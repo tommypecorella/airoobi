@@ -732,14 +732,30 @@ function shareRef(platform){
   const link=document.getElementById('ref-link').dataset.link;
   if(!link)return;
   const lang=document.documentElement.getAttribute('data-lang')||'it';
-  const text=lang==='it'
-    ?'Entra in AIROOBI — il fair airdrop marketplace. Registrati gratis: '
-    :'Join AIROOBI — the fair airdrop marketplace. Sign up free: ';
+  
+  const msgs={
+    it:{
+      whatsapp:'Hai presente quando partecipi a qualcosa e non vinci nulla? Ecco, con AIROOBI non succede. Ogni volta ricevi un NFT con valore reale. Oggetti fisici veri, blockchain Kaspa, zero fregature. I primi 1.000 hanno il badge permanente. Io sono dentro, tu?\n\n',
+      telegram:'AIROOBI — il marketplace dove nessuno perde mai. Oggetti reali, NFT garantiti, blockchain Kaspa. I primi 1.000 Early Adopter hanno vantaggi esclusivi.\n\nRegistrati gratis: ',
+      x:'Ho scoperto @airoobi_com — un marketplace dove partecipi ad airdrop di oggetti REALI e ricevi sempre un NFT con valore garantito. Zero gambling, 100% fairness. I primi 1.000 posti stanno finendo ',
+      email_subject:'Devi vedere questo progetto — AIROOBI',
+      email_body:'Ciao,\n\nho trovato un progetto che secondo me ti interessa: AIROOBI.\n\nIn pratica partecipi ad airdrop di oggetti fisici reali (smartphone, orologi, strumenti musicali...) e ogni volta ricevi un NFT con valore reale sostenuto dal Treasury. Nessuno perde mai.\n\nÈ su blockchain Kaspa, tutto trasparente e verificabile. I primi 1.000 iscritti ottengono un badge Early Adopter permanente — io mi sono già registrato.\n\nDai un\'occhiata: '
+    },
+    en:{
+      whatsapp:'You know when you enter something and walk away with nothing? With AIROOBI that literally cannot happen. Every time you participate, you get an NFT with real Treasury-backed value. Real physical objects, Kaspa blockchain, zero BS. First 1,000 get a permanent badge. I\'m in, you?\n\n',
+      telegram:'AIROOBI — the marketplace where nobody ever loses. Real objects, guaranteed NFTs, Kaspa blockchain. First 1,000 Early Adopters get exclusive perks.\n\nSign up free: ',
+      x:'Just found @airoobi_com — a marketplace where you participate in airdrops for REAL objects and always receive an NFT with guaranteed value. Zero gambling, 100% fairness. First 1,000 spots are running out ',
+      email_subject:'You need to see this — AIROOBI',
+      email_body:'Hey,\n\nI found a project I think you\'ll love: AIROOBI.\n\nBasically you participate in airdrops for real physical objects (smartphones, watches, musical instruments...) and every time you receive an NFT with real value backed by the Treasury. Nobody ever loses.\n\nIt\'s on Kaspa blockchain, fully transparent and verifiable. First 1,000 sign-ups get a permanent Early Adopter badge — I already signed up.\n\nCheck it out: '
+    }
+  };
+  
+  const m=msgs[lang]||msgs.it;
   const urls={
-    whatsapp:'https://wa.me/?text='+encodeURIComponent(text+link),
-    telegram:'https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(text),
-    x:'https://x.com/intent/tweet?text='+encodeURIComponent(text+link),
-    email:'mailto:?subject=AIROOBI&body='+encodeURIComponent(text+link)
+    whatsapp:'https://wa.me/?text='+encodeURIComponent(m.whatsapp+link),
+    telegram:'https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(m.telegram),
+    x:'https://x.com/intent/tweet?text='+encodeURIComponent(m.x+link),
+    email:'mailto:?subject='+encodeURIComponent(m.email_subject)+'&body='+encodeURIComponent(m.email_body+link)
   };
   window.open(urls[platform],'_blank');
 }
