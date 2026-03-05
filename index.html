@@ -165,6 +165,57 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
 .fomo-big{font-family:var(--font-h);font-size:clamp(36px,6vw,56px);font-weight:300;color:var(--gold);letter-spacing:-1px}
 .fomo-big span{color:var(--gray-400);font-size:.5em}
+
+/* ── AUTH MODAL ── */
+.auth-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.95);overflow-y:auto;padding:40px 24px}
+.auth-overlay.active{display:flex;align-items:center;justify-content:center}
+.auth-box{background:var(--gray-800);border:1px solid var(--gray-700);max-width:420px;width:100%;padding:48px 40px;position:relative}
+.auth-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:8px}
+.auth-box .auth-sub{font-size:13px;color:var(--gray-400);margin-bottom:32px}
+.auth-box label{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px}
+.auth-box input[type="email"],.auth-box input[type="password"]{width:100%;padding:14px 16px;background:var(--black);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;margin-bottom:20px;transition:border-color .3s}
+.auth-box input:focus{border-color:var(--gold)}
+.auth-btn{width:100%;padding:14px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:16px}
+.auth-btn:hover{background:var(--white)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed}
+.auth-toggle{font-size:13px;color:var(--gray-400);text-align:center}
+.auth-toggle a{color:var(--gold);cursor:pointer;text-decoration:none}
+.auth-toggle a:hover{text-decoration:underline}
+.auth-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--gray-400);font-size:20px;cursor:pointer}
+.auth-error{background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+.auth-success{background:rgba(184,150,12,.1);border:1px solid var(--gold-dim);color:var(--gold);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+
+/* ── DASHBOARD ── */
+.dash-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:250;background:var(--black);overflow-y:auto}
+.dash-overlay.active{display:block}
+.dash-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--gray-700)}
+.dash-nav img{height:28px}
+.dash-logout{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 16px;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .3s}
+.dash-logout:hover{border-color:var(--gold);color:var(--gold)}
+.dash-content{max-width:640px;margin:0 auto;padding:60px 24px}
+.dash-welcome{font-family:var(--font-h);font-size:clamp(28px,5vw,42px);font-weight:300;margin-bottom:8px}
+.dash-welcome em{color:var(--gold);font-style:italic}
+.dash-email{font-size:13px;color:var(--gray-400);margin-bottom:48px}
+
+.ref-card{border:1px solid var(--gray-700);padding:32px;margin-bottom:32px}
+.ref-card h3{font-family:var(--font-h);font-size:22px;font-weight:400;margin-bottom:16px}
+.ref-link-wrap{display:flex;gap:0;margin-bottom:16px}
+.ref-link{flex:1;padding:14px 16px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--gold);font-family:var(--font-m);font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ref-copy{padding:14px 20px;background:var(--gold);color:var(--black);border:none;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .3s;white-space:nowrap}
+.ref-copy:hover{background:var(--white)}
+.ref-share{display:flex;gap:12px;flex-wrap:wrap}
+.ref-share-btn{padding:10px 20px;border:1px solid var(--gray-700);background:none;color:var(--white);font-size:12px;letter-spacing:1px;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:8px}
+.ref-share-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+.ref-stats{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:32px}
+.ref-stat{padding:24px;background:var(--gray-800)}
+.ref-stat-val{font-family:var(--font-h);font-size:32px;font-weight:300;color:var(--gold)}
+.ref-stat-label{font-size:12px;color:var(--gray-400);margin-top:4px;letter-spacing:1px}
+
+/* ── ADSENSE ── */
+.ad-slot{background:var(--gray-800);border:1px solid var(--gray-700);padding:20px;text-align:center;margin-bottom:32px;min-height:90px;display:flex;align-items:center;justify-content:center}
+.ad-slot-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px}
+
 .gold-sep{width:60px;height:1px;background:var(--gold);margin:0 auto}
 </style>
 </head>
@@ -197,7 +248,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
     <p><span class="it">Il primo fair airdrop marketplace al mondo per oggetti fisici reali su blockchain Kaspa. Partecipa, accumula, ricevi — ogni volta.</span><span class="en">The world's first fair airdrop marketplace for real physical objects on Kaspa blockchain. Participate, accumulate, receive — every time.</span></p>
     <div class="hero-form" id="waitlist-form-top">
       <input type="email" id="email-top" placeholder="La tua email" data-it="La tua email" data-en="Your email" required>
-      <button type="button" onclick="handleWaitlist('email-top')"><span class="it">Entra in lista</span><span class="en">Join the list</span></button>
+      <button type="button" onclick="handleOrAuth('email-top')"><span class="it">Entra in lista</span><span class="en">Join the list</span></button>
     </div>
     <span class="hero-badge"><span class="it">&#9679; Solo i primi 1.000 — Early Adopter Badge permanente</span><span class="en">&#9679; First 1,000 only — Permanent Early Adopter Badge</span></span>
     <div class="fomo" id="fomo-hero">
@@ -365,7 +416,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
   <p class="section-text" style="margin:0 auto 40px;text-align:center"><span class="it">Solo i primi 1.000 ottengono il badge Early Adopter permanente. Posti in esaurimento.</span><span class="en">Only the first 1,000 get the permanent Early Adopter badge. Spots running out.</span></p>
   <div class="hero-form" id="waitlist-form-bottom" style="margin:0 auto">
     <input type="email" id="email-bottom" placeholder="La tua email" data-it="La tua email" data-en="Your email" required>
-    <button type="button" onclick="handleWaitlist('email-bottom')"><span class="it">Entra in lista</span><span class="en">Join the list</span></button>
+    <button type="button" onclick="handleOrAuth('email-bottom')"><span class="it">Entra in lista</span><span class="en">Join the list</span></button>
   </div>
   <div class="fomo" id="fomo-cta" style="margin-top:28px;flex-direction:column;gap:12px">
       <div class="fomo-big" id="fomo-big-num"></div>
@@ -502,6 +553,222 @@ function toggleLang(){
 function openModal(id){document.getElementById(id).style.display='block';document.body.style.overflow='hidden';}
 function closeModal(id){document.getElementById(id).style.display='none';document.body.style.overflow='';}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('[id$="-modal"]').forEach(m=>closeModal(m.id))}});
+
+// ══ SUPABASE AUTH ══
+const SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+async function sbAuth(endpoint, body){
+  const res=await fetch(SB_URL+'/auth/v1/'+endpoint,{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  return {status:res.status, data:await res.json()};
+}
+
+async function sbGet(path,token){
+  const h={'apikey':SB_KEY,'Authorization':'Bearer '+(token||SB_KEY)};
+  const res=await fetch(SB_URL+'/rest/v1/'+path,{headers:h});
+  return res.ok?await res.json():[];
+}
+
+// ── Auth UI ──
+function openAuth(){document.getElementById('auth-overlay').classList.add('active');document.body.style.overflow='hidden'}
+function closeAuth(){document.getElementById('auth-overlay').classList.remove('active');document.body.style.overflow='';clearErrors()}
+function showLogin(){document.getElementById('auth-signup').style.display='none';document.getElementById('auth-login').style.display='block';clearErrors()}
+function showSignup(){document.getElementById('auth-signup').style.display='block';document.getElementById('auth-login').style.display='none';clearErrors()}
+function clearErrors(){document.querySelectorAll('.auth-error,.auth-success').forEach(e=>e.style.display='none')}
+function showError(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block'}
+function showSuccess(id,msg){const e=document.getElementById(id);e.textContent=msg;e.style.display='block'}
+
+// ── Signup ──
+async function doSignup(){
+  clearErrors();
+  const email=document.getElementById('signup-email').value.trim();
+  const pw=document.getElementById('signup-password').value;
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(!email||!email.includes('@'))return showError('signup-error',lang==='it'?'Email non valida':'Invalid email');
+  if(!pw||pw.length<6)return showError('signup-error',lang==='it'?'Password minimo 6 caratteri':'Password min 6 characters');
+  
+  document.getElementById('signup-btn').disabled=true;
+  const ref=new URLSearchParams(window.location.search).get('ref')||null;
+  
+  const {status,data}=await sbAuth('signup',{email,password:pw,data:{referred_by:ref}});
+  
+  if(status===200||status===201){
+    // Also add to waitlist if not there
+    await sbPost('waitlist',{email,lang,referred_by:ref}).catch(()=>{});
+    
+    if(data.session){
+      // Auto-confirmed, log in directly
+      saveSession(data.session);
+      if(ref)await linkRef(data.user.id,ref,data.session.access_token);
+      closeAuth();
+      showDashboard(data.session);
+    }else{
+      showSuccess('signup-success',lang==='it'?'Controlla la tua email per confermare la registrazione!':'Check your email to confirm registration!');
+    }
+  }else{
+    const msg=data.error_description||data.msg||data.message||'Error';
+    showError('signup-error',msg);
+  }
+  document.getElementById('signup-btn').disabled=false;
+}
+
+// ── Login ──
+async function doLogin(){
+  clearErrors();
+  const email=document.getElementById('login-email').value.trim();
+  const pw=document.getElementById('login-password').value;
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(!email)return showError('login-error',lang==='it'?'Inserisci email':'Enter email');
+  if(!pw)return showError('login-error',lang==='it'?'Inserisci password':'Enter password');
+  
+  document.getElementById('login-btn').disabled=true;
+  const {status,data}=await sbAuth('token?grant_type=password',{email,password:pw});
+  
+  if(status===200&&data.access_token){
+    saveSession(data);
+    closeAuth();
+    showDashboard(data);
+  }else{
+    const lang=document.documentElement.getAttribute('data-lang')||'it';
+    showError('login-error',lang==='it'?'Email o password errati':'Wrong email or password');
+  }
+  document.getElementById('login-btn').disabled=false;
+}
+
+// ── Session ──
+function saveSession(s){localStorage.setItem('airoobi_session',JSON.stringify(s))}
+function getSession(){try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch{return null}}
+function clearSession(){localStorage.removeItem('airoobi_session')}
+
+// ── Logout ──
+function doLogout(){
+  clearSession();
+  document.getElementById('dash-overlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+
+// ── Link referral ──
+async function linkRef(userId,refCode,token){
+  await fetch(SB_URL+'/rest/v1/rpc/link_referral',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify({user_id:userId,ref_code:refCode})
+  }).catch(()=>{});
+}
+
+// ── Dashboard ──
+async function showDashboard(session){
+  const dash=document.getElementById('dash-overlay');
+  dash.classList.add('active');
+  document.body.style.overflow='auto';
+  
+  // Set logo (use the white logo from nav)
+  const navLogo=document.querySelector('.nav-logo-wrap + .nav-menu')?.previousElementSibling?.querySelector('img');
+  const dashLogo=document.getElementById('dash-logo');
+  if(navLogo)dashLogo.src=document.querySelector('.nav-logo')?.src||'';
+  // Actually use the LW logo
+  const lwImg=document.querySelector('.hero-logo');
+  if(lwImg)dashLogo.src=lwImg.src;
+  
+  // Set email
+  const email=session.user?.email||'';
+  document.getElementById('dash-user-email').textContent=email;
+  
+  // Load profile
+  const profiles=await sbGet('profiles?id=eq.'+session.user.id+'&select=*',session.access_token);
+  if(profiles.length>0){
+    const p=profiles[0];
+    const refLink='https://airoobi.com?ref='+p.referral_code;
+    document.getElementById('ref-link').textContent=refLink;
+    document.getElementById('ref-link').dataset.link=refLink;
+    document.getElementById('ref-count').textContent=p.referral_count||0;
+    
+    // Position
+    const all=await sbGet('profiles?select=id&order=created_at',session.access_token);
+    const pos=all.findIndex(x=>x.id===session.user.id)+1;
+    document.getElementById('ref-position').textContent='#'+pos;
+  }
+}
+
+// ── Copy referral ──
+function copyRef(){
+  const link=document.getElementById('ref-link').dataset.link;
+  if(!link)return;
+  navigator.clipboard.writeText(link).then(()=>{
+    const btn=document.querySelector('.ref-copy');
+    const lang=document.documentElement.getAttribute('data-lang')||'it';
+    btn.textContent=lang==='it'?'COPIATO!':'COPIED!';
+    setTimeout(()=>btn.innerHTML='<span class="it">COPIA</span><span class="en">COPY</span>',2000);
+  });
+}
+
+// ── Share referral ──
+function shareRef(platform){
+  const link=document.getElementById('ref-link').dataset.link;
+  if(!link)return;
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  const text=lang==='it'
+    ?'Entra in AIROOBI — il fair airdrop marketplace. Registrati gratis: '
+    :'Join AIROOBI — the fair airdrop marketplace. Sign up free: ';
+  const urls={
+    whatsapp:'https://wa.me/?text='+encodeURIComponent(text+link),
+    telegram:'https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(text),
+    x:'https://x.com/intent/tweet?text='+encodeURIComponent(text+link),
+    email:'mailto:?subject=AIROOBI&body='+encodeURIComponent(text+link)
+  };
+  window.open(urls[platform],'_blank');
+}
+
+// ── Auto-restore session ──
+(function(){
+  const s=getSession();
+  if(s&&s.access_token){
+    // Verify token is still valid
+    fetch(SB_URL+'/auth/v1/user',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+    }).then(r=>{
+      if(r.ok)return r.json();
+      throw new Error('expired');
+    }).then(user=>{
+      s.user=user;
+      showDashboard(s);
+    }).catch(()=>clearSession());
+  }
+})();
+
+
+// ── Smart handler: add to waitlist AND open auth ──
+async function handleOrAuth(inputId){
+  const input=document.getElementById(inputId);
+  const email=input.value.trim();
+  if(!email||!email.includes('@')||!email.includes('.')){
+    input.style.borderColor='#B91C1C';
+    setTimeout(()=>input.style.borderColor='',2000);
+    return;
+  }
+  // Add to waitlist silently
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  const ref=new URLSearchParams(window.location.search).get('ref')||null;
+  await sbPost('waitlist',{email,lang,referred_by:ref}).catch(()=>{});
+  updateCounter();
+  // Pre-fill auth and open
+  document.getElementById('signup-email').value=email;
+  openAuth();
+  input.value='';
+}
+
+// ── Enter key on auth forms ──
+document.addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    if(document.getElementById('auth-signup').style.display!=='none'&&document.getElementById('signup-email')===document.activeElement||document.getElementById('signup-password')===document.activeElement)doSignup();
+    if(document.getElementById('auth-login').style.display!=='none'&&(document.getElementById('login-email')===document.activeElement||document.getElementById('login-password')===document.activeElement))doLogin();
+  }
+});
+
 </script>
 
 <!-- ═══ PRIVACY POLICY ═══ -->
@@ -567,6 +834,95 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelec
 <h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">5. Contact</h3>
 <p>For questions: <a href="mailto:legal@airoobi.com" style="color:var(--gold)">legal@airoobi.com</a></p>
 </div>
+</div>
+</div>
+
+
+<!-- ═══ AUTH MODAL ═══ -->
+<div class="auth-overlay" id="auth-overlay">
+<div class="auth-box">
+  <button class="auth-close" onclick="closeAuth()">&times;</button>
+  <div id="auth-signup">
+    <h2><span class="it">Crea il tuo account</span><span class="en">Create your account</span></h2>
+    <p class="auth-sub"><span class="it">Entra nella community AIROOBI</span><span class="en">Join the AIROOBI community</span></p>
+    <div class="auth-error" id="signup-error"></div>
+    <div class="auth-success" id="signup-success"></div>
+    <label>Email</label>
+    <input type="email" id="signup-email" placeholder="email@example.com">
+    <label>Password</label>
+    <input type="password" id="signup-password" placeholder="Min. 6 caratteri">
+    <button class="auth-btn" id="signup-btn" onclick="doSignup()">
+      <span class="it">Registrati</span><span class="en">Sign Up</span>
+    </button>
+    <p class="auth-toggle"><span class="it">Hai già un account?</span><span class="en">Already have an account?</span> <a onclick="showLogin()">Login</a></p>
+  </div>
+  <div id="auth-login" style="display:none">
+    <h2>Login</h2>
+    <p class="auth-sub"><span class="it">Bentornato</span><span class="en">Welcome back</span></p>
+    <div class="auth-error" id="login-error"></div>
+    <label>Email</label>
+    <input type="email" id="login-email" placeholder="email@example.com">
+    <label>Password</label>
+    <input type="password" id="login-password" placeholder="Password">
+    <button class="auth-btn" id="login-btn" onclick="doLogin()">Login</button>
+    <p class="auth-toggle"><span class="it">Non hai un account?</span><span class="en">Don't have an account?</span> <a onclick="showSignup()"><span class="it">Registrati</span><span class="en">Sign Up</span></a></p>
+  </div>
+</div>
+</div>
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="dash-overlay" id="dash-overlay">
+<div class="dash-nav">
+  <img src="" id="dash-logo" alt="AIROOBI" style="height:28px">
+  <div style="display:flex;gap:12px;align-items:center">
+    <span id="dash-user-email" style="font-size:12px;color:var(--gray-400)"></span>
+    <button class="dash-logout" onclick="doLogout()">Logout</button>
+  </div>
+</div>
+<div class="dash-content">
+  <h1 class="dash-welcome"><span class="it">Benvenuto, <em>Early Adopter.</em></span><span class="en">Welcome, <em>Early Adopter.</em></span></h1>
+  <p class="dash-email"><span class="it">Il tuo posto è confermato. Sei tra i primi.</span><span class="en">Your spot is confirmed. You're among the first.</span></p>
+  
+  <!-- REFERRAL STATS -->
+  <div class="ref-stats">
+    <div class="ref-stat">
+      <div class="ref-stat-val" id="ref-count">0</div>
+      <div class="ref-stat-label"><span class="it">Persone invitate</span><span class="en">People invited</span></div>
+    </div>
+    <div class="ref-stat">
+      <div class="ref-stat-val" id="ref-position">—</div>
+      <div class="ref-stat-label"><span class="it">La tua posizione</span><span class="en">Your position</span></div>
+    </div>
+  </div>
+
+  <!-- REFERRAL LINK -->
+  <div class="ref-card">
+    <h3><span class="it">Il tuo link referral</span><span class="en">Your referral link</span></h3>
+    <div class="ref-link-wrap">
+      <div class="ref-link" id="ref-link">airoobi.com?ref=...</div>
+      <button class="ref-copy" onclick="copyRef()"><span class="it">COPIA</span><span class="en">COPY</span></button>
+    </div>
+    <div class="ref-share">
+      <button class="ref-share-btn" onclick="shareRef('whatsapp')">WhatsApp</button>
+      <button class="ref-share-btn" onclick="shareRef('telegram')">Telegram</button>
+      <button class="ref-share-btn" onclick="shareRef('x')">X / Twitter</button>
+      <button class="ref-share-btn" onclick="shareRef('email')">Email</button>
+    </div>
+  </div>
+
+  <!-- AD SLOT -->
+  <div class="ad-slot">
+    <span class="ad-slot-label">AD SPACE — GOOGLE ADSENSE</span>
+  </div>
+
+  <!-- INFO CARD -->
+  <div class="ref-card" style="border-color:var(--gold-dim)">
+    <h3><span class="it">Cosa succede ora?</span><span class="en">What happens now?</span></h3>
+    <p style="font-size:14px;color:var(--gray-300);line-height:1.8">
+      <span class="it">Il progetto è in fase Alpha. Stai costruendo con noi. Ti terremo aggiornato via email su ogni milestone. Intanto, invita amici — più referral hai, più alto il tuo status al lancio.</span>
+      <span class="en">The project is in Alpha phase. You're building with us. We'll keep you updated via email on every milestone. In the meantime, invite friends — the more referrals you have, the higher your status at launch.</span>
+    </p>
+  </div>
 </div>
 </div>
 
