@@ -10,7 +10,9 @@
 <meta property="og:description" content="Il primo fair airdrop marketplace al mondo per oggetti fisici reali su blockchain Kaspa.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://airoobi.com">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -50,6 +52,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:none}
 .lang-toggle:hover{border-color:var(--gold);background:var(--gold);color:var(--black)}
 [data-lang="en"] .it{display:none!important}
 [data-lang="it"] .en{display:none!important}
+.nav-link-btn{display:flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-300);padding:8px 16px;font-family:var(--font-b);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.nav-link-btn:hover{border-color:var(--gold);color:var(--gold)}
+.nav-link-btn svg{opacity:.7}
+.nav-logged-in{display:none;align-items:center;gap:12px}
+.nav-logged-in.active{display:flex}
+.nav-avatar{width:32px;height:32px;background:var(--gold);color:var(--black);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:13px;font-weight:700;cursor:pointer}
+@media(max-width:768px){.nav-link-btn span{display:none}.nav-link-btn{padding:8px 10px}}
 .nav-cta{background:var(--gold);color:var(--black);padding:10px 24px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;border:none;cursor:pointer;transition:all .3s}
 .nav-cta:hover{background:var(--white)}
 @media(max-width:768px){.nav-menu a{display:none}}
@@ -234,7 +243,11 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
     <a href="#kaspa">Blockchain</a>
     <a href="#roadmap">Roadmap</a>
     <button class="lang-toggle" onclick="toggleLang()" id="lang-btn">EN</button>
-    <button class="nav-cta" onclick="document.getElementById('email-top').focus()"><span class="it">Waitlist</span><span class="en">Waitlist</span></button>
+    <button class="nav-link-btn" onclick="openAuth('login')" id="nav-login-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg><span class="it">Accedi</span><span class="en">Login</span></button>
+    <button class="nav-cta" onclick="openAuth('signup')" id="nav-signup-btn"><span class="it">Registrati</span><span class="en">Sign Up</span></button>
+    <div class="nav-logged-in" id="nav-logged-in">
+      <div class="nav-avatar" id="nav-avatar" onclick="showDashFromNav()">?</div>
+    </div>
   </div>
 </div>
 </nav>
@@ -248,7 +261,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
     <p><span class="it">Il primo fair airdrop marketplace al mondo per oggetti fisici reali su blockchain Kaspa. Partecipa, accumula, ricevi — ogni volta.</span><span class="en">The world's first fair airdrop marketplace for real physical objects on Kaspa blockchain. Participate, accumulate, receive — every time.</span></p>
     <div class="hero-form" id="waitlist-form-top">
       <input type="email" id="email-top" placeholder="La tua email" data-it="La tua email" data-en="Your email" required>
-      <button type="button" onclick="handleOrAuth('email-top')"><span class="it">Entra in lista</span><span class="en">Join the list</span></button>
+      <button type="button" onclick="handleOrAuth('email-top')"><span class="it">Registrati</span><span class="en">Sign Up</span></button>
     </div>
     <span class="hero-badge"><span class="it">&#9679; Solo i primi 1.000 — Early Adopter Badge permanente</span><span class="en">&#9679; First 1,000 only — Permanent Early Adopter Badge</span></span>
     <div class="fomo" id="fomo-hero">
@@ -416,7 +429,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
   <p class="section-text" style="margin:0 auto 40px;text-align:center"><span class="it">Solo i primi 1.000 ottengono il badge Early Adopter permanente. Posti in esaurimento.</span><span class="en">Only the first 1,000 get the permanent Early Adopter badge. Spots running out.</span></p>
   <div class="hero-form" id="waitlist-form-bottom" style="margin:0 auto">
     <input type="email" id="email-bottom" placeholder="La tua email" data-it="La tua email" data-en="Your email" required>
-    <button type="button" onclick="handleOrAuth('email-bottom')"><span class="it">Entra in lista</span><span class="en">Join the list</span></button>
+    <button type="button" onclick="handleOrAuth('email-bottom')"><span class="it">Registrati</span><span class="en">Sign Up</span></button>
   </div>
   <div class="fomo" id="fomo-cta" style="margin-top:28px;flex-direction:column;gap:12px">
       <div class="fomo-big" id="fomo-big-num"></div>
@@ -574,7 +587,11 @@ async function sbGet(path,token){
 }
 
 // ── Auth UI ──
-function openAuth(){document.getElementById('auth-overlay').classList.add('active');document.body.style.overflow='hidden'}
+function openAuth(mode){
+  document.getElementById('auth-overlay').classList.add('active');
+  document.body.style.overflow='hidden';
+  if(mode==='login')showLogin();else showSignup();
+}
 function closeAuth(){document.getElementById('auth-overlay').classList.remove('active');document.body.style.overflow='';clearErrors()}
 function showLogin(){document.getElementById('auth-signup').style.display='none';document.getElementById('auth-login').style.display='block';clearErrors()}
 function showSignup(){document.getElementById('auth-signup').style.display='block';document.getElementById('auth-login').style.display='none';clearErrors()}
@@ -590,6 +607,8 @@ async function doSignup(){
   const lang=document.documentElement.getAttribute('data-lang')||'it';
   if(!email||!email.includes('@'))return showError('signup-error',lang==='it'?'Email non valida':'Invalid email');
   if(!pw||pw.length<6)return showError('signup-error',lang==='it'?'Password minimo 6 caratteri':'Password min 6 characters');
+  const pw2=document.getElementById('signup-password2').value;
+  if(pw!==pw2)return showError('signup-error',lang==='it'?'Le password non coincidono':'Passwords don\'t match');
   
   document.getElementById('signup-btn').disabled=true;
   const ref=new URLSearchParams(window.location.search).get('ref')||null;
@@ -647,6 +666,7 @@ function clearSession(){localStorage.removeItem('airoobi_session')}
 // ── Logout ──
 function doLogout(){
   clearSession();
+  updateNavAuth(false);
   document.getElementById('dash-overlay').classList.remove('active');
   document.body.style.overflow='';
 }
@@ -662,6 +682,7 @@ async function linkRef(userId,refCode,token){
 
 // ── Dashboard ──
 async function showDashboard(session){
+  updateNavAuth(true,session.user?.email);
   const dash=document.getElementById('dash-overlay');
   dash.classList.add('active');
   document.body.style.overflow='auto';
@@ -723,6 +744,26 @@ function shareRef(platform){
   window.open(urls[platform],'_blank');
 }
 
+
+function showDashFromNav(){
+  const s=getSession();
+  if(s)showDashboard(s);
+}
+function updateNavAuth(loggedIn, email){
+  const loginBtn=document.getElementById('nav-login-btn');
+  const signupBtn=document.getElementById('nav-signup-btn');
+  const loggedInDiv=document.getElementById('nav-logged-in');
+  if(loggedIn){
+    if(loginBtn)loginBtn.style.display='none';
+    if(signupBtn)signupBtn.style.display='none';
+    if(loggedInDiv){loggedInDiv.classList.add('active');document.getElementById('nav-avatar').textContent=(email||'?')[0].toUpperCase();}
+  }else{
+    if(loginBtn)loginBtn.style.display='';
+    if(signupBtn)signupBtn.style.display='';
+    if(loggedInDiv)loggedInDiv.classList.remove('active');
+  }
+}
+
 // ── Auto-restore session ──
 (function(){
   const s=getSession();
@@ -735,7 +776,7 @@ function shareRef(platform){
       throw new Error('expired');
     }).then(user=>{
       s.user=user;
-      showDashboard(s);
+      updateNavAuth(true,user.email);
     }).catch(()=>clearSession());
   }
 })();
@@ -843,14 +884,16 @@ document.addEventListener('keydown',e=>{
 <div class="auth-box">
   <button class="auth-close" onclick="closeAuth()">&times;</button>
   <div id="auth-signup">
-    <h2><span class="it">Crea il tuo account</span><span class="en">Create your account</span></h2>
-    <p class="auth-sub"><span class="it">Entra nella community AIROOBI</span><span class="en">Join the AIROOBI community</span></p>
+    <h2><span class="it">Registrati alla lista</span><span class="en">Join the waitlist</span></h2>
+    <p class="auth-sub"><span class="it">I primi 1.000 ricevono il badge Early Adopter permanente</span><span class="en">First 1,000 get the permanent Early Adopter badge</span></p>
     <div class="auth-error" id="signup-error"></div>
     <div class="auth-success" id="signup-success"></div>
     <label>Email</label>
     <input type="email" id="signup-email" placeholder="email@example.com">
     <label>Password</label>
-    <input type="password" id="signup-password" placeholder="Min. 6 caratteri">
+    <input type="password" id="signup-password" placeholder="Min. 6 caratteri" data-it="Min. 6 caratteri" data-en="Min. 6 characters">
+    <label><span class="it">Ripeti Password</span><span class="en">Repeat Password</span></label>
+    <input type="password" id="signup-password2" placeholder="Ripeti password" data-it="Ripeti password" data-en="Repeat password">
     <button class="auth-btn" id="signup-btn" onclick="doSignup()">
       <span class="it">Registrati</span><span class="en">Sign Up</span>
     </button>
