@@ -157,6 +157,14 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .reveal.visible{opacity:1;transform:translateY(0)}
 
 /* ── GOLD LINE SEPARATOR ── */
+.fomo{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:28px;animation:fadeUp 1s ease-out .6s both}
+.fomo-bar-wrap{width:200px;height:4px;background:var(--gray-700);position:relative;overflow:hidden}
+.fomo-bar{height:100%;background:var(--gold);transition:width 1.5s ease-out;width:0}
+.fomo-text{font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold)}
+.fomo-pulse{display:inline-block;width:6px;height:6px;background:var(--gold);border-radius:50%;margin-right:8px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+.fomo-big{font-family:var(--font-h);font-size:clamp(36px,6vw,56px);font-weight:300;color:var(--gold);letter-spacing:-1px}
+.fomo-big span{color:var(--gray-400);font-size:.5em}
 .gold-sep{width:60px;height:1px;background:var(--gold);margin:0 auto}
 </style>
 </head>
@@ -192,6 +200,10 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
       <button type="button" onclick="handleWaitlist('email-top')"><span class="it">Entra in lista</span><span class="en">Join the list</span></button>
     </div>
     <span class="hero-badge"><span class="it">&#9679; Solo i primi 1.000 — Early Adopter Badge permanente</span><span class="en">&#9679; First 1,000 only — Permanent Early Adopter Badge</span></span>
+    <div class="fomo" id="fomo-hero">
+      <div class="fomo-text"><span class="fomo-pulse"></span><span class="it" id="fomo-text-hero-it"></span><span class="en" id="fomo-text-hero-en"></span></div>
+      <div class="fomo-bar-wrap"><div class="fomo-bar" id="fomo-bar-hero"></div></div>
+    </div>
   </div>
   <div class="hero-scroll"><span></span></div>
 </section>
@@ -355,7 +367,11 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
     <input type="email" id="email-bottom" placeholder="La tua email" data-it="La tua email" data-en="Your email" required>
     <button type="button" onclick="handleWaitlist('email-bottom')"><span class="it">Entra in lista</span><span class="en">Join the list</span></button>
   </div>
-  <div class="cta-counter" id="counter"></div>
+  <div class="fomo" id="fomo-cta" style="margin-top:28px;flex-direction:column;gap:12px">
+      <div class="fomo-big" id="fomo-big-num"></div>
+      <div class="fomo-bar-wrap" style="width:280px"><div class="fomo-bar" id="fomo-bar-cta"></div></div>
+      <div class="fomo-text"><span class="fomo-pulse"></span><span class="it" id="fomo-text-cta-it"></span><span class="en" id="fomo-text-cta-en"></span></div>
+    </div>
   <p class="cta-legal"><span class="it">Nessuno spam, mai. Riceverai solo aggiornamenti sul progetto.</span><span class="en">No spam, ever. You'll only receive project updates.</span></p>
 </div>
 </section>
@@ -394,7 +410,7 @@ async function sbPost(table,data){
       'apikey':SUPABASE_KEY,
       'Authorization':'Bearer '+SUPABASE_KEY,
       'Content-Type':'application/json',
-      'Prefer':'return=representation'
+      
     },body:JSON.stringify(data)
   });
   return res
@@ -438,12 +454,26 @@ async function handleWaitlist(inputId){
 // ── Counter ──
 async function updateCounter(){
   const count=await sbCount();
-  const el=document.getElementById('counter');
-  const lang=document.documentElement.getAttribute('data-lang')||'it';
-  if(count>0){
-    const w=lang==='it'?(count===1?'persona':'persone'):(count===1?'person':'people');
-    el.textContent=count+' '+w+(lang==='it'?' in lista':' on the list');
-  }
+  const remaining=Math.max(0,1000-count);
+  const pct=Math.min(100,(count/1000)*100);
+  
+  // Hero fomo
+  const heroIt=document.getElementById('fomo-text-hero-it');
+  const heroEn=document.getElementById('fomo-text-hero-en');
+  if(heroIt)heroIt.textContent=remaining+' posti rimasti su 1.000';
+  if(heroEn)heroEn.textContent=remaining+' spots left out of 1,000';
+  const heroBar=document.getElementById('fomo-bar-hero');
+  if(heroBar)setTimeout(()=>heroBar.style.width=pct+'%',500);
+  
+  // CTA fomo
+  const bigNum=document.getElementById('fomo-big-num');
+  if(bigNum)bigNum.innerHTML=remaining+'<span> / 1.000</span>';
+  const ctaIt=document.getElementById('fomo-text-cta-it');
+  const ctaEn=document.getElementById('fomo-text-cta-en');
+  if(ctaIt)ctaIt.textContent='posti rimasti — non aspettare';
+  if(ctaEn)ctaEn.textContent='spots remaining — don\'t wait';
+  const ctaBar=document.getElementById('fomo-bar-cta');
+  if(ctaBar)setTimeout(()=>ctaBar.style.width=pct+'%',500);
 }
 updateCounter();
 
