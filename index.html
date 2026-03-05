@@ -687,12 +687,9 @@ async function showDashboard(session){
   dash.classList.add('active');
   document.body.style.overflow='auto';
   
-  // Set logo (use the white logo from nav)
-  const navLogo=document.querySelector('.nav-logo-wrap + .nav-menu')?.previousElementSibling?.querySelector('img');
-  const dashLogo=document.getElementById('dash-logo');
-  if(navLogo)dashLogo.src=document.querySelector('.nav-logo')?.src||'';
-  // Actually use the LW logo
+  // Set logo
   const lwImg=document.querySelector('.hero-logo');
+  const dashLogo=document.getElementById('dash-logo');
   if(lwImg)dashLogo.src=lwImg.src;
   
   // Set email
@@ -700,8 +697,20 @@ async function showDashboard(session){
   document.getElementById('dash-user-email').textContent=email;
   
   // Load profile
-  const profiles=await sbGet('profiles?id=eq.'+session.user.id+'&select=*',session.access_token);
-  if(profiles.length>0){
+  let profiles=await sbGet('profiles?id=eq.'+session.user.id+'&select=*',session.access_token);
+  
+  // If no profile exists, create one manually
+  if(!profiles||profiles.length===0){
+    const code=Math.random().toString(36).substring(2,10);
+    await fetch(SB_URL+'/rest/v1/profiles',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({id:session.user.id,email:email,referral_code:code})
+    });
+    profiles=await sbGet('profiles?id=eq.'+session.user.id+'&select=*',session.access_token);
+  }
+  
+  if(profiles&&profiles.length>0){
     const p=profiles[0];
     const refLink='https://airoobi.com?ref='+p.referral_code;
     document.getElementById('ref-link').textContent=refLink;
@@ -711,7 +720,7 @@ async function showDashboard(session){
     // Position
     const all=await sbGet('profiles?select=id&order=created_at',session.access_token);
     const pos=all.findIndex(x=>x.id===session.user.id)+1;
-    document.getElementById('ref-position').textContent='#'+pos;
+    document.getElementById('ref-position').textContent=pos>0?'#'+pos:'#1';
   }
 }
 
@@ -779,6 +788,32 @@ function updateNavAuth(loggedIn, email){
     if(loggedInDiv)loggedInDiv.classList.remove('active');
   }
 }
+
+
+// ── Handle email confirmation redirect ──
+(function(){
+  const hash=window.location.hash;
+  if(hash&&hash.includes('access_token')){
+    const params=new URLSearchParams(hash.substring(1));
+    const token=params.get('access_token');
+    const refresh=params.get('refresh_token');
+    if(token){
+      // Fetch user info with this token
+      fetch(SB_URL+'/auth/v1/user',{
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+      }).then(r=>r.ok?r.json():null).then(user=>{
+        if(user){
+          const session={access_token:token,refresh_token:refresh,user:user};
+          saveSession(session);
+          updateNavAuth(true,user.email);
+          // Clean URL hash
+          history.replaceState(null,'',window.location.pathname);
+          showDashboard(session);
+        }
+      }).catch(()=>{});
+    }
+  }
+})();
 
 // ── Auto-restore session ──
 (function(){
