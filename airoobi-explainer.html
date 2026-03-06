@@ -395,6 +395,11 @@ document.addEventListener('keydown',e=>{
   if(e.key==='p')toggleAuto();
 });
 
+// Auto-play if loaded with ?autoplay=1
+if(new URLSearchParams(window.location.search).get('autoplay')==='1'){
+  setTimeout(function(){toggleAuto();},500);
+}
+
 // Touch swipe
 let touchX=0;
 document.addEventListener('touchstart',e=>{touchX=e.touches[0].clientX});
