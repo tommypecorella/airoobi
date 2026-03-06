@@ -116,6 +116,7 @@ async function loadEarnings(){
   const histEl=document.getElementById('points-history');
   if(history&&history.length>0){
     const reasonLabels={
+      welcome_bonus:lang==='it'?'Bonus di benvenuto':'Welcome bonus',
       daily_checkin:lang==='it'?'Check-in giornaliero':'Daily check-in',
       weekly_streak:lang==='it'?'Bonus settimanale':'Weekly bonus',
       video_view:lang==='it'?'Video guardato':'Video watched',
@@ -130,7 +131,17 @@ async function loadEarnings(){
 }
 
 // ── CHECK-IN ──
+let checkinVideoSeen=false;
 async function doCheckin(){
+  if(!earnSession)return;
+  if(!checkinVideoSeen){
+    checkinVideoSeen=true;
+    showVideoAd(function(){doCheckinReal();});
+    return;
+  }
+  doCheckinReal();
+}
+async function doCheckinReal(){
   if(!earnSession)return;
   const btn=document.getElementById('checkin-btn');
   btn.disabled=true;
@@ -212,7 +223,17 @@ async function completeEarnVideo(){
 }
 
 // ── CONFIRM REFERRAL ──
+let refConfirmVideoSeen=false;
 async function doConfirmReferral(){
+  if(!earnSession)return;
+  if(!refConfirmVideoSeen){
+    refConfirmVideoSeen=true;
+    showVideoAd(function(){doConfirmReferralReal();});
+    return;
+  }
+  doConfirmReferralReal();
+}
+async function doConfirmReferralReal(){
   if(!earnSession)return;
   const lang=document.documentElement.getAttribute('data-lang')||'it';
   const btn=document.getElementById('confirm-ref-btn');
@@ -1026,6 +1047,31 @@ function closeModal(id){document.getElementById(id).style.display='none';documen
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('[id$="-modal"]').forEach(m=>closeModal(m.id))}});
 
 
+
+// ── Welcome bonus (100 points, once per user) ──
+async function awardWelcomeBonus(userId,token){
+  try{
+    // Check if already received
+    const existing=await fetch(SB_URL+'/rest/v1/points_ledger?user_id=eq.'+userId+'&reason=eq.welcome_bonus&select=id',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    const data=await existing.json();
+    if(data&&data.length>0)return; // already received
+    
+    // Award 100 points
+    await fetch(SB_URL+'/rest/v1/points_ledger',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({user_id:userId,amount:100,reason:'welcome_bonus'})
+    });
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userId,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({total_points:100})
+    });
+  }catch(e){}
+}
+
 // == VIDEO INTERSTITIAL ==
 const VIDEO_DURATION=15;
 let videoTimer=null;
@@ -1129,6 +1175,8 @@ async function doSignup(){
       // Auto-confirmed, log in directly
       saveSession(data.session);
       if(ref)await linkRef(data.user.id,ref,data.session.access_token);
+      // Award welcome bonus
+      await awardWelcomeBonus(data.user.id,data.session.access_token);
       closeAuth();
       gatedDashboard(data.session);
     }else{
@@ -1253,18 +1301,18 @@ function shareRef(platform){
   
   const msgs={
     it:{
-      whatsapp:'Sto accumulando punti su AIROOBI e volevo che entrassi anche tu. È una community esclusiva dove guadagni valore reale ogni giorno — check-in, video, inviti. I primi 1.000 posti (Tier Alpha) stanno finendo e chi entra ora prende vantaggi che dopo non ci saranno più. Io sono già dentro.\n\n',
-      telegram:'AIROOBI — la community dove ogni giorno accumuli valore reale. Tier Alpha: solo 1.000 posti, vantaggi esclusivi permanenti. Più tardi entri, meno ottieni.\n\nEntra gratis: ',
-      x:'Sono nel Tier Alpha di @airoobi_com — 1.000 posti esclusivi con vantaggi permanenti. Ogni giorno accumulo valore reale. I posti stanno finendo. Se aspetti, perdi il vantaggio. ',
-      email_subject:'Ti porto dentro — AIROOBI',
-      email_body:'Ciao,\n\nsono entrato in AIROOBI, un progetto nuovo dove ogni giorno accumuli valore reale partecipando — check-in, video, inviti.\n\nOra siamo nel Tier Alpha: solo 1.000 posti con vantaggi esclusivi e permanenti. Chi entra nel Tier Alpha riceve più di tutti — compreso chi si iscriverà dopo.\n\nÈ gratuito e ci vogliono 30 secondi. I posti stanno finendo.\n\nUsa il mio link: '
+      whatsapp:'Ti spiego AIROOBI in 20 secondi: \u00e8 un marketplace nuovo dove partecipi per ottenere oggetti reali \u2014 smartphone, orologi, strumenti musicali. Funziona ad accumulo di punti, non a fortuna.\n\nAdesso siamo in fase di test e chi partecipa alla testnet guadagna punti facendo azioni semplici (entra, guarda un video, invita). I punti che accumuli ora avranno valore reale al lancio.\n\nIo sono nel Tier Alpha (1.000 posti). Registrati col mio link e parti con 100 punti bonus:\n\n',
+      telegram:'AIROOBI \u2014 marketplace per oggetti reali dove partecipi ad accumulo, non a fortuna. Ora siamo in testnet incentivata: guadagni punti ogni giorno con azioni semplici. Al lancio avranno valore reale.\n\nTier Alpha: 1.000 posti. Registrati gratis e parti con 100 punti:\n\n',
+      x:'Ho scoperto @airoobi_com \u2014 marketplace per oggetti reali dove accumuli punti, non serve fortuna. Ora c\'\u00e8 la testnet incentivata: ogni azione = punti reali al lancio. Tier Alpha, 1.000 posti. ',
+      email_subject:'Ti porto dentro AIROOBI \u2014 testnet incentivata',
+      email_body:'Ciao,\n\nti scrivo perch\u00e9 ho trovato un progetto interessante: AIROOBI.\n\n\u00c8 un marketplace nuovo dove partecipi per ottenere oggetti reali (smartphone, orologi, strumenti musicali...) attraverso un sistema ad accumulo di punti. Non \u00e8 fortuna, non \u00e8 azzardo \u2014 chi si impegna di pi\u00f9, ottiene di pi\u00f9.\n\nAdesso siamo nella fase di testnet incentivata: il team sta testando la piattaforma e chi partecipa guadagna punti facendo azioni semplici (check-in giornaliero, guardare video, invitare amici). I punti accumulati ora avranno valore reale quando la piattaforma lancer\u00e0.\n\nIo sono nel Tier Alpha (solo 1.000 posti, vantaggi permanenti). Se ti registri col mio link parti subito con 100 punti bonus.\n\nRegistrati gratis: '
     },
     en:{
-      whatsapp:'I\'m earning real value on AIROOBI every day and I want you in. It\'s an exclusive community — daily check-ins, videos, referrals all earn you points. Tier Alpha has only 1,000 spots and early members get permanent perks that won\'t exist later. I\'m already in.\n\n',
-      telegram:'AIROOBI — the community where you build real value every day. Tier Alpha: only 1,000 spots, exclusive permanent perks. The later you join, the less you get.\n\nJoin free: ',
-      x:'I\'m in @airoobi_com Tier Alpha — 1,000 exclusive spots with permanent perks. Building real value every day. Spots are running out. Wait and you lose the advantage. ',
-      email_subject:'I\'m bringing you in — AIROOBI',
-      email_body:'Hey,\n\nI joined AIROOBI, a new project where you build real value every day by participating — check-ins, videos, referrals.\n\nRight now we\'re in Tier Alpha: only 1,000 spots with exclusive, permanent perks. Alpha members get more than everyone who joins later — across all future tiers.\n\nIt\'s free and takes 30 seconds. Spots are running out.\n\nUse my link: '
+      whatsapp:'Let me explain AIROOBI in 20 seconds: it\'s a new marketplace where you participate to get real objects \u2014 smartphones, watches, musical instruments. It works on points accumulation, not luck.\n\nRight now we\'re in the incentivized testnet phase \u2014 you earn points by doing simple actions (log in, watch a video, invite friends). The points you earn now will have real value at launch.\n\nI\'m in Tier Alpha (1,000 spots). Sign up with my link and start with 100 bonus points:\n\n',
+      telegram:'AIROOBI \u2014 marketplace for real objects where you participate through accumulation, not luck. Now in incentivized testnet: earn points daily with simple actions. At launch they\'ll have real value.\n\nTier Alpha: 1,000 spots. Sign up free, start with 100 points:\n\n',
+      x:'Found @airoobi_com \u2014 marketplace for real objects where you accumulate points, no luck needed. Incentivized testnet live: every action = real points at launch. Tier Alpha, 1,000 spots. ',
+      email_subject:'I\'m bringing you into AIROOBI \u2014 incentivized testnet',
+      email_body:'Hey,\n\nI found an interesting project: AIROOBI.\n\nIt\'s a new marketplace where you participate to get real objects (smartphones, watches, musical instruments...) through a points accumulation system. It\'s not luck, not gambling \u2014 those who engage most, get the most.\n\nRight now we\'re in the incentivized testnet phase: the team is testing the platform and participants earn points by doing simple actions (daily check-in, watching videos, inviting friends). Points accumulated now will have real value when the platform launches.\n\nI\'m in Tier Alpha (only 1,000 spots, permanent perks). If you sign up with my link you start with 100 bonus points.\n\nSign up free: '
     }
   };
   
@@ -1475,6 +1523,7 @@ async function loadEarnings(){
   const histEl=document.getElementById('points-history');
   if(history&&history.length>0){
     const reasonLabels={
+      welcome_bonus:lang==='it'?'Bonus di benvenuto':'Welcome bonus',
       daily_checkin:lang==='it'?'Check-in giornaliero':'Daily check-in',
       weekly_streak:lang==='it'?'Bonus settimanale':'Weekly bonus',
       video_view:lang==='it'?'Video guardato':'Video watched',
@@ -1489,7 +1538,17 @@ async function loadEarnings(){
 }
 
 // ── CHECK-IN ──
+let checkinVideoSeen=false;
 async function doCheckin(){
+  if(!earnSession)return;
+  if(!checkinVideoSeen){
+    checkinVideoSeen=true;
+    showVideoAd(function(){doCheckinReal();});
+    return;
+  }
+  doCheckinReal();
+}
+async function doCheckinReal(){
   if(!earnSession)return;
   const btn=document.getElementById('checkin-btn');
   btn.disabled=true;
@@ -1571,7 +1630,17 @@ async function completeEarnVideo(){
 }
 
 // ── CONFIRM REFERRAL ──
+let refConfirmVideoSeen=false;
 async function doConfirmReferral(){
+  if(!earnSession)return;
+  if(!refConfirmVideoSeen){
+    refConfirmVideoSeen=true;
+    showVideoAd(function(){doConfirmReferralReal();});
+    return;
+  }
+  doConfirmReferralReal();
+}
+async function doConfirmReferralReal(){
   if(!earnSession)return;
   const lang=document.documentElement.getAttribute('data-lang')||'it';
   const btn=document.getElementById('confirm-ref-btn');
@@ -1982,24 +2051,25 @@ async function sendInvestorForm(){
 <div class="investor-overlay" id="investor-overlay">
 <div class="investor-nav">
   <img src="" id="investor-logo" alt="AIROOBI" style="height:32px">
+  <button class="lang-toggle" onclick="toggleLang()" style="color:var(--black);border-color:#ccc;margin-right:12px" id="inv-lang-btn">EN</button>
   <button class="investor-close" onclick="closeInvestor()">Close</button>
 </div>
 <div class="investor-content">
-  <h1>AIROOBI<br><em>Investment Opportunity</em></h1>
-  <p style="font-size:18px;color:#666;margin-bottom:48px;">A new commerce model built on transparency, participation, and guaranteed value.</p>
+  <h1><span class="it">AIROOBI<br><em>Opportunità di Investimento</em></span><span class="en">AIROOBI<br><em>Investment Opportunity</em></span></h1>
+  <p style="font-size:18px;color:#666;margin-bottom:48px;"><span class="it">Un nuovo modello di commercio costruito su trasparenza, partecipazione e valore garantito.</span><span class="en">A new commerce model built on transparency, participation, and guaranteed value.</span></p>
 
-  <h2>The Problem</h2>
-  <p>Online commerce is broken. Auctions favor the wealthy. Lotteries are pure gambling. Marketplaces are saturated. There is no platform where ordinary people can access premium objects with a fair, transparent mechanism — and nobody loses.</p>
+  <h2><span class="it">Il Problema</span><span class="en">The Problem</span></h2>
+  <p><span class="it">Il commercio online è rotto. Le aste favoriscono chi ha più soldi. Le lotterie sono puro azzardo. I marketplace sono saturi. Non esiste una piattaforma dove le persone normali possano accedere a oggetti premium con un meccanismo equo e trasparente.</span><span class="en">Online commerce is broken. Auctions favor the wealthy. Lotteries are pure gambling. Marketplaces are saturated. There is no platform where ordinary people can access premium objects with a fair, transparent mechanism.</span></p>
 
-  <h2>The Solution</h2>
-  <p>AIROOBI is a <strong>fair commerce platform</strong> for real physical objects. Users accumulate points through engagement (daily check-ins, video views, referrals) and purchases. The top contributor receives the object. <strong>Everyone else receives a digital certificate with guaranteed value</strong>, backed by a transparent fund.</p>
+  <h2><span class="it">La Soluzione</span><span class="en">The Solution</span></h2>
+  <p><span class="it">AIROOBI è una <strong>piattaforma di commercio equo</strong> per oggetti fisici reali. Gli utenti accumulano punti attraverso l'engagement (check-in giornalieri, video, referral) e acquisti. Chi contribuisce di più riceve l'oggetto. <strong>Tutti gli altri ricevono un certificato digitale con valore garantito</strong>, sostenuto da un fondo trasparente.</span><span class="en">AIROOBI is a <strong>fair commerce platform</strong> for real physical objects. Users accumulate points through engagement (daily check-ins, video views, referrals) and purchases. The top contributor receives the object. <strong>Everyone else receives a digital certificate with guaranteed value</strong>, backed by a transparent fund.</span></p>
   
   <div class="investor-highlight">
-    <strong>Key innovation:</strong> Unlike lotteries or auctions, AIROOBI guarantees that every participant receives value back. The guarantee fund is transparent and verifiable. This is not gambling — it is a merit-based commerce system with built-in consumer protection.
+    <span class="it"><strong>Innovazione chiave:</strong> A differenza di lotterie o aste, AIROOBI garantisce che ogni partecipante riceva valore in cambio. Il fondo di garanzia è trasparente e verificabile. Non è azzardo — è un sistema di commercio basato sul merito con protezione del consumatore integrata.</span><span class="en"><strong>Key innovation:</strong> Unlike lotteries or auctions, AIROOBI guarantees that every participant receives value back. The guarantee fund is transparent and verifiable. This is not gambling — it is a merit-based commerce system with built-in consumer protection.</span>
   </div>
 
-  <h2>Market Opportunity</h2>
-  <p>AIROOBI operates at the intersection of three massive markets:</p>
+  <h2><span class="it">Opportunità di Mercato</span><span class="en">Market Opportunity</span></h2>
+  <p><span class="it">AIROOBI opera all'intersezione di tre mercati enormi:</span><span class="en">AIROOBI operates at the intersection of three massive markets:</span></p>
   <div class="investor-grid">
     <div class="investor-metric">
       <div class="investor-metric-val">$200B+</div>
@@ -2019,8 +2089,8 @@ async function sendInvestorForm(){
     </div>
   </div>
 
-  <h2>Business Model</h2>
-  <p>Four revenue streams from Day 1:</p>
+  <h2><span class="it">Modello di Business</span><span class="en">Business Model</span></h2>
+  <p><span class="it">Quattro flussi di ricavi dal Giorno 1:</span><span class="en">Four revenue streams from Day 1:</span></p>
   <div class="investor-highlight">
     <strong>1. Platform fees</strong> — 0.5% + 1% on each transaction<br>
     <strong>2. Video advertising</strong> — Mandatory video views before key actions (Google IMA SDK)<br>
@@ -2028,10 +2098,10 @@ async function sendInvestorForm(){
     <strong>4. Community contribution</strong> — 1% to social impact fund
   </div>
 
-  <h2>Technology</h2>
-  <p>Built on <strong>Kaspa blockchain</strong> — the fastest Proof-of-Work blockchain in the world. Sub-second confirmations, negligible fees, real decentralization. The guarantee fund is fully on-chain, transparent and immutable.</p>
+  <h2><span class="it">Tecnologia</span><span class="en">Technology</span></h2>
+  <p><span class="it">Costruito su <strong>blockchain Kaspa</strong> — la blockchain Proof-of-Work più veloce al mondo. Conferme sotto il secondo, commissioni trascurabili, decentralizzazione reale. Il fondo di garanzia è interamente on-chain, trasparente e immutabile.</span><span class="en">Built on <strong>Kaspa blockchain</strong> — the fastest Proof-of-Work blockchain in the world. Sub-second confirmations, negligible fees, real decentralization. The guarantee fund is fully on-chain, transparent and immutable.</span></p>
 
-  <h2>Current Status</h2>
+  <h2><span class="it">Stato Attuale</span><span class="en">Current Status</span></h2>
   <div class="investor-grid">
     <div class="investor-metric">
       <div class="investor-metric-val">Alpha</div>
@@ -2051,7 +2121,7 @@ async function sendInvestorForm(){
     </div>
   </div>
 
-  <h2>Roadmap</h2>
+  <h2><span class="it">Roadmap</span><span class="en">Roadmap</span></h2>
   <div class="investor-highlight">
     <strong>Alpha (now)</strong> — Landing page, waitlist, points system, community building, ad revenue<br><br>
     <strong>Beta (Q2-Q3 2026)</strong> — Full DApp mockup, simulated airdrops, 2,500 users target<br><br>
@@ -2059,8 +2129,8 @@ async function sendInvestorForm(){
     <strong>Scale (2027)</strong> — 16 product categories, corporate campaigns, EU expansion
   </div>
 
-  <h2>What We're Looking For</h2>
-  <p>AIROOBI is seeking <strong>strategic partners and early-stage investors</strong> who believe in building fair, transparent commerce. We are open to:</p>
+  <h2><span class="it">Cosa Cerchiamo</span><span class="en">What We're Looking For</span></h2>
+  <p><span class="it">AIROOBI cerca <strong>partner strategici e investitori early-stage</strong> che credano nel costruire un commercio equo e trasparente. Siamo aperti a:</span><span class="en">AIROOBI is seeking <strong>strategic partners and early-stage investors</strong> who believe in building fair, transparent commerce. We are open to:</span></p>
   <div class="investor-highlight">
     • Pre-seed / Seed investment (€100K-€500K range)<br>
     • Strategic advisory (blockchain, legal, marketing, marketplace ops)<br>
@@ -2068,11 +2138,11 @@ async function sendInvestorForm(){
     • C-level talent (CTO, CMO, Head of Legal)
   </div>
 
-  <h2>Contact</h2>
-  <p>Interested? We'd love to hear from you.</p>
+  <h2><span class="it">Contatti</span><span class="en">Contact</span></h2>
+  <p><span class="it">Interessato? Ci farebbe piacere sentirti.</span><span class="en">Interested? We'd love to hear from you.</span></p>
   
   <div class="investor-form" id="investor-form">
-    <h3>Get in touch</h3>
+    <h3><span class="it">Scrivici</span><span class="en">Get in touch</span></h3>
     <label>Name</label>
     <input type="text" id="inv-name" placeholder="Your name">
     <label>Email</label>
