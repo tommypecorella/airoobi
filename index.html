@@ -1078,7 +1078,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.5.3 · Last update: 06 Mar 2026 · 20:17 CET · 20:08 CET · 20:01 CET · 19:59 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.5.4 · Last update: 06 Mar 2026 · 20:28 CET · 20:17 CET · 20:08 CET · 20:01 CET · 19:59 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1476,6 +1476,12 @@ function shareRef(platform){
 }
 
 
+
+function closeDashboard(){
+  document.getElementById('dash-overlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+
 function showDashFromNav(){
   const s=getSession();
   if(s)gatedDashboard(s);
@@ -1484,6 +1490,7 @@ function updateNavAuth(loggedIn, email){
   const loginBtn=document.getElementById('nav-login-btn');
   const signupBtn=document.getElementById('nav-signup-btn');
   const loggedInDiv=document.getElementById('nav-logged-in');
+  const adminBtn=document.getElementById('nav-admin-btn');
   if(loggedIn){
     if(loginBtn)loginBtn.style.display='none';
     if(signupBtn)signupBtn.style.display='none';
@@ -1492,6 +1499,7 @@ function updateNavAuth(loggedIn, email){
     if(loginBtn)loginBtn.style.display='';
     if(signupBtn)signupBtn.style.display='';
     if(loggedInDiv)loggedInDiv.classList.remove('active');
+    if(adminBtn)adminBtn.remove();
   }
 }
 
@@ -2104,7 +2112,10 @@ function checkAdminAccess(email){
   </div>
 </div>
 <div class="dash-content">
-  <h1 class="dash-welcome"><span class="it">Benvenuto, <em>Alpha Brave.</em></span><span class="en">Welcome, <em>Alpha Brave.</em></span></h1>
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+    <h1 class="dash-welcome" style="margin:0"><span class="it">Benvenuto, <em>Alpha Brave.</em></span><span class="en">Welcome, <em>Alpha Brave.</em></span></h1>
+    <button onclick="closeDashboard()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'">&times;</button>
+  </div>
   <p class="dash-email"><span class="it">Il tuo posto è confermato. Sei tra i primi.</span><span class="en">Your spot is confirmed. You're among the first.</span></p>
   
   <!-- TABS -->
