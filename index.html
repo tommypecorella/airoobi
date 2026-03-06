@@ -117,6 +117,7 @@ async function loadEarnings(){
   const histEl=document.getElementById('points-history');
   if(history&&history.length>0){
     const reasonLabels={
+      login_bonus:lang==='it'?'Bonus login (Alpha Brave)':'Login bonus (Alpha Brave)',
       welcome_bonus:lang==='it'?'Bonus di benvenuto':'Welcome bonus',
       daily_checkin:lang==='it'?'Check-in giornaliero':'Daily check-in',
       weekly_streak:lang==='it'?'Bonus settimanale':'Weekly bonus',
@@ -1078,7 +1079,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.5.4 · Last update: 06 Mar 2026 · 20:28 CET · 20:17 CET · 20:08 CET · 20:01 CET · 19:59 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.5.6 · Last update: 06 Mar 2026 · 20:41 CET · 20:37 CET · 20:28 CET · 20:17 CET · 20:08 CET · 20:01 CET · 19:59 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1195,6 +1196,44 @@ function closeModal(id){document.getElementById(id).style.display='none';documen
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelectorAll('[id$="-modal"]').forEach(m=>closeModal(m.id))}});
 
 
+
+
+// ── Login bonus (10 points per login, Alpha Brave perk) ──
+async function awardLoginBonus(userId,token){
+  try{
+    // Check if already received today
+    var today=new Date().toISOString().split('T')[0];
+    const existing=await fetch(SB_URL+'/rest/v1/points_ledger?user_id=eq.'+userId+'&reason=eq.login_bonus&created_at=gte.'+today+'T00:00:00&select=id',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    const data=await existing.json();
+    if(data&&data.length>0)return; // already got today
+    
+    await fetch(SB_URL+'/rest/v1/points_ledger',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({user_id:userId,amount:10,reason:'login_bonus'})
+    });
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userId,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({total_points:null})
+    });
+    // Recalculate total from ledger
+    const pts=await fetch(SB_URL+'/rest/v1/points_ledger?user_id=eq.'+userId+'&select=amount',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    const ptsData=await pts.json();
+    if(ptsData){
+      var total=ptsData.reduce(function(a,b){return a+b.amount},0);
+      await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userId,{
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({total_points:total})
+      });
+    }
+  }catch(e){}
+}
 
 // ── Welcome bonus (100 points, once per user) ──
 async function awardWelcomeBonus(userId,token){
@@ -1352,6 +1391,7 @@ async function doLogin(){
   if(status===200&&data.access_token){
     saveSession(data);
     closeAuth();
+    await awardLoginBonus(data.user.id,data.access_token);
     gatedDashboard(data);
   }else{
     const lang=document.documentElement.getAttribute('data-lang')||'it';
@@ -1680,6 +1720,7 @@ async function loadEarnings(){
   const histEl=document.getElementById('points-history');
   if(history&&history.length>0){
     const reasonLabels={
+      login_bonus:lang==='it'?'Bonus login (Alpha Brave)':'Login bonus (Alpha Brave)',
       welcome_bonus:lang==='it'?'Bonus di benvenuto':'Welcome bonus',
       daily_checkin:lang==='it'?'Check-in giornaliero':'Daily check-in',
       weekly_streak:lang==='it'?'Bonus settimanale':'Weekly bonus',
@@ -2222,31 +2263,171 @@ function checkAdminAccess(email){
     <!-- RULES -->
     <div class="earn-card" style="border-color:var(--gold-dim)">
       <div class="earn-card-header">
-        <h3><span class="it">Come funzionano i punti</span><span class="en">How points work</span></h3>
+        <h3><span class="it">Regole Alpha Brave</span><span class="en">Alpha Brave Rules</span></h3>
+        <span class="earn-card-points" style="font-size:12px"><span class="it">Tier attivo</span><span class="en">Active tier</span></span>
       </div>
+      
+      <div style="background:rgba(184,150,12,.06);border:1px solid var(--gold-dim);padding:16px 20px;margin-bottom:24px;font-size:13px;color:var(--gold);line-height:1.7">
+        <span class="it">Queste regole sono esclusive per gli <strong>Alpha Brave</strong> — i primi 1.000 coraggiosi. I tier successivi (Alpha Wise e oltre) avranno condizioni meno vantaggiose. Più tardi entri, meno guadagni.</span>
+        <span class="en">These rules are exclusive to <strong>Alpha Brave</strong> — the first 1,000 brave ones. Future tiers (Alpha Wise and beyond) will have less favorable conditions. The later you join, the less you earn.</span>
+      </div>
+
       <div style="font-size:14px;color:var(--gray-300);line-height:1.9">
-        <span class="it">
-          I punti sono il tuo modo di costruire valore su AIROOBI, anche prima del lancio ufficiale.<br><br>
-          <strong style="color:var(--white)">Check-in giornaliero — 10 punti</strong><br>
-          Entra ogni giorno e timbra. Bastano 2 secondi. Se lo fai per 7 giorni di fila, ricevi un bonus di 100 punti.<br><br>
-          <strong style="color:var(--white)">Guarda un video — 10 punti</strong><br>
-          Guarda uno spot di 10 secondi. Puoi farlo fino a 5 volte al giorno, con 3 minuti di pausa tra uno e l'altro. Ogni video visto genera ricavi che finanziano il progetto.<br><br>
-          <strong style="color:var(--white)">Invita un amico — 100 punti (per entrambi)</strong><br>
-          Condividi il tuo link. Quando il tuo amico si registra e conferma l'invito, guadagnate 100 punti ciascuno. Per evitare abusi, la conferma richiede almeno 24 ore di iscrizione e un check-in.<br><br>
-          <strong style="color:var(--gold)">A cosa servono i punti?</strong><br>
-          I punti che accumuli oggi avranno un valore reale al lancio della piattaforma. Più punti hai, più alto il tuo status e i tuoi vantaggi. I dettagli esatti verranno svelati progressivamente — chi entra prima, guadagna di più.
-        </span>
-        <span class="en">
-          Points are your way to build value on AIROOBI, even before the official launch.<br><br>
-          <strong style="color:var(--white)">Daily check-in — 10 points</strong><br>
-          Log in every day and check in. Takes 2 seconds. Do it for 7 days in a row and you get a 100-point bonus.<br><br>
-          <strong style="color:var(--white)">Watch a video — 10 points</strong><br>
-          Watch a 10-second spot. You can do it up to 5 times a day, with a 3-minute cooldown between each. Every video watched generates revenue that funds the project.<br><br>
-          <strong style="color:var(--white)">Invite a friend — 100 points (for both)</strong><br>
-          Share your link. When your friend signs up and confirms the invite, you both earn 100 points. To prevent abuse, confirmation requires at least 24 hours of membership and one check-in.<br><br>
-          <strong style="color:var(--gold)">What are points for?</strong><br>
-          The points you accumulate today will have real value at platform launch. The more points you have, the higher your status and benefits. Exact details will be revealed progressively — those who join early, earn the most.
-        </span>
+        
+        <!-- GUADAGNI PASSIVI -->
+        <div style="margin-bottom:28px">
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;text-transform:uppercase">
+            <span class="it">Guadagni automatici</span><span class="en">Automatic earnings</span>
+          </div>
+          
+          <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:var(--white)"><span class="it">Login giornaliero</span><span class="en">Daily login</span></strong>
+              <span style="font-family:var(--font-m);color:var(--gold)">+10 pts</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
+              <span class="it">Accedi e ricevi punti automaticamente. 1 volta al giorno. <em style="color:var(--gold);font-style:normal">Esclusiva Alpha Brave.</em></span>
+              <span class="en">Log in and receive points automatically. Once per day. <em style="color:var(--gold);font-style:normal">Alpha Brave exclusive.</em></span>
+            </div>
+          </div>
+
+          <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:var(--white)"><span class="it">Bonus di benvenuto</span><span class="en">Welcome bonus</span></strong>
+              <span style="font-family:var(--font-m);color:var(--gold)">+100 pts</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
+              <span class="it">Alla registrazione, una tantum. Tutti gli Alpha Brave lo ricevono.</span>
+              <span class="en">At registration, one time. All Alpha Brave receive it.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- AZIONI QUOTIDIANE -->
+        <div style="margin-bottom:28px">
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;text-transform:uppercase">
+            <span class="it">Azioni quotidiane</span><span class="en">Daily actions</span>
+          </div>
+
+          <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:var(--white)"><span class="it">Check-in giornaliero</span><span class="en">Daily check-in</span></strong>
+              <span style="font-family:var(--font-m);color:var(--gold)">+10 pts</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
+              <span class="it">Timbra nella sezione Guadagni. 1 volta al giorno. 2 secondi.</span>
+              <span class="en">Stamp in the Earnings section. Once per day. 2 seconds.</span>
+            </div>
+          </div>
+
+          <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:var(--white)"><span class="it">Guarda un video</span><span class="en">Watch a video</span></strong>
+              <span style="font-family:var(--font-m);color:var(--gold)">+10 pts</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
+              <span class="it">Video di 10 secondi. Max 5 al giorno. Cooldown: 3 minuti tra uno e l'altro. Ogni video genera ricavi che sostengono il progetto.</span>
+              <span class="en">10-second video. Max 5 per day. Cooldown: 3 minutes between each. Every video generates revenue that supports the project.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- BONUS -->
+        <div style="margin-bottom:28px">
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;text-transform:uppercase">
+            <span class="it">Bonus e streak</span><span class="en">Bonuses and streaks</span>
+          </div>
+
+          <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:var(--white)"><span class="it">Streak settimanale</span><span class="en">Weekly streak</span></strong>
+              <span style="font-family:var(--font-m);color:var(--gold)">+100 pts</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
+              <span class="it">7 check-in consecutivi = 100 punti bonus. Se salti un giorno, la streak riparte da zero.</span>
+              <span class="en">7 consecutive check-ins = 100 bonus points. If you miss a day, the streak resets to zero.</span>
+            </div>
+          </div>
+
+          <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <strong style="color:var(--white)"><span class="it">Referral confermato</span><span class="en">Confirmed referral</span></strong>
+              <span style="font-family:var(--font-m);color:var(--gold)">+100 pts (×2)</span>
+            </div>
+            <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
+              <span class="it">Inviti un amico, si registra, conferma il referral → 100 punti a te, 100 a lui. Illimitato. Anti-bot: account attivo da 24h + almeno 1 check-in per confermare.</span>
+              <span class="en">Invite a friend, they register, confirm the referral → 100 points to you, 100 to them. Unlimited. Anti-bot: account active 24h + at least 1 check-in to confirm.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIEPILOGO -->
+        <div style="margin-bottom:28px">
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;text-transform:uppercase">
+            <span class="it">Riepilogo potenziale giornaliero</span><span class="en">Daily potential summary</span>
+          </div>
+
+          <div style="background:var(--gray-800);padding:20px;font-family:var(--font-m);font-size:13px;letter-spacing:.5px;line-height:2">
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)"><span class="it">Login</span><span class="en">Login</span></span><span style="color:var(--white)">10 pts</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Check-in</span><span style="color:var(--white)">10 pts</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Video (×5)</span><span style="color:var(--white)">50 pts</span></div>
+            <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--gray-700);margin-top:8px"><span style="color:var(--gold)"><span class="it">Totale giornaliero max</span><span class="en">Max daily total</span></span><strong style="color:var(--gold)">70 pts</strong></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Streak settimanale</span><span class="en">+ Weekly streak</span></span><span style="color:var(--white)">+100 pts</span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Ogni referral</span><span class="en">+ Each referral</span></span><span style="color:var(--white)">+100 pts</span></div>
+          </div>
+        </div>
+
+        <!-- VALORE DEI PUNTI -->
+        <div style="margin-bottom:16px">
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;text-transform:uppercase">
+            <span class="it">Valore dei punti</span><span class="en">Points value</span>
+          </div>
+          <div style="font-size:13px;color:var(--gray-400);line-height:1.8">
+            <span class="it">I punti che accumuli durante la fase Alpha avranno valore reale al lancio della piattaforma. I dettagli esatti verranno comunicati progressivamente. Una cosa è certa: <strong style="color:var(--gold)">gli Alpha Brave accumulano alle condizioni migliori che esisteranno mai.</strong> Ogni tier successivo avrà moltiplicatori più bassi.</span>
+            <span class="en">Points accumulated during the Alpha phase will have real value at platform launch. Exact details will be shared progressively. One thing is certain: <strong style="color:var(--gold)">Alpha Brave accumulate at the best conditions that will ever exist.</strong> Every subsequent tier will have lower multipliers.</span>
+          </div>
+        </div>
+
+        <!-- TIER COMPARISON -->
+        <div>
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;text-transform:uppercase">
+            <span class="it">Confronto Tier</span><span class="en">Tier comparison</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--gray-700);border:1px solid var(--gray-700)">
+            <div style="padding:12px;background:var(--black);text-align:center">
+              <div style="font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:8px">ALPHA BRAVE</div>
+              <div style="font-size:12px;color:var(--white)"><span class="it">1.000 posti</span><span class="en">1,000 spots</span></div>
+              <div style="font-size:12px;color:var(--gold);margin-top:4px"><span class="it">Max vantaggi</span><span class="en">Max perks</span></div>
+              <div style="font-size:11px;color:var(--gray-400);margin-top:4px">70 pts/day</div>
+              <div style="font-size:11px;color:var(--gray-400)">+100 welcome</div>
+              <div style="font-size:11px;color:var(--gray-400)">+10 login/day</div>
+              <div style="font-size:11px;color:var(--gray-400)">+1 NFT</div>
+            </div>
+            <div style="padding:12px;background:var(--gray-800);text-align:center;opacity:.6">
+              <div style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:8px">ALPHA WISE</div>
+              <div style="font-size:12px;color:var(--gray-300)"><span class="it">Prossimamente</span><span class="en">Coming soon</span></div>
+              <div style="font-size:12px;color:var(--gray-400);margin-top:4px"><span class="it">Meno vantaggi</span><span class="en">Fewer perks</span></div>
+              <div style="font-size:11px;color:var(--gray-400);margin-top:4px"><span class="it">Ridotto</span><span class="en">Reduced</span></div>
+              <div style="font-size:11px;color:var(--gray-400)"><span class="it">Ridotto</span><span class="en">Reduced</span></div>
+              <div style="font-size:11px;color:var(--gray-400)"><span class="it">No</span><span class="en">No</span></div>
+              <div style="font-size:11px;color:var(--gray-400)">+1 NFT</div>
+            </div>
+            <div style="padding:12px;background:var(--gray-800);text-align:center;opacity:.35">
+              <div style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:8px">TIER 3+</div>
+              <div style="font-size:12px;color:var(--gray-300)"><span class="it">Futuro</span><span class="en">Future</span></div>
+              <div style="font-size:12px;color:var(--gray-400);margin-top:4px"><span class="it">Base</span><span class="en">Base</span></div>
+              <div style="font-size:11px;color:var(--gray-400);margin-top:4px"><span class="it">Minimo</span><span class="en">Minimum</span></div>
+              <div style="font-size:11px;color:var(--gray-400)"><span class="it">No</span><span class="en">No</span></div>
+              <div style="font-size:11px;color:var(--gray-400)"><span class="it">No</span><span class="en">No</span></div>
+              <div style="font-size:11px;color:var(--gray-400)">+1 NFT</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:8px;text-align:center;font-style:italic">
+            <span class="it">Ogni tier riceve 1 NFT. Ma solo gli Alpha Brave hanno tutti i vantaggi di accumulo.</span>
+            <span class="en">Every tier receives 1 NFT. But only Alpha Brave have all accumulation perks.</span>
+          </div>
+        </div>
+
       </div>
     </div>
 
