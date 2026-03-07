@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#000000">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>AIROOBI — Partecipi. Vinci. O incassi. Sempre.</title>
-<meta name="description" content="AIROOBI è il marketplace dove chi ha qualcosa lo mette in palio, e chi vuole ottenerlo accumula punti gratis ogni giorno. Nessuno esce mai a mani vuote.">
-<meta name="keywords" content="airdrop, marketplace, punti, tessera, fondo garanzia, kaspa, gratis, guadagna">
+<meta name="description" content="AIROOBI è il marketplace degli airdrop reali. Guadagni ARIA ogni giorno. Chi ne ha di più vince l'oggetto. Tutti gli altri incassano. Sempre.">
+<meta name="keywords" content="airdrop, marketplace, aria, tessera, kaspa, stable coin, gratis, guadagna">
 <meta name="robots" content="index, follow">
 <meta name="author" content="AIROOBI">
 
@@ -15,7 +15,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://airoobi.com">
 <meta property="og:title" content="AIROOBI — Partecipi. Vinci. O incassi. Sempre.">
-<meta property="og:description" content="Accumula punti gratis ogni giorno. Chi ne ha di più vince l'oggetto. Tutti gli altri ricevono una Tessera con saldo garantito. Nessuno esce a mani vuote.">
+<meta property="og:description" content="Guadagna ARIA ogni giorno — gratis. Chi ne ha di più vince l'oggetto. Tutti gli altri incassano. Sempre.">
 <meta property="og:image" content="https://airoobi.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -27,7 +27,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@airoobi_com">
 <meta name="twitter:title" content="AIROOBI — Partecipi. Vinci. O incassi. Sempre.">
-<meta name="twitter:description" content="Accumula punti gratis ogni giorno. Chi vince prende l'oggetto. Tutti gli altri incassano. Sempre.">
+<meta name="twitter:description" content="Guadagna ARIA ogni giorno. Chi vince prende l'oggetto. Tutti gli altri incassano. Sempre.">
 <meta name="twitter:image" content="https://airoobi.com/og-image.png">
 <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous">
@@ -91,7 +91,7 @@ async function loadEarnings(){
   if(remaining===7&&streak>0&&streak%7===0){
     infoEl.innerHTML=lang==='it'?'<span>Streak completata! +100 bonus!</span>':'<span>Streak complete! +100 bonus!</span>';
   }else{
-    infoEl.textContent=lang==='it'?remaining+' giorni al bonus di 100 RPTS':remaining+' days to 100 RPTS bonus';
+    infoEl.textContent=lang==='it'?remaining+' giorni al bonus di 100 ARIA':remaining+' days to 100 ARIA bonus';
   }
   
   // Check-in button state
@@ -124,7 +124,7 @@ async function loadEarnings(){
     if(confirms&&confirms.length>0){
       document.getElementById('confirm-ref-btn').disabled=true;
       document.getElementById('confirm-ref-btn').innerHTML=lang==='it'?'GI\u00c0 CONFERMATO ✓':'ALREADY CONFIRMED ✓';
-      document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span> Hai guadagnato 100 RPTS.':'<span>Referral confirmed!</span> You earned 100 RPTS.';
+      document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span> Hai guadagnato 100 ARIA.':'<span>Referral confirmed!</span> You earned 100 ARIA.';
     }else{
       document.getElementById('earn-ref-status').innerHTML=lang==='it'?'Invitato da: <span>'+p.referred_by+'</span>':'Invited by: <span>'+p.referred_by+'</span>';
     }
@@ -933,7 +933,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <div id="nav-rpts-counter" onclick="showDashFromNav()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
         <span style="display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%"></span>
         <span id="nav-rpts-val" style="font-family:var(--font-m);font-size:11px;color:var(--white);letter-spacing:.5px">0</span>
-        <span style="font-family:var(--font-m);font-size:8px;color:var(--gray-400);letter-spacing:1px">RPTS</span>
+        <span style="font-family:var(--font-m);font-size:8px;color:var(--gold);letter-spacing:1px">ARIA</span>
       </div>
       <div id="nav-aria-counter" onclick="showDashFromNav()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
         <span style="display:inline-block;width:8px;height:8px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white)"></span>
@@ -1000,7 +1000,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     <div class="pillar">
       <div class="pillar-num">01</div>
       <h3><span class="it">Fair Airdrop</span><span class="en">Fair Airdrop</span></h3>
-      <p><span class="it">Chi ha un oggetto lo airdroppa e guadagna. Chi partecipa accumula punti — più ti impegni, più in alto vai. Non è fortuna, è merito. Ad ognuno, la sua opportunità.</span><span class="en">Owners airdrop their objects and earn. Participants accumulate RPTS — the more you engage, the higher you go. It\'s not luck, it\'s merit. To each, their opportunity.</span></p>
+      <p><span class="it">Chi ha un oggetto lo airdroppa e guadagna. Chi partecipa accumula ARIA — più ti impegni, più in alto vai. Non è fortuna, è merito. Ad ognuno, la sua opportunità.</span><span class="en">Owners airdrop their objects and earn. Participants accumulate ARIA — the more you engage, the higher you go. It\'s not luck, it\'s merit. To each, their opportunity.</span></p>
     </div>
     <div class="pillar">
       <div class="pillar-num">02</div>
@@ -1040,7 +1040,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 <div class="container reveal">
   <span class="section-label"><span class="it">Come funziona</span><span class="en">How it works</span></span>
   <h2 class="section-title"><span class="it">Quattro passaggi.<br><em>Valore garantito.</em></span><span class="en">Four steps.<br><em>Guaranteed value.</em></span></h2>
-  <p class="section-text"><span class="it">Accumuli punti ogni giorno. Chi ne ha di più vince l'oggetto. Tutti gli altri incassano. Sempre.</span><span class="en">Earn points every day. Top holder wins the object. Everyone else gets paid out. Always.</span></p>
+  <p class="section-text"><span class="it">Accumuli ARIA ogni giorno. Chi ne ha di più vince l'oggetto. Tutti gli altri incassano. Sempre.</span><span class="en">Earn ARIA every day. Top holder wins the object. Everyone else gets paid out. Always.</span></p>
   <div class="how-grid">
     <div class="step">
       <div class="step-num">1</div>
@@ -1051,13 +1051,13 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     <div class="step">
       <div class="step-num">2</div>
       <h3><span class="it">Accumula blocchi</span><span class="en">Accumulate blocks</span></h3>
-      <p><span class="it">Accumula punti gratis: entra ogni giorno, guarda un video, invita amici. Oppure compra punti extra a €0.10 ciascuno. Più punti hai, più sei in cima.</span><span class="en">Earn points free: log in daily, watch a video, invite friends. Or buy extra points at €0.10 each. The more points you have, the higher your position.</span></p>
+      <p><span class="it">Guadagna ARIA gratis: entra ogni giorno, guarda un video, invita amici. Oppure compra blocchi extra con ARIA — 1 ARIA = €0.10. Più ARIA hai, più sei in cima.</span><span class="en">Earn ARIA free: log in daily, watch a video, invite friends. Or buy extra blocks with ARIA — 1 ARIA = €0.10. The more ARIA you have, the higher your position.</span></p>
       <span class="step-arrow">&#8594;</span>
     </div>
     <div class="step">
       <div class="step-num">3</div>
       <h3><span class="it">Il top holder riceve l'oggetto</span><span class="en">Top holder gets the object</span></h3>
-      <p><span class="it">Chi ha più punti riceve l'oggetto fisico spedito a casa. Conta l'impegno e la costanza, non la fortuna.</span><span class="en">Whoever has the most points receives the physical object delivered home. Commitment and consistency matter, not luck.</span></p>
+      <p><span class="it">Chi ha più ARIA riceve l'oggetto fisico spedito a casa. Conta l'impegno e la costanza, non la fortuna.</span><span class="en">Whoever has the most ARIA receives the physical object delivered home. Commitment and consistency matter, not luck.</span></p>
       <span class="step-arrow">&#8594;</span>
     </div>
     <div class="step">
@@ -1083,12 +1083,12 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     <div class="diff-item">
       <div class="diff-icon">Skill</div>
       <h3><span class="it">Merito, non fortuna</span><span class="en">Merit, not luck</span></h3>
-      <p><span class="it">Check-in giornalieri, video, inviti, quiz — ogni attività ti avvicina al traguardo. Qui vince chi si impegna, non chi ha fortuna.</span><span class="en">Daily check-ins, videos, invites, quizzes — every activity brings you closer to the goal. Here, the committed win, not the lucky.</span></p>
+      <p><span class="it">Check-in giornalieri, video, inviti — ogni azione ti fa guadagnare ARIA. Qui vince chi si impegna, non chi ha fortuna.</span><span class="en">Daily check-ins, videos, invites — every action earns you ARIA. Here, the committed win, not the lucky.</span></p>
     </div>
     <div class="diff-item">
       <div class="diff-icon">Free Path</div>
       <h3><span class="it">Puoi partecipare gratis</span><span class="en">Free participation</span></h3>
-      <p><span class="it">Puoi accumulare punti gratis ogni giorno: entra, guarda un video, invita amici. Si può partecipare senza mai spendere un euro.</span><span class="en">You can accumulate RPTS for free every day: log in, watch a video, invite friends. You can participate without ever spending a euro.</span></p>
+      <p><span class="it">Guadagni ARIA gratis ogni giorno: entra, guarda un video, invita amici. Puoi partecipare senza mai spendere un euro.</span><span class="en">You earn ARIA free every day: log in, watch a video, invite friends. You can participate without ever spending a euro.</span></p>
     </div>
     <div class="diff-item">
       <div class="diff-icon">On-Chain</div>
@@ -1144,7 +1144,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <span class="phase-tag">Alpha</span>
       <div class="phase-dot"></div>
       <h3><span class="it">Sei qui</span><span class="en">You are here</span></h3>
-      <p><span class="it">Alpha Brave attivo — 1.000 posti per i coraggiosi. Vantaggi permanenti: più RPTS, Tessera Fondatore in regalo, accesso prioritario. Dopo di loro arrivano gli Alpha Wise, con meno vantaggi.</span><span class="en">Alpha Brave active — 1,000 spots for the brave. Permanent perks: more points, free Founder Card, priority access. After them come Alpha Wise, with fewer perks.</span></p>
+      <p><span class="it">Alpha Brave attivo — 1.000 posti per i coraggiosi. Vantaggi permanenti: più ARIA, Badge Fondatore in regalo, accesso prioritario agli airdrop. Dopo di loro arrivano gli Alpha Wise, con meno vantaggi.</span><span class="en">Alpha Brave active — 1,000 spots for the brave. Permanent perks: more ARIA, free Founder Badge, priority airdrop access. After them come Alpha Wise, with fewer perks.</span></p>
     </div>
     <div class="phase">
       <span class="phase-tag">Beta</span>
@@ -1369,20 +1369,20 @@ window.addEventListener('scroll',function(){closeBurger()},{passive:true});
 // ── Glossary ──
 var glossary={
   'NFT':{tag:'Tecnologia · Dietro le quinte',def:'NFT sta per "Non-Fungible Token": un oggetto digitale unico registrato sulla blockchain, impossibile da copiare o falsificare. Su AIROOBI lo chiamiamo Tessera — è più semplice. Dietro ogni Tessera c\'è una quota del Fondo Comune, con saldo garantito e rimborsabile. Non devi capire la tecnologia per usarla.'},
-  'RPTS':{tag:'Valuta interna · Punteggio',def:'I RPTS (Reward Points) sono i punti che accumuli partecipando ad AIROOBI: check-in giornaliero, video, referral. Più RPTS hai, più alta è la tua probabilità di vincere un airdrop. Non si comprano — si guadagnano con la partecipazione.'},
+  'ARIA':{tag:'Stable coin · Valuta AIROOBI',def:'ARIA è la stable coin di AIROOBI. Vale €0.10 fisso — nessuna volatilità, nessuna sorpresa. La guadagni gratis ogni giorno con check-in, video e referral. Quando vuoi partecipare a un airdrop, compri blocchi usando i tuoi ARIA. Con una Tessera Rendimento NFT puoi anche convertirli in KAS.'},
   'AICO':{tag:'Token · Valuta',def:'AICO è il token di utilità di AIROOBI, ancorato a €0,10 ciascuno. Viene usato per acquistare blocchi negli airdrop. 1 blocco = €1 = 10 AICO. Il valore è stabile by design: non è una crypto speculativa.'},
-  'Airdrop':{tag:'Meccanismo core',def:'Un airdrop su AIROOBI è la distribuzione di un oggetto reale (o digitale) alla community attraverso un sistema a punti. Chi ha più RPTS ha più chance. Ma tutti i partecipanti ricevono valore in cambio — nessuno perde mai completamente.'},
+  'Airdrop':{tag:'Meccanismo core',def:'Un airdrop su AIROOBI è la distribuzione di un oggetto reale (o digitale) alla community attraverso un sistema ad ARIA. Chi ha più ARIA ha più chance. Ma tutti i partecipanti ricevono valore in cambio — nessuno perde mai completamente.'},
   'Blockchain':{tag:'Tecnologia',def:'Una blockchain è un registro digitale distribuito e immutabile: ogni operazione viene registrata in modo permanente e verificabile da chiunque. Su AIROOBI usiamo Kaspa — una blockchain di nuova generazione, veloce e sicura — per garantire che le regole del gioco non possano essere cambiate.'},
   'Kaspa':{tag:'Blockchain · Tecnologia',def:'Kaspa è la blockchain su cui è costruito AIROOBI. È una delle più veloci e scalabili in assoluto, con blocchi confermati in meno di un secondo. A differenza di Ethereum, le fee di transazione sono bassissime — ideale per un marketplace come il nostro.'},
   'Treasury':{tag:'Finanza · Garanzia',def:'Il Fondo Comune di AIROOBI è il fondo in euro che garantisce il saldo delle Tessere emesse. Una parte di ogni transazione viene accantonata qui. Saldo per Tessera = Fondo totale ÷ numero di Tessere emesse. Se il fondo cresce, cresce anche il saldo delle tue Tessere.'},
-  'Alpha Brave':{tag:'Fase · Community',def:'Gli Alpha Brave sono i primi 1.000 utenti di AIROOBI. Ottengono vantaggi permanenti su tutti gli airdrop futuri, 2 Tessere di benvenuto (Tessera Fondatore + Tessera Rendimento) e un moltiplicatore sui RPTS. È un riconoscimento per chi crede nel progetto quando è ancora piccolo.'},
+  'Alpha Brave':{tag:'Fase · Community',def:'Gli Alpha Brave sono i primi 1.000 utenti di AIROOBI. Ottengono vantaggi permanenti su tutti gli airdrop futuri, Badge Fondatore + Tessera Rendimento di benvenuto e un moltiplicatore sugli ARIA guadagnati. È un riconoscimento per chi crede nel progetto prima che diventi ovvio.'},
   'Buyback':{tag:'Garanzia · Rimborso',def:'Il rimborso garantito è l\'impegno di AIROOBI a riacquistare le tue Tessere al 95% del loro saldo calcolato. Significa che puoi sempre "uscire" e recuperare ciò che hai accumulato. Non è un\'opzione teorica — è una garanzia scritta nelle regole.'},
   'Token':{tag:'Tecnologia · Crypto',def:'Un token è un\'unità digitale registrata su blockchain che rappresenta un diritto, un valore o un\'utilità. Su AIROOBI ci sono due tipi: AICO (per partecipare agli airdrop) e Tessere (che rappresentano quote del Fondo Comune con saldo garantito).'},
   'Wallet':{tag:'Strumento · Crypto',def:'Un wallet (portafoglio digitale) è il tuo "conto" sulla blockchain: conserva i tuoi token e le tue Tessere in modo sicuro. Su AIROOBI nelle fasi iniziali non serve un wallet crypto — puoi usare email e password come un normale sito. Il wallet sarà introdotto gradualmente.'},
-  'Smart Contract':{tag:'Tecnologia · Blockchain',def:'Un smart contract è un programma che vive sulla blockchain ed esegue automaticamente le regole scritte nel codice. Su AIROOBI gestisce la distribuzione degli airdrop, il calcolo dei RPTS e il saldo delle Tessere — senza possibilità di manipolazione da parte di nessuno, nemmeno del team.'},
+  'Smart Contract':{tag:'Tecnologia · Blockchain',def:'Un smart contract è un programma che vive sulla blockchain ed esegue automaticamente le regole scritte nel codice. Su AIROOBI gestisce la distribuzione degli airdrop, il calcolo degli ARIA e il saldo delle Tessere — senza possibilità di manipolazione da parte di nessuno, nemmeno del team.'},
   'Market Cap':{tag:'Finanza',def:'Il market cap (capitalizzazione di mercato) degli NFT AIROOBI è il valore totale di tutti gli NFT in circolazione: valore singolo NFT × numero di NFT emessi. È un indicatore della "dimensione" del progetto, simile a come si misura una società in borsa.'},
-  'Fase Alpha':{tag:'Roadmap · Community',def:'La Fase Alpha è la prima fase di AIROOBI — quella in cui sei adesso. È una fase di test incentivata: ogni azione che fai genera punti reali che avranno valore al lancio ufficiale. Chi partecipa in Alpha accumula di più e ottiene vantaggi permanenti sulle fasi successive.'},
-  'Referral':{tag:'Community · Bonus',def:'Il referral è il meccanismo con cui porti nuovi utenti su AIROOBI usando il tuo codice personale. Quando un amico si registra con il tuo codice, entrambi ricevete +100 RPTS. Più amici porti, più punti accumuli — e più alta è la tua probabilità di vincere airdrop.'}
+  'Fase Alpha':{tag:'Roadmap · Community',def:'La Fase Alpha è la prima fase di AIROOBI — quella in cui sei adesso. È live. Ogni azione che fai genera ARIA reali che puoi già usare. Chi partecipa in Alpha accumula di più e ottiene vantaggi permanenti su tutte le fasi successive.'},
+  'Referral':{tag:'Community · Bonus',def:'Il referral è il meccanismo con cui porti nuovi utenti su AIROOBI usando il tuo codice personale. Quando un amico si registra con il tuo codice, entrambi ricevete +100 ARIA. Più amici porti, più ARIA accumuli — e più alta è la tua probabilità di vincere airdrop.'}
 };
 
 function openGloss(term){
@@ -1410,7 +1410,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGloss()
     'Buyback','buyback','Treasury','treasury',
     'blockchain','Blockchain','Kaspa','Wallet','wallet',
     'Referral','referral','Airdrop','airdrop',
-    'RPTS','AICO','NFT','Token','token'
+    'ARIA','AICO','NFT','Token','token'
   ];
   // Canonical key for glossary lookup
   var canonical={
@@ -1477,7 +1477,7 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){document.querySelec
 
 
 
-// ── Login bonus (10 RPTS per login, Alpha Brave perk) ──
+// ── Login bonus (10 ARIA per login, Alpha Brave perk) ──
 async function awardLoginBonus(userId,token){
   try{
     // Check if already received today
@@ -1514,7 +1514,7 @@ async function awardLoginBonus(userId,token){
   }catch(e){}
 }
 
-// ── Welcome bonus (100 RPTS + NFT EARN + NFT ALPHA BRAVE, once per user) ──
+// ── Welcome bonus (100 ARIA + NFT EARN + NFT ALPHA BRAVE, once per user) ──
 async function awardWelcomeBonus(userId,token){
   try{
     // Check if already received
@@ -1524,7 +1524,7 @@ async function awardWelcomeBonus(userId,token){
     const data=await existing.json();
     if(data&&data.length>0)return; // already received
 
-    // Award 100 RPTS
+    // Award 100 ARIA
     await fetch(SB_URL+'/rest/v1/points_ledger',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
@@ -1721,7 +1721,7 @@ async function autoConfirmReferral(userId,token){
     const pData=await profiles.json();
     if(!pData||!pData.length||!pData[0].referred_by)return; // no referrer
 
-    // Confirm referral via RPC (+100 RPTS to both)
+    // Confirm referral via RPC (+100 ARIA to both)
     const deviceHash=navigator.userAgent+screen.width+'x'+screen.height;
     await fetch(SB_URL+'/rest/v1/rpc/confirm_referral',{
       method:'POST',
@@ -1853,18 +1853,18 @@ function shareRef(platform){
   
   const msgs={
     it:{
-      whatsapp:'\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u25c9 *AIROOBI*\n_The Dream-Robe Commerce_\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n*Non venderlo! Airdroppalo su AIROOBI.*\n\nAIROOBI \u00e8 un marketplace nuovo dove:\n\n\u2022 Se *hai un oggetto di valore* \u2192 lo lanci come airdrop e guadagni pi\u00f9 che vendendolo\n\u2022 Se *vuoi ottenere qualcosa* \u2192 partecipi accumulando RPTS con azioni semplici (entri ogni giorno, guardi un video, inviti amici)\n\nChi ha pi\u00f9 punti si aggiudica l\'oggetto. Ma *tutti ricevono valore in cambio*, sempre.\n\n\u261d\ufe0f Ad ognuno, la sua opportunit\u00e0.\n\nAdesso siamo nella fase di test incentivata: ogni azione ti fa guadagnare RPTS che avranno valore reale al lancio.\n\n\u26a1 Io sono un *Alpha Brave* (solo 1.000 posti). Chi entra prima accumula di pi\u00f9.\n\nRegistrati gratis:\n',
+      whatsapp:'\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u25c9 *AIROOBI*\n_The Dream-Robe Commerce_\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n*Non venderlo! Airdroppalo su AIROOBI.*\n\nAIROOBI \u00e8 un marketplace nuovo dove:\n\n\u2022 Se *hai un oggetto di valore* \u2192 lo lanci come airdrop e guadagni pi\u00f9 che vendendolo\n\u2022 Se *vuoi ottenere qualcosa* \u2192 accumuli *ARIA* gratis con azioni semplici (entri ogni giorno, guardi un video, inviti amici)\n\nChi ha pi\u00f9 punti si aggiudica l\'oggetto. Ma *tutti ricevono valore in cambio*, sempre.\n\n\u261d\ufe0f Ad ognuno, la sua opportunit\u00e0.\n\nAdesso siamo nella fase di test incentivata: ogni azione ti fa guadagnare ARIA. Vale \u20ac0.10 fisso.\n\n\u26a1 Io sono un *Alpha Brave* (solo 1.000 posti). Chi entra prima accumula di pi\u00f9.\n\nRegistrati gratis:\n',
       telegram:'\u25c9 AIROOBI \u2014 The Dream-Robe Commerce\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nNon venderlo! Airdroppalo su AIROOBI.\n\nHai un oggetto? Lo lanci come airdrop e guadagni.\nVuoi ottenere qualcosa? Partecipi e accumuli valore.\n\nAd ognuno, la sua opportunit\u00e0. Sempre.\n\nFase test incentivata live \u2014 ogni azione = punti reali al lancio.\nAlpha Brave: 1.000 posti.\n\nEntra gratis \u2b07\ufe0f\n',
       x:'\u25c9 Non venderlo! Airdroppalo su @airoobi_com\n\nHai un oggetto? Lo airdroppi e guadagni.\nVuoi qualcosa? Partecipi e accumuli valore.\n\nAd ognuno, la sua opportunit\u00e0.\n\nTestnet incentivata live. Alpha Brave: 1.000 posti \u2b07\ufe0f ',
       email_subject:'\u25c9 AIROOBI \u2014 Ad ognuno, la sua opportunit\u00e0.',
-      email_body:'<div style="max-width:560px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.8;"><div style="text-align:center;padding:32px 0;background:#000;"><img src="https://airoobi.com/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:40px;"></div><div style="padding:32px 24px;"><h1 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#000;margin-bottom:4px;">Non venderlo!</h1><h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#B8960C;margin-top:0;">Airdroppalo su AIROOBI.</h2><p>Ciao,</p><p>sono entrato in <strong>AIROOBI</strong> e volevo portarti dentro. \u00c8 un marketplace completamente nuovo con un\'idea semplice:</p><p>\u2022 <strong>Hai qualcosa di valore?</strong> Lo lanci come airdrop sulla piattaforma e guadagni pi\u00f9 che vendendolo normalmente.<br>\u2022 <strong>Vuoi ottenere qualcosa?</strong> Partecipi accumulando RPTS con azioni semplici: entri ogni giorno, guardi un video, inviti amici.</p><p>Chi accumula pi\u00f9 punti si aggiudica l\'oggetto. Ma la cosa bella: <strong>tutti ricevono valore in cambio</strong>. Sempre. Nessuno esce a mani vuote.</p><div style="background:#f8f8f8;border-left:3px solid #B8960C;padding:16px 20px;margin:24px 0;font-style:italic;"><strong style="color:#B8960C;">Ad ognuno, la sua opportunit\u00e0.</strong><br>Chi vende guadagna di pi\u00f9. Chi partecipa accede a oggetti esclusivi. Chi contribuisce con il suo tempo esce sempre con qualcosa.</div><p>Adesso siamo nella <strong>fase di test incentivata</strong>: ogni azione che fai oggi guadagna punti che avranno valore reale al lancio.</p><div style="background:#000;color:#fff;padding:20px;margin:24px 0;text-align:center;"><strong style="color:#B8960C;">ALPHA BRAVE</strong><br><span style="font-size:14px;">I primi 1.000. Vantaggi permanenti ed esclusivi.<br>Dopo arrivano gli Alpha Wise, con meno vantaggi.<br>Pi\u00f9 tardi entri, meno accumuli.</span></div><p>Registrati gratis col mio link (30 secondi, parti con 100 RPTS bonus):</p><p style="text-align:center;margin:24px 0;"><a href="REFLINK" style="display:inline-block;padding:14px 40px;background:#B8960C;color:#000;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">ENTRA IN AIROOBI</a></p><p style="font-size:12px;color:#999;text-align:center;">airoobi.com \u2022 The Dream-Robe Commerce</p></div></div>'
+      email_body:'<div style="max-width:560px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.8;"><div style="text-align:center;padding:32px 0;background:#000;"><img src="https://airoobi.com/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:40px;"></div><div style="padding:32px 24px;"><h1 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#000;margin-bottom:4px;">Non venderlo!</h1><h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#B8960C;margin-top:0;">Airdroppalo su AIROOBI.</h2><p>Ciao,</p><p>sono entrato in <strong>AIROOBI</strong> e volevo portarti dentro. \u00c8 un marketplace completamente nuovo con un\'idea semplice:</p><p>\u2022 <strong>Hai qualcosa di valore?</strong> Lo lanci come airdrop sulla piattaforma e guadagni pi\u00f9 che vendendolo normalmente.<br>\u2022 <strong>Vuoi ottenere qualcosa?</strong> Accumuli ARIA gratis con azioni semplici: entri ogni giorno, guardi un video, inviti amici.</p><p>Chi accumula pi\u00f9 punti si aggiudica l\'oggetto. Ma la cosa bella: <strong>tutti ricevono valore in cambio</strong>. Sempre. Nessuno esce a mani vuote.</p><div style="background:#f8f8f8;border-left:3px solid #B8960C;padding:16px 20px;margin:24px 0;font-style:italic;"><strong style="color:#B8960C;">Ad ognuno, la sua opportunit\u00e0.</strong><br>Chi vende guadagna di pi\u00f9. Chi partecipa accede a oggetti esclusivi. Chi contribuisce con il suo tempo esce sempre con qualcosa.</div><p>Adesso siamo nella <strong>fase di test incentivata</strong>: ogni azione che fai oggi guadagna punti che avranno valore reale al lancio.</p><div style="background:#000;color:#fff;padding:20px;margin:24px 0;text-align:center;"><strong style="color:#B8960C;">ALPHA BRAVE</strong><br><span style="font-size:14px;">I primi 1.000. Vantaggi permanenti ed esclusivi.<br>Dopo arrivano gli Alpha Wise, con meno vantaggi.<br>Pi\u00f9 tardi entri, meno accumuli.</span></div><p>Registrati gratis col mio link (30 secondi, parti con 100 ARIA bonus):</p><p style="text-align:center;margin:24px 0;"><a href="REFLINK" style="display:inline-block;padding:14px 40px;background:#B8960C;color:#000;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">ENTRA IN AIROOBI</a></p><p style="font-size:12px;color:#999;text-align:center;">airoobi.com \u2022 The Dream-Robe Commerce</p></div></div>'
     },
     en:{
-      whatsapp:'\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u25c9 *AIROOBI*\n_The Dream-Robe Commerce_\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n*Don\'t sell it! Airdrop it on AIROOBI.*\n\nAIROOBI is a new marketplace where:\n\n\u2022 If you *have a valuable object* \u2192 you launch it as an airdrop and earn more than selling it\n\u2022 If you *want to get something* \u2192 you participate by accumulating RPTS through simple actions (log in daily, watch a video, invite friends)\n\nTop point holders get the object. But *everyone receives value back*, always.\n\n\u261d\ufe0f To each, their opportunity.\n\nRight now it\'s the incentivized testnet: every action earns you points that will have real value at launch.\n\n\u26a1 I\'m an *Alpha Brave* (only 1,000 spots). Those who join first, accumulate the most.\n\nSign up free:\n',
+      whatsapp:'\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u25c9 *AIROOBI*\n_The Dream-Robe Commerce_\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n*Don\'t sell it! Airdrop it on AIROOBI.*\n\nAIROOBI is a new marketplace where:\n\n\u2022 If you *have a valuable object* \u2192 you launch it as an airdrop and earn more than selling it\n\u2022 If you *want to get something* \u2192 earn *ARIA* free through simple actions (log in daily, watch a video, invite friends)\n\nTop point holders get the object. But *everyone receives value back*, always.\n\n\u261d\ufe0f To each, their opportunity.\n\nRight now it\'s the incentivized testnet: every action earns you points that will have real value at launch.\n\n\u26a1 I\'m an *Alpha Brave* (only 1,000 spots). Those who join first, accumulate the most.\n\nSign up free:\n',
       telegram:'\u25c9 AIROOBI \u2014 The Dream-Robe Commerce\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nDon\'t sell it! Airdrop it on AIROOBI.\n\nHave an object? Launch it as an airdrop and earn.\nWant something? Participate and accumulate value.\n\nTo each, their opportunity. Always.\n\nIncentivized testnet live \u2014 every action = real points at launch.\nAlpha Brave: 1,000 spots.\n\nJoin free \u2b07\ufe0f\n',
       x:'\u25c9 Don\'t sell it! Airdrop it on @airoobi_com\n\nHave an object? Airdrop it and earn.\nWant something? Participate and accumulate value.\n\nTo each, their opportunity.\n\nIncentivized testnet live. Alpha Brave: 1,000 spots \u2b07\ufe0f ',
       email_subject:'\u25c9 AIROOBI \u2014 To each, their opportunity.',
-      email_body:'<div style="max-width:560px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.8;"><div style="text-align:center;padding:32px 0;background:#000;"><img src="https://airoobi.com/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:40px;"></div><div style="padding:32px 24px;"><h1 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#000;margin-bottom:4px;">Don\'t sell it!</h1><h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#B8960C;margin-top:0;">Airdrop it on AIROOBI.</h2><p>Hey,</p><p>I joined <strong>AIROOBI</strong> and wanted to bring you in. It\'s a completely new marketplace with a simple idea:</p><p>\u2022 <strong>Have something valuable?</strong> Launch it as an airdrop on the platform and earn more than selling it the traditional way.<br>\u2022 <strong>Want to get something?</strong> Participate by accumulating RPTS through simple actions: log in daily, watch a video, invite friends.</p><p>Top point holders get the object. But the best part: <strong>everyone receives value back</strong>. Always. Nobody walks away empty.</p><div style="background:#f8f8f8;border-left:3px solid #B8960C;padding:16px 20px;margin:24px 0;font-style:italic;"><strong style="color:#B8960C;">To each, their opportunity.</strong><br>Sellers earn more. Participants access exclusive objects. Contributors, even with just their time, always walk away with something.</div><p>Right now we\'re in the <strong>incentivized testnet phase</strong>: every action you take today earns points that will have real value at launch.</p><div style="background:#000;color:#fff;padding:20px;margin:24px 0;text-align:center;"><strong style="color:#B8960C;">ALPHA BRAVE</strong><br><span style="font-size:14px;">The first 1,000. Permanent, exclusive perks.<br>After us come the Alpha Wise, with fewer benefits.<br>The later you join, the less you accumulate.</span></div><p>Sign up free with my link (30 seconds, start with 100 RPTS bonus):</p><p style="text-align:center;margin:24px 0;"><a href="REFLINK" style="display:inline-block;padding:14px 40px;background:#B8960C;color:#000;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">JOIN AIROOBI</a></p><p style="font-size:12px;color:#999;text-align:center;">airoobi.com \u2022 The Dream-Robe Commerce</p></div></div>'
+      email_body:'<div style="max-width:560px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.8;"><div style="text-align:center;padding:32px 0;background:#000;"><img src="https://airoobi.com/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:40px;"></div><div style="padding:32px 24px;"><h1 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#000;margin-bottom:4px;">Don\'t sell it!</h1><h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#B8960C;margin-top:0;">Airdrop it on AIROOBI.</h2><p>Hey,</p><p>I joined <strong>AIROOBI</strong> and wanted to bring you in. It\'s a completely new marketplace with a simple idea:</p><p>\u2022 <strong>Have something valuable?</strong> Launch it as an airdrop on the platform and earn more than selling it the traditional way.<br>\u2022 <strong>Want to get something?</strong> Earn ARIA free through simple actions: log in daily, watch a video, invite friends.</p><p>Top point holders get the object. But the best part: <strong>everyone receives value back</strong>. Always. Nobody walks away empty.</p><div style="background:#f8f8f8;border-left:3px solid #B8960C;padding:16px 20px;margin:24px 0;font-style:italic;"><strong style="color:#B8960C;">To each, their opportunity.</strong><br>Sellers earn more. Participants access exclusive objects. Contributors, even with just their time, always walk away with something.</div><p>Right now we\'re in the <strong>incentivized testnet phase</strong>: every action you take today earns points that will have real value at launch.</p><div style="background:#000;color:#fff;padding:20px;margin:24px 0;text-align:center;"><strong style="color:#B8960C;">ALPHA BRAVE</strong><br><span style="font-size:14px;">The first 1,000. Permanent, exclusive perks.<br>After us come the Alpha Wise, with fewer benefits.<br>The later you join, the less you accumulate.</span></div><p>Sign up free with my link (30 seconds, start with 100 ARIA bonus):</p><p style="text-align:center;margin:24px 0;"><a href="REFLINK" style="display:inline-block;padding:14px 40px;background:#B8960C;color:#000;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">JOIN AIROOBI</a></p><p style="font-size:12px;color:#999;text-align:center;">airoobi.com \u2022 The Dream-Robe Commerce</p></div></div>'
     }
   };
   
@@ -2120,7 +2120,7 @@ async function loadEarnings(){
   if(remaining===7&&streak>0&&streak%7===0){
     infoEl.innerHTML=lang==='it'?'<span>Streak completata! +100 bonus!</span>':'<span>Streak complete! +100 bonus!</span>';
   }else{
-    infoEl.textContent=lang==='it'?remaining+' giorni al bonus di 100 RPTS':remaining+' days to 100 RPTS bonus';
+    infoEl.textContent=lang==='it'?remaining+' giorni al bonus di 100 ARIA':remaining+' days to 100 ARIA bonus';
   }
   
   // Check-in button state
@@ -2153,7 +2153,7 @@ async function loadEarnings(){
     if(confirms&&confirms.length>0){
       document.getElementById('confirm-ref-btn').disabled=true;
       document.getElementById('confirm-ref-btn').innerHTML=lang==='it'?'GI\u00c0 CONFERMATO ✓':'ALREADY CONFIRMED ✓';
-      document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span> Hai guadagnato 100 RPTS.':'<span>Referral confirmed!</span> You earned 100 RPTS.';
+      document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span> Hai guadagnato 100 ARIA.':'<span>Referral confirmed!</span> You earned 100 ARIA.';
     }else{
       document.getElementById('earn-ref-status').innerHTML=lang==='it'?'Invitato da: <span>'+p.referred_by+'</span>':'Invited by: <span>'+p.referred_by+'</span>';
     }
@@ -2633,7 +2633,7 @@ function checkAdminAccess(email){
     <div class="ref-stats" style="grid-template-columns:1fr 1fr 1fr 1fr;gap:2px">
       <div class="ref-stat">
         <div class="ref-stat-val" id="overview-points" style="font-size:clamp(20px,4vw,28px)">0</div>
-        <div class="ref-stat-label" style="font-size:10px"><span style="display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%;vertical-align:middle;margin-right:4px"></span>RPTS</div>
+        <div class="ref-stat-label" style="font-size:10px"><span style="display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%;vertical-align:middle;margin-right:4px"></span>ARIA</div>
       </div>
       <div class="ref-stat">
         <div class="ref-stat-val" id="overview-aria" style="font-size:clamp(20px,4vw,28px);color:var(--gold)">—</div>
@@ -2652,8 +2652,8 @@ function checkAdminAccess(email){
     <div class="ref-card" style="border-color:var(--gold-dim)">
       <h3><span class="it">Cosa succede ora?</span><span class="en">What happens now?</span></h3>
       <p style="font-size:14px;color:var(--gray-300);line-height:1.8">
-        <span class="it">Il progetto è in fase Alpha. Stai costruendo con noi. Fai check-in ogni giorno, guarda video, invita amici — ogni azione ti fa guadagnare RPTS.</span>
-        <span class="en">The project is in Alpha phase. You're building with us. Check in every day, watch videos, invite friends — every action earns you points.</span>
+        <span class="it">La fase Alpha è live. Ogni azione ti fa guadagnare ARIA — la nostra stable coin da €0.10. Accumulali ora: li userai per comprare blocchi e partecipare agli airdrop.</span>
+        <span class="en">Alpha phase is live. Every action earns you ARIA — our €0.10 stable coin. Accumulate now: you'll use them to buy blocks and join airdrops.</span>
       </p>
     </div>
   </div>
@@ -2666,7 +2666,7 @@ function checkAdminAccess(email){
       </div>
       <div class="earn-balance">
         <div class="earn-balance-val" id="earn-total">0</div>
-        <div class="earn-balance-label"><span class="it">I TUOI PUNTI</span><span class="en">YOUR POINTS</span></div>
+        <div class="earn-balance-label"><span class="it">IL TUO ARIA</span><span class="en">YOUR ARIA</span></div>
       </div>
     </div>
 
@@ -2674,9 +2674,9 @@ function checkAdminAccess(email){
     <div class="earn-card">
       <div class="earn-card-header">
         <h3><span class="it">Check-in giornaliero</span><span class="en">Daily Check-in</span></h3>
-        <span class="earn-card-points">+10 RPTS</span>
+        <span class="earn-card-points">+10 ARIA</span>
       </div>
-      <p><span class="it">Entra ogni giorno e ricevi punti automaticamente. Completa 7 giorni di fila per un bonus extra!</span><span class="en">Log in every day and receive points automatically. Complete 7 consecutive days for an extra bonus!</span></p>
+      <p><span class="it">Entra ogni giorno e ricevi ARIA automaticamente. Completa 7 giorni di fila per un bonus extra!</span><span class="en">Log in every day and receive ARIA automatically. Complete 7 consecutive days for an extra bonus!</span></p>
       <div class="streak-dots" id="streak-dots"></div>
       <div class="streak-bonus" id="streak-info"></div>
       <button class="earn-btn" id="checkin-btn" onclick="doCheckin()">
@@ -2688,9 +2688,9 @@ function checkAdminAccess(email){
     <div class="earn-card">
       <div class="earn-card-header">
         <h3><span class="it">Guarda un video</span><span class="en">Watch a video</span></h3>
-        <span class="earn-card-points">+10 RPTS</span>
+        <span class="earn-card-points">+10 ARIA</span>
       </div>
-      <p><span class="it">Guarda un breve video di 10 secondi e guadagna punti. Fino a 5 video al giorno.</span><span class="en">Watch a 10-second video and earn points. Up to 5 videos per day.</span></p>
+      <p><span class="it">Guarda un breve video di 10 secondi e guadagna ARIA. Fino a 5 video al giorno.</span><span class="en">Watch a 10-second video and earn ARIA. Up to 5 videos per day.</span></p>
       <div class="earn-video-container" id="earn-video-container"></div>
       <div class="earn-video-progress" id="earn-video-progress"><div class="earn-video-progress-bar" id="earn-video-bar"></div></div>
       <div class="earn-video-countdown" id="earn-video-cd"></div>
@@ -2704,9 +2704,9 @@ function checkAdminAccess(email){
     <div class="earn-card" id="earn-referral-card" style="display:none">
       <div class="earn-card-header">
         <h3><span class="it">Conferma referral</span><span class="en">Confirm referral</span></h3>
-        <span class="earn-card-points">+100 RPTS</span>
+        <span class="earn-card-points">+100 ARIA</span>
       </div>
-      <p><span class="it">Sei stato invitato! Conferma per ricevere punti bonus — e anche chi ti ha invitato sarà premiato.</span><span class="en">You were invited! Confirm to receive bonus points — and your inviter gets rewarded too.</span></p>
+      <p><span class="it">Sei stato invitato! Conferma per ricevere ARIA bonus — e anche chi ti ha invitato sarà premiato.</span><span class="en">You were invited! Confirm to receive ARIA bonus — and your inviter gets rewarded too.</span></p>
       <div class="earn-referral-status" id="earn-ref-status"></div>
       <button class="earn-btn" id="confirm-ref-btn" onclick="doConfirmReferral()">
         <span class="it">CONFERMA REFERRAL</span><span class="en">CONFIRM REFERRAL</span>
@@ -2737,7 +2737,7 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Login giornaliero</span><span class="en">Daily login</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+10 RPTS</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+10 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
               <span class="it">Accedi e ricevi punti automaticamente. 1 volta al giorno. <em style="color:var(--gold);font-style:normal">Esclusiva Alpha Brave.</em></span>
@@ -2748,7 +2748,7 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Bonus di benvenuto</span><span class="en">Welcome bonus</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+100 RPTS</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+100 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
               <span class="it">Alla registrazione, una tantum. Tutti gli Alpha Brave ricevono 2 Tessere: una Tessera Fondatore e una Tessera Rendimento.</span>
@@ -2766,7 +2766,7 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Check-in giornaliero</span><span class="en">Daily check-in</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+10 RPTS</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+10 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
               <span class="it">Timbra nella sezione Guadagni. 1 volta al giorno. 2 secondi.</span>
@@ -2777,7 +2777,7 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Guarda un video</span><span class="en">Watch a video</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+10 RPTS</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+10 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
               <span class="it">Video di 10 secondi. Max 5 al giorno. Cooldown: 3 minuti tra uno e l'altro. Ogni video genera ricavi che sostengono il progetto.</span>
@@ -2795,22 +2795,22 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Streak settimanale</span><span class="en">Weekly streak</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+100 RPTS</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+100 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
-              <span class="it">7 check-in consecutivi = 100 RPTS bonus. Se salti un giorno, la streak riparte da zero.</span>
-              <span class="en">7 consecutive check-ins = 100 RPTS bonus. If you miss a day, the streak resets to zero.</span>
+              <span class="it">7 check-in consecutivi = 100 ARIA bonus. Se salti un giorno, la streak riparte da zero.</span>
+              <span class="en">7 consecutive check-ins = 100 ARIA bonus. If you miss a day, the streak resets to zero.</span>
             </div>
           </div>
 
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Referral confermato</span><span class="en">Confirmed referral</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+100 RPTS (×2)</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+100 ARIA (×2)</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
-              <span class="it">Inviti un amico, si registra, conferma il referral → 100 RPTS a te, 100 a lui. Illimitato. Valido dopo 24h dall'iscrizione e almeno 1 check-in completato.</span>
-              <span class="en">Invite a friend, they register, confirm the referral → 100 RPTS to you, 100 to them. Unlimited. Valid after 24h from registration and at least 1 check-in completed.</span>
+              <span class="it">Inviti un amico, si registra, conferma il referral → 100 ARIA a te, 100 a lui. Illimitato. Valido dopo 24h dall'iscrizione e almeno 1 check-in completato.</span>
+              <span class="en">Invite a friend, they register, confirm the referral → 100 ARIA to you, 100 to them. Unlimited. Valid after 24h from registration and at least 1 check-in completed.</span>
             </div>
           </div>
         </div>
@@ -2822,12 +2822,12 @@ function checkAdminAccess(email){
           </div>
 
           <div style="background:var(--gray-800);padding:20px;font-family:var(--font-m);font-size:13px;letter-spacing:.5px;line-height:2">
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)"><span class="it">Login</span><span class="en">Login</span></span><span style="color:var(--white)">10 RPTS</span></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Check-in</span><span style="color:var(--white)">10 RPTS</span></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Video (×5)</span><span style="color:var(--white)">50 RPTS</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)"><span class="it">Login</span><span class="en">Login</span></span><span style="color:var(--white)">10 ARIA</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Check-in</span><span style="color:var(--white)">10 ARIA</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Video (×5)</span><span style="color:var(--white)">50 ARIA</span></div>
             <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--gray-700);margin-top:8px"><span style="color:var(--gold)"><span class="it">Totale giornaliero max</span><span class="en">Max daily total</span></span><strong style="color:var(--gold)">70 pts</strong></div>
-            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Streak settimanale</span><span class="en">+ Weekly streak</span></span><span style="color:var(--white)">+100 RPTS</span></div>
-            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Ogni referral</span><span class="en">+ Each referral</span></span><span style="color:var(--white)">+100 RPTS</span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Streak settimanale</span><span class="en">+ Weekly streak</span></span><span style="color:var(--white)">+100 ARIA</span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Ogni referral</span><span class="en">+ Each referral</span></span><span style="color:var(--white)">+100 ARIA</span></div>
           </div>
         </div>
 
@@ -2839,23 +2839,23 @@ function checkAdminAccess(email){
           <div style="font-size:13px;color:var(--gray-400);line-height:1.8">
             <span class="it">
               AIROOBI ha tre valute che lavorano insieme:<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--white)">ROBE POINTS (RPTS)</strong> — I punti che guadagni con le azioni quotidiane. Sono la tua ricompensa per testare e far crescere AIROOBI.<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — Il token con valore reale di AIROOBI. 1 ARIA = €0.10. Con gli ARIA compri i <strong style="color:var(--white)">blocchi</strong>, cioè le quote di partecipazione a un oggetto. I tuoi RPTS si convertiranno in ARIA. Gli ARIA si convertono in KAS (Kaspa).<br><br>
+              <span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--white)">ARIA</strong> — La stable coin che guadagni con le azioni quotidiane. Sono la tua ricompensa per testare e far crescere AIROOBI.<br><br>
+              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — Il token con valore reale di AIROOBI. 1 ARIA = €0.10. Con gli ARIA compri i <strong style="color:var(--white)">blocchi</strong>, cioè le quote di partecipazione a un oggetto. I tuoi ARIA valgono €0.10 ciascuno. Con una Tessera Rendimento si convertono in KAS (Kaspa).<br><br>
               <span style="font-family:var(--font-h);font-size:13px;color:var(--gold);font-weight:700;letter-spacing:-1px;vertical-align:middle">Oo</span> <strong style="color:var(--gold)">TESSERA RENDIMENTO</strong> — Il tuo saldo garantito su AIROOBI. Non si compra: si ottiene partecipando. Ogni tier ne riceve almeno una. Il saldo cresce con il Fondo Comune.<br><br>
               <strong style="color:var(--gold)">Come si collega tutto:</strong><br>
               Punti → crediti → partecipazione agli airdrop → Tessera Rendimento<br>
               Tessera → rimborsabile in qualsiasi momento<br><br>
-              Gli Alpha Brave accumulano RPTS alle <strong style="color:var(--gold)">condizioni migliori che esisteranno mai</strong>. Ogni tier successivo avrà moltiplicatori più bassi.
+              Gli Alpha Brave accumulano ARIA alle <strong style="color:var(--gold)">condizioni migliori che esisteranno mai</strong>. Ogni tier successivo avrà moltiplicatori più bassi.
             </span>
             <span class="en">
               AIROOBI has three currencies that work together:<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--white)">ROBE POINTS (RPTS)</strong> — The points you earn through daily actions. They are your reward for testing and growing AIROOBI.<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — AIROOBI's real-value token. 1 ARIA = €0.10. With ARIA you buy <strong style="color:var(--white)">blocks</strong>, i.e. participation shares in an object. Your RPTS will convert to ARIA. ARIA converts to KAS (Kaspa).<br><br>
+              <span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--white)">ARIA</strong> — The stable coin you earn through daily actions. They are your reward for testing and growing AIROOBI.<br><br>
+              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — AIROOBI's real-value token. 1 ARIA = €0.10. With ARIA you buy <strong style="color:var(--white)">blocks</strong>, i.e. participation shares in an object. Your ARIA is worth €0.10 each. With a Tessera Rendimento NFT they convert to KAS (Kaspa).<br><br>
               <span style="font-family:var(--font-h);font-size:13px;color:var(--gold);font-weight:700;letter-spacing:-1px;vertical-align:middle">Oo</span> <strong style="color:var(--gold)">YIELD CARD</strong> — Your guaranteed balance on AIROOBI. You can't buy it: you earn it by participating. Each tier receives at least one. Balance grows with the Common Fund.<br><br>
               <strong style="color:var(--gold)">How it all connects:</strong><br>
               Points → credits → airdrop participation → Yield Card<br>
               Card → redeemable at any time<br><br>
-              Alpha Brave accumulate RPTS at the <strong style="color:var(--gold)">best conditions that will ever exist</strong>. Every subsequent tier will have lower multipliers.
+              Alpha Brave accumulate ARIA at the <strong style="color:var(--gold)">best conditions that will ever exist</strong>. Every subsequent tier will have lower multipliers.
             </span>
           </div>
         </div>
@@ -2870,7 +2870,7 @@ function checkAdminAccess(email){
               <div style="font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:8px">ALPHA BRAVE</div>
               <div style="font-size:12px;color:var(--white)"><span class="it">1.000 posti</span><span class="en">1,000 spots</span></div>
               <div style="font-size:12px;color:var(--gold);margin-top:4px"><span class="it">Max vantaggi</span><span class="en">Max perks</span></div>
-              <div style="font-size:11px;color:var(--gray-400);margin-top:4px">70 RPTS/day</div>
+              <div style="font-size:11px;color:var(--gray-400);margin-top:4px">70 ARIA/day</div>
               <div style="font-size:11px;color:var(--gray-400)">+100 welcome</div>
               <div style="font-size:11px;color:var(--gray-400)">+10 login/day</div>
               <div style="font-size:11px;color:var(--gray-400)">+1 Tessera</div>
@@ -2906,7 +2906,7 @@ function checkAdminAccess(email){
     <!-- POINTS HISTORY -->
     <div class="earn-card">
       <div class="earn-card-header">
-        <h3><span class="it">Storico RPTS</span><span class="en">RPTS history</span></h3>
+        <h3><span class="it">Storico ARIA</span><span class="en">ARIA history</span></h3>
       </div>
       <div class="points-history" id="points-history">
         <p style="font-size:13px;color:var(--gray-400)"><span class="it">Nessuna attività ancora.</span><span class="en">No activity yet.</span></p>
@@ -3060,7 +3060,7 @@ function checkAdminAccess(email){
 
     <div class="earn-card" style="border-color:var(--gold-dim)">
       <h3><span class="it">Come funziona il referral</span><span class="en">How referrals work</span></h3>
-      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Dopo 24h e almeno 1 check-in, confermano il referral nel loro profilo<br>4. Entrambi guadagnate 100 RPTS!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. After 24h and at least 1 check-in, they confirm the referral in their profile<br>4. You both earn 100 RPTS!</span></p>
+      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Dopo 24h e almeno 1 check-in, confermano il referral nel loro profilo<br>4. Entrambi guadagnate 100 ARIA!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. After 24h and at least 1 check-in, they confirm the referral in their profile<br>4. You both earn 100 ARIA!</span></p>
     </div>
   </div>
 </div>
@@ -3082,7 +3082,7 @@ function checkAdminAccess(email){
   <p><span class="it">Il commercio online è rotto. Le aste favoriscono chi ha più soldi. Le lotterie sono puro azzardo. I marketplace sono saturi. Non esiste una piattaforma dove le persone normali possano accedere a oggetti premium con un meccanismo equo e trasparente.</span><span class="en">Online commerce is broken. Auctions favor the wealthy. Lotteries are pure gambling. Marketplaces are saturated. There is no platform where ordinary people can access premium objects with a fair, transparent mechanism.</span></p>
 
   <h2><span class="it">La Soluzione</span><span class="en">The Solution</span></h2>
-  <p><span class="it">AIROOBI è una <strong>piattaforma di commercio equo</strong> per oggetti fisici reali. Gli utenti accumulano punti attraverso l'engagement (check-in giornalieri, video, referral) e acquisti. Chi contribuisce di più riceve l'oggetto. <strong>Tutti gli altri ricevono una Tessera Rendimento con saldo garantito</strong>, sostenuto da un fondo trasparente.</span><span class="en">AIROOBI is a <strong>fair commerce platform</strong> for real physical objects. Users accumulate RPTS through engagement (daily check-ins, video views, referrals) and purchases. The top contributor receives the object. <strong>Everyone else receives a Yield Card with a guaranteed balance</strong>, backed by a transparent fund.</span></p>
+  <p><span class="it">AIROOBI è una <strong>piattaforma di commercio equo</strong> per oggetti fisici reali. Gli utenti accumulano punti attraverso l'engagement (check-in giornalieri, video, referral) e acquisti. Chi contribuisce di più riceve l'oggetto. <strong>Tutti gli altri ricevono una Tessera Rendimento con saldo garantito</strong>, sostenuto da un fondo trasparente.</span><span class="en">AIROOBI is a <strong>fair commerce platform</strong> for real physical objects. Users accumulate ARIA through engagement (daily check-ins, video views, referrals) and purchases. The top contributor receives the object. <strong>Everyone else receives a Yield Card with a guaranteed balance</strong>, backed by a transparent fund.</span></p>
   
   <div class="investor-highlight">
     <span class="it"><strong>Innovazione chiave:</strong> A differenza di lotterie o aste, AIROOBI garantisce che ogni partecipante riceva valore in cambio. Il fondo di garanzia è trasparente e verificabile. Non è azzardo — è un sistema di commercio basato sul merito con protezione del consumatore integrata.</span><span class="en"><strong>Key innovation:</strong> Unlike lotteries or auctions, AIROOBI guarantees that every participant receives value back. The guarantee fund is transparent and verifiable. This is not gambling — it is a merit-based commerce system with built-in consumer protection.</span>
