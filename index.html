@@ -862,9 +862,35 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .mobile-menu-actions{display:flex;gap:10px;padding:16px 24px}
 .mobile-menu-actions .nav-link-btn,.mobile-menu-actions .nav-cta{flex:1;justify-content:center}
 @media(max-width:768px){.burger-btn{display:flex}}
+
+/* ── GLOSSARY TOOLTIPS ── */
+.gloss{display:inline;position:relative;white-space:nowrap}
+.gloss-word{border-bottom:1px dashed rgba(184,150,12,0.5);cursor:pointer;transition:border-color .2s}
+.gloss-word:hover{border-color:var(--gold)}
+.gloss-icon{display:inline-block;width:13px;height:13px;border-radius:50%;background:rgba(184,150,12,0.15);border:1px solid rgba(184,150,12,0.4);font-size:8px;line-height:13px;text-align:center;color:var(--gold);cursor:pointer;vertical-align:middle;margin-left:3px;transition:background .2s;font-style:normal;font-family:var(--font-m)}
+.gloss-icon:hover{background:rgba(184,150,12,0.3)}
+.gloss-popup{display:none;position:fixed;z-index:99999;top:50%;left:50%;transform:translate(-50%,-50%);background:#0a0a0a;border:1px solid var(--gold);padding:28px 32px;max-width:380px;width:calc(100vw - 40px);box-shadow:0 0 60px rgba(0,0,0,.8)}
+.gloss-popup.active{display:block}
+.gloss-popup-term{font-family:var(--font-h);font-size:22px;color:var(--gold);margin-bottom:6px;letter-spacing:1px}
+.gloss-popup-tag{font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:rgba(184,150,12,0.5);text-transform:uppercase;margin-bottom:16px}
+.gloss-popup-def{font-family:var(--font-b);font-size:14px;color:rgba(255,255,255,0.8);line-height:1.7;margin-bottom:0}
+.gloss-popup-close{position:absolute;top:12px;right:16px;font-size:18px;color:rgba(255,255,255,0.3);cursor:pointer;background:none;border:none;line-height:1}
+.gloss-popup-close:hover{color:var(--white)}
+.gloss-overlay{display:none;position:fixed;inset:0;z-index:99998;background:rgba(0,0,0,.6)}
+.gloss-overlay.active{display:block}
+@media(max-width:480px){.gloss-popup{padding:22px 20px}.gloss-popup-term{font-size:18px}.gloss-popup-def{font-size:13px}}
 </style>
 </head>
 <body>
+
+<!-- ═══ GLOSSARY OVERLAY + POPUP ═══ -->
+<div class="gloss-overlay" id="gloss-overlay" onclick="closeGloss()"></div>
+<div class="gloss-popup" id="gloss-popup">
+  <button class="gloss-popup-close" onclick="closeGloss()">✕</button>
+  <div class="gloss-popup-term" id="gloss-term"></div>
+  <div class="gloss-popup-tag" id="gloss-tag"></div>
+  <div class="gloss-popup-def" id="gloss-def"></div>
+</div>
 
 <!-- ═══ NAV ═══ -->
 <nav id="nav">
@@ -1277,6 +1303,109 @@ window.addEventListener('scroll',function(){closeBurger()},{passive:true});
   const saved=localStorage.getItem('airoobi_lang');
   if(saved&&saved!=='it'){toggleLang();}
 })();
+
+// ── Glossary ──
+var glossary={
+  'NFT':{tag:'Tecnologia · Blockchain',def:'Un NFT (Non-Fungible Token) è un oggetto digitale unico registrato sulla blockchain. Su AIROOBI ogni NFT rappresenta una quota della treasury — ha un valore reale in euro garantito dal progetto, calcolato come: valore del fondo ÷ numero di NFT emessi. Non è speculazione: è un diritto.'},
+  'RPTS':{tag:'Valuta interna · Punteggio',def:'I RPTS (Reward Points) sono i punti che accumuli partecipando ad AIROOBI: check-in giornaliero, video, referral. Più RPTS hai, più alta è la tua probabilità di vincere un airdrop. Non si comprano — si guadagnano con la partecipazione.'},
+  'AICO':{tag:'Token · Valuta',def:'AICO è il token di utilità di AIROOBI, ancorato a €0,10 ciascuno. Viene usato per acquistare blocchi negli airdrop. 1 blocco = €1 = 10 AICO. Il valore è stabile by design: non è una crypto speculativa.'},
+  'Airdrop':{tag:'Meccanismo core',def:'Un airdrop su AIROOBI è la distribuzione di un oggetto reale (o digitale) alla community attraverso un sistema a punti. Chi ha più RPTS ha più chance. Ma tutti i partecipanti ricevono valore in cambio — nessuno perde mai completamente.'},
+  'Blockchain':{tag:'Tecnologia',def:'Una blockchain è un registro digitale distribuito e immutabile: ogni operazione viene registrata in modo permanente e verificabile da chiunque. Su AIROOBI usiamo Kaspa — una blockchain di nuova generazione, veloce e sicura — per garantire che le regole del gioco non possano essere cambiate.'},
+  'Kaspa':{tag:'Blockchain · Tecnologia',def:'Kaspa è la blockchain su cui è costruito AIROOBI. È una delle più veloci e scalabili in assoluto, con blocchi confermati in meno di un secondo. A differenza di Ethereum, le fee di transazione sono bassissime — ideale per un marketplace come il nostro.'},
+  'Treasury':{tag:'Finanza · Garanzia',def:'La treasury di AIROOBI è il fondo in euro che garantisce il valore degli NFT emessi. Una parte di ogni transazione viene accantonata qui. Il valore di ogni NFT = treasury totale ÷ numero di NFT. Se la treasury cresce, crescono anche i tuoi NFT.'},
+  'Alpha Brave':{tag:'Fase · Community',def:'Gli Alpha Brave sono i primi 1.000 utenti di AIROOBI. Ottengono vantaggi permanenti su tutti gli airdrop futuri, 2 NFT di benvenuto e un moltiplicatore sui RPTS. È un riconoscimento per chi crede nel progetto quando è ancora piccolo.'},
+  'Buyback':{tag:'Garanzia · Finanza',def:'Il buyback è l\'impegno di AIROOBI a riacquistare i tuoi NFT al 95% del loro valore calcolato. Significa che puoi sempre "uscire" e recuperare il tuo investimento. Non è un\'opzione teorica — è una garanzia scritta nelle regole del progetto.'},
+  'Token':{tag:'Tecnologia · Crypto',def:'Un token è un\'unità digitale registrata su blockchain che rappresenta un diritto, un valore o un\'utilità. Su AIROOBI ci sono due tipi: AICO (per partecipare agli airdrop) e NFT (che rappresentano quote della treasury con valore garantito).'},
+  'Wallet':{tag:'Strumento · Crypto',def:'Un wallet (portafoglio digitale) è il tuo "conto" sulla blockchain: conserva i tuoi token e NFT in modo sicuro. Su AIROOBI nelle fasi iniziali non serve un wallet crypto — puoi usare email e password come un normale sito. Il wallet sarà introdotto gradualmente.'},
+  'Smart Contract':{tag:'Tecnologia · Blockchain',def:'Un smart contract è un programma che vive sulla blockchain ed esegue automaticamente le regole scritte nel codice. Su AIROOBI gestisce la distribuzione degli airdrop, il calcolo dei RPTS e il valore degli NFT — senza possibilità di manipolazione da parte di nessuno, nemmeno del team.'},
+  'Market Cap':{tag:'Finanza',def:'Il market cap (capitalizzazione di mercato) degli NFT AIROOBI è il valore totale di tutti gli NFT in circolazione: valore singolo NFT × numero di NFT emessi. È un indicatore della "dimensione" del progetto, simile a come si misura una società in borsa.'},
+  'Fase Alpha':{tag:'Roadmap · Community',def:'La Fase Alpha è la prima fase di AIROOBI — quella in cui sei adesso. È una fase di test incentivata: ogni azione che fai genera punti reali che avranno valore al lancio ufficiale. Chi partecipa in Alpha accumula di più e ottiene vantaggi permanenti sulle fasi successive.'},
+  'Referral':{tag:'Community · Bonus',def:'Il referral è il meccanismo con cui porti nuovi utenti su AIROOBI usando il tuo codice personale. Quando un amico si registra con il tuo codice, entrambi ricevete +100 RPTS. Più amici porti, più punti accumuli — e più alta è la tua probabilità di vincere airdrop.'}
+};
+
+function openGloss(term){
+  var g=glossary[term];
+  if(!g)return;
+  document.getElementById('gloss-term').textContent=term;
+  document.getElementById('gloss-tag').textContent=g.tag;
+  document.getElementById('gloss-def').textContent=g.def;
+  document.getElementById('gloss-popup').classList.add('active');
+  document.getElementById('gloss-overlay').classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function closeGloss(){
+  document.getElementById('gloss-popup').classList.remove('active');
+  document.getElementById('gloss-overlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGloss();});
+
+// Auto-inject glossary icons into page text
+(function(){
+  // Terms to highlight and their exact match strings (order matters — longer first)
+  var terms=[
+    'Alpha Brave','Smart Contract','Market Cap','Fase Alpha',
+    'Buyback','buyback','Treasury','treasury',
+    'blockchain','Blockchain','Kaspa','Wallet','wallet',
+    'Referral','referral','Airdrop','airdrop',
+    'RPTS','AICO','NFT','Token','token'
+  ];
+  // Canonical key for glossary lookup
+  var canonical={
+    'buyback':'Buyback','treasury':'Treasury','blockchain':'Blockchain',
+    'wallet':'Wallet','referral':'Referral','airdrop':'Airdrop',
+    'token':'Token'
+  };
+  function getKey(t){return canonical[t]||t;}
+
+  // Sections to process (avoid nav, footer, scripts, modals internals)
+  var roots=['#what','#how','#why','#kaspa','#roadmap','.hero-badge','.faq','#earn-tab','.earn-rules'];
+
+  function wrapTermsInNode(node,term,key){
+    if(node.nodeType===3){
+      var txt=node.nodeValue;
+      var re=new RegExp('\\b'+term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\b','g');
+      if(!re.test(txt))return;
+      re.lastIndex=0;
+      var frag=document.createDocumentFragment();
+      var last=0,m;
+      while((m=re.exec(txt))!==null){
+        if(m.index>last)frag.appendChild(document.createTextNode(txt.slice(last,m.index)));
+        var s=document.createElement('span');
+        s.className='gloss-word';
+        s.textContent=m[0];
+        s.onclick=function(k){return function(){openGloss(k);};}(key);
+        var ic=document.createElement('i');
+        ic.className='gloss-icon';
+        ic.textContent='i';
+        ic.onclick=function(k){return function(e){e.stopPropagation();openGloss(k);};}(key);
+        s.appendChild(ic);
+        frag.appendChild(s);
+        last=re.lastIndex;
+      }
+      if(last<txt.length)frag.appendChild(document.createTextNode(txt.slice(last)));
+      node.parentNode.replaceChild(frag,node);
+    } else if(node.nodeType===1){
+      // Skip script, style, already-wrapped, buttons, inputs
+      var tag=node.tagName.toLowerCase();
+      if(tag==='script'||tag==='style'||tag==='button'||tag==='input'||tag==='a'||node.classList.contains('gloss-word')||node.classList.contains('gloss-popup'))return;
+      Array.from(node.childNodes).forEach(function(c){wrapTermsInNode(c,term,key);});
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded',function(){
+    // Build a flat list of sections to process
+    var sections=[];
+    document.querySelectorAll('section, .hero-badge, .faq-item, .earn-rules').forEach(function(el){sections.push(el);});
+    terms.forEach(function(term){
+      var key=getKey(term);
+      sections.forEach(function(section){
+        wrapTermsInNode(section,term,key);
+      });
+    });
+  });
+})();
+
 
 // ── Modals ──
 function openModal(id){document.getElementById(id).style.display='block';document.body.style.overflow='hidden';}
