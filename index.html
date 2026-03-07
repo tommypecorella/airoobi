@@ -880,6 +880,8 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .gloss-overlay.active{display:block}
 @media(max-width:480px){.gloss-popup{padding:22px 20px}.gloss-popup-term{font-size:18px}.gloss-popup-def{font-size:13px}}
 </style>
+<!-- Vercel Analytics -->
+<script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
 
@@ -1203,6 +1205,41 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 // ── Supabase ──
 const SUPABASE_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+// ── Analytics & Event Tracking ──
+async function track(event, props={}) {
+  // 1. Vercel Analytics
+  if(window.va) window.va('event', {name: event, ...props});
+
+  // 2. Supabase events table (fire & forget)
+  try {
+    const session = window._currentSession;
+    const payload = {
+      event,
+      user_id: session?.user?.id || null,
+      props: Object.keys(props).length ? props : null,
+      url: location.pathname + location.hash,
+      referrer: document.referrer || null,
+      ua: navigator.userAgent.substring(0,120),
+      created_at: new Date().toISOString()
+    };
+    fetch(SUPABASE_URL+'/rest/v1/events', {
+      method:'POST',
+      headers:{
+        'apikey':SUPABASE_KEY,
+        'Authorization':'Bearer '+SUPABASE_KEY,
+        'Content-Type':'application/json',
+        'Prefer':'return=minimal'
+      },
+      body: JSON.stringify(payload)
+    }).catch(()=>{}); // silenzioso, non blocca nulla
+  } catch(e){}
+}
+
+// Track pageview al caricamento
+window.addEventListener('DOMContentLoaded', ()=>{
+  track('pageview', {lang: document.documentElement.lang || 'it'});
+});
+
 async function sbPost(table,data){
   const res=await fetch(SUPABASE_URL+'/rest/v1/'+table,{
     method:'POST',headers:{
@@ -1510,6 +1547,7 @@ let videoCallback=null;
 let videoSeenThisSession=false;
 
 function showVideoAd(onComplete){
+  track('video_start');
   videoCallback=onComplete;
   videoSeconds=0;
   const overlay=document.getElementById('video-overlay');
@@ -1589,6 +1627,7 @@ async function sbGet(path,token){
 
 // ── Auth UI ──
 function openAuth(mode){
+  track('cta_click', {mode, source: location.hash || 'landing'});
   document.getElementById('auth-overlay').classList.add('active');
   document.body.style.overflow='hidden';
   if(mode==='login')showLogin();else showSignup();
@@ -1627,16 +1666,20 @@ async function doSignup(){
     if(data.session){
       // Auto-confirmed, log in directly
       saveSession(data.session);
+      window._currentSession = data.session;
       if(ref)await linkRef(data.user.id,ref,data.session.access_token);
       // Award welcome bonus
       await awardWelcomeBonus(data.user.id,data.session.access_token);
+      track('signup_complete', {method:'auto_confirm', has_ref: !!ref, lang});
       closeAuth();
       gatedDashboard(data.session);
     }else{
+      track('signup_email_sent', {has_ref: !!ref, lang});
       showSuccess('signup-success',lang==='it'?'Controlla la tua email per confermare la registrazione! Guarda anche nello spam.':'Check your email to confirm registration! Also check your spam folder.');
     }
   }else{
     const msg=data.error_description||data.msg||data.message||'Error';
+    track('signup_error', {error: msg.substring(0,80), lang});
     showError('signup-error',msg);
   }
   document.getElementById('signup-btn').disabled=false;
@@ -1684,13 +1727,16 @@ async function doLogin(){
   
   if(status===200&&data.access_token){
     saveSession(data);
+    window._currentSession = data;
     closeAuth();
     await awardLoginBonus(data.user.id,data.access_token);
     await awardWelcomeBonus(data.user.id,data.access_token); // idempotent: only fires once
     await autoConfirmReferral(data.user.id,data.access_token); // idempotent: only fires if not yet confirmed
+    track('login', {lang});
     gatedDashboard(data);
   }else{
     const lang=document.documentElement.getAttribute('data-lang')||'it';
+    track('login_error', {lang});
     showError('login-error',lang==='it'?'Email o password errati':'Wrong email or password');
   }
   document.getElementById('login-btn').disabled=false;
@@ -1771,6 +1817,7 @@ async function showDashboard(session){
 function copyRef(){
   const link=document.getElementById('ref-link').dataset.link;
   if(!link)return;
+  track('referral_copy');
   navigator.clipboard.writeText(link).then(()=>{
     const btn=document.querySelector('.ref-copy');
     const lang=document.documentElement.getAttribute('data-lang')||'it';
@@ -1784,6 +1831,7 @@ function shareRef(platform){
   const link=document.getElementById('ref-link').dataset.link;
   if(!link)return;
   const lang=document.documentElement.getAttribute('data-lang')||'it';
+  track('referral_share', {platform});
   
   const msgs={
     it:{
