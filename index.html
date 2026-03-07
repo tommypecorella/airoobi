@@ -343,6 +343,23 @@ function closeAdmin(){
   document.body.style.overflow='';
 }
 
+function updateNftMetrics(){
+  var treasury=parseFloat(document.getElementById('adm-input-treasury').value)||0;
+  var minted=parseInt(document.getElementById('adm-input-minted').value)||0;
+  var circulating=parseInt(document.getElementById('adm-input-circulating').value)||0;
+  var maxSupply=parseInt(document.getElementById('adm-input-maxsupply').value)||1000;
+  var nftValue=minted>0?treasury/minted:0;
+  var marketCap=nftValue*circulating;
+  var fullyDiluted=nftValue*maxSupply;
+  var fmt=function(n){return '€ '+n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});};
+  document.getElementById('adm-treasury-val').textContent=fmt(treasury);
+  document.getElementById('adm-nft-minted').textContent=minted.toLocaleString('it-IT');
+  document.getElementById('adm-nft-value').textContent=fmt(nftValue);
+  document.getElementById('adm-nft-marketcap').textContent=fmt(marketCap);
+  document.getElementById('adm-nft-circulating').textContent=circulating.toLocaleString('it-IT')+' NFT';
+  document.getElementById('adm-nft-fully-diluted').textContent=fmt(fullyDiluted);
+}
+
 async function loadAdminData(){
   const s=getSession();
   if(!s)return;
@@ -830,6 +847,21 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 }
 
 .gold-sep{width:60px;height:1px;background:var(--gold);margin:0 auto}
+
+/* ── Burger Menu ── */
+.burger-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;margin-left:auto}
+.burger-btn span{display:block;width:22px;height:1.5px;background:var(--white);transition:all .3s;transform-origin:center}
+.burger-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.burger-btn.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.burger-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;background:#000;border-bottom:1px solid rgba(184,150,12,.3);z-index:9998;padding:16px 0;flex-direction:column}
+.mobile-menu.open{display:flex}
+.mobile-menu a{color:var(--gray-300);text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:14px 24px;border-bottom:1px solid rgba(255,255,255,.04);transition:color .2s}
+.mobile-menu a:hover{color:var(--gold)}
+.mobile-menu a[style*="gold"]{color:var(--gold)!important}
+.mobile-menu-actions{display:flex;gap:10px;padding:16px 24px}
+.mobile-menu-actions .nav-link-btn,.mobile-menu-actions .nav-cta{flex:1;justify-content:center}
+@media(max-width:768px){.burger-btn{display:flex}}
 </style>
 </head>
 <body>
@@ -869,9 +901,28 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       </div>
       <div class="nav-avatar" id="nav-avatar" onclick="showDashFromNav()">?</div>
     </div>
+    <button class="burger-btn" id="burger-btn" onclick="toggleBurger()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </div>
 </nav>
+
+<!-- ═══ MOBILE MENU ═══ -->
+<div class="mobile-menu" id="mobile-menu">
+  <a href="#what" onclick="closeBurger()"><span class="it">Cos'è</span><span class="en">What</span></a>
+  <a href="#how" onclick="closeBurger()"><span class="it">Come funziona</span><span class="en">How it works</span></a>
+  <a href="#why" onclick="closeBurger()"><span class="it">Perché</span><span class="en">Why</span></a>
+  <a href="#kaspa" onclick="closeBurger()">Blockchain</a>
+  <a href="#roadmap" onclick="closeBurger()">Roadmap</a>
+  <a href="https://airoobi.com/airoobi-explainer.html" target="_blank" style="color:var(--gold)" onclick="closeBurger()">▶ Explainer</a>
+  <a href="javascript:void(0)" onclick="openInvestor();closeBurger();" style="color:var(--gold)">Investor</a>
+  <div class="mobile-menu-actions">
+    <button class="lang-toggle" onclick="toggleLang();closeBurger();" id="lang-btn-mobile">EN</button>
+    <button class="nav-link-btn" onclick="openAuth('login');closeBurger();"><span class="it">Accedi</span><span class="en">Login</span></button>
+    <button class="nav-cta" onclick="openAuth('signup');closeBurger();"><span class="it">Registrati</span><span class="en">Sign Up</span></button>
+  </div>
+</div>
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
@@ -1102,7 +1153,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.1 · Last update: 06 Mar 2026 · 23:29 CET · 23:14 CET · 22:42 CET · 20:50 CET · 20:50 CET · 20:49 CET · 20:41 CET · 20:37 CET · 20:28 CET · 20:17 CET · 20:08 CET · 20:01 CET · 19:59 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.2 · Last update: 07 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1207,6 +1258,20 @@ function toggleLang(){
   });
   localStorage.setItem('airoobi_lang',next);
 }
+
+function toggleBurger(){
+  var btn=document.getElementById('burger-btn');
+  var menu=document.getElementById('mobile-menu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+function closeBurger(){
+  document.getElementById('burger-btn').classList.remove('open');
+  document.getElementById('mobile-menu').classList.remove('open');
+}
+// Close burger on scroll
+window.addEventListener('scroll',function(){closeBurger()},{passive:true});
+
 // Restore saved language
 (function(){
   const saved=localStorage.getItem('airoobi_lang');
@@ -2824,6 +2889,60 @@ function checkAdminAccess(email){
     <p class="admin-note">Treasury balance e revenue aggiornati manualmente. Integrazione automatica in roadmap.</p>
   </div>
 
+  <!-- NFT METRICS -->
+  <div class="admin-section">
+    <h2>NFT Economics</h2>
+    <div class="admin-grid">
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-treasury-val">€ 0.00</div>
+        <div class="admin-card-label">Treasury (€)</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-nft-minted">0</div>
+        <div class="admin-card-label">NFT Minati</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-nft-value">€ 0.00</div>
+        <div class="admin-card-label">Valore NFT stimato</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-nft-marketcap">€ 0.00</div>
+        <div class="admin-card-label">Market Cap (circolante)</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-nft-circulating">0 NFT</div>
+        <div class="admin-card-label">Circolante</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-nft-fully-diluted">€ 0.00</div>
+        <div class="admin-card-label">Fully Diluted (1.000 NFT)</div>
+      </div>
+    </div>
+    <div style="margin-top:24px;padding:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
+      <h3 style="font-family:var(--font-h);font-size:16px;color:var(--gold);margin-bottom:16px;letter-spacing:1px">Aggiorna Parametri</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+        <div>
+          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">TREASURY (€)</label>
+          <input type="number" id="adm-input-treasury" placeholder="0.00" step="0.01" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
+        </div>
+        <div>
+          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">NFT MINATI</label>
+          <input type="number" id="adm-input-minted" placeholder="0" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
+        </div>
+        <div>
+          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">CIRCOLANTE (NFT)</label>
+          <input type="number" id="adm-input-circulating" placeholder="0" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
+        </div>
+        <div>
+          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">MAX SUPPLY</label>
+          <input type="number" id="adm-input-maxsupply" value="1000" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
+        </div>
+      </div>
+      <button onclick="updateNftMetrics()" style="background:var(--gold);color:#000;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:10px 24px;border:none;cursor:pointer">CALCOLA &amp; AGGIORNA</button>
+    </div>
+    <p class="admin-note" style="margin-top:12px">Logica: <strong>Valore NFT = Treasury ÷ NFT Minati</strong> · <strong>Market Cap = Valore NFT × Circolante</strong> · <strong>Fully Diluted = Valore NFT × Max Supply</strong></p>
+  </div>
+
   <!-- COSTS -->
   <div class="admin-section">
     <h2>Costi operativi</h2>
@@ -2884,6 +3003,103 @@ function checkAdminAccess(email){
       </div>
     </div>
     <p class="admin-note">NFT tracking sarà collegato a Kaspa al mainnet. Per ora monitoriamo i candidati per tier.</p>
+  </div>
+
+  <!-- NFT VALUATION & TOKENOMICS -->
+  <div class="admin-section">
+    <h2>💎 NFT Valuation &amp; Tokenomics</h2>
+    <p class="admin-note" style="margin-bottom:20px">Dati calcolati in tempo reale. Valore NFT = Treasury × 95% / NFT emessi. Aggiorna treasury manualmente.</p>
+
+    <!-- INPUT MANUALE TREASURY -->
+    <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap">
+      <div>
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€)</label>
+        <input type="number" id="adm-treasury-input" placeholder="0.00" step="0.01" min="0"
+          style="background:#111;border:1px solid var(--gold);color:var(--white);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none"
+          oninput="recalcNFTValue()">
+      </div>
+      <div>
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">AICO IN CIRCOLAZIONE</label>
+        <input type="number" id="adm-aico-input" placeholder="0" step="1" min="0"
+          style="background:#111;border:1px solid rgba(255,255,255,.2);color:var(--white);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none"
+          oninput="recalcNFTValue()">
+      </div>
+      <button onclick="saveAdminTokenomics()"
+        style="padding:10px 20px;background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700">
+        SALVA
+      </button>
+    </div>
+
+    <!-- METRICHE PRINCIPALI -->
+    <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)">
+        <div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">€0.00</div>
+        <div class="admin-card-label">Treasury totale</div>
+      </div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)">
+        <div class="admin-card-val" id="adm-nft-minted" style="color:var(--gold)">0</div>
+        <div class="admin-card-label">NFT emessi (minati)</div>
+      </div>
+      <div class="admin-card" style="border:2px solid var(--gold)">
+        <div class="admin-card-val" id="adm-nft-value" style="color:var(--gold);font-size:28px">€—</div>
+        <div class="admin-card-label" style="color:var(--gold)">Valore probabile NFT</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-nft-buyback">€0.00</div>
+        <div class="admin-card-label">Buyback garantito (95%)</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-nft-upside">€0.00</div>
+        <div class="admin-card-label">Upside potenziale (5%)</div>
+      </div>
+    </div>
+
+    <!-- COIN METRICS -->
+    <h3 style="font-family:var(--font-h);font-size:16px;letter-spacing:2px;color:var(--white);margin:24px 0 14px;text-transform:uppercase">Coin Metrics (AICO)</h3>
+    <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-coin-price">€0.10</div>
+        <div class="admin-card-label">Prezzo AICO (pegged)</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-coin-supply">0</div>
+        <div class="admin-card-label">Circolante (AICO)</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-coin-marketcap">€0.00</div>
+        <div class="admin-card-label">Market Cap</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-coin-fdv">€0.00</div>
+        <div class="admin-card-label">Fully Diluted Val. (FDV)</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val">10,000,000</div>
+        <div class="admin-card-label">Max Supply (AICO)</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-coin-treasury-ratio">—%</div>
+        <div class="admin-card-label">Treasury / Market Cap</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-coin-nft-ratio">—</div>
+        <div class="admin-card-label">AICO per NFT (circolante)</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-coin-backing">—%</div>
+        <div class="admin-card-label">Backing ratio (95% rule)</div>
+      </div>
+    </div>
+
+    <!-- NFT BREAKDOWN PER TIPO -->
+    <h3 style="font-family:var(--font-h);font-size:16px;letter-spacing:2px;color:var(--white);margin:24px 0 14px;text-transform:uppercase">NFT per tipo</h3>
+    <table class="admin-table">
+      <thead><tr><th>Tipo</th><th>Emessi</th><th>% sul totale</th><th>Valore stimato/NFT</th></tr></thead>
+      <tbody id="adm-nft-breakdown">
+        <tr><td colspan="4" style="color:var(--gray-400)">Caricamento...</td></tr>
+      </tbody>
+    </table>
+    <p class="admin-note" style="margin-top:16px">⚠️ I dati treasury sono inseriti manualmente. NFT conteggiati da Supabase nft_rewards. AICO circolante da inserire manualmente (integrare con exchange al mainnet).</p>
   </div>
 
   <!-- 
