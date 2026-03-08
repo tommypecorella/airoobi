@@ -421,7 +421,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .nav-logo{height:24px}
   .nav-menu{padding:0 12px;gap:12px;height:56px}
   .nav-menu a{font-size:11px;letter-spacing:1px;display:none}
-  .nav-menu a[style*="gold"]{display:inline}
+  #lang-btn{display:none}
   .lang-toggle{padding:4px 8px;font-size:10px}
   .nav-link-btn{padding:6px 10px;font-size:10px}
   .nav-link-btn span{display:none}
@@ -909,7 +909,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.3 · Last update: 08 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.4 · Last update: 08 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -2715,8 +2715,8 @@ function checkAdminAccess(email){
           </div>
         </div>
         <div class="wcard-desc">
-          <span class="it">La valuta di AIROOBI. Guadagnata ogni giorno con check-in, video e inviti. Chi ha più ARIA ha più forza negli airdrop — e può usarla per comprare blocchi di partecipazione.</span>
-          <span class="en">AIROOBI's currency. Earned daily via check-ins, videos and referrals. More ARIA means more power in airdrops — use it to buy participation blocks.</span>
+          <span class="it">Il tuo portafoglio ARIA. Ricaricato ogni volta che guadagni — check-in, video, referral. Mostra l'importo totale disponibile: puoi usarne parte o tutto per comprare blocchi di partecipazione agli airdrop.</span>
+          <span class="en">Your ARIA wallet. Recharged every time you earn — check-ins, videos, referrals. Shows your total available balance: use part or all of it to buy airdrop participation blocks.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-serial" style="color:rgba(74,158,255,.3)">ALPHA · #<span id="wcard-aria-serial">—</span></div>
@@ -2749,8 +2749,8 @@ function checkAdminAccess(email){
           </div>
         </div>
         <div class="wcard-desc">
-          <span class="it">Il tuo NFT chiave. Usala per riscuotere KAS reale sulla blockchain Kaspa. Garantisce il rimborso del 95% del Fondo Comune, elaborato in 24–48h.</span>
-          <span class="en">Your key NFT. Use it to redeem real KAS on the Kaspa blockchain. Guarantees 95% of the Common Fund refund, processed in 24–48h.</span>
+          <span class="it">Il tuo certificato di resa. Mostra il valore KAS che hai diritto a riscuotere. Puoi convertire parte o tutto l'importo in KAS reale sulla blockchain Kaspa — rimborso garantito al 95%, elaborato in 24–48h.</span>
+          <span class="en">Your yield certificate. Shows the KAS value you're entitled to redeem. Convert part or all of the balance into real KAS on the Kaspa blockchain — 95% guaranteed refund, processed in 24–48h.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-serial" style="color:rgba(184,150,12,.3)">GENESIS · #<span id="wcard-rend-serial">—</span></div>
@@ -2775,8 +2775,8 @@ function checkAdminAccess(email){
           </div>
         </div>
         <div class="wcard-desc">
-          <span class="it">Non hai ancora una Tessera Rendimento. Partecipa agli airdrop per riceverne una — è la chiave per convertire i tuoi guadagni in KAS.</span>
-          <span class="en">You don't have a Yield Card yet. Join airdrops to earn one — it's the key to converting your earnings into real KAS.</span>
+          <span class="it">Non hai ancora una Tessera Rendimento. Partecipa agli airdrop per ottenerne una — sarà il tuo portafoglio per riscuotere KAS reale in qualsiasi momento.</span>
+          <span class="en">You don't have a Yield Card yet. Join airdrops to earn one — it will be your wallet to redeem real KAS at any time.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-holder" style="color:rgba(184,150,12,.2)"><span class="it">Partecipa agli airdrop per ottenerla</span><span class="en">Join airdrops to earn one</span></div>
@@ -2807,8 +2807,8 @@ function checkAdminAccess(email){
           </div>
         </div>
         <div class="wcard-desc">
-          <span class="it">Il tuo portafoglio Kaspa su AIROOBI. Dopo ogni conversione con la Tessera Rendimento, il KAS viene accreditato qui — on-chain, tuo per sempre. Disponibile al mainnet.</span>
-          <span class="en">Your Kaspa wallet on AIROOBI. After each Yield Card conversion, KAS is credited here — on-chain, yours forever. Available at mainnet.</span>
+          <span class="it">Il tuo portafoglio KAS su AIROOBI. Mostra il totale dei KAS ricevuti: ogni conversione dalla Tessera Rendimento accredita qui l'importo — on-chain, tuo per sempre. Puoi spostare parte o tutto quando vuoi. Disponibile al mainnet.</span>
+          <span class="en">Your KAS wallet on AIROOBI. Shows total KAS received: each Yield Card conversion credits the amount here — on-chain, yours forever. Move part or all of it whenever you want. Available at mainnet.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-serial" style="color:rgba(73,234,203,.2)">KASPA NETWORK</div>
@@ -2944,10 +2944,10 @@ function checkAdminAccess(email){
     <!-- ── FONDO COMUNE ── -->
     <div class="wallet-fund">
       <div class="wfund-label">FONDO COMUNE · COMMON FUND</div>
-      <div style="font-size:13px;color:var(--gray-400);line-height:1.7">
-        <span class="it">Il Fondo Comune garantisce il valore delle Tessere. Ogni Tessera vale: <strong style="color:var(--white)">Fondo totale ÷ Tessere emesse</strong>. Se il Fondo cresce, cresce anche il tuo saldo.</span>
-        <span class="en">The Common Fund guarantees the value of Cards. Each Card is worth: <strong style="color:var(--white)">Total Fund ÷ Cards issued</strong>. If the Fund grows, your balance grows too.</span>
-      </div>
+
+
+
+
       <div class="wfund-stats">
         <div>
           <div class="wfund-stat-lbl"><span class="it">Fondo attuale</span><span class="en">Current fund</span></div>
