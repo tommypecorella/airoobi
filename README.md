@@ -25,4 +25,6 @@ scripts/       → Utility and automation scripts
 - Font titoli: Cormorant Garamond
 - Font body: Instrument Sans
 - Dark mode default
-- 1 AICO = €0.10 (unica certezza comunicabile)
+- 1 AICO = €0.10 (stable coin di AIROOBI)
+
+NEssun riferimento a eur o valori
