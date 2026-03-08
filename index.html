@@ -1196,12 +1196,7 @@ async function awardLoginBonus(userId,token){
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
       body:JSON.stringify({user_id:userId,amount:10,reason:'login_bonus'})
     });
-    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userId,{
-      method:'PATCH',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({total_points:null})
-    });
-    // Recalculate total from ledger
+    // Recalculate total from ledger and update profile in one PATCH
     const pts=await fetch(SB_URL+'/rest/v1/points_ledger?user_id=eq.'+userId+'&select=amount',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
     });
@@ -1450,9 +1445,15 @@ async function doLogin(){
     saveSession(data);
     window._currentSession = data;
     closeAuth();
-    await awardLoginBonus(data.user.id,data.access_token);
-    await awardWelcomeBonus(data.user.id,data.access_token); // idempotent: only fires once
-    await autoConfirmReferral(data.user.id,data.access_token); // idempotent: only fires if not yet confirmed
+    try{
+      await awardLoginBonus(data.user.id,data.access_token);
+    }catch(e){console.error('[AIROOBI] awardLoginBonus failed:',e);}
+    try{
+      await awardWelcomeBonus(data.user.id,data.access_token);
+    }catch(e){console.error('[AIROOBI] awardWelcomeBonus failed:',e);}
+    try{
+      await autoConfirmReferral(data.user.id,data.access_token);
+    }catch(e){console.error('[AIROOBI] autoConfirmReferral failed:',e);}
     track('login', {lang});
     gatedDashboard(data);
   }else{
@@ -1527,10 +1528,15 @@ async function showDashboard(session){
     checkAdminAccess(email);
     updateNavCounters(session);
     
-    // Position
-    const all=await sbGet('profiles?select=id&order=created_at',session.access_token);
-    const pos=all.findIndex(x=>x.id===session.user.id)+1;
-    document.getElementById('ref-position').textContent=pos>0?'#'+pos:'#1';
+    // Position (server-side via RPC)
+    try{
+      const posData=await sbRpc('get_user_position',{p_user_id:session.user.id},session.access_token);
+      const pos=(typeof posData==='number')?posData:(posData&&posData[0]?posData[0].position:0);
+      document.getElementById('ref-position').textContent=pos>0?'#'+pos:'#1';
+    }catch(e){
+      console.error('[AIROOBI] get_user_position failed:',e);
+      document.getElementById('ref-position').textContent='#—';
+    }
   }
 }
 
