@@ -30,8 +30,433 @@
 <meta name="twitter:description" content="Guadagna ARIA ogni giorno. Chi vince prende l'oggetto. Tutti gli altri incassano. Sempre.">
 <meta name="twitter:image" content="https://airoobi.com/og-image.png">
 <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous">
+// ══ TABS ══
+function switchTab(tab){
+  document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
+  event.target.closest('.dash-tab').classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='earnings')loadEarnings();
+  if(tab==='referral')loadReferralTab();
+}
+
+// ══ EARNINGS SYSTEM ══
+let earnSession=null;
+
+async function sbRpc(fn,body,token){
+  const res=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  if(res.ok)return await res.json();
+  return null;
+}
+
+async function loadEarnings(){
+  const s=getSession();
+  if(!s)return;
+  earnSession=s;
+  const token=s.access_token;
+  const uid=s.user.id;
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  
+  // Load profile
+  const profiles=await sbGet('profiles?id=eq.'+uid+'&select=*',token);
+  if(!profiles||!profiles.length)return;
+  const p=profiles[0];
+  
+  // Update totals
+  document.getElementById('earn-total').textContent=p.total_points||0;
+  document.getElementById('overview-points').textContent=p.total_points||0;
+  document.getElementById('overview-streak').textContent=p.current_streak||0;
+  
+  // Streak dots
+  const streak=p.current_streak||0;
+  const dayInWeek=streak%7;
+  const dotsEl=document.getElementById('streak-dots');
+  const days=lang==='it'?['L','M','M','G','V','S','D']:['M','T','W','T','F','S','S'];
+  let dotsHtml='';
+  for(let i=0;i<7;i++){
+    const done=i<dayInWeek;
+    const today=i===dayInWeek&&p.last_checkin!==new Date().toISOString().split('T')[0];
+    dotsHtml+='<div class="streak-dot'+(done?' done':'')+(today?' today':'')+'">'+days[i]+'</div>';
+  }
+  dotsEl.innerHTML=dotsHtml;
+  
+  // Streak info
+  const infoEl=document.getElementById('streak-info');
+  const remaining=7-dayInWeek;
+  if(remaining===7&&streak>0&&streak%7===0){
+    infoEl.innerHTML=lang==='it'?'<span>Streak completata! +100 bonus!</span>':'<span>Streak complete! +100 bonus!</span>';
+  }else{
+    infoEl.textContent=lang==='it'?remaining+' giorni al bonus di 100 ARIA':remaining+' days to 100 ARIA bonus';
+  }
+  
+  // Check-in button state
+  const checkinBtn=document.getElementById('checkin-btn');
+  const today=new Date().toISOString().split('T')[0];
+  if(p.last_checkin===today){
+    checkinBtn.disabled=true;
+    checkinBtn.innerHTML=lang==='it'?'GI\u00c0 TIMBRATO OGGI ✓':'ALREADY CHECKED IN ✓';
+  }else{
+    checkinBtn.disabled=false;
+    checkinBtn.innerHTML=lang==='it'?'CHECK-IN OGGI':'CHECK IN TODAY';
+  }
+  
+  // Video views today
+  const views=await sbGet('video_views?user_id=eq.'+uid+'&viewed_at=gte.'+today+'T00:00:00&select=id',token);
+  const viewCount=views?views.length:0;
+  const videoMsg=document.getElementById('earn-video-msg');
+  videoMsg.textContent=lang==='it'?viewCount+'/5 video oggi':viewCount+'/5 videos today';
+  const videoBtn=document.getElementById('video-earn-btn');
+  if(viewCount>=5){
+    videoBtn.disabled=true;
+    videoBtn.innerHTML=lang==='it'?'LIMITE RAGGIUNTO':'LIMIT REACHED';
+  }
+  
+  // Referral confirmation card
+  const refCard=document.getElementById('earn-referral-card');
+  if(p.referred_by){
+    refCard.style.display='block';
+    const confirms=await sbGet('referral_confirmations?referred_id=eq.'+uid+'&status=eq.confirmed&select=id',token);
+    if(confirms&&confirms.length>0){
+      document.getElementById('confirm-ref-btn').disabled=true;
+      document.getElementById('confirm-ref-btn').innerHTML=lang==='it'?'GI\u00c0 CONFERMATO ✓':'ALREADY CONFIRMED ✓';
+      document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span> Hai guadagnato 100 ARIA.':'<span>Referral confirmed!</span> You earned 100 ARIA.';
+    }else{
+      document.getElementById('earn-ref-status').innerHTML=lang==='it'?'Invitato da: <span>'+p.referred_by+'</span>':'Invited by: <span>'+p.referred_by+'</span>';
+    }
+  }
+  
+  // Points history
+  const history=await sbGet('points_ledger?user_id=eq.'+uid+'&select=*&order=created_at.desc&limit=20',token);
+  const histEl=document.getElementById('points-history');
+  if(history&&history.length>0){
+    const reasonLabels={
+      login_bonus:lang==='it'?'Bonus login (Alpha Brave)':'Login bonus (Alpha Brave)',
+      welcome_bonus:lang==='it'?'Bonus di benvenuto':'Welcome bonus',
+      daily_checkin:lang==='it'?'Check-in giornaliero':'Daily check-in',
+      weekly_streak:lang==='it'?'Bonus settimanale':'Weekly bonus',
+      video_view:lang==='it'?'Video guardato':'Video watched',
+      referral_bonus:lang==='it'?'Bonus referral':'Referral bonus'
+    };
+    histEl.innerHTML=history.map(function(h){
+      var d=new Date(h.created_at);
+      var dateStr=d.toLocaleDateString(lang==='it'?'it-IT':'en-US',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      return '<div class="points-row"><div><div class="points-row-reason">'+(reasonLabels[h.reason]||h.reason)+'</div><div class="points-row-date">'+dateStr+'</div></div><div class="points-row-amount">+'+h.amount+'</div></div>';
+    }).join('');
+  }
+}
+
+// ── CHECK-IN ──
+let checkinVideoSeen=false;
+async function doCheckin(){
+  if(!earnSession)return;
+  if(!checkinVideoSeen){
+    checkinVideoSeen=true;
+    showVideoAd(function(){doCheckinReal();});
+    return;
+  }
+  doCheckinReal();
+}
+async function doCheckinReal(){
+  if(!earnSession)return;
+  const btn=document.getElementById('checkin-btn');
+  btn.disabled=true;
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  btn.textContent=lang==='it'?'TIMBRO IN CORSO...':'CHECKING IN...';
+  
+  const result=await sbRpc('do_checkin',{p_user_id:earnSession.user.id},earnSession.access_token);
+  
+  if(result&&result.success){
+    var msg='+'+result.points_earned+' '+(lang==='it'?'ARIA':'ARIA')+'!';
+    if(result.weekly_bonus)msg+=' 🎉 +100 bonus!';
+    btn.textContent=msg;
+    setTimeout(function(){loadEarnings();},1500);
+  }else if(result&&result.reason==='already_checked_in'){
+    btn.textContent=lang==='it'?'GI\u00c0 TIMBRATO OGGI ✓':'ALREADY CHECKED IN ✓';
+  }else{
+    btn.textContent=lang==='it'?'Errore, riprova':'Error, try again';
+    btn.disabled=false;
+  }
+}
+
+// ── VIDEO EARN ──
+let earnVideoTimer=null;
+let earnVideoSec=0;
+
+function startEarnVideo(){
+  if(!earnSession)return;
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  const container=document.getElementById('earn-video-container');
+  const progress=document.getElementById('earn-video-progress');
+  const bar=document.getElementById('earn-video-bar');
+  const cd=document.getElementById('earn-video-cd');
+  const btn=document.getElementById('video-earn-btn');
+  
+  container.style.display='block';
+  progress.style.display='block';
+  cd.style.display='block';
+  btn.disabled=true;
+  bar.style.width='0%';
+  earnVideoSec=0;
+  
+  container.innerHTML='<iframe src="https://airoobi.com/airoobi-explainer.html?autoplay=1" style="width:100%;height:100%;border:none;" allow="autoplay"></iframe>';
+  
+  earnVideoTimer=setInterval(function(){
+    earnVideoSec++;
+    bar.style.width=Math.min(100,(earnVideoSec/10)*100)+'%';
+    var r=Math.max(0,10-earnVideoSec);
+    cd.textContent=r>0?(r+'s'):(lang==='it'?'Completato!':'Complete!');
+    
+    if(earnVideoSec>=10){
+      clearInterval(earnVideoTimer);
+      completeEarnVideo();
+    }
+  },1000);
+}
+
+async function completeEarnVideo(){
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  const result=await sbRpc('reward_video_view',{p_user_id:earnSession.user.id,p_duration:10},earnSession.access_token);
+  
+  const btn=document.getElementById('video-earn-btn');
+  if(result&&result.success){
+    btn.innerHTML='+10 '+(lang==='it'?'ARIA':'ARIA')+'! ✓';
+    btn.classList.remove('earn-btn-outline');
+    setTimeout(function(){
+      btn.classList.add('earn-btn-outline');
+      document.getElementById('earn-video-container').style.display='none';
+      document.getElementById('earn-video-progress').style.display='none';
+      document.getElementById('earn-video-cd').style.display='none';
+      loadEarnings();
+    },2000);
+  }else if(result&&result.reason==='daily_limit'){
+    btn.innerHTML=lang==='it'?'LIMITE RAGGIUNTO':'LIMIT REACHED';
+  }else if(result&&result.reason==='cooldown'){
+    btn.innerHTML=lang==='it'?'ATTENDI 3 MINUTI':'WAIT 3 MINUTES';
+    btn.disabled=false;
+    setTimeout(function(){btn.innerHTML=lang==='it'?'<span class="it">GUARDA VIDEO</span><span class="en">WATCH VIDEO</span>':'WATCH VIDEO';btn.disabled=false;},5000);
+  }
+}
+
+// ── CONFIRM REFERRAL ──
+let refConfirmVideoSeen=false;
+async function doConfirmReferral(){
+  if(!earnSession)return;
+  if(!refConfirmVideoSeen){
+    refConfirmVideoSeen=true;
+    showVideoAd(function(){doConfirmReferralReal();});
+    return;
+  }
+  doConfirmReferralReal();
+}
+async function doConfirmReferralReal(){
+  if(!earnSession)return;
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  const btn=document.getElementById('confirm-ref-btn');
+  btn.disabled=true;
+  
+  // Generate device hash (simple fingerprint)
+  var fp=navigator.userAgent+screen.width+screen.height+new Date().getTimezoneOffset();
+  var hash=0;
+  for(var i=0;i<fp.length;i++){hash=((hash<<5)-hash)+fp.charCodeAt(i);hash|=0;}
+  var deviceHash=Math.abs(hash).toString(36);
+  
+  const result=await sbRpc('confirm_referral',{p_referred_id:earnSession.user.id,p_device_hash:deviceHash},earnSession.access_token);
+  
+  if(result&&result.success){
+    btn.innerHTML='+100 '+(lang==='it'?'ARIA':'ARIA')+'! ✓';
+    document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span>':'<span>Referral confirmed!</span>';
+    setTimeout(loadEarnings,1500);
+  }else if(result){
+    var reasons={
+      account_too_new:lang==='it'?'Account troppo recente (attendi 24h)':'Account too new (wait 24h)',
+      needs_checkin:lang==='it'?'Fai prima un check-in':'Do a check-in first',
+      already_confirmed:lang==='it'?'Già confermato':'Already confirmed',
+      device_limit:lang==='it'?'Limite dispositivo raggiunto':'Device limit reached',
+      no_referrer:lang==='it'?'Nessun referral da confermare':'No referral to confirm'
+    };
+    btn.innerHTML=reasons[result.reason]||'Error';
+    if(result.reason!=='already_confirmed')setTimeout(function(){btn.disabled=false;btn.innerHTML=lang==='it'?'CONFERMA REFERRAL':'CONFIRM REFERRAL';},3000);
+  }
+}
+
+// ── LOAD REFERRAL TAB ──
+async function loadReferralTab(){
+  if(!earnSession)return;
+  const token=earnSession.access_token;
+  const uid=earnSession.user.id;
+  const profiles=await sbGet('profiles?id=eq.'+uid+'&select=referral_count',token);
+  if(profiles&&profiles.length>0){
+    document.getElementById('ref-count-2').textContent=profiles[0].referral_count||0;
+  }
+  const confirmed=await sbGet('referral_confirmations?referrer_id=eq.'+uid+'&status=eq.confirmed&select=id',token);
+  document.getElementById('ref-confirmed').textContent=confirmed?confirmed.length:0;
+}
+
+
+// ══ INVESTOR PAGE ══
+function openInvestor(){
+  const overlay=document.getElementById('investor-overlay');
+  overlay.classList.add('active');
+  document.body.style.overflow='hidden';
+  // Set logo (black logo for white bg)
+  var logoSrc=document.querySelector('.nav-logo')?.src||'';
+  document.getElementById('investor-logo').src=logoSrc;
+  // Load waitlist count
+  sbCount().then(function(c){document.getElementById('inv-waitlist').textContent=c||'—';});
+}
+function closeInvestor(){
+  document.getElementById('investor-overlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+
+async function sendInvestorForm(){
+  var name=document.getElementById('inv-name').value.trim();
+  var email=document.getElementById('inv-email').value.trim();
+  var org=document.getElementById('inv-org').value.trim();
+  var msg=document.getElementById('inv-msg').value.trim();
+  var msgEl=document.getElementById('inv-form-msg');
+  
+  if(!name||!email||!msg){
+    msgEl.style.color='#B91C1C';
+    msgEl.textContent='Please fill in name, email and message.';
+    return;
+  }
+  
+  // Send via Supabase (store in a table or just send email)
+  // For now, store in a simple table
+  try{
+    await fetch(SB_URL+'/rest/v1/investor_leads',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({name:name,email:email,organization:org,message:msg})
+    });
+    msgEl.style.color='var(--gold)';
+    msgEl.textContent='Message sent! We will be in touch soon.';
+    document.getElementById('inv-name').value='';
+    document.getElementById('inv-email').value='';
+    document.getElementById('inv-org').value='';
+    document.getElementById('inv-msg').value='';
+  }catch(e){
+    // Fallback: mailto
+    window.location.href='mailto:investor@airoobi.com?subject=Investment Inquiry from '+encodeURIComponent(name)+'&body='+encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nOrganization: '+org+'\n\n'+msg);
+  }
+}
+
+
+// ══ ADMIN AREA ══
+const ADMIN_EMAIL='tommaso.pecorella@outlook.com'; // flag: only this user sees admin
+
+function openAdmin(){
+  document.getElementById('admin-overlay').classList.add('active');
+  document.body.style.overflow='hidden';
+  loadAdminData();
+}
+function closeAdmin(){
+  document.getElementById('admin-overlay').classList.remove('active');
+  document.body.style.overflow='';
+}
+
+function updateNftMetrics(){
+  var treasury=parseFloat(document.getElementById('adm-input-treasury').value)||0;
+  var minted=parseInt(document.getElementById('adm-input-minted').value)||0;
+  var circulating=parseInt(document.getElementById('adm-input-circulating').value)||0;
+  var maxSupply=parseInt(document.getElementById('adm-input-maxsupply').value)||1000;
+  var nftValue=minted>0?treasury/minted:0;
+  var marketCap=nftValue*circulating;
+  var fullyDiluted=nftValue*maxSupply;
+  var fmt=function(n){return '€ '+n.toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});};
+  document.getElementById('adm-treasury-val').textContent=fmt(treasury);
+  document.getElementById('adm-nft-minted').textContent=minted.toLocaleString('it-IT');
+  document.getElementById('adm-nft-value').textContent=fmt(nftValue);
+  document.getElementById('adm-nft-marketcap').textContent=fmt(marketCap);
+  document.getElementById('adm-nft-circulating').textContent=circulating.toLocaleString('it-IT')+' NFT';
+  document.getElementById('adm-nft-fully-diluted').textContent=fmt(fullyDiluted);
+}
+
+async function loadAdminData(){
+  const s=getSession();
+  if(!s)return;
+  const t=s.access_token;
+  
+  try{
+    // Users
+    const users=await sbGet('profiles?select=*&order=created_at.desc',t);
+    document.getElementById('adm-users').textContent=users?users.length:0;
+    
+    // Waitlist
+    const wl=await sbGet('waitlist?select=id',t);
+    document.getElementById('adm-waitlist').textContent=wl?wl.length:0;
+    
+    // Total points issued
+    const points=await sbGet('points_ledger?select=amount',t);
+    const totalPts=points?points.reduce(function(a,b){return a+b.amount},0):0;
+    document.getElementById('adm-points').textContent=totalPts.toLocaleString();
+    
+    // Today's checkins
+    var today=new Date().toISOString().split('T')[0];
+    const cks=await sbGet('checkins?checked_at=eq.'+today+'&select=id',t);
+    document.getElementById('adm-checkins').textContent=cks?cks.length:0;
+    
+    // Today's videos
+    const vids=await sbGet('video_views?viewed_at=gte.'+today+'T00:00:00&select=id',t);
+    document.getElementById('adm-videos').textContent=vids?vids.length:0;
+    
+    // Confirmed referrals
+    const refs=await sbGet('referral_confirmations?status=eq.confirmed&select=id',t);
+    document.getElementById('adm-referrals').textContent=refs?refs.length:0;
+    
+    // Users table
+    if(users&&users.length>0){
+      var tbody=document.getElementById('adm-users-body');
+      tbody.innerHTML=users.slice(0,20).map(function(u){
+        var d=new Date(u.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+        return '<tr><td>'+u.email+'</td><td>'+(u.total_points||0)+'</td><td>'+(u.current_streak||0)+'</td><td>'+(u.referral_count||0)+'</td><td>'+d+'</td></tr>';
+      }).join('');
+    }
+    
+    // Stats
+    if(users&&users.length>0){
+      var avgPts=Math.round(totalPts/users.length);
+      document.getElementById('adm-avg-points').textContent=avgPts;
+      var maxStreak=Math.max.apply(null,users.map(function(u){return u.longest_streak||0}));
+      document.getElementById('adm-max-streak').textContent=maxStreak+'d';
+      document.getElementById('adm-conversion').textContent=users.length+'/'+(wl?wl.length:0);
+    }
+    
+    // Investor leads
+    try{
+      const leads=await sbGet('investor_leads?select=id',t);
+      document.getElementById('adm-inv-leads').textContent=leads?leads.length:0;
+    }catch(e){document.getElementById('adm-inv-leads').textContent='—';}
+    
+  }catch(e){console.error('Admin load error:',e);}
+}
+
+// Show admin menu item only for admin user
+function checkAdminAccess(email){
+  if(email===ADMIN_EMAIL){
+    // Add admin link to nav if not there
+    var menu=document.querySelector('.nav-menu');
+    if(menu&&!document.getElementById('nav-admin-btn')){
+      var btn=document.createElement('button');
+      btn.id='nav-admin-btn';
+      btn.className='nav-link-btn';
+      btn.onclick=openAdmin;
+      btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>';
+      var loggedIn=document.getElementById('nav-logged-in');
+      menu.insertBefore(btn,loggedIn);
+    }
+  }
+}
+
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -298,22 +723,6 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .dash-tab:hover{color:var(--white)}
 .dash-page{display:none}
 .dash-page.active{display:block}
-/* Mobile tab burger */
-.dash-tab-mobile{display:none;margin-bottom:24px;position:relative;z-index:100}
-.dash-tab-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 18px;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.2);color:var(--white);cursor:pointer;font-family:var(--font-b);font-size:12px;letter-spacing:2px;text-transform:uppercase}
-.dash-tab-trigger-label{display:flex;align-items:center;gap:10px}
-.dash-tab-trigger-label span{color:var(--gold)}
-.dash-tab-chevron{width:16px;height:16px;position:relative;transition:transform .25s}
-.dash-tab-chevron::before,.dash-tab-chevron::after{content:'';position:absolute;width:8px;height:1.5px;background:var(--gold);top:7px}
-.dash-tab-chevron::before{right:50%;transform:rotate(45deg);transform-origin:right center}
-.dash-tab-chevron::after{left:50%;transform:rotate(-45deg);transform-origin:left center}
-.dash-tab-mobile.open .dash-tab-chevron{transform:rotate(180deg)}
-.dash-tab-dropdown{display:none;position:absolute;top:100%;left:0;right:0;background:#0a0a0a;border:1px solid rgba(184,150,12,.2);border-top:none;flex-direction:column}
-.dash-tab-mobile.open .dash-tab-dropdown{display:flex}
-.dash-tab-option{padding:14px 18px;font-family:var(--font-b);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-400);cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:color .2s;background:none;border-left:none;border-right:none;border-top:none;text-align:left}
-.dash-tab-option:last-child{border-bottom:none}
-.dash-tab-option.active{color:var(--gold)}
-.dash-tab-option:hover{color:var(--white)}
 
 /* ── VIDEO INTERSTITIAL ── */
 .video-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;background:var(--black);align-items:center;justify-content:center;flex-direction:column}
@@ -421,7 +830,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .nav-logo{height:24px}
   .nav-menu{padding:0 12px;gap:12px;height:56px}
   .nav-menu a{font-size:11px;letter-spacing:1px;display:none}
-  #lang-btn{display:none}
+  .nav-menu a[style*="gold"]{display:inline}
   .lang-toggle{padding:4px 8px;font-size:10px}
   .nav-link-btn{padding:6px 10px;font-size:10px}
   .nav-link-btn span{display:none}
@@ -434,8 +843,8 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .ref-link{font-size:11px;padding:12px}
   .ref-share{flex-wrap:wrap;gap:8px}
   .ref-share-btn{flex:1;min-width:calc(50% - 8px);justify-content:center;padding:10px 12px;font-size:11px}
-  .dash-tabs{display:none}
-  .dash-tab-mobile{display:block}
+  .dash-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .dash-tab{padding:10px 16px;font-size:11px;white-space:nowrap}
   .earn-card{padding:20px}
   .earn-header{flex-direction:column;align-items:flex-start}
   .earn-balance{text-align:left}
@@ -494,49 +903,44 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 ═══════════════════════════════════════════ */
 .wallet-section-label{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gray-500);text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--gray-800);display:flex;align-items:center;gap:10px;}
 .wallet-section-label span{color:var(--gray-700);}
-.wallet-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:32px;}
+.wallet-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
 
 /* CARD BASE */
-.wcard{position:relative;border-radius:2px;padding:20px 24px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;animation:wcardIn .55s ease both;}
+.wcard{position:relative;border-radius:2px;padding:24px 24px 20px;overflow:hidden;cursor:pointer;transition:transform .35s,box-shadow .35s;aspect-ratio:1.586/1;display:flex;flex-direction:column;justify-content:space-between;animation:wcardIn .55s ease both;}
 .wcard:nth-child(1){animation-delay:.04s}.wcard:nth-child(2){animation-delay:.1s}.wcard:nth-child(3){animation-delay:.16s}
 @keyframes wcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.wcard:hover{transform:translateX(4px);}
-.wcard-locked{opacity:.32;pointer-events:none;}
+.wcard:hover{transform:translateY(-6px) scale(1.015);}
+.wcard-locked{opacity:.38;pointer-events:none;}
 
 /* Tessera Coin — ARIA blue */
-.wcard-aria{background:linear-gradient(135deg,#020810,#040c1a 60%,#020608);box-shadow:0 8px 40px rgba(74,158,255,.08),0 0 0 1px rgba(74,158,255,.18);}
-.wcard-aria:hover{box-shadow:0 12px 55px rgba(74,158,255,.16),0 0 0 1px rgba(74,158,255,.4);}
+.wcard-aria{background:linear-gradient(135deg,#020810,#040c1a 50%,#020608);box-shadow:0 18px 55px rgba(74,158,255,.1),0 0 0 1px rgba(74,158,255,.22);}
+.wcard-aria:hover{box-shadow:0 28px 75px rgba(74,158,255,.22),0 0 0 1px rgba(74,158,255,.5);}
 
 /* Tessera Rendimento — gold NFT */
-.wcard-rendimento{background:linear-gradient(135deg,#0c0900,#1c1400 60%,#0a0800);box-shadow:0 8px 40px rgba(184,150,12,.1),0 0 0 1px rgba(184,150,12,.25);}
-.wcard-rendimento:hover{box-shadow:0 12px 55px rgba(184,150,12,.2),0 0 0 1px rgba(184,150,12,.5);}
-.wcard-shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(184,150,12,.04) 50%,transparent 62%);animation:wshimmer 4s ease-in-out infinite;pointer-events:none;}
+.wcard-rendimento{background:linear-gradient(135deg,#0c0900,#1c1400 50%,#0a0800);box-shadow:0 18px 55px rgba(184,150,12,.12),0 0 0 1px rgba(184,150,12,.3);}
+.wcard-rendimento:hover{box-shadow:0 28px 75px rgba(184,150,12,.24),0 0 0 1px rgba(184,150,12,.6);}
+.wcard-shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(184,150,12,.06) 50%,transparent 62%);animation:wshimmer 4s ease-in-out infinite;pointer-events:none;}
 @keyframes wshimmer{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
 
 /* Tessera Kaspa — green */
-.wcard-kaspa{background:linear-gradient(135deg,#010d0b,#021510 60%,#010a07);box-shadow:0 8px 40px rgba(73,234,203,.05),0 0 0 1px rgba(73,234,203,.14);}
-.wcard-kaspa:hover{box-shadow:0 12px 55px rgba(73,234,203,.12),0 0 0 1px rgba(73,234,203,.35);}
+.wcard-kaspa{background:linear-gradient(135deg,#010d0b,#021510 50%,#010a07);box-shadow:0 18px 55px rgba(73,234,203,.07),0 0 0 1px rgba(73,234,203,.18);}
+.wcard-kaspa:hover{box-shadow:0 28px 75px rgba(73,234,203,.16),0 0 0 1px rgba(73,234,203,.4);}
 
 .wcard-ring{position:absolute;border-radius:50%;pointer-events:none;border-width:1px;border-style:solid;}
-.wcard-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
-.wcard-title-group{display:flex;flex-direction:column;gap:3px;}
-.wcard-label{font-family:var(--font-m);font-size:10px;letter-spacing:3px;text-transform:uppercase;line-height:1;}
-.wcard-sublabel{font-family:var(--font-h);font-size:12px;font-style:italic;opacity:.45;}
-.wcard-icons{display:flex;align-items:center;gap:8px;}
-.wcard-badge{font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border:1px solid;background:rgba(0,0,0,.6);}
-.wcard-chip{width:30px;height:22px;border:1px solid rgba(255,255,255,.1);border-radius:3px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:4px;background:rgba(255,255,255,.03);flex-shrink:0;}
+.wcard-top{display:flex;justify-content:space-between;align-items:flex-start;}
+.wcard-label{font-family:var(--font-m);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;line-height:1;}
+.wcard-sublabel{margin-top:5px;font-family:var(--font-h);font-size:11px;font-style:italic;}
+.wcard-chip{width:32px;height:24px;border:1px solid rgba(255,255,255,.1);border-radius:3px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:4px;background:rgba(255,255,255,.03);flex-shrink:0;}
 .wcard-chip-dot{border-radius:1px;background:currentColor;}
 .wcard-chip-dot:nth-child(1){opacity:.35}.wcard-chip-dot:nth-child(2){opacity:.15}.wcard-chip-dot:nth-child(3){opacity:.2}.wcard-chip-dot:nth-child(4){opacity:.4}
-.wcard-body{display:flex;align-items:baseline;gap:12px;margin-bottom:0;}
-.wcard-amount-block{display:flex;flex-direction:column;gap:4px;}
-.wcard-desc{font-family:var(--font-b);font-size:12px;line-height:1.6;color:rgba(255,255,255,.42);margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);flex:1;}
-.wcard-amount{font-family:var(--font-m);font-size:clamp(30px,3.5vw,48px);font-weight:300;letter-spacing:-3px;line-height:1;}
-.wcard-unit{font-family:var(--font-m);font-size:9px;letter-spacing:2px;opacity:.35;}
-
-.wcard-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05);}
-.wcard-serial{font-family:var(--font-m);font-size:10px;letter-spacing:2px;opacity:.25;}
-.wcard-holder{font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.25;}
-.wcard-kaspa-logo{width:32px;height:32px;opacity:.4;}
+.wcard-mid{display:flex;flex-direction:column;gap:3px;}
+.wcard-amount{font-family:var(--font-m);font-size:clamp(22px,3vw,32px);font-weight:300;letter-spacing:-1px;line-height:1;}
+.wcard-unit{font-family:var(--font-m);font-size:9px;letter-spacing:1px;}
+.wcard-bottom{display:flex;justify-content:space-between;align-items:flex-end;}
+.wcard-serial{font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;}
+.wcard-holder{font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-500);margin-top:2px;}
+.wcard-badge{position:absolute;top:12px;right:12px;font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 7px;border:1px solid;background:rgba(0,0,0,.75);}
+.wcard-kaspa-logo{width:26px;height:26px;}
 
 /* FLOW STRIP */
 .wallet-flow{display:flex;align-items:center;border:1px solid var(--gray-800);background:var(--gray-900);padding:18px 24px;margin-bottom:32px;gap:0;}
@@ -903,13 +1307,13 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   <div class="footer-inner">
     <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAEJAn0DASIAAhEBAxEB/8QAHQABAAICAwEBAAAAAAAAAAAAAAEIBwkEBQYCA//EAGAQAAEDAwIDAwQJDAwLBwQDAAEAAgMEBQYHEQgSIRMxQVFhcbEJFCIydIGRodEVFhcjQlZykpOUssEYJCc0N0ZSYmRzdrMzNTZDRFRVdYPS4SZFU2NmgsIlKDiEZaPi/8QAFgEBAQEAAAAAAAAAAAAAAAAAAAEC/8QAGhEBAQEAAwEAAAAAAAAAAAAAABEBITFBAv/aAAwDAQACEQMRAD8ApkilQgIiICIiAiIgIp2RBCnZOidEEIiICIiAiIgIilBCKUQQilEBEUICIiAiIgIiICKUQQilEBERBBREQEREBERARSmyCEUoghTsiIChSoQEREBERARFKCEUoghSpaNyfQr7aVaTaf3DhnocirsXoJ7o+xSVDqlzPdF4jcQ7yIKEKF+lQAJ5ABsA47fKvzQEREBERAREQEUoghFKICIiCEREBERAREQEREBERAUom6BuibqEBERAREQEREBFKICIiAiIgKERAREQEREBSoUoCIiAibpugIoRAREQEREBERARSoQSnRE3QOiIoQSoREBERAREQFKhSgIiboHREUIPoLZho+QOEa3f2Zk/uXLWcO9bMdIB/wDaPbR/6Zk/uXIjWjU/vmX8M+tfmv0qf3xL+GfWvzRRERARFKAiIgeKIoQSihEBERAREQEREBERAREQEREBERAREQEREBERAREQSoREBERAREQEREBERAREQEREBSoRAREQEREBERAREQEREEqERAREQEREBERAREQEREEooRAREQEREEt71sy0gH/2lWz+zMn9y5azW962aaRDbhLtn9mX/wBy5Uazqn98y/hn1r81+lT++Zfwz61+agIiIJUIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICIiAiIgIiICKVCApREEIiICIiAiIgIiICKUQQilQgIiICIiAiIgIiICIpQQilEEIpUICIiAiIgIiICIpQG962b6TjbhLtn9mH/3LlrJb3rZtpT/+Jdt/su/+5ciNZdT++Zfwz61+a/Sp/fEn4Z9a+EVCIiAiIgIiICIpQQiIgIpRBCIiAiIgIiICIiAikIgBERARFCCd1CIgIiICIiAiKUEKURAREQERQglQiICIiAiKUEIpRAREQERQglFCICIiAiIgKURAREQEREEKVCICIiAiIgIilBClEQEREEt71s10oO/CZbf7MP8A7ly1lN71s00m/wDxMtn9mH/3LkTWs2p/fMn4Z9a/NfpU/vmX8M+tfmiiIiAiIgKURAREQERQglQiICIiAiIgIiICIiApUIgIiICIiAiIgIiICIiAiIg+mNc97WMBLnHYAeJXrotMM/ljbJHil0cxwBaRA7qCvK0MogrYJnb8scjXHbzFXjs/GFg1JZ6Kkks11MkMDI3HZuxIACCpX2K9QvDErr+buQaVah/eldfyBVwmcZGCeFmunxgKTxlYKP8Aua4/IPoQU8+xVqH96V1/IFQdK9Qx/FK6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" alt="AIROOBI" class="footer-logo">
     <div class="footer-links">
-      <a href="/404"><span class="it">Contatti</span><span class="en">Contact</span></a>
+      <a href="/cdn-cgi/l/email-protection#abc3cec7c7c4ebcac2d9c4c4c9c285c8c4c6"><span class="it">Contatti</span><span class="en">Contact</span></a>
       <a href="/cdn-cgi/l/email-protection#21484f574452554e53614048534e4e43480f424e4c"><span class="it">Investitori</span><span class="en">Investors</span></a>
       <a href="javascript:void(0)" onclick="openModal('privacy-modal')"><span class="it">Privacy</span><span class="en">Privacy</span></a>
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.5 · Last update: 08 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.2 · Last update: 07 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1072,7 +1476,7 @@ window.addEventListener('scroll',function(){closeBurger()},{passive:true});
 // ── Glossary ──
 var glossary={
   'NFT':{tag:'Tecnologia · Dietro le quinte',def:'NFT sta per "Non-Fungible Token": un oggetto digitale unico registrato sulla blockchain, impossibile da copiare o falsificare. Su AIROOBI lo chiamiamo Tessera — è più semplice. Dietro ogni Tessera c\'è una quota del Fondo Comune, con saldo garantito e rimborsabile. Non devi capire la tecnologia per usarla.'},
-  'ARIA':{tag:'Valuta AIROOBI',def:'ARIA è la valuta di AIROOBI. La guadagni gratis ogni giorno con check-in, video e referral. Quando vuoi partecipare a un airdrop, compri blocchi usando i tuoi ARIA.'},
+  'ARIA':{tag:'Valuta AIROOBI',def:'ARIA è la valuta di AIROOBI. La guadagni gratis ogni giorno con check-in, video e referral. Quando vuoi partecipare a un airdrop, compri blocchi usando i tuoi ARIA. Con una Tessera Rendimento NFT puoi anche convertirli in KAS.'},
   'AICO':{tag:'Token · Valuta',def:'AICO è il token di utilità di AIROOBI. Viene usato per acquistare blocchi negli airdrop. 1 blocco = €1 = 10 AICO. Il valore è stabile by design: non è una crypto speculativa.'},
   'Airdrop':{tag:'Meccanismo core',def:'Un airdrop su AIROOBI è la distribuzione di un oggetto reale (o digitale) alla community attraverso un sistema ad ARIA. Chi ha più ARIA ha più chance. Ma tutti i partecipanti ricevono valore in cambio — nessuno perde mai completamente.'},
   'Blockchain':{tag:'Tecnologia',def:'Una blockchain è un registro digitale distribuito e immutabile: ogni operazione viene registrata in modo permanente e verificabile da chiunque. Su AIROOBI usiamo Kaspa — una blockchain di nuova generazione, veloce e sicura — per garantire che le regole del gioco non possano essere cambiate.'},
@@ -1556,7 +1960,8 @@ function shareRef(platform){
   
   const msgs={
     it:{
-      whatsapp:'\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u25c9 *AIROOBI*\n_The Dream-Robe Commerce_\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n*Non venderlo! Airdroppalo su AIROOBI.*\n\nAIROOBI \u00e8 un marketplace nuovo dove:\n\n\u2022 Se *hai un oggetto di valore* \u2192 lo lanci come airdrop e guadagni pi\u00f9 che vendendolo\n\u2022 Se *vuoi ottenere qualcosa* \u2192 accumuli *ARIA* gratis con azioni semplici (entri ogni giorno, guardi un video, inviti amici)\n\nChi ha pi\u00f9 ARIA si aggiudica l\'oggetto. Ma *tutti ricevono valore in cambio*, sempre.\n\n\u261d\ufe0f Ad ognuno, la sua opportunit\u00e0.\n\nAdesso siamo nella fase di test incentivata: ogni azione ti fa guadagnare ARIA.\n\n\u26a1 Io sono un *Alpha Brave* (solo 1.000 posti). Chi entra prima accumula di pi\u00f9.\n\nRegistrati gratis:\n',
+      whatsapp:'\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u25c9 *AIROOBI*\n_The Dream-Robe Commerce_\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n*Non venderlo! Airdroppalo su AIROOBI.*\n\nAIROOBI \u00e8 un marketplace nuovo dove:\n\n\u2022 Se *hai un oggetto di valore* \u2192 lo lanci come airdrop e guadagni pi\u00f9 che vendendolo\n\u2022 Se *vuoi ottenere qualcosa* \u2192 accumuli *ARIA* gratis con azioni semplici (entri ogni giorno, guardi un video, inviti amici)\n\nChi ha pi\u00f9 ARIA si aggiudica l\'oggetto. Ma *tutti ricevono valore in cambio*, sempre.\n\n\u261d\ufe0f Ad ognuno, la sua opportunit\u00e0.\n\nAdesso siamo nella fase di test incentivata: ogni azione ti fa guadagnare ARIA.
+\n\u26a1 Io sono un *Alpha Brave* (solo 1.000 posti). Chi entra prima accumula di pi\u00f9.\n\nRegistrati gratis:\n',
       telegram:'\u25c9 AIROOBI \u2014 The Dream-Robe Commerce\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nNon venderlo! Airdroppalo su AIROOBI.\n\nHai un oggetto? Lo lanci come airdrop e guadagni.\nVuoi ottenere qualcosa? Partecipi e accumuli valore.\n\nAd ognuno, la sua opportunit\u00e0. Sempre.\n\nFase test incentivata live \u2014 ogni azione = ARIA.\nAlpha Brave: 1.000 posti.\n\nEntra gratis \u2b07\ufe0f\n',
       x:'\u25c9 Non venderlo! Airdroppalo su @airoobi_com\n\nHai un oggetto? Lo airdroppi e guadagni.\nVuoi qualcosa? Partecipi e accumuli valore.\n\nAd ognuno, la sua opportunit\u00e0.\n\nTestnet incentivata live. Alpha Brave: 1.000 posti \u2b07\ufe0f ',
       email_subject:'\u25c9 AIROOBI \u2014 Ad ognuno, la sua opportunit\u00e0.',
@@ -1721,27 +2126,14 @@ document.addEventListener('keydown',e=>{
 
 
 // ══ TABS ══
-const TAB_LABELS={overview:{it:'Profilo',en:'Profile'},earnings:{it:'Guadagni',en:'Earnings'},tessere:{it:'Oo Portafoglio',en:'Oo Wallet'},referral:{it:'Referral',en:'Referral'}};
 function switchTab(tab){
   document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
-  const btn=document.querySelector('.dash-tab[onclick*="\''+tab+'\'"]');
-  if(btn)btn.classList.add('active');
+  event.target.closest('.dash-tab').classList.add('active');
   document.getElementById('tab-'+tab).classList.add('active');
-  // Update mobile label
-  const lbl=TAB_LABELS[tab]||{it:tab,en:tab};
-  const el=document.getElementById('dash-tab-current-it');
-  if(el)el.textContent=lbl.it;
-  document.querySelectorAll('.dash-tab-option').forEach(o=>o.classList.toggle('active',o.dataset.tab===tab));
   if(tab==='earnings')loadEarnings();
   if(tab==='referral')loadReferralTab();
   if(tab==='tessere')loadTessere();
-}
-function toggleTabMobile(){
-  document.getElementById('dash-tab-mobile').classList.toggle('open');
-}
-function closeTabMobile(){
-  document.getElementById('dash-tab-mobile').classList.remove('open');
 }
 
 async function loadTessere(){
@@ -1764,6 +2156,9 @@ async function loadTessere(){
       const serial=String(pData[0].referral_count||1).padStart(5,'0');
       const serialEl=document.getElementById('wcard-aria-serial');
       if(serialEl)serialEl.textContent=serial;
+      // swap display
+      const swapBal=document.getElementById('wswap-aria-bal');
+      if(swapBal)swapBal.textContent=aria.toLocaleString('it');
     }
   }catch(e){}
 
@@ -2230,35 +2625,35 @@ function checkAdminAccess(email){
 <div style="max-width:720px;margin:0 auto;padding:40px 0">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:40px">
   <h2 style="font-family:var(--font-h);font-size:32px;font-weight:300">Privacy Policy</h2>
-  <button onclick="closeModal('privacy-modal')" style="background:none;border:1px solid var(--gray-700);color:var(--white);padding:8px 16px;cursor:pointer;font-size:13px">&times; <span class="it">Chiudi</span><span class="en">Close</span></button>
+  <button onclick="closeModal('privacy-modal')" style="background:none;border:1px solid var(--gray-700);color:var(--white);padding:8px 16px;cursor:pointer;font-size:13px">&times; Close</button>
 </div>
 <div style="font-size:14px;line-height:1.8;color:var(--gray-300)">
-<p style="margin-bottom:16px"><strong style="color:var(--white)"><span class="it">Ultimo aggiornamento:</span><span class="en">Last updated:</span></strong> <span class="it">Marzo</span><span class="en">March</span> 2026</p>
-<p style="margin-bottom:16px"><strong style="color:var(--white)"><span class="it">Titolare del trattamento:</span><span class="en">Data Controller:</span></strong> AIROOBI — <a href="mailto:privacy@airoobi.com" style="color:var(--gold)">privacy@airoobi.com</a></p>
+<p style="margin-bottom:16px"><strong style="color:var(--white)">Last updated:</strong> March 2026</p>
+<p style="margin-bottom:16px"><strong style="color:var(--white)">Data Controller:</strong> AIROOBI — <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5e363b3232311e3f372c31313c37703d3133">[email&#160;protected]</a></p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">1. <span class="it">Cosa raccogliamo</span><span class="en">What we collect</span></h3>
-<p style="margin-bottom:16px"><span class="it">Quando ti iscrivi alla waitlist, raccogliamo il tuo <strong style="color:var(--white)">indirizzo email</strong>, la <strong style="color:var(--white)">preferenza linguistica</strong> selezionata e il <strong style="color:var(--white)">codice referral</strong> se sei arrivato tramite un link condiviso. Non raccogliamo altri dati personali in questa fase.</span><span class="en">When you join our waitlist, we collect your <strong style="color:var(--white)">email address</strong>, the <strong style="color:var(--white)">language preference</strong> you selected, and the <strong style="color:var(--white)">referral code</strong> if you arrived via a shared link. We do not collect any other personal data at this stage.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">1. What we collect</h3>
+<p style="margin-bottom:16px">When you join our waitlist, we collect your <strong style="color:var(--white)">email address</strong>, the <strong style="color:var(--white)">language preference</strong> you selected, and the <strong style="color:var(--white)">referral code</strong> if you arrived via a shared link. We do not collect any other personal data at this stage.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">2. <span class="it">Perché li raccogliamo</span><span class="en">Why we collect it</span></h3>
-<p style="margin-bottom:16px"><span class="it">Usiamo la tua email esclusivamente per inviarti aggiornamenti sul progetto AIROOBI: annunci di lancio, inviti all'accesso anticipato e milestone importanti. Base giuridica: il tuo consenso esplicito (Art. 6(1)(a) GDPR).</span><span class="en">We use your email exclusively to send you updates about the AIROOBI project: launch announcements, early access invitations, and important milestones. Legal basis: your explicit consent (Art. 6(1)(a) GDPR).</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">2. Why we collect it</h3>
+<p style="margin-bottom:16px">We use your email exclusively to send you updates about the AIROOBI project: launch announcements, early access invitations, and important milestones. Legal basis: your explicit consent (Art. 6(1)(a) GDPR).</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">3. <span class="it">Dove li conserviamo</span><span class="en">Where we store it</span></h3>
-<p style="margin-bottom:16px"><span class="it">I tuoi dati sono conservati su Supabase (ospitato su AWS, regione EU Francoforte). I dati non escono dallo Spazio Economico Europeo.</span><span class="en">Your data is stored on Supabase (hosted on AWS, EU region Frankfurt). Data does not leave the European Economic Area.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">3. Where we store it</h3>
+<p style="margin-bottom:16px">Your data is stored on Supabase (hosted on AWS, EU region Frankfurt). Data does not leave the European Economic Area.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">4. <span class="it">Chi ha accesso</span><span class="en">Who has access</span></h3>
-<p style="margin-bottom:16px"><span class="it">Solo il team fondatore di AIROOBI ha accesso ai tuoi dati. Non vendiamo, condividiamo o trasferiamo i tuoi dati a terze parti per scopi di marketing.</span><span class="en">Only the AIROOBI founding team has access to your data. We do not sell, share, or transfer your data to third parties for marketing purposes.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">4. Who has access</h3>
+<p style="margin-bottom:16px">Only the AIROOBI founding team has access to your data. We do not sell, share, or transfer your data to third parties for marketing purposes.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">5. <span class="it">Per quanto tempo</span><span class="en">How long we keep it</span></h3>
-<p style="margin-bottom:16px"><span class="it">Conserviamo la tua email fino alla disiscrizione, alla richiesta di cancellazione o alla chiusura del progetto AIROOBI.</span><span class="en">We retain your email until you unsubscribe or request deletion, or until the AIROOBI project is discontinued.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">5. How long we keep it</h3>
+<p style="margin-bottom:16px">We retain your email until you unsubscribe or request deletion, or until the AIROOBI project is discontinued.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">6. <span class="it">I tuoi diritti</span><span class="en">Your rights</span></h3>
-<p style="margin-bottom:16px"><span class="it">Ai sensi del GDPR hai diritto a: accedere ai tuoi dati, rettificare dati inesatti, richiedere la cancellazione ("diritto all'oblio"), limitare il trattamento, la portabilità dei dati e revocare il consenso in qualsiasi momento. Per esercitare questi diritti scrivi a <a href="mailto:privacy@airoobi.com" style="color:var(--gold)">privacy@airoobi.com</a>.</span><span class="en">Under GDPR, you have the right to: access your data, rectify inaccurate data, request deletion ("right to be forgotten"), restrict processing, data portability, and withdraw consent at any time. To exercise any of these rights, email us at <a href="mailto:privacy@airoobi.com" style="color:var(--gold)">privacy@airoobi.com</a>.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">6. Your rights</h3>
+<p style="margin-bottom:16px">Under GDPR, you have the right to: access your data, rectify inaccurate data, request deletion ("right to be forgotten"), restrict processing, data portability, and withdraw consent at any time. To exercise any of these rights, email us at <a href="/cdn-cgi/l/email-protection#cca0a9abada08cada5bea3a3aea5e2afa3a1" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="bcd0d9dbddd0fcddd5ced3d3ded592dfd3d1">[email&#160;protected]</span></a>.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">7. <span class="it">Cookie e Analytics</span><span class="en">Cookies &amp; Analytics</span></h3>
-<p style="margin-bottom:16px"><span class="it">Questo sito utilizza Cloudflare Web Analytics, che non usa cookie e non raccoglie dati personali. Non è richiesto alcun banner di consenso ai cookie.</span><span class="en">This website uses Cloudflare Web Analytics, which does not use cookies and does not collect personal data. No cookie consent banner is required.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">7. Cookies & Analytics</h3>
+<p style="margin-bottom:16px">This website uses Cloudflare Web Analytics, which does not use cookies and does not collect personal data. No cookie consent banner is required.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">8. <span class="it">Contatti</span><span class="en">Contact</span></h3>
-<p><span class="it">Per qualsiasi domanda sulla privacy:</span><span class="en">For any privacy-related questions:</span> <a href="mailto:privacy@airoobi.com" style="color:var(--gold)">privacy@airoobi.com</a></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">8. Contact</h3>
+<p>For any privacy-related questions: <a href="/cdn-cgi/l/email-protection#224e4745434e62434b504d4d404b0c414d4f" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="5b373e3c3a371b3a32293434393275383436">[email&#160;protected]</span></a></p>
 </div>
 </div>
 </div>
@@ -2267,26 +2662,26 @@ function checkAdminAccess(email){
 <div id="terms-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:rgba(0,0,0,.92);overflow-y:auto;padding:40px 24px">
 <div style="max-width:720px;margin:0 auto;padding:40px 0">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:40px">
-  <h2 style="font-family:var(--font-h);font-size:32px;font-weight:300"><span class="it">Termini di Servizio</span><span class="en">Terms of Service</span></h2>
-  <button onclick="closeModal('terms-modal')" style="background:none;border:1px solid var(--gray-700);color:var(--white);padding:8px 16px;cursor:pointer;font-size:13px">&times; <span class="it">Chiudi</span><span class="en">Close</span></button>
+  <h2 style="font-family:var(--font-h);font-size:32px;font-weight:300">Terms of Service</h2>
+  <button onclick="closeModal('terms-modal')" style="background:none;border:1px solid var(--gray-700);color:var(--white);padding:8px 16px;cursor:pointer;font-size:13px">&times; Close</button>
 </div>
 <div style="font-size:14px;line-height:1.8;color:var(--gray-300)">
-<p style="margin-bottom:16px"><strong style="color:var(--white)"><span class="it">Ultimo aggiornamento:</span><span class="en">Last updated:</span></strong> <span class="it">Marzo</span><span class="en">March</span> 2026</p>
+<p style="margin-bottom:16px"><strong style="color:var(--white)">Last updated:</strong> March 2026</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">1. <span class="it">Cos'è AIROOBI</span><span class="en">About AIROOBI</span></h3>
-<p style="margin-bottom:16px"><span class="it">AIROOBI è una piattaforma di asset digitali attualmente in fase di pre-lancio. Iscrivendoti alla waitlist, riconosci che la piattaforma è in sviluppo attivo e che le funzionalità descritte sono soggette a modifiche.</span><span class="en">AIROOBI is a digital asset platform currently in pre-launch phase. By joining our waitlist, you acknowledge that the platform is under active development and features described are subject to change.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">1. About AIROOBI</h3>
+<p style="margin-bottom:16px">AIROOBI is a digital asset platform currently in pre-launch phase. By joining our waitlist, you acknowledge that the platform is under active development and features described are subject to change.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">2. <span class="it">Nessuna consulenza finanziaria</span><span class="en">No financial advice</span></h3>
-<p style="margin-bottom:16px"><span class="it">Nulla di quanto presente su questo sito costituisce consulenza finanziaria, d'investimento o legale. AIROOBI non è un operatore di gioco d'azzardo. La piattaforma è concepita come un marketplace di airdrop equo, con Tessere garantite da un Fondo Comune trasparente.</span><span class="en">Nothing on this website constitutes financial, investment, or legal advice. AIROOBI is not a gambling operator. The platform is designed as a fair airdrop marketplace with Cards backed by a transparent Common Fund.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">2. No financial advice</h3>
+<p style="margin-bottom:16px">Nothing on this website constitutes financial, investment, or legal advice. AIROOBI is not a gambling operator. The platform is designed as a fair airdrop marketplace with Cards backed by a transparent Common Fund.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">3. <span class="it">Waitlist</span><span class="en">Waitlist</span></h3>
-<p style="margin-bottom:16px"><span class="it">L'iscrizione alla waitlist non garantisce l'accesso alla piattaforma, a funzionalità specifiche o a un rendimento economico. Il badge Early Adopter è un riconoscimento digitale non trasferibile, privo di valore monetario.</span><span class="en">Joining the waitlist does not guarantee access to the platform, specific features, or any financial return. The Early Adopter badge is a non-transferable digital acknowledgment with no monetary value.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">3. Waitlist</h3>
+<p style="margin-bottom:16px">Joining the waitlist does not guarantee access to the platform, specific features, or any financial return. The Early Adopter badge is a non-transferable digital acknowledgment with no monetary value.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">4. <span class="it">Proprietà intellettuale</span><span class="en">Intellectual property</span></h3>
-<p style="margin-bottom:16px"><span class="it">Tutti i contenuti, il design, i loghi e il codice di questo sito sono di proprietà di AIROOBI. La riproduzione non autorizzata è vietata.</span><span class="en">All content, design, logos, and code on this website are property of AIROOBI. Unauthorized reproduction is prohibited.</span></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">4. Intellectual property</h3>
+<p style="margin-bottom:16px">All content, design, logos, and code on this website are property of AIROOBI. Unauthorized reproduction is prohibited.</p>
 
-<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">5. <span class="it">Contatti</span><span class="en">Contact</span></h3>
-<p><span class="it">Per domande:</span><span class="en">For questions:</span> <a href="mailto:info@airoobi.com" style="color:var(--gold)">info@airoobi.com</a></p>
+<h3 style="font-family:var(--font-h);font-size:20px;color:var(--white);margin:32px 0 12px">5. Contact</h3>
+<p>For questions: <a href="/cdn-cgi/l/email-protection#9af6fffdfbf6dafbf3e8f5f5f8f3b4f9f5f7" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="14787173757854757d667b7b767d3a777b79">[email&#160;protected]</span></a></p>
 </div>
 </div>
 </div>
@@ -2368,20 +2763,6 @@ function checkAdminAccess(email){
   <p class="dash-email"><span class="it">Il tuo posto è confermato. Sei tra i primi.</span><span class="en">Your spot is confirmed. You're among the first.</span></p>
   
   <!-- TABS -->
-  <!-- Mobile tab selector -->
-  <div class="dash-tab-mobile" id="dash-tab-mobile">
-    <button class="dash-tab-trigger" onclick="toggleTabMobile()">
-      <span class="dash-tab-trigger-label"><span id="dash-tab-current-it">Profilo</span></span>
-      <span class="dash-tab-chevron"></span>
-    </button>
-    <div class="dash-tab-dropdown">
-      <button class="dash-tab-option active" onclick="switchTab('overview');closeTabMobile()" data-tab="overview"><span class="it">Profilo</span><span class="en">Profile</span></button>
-      <button class="dash-tab-option" onclick="switchTab('earnings');closeTabMobile()" data-tab="earnings"><span class="it">Guadagni</span><span class="en">Earnings</span></button>
-      <button class="dash-tab-option" onclick="switchTab('tessere');closeTabMobile()" data-tab="tessere"><span style="font-family:var(--font-h);font-size:13px;font-weight:600;letter-spacing:-1px;vertical-align:middle;margin-right:4px">Oo</span><span class="it">Portafoglio</span><span class="en">Wallet</span></button>
-      <button class="dash-tab-option" onclick="switchTab('referral');closeTabMobile()" data-tab="referral">Referral</button>
-    </div>
-  </div>
-
   <div class="dash-tabs">
     <button class="dash-tab active" onclick="switchTab('overview')"><span class="it">Profilo</span><span class="en">Profile</span></button>
     <button class="dash-tab" onclick="switchTab('earnings')"><span class="it">Guadagni</span><span class="en">Earnings</span></button>
@@ -2611,7 +2992,7 @@ function checkAdminAccess(email){
             <span class="it">
               AIROOBI ha tre valute che lavorano insieme:<br><br>
               <span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--white)">ARIA</strong> — La stable coin che guadagni con le azioni quotidiane. Sono la tua ricompensa per testare e far crescere AIROOBI.<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — La valuta di AIROOBI. Con gli ARIA compri i <strong style="color:var(--white)">blocchi</strong>, cioè le quote di partecipazione a un oggetto.<br><br>
+              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — La valuta di AIROOBI. Con gli ARIA compri i <strong style="color:var(--white)">blocchi</strong>, cioè le quote di partecipazione a un oggetto. Con una Tessera Rendimento si convertono in KAS (Kaspa).<br><br>
               <span style="font-family:var(--font-h);font-size:13px;color:var(--gold);font-weight:700;letter-spacing:-1px;vertical-align:middle">Oo</span> <strong style="color:var(--gold)">TESSERA RENDIMENTO</strong> — Il tuo saldo garantito su AIROOBI. Non si compra: si ottiene partecipando. Ogni tier ne riceve almeno una. Il saldo cresce con il Fondo Comune.<br><br>
               <strong style="color:var(--gold)">Come si collega tutto:</strong><br>
               Punti → crediti → partecipazione agli airdrop → Tessera Rendimento<br>
@@ -2694,126 +3075,109 @@ function checkAdminAccess(email){
 
       <!-- TESSERA COIN — ARIA -->
       <div class="wcard wcard-aria" id="wcard-aria">
-        <div class="wcard-ring" style="width:350px;height:350px;right:-100px;bottom:-100px;border-color:rgba(74,158,255,.04)"></div>
-        <div class="wcard-header">
-          <div class="wcard-title-group">
+        <div class="wcard-ring" style="width:190px;height:190px;right:-60px;bottom:-60px;border-color:rgba(74,158,255,.06)"></div>
+        <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)"><span class="it">Guadagno</span><span class="en">Earning</span></div>
+        <div class="wcard-top">
+          <div>
             <div class="wcard-label" style="color:var(--aria)"><span class="it">Tessera Coin</span><span class="en">Coin Card</span></div>
-            <div class="wcard-sublabel" style="color:var(--aria)"><span class="it">Il tuo ARIA</span><span class="en">Your ARIA</span></div>
+            <div class="wcard-sublabel" style="color:rgba(74,158,255,.35)"><span class="it">Il tuo ARIA</span><span class="en">Your ARIA</span></div>
           </div>
-          <div class="wcard-icons">
-            <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)"><span class="it">Guadagno</span><span class="en">Earning</span></div>
-            <div class="wcard-chip" style="border-color:rgba(74,158,255,.18)">
-              <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
-              <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
-            </div>
+          <div class="wcard-chip" style="border-color:rgba(74,158,255,.18)">
+            <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
+            <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
           </div>
         </div>
-        <div class="wcard-body">
-          <div class="wcard-amount-block">
-            <div class="wcard-amount" style="color:var(--aria)" id="wcard-aria-amount">—</div>
-            <div class="wcard-unit" style="color:rgba(74,158,255,.5)"><span class="it">ARIA ACCUMULATI</span><span class="en">ARIA ACCUMULATED</span></div>
+        <div class="wcard-mid">
+          <div class="wcard-amount" style="color:var(--aria)" id="wcard-aria-amount">—</div>
+          <div class="wcard-unit" style="color:rgba(74,158,255,.3)"><span class="it">ARIA ACCUMULATI</span><span class="en">ARIA ACCUMULATED</span></div>
+        </div>
+        <div class="wcard-bottom">
+          <div>
+            <div class="wcard-serial" style="color:rgba(74,158,255,.2)">ALPHA · #<span id="wcard-aria-serial">—</span></div>
+            <div class="wcard-holder" style="color:var(--gray-600)"><span class="it">Check-in · Video · Referral</span><span class="en">Check-in · Video · Referral</span></div>
           </div>
-        </div>
-        <div class="wcard-desc">
-          <span class="it">Il tuo portafoglio ARIA. Ricaricato ogni volta che guadagni — check-in, video, referral. Mostra l'importo totale disponibile: puoi usarne parte o tutto per comprare blocchi di partecipazione agli airdrop.</span>
-          <span class="en">Your ARIA wallet. Recharged every time you earn — check-ins, videos, referrals. Shows your total available balance: use part or all of it to buy airdrop participation blocks.</span>
-        </div>
-        <div class="wcard-footer">
-          <div class="wcard-serial" style="color:rgba(74,158,255,.3)">ALPHA · #<span id="wcard-aria-serial">—</span></div>
-          <div class="wcard-holder" style="color:rgba(74,158,255,.3)"><span class="it">Check-in · Video · Referral</span><span class="en">Check-in · Video · Referral</span></div>
-          <div style="font-family:var(--font-m);font-size:11px;color:rgba(74,158,255,.2);letter-spacing:3px">ARIA</div>
+          <div style="font-family:var(--font-m);font-size:11px;color:rgba(74,158,255,.15);letter-spacing:2px">ARIA</div>
         </div>
       </div>
 
-      <!-- TESSERA RENDIMENTO — GOLD NFT (visibile se ce l'ha) -->
+      <!-- TESSERA RENDIMENTO — GOLD NFT -->
       <div class="wcard wcard-rendimento" id="wcard-rendimento" style="display:none">
         <div class="wcard-shimmer"></div>
-        <div class="wcard-ring" style="width:300px;height:300px;right:-80px;top:-80px;border-color:rgba(184,150,12,.05)"></div>
-        <div class="wcard-header">
-          <div class="wcard-title-group">
+        <div class="wcard-ring" style="width:170px;height:170px;right:-50px;top:-50px;border-color:rgba(184,150,12,.07)"></div>
+        <div class="wcard-ring" style="width:90px;height:90px;right:-12px;top:-12px;border-color:rgba(184,150,12,.05)"></div>
+        <div class="wcard-badge" style="color:var(--gold);border-color:rgba(184,150,12,.5)">NFT</div>
+        <div class="wcard-top">
+          <div>
             <div class="wcard-label" style="color:var(--gold)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
-            <div class="wcard-sublabel" style="color:var(--gold)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
+            <div class="wcard-sublabel" style="color:rgba(184,150,12,.4)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
           </div>
-          <div class="wcard-icons">
-            <div class="wcard-badge" style="color:var(--gold);border-color:rgba(184,150,12,.5)">NFT</div>
-            <div class="wcard-chip" style="border-color:rgba(184,150,12,.18)">
-              <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
-              <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
-            </div>
+          <div class="wcard-chip" style="border-color:rgba(184,150,12,.18)">
+            <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
+            <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
           </div>
         </div>
-        <div class="wcard-body">
-          <div class="wcard-amount-block">
-            <div class="wcard-amount" style="color:var(--gold)" id="wcard-rend-count">1</div>
-            <div class="wcard-unit" style="color:rgba(184,150,12,.5)"><span class="it">NFT IN PORTAFOGLIO</span><span class="en">NFT IN WALLET</span></div>
+        <div class="wcard-mid">
+          <div class="wcard-amount" style="color:var(--gold)" id="wcard-rend-count">1</div>
+          <div class="wcard-unit" style="color:rgba(184,150,12,.35)"><span class="it">NFT IN PORTAFOGLIO</span><span class="en">NFT IN WALLET</span></div>
+        </div>
+        <div class="wcard-bottom">
+          <div>
+            <div class="wcard-serial" style="color:rgba(184,150,12,.3)">GENESIS · #<span id="wcard-rend-serial">—</span></div>
+            <div class="wcard-holder" style="color:var(--gray-600)"><span class="it">Usa per convertire ARIA → KAS</span><span class="en">Use to convert ARIA → KAS</span></div>
           </div>
-        </div>
-        <div class="wcard-desc">
-          <span class="it">Il tuo certificato di resa. Mostra il valore KAS che hai diritto a riscuotere. Puoi convertire parte o tutto l'importo in KAS reale sulla blockchain Kaspa — rimborso garantito al 95%, elaborato in 24–48h.</span>
-          <span class="en">Your yield certificate. Shows the KAS value you're entitled to redeem. Convert part or all of the balance into real KAS on the Kaspa blockchain — 95% guaranteed refund, processed in 24–48h.</span>
-        </div>
-        <div class="wcard-footer">
-          <div class="wcard-serial" style="color:rgba(184,150,12,.3)">GENESIS · #<span id="wcard-rend-serial">—</span></div>
-          <div class="wcard-holder" style="color:rgba(184,150,12,.3)"><span class="it">NFT · Chiave di riscossione KAS</span><span class="en">NFT · KAS redemption key</span></div>
-          <div style="font-family:var(--font-h);font-size:20px;color:rgba(184,150,12,.2);letter-spacing:-1px">Oo</div>
+          <div style="font-family:var(--font-h);font-size:18px;color:rgba(184,150,12,.2);letter-spacing:-1px">Oo</div>
         </div>
       </div>
 
-      <!-- TESSERA RENDIMENTO — LOCKED -->
+      <!-- TESSERA RENDIMENTO — LOCKED (se non ce l'ha) -->
       <div class="wcard wcard-rendimento wcard-locked" id="wcard-rendimento-locked">
-        <div class="wcard-header">
-          <div class="wcard-title-group">
-            <div class="wcard-label" style="color:rgba(184,150,12,.35)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
-            <div class="wcard-sublabel" style="color:rgba(184,150,12,.2)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
-          </div>
-          <div class="wcard-badge" style="color:rgba(184,150,12,.4);border-color:rgba(184,150,12,.2)">NFT</div>
-        </div>
-        <div class="wcard-body">
-          <div class="wcard-amount-block">
-            <div class="wcard-amount" style="color:rgba(184,150,12,.2)">—</div>
-            <div class="wcard-unit" style="color:rgba(184,150,12,.2)"><span class="it">NON IN POSSESSO</span><span class="en">NOT OWNED</span></div>
+        <div class="wcard-top">
+          <div>
+            <div class="wcard-label" style="color:rgba(184,150,12,.3)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
+            <div class="wcard-sublabel" style="color:rgba(184,150,12,.15)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
           </div>
         </div>
-        <div class="wcard-desc">
-          <span class="it">Non hai ancora una Tessera Rendimento. Partecipa agli airdrop per ottenerne una — sarà il tuo portafoglio per riscuotere KAS reale in qualsiasi momento.</span>
-          <span class="en">You don't have a Yield Card yet. Join airdrops to earn one — it will be your wallet to redeem real KAS at any time.</span>
+        <div class="wcard-mid">
+          <div class="wcard-amount" style="color:rgba(184,150,12,.2)">—</div>
+          <div class="wcard-unit" style="color:rgba(184,150,12,.15)"><span class="it">NON ANCORA IN POSSESSO</span><span class="en">NOT YET OWNED</span></div>
         </div>
-        <div class="wcard-footer">
+        <div class="wcard-bottom">
           <div class="wcard-holder" style="color:rgba(184,150,12,.2)"><span class="it">Partecipa agli airdrop per ottenerla</span><span class="en">Join airdrops to earn one</span></div>
         </div>
       </div>
 
       <!-- TESSERA KASPA — VERDE -->
       <div class="wcard wcard-kaspa">
-        <div class="wcard-ring" style="width:320px;height:320px;right:-90px;bottom:-90px;border-color:rgba(73,234,203,.04)"></div>
-        <div class="wcard-header">
-          <div class="wcard-title-group">
+        <div class="wcard-ring" style="width:180px;height:180px;left:-45px;top:-45px;border-color:rgba(73,234,203,.05)"></div>
+        <div class="wcard-ring" style="width:290px;height:290px;right:-100px;bottom:-100px;border-color:rgba(73,234,203,.03)"></div>
+        <div class="wcard-badge" style="color:var(--kas);border-color:rgba(73,234,203,.35)"><span class="it">Presto</span><span class="en">Soon</span></div>
+        <div class="wcard-top">
+          <div>
             <div class="wcard-label" style="color:var(--kas)"><span class="it">Tessera Kaspa</span><span class="en">Kaspa Card</span></div>
-            <div class="wcard-sublabel" style="color:var(--kas)"><span class="it">Il tuo KAS</span><span class="en">Your KAS</span></div>
+            <div class="wcard-sublabel" style="color:rgba(73,234,203,.3)"><span class="it">Il tuo KAS</span><span class="en">Your KAS</span></div>
           </div>
-          <div class="wcard-icons">
-            <div class="wcard-badge" style="color:var(--kas);border-color:rgba(73,234,203,.35)"><span class="it">Presto</span><span class="en">Soon</span></div>
-            <svg class="wcard-kaspa-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" stroke="#49EACB" stroke-width="6" fill="none" opacity=".5"/>
-              <polygon points="100,38 162,70 162,130 100,162 38,130 38,70" stroke="#49EACB" stroke-width="4" fill="none" opacity=".3"/>
-              <circle cx="100" cy="100" r="18" fill="#49EACB" opacity=".5"/>
-            </svg>
+          <svg class="wcard-kaspa-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" stroke="#49EACB" stroke-width="6" fill="none" opacity=".4"/>
+            <polygon points="100,38 162,70 162,130 100,162 38,130 38,70" stroke="#49EACB" stroke-width="4" fill="none" opacity=".22"/>
+            <circle cx="100" cy="100" r="18" fill="#49EACB" opacity=".45"/>
+            <line x1="100" y1="38" x2="100" y2="82" stroke="#49EACB" stroke-width="3" opacity=".25"/>
+            <line x1="100" y1="118" x2="100" y2="162" stroke="#49EACB" stroke-width="3" opacity=".25"/>
+            <line x1="38" y1="70" x2="76" y2="91" stroke="#49EACB" stroke-width="3" opacity=".25"/>
+            <line x1="124" y1="109" x2="162" y2="130" stroke="#49EACB" stroke-width="3" opacity=".25"/>
+            <line x1="162" y1="70" x2="124" y2="91" stroke="#49EACB" stroke-width="3" opacity=".25"/>
+            <line x1="76" y1="109" x2="38" y2="130" stroke="#49EACB" stroke-width="3" opacity=".25"/>
+          </svg>
+        </div>
+        <div class="wcard-mid">
+          <div class="wcard-amount" style="color:var(--kas)">—</div>
+          <div class="wcard-unit" style="color:rgba(73,234,203,.25)"><span class="it">KAS · DISPONIBILE CON MAINNET</span><span class="en">KAS · AVAILABLE AT MAINNET</span></div>
+        </div>
+        <div class="wcard-bottom">
+          <div>
+            <div class="wcard-serial" style="color:rgba(73,234,203,.15)">KASPA NETWORK</div>
+            <div class="wcard-holder" style="color:rgba(73,234,203,.2)"><span class="it">Ricevi dopo ogni conversione</span><span class="en">Received after each swap</span></div>
           </div>
-        </div>
-        <div class="wcard-body">
-          <div class="wcard-amount-block">
-            <div class="wcard-amount" style="color:var(--kas)">—</div>
-            <div class="wcard-unit" style="color:rgba(73,234,203,.45)"><span class="it">KAS · CON MAINNET</span><span class="en">KAS · AT MAINNET</span></div>
-          </div>
-        </div>
-        <div class="wcard-desc">
-          <span class="it">Il tuo portafoglio KAS su AIROOBI. Mostra il totale dei KAS ricevuti: ogni conversione dalla Tessera Rendimento accredita qui l'importo — on-chain, tuo per sempre. Puoi spostare parte o tutto quando vuoi. Disponibile al mainnet.</span>
-          <span class="en">Your KAS wallet on AIROOBI. Shows total KAS received: each Yield Card conversion credits the amount here — on-chain, yours forever. Move part or all of it whenever you want. Available at mainnet.</span>
-        </div>
-        <div class="wcard-footer">
-          <div class="wcard-serial" style="color:rgba(73,234,203,.2)">KASPA NETWORK</div>
-          <div class="wcard-holder" style="color:rgba(73,234,203,.2)"><span class="it">Ricevi dopo ogni conversione</span><span class="en">Received after each swap</span></div>
-          <div style="font-family:var(--font-m);font-size:11px;color:rgba(73,234,203,.15);letter-spacing:3px">KAS</div>
+          <div style="font-family:var(--font-m);font-size:10px;color:rgba(73,234,203,.12);letter-spacing:2px">KAS</div>
         </div>
       </div>
 
@@ -2898,27 +3262,38 @@ function checkAdminAccess(email){
 
     </div><!-- /wallet-badges -->
 
-    <!-- ── CONVERTI TESSERA RENDIMENTO → KAS ── -->
-    <div class="wallet-section-label" style="margin-top:4px"><span class="it">Converti in KAS</span><span class="en">Convert to KAS</span> <span>· <span class="it">usa la tua Tessera Rendimento NFT</span><span class="en">use your Yield Card NFT</span></span></div>
+    <!-- ── CONVERTI ARIA → KAS ── -->
+    <div class="wallet-section-label" style="margin-top:4px"><span class="it">Converti ARIA in KAS</span><span class="en">Convert ARIA to KAS</span> <span>· <span class="it">richiede Tessera Rendimento NFT</span><span class="en">requires Yield Card NFT</span></span></div>
     <div class="wallet-swap">
-      <div class="wswap-title"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span> → KAS</div>
-      <div class="wswap-sub"><span class="it">La Tessera Rendimento NFT è la chiave per riscuotere KAS dalla blockchain Kaspa</span><span class="en">The Yield Card NFT is the key to redeeming KAS from the Kaspa blockchain</span></div>
+      <div class="wswap-title">ARIA → KAS</div>
+      <div class="wswap-sub"><span class="it">Usa una Tessera Rendimento NFT per convertire il tuo ARIA in KAS</span><span class="en">Use a Yield Card NFT to convert your ARIA to KAS</span></div>
       <div class="wswap-flow">
-        <!-- FROM: Tessera Rendimento -->
-        <div class="wswap-box wswap-box-nft" style="flex:1">
+        <!-- FROM: ARIA -->
+        <div class="wswap-box">
           <div class="wsbox-label"><span class="it">Converti</span><span class="en">Convert</span></div>
           <div class="wsbox-row">
-            <div class="ws-dot" style="background:var(--gold)"></div>
-            <div class="ws-name" style="color:var(--gold)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
+            <div class="ws-dot" style="background:var(--aria)"></div>
+            <div class="ws-name" style="color:var(--aria)">Tessera Coin · ARIA</div>
           </div>
-          <div class="ws-amount" style="color:var(--gold)" id="wswap-nft-count">—</div>
-          <div class="ws-unit" style="color:rgba(184,150,12,.5)">NFT · <span class="it">IN PORTAFOGLIO</span><span class="en">IN WALLET</span></div>
-          <div class="ws-unit" style="margin-top:6px;color:rgba(184,150,12,.4);font-size:9px;letter-spacing:1px"><span class="it">Garantisce il 95% del Fondo Comune</span><span class="en">Guarantees 95% of Common Fund</span></div>
+          <div class="ws-amount" style="color:var(--aria)" id="wswap-aria-bal">—</div>
+          <div class="ws-unit"><span class="it">ARIA DISPONIBILI</span><span class="en">ARIA AVAILABLE</span></div>
+        </div>
+        <!-- + NFT -->
+        <div class="wswap-conn">+</div>
+        <div class="wswap-box wswap-box-nft">
+          <div class="wsbox-label"><span class="it">Richiede</span><span class="en">Requires</span></div>
+          <div class="wsbox-row">
+            <div class="ws-dot" style="background:var(--gold)"></div>
+            <div class="ws-name" style="color:rgba(184,150,12,.7)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
+          </div>
+          <div class="ws-amount" style="color:var(--gold)">1</div>
+          <div class="ws-unit" style="color:rgba(184,150,12,.4)">NFT · <span class="it">CHIAVE</span><span class="en">KEY</span></div>
+          <div class="ws-unit" style="margin-top:6px"><span class="it">In portafoglio:</span><span class="en">In wallet:</span> <span style="color:var(--white)" id="wswap-nft-count">—</span></div>
         </div>
         <!-- → -->
         <div class="wswap-conn">→</div>
         <!-- TO: KAS -->
-        <div class="wswap-box wswap-box-out" style="flex:1">
+        <div class="wswap-box wswap-box-out">
           <div class="wsbox-label"><span class="it">Ricevi</span><span class="en">Receive</span></div>
           <div class="wsbox-row">
             <div class="ws-dot" style="background:var(--kas)"></div>
@@ -2935,7 +3310,7 @@ function checkAdminAccess(email){
           <div class="wswap-info" style="margin-top:6px;color:rgba(192,132,252,.35);font-size:9px">✦ <span class="it">I Badge non sono convertibili</span><span class="en">Badges are not convertible</span></div>
         </div>
         <div style="text-align:right">
-          <div class="wswap-btn"><span class="it">Converti Tessera → KAS</span><span class="en">Convert Card → KAS</span></div>
+          <div class="wswap-btn"><span class="it">Converti ARIA → KAS</span><span class="en">Convert ARIA → KAS</span></div>
           <div class="wswap-coming"><span class="it">Disponibile al lancio mainnet</span><span class="en">Available at mainnet launch</span></div>
         </div>
       </div>
@@ -2944,10 +3319,10 @@ function checkAdminAccess(email){
     <!-- ── FONDO COMUNE ── -->
     <div class="wallet-fund">
       <div class="wfund-label">FONDO COMUNE · COMMON FUND</div>
-
-
-
-
+      <div style="font-size:13px;color:var(--gray-400);line-height:1.7">
+        <span class="it">Il Fondo Comune garantisce il valore delle Tessere. Ogni Tessera vale: <strong style="color:var(--white)">Fondo totale ÷ Tessere emesse</strong>. Se il Fondo cresce, cresce anche il tuo saldo.</span>
+        <span class="en">The Common Fund guarantees the value of Cards. Each Card is worth: <strong style="color:var(--white)">Total Fund ÷ Cards issued</strong>. If the Fund grows, your balance grows too.</span>
+      </div>
       <div class="wfund-stats">
         <div>
           <div class="wfund-stat-lbl"><span class="it">Fondo attuale</span><span class="en">Current fund</span></div>
@@ -3392,8 +3767,4 @@ function checkAdminAccess(email){
     <p class="admin-note" style="margin-top:16px">⚠️ I dati treasury sono inseriti manualmente. NFT conteggiati da Supabase nft_rewards. AICO circolante da inserire manualmente (integrare con exchange al mainnet).</p>
   </div>
 
-</div>
-</div>
-
-</body>
-</html>
+  <!-- 
