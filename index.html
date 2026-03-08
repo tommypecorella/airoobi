@@ -77,10 +77,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:none}
 .nav-logged-in{display:none;align-items:center;gap:12px}
 .nav-logged-in.active{display:flex}
 .nav-avatar{width:32px;height:32px;background:var(--gold);color:var(--black);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:13px;font-weight:700;cursor:pointer}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-link-btn span{display:none}.nav-link-btn{padding:8px 10px}}
+@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-link-btn span{display:none}.nav-link-btn{padding:8px 10px}.nav-menu a{display:none}}
 .nav-cta{background:var(--gold);color:var(--black);padding:10px 24px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;border:none;cursor:pointer;transition:all .3s}
 .nav-cta:hover{background:var(--white)}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-menu a{display:none}}
 
 /* ── HERO ── */
 .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;padding:120px 24px 80px}
@@ -127,15 +126,15 @@ section{padding:clamp(80px,12vw,160px) 0;position:relative}
 .step h3{font-family:var(--font-h);font-size:22px;font-weight:500;margin-bottom:12px}
 .step p{font-size:13px;color:var(--gray-300);line-height:1.7}
 .step-arrow{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gold-dim);font-size:24px}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}.step-arrow{display:none}}
+@media(max-width:768px){.step-arrow{display:none}}
 
 /* ── DIFFERENT (white) ── */
 .different{background:var(--white);color:var(--black)}
 .diff-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:64px;border:1px solid #e0e0e0}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}.diff-grid{grid-template-columns:1fr}}
+@media(max-width:768px){.diff-grid{grid-template-columns:1fr}}
 .diff-item{padding:40px;border-bottom:1px solid #e0e0e0;position:relative;overflow:hidden;transition:background .3s}
 .diff-item:nth-child(odd){border-right:1px solid #e0e0e0}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}.diff-item:nth-child(odd){border-right:none}}
+@media(max-width:768px){.diff-item:nth-child(odd){border-right:none}}
 .diff-item:hover{background:var(--gold-glow)}
 .diff-icon{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:3px;margin-bottom:16px;text-transform:uppercase}
 .diff-item h3{font-family:var(--font-h);font-size:22px;font-weight:500;margin-bottom:8px;color:var(--black)}
@@ -143,7 +142,7 @@ section{padding:clamp(80px,12vw,160px) 0;position:relative}
 
 /* ── KASPA ── */
 .kaspa-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}.kaspa-inner{grid-template-columns:1fr;gap:48px}}
+@media(max-width:768px){.kaspa-inner{grid-template-columns:1fr;gap:48px}}
 .kaspa-stats{display:flex;flex-direction:column;gap:32px}
 .kstat{padding:24px 0;border-bottom:1px solid var(--gray-700)}
 .kstat-val{font-family:var(--font-h);font-size:36px;font-weight:300;color:var(--gold);margin-bottom:4px}
@@ -399,7 +398,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .kaspa .section-text{color:var(--gray-300)}
 
 /* ── MOBILE OPTIMIZATION ── */
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}
+@media(max-width:768px){
   .hero{padding:100px 16px 60px;min-height:auto}
   .hero-logo{width:min(280px,70vw);margin-bottom:32px}
   .hero h1{font-size:clamp(26px,7vw,40px)}
@@ -458,7 +457,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .gold-sep{width:60px;height:1px;background:var(--gold);margin:0 auto}
 
 /* ── Burger Menu ── */
-.burger-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:36px;height:36px;background:none;border:none;cursor:pointer;padding:4px;margin-left:auto}
+.burger-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:none;cursor:pointer;padding:8px;margin-left:auto}
 .burger-btn span{display:block;width:22px;height:1.5px;background:var(--white);transition:all .3s;transform-origin:center}
 .burger-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
 .burger-btn.open span:nth-child(2){opacity:0;transform:scaleX(0)}
@@ -600,6 +599,19 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .wswap-flow{flex-direction:column;}
   .wswap-box-nft{flex:none;}
 }
+
+/* ── MOBILE FIX: ref-stats 4 col ── */
+.ref-stats-4col{grid-template-columns:1fr 1fr 1fr 1fr;gap:2px}
+@media(max-width:768px){.ref-stats-4col{grid-template-columns:1fr 1fr!important}}
+
+/* ── MOBILE FIX: tier comparison grid ── */
+@media(max-width:480px){.tier-compare-grid{grid-template-columns:1fr!important}}
+
+/* ── MOBILE FIX: admin param grid ── */
+@media(max-width:480px){.admin-param-grid{grid-template-columns:1fr!important}}
+
+/* ── MOBILE FIX: privacy/terms modali ── */
+@media(max-width:480px){.legal-modal{padding:20px 12px!important}.legal-modal-inner{padding:20px 0!important}.legal-modal h2{font-size:24px!important}.legal-modal h3{font-size:17px!important;margin:24px 0 10px!important}}
 </style>
 <!-- Vercel Analytics -->
 <script defer src="/_vercel/insights/script.js"></script>
@@ -2232,8 +2244,8 @@ function checkAdminAccess(email){
 </script>
 
 <!-- ═══ PRIVACY POLICY ═══ -->
-<div id="privacy-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:rgba(0,0,0,.92);overflow-y:auto;padding:40px 24px">
-<div style="max-width:720px;margin:0 auto;padding:40px 0">
+<div id="privacy-modal" class="legal-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:rgba(0,0,0,.92);overflow-y:auto;padding:40px 24px">
+<div class="legal-modal-inner" style="max-width:720px;margin:0 auto;padding:40px 0">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:40px">
   <h2 style="font-family:var(--font-h);font-size:32px;font-weight:300">Privacy Policy</h2>
   <button onclick="closeModal('privacy-modal')" style="background:none;border:1px solid var(--gray-700);color:var(--white);padding:8px 16px;cursor:pointer;font-size:13px">&times; <span class="it">Chiudi</span><span class="en">Close</span></button>
@@ -2270,8 +2282,8 @@ function checkAdminAccess(email){
 </div>
 
 <!-- ═══ TERMS ═══ -->
-<div id="terms-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:rgba(0,0,0,.92);overflow-y:auto;padding:40px 24px">
-<div style="max-width:720px;margin:0 auto;padding:40px 0">
+<div id="terms-modal" class="legal-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:rgba(0,0,0,.92);overflow-y:auto;padding:40px 24px">
+<div class="legal-modal-inner" style="max-width:720px;margin:0 auto;padding:40px 0">
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:40px">
   <h2 style="font-family:var(--font-h);font-size:32px;font-weight:300"><span class="it">Termini di Servizio</span><span class="en">Terms of Service</span></h2>
   <button onclick="closeModal('terms-modal')" style="background:none;border:1px solid var(--gray-700);color:var(--white);padding:8px 16px;cursor:pointer;font-size:13px">&times; <span class="it">Chiudi</span><span class="en">Close</span></button>
@@ -2407,7 +2419,7 @@ function checkAdminAccess(email){
         <div class="ref-stat-label"><span class="it">La tua posizione</span><span class="en">Your position</span></div>
       </div>
     </div>
-    <div class="ref-stats" style="grid-template-columns:1fr 1fr 1fr 1fr;gap:2px">
+    <div class="ref-stats ref-stats-4col">
       <div class="ref-stat">
         <div class="ref-stat-val" id="overview-points" style="font-size:clamp(20px,4vw,28px)">0</div>
         <div class="ref-stat-label" style="font-size:10px"><span style="display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%;vertical-align:middle;margin-right:4px"></span>ARIA</div>
@@ -2642,7 +2654,7 @@ function checkAdminAccess(email){
           <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;text-transform:uppercase">
             <span class="it">Confronto Tier</span><span class="en">Tier comparison</span>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--gray-700);border:1px solid var(--gray-700)">
+          <div class="tier-compare-grid" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:var(--gray-700);border:1px solid var(--gray-700)">
             <div style="padding:12px;background:var(--black);text-align:center">
               <div style="font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:8px">ALPHA BRAVE</div>
               <div style="font-size:12px;color:var(--white)"><span class="it">1.000 posti</span><span class="en">1,000 spots</span></div>
@@ -3216,7 +3228,7 @@ function checkAdminAccess(email){
     </div>
     <div style="margin-top:24px;padding:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
       <h3 style="font-family:var(--font-h);font-size:16px;color:var(--gold);margin-bottom:16px;letter-spacing:1px">Aggiorna Parametri</h3>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+      <div class="admin-param-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
         <div>
           <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">TREASURY (€)</label>
           <input type="number" id="adm-input-treasury" placeholder="0.00" step="0.01" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
