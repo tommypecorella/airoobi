@@ -20,7 +20,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);overfl
 
 /* ── SLIDE SYSTEM ── */
 .slides{position:relative;width:100%;height:100vh}
-.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .8s ease}
+.slide{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .8s ease;padding-bottom:100px;box-sizing:border-box;}
 .slide.active{opacity:1;pointer-events:auto}
 .slide-inner{max-width:800px;width:100%;padding:40px;text-align:center}
 
@@ -79,7 +79,7 @@ p strong{color:var(--white)}
 .progress-fill{height:100%;background:var(--gold);width:0;transition:width 5s linear}
 
 /* ── CONTROLS ── */
-.controls{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:20px;z-index:100}
+.controls{position:fixed;bottom:0;left:0;right:0;display:flex;align-items:center;justify-content:center;gap:20px;z-index:100;padding:16px 24px 20px;background:linear-gradient(to top,#000 60%,transparent);}
 .ctrl-btn{background:none;border:1px solid var(--gray-700);color:var(--gray-400);width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;transition:all .3s}
 .ctrl-btn:hover{border-color:var(--gold);color:var(--gold)}
 .ctrl-dots{display:flex;gap:8px}
@@ -100,7 +100,7 @@ p strong{color:var(--white)}
   .slide-inner{padding:24px 20px}
   .stat-grid{grid-template-columns:1fr}
   .tier-compare{grid-template-columns:1fr}
-  .controls{bottom:16px;gap:12px}
+  .controls{bottom:0;gap:12px;padding:12px 16px 16px;}
 }
 </style>
 </head>
