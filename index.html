@@ -481,7 +481,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .wallet-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:32px;}
 
 /* CARD BASE */
-.wcard{position:relative;border-radius:2px;padding:28px 32px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto auto;column-gap:32px;animation:wcardIn .55s ease both;}
+.wcard{position:relative;border-radius:2px;padding:20px 24px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto auto;column-gap:24px;animation:wcardIn .55s ease both;}
 .wcard:nth-child(1){animation-delay:.04s}.wcard:nth-child(2){animation-delay:.1s}.wcard:nth-child(3){animation-delay:.16s}
 @keyframes wcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .wcard:hover{transform:translateX(4px);}
@@ -502,21 +502,21 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .wcard-kaspa:hover{box-shadow:0 12px 55px rgba(73,234,203,.12),0 0 0 1px rgba(73,234,203,.35);}
 
 .wcard-ring{position:absolute;border-radius:50%;pointer-events:none;border-width:1px;border-style:solid;}
-.wcard-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
-.wcard-title-group{display:flex;flex-direction:column;gap:4px;}
-.wcard-label{font-family:var(--font-m);font-size:11px;letter-spacing:3px;text-transform:uppercase;line-height:1;}
-.wcard-sublabel{font-family:var(--font-h);font-size:13px;font-style:italic;opacity:.45;}
-.wcard-icons{display:flex;align-items:center;gap:10px;}
-.wcard-badge{font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border:1px solid;background:rgba(0,0,0,.6);}
-.wcard-chip{width:36px;height:28px;border:1px solid rgba(255,255,255,.1);border-radius:3px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:5px;background:rgba(255,255,255,.03);flex-shrink:0;}
+.wcard-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.wcard-title-group{display:flex;flex-direction:column;gap:3px;}
+.wcard-label{font-family:var(--font-m);font-size:10px;letter-spacing:3px;text-transform:uppercase;line-height:1;}
+.wcard-sublabel{font-family:var(--font-h);font-size:12px;font-style:italic;opacity:.45;}
+.wcard-icons{display:flex;align-items:center;gap:8px;}
+.wcard-badge{font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border:1px solid;background:rgba(0,0,0,.6);}
+.wcard-chip{width:30px;height:22px;border:1px solid rgba(255,255,255,.1);border-radius:3px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:4px;background:rgba(255,255,255,.03);flex-shrink:0;}
 .wcard-chip-dot{border-radius:1px;background:currentColor;}
 .wcard-chip-dot:nth-child(1){opacity:.35}.wcard-chip-dot:nth-child(2){opacity:.15}.wcard-chip-dot:nth-child(3){opacity:.2}.wcard-chip-dot:nth-child(4){opacity:.4}
 .wcard-body{display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;}
 .wcard-amount-block{display:flex;flex-direction:column;gap:4px;}
-.wcard-amount{font-family:var(--font-m);font-size:clamp(40px,5vw,64px);font-weight:300;letter-spacing:-3px;line-height:1;}
-.wcard-unit{font-family:var(--font-m);font-size:10px;letter-spacing:2px;opacity:.35;}
-.wcard-desc{font-family:var(--font-b);font-size:13px;line-height:1.65;opacity:.5;border-left:1px solid rgba(255,255,255,.07);padding-left:24px;}
-.wcard-footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:14px;border-top:1px solid rgba(255,255,255,.05);}
+.wcard-amount{font-family:var(--font-m);font-size:clamp(30px,3.5vw,48px);font-weight:300;letter-spacing:-3px;line-height:1;}
+.wcard-unit{font-family:var(--font-m);font-size:9px;letter-spacing:2px;opacity:.35;}
+.wcard-desc{font-family:var(--font-b);font-size:12px;line-height:1.6;opacity:.5;border-left:1px solid rgba(255,255,255,.07);padding-left:18px;}
+.wcard-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05);}
 .wcard-serial{font-family:var(--font-m);font-size:10px;letter-spacing:2px;opacity:.25;}
 .wcard-holder{font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.25;}
 .wcard-kaspa-logo{width:32px;height:32px;opacity:.4;}
