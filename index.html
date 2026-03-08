@@ -298,6 +298,22 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .dash-tab:hover{color:var(--white)}
 .dash-page{display:none}
 .dash-page.active{display:block}
+/* Mobile tab burger */
+.dash-tab-mobile{display:none;margin-bottom:24px;position:relative;z-index:100}
+.dash-tab-trigger{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 18px;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.2);color:var(--white);cursor:pointer;font-family:var(--font-b);font-size:12px;letter-spacing:2px;text-transform:uppercase}
+.dash-tab-trigger-label{display:flex;align-items:center;gap:10px}
+.dash-tab-trigger-label span{color:var(--gold)}
+.dash-tab-chevron{width:16px;height:16px;position:relative;transition:transform .25s}
+.dash-tab-chevron::before,.dash-tab-chevron::after{content:'';position:absolute;width:8px;height:1.5px;background:var(--gold);top:7px}
+.dash-tab-chevron::before{right:50%;transform:rotate(45deg);transform-origin:right center}
+.dash-tab-chevron::after{left:50%;transform:rotate(-45deg);transform-origin:left center}
+.dash-tab-mobile.open .dash-tab-chevron{transform:rotate(180deg)}
+.dash-tab-dropdown{display:none;position:absolute;top:100%;left:0;right:0;background:#0a0a0a;border:1px solid rgba(184,150,12,.2);border-top:none;flex-direction:column}
+.dash-tab-mobile.open .dash-tab-dropdown{display:flex}
+.dash-tab-option{padding:14px 18px;font-family:var(--font-b);font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-400);cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:color .2s;background:none;border-left:none;border-right:none;border-top:none;text-align:left}
+.dash-tab-option:last-child{border-bottom:none}
+.dash-tab-option.active{color:var(--gold)}
+.dash-tab-option:hover{color:var(--white)}
 
 /* ── VIDEO INTERSTITIAL ── */
 .video-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;background:var(--black);align-items:center;justify-content:center;flex-direction:column}
@@ -418,8 +434,8 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .ref-link{font-size:11px;padding:12px}
   .ref-share{flex-wrap:wrap;gap:8px}
   .ref-share-btn{flex:1;min-width:calc(50% - 8px);justify-content:center;padding:10px 12px;font-size:11px}
-  .dash-tabs{overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .dash-tab{padding:10px 16px;font-size:11px;white-space:nowrap}
+  .dash-tabs{display:none}
+  .dash-tab-mobile{display:block}
   .earn-card{padding:20px}
   .earn-header{flex-direction:column;align-items:flex-start}
   .earn-balance{text-align:left}
@@ -481,7 +497,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .wallet-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:32px;}
 
 /* CARD BASE */
-.wcard{position:relative;border-radius:2px;padding:20px 24px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto auto;column-gap:24px;animation:wcardIn .55s ease both;}
+.wcard{position:relative;border-radius:2px;padding:20px 24px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;animation:wcardIn .55s ease both;}
 .wcard:nth-child(1){animation-delay:.04s}.wcard:nth-child(2){animation-delay:.1s}.wcard:nth-child(3){animation-delay:.16s}
 @keyframes wcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 .wcard:hover{transform:translateX(4px);}
@@ -511,13 +527,13 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .wcard-chip{width:30px;height:22px;border:1px solid rgba(255,255,255,.1);border-radius:3px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:4px;background:rgba(255,255,255,.03);flex-shrink:0;}
 .wcard-chip-dot{border-radius:1px;background:currentColor;}
 .wcard-chip-dot:nth-child(1){opacity:.35}.wcard-chip-dot:nth-child(2){opacity:.15}.wcard-chip-dot:nth-child(3){opacity:.2}.wcard-chip-dot:nth-child(4){opacity:.4}
-.wcard-body{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;}
+.wcard-body{display:flex;align-items:baseline;gap:12px;margin-bottom:0;}
 .wcard-amount-block{display:flex;flex-direction:column;gap:4px;}
-.wcard-desc{font-family:var(--font-b);font-size:12px;line-height:1.6;color:rgba(255,255,255,.45);margin-bottom:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.06);}
+.wcard-desc{font-family:var(--font-b);font-size:12px;line-height:1.6;color:rgba(255,255,255,.42);margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);flex:1;}
 .wcard-amount{font-family:var(--font-m);font-size:clamp(30px,3.5vw,48px);font-weight:300;letter-spacing:-3px;line-height:1;}
 .wcard-unit{font-family:var(--font-m);font-size:9px;letter-spacing:2px;opacity:.35;}
-.wcard-desc{font-family:var(--font-b);font-size:12px;line-height:1.6;opacity:.5;border-left:1px solid rgba(255,255,255,.07);padding-left:18px;}
-.wcard-footer{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05);}
+
+.wcard-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05);}
 .wcard-serial{font-family:var(--font-m);font-size:10px;letter-spacing:2px;opacity:.25;}
 .wcard-holder{font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.25;}
 .wcard-kaspa-logo{width:32px;height:32px;opacity:.4;}
@@ -1056,7 +1072,7 @@ window.addEventListener('scroll',function(){closeBurger()},{passive:true});
 // ── Glossary ──
 var glossary={
   'NFT':{tag:'Tecnologia · Dietro le quinte',def:'NFT sta per "Non-Fungible Token": un oggetto digitale unico registrato sulla blockchain, impossibile da copiare o falsificare. Su AIROOBI lo chiamiamo Tessera — è più semplice. Dietro ogni Tessera c\'è una quota del Fondo Comune, con saldo garantito e rimborsabile. Non devi capire la tecnologia per usarla.'},
-  'ARIA':{tag:'Valuta AIROOBI',def:'ARIA è la valuta di AIROOBI. La guadagni gratis ogni giorno con check-in, video e referral. Quando vuoi partecipare a un airdrop, compri blocchi usando i tuoi ARIA. Con una Tessera Rendimento NFT puoi anche convertirli in KAS.'},
+  'ARIA':{tag:'Valuta AIROOBI',def:'ARIA è la valuta di AIROOBI. La guadagni gratis ogni giorno con check-in, video e referral. Quando vuoi partecipare a un airdrop, compri blocchi usando i tuoi ARIA.'},
   'AICO':{tag:'Token · Valuta',def:'AICO è il token di utilità di AIROOBI. Viene usato per acquistare blocchi negli airdrop. 1 blocco = €1 = 10 AICO. Il valore è stabile by design: non è una crypto speculativa.'},
   'Airdrop':{tag:'Meccanismo core',def:'Un airdrop su AIROOBI è la distribuzione di un oggetto reale (o digitale) alla community attraverso un sistema ad ARIA. Chi ha più ARIA ha più chance. Ma tutti i partecipanti ricevono valore in cambio — nessuno perde mai completamente.'},
   'Blockchain':{tag:'Tecnologia',def:'Una blockchain è un registro digitale distribuito e immutabile: ogni operazione viene registrata in modo permanente e verificabile da chiunque. Su AIROOBI usiamo Kaspa — una blockchain di nuova generazione, veloce e sicura — per garantire che le regole del gioco non possano essere cambiate.'},
@@ -1705,14 +1721,27 @@ document.addEventListener('keydown',e=>{
 
 
 // ══ TABS ══
+const TAB_LABELS={overview:{it:'Profilo',en:'Profile'},earnings:{it:'Guadagni',en:'Earnings'},tessere:{it:'Oo Portafoglio',en:'Oo Wallet'},referral:{it:'Referral',en:'Referral'}};
 function switchTab(tab){
   document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
-  event.target.closest('.dash-tab').classList.add('active');
+  const btn=document.querySelector('.dash-tab[onclick*="\''+tab+'\'"]');
+  if(btn)btn.classList.add('active');
   document.getElementById('tab-'+tab).classList.add('active');
+  // Update mobile label
+  const lbl=TAB_LABELS[tab]||{it:tab,en:tab};
+  const el=document.getElementById('dash-tab-current-it');
+  if(el)el.textContent=lbl.it;
+  document.querySelectorAll('.dash-tab-option').forEach(o=>o.classList.toggle('active',o.dataset.tab===tab));
   if(tab==='earnings')loadEarnings();
   if(tab==='referral')loadReferralTab();
   if(tab==='tessere')loadTessere();
+}
+function toggleTabMobile(){
+  document.getElementById('dash-tab-mobile').classList.toggle('open');
+}
+function closeTabMobile(){
+  document.getElementById('dash-tab-mobile').classList.remove('open');
 }
 
 async function loadTessere(){
@@ -1735,9 +1764,6 @@ async function loadTessere(){
       const serial=String(pData[0].referral_count||1).padStart(5,'0');
       const serialEl=document.getElementById('wcard-aria-serial');
       if(serialEl)serialEl.textContent=serial;
-      // swap display
-      const swapBal=document.getElementById('wswap-aria-bal');
-      if(swapBal)swapBal.textContent=aria.toLocaleString('it');
     }
   }catch(e){}
 
@@ -2342,6 +2368,20 @@ function checkAdminAccess(email){
   <p class="dash-email"><span class="it">Il tuo posto è confermato. Sei tra i primi.</span><span class="en">Your spot is confirmed. You're among the first.</span></p>
   
   <!-- TABS -->
+  <!-- Mobile tab selector -->
+  <div class="dash-tab-mobile" id="dash-tab-mobile">
+    <button class="dash-tab-trigger" onclick="toggleTabMobile()">
+      <span class="dash-tab-trigger-label"><span id="dash-tab-current-it">Profilo</span></span>
+      <span class="dash-tab-chevron"></span>
+    </button>
+    <div class="dash-tab-dropdown">
+      <button class="dash-tab-option active" onclick="switchTab('overview');closeTabMobile()" data-tab="overview"><span class="it">Profilo</span><span class="en">Profile</span></button>
+      <button class="dash-tab-option" onclick="switchTab('earnings');closeTabMobile()" data-tab="earnings"><span class="it">Guadagni</span><span class="en">Earnings</span></button>
+      <button class="dash-tab-option" onclick="switchTab('tessere');closeTabMobile()" data-tab="tessere"><span style="font-family:var(--font-h);font-size:13px;font-weight:600;letter-spacing:-1px;vertical-align:middle;margin-right:4px">Oo</span><span class="it">Portafoglio</span><span class="en">Wallet</span></button>
+      <button class="dash-tab-option" onclick="switchTab('referral');closeTabMobile()" data-tab="referral">Referral</button>
+    </div>
+  </div>
+
   <div class="dash-tabs">
     <button class="dash-tab active" onclick="switchTab('overview')"><span class="it">Profilo</span><span class="en">Profile</span></button>
     <button class="dash-tab" onclick="switchTab('earnings')"><span class="it">Guadagni</span><span class="en">Earnings</span></button>
@@ -2571,7 +2611,7 @@ function checkAdminAccess(email){
             <span class="it">
               AIROOBI ha tre valute che lavorano insieme:<br><br>
               <span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--white)">ARIA</strong> — La stable coin che guadagni con le azioni quotidiane. Sono la tua ricompensa per testare e far crescere AIROOBI.<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — La valuta di AIROOBI. Con gli ARIA compri i <strong style="color:var(--white)">blocchi</strong>, cioè le quote di partecipazione a un oggetto. Con una Tessera Rendimento si convertono in KAS (Kaspa).<br><br>
+              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — La valuta di AIROOBI. Con gli ARIA compri i <strong style="color:var(--white)">blocchi</strong>, cioè le quote di partecipazione a un oggetto.<br><br>
               <span style="font-family:var(--font-h);font-size:13px;color:var(--gold);font-weight:700;letter-spacing:-1px;vertical-align:middle">Oo</span> <strong style="color:var(--gold)">TESSERA RENDIMENTO</strong> — Il tuo saldo garantito su AIROOBI. Non si compra: si ottiene partecipando. Ogni tier ne riceve almeno una. Il saldo cresce con il Fondo Comune.<br><br>
               <strong style="color:var(--gold)">Come si collega tutto:</strong><br>
               Punti → crediti → partecipazione agli airdrop → Tessera Rendimento<br>
@@ -2709,12 +2749,12 @@ function checkAdminAccess(email){
           </div>
         </div>
         <div class="wcard-desc">
-          <span class="it">Il tuo NFT chiave. Converte ARIA in KAS reale sulla blockchain Kaspa. Garantisce il rimborso del 95% del valore, elaborato in 24–48h.</span>
-          <span class="en">Your key NFT. Converts ARIA into real KAS on Kaspa. Guarantees 95% value redemption, processed in 24–48h.</span>
+          <span class="it">Il tuo NFT chiave. Usala per riscuotere KAS reale sulla blockchain Kaspa. Garantisce il rimborso del 95% del Fondo Comune, elaborato in 24–48h.</span>
+          <span class="en">Your key NFT. Use it to redeem real KAS on the Kaspa blockchain. Guarantees 95% of the Common Fund refund, processed in 24–48h.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-serial" style="color:rgba(184,150,12,.3)">GENESIS · #<span id="wcard-rend-serial">—</span></div>
-          <div class="wcard-holder" style="color:rgba(184,150,12,.3)"><span class="it">Usa per convertire ARIA → KAS</span><span class="en">Use to convert ARIA → KAS</span></div>
+          <div class="wcard-holder" style="color:rgba(184,150,12,.3)"><span class="it">NFT · Chiave di riscossione KAS</span><span class="en">NFT · KAS redemption key</span></div>
           <div style="font-family:var(--font-h);font-size:20px;color:rgba(184,150,12,.2);letter-spacing:-1px">Oo</div>
         </div>
       </div>
@@ -2858,38 +2898,27 @@ function checkAdminAccess(email){
 
     </div><!-- /wallet-badges -->
 
-    <!-- ── CONVERTI ARIA → KAS ── -->
-    <div class="wallet-section-label" style="margin-top:4px"><span class="it">Converti ARIA in KAS</span><span class="en">Convert ARIA to KAS</span> <span>· <span class="it">richiede Tessera Rendimento NFT</span><span class="en">requires Yield Card NFT</span></span></div>
+    <!-- ── CONVERTI TESSERA RENDIMENTO → KAS ── -->
+    <div class="wallet-section-label" style="margin-top:4px"><span class="it">Converti in KAS</span><span class="en">Convert to KAS</span> <span>· <span class="it">usa la tua Tessera Rendimento NFT</span><span class="en">use your Yield Card NFT</span></span></div>
     <div class="wallet-swap">
-      <div class="wswap-title">ARIA → KAS</div>
-      <div class="wswap-sub"><span class="it">Usa una Tessera Rendimento NFT per convertire il tuo ARIA in KAS</span><span class="en">Use a Yield Card NFT to convert your ARIA to KAS</span></div>
+      <div class="wswap-title"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span> → KAS</div>
+      <div class="wswap-sub"><span class="it">La Tessera Rendimento NFT è la chiave per riscuotere KAS dalla blockchain Kaspa</span><span class="en">The Yield Card NFT is the key to redeeming KAS from the Kaspa blockchain</span></div>
       <div class="wswap-flow">
-        <!-- FROM: ARIA -->
-        <div class="wswap-box">
+        <!-- FROM: Tessera Rendimento -->
+        <div class="wswap-box wswap-box-nft" style="flex:1">
           <div class="wsbox-label"><span class="it">Converti</span><span class="en">Convert</span></div>
           <div class="wsbox-row">
-            <div class="ws-dot" style="background:var(--aria)"></div>
-            <div class="ws-name" style="color:var(--aria)">Tessera Coin · ARIA</div>
-          </div>
-          <div class="ws-amount" style="color:var(--aria)" id="wswap-aria-bal">—</div>
-          <div class="ws-unit"><span class="it">ARIA DISPONIBILI</span><span class="en">ARIA AVAILABLE</span></div>
-        </div>
-        <!-- + NFT -->
-        <div class="wswap-conn">+</div>
-        <div class="wswap-box wswap-box-nft">
-          <div class="wsbox-label"><span class="it">Richiede</span><span class="en">Requires</span></div>
-          <div class="wsbox-row">
             <div class="ws-dot" style="background:var(--gold)"></div>
-            <div class="ws-name" style="color:rgba(184,150,12,.7)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
+            <div class="ws-name" style="color:var(--gold)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
           </div>
-          <div class="ws-amount" style="color:var(--gold)">1</div>
-          <div class="ws-unit" style="color:rgba(184,150,12,.4)">NFT · <span class="it">CHIAVE</span><span class="en">KEY</span></div>
-          <div class="ws-unit" style="margin-top:6px"><span class="it">In portafoglio:</span><span class="en">In wallet:</span> <span style="color:var(--white)" id="wswap-nft-count">—</span></div>
+          <div class="ws-amount" style="color:var(--gold)" id="wswap-nft-count">—</div>
+          <div class="ws-unit" style="color:rgba(184,150,12,.5)">NFT · <span class="it">IN PORTAFOGLIO</span><span class="en">IN WALLET</span></div>
+          <div class="ws-unit" style="margin-top:6px;color:rgba(184,150,12,.4);font-size:9px;letter-spacing:1px"><span class="it">Garantisce il 95% del Fondo Comune</span><span class="en">Guarantees 95% of Common Fund</span></div>
         </div>
         <!-- → -->
         <div class="wswap-conn">→</div>
         <!-- TO: KAS -->
-        <div class="wswap-box wswap-box-out">
+        <div class="wswap-box wswap-box-out" style="flex:1">
           <div class="wsbox-label"><span class="it">Ricevi</span><span class="en">Receive</span></div>
           <div class="wsbox-row">
             <div class="ws-dot" style="background:var(--kas)"></div>
@@ -2906,7 +2935,7 @@ function checkAdminAccess(email){
           <div class="wswap-info" style="margin-top:6px;color:rgba(192,132,252,.35);font-size:9px">✦ <span class="it">I Badge non sono convertibili</span><span class="en">Badges are not convertible</span></div>
         </div>
         <div style="text-align:right">
-          <div class="wswap-btn"><span class="it">Converti ARIA → KAS</span><span class="en">Convert ARIA → KAS</span></div>
+          <div class="wswap-btn"><span class="it">Converti Tessera → KAS</span><span class="en">Convert Card → KAS</span></div>
           <div class="wswap-coming"><span class="it">Disponibile al lancio mainnet</span><span class="en">Available at mainnet launch</span></div>
         </div>
       </div>
