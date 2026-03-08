@@ -478,44 +478,48 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 ═══════════════════════════════════════════ */
 .wallet-section-label{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gray-500);text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--gray-800);display:flex;align-items:center;gap:10px;}
 .wallet-section-label span{color:var(--gray-700);}
-.wallet-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;}
+.wallet-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:32px;}
 
 /* CARD BASE */
-.wcard{position:relative;border-radius:2px;padding:24px 24px 20px;overflow:hidden;cursor:pointer;transition:transform .35s,box-shadow .35s;aspect-ratio:1.586/1;display:flex;flex-direction:column;justify-content:space-between;animation:wcardIn .55s ease both;}
+.wcard{position:relative;border-radius:2px;padding:28px 32px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto auto;column-gap:32px;animation:wcardIn .55s ease both;}
 .wcard:nth-child(1){animation-delay:.04s}.wcard:nth-child(2){animation-delay:.1s}.wcard:nth-child(3){animation-delay:.16s}
 @keyframes wcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.wcard:hover{transform:translateY(-6px) scale(1.015);}
-.wcard-locked{opacity:.38;pointer-events:none;}
+.wcard:hover{transform:translateX(4px);}
+.wcard-locked{opacity:.32;pointer-events:none;}
 
 /* Tessera Coin — ARIA blue */
-.wcard-aria{background:linear-gradient(135deg,#020810,#040c1a 50%,#020608);box-shadow:0 18px 55px rgba(74,158,255,.1),0 0 0 1px rgba(74,158,255,.22);}
-.wcard-aria:hover{box-shadow:0 28px 75px rgba(74,158,255,.22),0 0 0 1px rgba(74,158,255,.5);}
+.wcard-aria{background:linear-gradient(135deg,#020810,#040c1a 60%,#020608);box-shadow:0 8px 40px rgba(74,158,255,.08),0 0 0 1px rgba(74,158,255,.18);}
+.wcard-aria:hover{box-shadow:0 12px 55px rgba(74,158,255,.16),0 0 0 1px rgba(74,158,255,.4);}
 
 /* Tessera Rendimento — gold NFT */
-.wcard-rendimento{background:linear-gradient(135deg,#0c0900,#1c1400 50%,#0a0800);box-shadow:0 18px 55px rgba(184,150,12,.12),0 0 0 1px rgba(184,150,12,.3);}
-.wcard-rendimento:hover{box-shadow:0 28px 75px rgba(184,150,12,.24),0 0 0 1px rgba(184,150,12,.6);}
-.wcard-shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(184,150,12,.06) 50%,transparent 62%);animation:wshimmer 4s ease-in-out infinite;pointer-events:none;}
+.wcard-rendimento{background:linear-gradient(135deg,#0c0900,#1c1400 60%,#0a0800);box-shadow:0 8px 40px rgba(184,150,12,.1),0 0 0 1px rgba(184,150,12,.25);}
+.wcard-rendimento:hover{box-shadow:0 12px 55px rgba(184,150,12,.2),0 0 0 1px rgba(184,150,12,.5);}
+.wcard-shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(184,150,12,.04) 50%,transparent 62%);animation:wshimmer 4s ease-in-out infinite;pointer-events:none;}
 @keyframes wshimmer{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
 
 /* Tessera Kaspa — green */
-.wcard-kaspa{background:linear-gradient(135deg,#010d0b,#021510 50%,#010a07);box-shadow:0 18px 55px rgba(73,234,203,.07),0 0 0 1px rgba(73,234,203,.18);}
-.wcard-kaspa:hover{box-shadow:0 28px 75px rgba(73,234,203,.16),0 0 0 1px rgba(73,234,203,.4);}
+.wcard-kaspa{background:linear-gradient(135deg,#010d0b,#021510 60%,#010a07);box-shadow:0 8px 40px rgba(73,234,203,.05),0 0 0 1px rgba(73,234,203,.14);}
+.wcard-kaspa:hover{box-shadow:0 12px 55px rgba(73,234,203,.12),0 0 0 1px rgba(73,234,203,.35);}
 
 .wcard-ring{position:absolute;border-radius:50%;pointer-events:none;border-width:1px;border-style:solid;}
-.wcard-top{display:flex;justify-content:space-between;align-items:flex-start;}
-.wcard-label{font-family:var(--font-m);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;line-height:1;}
-.wcard-sublabel{margin-top:5px;font-family:var(--font-h);font-size:11px;font-style:italic;}
-.wcard-chip{width:32px;height:24px;border:1px solid rgba(255,255,255,.1);border-radius:3px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:4px;background:rgba(255,255,255,.03);flex-shrink:0;}
+.wcard-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;}
+.wcard-title-group{display:flex;flex-direction:column;gap:4px;}
+.wcard-label{font-family:var(--font-m);font-size:11px;letter-spacing:3px;text-transform:uppercase;line-height:1;}
+.wcard-sublabel{font-family:var(--font-h);font-size:13px;font-style:italic;opacity:.45;}
+.wcard-icons{display:flex;align-items:center;gap:10px;}
+.wcard-badge{font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border:1px solid;background:rgba(0,0,0,.6);}
+.wcard-chip{width:36px;height:28px;border:1px solid rgba(255,255,255,.1);border-radius:3px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:5px;background:rgba(255,255,255,.03);flex-shrink:0;}
 .wcard-chip-dot{border-radius:1px;background:currentColor;}
 .wcard-chip-dot:nth-child(1){opacity:.35}.wcard-chip-dot:nth-child(2){opacity:.15}.wcard-chip-dot:nth-child(3){opacity:.2}.wcard-chip-dot:nth-child(4){opacity:.4}
-.wcard-mid{display:flex;flex-direction:column;gap:3px;}
-.wcard-amount{font-family:var(--font-m);font-size:clamp(22px,3vw,32px);font-weight:300;letter-spacing:-1px;line-height:1;}
-.wcard-unit{font-family:var(--font-m);font-size:9px;letter-spacing:1px;}
-.wcard-bottom{display:flex;justify-content:space-between;align-items:flex-end;}
-.wcard-serial{font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;}
-.wcard-holder{font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-500);margin-top:2px;}
-.wcard-badge{position:absolute;top:12px;right:12px;font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 7px;border:1px solid;background:rgba(0,0,0,.75);}
-.wcard-kaspa-logo{width:26px;height:26px;}
+.wcard-body{display:grid;grid-template-columns:auto 1fr;gap:32px;align-items:center;}
+.wcard-amount-block{display:flex;flex-direction:column;gap:4px;}
+.wcard-amount{font-family:var(--font-m);font-size:clamp(40px,5vw,64px);font-weight:300;letter-spacing:-3px;line-height:1;}
+.wcard-unit{font-family:var(--font-m);font-size:10px;letter-spacing:2px;opacity:.35;}
+.wcard-desc{font-family:var(--font-b);font-size:13px;line-height:1.65;opacity:.5;border-left:1px solid rgba(255,255,255,.07);padding-left:24px;}
+.wcard-footer{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:14px;border-top:1px solid rgba(255,255,255,.05);}
+.wcard-serial{font-family:var(--font-m);font-size:10px;letter-spacing:2px;opacity:.25;}
+.wcard-holder{font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.25;}
+.wcard-kaspa-logo{width:32px;height:32px;opacity:.4;}
 
 /* FLOW STRIP */
 .wallet-flow{display:flex;align-items:center;border:1px solid var(--gray-800);background:var(--gray-900);padding:18px 24px;margin-bottom:32px;gap:0;}
@@ -2649,109 +2653,126 @@ function checkAdminAccess(email){
 
       <!-- TESSERA COIN — ARIA -->
       <div class="wcard wcard-aria" id="wcard-aria">
-        <div class="wcard-ring" style="width:190px;height:190px;right:-60px;bottom:-60px;border-color:rgba(74,158,255,.06)"></div>
-        <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)"><span class="it">Guadagno</span><span class="en">Earning</span></div>
-        <div class="wcard-top">
-          <div>
+        <div class="wcard-ring" style="width:350px;height:350px;right:-100px;bottom:-100px;border-color:rgba(74,158,255,.04)"></div>
+        <div class="wcard-header">
+          <div class="wcard-title-group">
             <div class="wcard-label" style="color:var(--aria)"><span class="it">Tessera Coin</span><span class="en">Coin Card</span></div>
-            <div class="wcard-sublabel" style="color:rgba(74,158,255,.35)"><span class="it">Il tuo ARIA</span><span class="en">Your ARIA</span></div>
+            <div class="wcard-sublabel" style="color:var(--aria)"><span class="it">Il tuo ARIA</span><span class="en">Your ARIA</span></div>
           </div>
-          <div class="wcard-chip" style="border-color:rgba(74,158,255,.18)">
-            <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
-            <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
+          <div class="wcard-icons">
+            <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)"><span class="it">Guadagno</span><span class="en">Earning</span></div>
+            <div class="wcard-chip" style="border-color:rgba(74,158,255,.18)">
+              <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
+              <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
+            </div>
           </div>
         </div>
-        <div class="wcard-mid">
-          <div class="wcard-amount" style="color:var(--aria)" id="wcard-aria-amount">—</div>
-          <div class="wcard-unit" style="color:rgba(74,158,255,.3)"><span class="it">ARIA ACCUMULATI</span><span class="en">ARIA ACCUMULATED</span></div>
-        </div>
-        <div class="wcard-bottom">
-          <div>
-            <div class="wcard-serial" style="color:rgba(74,158,255,.2)">ALPHA · #<span id="wcard-aria-serial">—</span></div>
-            <div class="wcard-holder" style="color:var(--gray-600)"><span class="it">Check-in · Video · Referral</span><span class="en">Check-in · Video · Referral</span></div>
+        <div class="wcard-body">
+          <div class="wcard-amount-block">
+            <div class="wcard-amount" style="color:var(--aria)" id="wcard-aria-amount">—</div>
+            <div class="wcard-unit" style="color:rgba(74,158,255,.5)"><span class="it">ARIA ACCUMULATI</span><span class="en">ARIA ACCUMULATED</span></div>
           </div>
-          <div style="font-family:var(--font-m);font-size:11px;color:rgba(74,158,255,.15);letter-spacing:2px">ARIA</div>
+          <div class="wcard-desc" style="color:rgba(255,255,255,.6);border-color:rgba(74,158,255,.12)">
+            <span class="it">La valuta di AIROOBI. La guadagni ogni giorno con azioni semplici: check-in, video, inviti. Chi accumula più ARIA ha più forza negli airdrop — e può usarla per comprare blocchi di partecipazione.</span>
+            <span class="en">AIROOBI's native currency. Earn it daily: check-ins, videos, referrals. More ARIA means more power in airdrops — use it to buy participation blocks.</span>
+          </div>
+        </div>
+        <div class="wcard-footer">
+          <div class="wcard-serial" style="color:rgba(74,158,255,.3)">ALPHA · #<span id="wcard-aria-serial">—</span></div>
+          <div class="wcard-holder" style="color:rgba(74,158,255,.3)"><span class="it">Check-in · Video · Referral</span><span class="en">Check-in · Video · Referral</span></div>
+          <div style="font-family:var(--font-m);font-size:11px;color:rgba(74,158,255,.2);letter-spacing:3px">ARIA</div>
         </div>
       </div>
 
-      <!-- TESSERA RENDIMENTO — GOLD NFT -->
+      <!-- TESSERA RENDIMENTO — GOLD NFT (visibile se ce l'ha) -->
       <div class="wcard wcard-rendimento" id="wcard-rendimento" style="display:none">
         <div class="wcard-shimmer"></div>
-        <div class="wcard-ring" style="width:170px;height:170px;right:-50px;top:-50px;border-color:rgba(184,150,12,.07)"></div>
-        <div class="wcard-ring" style="width:90px;height:90px;right:-12px;top:-12px;border-color:rgba(184,150,12,.05)"></div>
-        <div class="wcard-badge" style="color:var(--gold);border-color:rgba(184,150,12,.5)">NFT</div>
-        <div class="wcard-top">
-          <div>
+        <div class="wcard-ring" style="width:300px;height:300px;right:-80px;top:-80px;border-color:rgba(184,150,12,.05)"></div>
+        <div class="wcard-header">
+          <div class="wcard-title-group">
             <div class="wcard-label" style="color:var(--gold)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
-            <div class="wcard-sublabel" style="color:rgba(184,150,12,.4)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
+            <div class="wcard-sublabel" style="color:var(--gold)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
           </div>
-          <div class="wcard-chip" style="border-color:rgba(184,150,12,.18)">
-            <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
-            <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
+          <div class="wcard-icons">
+            <div class="wcard-badge" style="color:var(--gold);border-color:rgba(184,150,12,.5)">NFT</div>
+            <div class="wcard-chip" style="border-color:rgba(184,150,12,.18)">
+              <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
+              <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
+            </div>
           </div>
         </div>
-        <div class="wcard-mid">
-          <div class="wcard-amount" style="color:var(--gold)" id="wcard-rend-count">1</div>
-          <div class="wcard-unit" style="color:rgba(184,150,12,.35)"><span class="it">NFT IN PORTAFOGLIO</span><span class="en">NFT IN WALLET</span></div>
-        </div>
-        <div class="wcard-bottom">
-          <div>
-            <div class="wcard-serial" style="color:rgba(184,150,12,.3)">GENESIS · #<span id="wcard-rend-serial">—</span></div>
-            <div class="wcard-holder" style="color:var(--gray-600)"><span class="it">Usa per convertire ARIA → KAS</span><span class="en">Use to convert ARIA → KAS</span></div>
+        <div class="wcard-body">
+          <div class="wcard-amount-block">
+            <div class="wcard-amount" style="color:var(--gold)" id="wcard-rend-count">1</div>
+            <div class="wcard-unit" style="color:rgba(184,150,12,.5)"><span class="it">NFT IN PORTAFOGLIO</span><span class="en">NFT IN WALLET</span></div>
           </div>
-          <div style="font-family:var(--font-h);font-size:18px;color:rgba(184,150,12,.2);letter-spacing:-1px">Oo</div>
+          <div class="wcard-desc" style="color:rgba(255,255,255,.6);border-color:rgba(184,150,12,.12)">
+            <span class="it">Il tuo NFT di rendimento. Funziona come una chiave: ti permette di convertire il tuo ARIA accumulato in KAS reale sulla blockchain Kaspa. Ogni tessera garantisce il rimborso del 95% del valore — elaborato in 24–48h.</span>
+            <span class="en">Your yield NFT — works as a key. Lets you convert accumulated ARIA into real KAS on the Kaspa blockchain. Each card guarantees 95% value redemption, processed in 24–48h.</span>
+          </div>
+        </div>
+        <div class="wcard-footer">
+          <div class="wcard-serial" style="color:rgba(184,150,12,.3)">GENESIS · #<span id="wcard-rend-serial">—</span></div>
+          <div class="wcard-holder" style="color:rgba(184,150,12,.3)"><span class="it">Usa per convertire ARIA → KAS</span><span class="en">Use to convert ARIA → KAS</span></div>
+          <div style="font-family:var(--font-h);font-size:20px;color:rgba(184,150,12,.2);letter-spacing:-1px">Oo</div>
         </div>
       </div>
 
-      <!-- TESSERA RENDIMENTO — LOCKED (se non ce l'ha) -->
+      <!-- TESSERA RENDIMENTO — LOCKED -->
       <div class="wcard wcard-rendimento wcard-locked" id="wcard-rendimento-locked">
-        <div class="wcard-top">
-          <div>
-            <div class="wcard-label" style="color:rgba(184,150,12,.3)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
-            <div class="wcard-sublabel" style="color:rgba(184,150,12,.15)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
+        <div class="wcard-header">
+          <div class="wcard-title-group">
+            <div class="wcard-label" style="color:rgba(184,150,12,.35)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
+            <div class="wcard-sublabel" style="color:rgba(184,150,12,.2)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
+          </div>
+          <div class="wcard-badge" style="color:rgba(184,150,12,.4);border-color:rgba(184,150,12,.2)">NFT</div>
+        </div>
+        <div class="wcard-body">
+          <div class="wcard-amount-block">
+            <div class="wcard-amount" style="color:rgba(184,150,12,.2)">—</div>
+            <div class="wcard-unit" style="color:rgba(184,150,12,.2)"><span class="it">NON IN POSSESSO</span><span class="en">NOT OWNED</span></div>
+          </div>
+          <div class="wcard-desc" style="color:rgba(255,255,255,.25);border-color:rgba(184,150,12,.08)">
+            <span class="it">Non hai ancora una Tessera Rendimento. Partecipa agli airdrop o guadagna ARIA sufficiente per riceverne una — è la chiave per convertire i tuoi guadagni in KAS reale.</span>
+            <span class="en">You don't have a Yield Card yet. Participate in airdrops or earn enough ARIA to receive one — it's the key to converting your earnings into real KAS.</span>
           </div>
         </div>
-        <div class="wcard-mid">
-          <div class="wcard-amount" style="color:rgba(184,150,12,.2)">—</div>
-          <div class="wcard-unit" style="color:rgba(184,150,12,.15)"><span class="it">NON ANCORA IN POSSESSO</span><span class="en">NOT YET OWNED</span></div>
-        </div>
-        <div class="wcard-bottom">
+        <div class="wcard-footer">
           <div class="wcard-holder" style="color:rgba(184,150,12,.2)"><span class="it">Partecipa agli airdrop per ottenerla</span><span class="en">Join airdrops to earn one</span></div>
         </div>
       </div>
 
       <!-- TESSERA KASPA — VERDE -->
       <div class="wcard wcard-kaspa">
-        <div class="wcard-ring" style="width:180px;height:180px;left:-45px;top:-45px;border-color:rgba(73,234,203,.05)"></div>
-        <div class="wcard-ring" style="width:290px;height:290px;right:-100px;bottom:-100px;border-color:rgba(73,234,203,.03)"></div>
-        <div class="wcard-badge" style="color:var(--kas);border-color:rgba(73,234,203,.35)"><span class="it">Presto</span><span class="en">Soon</span></div>
-        <div class="wcard-top">
-          <div>
+        <div class="wcard-ring" style="width:320px;height:320px;right:-90px;bottom:-90px;border-color:rgba(73,234,203,.04)"></div>
+        <div class="wcard-header">
+          <div class="wcard-title-group">
             <div class="wcard-label" style="color:var(--kas)"><span class="it">Tessera Kaspa</span><span class="en">Kaspa Card</span></div>
-            <div class="wcard-sublabel" style="color:rgba(73,234,203,.3)"><span class="it">Il tuo KAS</span><span class="en">Your KAS</span></div>
+            <div class="wcard-sublabel" style="color:var(--kas)"><span class="it">Il tuo KAS</span><span class="en">Your KAS</span></div>
           </div>
-          <svg class="wcard-kaspa-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" stroke="#49EACB" stroke-width="6" fill="none" opacity=".4"/>
-            <polygon points="100,38 162,70 162,130 100,162 38,130 38,70" stroke="#49EACB" stroke-width="4" fill="none" opacity=".22"/>
-            <circle cx="100" cy="100" r="18" fill="#49EACB" opacity=".45"/>
-            <line x1="100" y1="38" x2="100" y2="82" stroke="#49EACB" stroke-width="3" opacity=".25"/>
-            <line x1="100" y1="118" x2="100" y2="162" stroke="#49EACB" stroke-width="3" opacity=".25"/>
-            <line x1="38" y1="70" x2="76" y2="91" stroke="#49EACB" stroke-width="3" opacity=".25"/>
-            <line x1="124" y1="109" x2="162" y2="130" stroke="#49EACB" stroke-width="3" opacity=".25"/>
-            <line x1="162" y1="70" x2="124" y2="91" stroke="#49EACB" stroke-width="3" opacity=".25"/>
-            <line x1="76" y1="109" x2="38" y2="130" stroke="#49EACB" stroke-width="3" opacity=".25"/>
-          </svg>
-        </div>
-        <div class="wcard-mid">
-          <div class="wcard-amount" style="color:var(--kas)">—</div>
-          <div class="wcard-unit" style="color:rgba(73,234,203,.25)"><span class="it">KAS · DISPONIBILE CON MAINNET</span><span class="en">KAS · AVAILABLE AT MAINNET</span></div>
-        </div>
-        <div class="wcard-bottom">
-          <div>
-            <div class="wcard-serial" style="color:rgba(73,234,203,.15)">KASPA NETWORK</div>
-            <div class="wcard-holder" style="color:rgba(73,234,203,.2)"><span class="it">Ricevi dopo ogni conversione</span><span class="en">Received after each swap</span></div>
+          <div class="wcard-icons">
+            <div class="wcard-badge" style="color:var(--kas);border-color:rgba(73,234,203,.35)"><span class="it">Presto</span><span class="en">Soon</span></div>
+            <svg class="wcard-kaspa-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" stroke="#49EACB" stroke-width="6" fill="none" opacity=".5"/>
+              <polygon points="100,38 162,70 162,130 100,162 38,130 38,70" stroke="#49EACB" stroke-width="4" fill="none" opacity=".3"/>
+              <circle cx="100" cy="100" r="18" fill="#49EACB" opacity=".5"/>
+            </svg>
           </div>
-          <div style="font-family:var(--font-m);font-size:10px;color:rgba(73,234,203,.12);letter-spacing:2px">KAS</div>
+        </div>
+        <div class="wcard-body">
+          <div class="wcard-amount-block">
+            <div class="wcard-amount" style="color:var(--kas)">—</div>
+            <div class="wcard-unit" style="color:rgba(73,234,203,.45)"><span class="it">KAS · CON MAINNET</span><span class="en">KAS · AT MAINNET</span></div>
+          </div>
+          <div class="wcard-desc" style="color:rgba(255,255,255,.6);border-color:rgba(73,234,203,.1)">
+            <span class="it">Il tuo portafoglio Kaspa su AIROOBI. Dopo ogni conversione con la Tessera Rendimento, il KAS ricevuto viene accreditato qui — on-chain, tuo per sempre. Disponibile al lancio della mainnet.</span>
+            <span class="en">Your Kaspa wallet on AIROOBI. After each conversion with your Yield Card, the received KAS is credited here — on-chain, yours forever. Available at mainnet launch.</span>
+          </div>
+        </div>
+        <div class="wcard-footer">
+          <div class="wcard-serial" style="color:rgba(73,234,203,.2)">KASPA NETWORK</div>
+          <div class="wcard-holder" style="color:rgba(73,234,203,.2)"><span class="it">Ricevi dopo ogni conversione</span><span class="en">Received after each swap</span></div>
+          <div style="font-family:var(--font-m);font-size:11px;color:rgba(73,234,203,.15);letter-spacing:3px">KAS</div>
         </div>
       </div>
 
