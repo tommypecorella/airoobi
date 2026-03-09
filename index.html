@@ -921,7 +921,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.8 · Last update: 09 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.9 · Last update: 09 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1224,7 +1224,7 @@ async function awardLoginBonus(userId,token){
   }catch(e){}
 }
 
-// ── Welcome bonus (100 ARIA + NFT EARN + NFT ALPHA BRAVE, once per user) ──
+// ── Welcome bonus (10 ARIA + NFT EARN + NFT ALPHA BRAVE, once per user, at first login) ──
 async function awardWelcomeBonus(userId,token){
   try{
     // Check if already received
@@ -1234,11 +1234,11 @@ async function awardWelcomeBonus(userId,token){
     const data=await existing.json();
     if(data&&data.length>0)return; // already received
 
-    // Award 100 ARIA
+    // Award 10 ARIA
     await fetch(SB_URL+'/rest/v1/points_ledger',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-      body:JSON.stringify({user_id:userId,amount:100,reason:'welcome_bonus'})
+      body:JSON.stringify({user_id:userId,amount:10,reason:'welcome_bonus'})
     });
 
     // Recalculate total
@@ -1396,8 +1396,7 @@ async function doSignup(){
       saveSession(data.session);
       window._currentSession = data.session;
       if(ref)await linkRef(data.user.id,ref,data.session.access_token);
-      // Award welcome bonus
-      await awardWelcomeBonus(data.user.id,data.session.access_token);
+      // Bonuses awarded at first login, not here
       track('signup_complete', {method:'auto_confirm', has_ref: !!ref, lang});
       closeAuth();
       gatedDashboard(data.session);
@@ -1427,8 +1426,8 @@ async function resendConfirmation(){
   }
 }
 
-// ── Auto-confirm referral: called at email confirm + login ──
-// Checks if user was referred and referral not yet confirmed → awards +100 to both
+// ── Auto-confirm referral: called at first login ──
+// Checks if user was referred and not yet confirmed → awards +10 referrer, +15 invited
 async function autoConfirmReferral(userId,token){
   try{
     // Check if already confirmed
@@ -1445,7 +1444,7 @@ async function autoConfirmReferral(userId,token){
     const pData=await profiles.json();
     if(!pData||!pData.length||!pData[0].referred_by)return; // no referrer
 
-    // Confirm referral via RPC (+100 ARIA to both)
+    // Auto-confirm referral via RPC (+10 referrer, +15 invited)
     const deviceHash=navigator.userAgent+screen.width+'x'+screen.height;
     await fetch(SB_URL+'/rest/v1/rpc/confirm_referral',{
       method:'POST',
@@ -1711,16 +1710,12 @@ function updateNavAuth(loggedIn, email){
           saveSession(session);
           updateNavAuth(true,user.email);
           history.replaceState(null,'',window.location.pathname);
-          // Award welcome bonus + NFTs (idempotent)
-          await awardWelcomeBonus(user.id,token).catch(()=>{});
-          // Link referral saved at signup
+          // Link referral saved at signup (bonuses awarded at first login)
           const storedRef=window._airoobi_ref||localStorage.getItem('airoobi_pending_ref');
           if(storedRef){
             await linkRef(user.id,storedRef,token);
             localStorage.removeItem('airoobi_pending_ref');
           }
-          // Auto-confirm referral (+100 to both)
-          await autoConfirmReferral(user.id,token);
           gatedDashboard(session);
         }
       }).catch(()=>{});
@@ -2109,7 +2104,7 @@ async function doConfirmReferralReal(){
   const result=await sbRpc('confirm_referral',{p_referred_id:earnSession.user.id,p_device_hash:deviceHash},earnSession.access_token);
   
   if(result&&result.success){
-    btn.innerHTML='+100 '+(lang==='it'?'ARIA':'ARIA')+'! ✓';
+    btn.innerHTML='+'+(lang==='it'?'15 ARIA':'15 ARIA')+'! ✓';
     document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span>':'<span>Referral confirmed!</span>';
     setTimeout(loadEarnings,1500);
   }else if(result){
@@ -3057,7 +3052,7 @@ function checkAdminAccess(email){
 
     <div class="earn-card" style="border-color:var(--gold-dim)">
       <h3><span class="it">Come funziona il referral</span><span class="en">How referrals work</span></h3>
-      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Dopo 24h e almeno 1 check-in, confermano il referral nel loro profilo<br>4. Entrambi guadagnate 100 ARIA!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. After 24h and at least 1 check-in, they confirm the referral in their profile<br>4. You both earn 100 ARIA!</span></p>
+      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login il referral si conferma automaticamente<br>4. Tu ricevi +10 ARIA, il tuo amico +15 ARIA!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. Referral auto-confirms at their first login<br>4. You get +10 ARIA, your friend gets +15 ARIA!</span></p>
     </div>
   </div>
 </div>
