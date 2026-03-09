@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AIROOBI — Come Funziona</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000000;--white:#FFFFFF;--gold:#B8960C;
+  --gold-dim:rgba(184,150,12,.3);--gold-glow:rgba(184,150,12,.12);
+  --gray-400:#888;--gray-700:#333;
+  --font-h:'Cormorant Garamond',Georgia,serif;
+  --font-b:'Instrument Sans',system-ui,sans-serif;
+  --font-m:'DM Mono',monospace;
+}
+html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden;font-family:var(--font-b)}
+
+/* ── SCENE SYSTEM ── */
+.scene{
+  position:fixed;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;
+  padding:40px 32px;opacity:0;visibility:hidden;
+  transition:opacity .8s ease,visibility .8s ease;z-index:1;
+}
+.scene.active{opacity:1;visibility:visible;z-index:10}
+
+/* ── TYPOGRAPHY ── */
+.scene h1{
+  font-family:var(--font-h);font-size:clamp(36px,7vw,72px);
+  font-weight:300;line-height:1.1;letter-spacing:-1px;
+  max-width:900px;
+}
+.scene h1 em{font-style:italic;color:var(--gold)}
+.scene h2{
+  font-family:var(--font-h);font-size:clamp(28px,5vw,52px);
+  font-weight:300;line-height:1.2;max-width:800px;
+}
+.scene p{
+  font-family:var(--font-b);font-size:clamp(15px,2.2vw,20px);
+  color:var(--gray-400);line-height:1.7;max-width:600px;margin-top:24px;
+}
+.scene .label{
+  font-family:var(--font-m);font-size:12px;letter-spacing:3px;
+  text-transform:uppercase;color:var(--gold);margin-bottom:20px;
+}
+.gold{color:var(--gold)}
+.rule{width:60px;height:1px;background:var(--gold);margin:28px auto}
+
+/* ── ANIMATED ELEMENTS ── */
+.fade-up{opacity:0;transform:translateY(30px);transition:all .7s ease}
+.scene.active .fade-up{opacity:1;transform:translateY(0)}
+.scene.active .fade-up:nth-child(2){transition-delay:.2s}
+.scene.active .fade-up:nth-child(3){transition-delay:.4s}
+.scene.active .fade-up:nth-child(4){transition-delay:.6s}
+.scene.active .fade-up:nth-child(5){transition-delay:.8s}
+.scene.active .fade-up:nth-child(6){transition-delay:1s}
+
+/* ── LOGO ── */
+.logo-text{
+  font-family:var(--font-h);font-size:clamp(48px,10vw,96px);
+  font-weight:300;letter-spacing:8px;
+}
+.logo-text .oo{position:relative;display:inline-block}
+
+/* ── STEP CARDS ── */
+.steps{display:flex;gap:24px;margin-top:40px;flex-wrap:wrap;justify-content:center}
+.step{
+  background:rgba(255,255,255,.03);border:1px solid var(--gray-700);
+  padding:32px 24px;width:200px;text-align:center;
+}
+.step-num{
+  font-family:var(--font-m);font-size:36px;color:var(--gold);
+  font-weight:300;margin-bottom:12px;
+}
+.step-title{font-size:14px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.step-desc{font-size:13px;color:var(--gray-400);line-height:1.5}
+
+/* ── ICON BLOCKS ── */
+.icon-row{display:flex;gap:32px;margin-top:36px;flex-wrap:wrap;justify-content:center}
+.icon-block{text-align:center;width:140px}
+.icon-circle{
+  width:64px;height:64px;border:1px solid var(--gold-dim);
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 12px;font-size:28px;border-radius:50%;
+}
+.icon-label{font-size:13px;color:var(--gray-400)}
+.icon-value{font-family:var(--font-m);font-size:18px;color:var(--gold);margin-top:4px}
+
+/* ── FAIRNESS VISUAL ── */
+.fair-box{
+  border:2px solid var(--gold);padding:40px;margin-top:32px;
+  max-width:560px;position:relative;
+}
+.fair-box::before{
+  content:'FAIR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:var(--black);padding:0 16px;font-family:var(--font-m);
+  font-size:11px;letter-spacing:4px;color:var(--gold);
+}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{
+  position:fixed;bottom:0;left:0;right:0;height:3px;
+  background:rgba(255,255,255,.05);z-index:100;
+}
+.progress-bar{height:100%;background:var(--gold);width:0;transition:width .3s linear}
+
+/* ── CONTROLS ── */
+.controls{
+  position:fixed;bottom:24px;right:24px;z-index:100;
+  display:flex;gap:8px;
+}
+.ctrl-btn{
+  background:none;border:1px solid var(--gray-700);color:var(--gray-400);
+  width:44px;height:44px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;font-size:18px;transition:all .3s;
+}
+.ctrl-btn:hover{border-color:var(--gold);color:var(--gold)}
+.ctrl-btn.active{border-color:var(--gold);color:var(--gold)}
+
+.scene-counter{
+  position:fixed;bottom:28px;left:24px;z-index:100;
+  font-family:var(--font-m);font-size:11px;color:var(--gray-400);
+  letter-spacing:2px;
+}
+
+/* ── CATEGORY GRID ── */
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px;max-width:500px}
+@media(max-width:600px){.cat-grid{grid-template-columns:repeat(2,1fr)}}
+.cat-tag{
+  padding:12px 8px;border:1px solid var(--gray-700);font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;color:var(--gray-400);
+  text-align:center;transition:all .4s;
+}
+.scene.active .cat-tag{opacity:0;animation:popIn .4s ease forwards}
+@keyframes popIn{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1)}}
+.cat-tag:nth-child(1){animation-delay:.3s}
+.cat-tag:nth-child(2){animation-delay:.45s}
+.cat-tag:nth-child(3){animation-delay:.6s}
+.cat-tag:nth-child(4){animation-delay:.75s}
+.cat-tag:nth-child(5){animation-delay:.9s}
+.cat-tag:nth-child(6){animation-delay:1.05s}
+.cat-tag:nth-child(7){animation-delay:1.2s}
+.cat-tag:nth-child(8){animation-delay:1.35s}
+
+/* ── WINNER ANIMATION ── */
+.winner-visual{margin-top:32px;position:relative}
+.winner-obj{
+  font-size:64px;animation:float 3s ease-in-out infinite;
+}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.winner-badge{
+  display:inline-block;margin-top:16px;padding:8px 20px;
+  border:1px solid var(--gold);font-family:var(--font-m);
+  font-size:12px;letter-spacing:3px;color:var(--gold);
+}
+
+/* ── CTA FINAL ── */
+.cta-btn{
+  display:inline-block;margin-top:32px;padding:18px 48px;
+  background:var(--gold);color:var(--black);font-family:var(--font-b);
+  font-size:14px;font-weight:700;letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;transition:all .3s;border:none;cursor:pointer;
+}
+.cta-btn:hover{background:var(--white)}
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  .steps{flex-direction:column;align-items:center}
+  .step{width:100%;max-width:280px}
+  .icon-row{gap:20px}
+  .icon-block{width:100px}
+  .fair-box{padding:28px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- SCENE 0: INTRO -->
+<div class="scene active" id="s0">
+  <div class="fade-up label">Benvenuto in</div>
+  <div class="fade-up logo-text">AIR<span class="oo">OO</span>BI</div>
+  <div class="fade-up rule"></div>
+  <p class="fade-up">Il marketplace dove realizzi<br>i tuoi desideri.</p>
+</div>
+
+<!-- SCENE 1: IL DESIDERIO -->
+<div class="scene" id="s1">
+  <div class="fade-up label">Il tuo desiderio</div>
+  <h1 class="fade-up">C'è qualcosa che <em>desideri</em> davvero?</h1>
+  <p class="fade-up">Uno smartphone top di gamma. Una moto. Un orologio di lusso.<br>Di solito costa migliaia di euro. Su AIROOBI, costa molto meno.</p>
+</div>
+
+<!-- SCENE 2: COS'È AIROOBI -->
+<div class="scene" id="s2">
+  <div class="fade-up label">Cos'è AIROOBI</div>
+  <h1 class="fade-up">Un <em>marketplace</em> di oggetti reali</h1>
+  <p class="fade-up">Persone vere mettono in vendita oggetti di valore.<br>Tu partecipi per ottenerli a un prezzo ridicolo.</p>
+</div>
+
+<!-- SCENE 3: COME FUNZIONA - GUADAGNI -->
+<div class="scene" id="s3">
+  <div class="fade-up label">Come funziona</div>
+  <h2 class="fade-up">Guadagni <span class="gold">ARIA</span> ogni giorno</h2>
+  <p class="fade-up">ARIA è la valuta di AIROOBI. La guadagni gratis, con azioni semplici.</p>
+  <div class="icon-row fade-up">
+    <div class="icon-block">
+      <div class="icon-circle">&#10004;</div>
+      <div class="icon-label">Check-in</div>
+      <div class="icon-value">+10</div>
+    </div>
+    <div class="icon-block">
+      <div class="icon-circle">&#9654;</div>
+      <div class="icon-label">Video</div>
+      <div class="icon-value">+10</div>
+    </div>
+    <div class="icon-block">
+      <div class="icon-circle">&#128279;</div>
+      <div class="icon-label">Referral</div>
+      <div class="icon-value">+100</div>
+    </div>
+    <div class="icon-block">
+      <div class="icon-circle">&#128293;</div>
+      <div class="icon-label">Streak 7gg</div>
+      <div class="icon-value">+100</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 4: COME FUNZIONA - BLOCCHI -->
+<div class="scene" id="s4">
+  <div class="fade-up label">Partecipa</div>
+  <h2 class="fade-up">Usa ARIA per prendere <span class="gold">blocchi</span></h2>
+  <p class="fade-up">Ogni oggetto ha un numero limitato di blocchi.<br>Con i tuoi ARIA ne prendi quanti vuoi.</p>
+  <div class="steps fade-up">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Scegli</div>
+      <div class="step-desc">Trova l'oggetto che desideri nel marketplace</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Partecipa</div>
+      <div class="step-desc">Usa i tuoi ARIA per prendere blocchi</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">Ottieni</div>
+      <div class="step-desc">Quando i blocchi finiscono, qualcuno ottiene l'oggetto</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE 5: CATEGORIE -->
+<div class="scene" id="s5">
+  <div class="fade-up label">Cosa puoi ottenere</div>
+  <h2 class="fade-up">Oggetti <em>reali</em> di ogni tipo</h2>
+  <div class="cat-grid fade-up">
+    <div class="cat-tag">Smartphone</div>
+    <div class="cat-tag">Orologi</div>
+    <div class="cat-tag">Moto</div>
+    <div class="cat-tag">Tech</div>
+    <div class="cat-tag">Luxury</div>
+    <div class="cat-tag">Sneakers</div>
+    <div class="cat-tag">Gaming</div>
+    <div class="cat-tag">Audio</div>
+  </div>
+  <p class="fade-up">Ogni oggetto è verificato e valutato da AIROOBI.</p>
+</div>
+
+<!-- SCENE 6: FAIRNESS RULE -->
+<div class="scene" id="s6">
+  <div class="fade-up label">Fairness assoluta</div>
+  <h2 class="fade-up">Hai ottenuto l'oggetto? <span class="gold">Lascia spazio.</span></h2>
+  <div class="fade-up fair-box">
+    <p style="color:var(--white);margin-top:0;font-size:clamp(15px,2vw,18px);line-height:1.7">
+      Se ottieni un oggetto in una categoria,<br>
+      <strong style="color:var(--gold)">quella categoria si chiude per te.</strong><br><br>
+      Così tutti hanno davvero la stessa possibilità.<br>
+      Nessuno accumula. Nessuno domina.
+    </p>
+  </div>
+</div>
+
+<!-- SCENE 7: IL TUO REWARD -->
+<div class="scene" id="s7">
+  <div class="fade-up label">Il tuo reward</div>
+  <h2 class="fade-up">Ogni partecipazione<br>ha un <span class="gold">valore reale</span></h2>
+  <p class="fade-up">Ogni volta che partecipi, ricevi una Tessera digitale.<br>Pensala come un buono fruttifero: il suo valore cresce nel tempo.</p>
+  <div class="fade-up rule"></div>
+  <p class="fade-up" style="font-family:var(--font-m);font-size:13px;color:var(--gold)">
+    Partecipi &nbsp;→&nbsp; accumuli Tessere<br>
+    Le Tessere &nbsp;→&nbsp; crescono di valore
+  </p>
+</div>
+
+<!-- SCENE 8: VENDI -->
+<div class="scene" id="s8">
+  <div class="fade-up label">Per chi vende</div>
+  <h2 class="fade-up">Hai un oggetto di valore?<br><span class="gold">Vendilo su AIROOBI</span></h2>
+  <p class="fade-up">Inserisci il tuo oggetto (valore minimo €500).<br>La community partecipa. Tu incassi il prezzo di mercato.</p>
+  <div class="fade-up rule"></div>
+  <p class="fade-up" style="font-size:14px;color:var(--gray-400)">
+    Venditori privati · Valore minimo €500 · Incasso garantito
+  </p>
+</div>
+
+<!-- SCENE 9: PERCHÉ TORNARE -->
+<div class="scene" id="s9">
+  <div class="fade-up label">Perché restare</div>
+  <h2 class="fade-up">AIROOBI ti <em>ricompensa</em><br>ogni giorno</h2>
+  <p class="fade-up">Guadagni ARIA gratis. Accumuli Tessere che crescono.<br>Nuovi oggetti ogni settimana. Nuove categorie da esplorare.</p>
+  <div class="fade-up winner-visual">
+    <div class="winner-obj">&#10024;</div>
+    <div class="winner-badge">IL TUO PROSSIMO DESIDERIO</div>
+  </div>
+</div>
+
+<!-- SCENE 10: CTA -->
+<div class="scene" id="s10">
+  <div class="fade-up logo-text" style="font-size:clamp(36px,8vw,64px)">AIR<span class="oo">OO</span>BI</div>
+  <div class="fade-up rule"></div>
+  <h2 class="fade-up">Realizza il tuo <em>desiderio.</em><br>A un prezzo che non crederesti.</h2>
+  <p class="fade-up">Registrati gratis. Inizia a guadagnare ARIA oggi.</p>
+  <a href="https://airoobi.com" class="fade-up cta-btn">Entra in AIROOBI</a>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap"><div class="progress-bar" id="progress"></div></div>
+
+<!-- SCENE COUNTER -->
+<div class="scene-counter"><span id="counter">01</span> / 11</div>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <button class="ctrl-btn" id="btn-prev" title="Indietro">&#8592;</button>
+  <button class="ctrl-btn" id="btn-play" title="Play/Pausa">&#9646;&#9646;</button>
+  <button class="ctrl-btn" id="btn-next" title="Avanti">&#8594;</button>
+</div>
+
+<script>
+(function(){
+  const scenes = document.querySelectorAll('.scene');
+  const total = scenes.length;
+  const progress = document.getElementById('progress');
+  const counter = document.getElementById('counter');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const btnPlay = document.getElementById('btn-play');
+
+  let current = 0;
+  let playing = true;
+  let timer = null;
+  const DURATION = 5000; // 5s per scene
+
+  function goTo(idx){
+    if(idx < 0) idx = 0;
+    if(idx >= total) idx = total - 1;
+    scenes[current].classList.remove('active');
+    current = idx;
+    scenes[current].classList.add('active');
+    progress.style.width = ((current + 1) / total * 100) + '%';
+    counter.textContent = String(current + 1).padStart(2, '0');
+  }
+
+  function next(){
+    if(current < total - 1) goTo(current + 1);
+    else { playing = false; updatePlayBtn(); clearInterval(timer); }
+  }
+
+  function prev(){
+    if(current > 0) goTo(current - 1);
+  }
+
+  function startAutoplay(){
+    clearInterval(timer);
+    timer = setInterval(next, DURATION);
+  }
+
+  function updatePlayBtn(){
+    btnPlay.innerHTML = playing ? '&#9646;&#9646;' : '&#9654;';
+    btnPlay.classList.toggle('active', playing);
+  }
+
+  // Auto start
+  startAutoplay();
+  updatePlayBtn();
+
+  btnNext.addEventListener('click', ()=>{ next(); if(playing){ clearInterval(timer); startAutoplay(); }});
+  btnPrev.addEventListener('click', ()=>{ prev(); if(playing){ clearInterval(timer); startAutoplay(); }});
+  btnPlay.addEventListener('click', ()=>{
+    playing = !playing;
+    updatePlayBtn();
+    if(playing){
+      if(current >= total - 1) goTo(0);
+      startAutoplay();
+    } else {
+      clearInterval(timer);
+    }
+  });
+
+  // Keyboard
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowRight' || e.key === ' '){ e.preventDefault(); next(); if(playing){ clearInterval(timer); startAutoplay(); }}
+    if(e.key === 'ArrowLeft'){ e.preventDefault(); prev(); if(playing){ clearInterval(timer); startAutoplay(); }}
+    if(e.key === 'p' || e.key === 'P'){ btnPlay.click(); }
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e)=>{ touchStartX = e.changedTouches[0].screenX; });
+  document.addEventListener('touchend', (e)=>{
+    const diff = e.changedTouches[0].screenX - touchStartX;
+    if(Math.abs(diff) > 50){
+      if(diff < 0) next(); else prev();
+      if(playing){ clearInterval(timer); startAutoplay(); }
+    }
+  });
+
+  // Init progress
+  progress.style.width = (1 / total * 100) + '%';
+})();
+</script>
+</body>
+</html>
