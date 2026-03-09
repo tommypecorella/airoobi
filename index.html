@@ -1468,20 +1468,38 @@ async function doLogin(){
   const {status,data}=await sbAuth('token?grant_type=password',{email,password:pw});
   
   if(status===200&&data.access_token){
-    saveSession(data);
-    window._currentSession = data;
-    closeAuth();
-    try{
-      await awardLoginBonus(data.user.id,data.access_token);
-    }catch(e){console.error('[AIROOBI] awardLoginBonus failed:',e);}
-    try{
-      await awardWelcomeBonus(data.user.id,data.access_token);
-    }catch(e){console.error('[AIROOBI] awardWelcomeBonus failed:',e);}
-    try{
-      await autoConfirmReferral(data.user.id,data.access_token);
-    }catch(e){console.error('[AIROOBI] autoConfirmReferral failed:',e);}
-    track('login', {lang});
-    gatedDashboard(data);
+    if(!data.user.email_confirmed_at){
+      track('login_email_not_confirmed', {lang});
+      const errEl=document.getElementById('login-error');
+      errEl.style.display='block';
+      errEl.style.color='#B8960C';
+      errEl.innerHTML=(lang==='it'
+        ?'Controlla la tua email per confermare l\'account.<br>Hai ricevuto: <strong>'+email+'</strong>'
+        :'Check your email to confirm your account.<br>Sent to: <strong>'+email+'</strong>')
+        +'<br><button id="resend-confirm-btn" style="margin-top:10px;padding:8px 18px;background:#B8960C;color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:600">'
+        +(lang==='it'?'Reinvia email di conferma':'Resend confirmation email')+'</button>';
+      document.getElementById('resend-confirm-btn').onclick=async function(){
+        this.disabled=true;
+        this.textContent=lang==='it'?'Invio in corso...':'Sending...';
+        await sbAuth('resend',{type:'signup',email});
+        this.textContent=lang==='it'?'Email reinviata ✓':'Email resent ✓';
+      };
+    }else{
+      saveSession(data);
+      window._currentSession = data;
+      closeAuth();
+      try{
+        await awardLoginBonus(data.user.id,data.access_token);
+      }catch(e){console.error('[AIROOBI] awardLoginBonus failed:',e);}
+      try{
+        await awardWelcomeBonus(data.user.id,data.access_token);
+      }catch(e){console.error('[AIROOBI] awardWelcomeBonus failed:',e);}
+      try{
+        await autoConfirmReferral(data.user.id,data.access_token);
+      }catch(e){console.error('[AIROOBI] autoConfirmReferral failed:',e);}
+      track('login', {lang});
+      gatedDashboard(data);
+    }
   }else{
     const msg=data.error_description||data.msg||data.message||'';
     if(msg.toLowerCase().includes('email not confirmed')){
@@ -2172,9 +2190,11 @@ async function sendInvestorForm(){
 
 
 // ══ ADMIN AREA ══
-const ADMIN_EMAIL='tommaso.pecorella@outlook.com'; // flag: only this user sees admin
+const ADMIN_EMAIL='tommaso.pecorella+ceo@outlook.com'; // flag: only this user sees admin
 
 function openAdmin(){
+  const s=getSession();
+  if(!s||s.user?.email!==ADMIN_EMAIL)return;
   document.getElementById('admin-overlay').classList.add('active');
   document.body.style.overflow='hidden';
   loadAdminData();
