@@ -921,7 +921,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.7.9 · Last update: 09 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.8.0 · Last update: 09 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1097,7 +1097,7 @@ var glossary={
   'Smart Contract':{tag:'Tecnologia · Blockchain',def:'Un smart contract è un programma che vive sulla blockchain ed esegue automaticamente le regole scritte nel codice. Su AIROOBI gestisce la distribuzione degli airdrop, il calcolo degli ARIA e il saldo delle Tessere — senza possibilità di manipolazione da parte di nessuno, nemmeno del team.'},
   'Market Cap':{tag:'Finanza',def:'Il market cap (capitalizzazione di mercato) degli NFT AIROOBI è il valore totale di tutti gli NFT in circolazione: valore singolo NFT × numero di NFT emessi. È un indicatore della "dimensione" del progetto, simile a come si misura una società in borsa.'},
   'Fase Alpha':{tag:'Roadmap · Community',def:'La Fase Alpha è la prima fase di AIROOBI — quella in cui sei adesso. È live. Ogni azione che fai genera ARIA reali che puoi già usare. Chi partecipa in Alpha accumula di più e ottiene vantaggi permanenti su tutte le fasi successive.'},
-  'Referral':{tag:'Community · Bonus',def:'Il referral è il meccanismo con cui porti nuovi utenti su AIROOBI usando il tuo codice personale. Quando un amico si registra con il tuo codice, entrambi ricevete +100 ARIA. Più amici porti, più ARIA accumuli — e più alta è la tua probabilità di vincere airdrop.'}
+  'Referral':{tag:'Community · Bonus',def:'Il referral è il meccanismo con cui porti nuovi utenti su AIROOBI usando il tuo codice personale. Quando un amico si registra con il tuo codice e fa il primo login, tu ricevi +10 ARIA e lui +15 ARIA. Più amici porti, più ARIA accumuli — e più alta è la tua posizione.'}
 };
 
 function openGloss(term){
@@ -1206,7 +1206,7 @@ async function awardLoginBonus(userId,token){
     await fetch(SB_URL+'/rest/v1/points_ledger',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-      body:JSON.stringify({user_id:userId,amount:10,reason:'login_bonus'})
+      body:JSON.stringify({user_id:userId,amount:1,reason:'login_bonus'})
     });
     // Recalculate total from ledger and update profile in one PATCH
     const pts=await fetch(SB_URL+'/rest/v1/points_ledger?user_id=eq.'+userId+'&select=amount',{
@@ -1614,14 +1614,14 @@ function shareRef(platform){
       telegram:'\u25c9 AIROOBI \u2014 The Dream-Robe Commerce\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nRealizza il tuo desiderio su AIROOBI.\n\nHai un oggetto di valore (da \u20ac500 in su)? Lo lanci come airdrop e incassi.\nDesideri qualcosa? Partecipi e lo ottieni a un prezzo ridicolo.\n\nAd ognuno, la sua opportunit\u00e0. Sempre.\n\nFase test incentivata live \u2014 ogni azione = ARIA.\nAlpha Brave: 1.000 posti.\n\nEntra gratis \u2b07\ufe0f\n',
       x:'\u25c9 Realizza il tuo desiderio su @airoobi_com\n\nHai un oggetto di valore (\u20ac500+)? Airdroppalo e incassa.\nDesideri qualcosa? Partecipa e ottienilo a un prezzo ridicolo.\n\nAd ognuno, la sua opportunit\u00e0.\n\nTestnet incentivata live. Alpha Brave: 1.000 posti \u2b07\ufe0f ',
       email_subject:'\u25c9 AIROOBI \u2014 Ad ognuno, la sua opportunit\u00e0.',
-      email_body:'<div style="max-width:560px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.8;"><div style="text-align:center;padding:32px 0;background:#000;"><img src="https://airoobi.com/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:40px;"></div><div style="padding:32px 24px;"><h1 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#000;margin-bottom:4px;">Realizza il tuo desiderio.</h1><h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#B8960C;margin-top:0;">Su AIROOBI.</h2><p>Ciao,</p><p>sono entrato in <strong>AIROOBI</strong> e volevo portarti dentro. \u00c8 un marketplace completamente nuovo con un\'idea semplice:</p><p>\u2022 <strong>Hai un oggetto di valore (da \u20ac500 in su)?</strong> Lo lanci come airdrop sulla piattaforma e incassi il prezzo di mercato.<br>\u2022 <strong>Desideri qualcosa?</strong> Accumuli ARIA gratis con azioni semplici: entri ogni giorno, guardi un video, inviti amici. E lo ottieni a un prezzo ridicolo.</p><p>Ogni partecipazione genera una Tessera digitale che cresce di valore nel tempo \u2014 come un buono fruttifero.</p><div style="background:#f8f8f8;border-left:3px solid #B8960C;padding:16px 20px;margin:24px 0;font-style:italic;"><strong style="color:#B8960C;">Ad ognuno, la sua opportunit\u00e0.</strong><br>Chi vende incassa a prezzo di mercato. Chi partecipa ottiene oggetti straordinari a un prezzo ridicolo. Ogni partecipazione genera valore reale.</div><p>Adesso siamo nella <strong>fase di test incentivata</strong>: ogni azione che fai oggi guadagna punti che avranno valore reale al lancio.</p><div style="background:#000;color:#fff;padding:20px;margin:24px 0;text-align:center;"><strong style="color:#B8960C;">ALPHA BRAVE</strong><br><span style="font-size:14px;">I primi 1.000. Vantaggi permanenti ed esclusivi.<br>Dopo arrivano gli Alpha Wise, con meno vantaggi.<br>Pi\u00f9 tardi entri, meno accumuli.</span></div><p>Registrati gratis col mio link (30 secondi, parti con 100 ARIA bonus):</p><p style="text-align:center;margin:24px 0;"><a href="REFLINK" style="display:inline-block;padding:14px 40px;background:#B8960C;color:#000;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">ENTRA IN AIROOBI</a></p><p style="font-size:12px;color:#999;text-align:center;">airoobi.com \u2022 The Dream-Robe Commerce</p></div></div>'
+      email_body:'<div style="max-width:560px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.8;"><div style="text-align:center;padding:32px 0;background:#000;"><img src="https://airoobi.com/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:40px;"></div><div style="padding:32px 24px;"><h1 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#000;margin-bottom:4px;">Realizza il tuo desiderio.</h1><h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#B8960C;margin-top:0;">Su AIROOBI.</h2><p>Ciao,</p><p>sono entrato in <strong>AIROOBI</strong> e volevo portarti dentro. \u00c8 un marketplace completamente nuovo con un\'idea semplice:</p><p>\u2022 <strong>Hai un oggetto di valore (da \u20ac500 in su)?</strong> Lo lanci come airdrop sulla piattaforma e incassi il prezzo di mercato.<br>\u2022 <strong>Desideri qualcosa?</strong> Accumuli ARIA gratis con azioni semplici: entri ogni giorno, guardi un video, inviti amici. E lo ottieni a un prezzo ridicolo.</p><p>Ogni partecipazione genera una Tessera digitale che cresce di valore nel tempo \u2014 come un buono fruttifero.</p><div style="background:#f8f8f8;border-left:3px solid #B8960C;padding:16px 20px;margin:24px 0;font-style:italic;"><strong style="color:#B8960C;">Ad ognuno, la sua opportunit\u00e0.</strong><br>Chi vende incassa a prezzo di mercato. Chi partecipa ottiene oggetti straordinari a un prezzo ridicolo. Ogni partecipazione genera valore reale.</div><p>Adesso siamo nella <strong>fase di test incentivata</strong>: ogni azione che fai oggi guadagna punti che avranno valore reale al lancio.</p><div style="background:#000;color:#fff;padding:20px;margin:24px 0;text-align:center;"><strong style="color:#B8960C;">ALPHA BRAVE</strong><br><span style="font-size:14px;">I primi 1.000. Vantaggi permanenti ed esclusivi.<br>Dopo arrivano gli Alpha Wise, con meno vantaggi.<br>Pi\u00f9 tardi entri, meno accumuli.</span></div><p>Registrati gratis col mio link (30 secondi, parti con 10 ARIA bonus):</p><p style="text-align:center;margin:24px 0;"><a href="REFLINK" style="display:inline-block;padding:14px 40px;background:#B8960C;color:#000;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">ENTRA IN AIROOBI</a></p><p style="font-size:12px;color:#999;text-align:center;">airoobi.com \u2022 The Dream-Robe Commerce</p></div></div>'
     },
     en:{
       whatsapp:'\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\u25c9 *AIROOBI*\n_The Dream-Robe Commerce_\n\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n\n*Make your desire real on AIROOBI.*\n\nAIROOBI is a marketplace where:\n\n\u2022 If you *have a valuable object (\u20ac500+)* \u2192 you launch it as an airdrop and get market price\n\u2022 If you *desire something* \u2192 earn *ARIA* free through simple actions (log in daily, watch a video, invite friends) and get it at an unbelievable price\n\nEvery participation generates a Tessera that grows in value over time.\n\n\u261d\ufe0f To each, their opportunity.\n\nRight now it\'s the incentivized testnet: every action earns you ARIA.\n\n\u26a1 I\'m an *Alpha Brave* (only 1,000 spots). Those who join first, accumulate the most.\n\nSign up free:\n',
       telegram:'\u25c9 AIROOBI \u2014 The Dream-Robe Commerce\n\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n\nMake your desire real on AIROOBI.\n\nHave a valuable object (\u20ac500+)? Launch it as an airdrop and get paid.\nDesire something? Participate and get it at an unbelievable price.\n\nTo each, their opportunity. Always.\n\nIncentivized testnet live \u2014 every action = ARIA.\nAlpha Brave: 1,000 spots.\n\nJoin free \u2b07\ufe0f\n',
       x:'\u25c9 Make your desire real on @airoobi_com\n\nHave a valuable object (\u20ac500+)? Airdrop it and get paid.\nDesire something? Participate and get it at an unbelievable price.\n\nTo each, their opportunity.\n\nIncentivized testnet live. Alpha Brave: 1,000 spots \u2b07\ufe0f ',
       email_subject:'\u25c9 AIROOBI \u2014 To each, their opportunity.',
-      email_body:'<div style="max-width:560px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.8;"><div style="text-align:center;padding:32px 0;background:#000;"><img src="https://airoobi.com/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:40px;"></div><div style="padding:32px 24px;"><h1 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#000;margin-bottom:4px;">Make your desire real.</h1><h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#B8960C;margin-top:0;">On AIROOBI.</h2><p>Hey,</p><p>I joined <strong>AIROOBI</strong> and wanted to bring you in. It\'s a completely new marketplace with a simple idea:</p><p>\u2022 <strong>Have a valuable object (\u20ac500+)?</strong> Launch it as an airdrop on the platform and get market price.<br>\u2022 <strong>Desire something?</strong> Earn ARIA free through simple actions: log in daily, watch a video, invite friends. Get it at an unbelievable price.</p><p>Every participation generates a digital Tessera that grows in value over time \u2014 like a savings bond.</p><div style="background:#f8f8f8;border-left:3px solid #B8960C;padding:16px 20px;margin:24px 0;font-style:italic;"><strong style="color:#B8960C;">To each, their opportunity.</strong><br>Sellers get market price. Participants get extraordinary objects at unbelievable prices. Every participation generates real value.</div><p>Right now we\'re in the <strong>incentivized testnet phase</strong>: every action you take today earns points that will have real value at launch.</p><div style="background:#000;color:#fff;padding:20px;margin:24px 0;text-align:center;"><strong style="color:#B8960C;">ALPHA BRAVE</strong><br><span style="font-size:14px;">The first 1,000. Permanent, exclusive perks.<br>After us come the Alpha Wise, with fewer benefits.<br>The later you join, the less you accumulate.</span></div><p>Sign up free with my link (30 seconds, start with 100 ARIA bonus):</p><p style="text-align:center;margin:24px 0;"><a href="REFLINK" style="display:inline-block;padding:14px 40px;background:#B8960C;color:#000;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">JOIN AIROOBI</a></p><p style="font-size:12px;color:#999;text-align:center;">airoobi.com \u2022 The Dream-Robe Commerce</p></div></div>'
+      email_body:'<div style="max-width:560px;margin:0 auto;font-family:Helvetica,Arial,sans-serif;color:#333;line-height:1.8;"><div style="text-align:center;padding:32px 0;background:#000;"><img src="https://airoobi.com/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:40px;"></div><div style="padding:32px 24px;"><h1 style="font-family:Georgia,serif;font-size:28px;font-weight:300;color:#000;margin-bottom:4px;">Make your desire real.</h1><h2 style="font-family:Georgia,serif;font-size:22px;font-weight:300;color:#B8960C;margin-top:0;">On AIROOBI.</h2><p>Hey,</p><p>I joined <strong>AIROOBI</strong> and wanted to bring you in. It\'s a completely new marketplace with a simple idea:</p><p>\u2022 <strong>Have a valuable object (\u20ac500+)?</strong> Launch it as an airdrop on the platform and get market price.<br>\u2022 <strong>Desire something?</strong> Earn ARIA free through simple actions: log in daily, watch a video, invite friends. Get it at an unbelievable price.</p><p>Every participation generates a digital Tessera that grows in value over time \u2014 like a savings bond.</p><div style="background:#f8f8f8;border-left:3px solid #B8960C;padding:16px 20px;margin:24px 0;font-style:italic;"><strong style="color:#B8960C;">To each, their opportunity.</strong><br>Sellers get market price. Participants get extraordinary objects at unbelievable prices. Every participation generates real value.</div><p>Right now we\'re in the <strong>incentivized testnet phase</strong>: every action you take today earns points that will have real value at launch.</p><div style="background:#000;color:#fff;padding:20px;margin:24px 0;text-align:center;"><strong style="color:#B8960C;">ALPHA BRAVE</strong><br><span style="font-size:14px;">The first 1,000. Permanent, exclusive perks.<br>After us come the Alpha Wise, with fewer benefits.<br>The later you join, the less you accumulate.</span></div><p>Sign up free with my link (30 seconds, start with 10 ARIA bonus):</p><p style="text-align:center;margin:24px 0;"><a href="REFLINK" style="display:inline-block;padding:14px 40px;background:#B8960C;color:#000;text-decoration:none;font-weight:700;letter-spacing:2px;font-size:13px;">JOIN AIROOBI</a></p><p style="font-size:12px;color:#999;text-align:center;">airoobi.com \u2022 The Dream-Robe Commerce</p></div></div>'
     }
   };
   
@@ -1925,9 +1925,9 @@ async function loadEarnings(){
   const infoEl=document.getElementById('streak-info');
   const remaining=7-dayInWeek;
   if(remaining===7&&streak>0&&streak%7===0){
-    infoEl.innerHTML=lang==='it'?'<span>Streak completata! +100 bonus!</span>':'<span>Streak complete! +100 bonus!</span>';
+    infoEl.innerHTML=lang==='it'?'<span>Streak completata! +1 bonus!</span>':'<span>Streak complete! +1 bonus!</span>';
   }else{
-    infoEl.textContent=lang==='it'?remaining+' giorni al bonus di 100 ARIA':remaining+' days to 100 ARIA bonus';
+    infoEl.textContent=lang==='it'?remaining+' giorni al bonus di 1 ARIA':remaining+' days to 1 ARIA bonus';
   }
   
   // Check-in button state
@@ -1960,7 +1960,7 @@ async function loadEarnings(){
     if(confirms&&confirms.length>0){
       document.getElementById('confirm-ref-btn').disabled=true;
       document.getElementById('confirm-ref-btn').innerHTML=lang==='it'?'GI\u00c0 CONFERMATO ✓':'ALREADY CONFIRMED ✓';
-      document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span> Hai guadagnato 100 ARIA.':'<span>Referral confirmed!</span> You earned 100 ARIA.';
+      document.getElementById('earn-ref-status').innerHTML=lang==='it'?'<span>Referral confermato!</span> Hai guadagnato 15 ARIA.':'<span>Referral confirmed!</span> You earned 15 ARIA.';
     }else{
       document.getElementById('earn-ref-status').innerHTML=lang==='it'?'Invitato da: <span>'+p.referred_by+'</span>':'Invited by: <span>'+p.referred_by+'</span>';
     }
@@ -2502,7 +2502,7 @@ function checkAdminAccess(email){
     <div class="earn-card">
       <div class="earn-card-header">
         <h3><span class="it">Check-in giornaliero</span><span class="en">Daily Check-in</span></h3>
-        <span class="earn-card-points">+10 ARIA</span>
+        <span class="earn-card-points">+1 ARIA</span>
       </div>
       <p><span class="it">Entra ogni giorno e ricevi ARIA automaticamente. Completa 7 giorni di fila per un bonus extra!</span><span class="en">Log in every day and receive ARIA automatically. Complete 7 consecutive days for an extra bonus!</span></p>
       <div class="streak-dots" id="streak-dots"></div>
@@ -2516,7 +2516,7 @@ function checkAdminAccess(email){
     <div class="earn-card">
       <div class="earn-card-header">
         <h3><span class="it">Guarda un video</span><span class="en">Watch a video</span></h3>
-        <span class="earn-card-points">+10 ARIA</span>
+        <span class="earn-card-points">+1 ARIA</span>
       </div>
       <p><span class="it">Guarda un breve video di 10 secondi e guadagna ARIA. Fino a 5 video al giorno.</span><span class="en">Watch a 10-second video and earn ARIA. Up to 5 videos per day.</span></p>
       <div class="earn-video-container" id="earn-video-container"></div>
@@ -2532,9 +2532,9 @@ function checkAdminAccess(email){
     <div class="earn-card" id="earn-referral-card" style="display:none">
       <div class="earn-card-header">
         <h3><span class="it">Conferma referral</span><span class="en">Confirm referral</span></h3>
-        <span class="earn-card-points">+100 ARIA</span>
+        <span class="earn-card-points">+15 ARIA</span>
       </div>
-      <p><span class="it">Sei stato invitato! Conferma per ricevere ARIA bonus — e anche chi ti ha invitato sarà premiato.</span><span class="en">You were invited! Confirm to receive ARIA bonus — and your inviter gets rewarded too.</span></p>
+      <p><span class="it">Sei stato invitato! Il referral si conferma automaticamente al primo login — tu ricevi +15 ARIA e chi ti ha invitato +10.</span><span class="en">You were invited! Referral auto-confirms at first login — you get +15 ARIA and your inviter gets +10.</span></p>
       <div class="earn-referral-status" id="earn-ref-status"></div>
       <button class="earn-btn" id="confirm-ref-btn" onclick="doConfirmReferral()">
         <span class="it">CONFERMA REFERRAL</span><span class="en">CONFIRM REFERRAL</span>
@@ -2565,7 +2565,7 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Login giornaliero</span><span class="en">Daily login</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+10 ARIA</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+1 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
               <span class="it">Accedi e ricevi punti automaticamente. 1 volta al giorno. <em style="color:var(--gold);font-style:normal">Esclusiva Alpha Brave.</em></span>
@@ -2576,11 +2576,11 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Bonus di benvenuto</span><span class="en">Welcome bonus</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+100 ARIA</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+10 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
-              <span class="it">Alla registrazione, una tantum. Tutti gli Alpha Brave ricevono 2 Tessere: una Tessera Fondatore e una Tessera Rendimento.</span>
-              <span class="en">At registration, one time. All Alpha Brave receive 2 Cards: a Founder Card and a Yield Card.</span>
+              <span class="it">Al primo login, una tantum. Tutti gli Alpha Brave ricevono 2 Tessere: una Tessera Fondatore e una Tessera Rendimento.</span>
+              <span class="en">At first login, one time. All Alpha Brave receive 2 Cards: a Founder Card and a Yield Card.</span>
             </div>
           </div>
         </div>
@@ -2594,7 +2594,7 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Check-in giornaliero</span><span class="en">Daily check-in</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+10 ARIA</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+1 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
               <span class="it">Timbra nella sezione Guadagni. 1 volta al giorno. 2 secondi.</span>
@@ -2605,7 +2605,7 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Guarda un video</span><span class="en">Watch a video</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+10 ARIA</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+1 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
               <span class="it">Video di 10 secondi. Max 5 al giorno. Cooldown: 3 minuti tra uno e l'altro. Ogni video genera ricavi che sostengono il progetto.</span>
@@ -2623,22 +2623,22 @@ function checkAdminAccess(email){
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Streak settimanale</span><span class="en">Weekly streak</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+100 ARIA</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+1 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
-              <span class="it">7 check-in consecutivi = 100 ARIA bonus. Se salti un giorno, la streak riparte da zero.</span>
-              <span class="en">7 consecutive check-ins = 100 ARIA bonus. If you miss a day, the streak resets to zero.</span>
+              <span class="it">7 check-in consecutivi = 1 ARIA bonus. Se salti un giorno, la streak riparte da zero.</span>
+              <span class="en">7 consecutive check-ins = 1 ARIA bonus. If you miss a day, the streak resets to zero.</span>
             </div>
           </div>
 
           <div style="padding:12px 0;border-bottom:1px solid var(--gray-800)">
             <div style="display:flex;justify-content:space-between;align-items:center">
               <strong style="color:var(--white)"><span class="it">Referral confermato</span><span class="en">Confirmed referral</span></strong>
-              <span style="font-family:var(--font-m);color:var(--gold)">+100 ARIA (×2)</span>
+              <span style="font-family:var(--font-m);color:var(--gold)">+10 / +15 ARIA</span>
             </div>
             <div style="font-size:13px;color:var(--gray-400);margin-top:4px">
-              <span class="it">Inviti un amico, si registra, conferma il referral → 100 ARIA a te, 100 a lui. Illimitato. Valido dopo 24h dall'iscrizione e almeno 1 check-in completato.</span>
-              <span class="en">Invite a friend, they register, confirm the referral → 100 ARIA to you, 100 to them. Unlimited. Valid after 24h from registration and at least 1 check-in completed.</span>
+              <span class="it">Inviti un amico, si registra, al primo login il referral si conferma automaticamente → +10 ARIA a te, +15 al tuo amico. Illimitato.</span>
+              <span class="en">Invite a friend, they sign up, referral auto-confirms at first login → +10 ARIA to you, +15 to your friend. Unlimited.</span>
             </div>
           </div>
         </div>
@@ -2650,12 +2650,12 @@ function checkAdminAccess(email){
           </div>
 
           <div style="background:var(--gray-800);padding:20px;font-family:var(--font-m);font-size:13px;letter-spacing:.5px;line-height:2">
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)"><span class="it">Login</span><span class="en">Login</span></span><span style="color:var(--white)">10 ARIA</span></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Check-in</span><span style="color:var(--white)">10 ARIA</span></div>
-            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Video (×5)</span><span style="color:var(--white)">50 ARIA</span></div>
-            <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--gray-700);margin-top:8px"><span style="color:var(--gold)"><span class="it">Totale giornaliero max</span><span class="en">Max daily total</span></span><strong style="color:var(--gold)">70 pts</strong></div>
-            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Streak settimanale</span><span class="en">+ Weekly streak</span></span><span style="color:var(--white)">+100 ARIA</span></div>
-            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Ogni referral</span><span class="en">+ Each referral</span></span><span style="color:var(--white)">+100 ARIA</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)"><span class="it">Login</span><span class="en">Login</span></span><span style="color:var(--white)">1 ARIA</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Check-in</span><span style="color:var(--white)">1 ARIA</span></div>
+            <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Video (×5)</span><span style="color:var(--white)">5 ARIA</span></div>
+            <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--gray-700);margin-top:8px"><span style="color:var(--gold)"><span class="it">Totale giornaliero max</span><span class="en">Max daily total</span></span><strong style="color:var(--gold)">7 ARIA</strong></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Streak settimanale</span><span class="en">+ Weekly streak</span></span><span style="color:var(--white)">+1 ARIA</span></div>
+            <div style="display:flex;justify-content:space-between;margin-top:4px"><span style="color:var(--gray-400)"><span class="it">+ Ogni referral</span><span class="en">+ Each referral</span></span><span style="color:var(--white)">+10 ARIA</span></div>
           </div>
         </div>
 
