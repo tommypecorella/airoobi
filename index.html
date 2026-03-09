@@ -1403,7 +1403,8 @@ async function doSignup(){
       gatedDashboard(data.session);
     }else{
       track('signup_email_sent', {has_ref: !!ref, lang});
-      showSuccess('signup-success',lang==='it'?'Controlla la tua email per confermare la registrazione! Guarda anche nello spam.':'Check your email to confirm registration! Also check your spam folder.');
+      showSuccess('signup-success',lang==='it'?'Controlla la tua email per confermare il tuo account su airoobi.com — guarda anche nello spam.':'Check your email to confirm your account on airoobi.com — also check your spam folder.');
+      document.getElementById('resend-email-wrap').style.display='block';
     }
   }else{
     const msg=data.error_description||data.msg||data.message||'Error';
@@ -1411,6 +1412,19 @@ async function doSignup(){
     showError('signup-error',msg);
   }
   document.getElementById('signup-btn').disabled=false;
+}
+
+// ── Resend confirmation email ──
+async function resendConfirmation(){
+  const email=document.getElementById('signup-email').value.trim();
+  const lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(!email)return;
+  const {status}=await sbAuth('resend',{type:'signup',email});
+  if(status===200){
+    showSuccess('signup-success',lang==='it'?'Email reinviata! Controlla la tua casella di posta.':'Email resent! Check your inbox.');
+  }else{
+    showError('signup-error',lang==='it'?'Impossibile reinviare. Riprova tra qualche minuto.':'Unable to resend. Try again in a few minutes.');
+  }
 }
 
 // ── Auto-confirm referral: called at email confirm + login ──
@@ -1469,9 +1483,14 @@ async function doLogin(){
     track('login', {lang});
     gatedDashboard(data);
   }else{
-    const lang=document.documentElement.getAttribute('data-lang')||'it';
-    track('login_error', {lang});
-    showError('login-error',lang==='it'?'Email o password errati':'Wrong email or password');
+    const msg=data.error_description||data.msg||data.message||'';
+    if(msg.toLowerCase().includes('email not confirmed')){
+      track('login_email_not_confirmed', {lang});
+      showError('login-error',lang==='it'?'Devi confermare la tua email prima di accedere. Controlla la tua casella di posta.':'You must confirm your email before logging in. Check your inbox.');
+    }else{
+      track('login_error', {lang});
+      showError('login-error',lang==='it'?'Email o password errati':'Wrong email or password');
+    }
   }
   document.getElementById('login-btn').disabled=false;
 }
@@ -2342,6 +2361,11 @@ function checkAdminAccess(email){
     <p class="auth-sub"><span class="it">I primi 1.000 coraggiosi. Vantaggi permanenti esclusivi.</span><span class="en">The first 1,000 brave ones. Exclusive permanent perks.</span></p>
     <div class="auth-error" id="signup-error"></div>
     <div class="auth-success" id="signup-success"></div>
+    <div id="resend-email-wrap" style="display:none;text-align:center;margin:8px 0">
+      <a href="javascript:void(0)" onclick="resendConfirmation()" style="color:var(--gold);font-size:13px;text-decoration:underline">
+        <span class="it">Non hai ricevuto l'email? Reinvia</span><span class="en">Didn't receive the email? Resend</span>
+      </a>
+    </div>
     <label>Email</label>
     <input type="email" id="signup-email" placeholder="email@example.com">
     <label>Password</label>
