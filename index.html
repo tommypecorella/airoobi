@@ -31,6 +31,8 @@
 <meta name="twitter:image" content="https://airoobi.com/og-image.png">
 <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
+<!-- Cloudflare Turnstile -->
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
@@ -355,6 +357,61 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .auth-close{position:absolute;top:16px;right:16px;background:none;border:none;color:var(--gray-400);font-size:20px;cursor:pointer}
 .auth-error{background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
 .auth-success{background:rgba(184,150,12,.1);border:1px solid var(--gold-dim);color:var(--gold);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+
+/* ── PASSWORD STRENGTH ── */
+.pw-strength{height:4px;margin:-12px 0 16px;display:flex;gap:3px}
+.pw-strength-bar{flex:1;height:100%;background:var(--gray-700);transition:background .3s}
+.pw-strength-bar.weak{background:#B91C1C}
+.pw-strength-bar.medium{background:#B8960C}
+.pw-strength-bar.strong{background:#1a7a3f}
+.pw-strength-label{font-size:11px;margin:-8px 0 16px;letter-spacing:1px}
+
+/* ── TURNSTILE ── */
+.cf-turnstile-wrap{margin-bottom:16px;display:flex;justify-content:center}
+
+/* ── EMAIL CONFIRM OVERLAY ── */
+.email-confirm-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:350;background:rgba(0,0,0,.95);align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px}
+.email-confirm-overlay.active{display:flex}
+.email-confirm-box{max-width:440px;padding:48px 40px;border:1px solid var(--gold);background:var(--gray-800)}
+.email-confirm-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:16px;color:var(--gold)}
+.email-confirm-box p{font-size:15px;color:var(--gray-300);line-height:1.7;margin-bottom:24px}
+
+/* ── PROFILE INFO ── */
+.profile-info{border:1px solid var(--gray-700);padding:24px;margin-bottom:24px}
+.profile-info-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray-800);font-size:13px}
+.profile-info-row:last-child{border-bottom:none}
+.profile-info-label{color:var(--gray-400)}
+.profile-info-val{color:var(--white);text-align:right}
+.profile-badge{display:inline-block;padding:2px 8px;font-size:10px;letter-spacing:1px;font-family:var(--font-m)}
+.profile-badge-green{background:rgba(26,122,63,.15);color:#1a7a3f;border:1px solid rgba(26,122,63,.3)}
+.profile-badge-gold{background:rgba(184,150,12,.15);color:var(--gold);border:1px solid var(--gold-dim)}
+
+/* ── DELETE ACCOUNT MODAL ── */
+.delete-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:350;background:rgba(0,0,0,.9);align-items:center;justify-content:center;padding:24px}
+.delete-modal.active{display:flex}
+.delete-modal-box{max-width:440px;width:100%;padding:40px;background:var(--gray-800);border:1px solid #B91C1C}
+.delete-modal-box h3{font-family:var(--font-h);font-size:22px;font-weight:300;color:#f87171;margin-bottom:16px}
+.delete-modal-box p{font-size:13px;color:var(--gray-300);line-height:1.7;margin-bottom:20px}
+.delete-btn{padding:12px 24px;background:#B91C1C;color:var(--white);border:none;font-size:12px;font-weight:700;letter-spacing:1px;cursor:pointer;width:100%;margin-bottom:12px}
+.delete-btn:disabled{opacity:.5;cursor:not-allowed}
+.delete-cancel{padding:12px 24px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-size:12px;cursor:pointer;width:100%}
+.delete-account-trigger{background:none;border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 20px;font-size:12px;cursor:pointer;margin-top:24px;transition:all .3s}
+.delete-account-trigger:hover{border-color:#B91C1C;background:rgba(185,28,28,.1)}
+.delete-error{color:#f87171;font-size:13px;margin-bottom:12px;display:none}
+
+/* ── REFERRAL HISTORY ── */
+.ref-history-section{margin-top:24px}
+.ref-history-title{font-family:var(--font-h);font-size:18px;font-weight:400;margin-bottom:12px;color:var(--white)}
+.ref-history-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--gray-800);font-size:13px}
+.ref-history-email{color:var(--gray-300);font-family:var(--font-m);font-size:12px}
+.ref-history-status{font-family:var(--font-m);font-size:11px;letter-spacing:1px}
+.ref-history-confirmed{color:#1a7a3f}
+.ref-history-pending{color:var(--gold)}
+.ref-history-aria{font-family:var(--font-m);color:var(--gold);font-size:12px}
+
+/* ── SESSION EXPIRED TOAST ── */
+.session-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--gray-800);border:1px solid var(--gold);padding:16px 32px;z-index:9999;font-size:14px;color:var(--gold);display:none;text-align:center;max-width:400px}
+.session-toast.active{display:block}
 
 /* ── DASHBOARD ── */
 .dash-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:250;background:var(--black);overflow-y:auto}
@@ -921,7 +978,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.8.0 · Last update: 09 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.9.0 · Last update: 10 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1097,7 +1154,7 @@ var glossary={
   'Smart Contract':{tag:'Tecnologia · Blockchain',def:'Un smart contract è un programma che vive sulla blockchain ed esegue automaticamente le regole scritte nel codice. Su AIROOBI gestisce la distribuzione degli airdrop, il calcolo degli ARIA e il saldo delle Tessere — senza possibilità di manipolazione da parte di nessuno, nemmeno del team.'},
   'Market Cap':{tag:'Finanza',def:'Il market cap (capitalizzazione di mercato) degli NFT AIROOBI è il valore totale di tutti gli NFT in circolazione: valore singolo NFT × numero di NFT emessi. È un indicatore della "dimensione" del progetto, simile a come si misura una società in borsa.'},
   'Fase Alpha':{tag:'Roadmap · Community',def:'La Fase Alpha è la prima fase di AIROOBI — quella in cui sei adesso. È live. Ogni azione che fai genera ARIA reali che puoi già usare. Chi partecipa in Alpha accumula di più e ottiene vantaggi permanenti su tutte le fasi successive.'},
-  'Referral':{tag:'Community · Bonus',def:'Il referral è il meccanismo con cui porti nuovi utenti su AIROOBI usando il tuo codice personale. Quando un amico si registra con il tuo codice e fa il primo login, tu ricevi +10 ARIA e lui +15 ARIA. Più amici porti, più ARIA accumuli — e più alta è la tua posizione.'}
+  'Referral':{tag:'Community · Bonus',def:'Il referral è il meccanismo con cui porti nuovi utenti su AIROOBI usando il tuo codice personale. Quando un amico si registra con il tuo codice e fa il primo login, tu ricevi +10 ARIA e lui +15 ARIA. Nessun limite al numero di referral — più amici porti, più ARIA accumuli.'}
 };
 
 function openGloss(term){
@@ -1378,12 +1435,45 @@ async function doSignup(){
   const pw=document.getElementById('signup-password').value;
   const lang=document.documentElement.getAttribute('data-lang')||'it';
   if(!email||!email.includes('@'))return showError('signup-error',lang==='it'?'Email non valida':'Invalid email');
-  if(!pw||pw.length<6)return showError('signup-error',lang==='it'?'Password minimo 6 caratteri':'Password min 6 characters');
+
+  // Password strength validation
+  if(!PW_REGEX.test(pw)){
+    return showError('signup-error',lang==='it'
+      ?'La password deve avere almeno 8 caratteri, 1 maiuscola, 1 minuscola, 1 numero e 1 carattere speciale (!@#$%^&*).'
+      :'Password must have at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character (!@#$%^&*).');
+  }
+
   const pw2=document.getElementById('signup-password2').value;
   if(pw!==pw2)return showError('signup-error',lang==='it'?'Le password non coincidono':'Passwords don\'t match');
-  
+
+  // Turnstile captcha check
+  var turnstileToken=getTurnstileToken('signup-turnstile');
+  if(!turnstileToken){
+    return showError('signup-error',lang==='it'?'Completa la verifica anti-bot.':'Complete the anti-bot verification.');
+  }
+
   document.getElementById('signup-btn').disabled=true;
-  const ref=new URLSearchParams(window.location.search).get('ref')||null;
+  const ref=new URLSearchParams(window.location.search).get('ref')||document.getElementById('signup-ref').value.trim()||null;
+
+  // Validate referral code exists (if provided)
+  if(ref){
+    // Block self-referral
+    var currentSession=getSession();
+    if(currentSession&&currentSession.user){
+      var myProfile=await sbGet('profiles?id=eq.'+currentSession.user.id+'&select=referral_code',currentSession.access_token).catch(function(){return []});
+      if(myProfile&&myProfile.length>0&&myProfile[0].referral_code===ref){
+        track('self_referral_attempt',{ref_code:ref});
+        // Silently ignore, clear ref
+        document.getElementById('signup-ref').value='';
+      }
+    }
+    // Validate ref code exists
+    var refProfiles=await sbGet('profiles?referral_code=eq.'+ref+'&select=id',SB_KEY).catch(function(){return []});
+    if(!refProfiles||refProfiles.length===0){
+      document.getElementById('signup-btn').disabled=false;
+      return showError('signup-error',lang==='it'?'Codice referral non valido.':'Invalid referral code.');
+    }
+  }
   
   const {status,data}=await sbAuth('signup',{email,password:pw,data:{referred_by:ref}});
   
@@ -1398,10 +1488,12 @@ async function doSignup(){
       if(ref)await linkRef(data.user.id,ref,data.session.access_token);
       // Bonuses awarded at first login, not here
       track('signup_complete', {method:'auto_confirm', has_ref: !!ref, lang});
+      if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user.id});
       closeAuth();
       gatedDashboard(data.session);
     }else{
       track('signup_email_sent', {has_ref: !!ref, lang});
+      if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user?.id||'pending'});
       showSuccess('signup-success',lang==='it'?'Controlla la tua email per confermare il tuo account su airoobi.com — guarda anche nello spam.':'Check your email to confirm your account on airoobi.com — also check your spam folder.');
       document.getElementById('resend-email-wrap').style.display='block';
     }
@@ -1446,11 +1538,21 @@ async function autoConfirmReferral(userId,token){
 
     // Auto-confirm referral via RPC (+10 referrer, +15 invited)
     const deviceHash=navigator.userAgent+screen.width+'x'+screen.height;
-    await fetch(SB_URL+'/rest/v1/rpc/confirm_referral',{
+    var refResult=await fetch(SB_URL+'/rest/v1/rpc/confirm_referral',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
       body:JSON.stringify({p_referred_id:userId,p_device_hash:btoa(deviceHash).substring(0,32)})
-    }).catch(()=>{});
+    }).then(function(r){return r.json()}).catch(function(){return null});
+
+    // Track referral confirmed
+    if(refResult&&refResult.success){
+      // Get referrer_id for tracking
+      var refProfiles=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+userId+'&select=referred_by',{
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+      }).then(function(r){return r.json()}).catch(function(){return []});
+      var referrerCode=refProfiles&&refProfiles[0]?refProfiles[0].referred_by:'';
+      track('referral_confirmed',{referrer_code:referrerCode,referred_id:userId,aria_referrer:10,aria_invited:15});
+    }
   }catch(e){}
 }
 
@@ -1462,7 +1564,13 @@ async function doLogin(){
   const lang=document.documentElement.getAttribute('data-lang')||'it';
   if(!email)return showError('login-error',lang==='it'?'Inserisci email':'Enter email');
   if(!pw)return showError('login-error',lang==='it'?'Inserisci password':'Enter password');
-  
+
+  // Turnstile captcha check
+  var turnstileToken=getTurnstileToken('login-turnstile');
+  if(!turnstileToken){
+    return showError('login-error',lang==='it'?'Completa la verifica anti-bot.':'Complete the anti-bot verification.');
+  }
+
   document.getElementById('login-btn').disabled=true;
   const {status,data}=await sbAuth('token?grant_type=password',{email,password:pw});
   
@@ -1575,6 +1683,8 @@ async function showDashboard(session){
     earnSession=session;
     checkAdminAccess(email);
     updateNavCounters(session);
+    loadProfileInfo();
+    loadReferralHistory();
     
     // Position (server-side via RPC)
     try{
@@ -1784,7 +1894,7 @@ function switchTab(tab){
   if(el)el.textContent=lbl.it;
   document.querySelectorAll('.dash-tab-option').forEach(o=>o.classList.toggle('active',o.dataset.tab===tab));
   if(tab==='earnings')loadEarnings();
-  if(tab==='referral')loadReferralTab();
+  if(tab==='referral'){loadReferralTab();loadReferralHistory();}
   if(tab==='tessere')loadTessere();
 }
 function toggleTabMobile(){
@@ -2008,7 +2118,7 @@ async function doCheckinReal(){
   
   if(result&&result.success){
     var msg='+'+result.points_earned+' '+(lang==='it'?'ARIA':'ARIA')+'!';
-    if(result.weekly_bonus)msg+=' 🎉 +100 bonus!';
+    if(result.weekly_bonus)msg+=' +1 streak bonus!';
     btn.textContent=msg;
     setTimeout(function(){loadEarnings();},1500);
   }else if(result&&result.reason==='already_checked_in'){
@@ -2060,7 +2170,7 @@ async function completeEarnVideo(){
   
   const btn=document.getElementById('video-earn-btn');
   if(result&&result.success){
-    btn.innerHTML='+10 '+(lang==='it'?'ARIA':'ARIA')+'! ✓';
+    btn.innerHTML='+1 '+(lang==='it'?'ARIA':'ARIA')+'! ✓';
     btn.classList.remove('earn-btn-outline');
     setTimeout(function(){
       btn.classList.add('earn-btn-outline');
@@ -2275,6 +2385,328 @@ function checkAdminAccess(email){
   }
 }
 
+// ══════════════════════════════════════════════════
+// 1. AUTO LOGOUT — Session expiry
+// ══════════════════════════════════════════════════
+function showSessionToast(){
+  var toast=document.getElementById('session-toast');
+  if(toast){toast.classList.add('active');setTimeout(function(){toast.classList.remove('active')},5000);}
+}
+
+// Check JWT expiry at app startup
+(function(){
+  var s=getSession();
+  if(s&&s.access_token){
+    try{
+      var payload=JSON.parse(atob(s.access_token.split('.')[1]));
+      if(payload.exp&&payload.exp<Date.now()/1000){
+        clearSession();
+        updateNavAuth(false);
+        showSessionToast();
+      }
+    }catch(e){clearSession();}
+  }
+})();
+
+// Listen for auth state changes (token refresh failure, signout)
+(function(){
+  // Poll-based check since we're using REST API not Supabase JS SDK
+  setInterval(function(){
+    var s=getSession();
+    if(!s||!s.access_token)return;
+    try{
+      var payload=JSON.parse(atob(s.access_token.split('.')[1]));
+      if(payload.exp&&payload.exp<Date.now()/1000){
+        doLogout();
+        showSessionToast();
+      }
+    }catch(e){doLogout();showSessionToast();}
+  },60000); // check every 60s
+})();
+
+// ══════════════════════════════════════════════════
+// 2. PASSWORD STRENGTH — Validation + indicator
+// ══════════════════════════════════════════════════
+var PW_REGEX=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+
+function checkPasswordStrength(pw){
+  if(!pw||pw.length<4)return 0;
+  var score=0;
+  if(pw.length>=8)score++;
+  if(/[a-z]/.test(pw)&&/[A-Z]/.test(pw))score++;
+  if(/\d/.test(pw))score++;
+  if(/[!@#$%^&*]/.test(pw))score++;
+  return score; // 0-4
+}
+
+function updatePwStrength(){
+  var pw=document.getElementById('signup-password').value;
+  var bars=document.querySelectorAll('.pw-strength-bar');
+  var label=document.getElementById('pw-strength-label');
+  var score=checkPasswordStrength(pw);
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+
+  bars.forEach(function(b,i){
+    b.className='pw-strength-bar';
+    if(pw.length===0)return;
+    if(score<=1&&i===0)b.classList.add('weak');
+    else if(score===2&&i<2){b.classList.add('medium');}
+    else if(score===3&&i<3){b.classList.add('medium');}
+    else if(score>=4)b.classList.add('strong');
+  });
+
+  if(!pw){label.textContent='';label.style.color='';}
+  else if(score<=1){label.textContent=lang==='it'?'Debole':'Weak';label.style.color='#B91C1C';}
+  else if(score<=3){label.textContent=lang==='it'?'Media':'Medium';label.style.color='#B8960C';}
+  else{label.textContent=lang==='it'?'Forte':'Strong';label.style.color='#1a7a3f';}
+}
+
+// Attach listener after DOM ready
+document.addEventListener('DOMContentLoaded',function(){
+  var pwInput=document.getElementById('signup-password');
+  if(pwInput)pwInput.addEventListener('input',updatePwStrength);
+});
+
+// ══════════════════════════════════════════════════
+// 3. CAPTCHA — Cloudflare Turnstile
+// ══════════════════════════════════════════════════
+// TODO: inserire site key da Cloudflare Dashboard → Turnstile
+var TURNSTILE_SITE_KEY='0x0000000000000000000000'; // placeholder
+
+function getTurnstileToken(formId){
+  var container=document.getElementById(formId);
+  if(!container)return null;
+  var input=container.querySelector('[name="cf-turnstile-response"]');
+  return input?input.value:null;
+}
+
+// ══════════════════════════════════════════════════
+// 4. EMAIL CONFIRM — Post-click feedback
+// ══════════════════════════════════════════════════
+(function(){
+  var hash=window.location.hash;
+  if(!hash||!hash.includes('access_token'))return;
+  var params=new URLSearchParams(hash.substring(1));
+  var type=params.get('type');
+  // Show overlay for signup confirmation
+  if(type==='signup'||type==='email'){
+    var token=params.get('access_token');
+    var refresh=params.get('refresh_token');
+    if(!token)return;
+    // Show confirmation overlay
+    setTimeout(function(){
+      var overlay=document.getElementById('email-confirm-overlay');
+      if(overlay){
+        overlay.classList.add('active');
+        document.body.style.overflow='hidden';
+      }
+      // Track event
+      fetch(SB_URL+'/rest/v1/events',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+        body:JSON.stringify({action:'email_confirmed'})
+      }).catch(function(){});
+    },500);
+    // Store token for "enter platform" button
+    window._emailConfirmToken=token;
+    window._emailConfirmRefresh=refresh;
+  }
+})();
+
+function enterAfterEmailConfirm(){
+  var token=window._emailConfirmToken;
+  var refresh=window._emailConfirmRefresh;
+  if(!token)return;
+  document.getElementById('email-confirm-overlay').classList.remove('active');
+  document.body.style.overflow='';
+  fetch(SB_URL+'/auth/v1/user',{
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+  }).then(function(r){return r.ok?r.json():null}).then(async function(user){
+    if(user){
+      var session={access_token:token,refresh_token:refresh,user:user};
+      saveSession(session);
+      window._currentSession=session;
+      history.replaceState(null,'',window.location.pathname);
+      // Link referral
+      var storedRef=window._airoobi_ref||localStorage.getItem('airoobi_pending_ref');
+      if(storedRef){await linkRef(user.id,storedRef,token);localStorage.removeItem('airoobi_pending_ref');}
+      try{await awardLoginBonus(user.id,token);}catch(e){}
+      try{await awardWelcomeBonus(user.id,token);}catch(e){}
+      try{await autoConfirmReferral(user.id,token);}catch(e){}
+      gatedDashboard(session);
+    }
+  }).catch(function(){});
+}
+
+// ══════════════════════════════════════════════════
+// 5. PROFILE INFO — Account details
+// ══════════════════════════════════════════════════
+async function loadProfileInfo(){
+  var s=window._currentSession||getSession();
+  if(!s||!s.user)return;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var user=s.user;
+
+  // Email + verified badge
+  var emailEl=document.getElementById('profile-email');
+  var badgeEl=document.getElementById('profile-email-badge');
+  if(emailEl)emailEl.textContent=user.email||'';
+  if(badgeEl){
+    if(user.email_confirmed_at){
+      badgeEl.className='profile-badge profile-badge-green';
+      badgeEl.textContent=lang==='it'?'Verificata':'Verified';
+    }else{
+      badgeEl.className='profile-badge profile-badge-gold';
+      badgeEl.textContent=lang==='it'?'Non verificata':'Not verified';
+    }
+  }
+
+  // Registration date
+  var dateEl=document.getElementById('profile-created');
+  if(dateEl&&user.created_at){
+    var d=new Date(user.created_at);
+    dateEl.textContent=d.toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'});
+  }
+
+  // User ID (first 8 chars)
+  var idEl=document.getElementById('profile-uid');
+  if(idEl)idEl.textContent=(user.id||'').substring(0,8);
+}
+
+// ══════════════════════════════════════════════════
+// 6. DELETE ACCOUNT — Soft delete with password
+// ══════════════════════════════════════════════════
+function openDeleteModal(){
+  document.getElementById('delete-modal').classList.add('active');
+  document.getElementById('delete-error').style.display='none';
+  document.getElementById('delete-password').value='';
+}
+function closeDeleteModal(){
+  document.getElementById('delete-modal').classList.remove('active');
+}
+
+async function confirmDeleteAccount(){
+  var s=window._currentSession||getSession();
+  if(!s||!s.user)return;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var pw=document.getElementById('delete-password').value;
+  var errEl=document.getElementById('delete-error');
+  var btn=document.getElementById('delete-confirm-btn');
+
+  if(!pw){errEl.textContent=lang==='it'?'Inserisci la password':'Enter your password';errEl.style.display='block';return;}
+
+  btn.disabled=true;
+  btn.textContent=lang==='it'?'Eliminazione...':'Deleting...';
+
+  // Re-authenticate
+  var authRes=await sbAuth('token?grant_type=password',{email:s.user.email,password:pw});
+  if(authRes.status!==200||!authRes.data.access_token){
+    errEl.textContent=lang==='it'?'Password errata':'Wrong password';
+    errEl.style.display='block';
+    btn.disabled=false;
+    btn.textContent=lang==='it'?'Conferma eliminazione':'Confirm deletion';
+    return;
+  }
+
+  var token=authRes.data.access_token;
+
+  // Track deletion BEFORE deleting
+  try{
+    var profiles=await sbGet('profiles?id=eq.'+s.user.id+'&select=total_points',token);
+    var nfts=await sbGet('nft_rewards?user_id=eq.'+s.user.id+'&select=id',token);
+    await fetch(SB_URL+'/rest/v1/events',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({action:'account_deleted',metadata:{user_id:s.user.id,email:s.user.email,aria_balance:profiles&&profiles[0]?profiles[0].total_points:0,nft_count:nfts?nfts.length:0}})
+    });
+  }catch(e){}
+
+  // Soft delete: set deleted_at on profile
+  try{
+    await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+s.user.id,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({deleted_at:new Date().toISOString()})
+    });
+  }catch(e){}
+
+  closeDeleteModal();
+  doLogout();
+  // Show deletion message
+  var toast=document.getElementById('session-toast');
+  if(toast){toast.textContent=lang==='it'?'Il tuo account è stato eliminato.':'Your account has been deleted.';toast.classList.add('active');setTimeout(function(){toast.classList.remove('active')},5000);}
+}
+
+// ══════════════════════════════════════════════════
+// 7. REFERRAL HISTORY — Invited list + inviter info
+// ══════════════════════════════════════════════════
+function truncateEmail(email){
+  if(!email)return '***';
+  var parts=email.split('@');
+  if(parts.length!==2)return '***';
+  return parts[0].substring(0,2)+'***@'+parts[1];
+}
+
+async function loadReferralHistory(){
+  var s=window._currentSession||getSession();
+  if(!s||!s.user)return;
+  var token=s.access_token;
+  var uid=s.user.id;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+
+  // A) Chi hai invitato
+  var invitedContainer=document.getElementById('ref-invited-list');
+  if(invitedContainer){
+    try{
+      var confirmations=await sbGet('referral_confirmations?referrer_id=eq.'+uid+'&select=*,referred:referred_id(email)',token);
+      if(confirmations&&confirmations.length>0){
+        invitedContainer.innerHTML=confirmations.map(function(c){
+          var email=c.referred&&c.referred.email?truncateEmail(c.referred.email):'***';
+          var date=c.confirmed_at?new Date(c.confirmed_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):(c.created_at?new Date(c.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'—');
+          var status=c.status==='confirmed';
+          return '<div class="ref-history-row"><span class="ref-history-email">'+email+'</span><span class="ref-history-status '+(status?'ref-history-confirmed':'ref-history-pending')+'">'+(status?(lang==='it'?'Confermato':'Confirmed'):(lang==='it'?'In attesa':'Pending'))+'</span><span class="ref-history-aria">'+(status?'+10 ARIA':'—')+'</span><span style="font-size:11px;color:var(--gray-400)">'+date+'</span></div>';
+        }).join('');
+      }else{
+        invitedContainer.innerHTML='<p style="font-size:13px;color:var(--gray-400)">'+(lang==='it'?'Nessun invitato ancora.':'No invitees yet.')+'</p>';
+      }
+    }catch(e){
+      invitedContainer.innerHTML='<p style="font-size:13px;color:var(--gray-400)">'+(lang==='it'?'Nessun invitato ancora.':'No invitees yet.')+'</p>';
+    }
+  }
+
+  // B) Sei stato invitato da
+  var inviterContainer=document.getElementById('ref-inviter-info');
+  if(inviterContainer){
+    try{
+      var myProfile=await sbGet('profiles?id=eq.'+uid+'&select=referred_by',token);
+      if(myProfile&&myProfile.length>0&&myProfile[0].referred_by){
+        var refCode=myProfile[0].referred_by;
+        var referrerProfile=await sbGet('profiles?referral_code=eq.'+refCode+'&select=email',token);
+        var referrerEmail=referrerProfile&&referrerProfile.length>0?truncateEmail(referrerProfile[0].email):'***';
+        var confirms=await sbGet('referral_confirmations?referred_id=eq.'+uid+'&status=eq.confirmed&select=confirmed_at',token);
+        var confirmDate=confirms&&confirms.length>0&&confirms[0].confirmed_at?new Date(confirms[0].confirmed_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'—';
+        inviterContainer.innerHTML='<div class="ref-history-row"><span class="ref-history-email">'+referrerEmail+'</span><span class="ref-history-status ref-history-confirmed">'+(confirms&&confirms.length>0?(lang==='it'?'Confermato':'Confirmed'):(lang==='it'?'In attesa':'Pending'))+'</span><span class="ref-history-aria">'+(confirms&&confirms.length>0?'+15 ARIA':'—')+'</span><span style="font-size:11px;color:var(--gray-400)">'+confirmDate+'</span></div>';
+      }else{
+        inviterContainer.innerHTML='<p style="font-size:13px;color:var(--gray-400)">'+(lang==='it'?'Non sei stato invitato da nessuno.':'You were not invited by anyone.')+'</p>';
+      }
+    }catch(e){
+      inviterContainer.innerHTML='';
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════
+// 8. REFERRAL TRACKING — Enhanced tracking
+// ══════════════════════════════════════════════════
+// Track referral link click (on page load with ?ref=)
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var ref=params.get('ref');
+  if(ref){
+    track('referral_link_clicked',{ref_code:ref});
+  }
+})();
+
 </script>
 
 <!-- ═══ PRIVACY POLICY ═══ -->
@@ -2384,11 +2816,16 @@ function checkAdminAccess(email){
     <label>Email</label>
     <input type="email" id="signup-email" placeholder="email@example.com">
     <label>Password</label>
-    <input type="password" id="signup-password" placeholder="Min. 6 caratteri" data-it="Min. 6 caratteri" data-en="Min. 6 characters">
+    <input type="password" id="signup-password" placeholder="Min. 8 caratteri, maiuscola, numero, speciale" data-it="Min. 8 caratteri, maiuscola, numero, speciale" data-en="Min. 8 chars, uppercase, number, special">
+    <div class="pw-strength"><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div></div>
+    <div class="pw-strength-label" id="pw-strength-label"></div>
     <label><span class="it">Ripeti Password</span><span class="en">Repeat Password</span></label>
     <input type="password" id="signup-password2" placeholder="Ripeti password" data-it="Ripeti password" data-en="Repeat password">
     <label><span class="it">Invitato con affetto da</span><span class="en">Warmly invited by</span></label>
     <input type="text" id="signup-ref" placeholder="Codice referral (opzionale)" data-it="Codice referral (opzionale)" data-en="Referral code (optional)" style="font-family:var(--font-m);letter-spacing:1px;width:100%;box-sizing:border-box">
+    <div class="cf-turnstile-wrap" id="signup-turnstile">
+      <div class="cf-turnstile" data-sitekey="0x0000000000000000000000" data-theme="dark"></div>
+    </div>
     <button class="auth-btn" id="signup-btn" onclick="doSignup()">
       <span class="it">Registrati</span><span class="en">Sign Up</span>
     </button>
@@ -2402,9 +2839,46 @@ function checkAdminAccess(email){
     <input type="email" id="login-email" placeholder="email@example.com">
     <label>Password</label>
     <input type="password" id="login-password" placeholder="Password">
+    <div class="cf-turnstile-wrap" id="login-turnstile">
+      <div class="cf-turnstile" data-sitekey="0x0000000000000000000000" data-theme="dark"></div>
+    </div>
     <button class="auth-btn" id="login-btn" onclick="doLogin()">Login</button>
     <p class="auth-toggle"><span class="it">Non hai un account?</span><span class="en">Don't have an account?</span> <a onclick="showSignup()"><span class="it">Registrati</span><span class="en">Sign Up</span></a></p>
   </div>
+</div>
+</div>
+
+<!-- ═══ EMAIL CONFIRM OVERLAY ═══ -->
+<div class="email-confirm-overlay" id="email-confirm-overlay">
+<div class="email-confirm-box">
+  <h2><span class="it">Email verificata!</span><span class="en">Email verified!</span></h2>
+  <p><span class="it">Benvenuto tra gli Alpha Brave. Il tuo account è pronto.</span><span class="en">Welcome to the Alpha Brave. Your account is ready.</span></p>
+  <button class="auth-btn" onclick="enterAfterEmailConfirm()">
+    <span class="it">Entra nella piattaforma</span><span class="en">Enter the platform</span>
+  </button>
+</div>
+</div>
+
+<!-- ═══ SESSION EXPIRED TOAST ═══ -->
+<div class="session-toast" id="session-toast">
+  <span class="it">La tua sessione è scaduta. Accedi di nuovo.</span>
+  <span class="en">Your session has expired. Please log in again.</span>
+</div>
+
+<!-- ═══ DELETE ACCOUNT MODAL ═══ -->
+<div class="delete-modal" id="delete-modal">
+<div class="delete-modal-box">
+  <h3><span class="it">Elimina il tuo account</span><span class="en">Delete your account</span></h3>
+  <p><span class="it">Questa azione è irreversibile. Tutti i tuoi ARIA e le tue Tessere verranno persi. Inserisci la tua password per confermare.</span><span class="en">This action is irreversible. All your ARIA and Cards will be lost. Enter your password to confirm.</span></p>
+  <div class="delete-error" id="delete-error"></div>
+  <label style="font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px;display:block">Password</label>
+  <input type="password" id="delete-password" placeholder="Password" style="width:100%;padding:14px 16px;background:var(--black);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;margin-bottom:16px">
+  <button class="delete-btn" id="delete-confirm-btn" onclick="confirmDeleteAccount()">
+    <span class="it">Conferma eliminazione</span><span class="en">Confirm deletion</span>
+  </button>
+  <button class="delete-cancel" onclick="closeDeleteModal()">
+    <span class="it">Annulla</span><span class="en">Cancel</span>
+  </button>
 </div>
 </div>
 
@@ -2477,12 +2951,42 @@ function checkAdminAccess(email){
       </div>
     </div>
     
+    <!-- PROFILE INFO -->
+    <div class="profile-info">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:12px;text-transform:uppercase">
+        <span class="it">Il tuo account</span><span class="en">Your account</span>
+      </div>
+      <div class="profile-info-row">
+        <span class="profile-info-label">Email</span>
+        <span class="profile-info-val"><span id="profile-email"></span> <span id="profile-email-badge" class="profile-badge"></span></span>
+      </div>
+      <div class="profile-info-row">
+        <span class="profile-info-label"><span class="it">Data iscrizione</span><span class="en">Registration date</span></span>
+        <span class="profile-info-val" id="profile-created">—</span>
+      </div>
+      <div class="profile-info-row">
+        <span class="profile-info-label">ID</span>
+        <span class="profile-info-val" style="font-family:var(--font-m);font-size:12px;letter-spacing:1px" id="profile-uid">—</span>
+      </div>
+      <div class="profile-info-row">
+        <span class="profile-info-label"><span class="it">Piano</span><span class="en">Plan</span></span>
+        <span class="profile-info-val"><span class="profile-badge profile-badge-gold">Alpha Brave</span></span>
+      </div>
+    </div>
+
     <div class="ref-card" style="border-color:var(--gold-dim)">
       <h3><span class="it">Cosa succede ora?</span><span class="en">What happens now?</span></h3>
       <p style="font-size:14px;color:var(--gray-300);line-height:1.8">
         <span class="it">La fase Alpha è live. Ogni azione ti fa guadagnare ARIA. Accumulali ora: li userai per comprare blocchi e partecipare agli airdrop.</span>
         <span class="en">Alpha phase is live. Every action earns you ARIA. Accumulate now: you'll use them to buy blocks and join airdrops.</span>
       </p>
+    </div>
+
+    <!-- DELETE ACCOUNT -->
+    <div style="text-align:center;margin-top:32px">
+      <button class="delete-account-trigger" onclick="openDeleteModal()">
+        <span class="it">Elimina il mio account</span><span class="en">Delete my account</span>
+      </button>
     </div>
   </div>
 
@@ -2698,9 +3202,9 @@ function checkAdminAccess(email){
               <div style="font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:8px">ALPHA BRAVE</div>
               <div style="font-size:12px;color:var(--white)"><span class="it">1.000 posti</span><span class="en">1,000 spots</span></div>
               <div style="font-size:12px;color:var(--gold);margin-top:4px"><span class="it">Max vantaggi</span><span class="en">Max perks</span></div>
-              <div style="font-size:11px;color:var(--gray-400);margin-top:4px">70 ARIA/day</div>
-              <div style="font-size:11px;color:var(--gray-400)">+100 welcome</div>
-              <div style="font-size:11px;color:var(--gray-400)">+10 login/day</div>
+              <div style="font-size:11px;color:var(--gray-400);margin-top:4px">7 ARIA/day</div>
+              <div style="font-size:11px;color:var(--gray-400)">+10 welcome</div>
+              <div style="font-size:11px;color:var(--gray-400)">+1 login/day</div>
               <div style="font-size:11px;color:var(--gray-400)">+1 Tessera</div>
             </div>
             <div style="padding:12px;background:var(--gray-800);text-align:center;opacity:.6">
@@ -3053,6 +3557,22 @@ function checkAdminAccess(email){
     <div class="earn-card" style="border-color:var(--gold-dim)">
       <h3><span class="it">Come funziona il referral</span><span class="en">How referrals work</span></h3>
       <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login il referral si conferma automaticamente<br>4. Tu ricevi +10 ARIA, il tuo amico +15 ARIA!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. Referral auto-confirms at their first login<br>4. You get +10 ARIA, your friend gets +15 ARIA!</span></p>
+    </div>
+
+    <!-- REFERRAL HISTORY: Chi hai invitato -->
+    <div class="ref-history-section">
+      <h3 class="ref-history-title"><span class="it">Chi hai invitato</span><span class="en">People you invited</span></h3>
+      <div id="ref-invited-list">
+        <p style="font-size:13px;color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></p>
+      </div>
+    </div>
+
+    <!-- REFERRAL HISTORY: Sei stato invitato da -->
+    <div class="ref-history-section">
+      <h3 class="ref-history-title"><span class="it">Sei stato invitato da</span><span class="en">You were invited by</span></h3>
+      <div id="ref-inviter-info">
+        <p style="font-size:13px;color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></p>
+      </div>
     </div>
   </div>
 </div>

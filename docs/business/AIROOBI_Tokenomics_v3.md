@@ -1,5 +1,5 @@
 # AIROOBI — Tokenomics & Economic Model
-**TECH-001 · Version 3.0 · Final · 08 Marzo 2026**
+**TECH-001 · Version 3.1 · Final · 10 Marzo 2026**
 
 > Stage 0 CHIUSO. Questo documento riflette il sistema definitivo in produzione su airoobi.com.
 
@@ -31,10 +31,15 @@ Il modello economico di AIROOBI si basa su tre asset distinti:
 
 | Azione | ARIA guadagnati | Limite |
 |---|---|---|
-| Daily check-in | +10 ARIA | 1 al giorno |
-| Video view | +10 ARIA | Max 5 al giorno (50 ARIA/giorno) |
-| Referral accettato + KYC | +100 ARIA | Nessun limite |
-| Streak settimanale (7gg) | +100 ARIA | 1 a settimana |
+| Welcome bonus | +10 ARIA | Una tantum, al primo login |
+| Login giornaliero | +1 ARIA | 1 al giorno |
+| Daily check-in | +1 ARIA | 1 al giorno |
+| Video view | +1 ARIA | Max 5 al giorno (5 ARIA/giorno) |
+| Referral (referrer) | +10 ARIA | Auto al primo login dell'invitato, illimitato |
+| Referral (invitato) | +15 ARIA | Auto al primo login |
+| Streak settimanale (7gg) | +1 ARIA | 1 a settimana |
+
+> **Max giornaliero ricorrente:** 7 ARIA (login + check-in + 5 video). Streak settimanale e referral sono bonus aggiuntivi.
 
 > ⚠️ **REGOLA TASSATIVA:** Il valore €0,10 per ARIA NON viene mai mostrato nell'area utente. Appare solo nel pannello admin. Il meccanismo di conversione ARIA → KAS è TBD e non va mai affermato nell'UI.
 

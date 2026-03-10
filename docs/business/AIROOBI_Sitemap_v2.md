@@ -1,5 +1,5 @@
 # AIROOBI — Sitemap & Product Structure
-**TECH-002 · Version 2.0 · Final · 08 Marzo 2026**
+**TECH-002 · Version 2.1 · Final · 10 Marzo 2026**
 
 > v2.0: File unico index.html (non più app.html + index.html). Hash-based routing. /contact → 404. Tutte le schermate integrate.
 
@@ -41,7 +41,7 @@
 | NFT Portfolio | #nft | Lista NFT posseduti, valore, storico |
 | Leaderboard | #leaderboard | Classifica utenti per ARIA/blocchi |
 | Referral | #referral | Link personale, statistiche, reward |
-| Profilo / KYC | #profilo | Dati utente, stato KYC, wallet Kaspa, preferenze |
+| Profilo / KYC | #profilo | Dati utente, info account, verifica email, elimina account |
 | Help / FAQ | #help | Guide, FAQ, chat support |
 | Admin Panel | #admin (solo admin) | Visibile solo a tommaso.pecorella@outlook.com |
 
@@ -59,9 +59,17 @@
 
 ### 3.1 Flusso Login
 1. User su landing → inserisce email/password → preme "Accedi"
-2. VIDEO INTERSTITIAL 15s (obbligatorio, non-skippabile)
-3. Dopo video: accesso app → tab Marketplace
-4. First login: KYC prompt → completamento → sblocco pieno accesso
+2. Cloudflare Turnstile verifica anti-bot (invisibile)
+3. VIDEO INTERSTITIAL 15s (obbligatorio, non-skippabile)
+4. Dopo video: accesso app → tab Profilo
+5. Auto logout su scadenza sessione JWT o TOKEN_REFRESH_FAILED
+
+### 3.1b Flusso Signup
+1. User inserisce email/password → validazione password robusta (min 8 char, maiuscola, minuscola, numero, speciale)
+2. Indicatore forza password (debole/media/forte)
+3. Cloudflare Turnstile verifica anti-bot
+4. Conferma email via link → redirect su airoobi.com con overlay "Email verificata!"
+5. Primo login: welcome bonus +10 ARIA + auto-confirm referral se presente
 
 ### 3.2 Flusso Acquisto Blocchi
 1. User naviga Marketplace → seleziona oggetto → visualizza dettaglio
@@ -107,7 +115,7 @@
 | referral_confirmations | GET | Stato conferma referral |
 | treasury_stats | GET | Bilancio fondo EUR, NFT mintati, valore unitario |
 | investor_leads | POST/GET | Form contatto investitori |
-| rpc/confirm_referral | POST | Conferma referral (+100 ARIA a entrambi) |
+| rpc/confirm_referral | POST | Conferma referral (+10 ARIA referrer, +15 ARIA invitato) |
 | rpc/link_referral | POST | Collega referral a profilo |
 | rpc/daily_checkin | POST | Esegue check-in |
 | rpc/get_user_position | POST | Posizione utente server-side (aggiunto Stage 0) |
