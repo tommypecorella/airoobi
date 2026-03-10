@@ -79,7 +79,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:none}
 .nav-logged-in{display:none;align-items:center;gap:12px}
 .nav-logged-in.active{display:flex}
 .nav-avatar{width:32px;height:32px;background:var(--gold);color:var(--black);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:13px;font-weight:700;cursor:pointer}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-aria-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-link-btn span{display:none}.nav-link-btn{padding:8px 10px}.nav-menu a{display:none}}
+@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-link-btn span{display:none}.nav-link-btn{padding:8px 10px}.nav-menu a{display:none}}
 .nav-cta{background:var(--gold);color:var(--black);padding:10px 24px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;border:none;cursor:pointer;transition:all .3s}
 .nav-cta:hover{background:var(--white)}
 
@@ -153,14 +153,38 @@ section{padding:clamp(80px,12vw,160px) 0;position:relative}
 /* ── ROADMAP ── */
 .roadmap{background:var(--white);color:var(--black)}
 .phases{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;margin-top:64px}
-.phase{padding:40px;background:#f8f8f8;position:relative;transition:all .4s}
-.phase:hover{background:#f0f0f0}
+.phase{padding:40px;background:#f8f8f8;position:relative;transition:all .4s;cursor:pointer}
+.phase:hover{background:#f0f0f0;transform:translateY(-2px)}
 .phase-tag{display:inline-block;font-family:var(--font-m);font-size:10px;letter-spacing:3px;text-transform:uppercase;padding:4px 12px;margin-bottom:16px;border:1px solid var(--gold);color:var(--gold)}
 .phase.active .phase-tag{background:var(--gold);color:var(--black)}
 .phase h3{font-family:var(--font-h);font-size:22px;font-weight:500;margin-bottom:12px;color:var(--black)}
 .phase p{font-size:13px;color:#666;line-height:1.7}
 .phase-dot{position:absolute;top:40px;right:24px;width:8px;height:8px;border-radius:50%;background:#ddd}
 .phase.active .phase-dot{background:var(--gold);box-shadow:0 0 12px var(--gold-dim)}
+/* ── ROADMAP DETAIL ── */
+.rd-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:280;background:var(--black);overflow-y:auto}
+.rd-overlay.active{display:block}
+.rd-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--gray-700)}
+.rd-nav span{font-family:var(--font-m);font-size:12px;color:var(--gold);letter-spacing:2px}
+.rd-close{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 16px;font-size:12px;cursor:pointer;transition:all .3s}
+.rd-close:hover{border-color:var(--gold);color:var(--gold)}
+.rd-content{max-width:800px;margin:0 auto;padding:60px 24px}
+.rd-phase-tag{display:inline-block;font-family:var(--font-m);font-size:11px;letter-spacing:3px;text-transform:uppercase;padding:6px 16px;margin-bottom:24px;border:1px solid var(--gold);color:var(--gold)}
+.rd-phase-tag.rd-active{background:var(--gold);color:var(--black)}
+.rd-content h1{font-family:var(--font-h);font-size:clamp(28px,4vw,42px);font-weight:300;color:var(--white);margin-bottom:12px}
+.rd-content .rd-desc{font-size:15px;color:var(--gray-300);line-height:1.8;margin-bottom:40px}
+.rd-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:40px}
+.rd-stat{padding:24px;background:var(--gray-800);border:1px solid var(--gray-700);text-align:center}
+.rd-stat-val{font-family:var(--font-h);font-size:32px;font-weight:300;color:var(--gold);margin-bottom:4px}
+.rd-stat-label{font-size:11px;color:var(--gray-400);letter-spacing:1px;text-transform:uppercase}
+.rd-coming{text-align:center;padding:48px 24px;border:1px solid var(--gray-700);margin-bottom:40px}
+.rd-coming h3{font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--gray-400);margin-bottom:12px}
+.rd-coming p{font-size:13px;color:var(--gray-400)}
+.rd-features{margin-bottom:40px}
+.rd-features h3{font-family:var(--font-h);font-size:20px;font-weight:400;color:var(--white);margin-bottom:16px}
+.rd-features ul{list-style:none;padding:0}
+.rd-features li{padding:12px 0;border-bottom:1px solid var(--gray-800);font-size:14px;color:var(--gray-300);display:flex;align-items:flex-start;gap:12px}
+.rd-features li::before{content:'→';color:var(--gold);font-weight:700;flex-shrink:0}
 
 /* ── CTA FINALE ── */
 .cta-section{text-align:center;padding:clamp(100px,15vw,200px) 24px}
@@ -224,26 +248,31 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .admin-note{font-size:12px;color:var(--gray-400);font-style:italic;margin-top:8px}
 
 /* ── INVESTOR PAGE ── */
-.investor-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:var(--white);overflow-y:auto;color:var(--black)}
+.investor-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:var(--black);overflow-y:auto;color:var(--white)}
 .investor-overlay.active{display:block}
-.investor-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid #e0e0e0}
-.investor-nav img{height:32px}
-.investor-close{background:none;border:1px solid #ccc;color:var(--black);padding:8px 20px;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .3s}
+.investor-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid var(--gray-700)}
+.investor-nav img{height:32px;filter:invert(1)}
+.investor-close{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 20px;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .3s}
 .investor-close:hover{border-color:var(--gold);color:var(--gold)}
 .investor-content{max-width:760px;margin:0 auto;padding:80px 24px}
-.investor-content h1{font-family:var(--font-h);font-size:clamp(32px,5vw,48px);font-weight:300;margin-bottom:16px;color:var(--black)}
+.investor-content h1{font-family:var(--font-h);font-size:clamp(32px,5vw,48px);font-weight:300;margin-bottom:16px;color:var(--white)}
 .investor-content h1 em{color:var(--gold);font-style:italic}
-.investor-content h2{font-family:var(--font-h);font-size:24px;font-weight:400;margin:48px 0 16px;color:var(--black);border-bottom:1px solid #e0e0e0;padding-bottom:8px}
-.investor-content p{font-size:15px;color:#444;line-height:1.8;margin-bottom:16px}
-.investor-content strong{color:var(--black)}
-.investor-highlight{padding:24px;background:#f8f8f8;border-left:3px solid var(--gold);margin:24px 0;font-size:14px;color:#444;line-height:1.8}
+.investor-content h2{font-family:var(--font-h);font-size:24px;font-weight:400;margin:48px 0 16px;color:var(--white);border-bottom:1px solid var(--gray-700);padding-bottom:8px}
+.investor-content p{font-size:15px;color:var(--gray-300);line-height:1.8;margin-bottom:16px}
+.investor-content strong{color:var(--white)}
+.investor-highlight{padding:24px;background:rgba(184,150,12,.06);border-left:3px solid var(--gold);margin:24px 0;font-size:14px;color:var(--gray-300);line-height:1.8}
 .investor-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:24px 0}
 @media(max-width:600px){.investor-grid{grid-template-columns:1fr}}
-.investor-metric{padding:24px;border:1px solid #e0e0e0}
+.investor-metric{padding:24px;border:1px solid var(--gray-700);background:var(--gray-800)}
 .investor-metric-val{font-family:var(--font-h);font-size:32px;font-weight:300;color:var(--gold)}
-.investor-metric-label{font-size:13px;color:#888;margin-top:4px}
-.investor-form{margin-top:48px;padding:32px;border:1px solid #e0e0e0}
-.investor-form h3{font-family:var(--font-h);font-size:22px;font-weight:400;margin-bottom:16px}
+.investor-metric-label{font-size:13px;color:var(--gray-400);margin-top:4px}
+.investor-chart{margin:32px 0;padding:24px;border:1px solid var(--gray-700);background:var(--gray-800)}
+.investor-chart canvas{width:100%!important;max-height:280px}
+.investor-cta-box{text-align:center;padding:48px 32px;border:2px solid var(--gold);margin-top:48px}
+.investor-cta-box h3{font-family:var(--font-h);font-size:28px;font-weight:300;color:var(--gold);margin-bottom:12px}
+.investor-cta-box p{font-size:14px;color:var(--gray-400);margin-bottom:24px}
+.investor-cta-box a{display:inline-block;background:var(--gold);color:var(--black);padding:14px 40px;font-family:var(--font-m);font-size:12px;letter-spacing:2px;text-decoration:none;font-weight:700;transition:all .3s}
+.investor-cta-box a:hover{background:var(--white)}
 .investor-form label{display:block;font-size:12px;letter-spacing:1px;color:#888;margin-bottom:6px;text-transform:uppercase}
 .investor-form input,.investor-form textarea{width:100%;padding:12px 14px;border:1px solid #ddd;font-family:var(--font-b);font-size:14px;color:var(--black);margin-bottom:16px;outline:none;background:var(--white);transition:border .3s}
 .investor-form input:focus,.investor-form textarea:focus{border-color:var(--gold)}
@@ -340,9 +369,14 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .video-msg em{color:var(--gold);font-style:normal}
 
 /* ── AUTH MODAL ── */
-.auth-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:rgba(0,0,0,.95);overflow-y:auto;padding:40px 24px}
-.auth-overlay.active{display:flex;align-items:center;justify-content:center}
+.auth-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:var(--black);overflow-y:auto;padding:40px 24px}
+.auth-overlay.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
+.auth-logo-wrap{margin-bottom:32px;text-align:center}
+.auth-logo-wrap img{height:36px;filter:invert(1)}
 .auth-box{background:var(--gray-800);border:1px solid var(--gray-700);max-width:420px;width:100%;padding:48px 40px;position:relative}
+.auth-ad-slot{max-width:728px;width:100%;margin-top:32px;text-align:center;min-height:90px}
+.auth-ad-slot-mobile{display:none}
+@media(max-width:768px){.auth-ad-slot{display:none}.auth-ad-slot-mobile{display:block;max-width:320px;width:100%;margin-top:24px;text-align:center;min-height:50px}}
 .auth-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:8px}
 .auth-box .auth-sub{font-size:13px;color:var(--gray-400);margin-bottom:32px}
 .auth-box label{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px}
@@ -667,9 +701,38 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 /* ── MOBILE FIX: admin param grid ── */
 @media(max-width:480px){.admin-param-grid{grid-template-columns:1fr!important}}
 
+/* ── COST TRACKER ── */
+.ct-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.ct-toolbar input[type="month"]{background:#111;border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-m);font-size:12px;padding:8px 12px}
+.ct-toolbar button{background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:8px 18px;cursor:pointer;font-weight:700}
+.ct-modal-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:400;background:rgba(0,0,0,.85);align-items:center;justify-content:center}
+.ct-modal-bg.active{display:flex}
+.ct-modal{background:var(--gray-800);border:1px solid var(--gray-700);max-width:480px;width:100%;padding:32px;position:relative}
+.ct-modal h3{font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--gold);margin-bottom:20px}
+.ct-modal label{display:block;font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;margin-top:12px}
+.ct-modal input,.ct-modal select{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:8px 10px}
+.ct-modal select{appearance:none;cursor:pointer}
+.ct-modal-actions{display:flex;gap:10px;margin-top:20px}
+.ct-modal-actions button{flex:1;padding:10px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;border:none}
+.ct-btn-save{background:var(--gold);color:#000;font-weight:700}
+.ct-btn-cancel{background:transparent;border:1px solid var(--gray-700)!important;color:var(--gray-400)}
+.ct-btn-del{background:transparent;border:1px solid #c0392b!important;color:#e74c3c;font-size:10px!important;padding:6px 12px!important;flex:0!important}
+.ct-actions{display:flex;gap:6px}
+.ct-actions button{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:4px 10px;font-size:10px;font-family:var(--font-m);cursor:pointer;letter-spacing:1px}
+.ct-actions button:hover{border-color:var(--gold);color:var(--gold)}
+.ct-status{display:inline-block;padding:2px 8px;font-size:10px;letter-spacing:1px;font-family:var(--font-m)}
+.ct-s-pagato{background:rgba(73,181,131,.15);color:#49b583;border:1px solid rgba(73,181,131,.3)}
+.ct-s-da_pagare{background:rgba(184,150,12,.15);color:var(--gold);border:1px solid var(--gold-dim)}
+.ct-s-free,.ct-s-freemium{background:rgba(74,158,255,.1);color:var(--aria);border:1px solid rgba(74,158,255,.3)}
+.ct-s-a_pagamento{background:rgba(255,255,255,.05);color:var(--white);border:1px solid var(--gray-700)}
+.ct-s-abbandonato{background:rgba(255,255,255,.03);color:var(--gray-400);border:1px solid var(--gray-700);text-decoration:line-through}
+.ct-s-in_ritardo,.ct-s-non_pagato{background:rgba(231,76,60,.12);color:#e74c3c;border:1px solid rgba(231,76,60,.3)}
+
 /* ── MOBILE FIX: privacy/terms modali ── */
 @media(max-width:480px){.legal-modal{padding:20px 12px!important}.legal-modal-inner{padding:20px 0!important}.legal-modal h2{font-size:24px!important}.legal-modal h3{font-size:17px!important;margin:24px 0 10px!important}}
 </style>
+<!-- Chart.js (Investor page) -->
+<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <!-- Vercel Analytics -->
 <script defer src="/_vercel/insights/script.js"></script>
 </head>
@@ -696,21 +759,16 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     <a href="#why"><span class="it">Perché</span><span class="en">Why</span></a>
     <a href="#kaspa">Blockchain</a>
     <a href="#roadmap">Roadmap</a>
-    <a href="https://airoobi.com/video-intro.html" target="_blank" style="color:var(--gold)">▶ Explainer</a>
+    <a href="javascript:void(0)" onclick="openExplainerVideo()" style="color:var(--gold)"><span class="it">▶ Video Explainer</span><span class="en">▶ Video Explainer</span></a>
     <a href="javascript:void(0)" onclick="openInvestor()" style="color:var(--gold)">Investor</a>
     <button class="lang-toggle" onclick="toggleLang()" id="lang-btn">EN</button>
     <button class="nav-link-btn" onclick="openAuth('login')" id="nav-login-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg><span class="it">Accedi</span><span class="en">Login</span></button>
     <button class="nav-cta" onclick="openAuth('signup')" id="nav-signup-btn"><span class="it">Registrati</span><span class="en">Sign Up</span></button>
     <div class="nav-logged-in" id="nav-logged-in">
       <div id="nav-rpts-counter" onclick="showDashFromNav()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
-        <span style="display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%"></span>
-        <span id="nav-rpts-val" style="font-family:var(--font-m);font-size:11px;color:var(--white);letter-spacing:.5px">0</span>
-        <span style="font-family:var(--font-m);font-size:8px;color:var(--gold);letter-spacing:1px">ARIA</span>
-      </div>
-      <div id="nav-aria-counter" onclick="showDashFromNav()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
-        <span style="display:inline-block;width:8px;height:8px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white)"></span>
-        <span id="nav-aria-val" style="font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:.5px">0</span>
-        <span style="font-family:var(--font-m);font-size:8px;color:var(--gray-400);letter-spacing:1px">ARIA</span>
+        <span style="display:inline-block;width:8px;height:8px;background:var(--aria);border-radius:50%"></span>
+        <span id="nav-rpts-val" style="font-family:var(--font-m);font-size:11px;color:var(--aria);letter-spacing:.5px">0</span>
+        <span style="font-family:var(--font-m);font-size:8px;color:var(--aria);letter-spacing:1px">ARIA</span>
       </div>
       <div id="nav-nft-counter" onclick="showDashFromNav()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
         <span style="font-family:var(--font-h);font-size:10px;color:var(--gold);font-weight:700;letter-spacing:-1px">Oo</span>
@@ -733,7 +791,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   <a href="#why" onclick="closeBurger()"><span class="it">Perché</span><span class="en">Why</span></a>
   <a href="#kaspa" onclick="closeBurger()">Blockchain</a>
   <a href="#roadmap" onclick="closeBurger()">Roadmap</a>
-  <a href="https://airoobi.com/video-intro.html" target="_blank" style="color:var(--gold)" onclick="closeBurger()">▶ Explainer</a>
+  <a href="javascript:void(0)" onclick="openExplainerVideo();closeBurger();" style="color:var(--gold)"><span class="it">▶ Video Explainer</span><span class="en">▶ Video Explainer</span></a>
   <a href="javascript:void(0)" onclick="openInvestor();closeBurger();" style="color:var(--gold)">Investor</a>
   <div class="mobile-menu-actions">
     <button class="lang-toggle" onclick="toggleLang();closeBurger();" id="lang-btn-mobile">EN</button>
@@ -760,6 +818,22 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     </div>
   </div>
   <div class="hero-scroll"><span></span></div>
+</section>
+
+<!-- ═══ EXPLAINER VIDEO ═══ -->
+<section id="explainer-section" style="padding:80px 0;background:#000;border-bottom:1px solid rgba(184,150,12,.12)">
+<div class="container reveal" style="max-width:800px;text-align:center">
+  <img src="/public/images/Logo_long_airoobi_transparent.png" alt="AIROOBI" style="height:40px;margin-bottom:24px;filter:invert(1)">
+  <h2 style="font-family:var(--font-h);font-size:clamp(28px,4vw,42px);font-weight:300;color:var(--white);margin-bottom:8px">
+    <span class="it">Scopri AIROOBI in 2 minuti</span><span class="en">Discover AIROOBI in 2 minutes</span>
+  </h2>
+  <p style="font-size:14px;color:var(--gray-400);margin-bottom:32px">
+    <span class="it">Il marketplace dove realizzi i tuoi desideri.</span><span class="en">The marketplace where you make your desires real.</span>
+  </p>
+  <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border:1px solid rgba(184,150,12,.2);background:#111">
+    <iframe src="https://airoobi.com/video-intro.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" loading="lazy"></iframe>
+  </div>
+</div>
 </section>
 
 <!-- ═══ WHAT ═══ -->
@@ -912,25 +986,25 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   <span class="section-label"><span class="it">Roadmap</span><span class="en">Roadmap</span></span>
   <h2 class="section-title"><span class="it">Stiamo costruendo.<br><em>Entra adesso.</em></span><span class="en">We're building.<br><em>Join now.</em></span></h2>
   <div class="phases">
-    <div class="phase active">
+    <div class="phase active" onclick="openRoadmapDetail('alpha')">
       <span class="phase-tag">Alpha</span>
       <div class="phase-dot"></div>
       <h3><span class="it">Sei qui</span><span class="en">You are here</span></h3>
       <p><span class="it">Alpha Brave attivo — 1.000 posti per i coraggiosi. Vantaggi permanenti: più ARIA, Badge Fondatore in regalo, accesso prioritario agli airdrop. Dopo di loro arrivano gli Alpha Wise, con meno vantaggi.</span><span class="en">Alpha Brave active — 1,000 spots for the brave. Permanent perks: more ARIA, free Founder Badge, priority airdrop access. After them come Alpha Wise, with fewer perks.</span></p>
     </div>
-    <div class="phase">
+    <div class="phase" onclick="openRoadmapDetail('beta')">
       <span class="phase-tag">Beta</span>
       <div class="phase-dot"></div>
       <h3><span class="it">Piattaforma mockup</span><span class="en">Mockup platform</span></h3>
       <p><span class="it">DApp navigabile con dati simulati. Primi airdrop di test. Community building e referral attivo.</span><span class="en">Navigable DApp with simulated data. First test airdrops. Community building and active referrals.</span></p>
     </div>
-    <div class="phase">
+    <div class="phase" onclick="openRoadmapDetail('preprod')">
       <span class="phase-tag">Pre-Prod</span>
       <div class="phase-dot"></div>
       <h3><span class="it">Pre-produzione</span><span class="en">Pre-production</span></h3>
       <p><span class="it">Test reali con community ristretta. Integrazione pagamenti, verifica identità, stress test del sistema. Tutto viene validato prima del lancio pubblico.</span><span class="en">Real testing with restricted community. Payment integration, identity verification, system stress testing. Everything is validated before public launch.</span></p>
     </div>
-    <div class="phase">
+    <div class="phase" onclick="openRoadmapDetail('mainnet')">
       <span class="phase-tag">Mainnet</span>
       <div class="phase-dot"></div>
       <h3><span class="it">Lancio reale</span><span class="en">Real launch</span></h3>
@@ -939,6 +1013,17 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   </div>
 </div>
 </section>
+
+<!-- ═══ ROADMAP DETAIL OVERLAY ═══ -->
+<div class="rd-overlay" id="rd-overlay">
+  <div class="rd-nav">
+    <span>AIROOBI · ROADMAP</span>
+    <button class="rd-close" onclick="closeRoadmapDetail()">Close</button>
+  </div>
+  <div class="rd-content" id="rd-content">
+    <!-- populated by JS -->
+  </div>
+</div>
 
 <!-- ═══ CTA FINALE ═══ -->
 <section class="cta-section">
@@ -978,7 +1063,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.9.0 · Last update: 10 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.10.0 · Last update: 10 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1028,6 +1113,15 @@ async function track(event, props={}) {
 // Track pageview al caricamento
 window.addEventListener('DOMContentLoaded', ()=>{
   track('pageview', {lang: document.documentElement.lang || 'it'});
+  // Hash routing for auth pages
+  var h=location.hash;
+  if(h==='#login')openAuth('login');
+  else if(h==='#signup')openAuth('signup');
+  window.addEventListener('hashchange',function(){
+    var hh=location.hash;
+    if(hh==='#login')openAuth('login');
+    else if(hh==='#signup')openAuth('signup');
+  });
 });
 
 async function sbPost(table,data){
@@ -1377,17 +1471,22 @@ function skipVideo(){
   videoCallback=null;
 }
 
-// ADG_PENDING = true → sempre mostra il video (in attesa approvazione Google Ad Manager)
-// Quando approvato: metti ADG_PENDING = false → rispetterà localStorage
-var ADG_PENDING = true;
+function openExplainerVideo(){
+  track('explainer_video_viewed');
+  showVideoAd(function(){});
+}
 
 function gatedDashboard(session){
-  var seen=localStorage.getItem('airoobi_explainer_seen');
-  if(!ADG_PENDING && seen){
-    // ADG approvato e utente ha già visto: vai dritto alla dashboard
+  var seen=localStorage.getItem('first_login_video_shown');
+  if(seen){
+    // Utente ha già visto il video al primo login: vai dritto alla dashboard
     showDashboard(session);
   } else {
-    showVideoAd(function(){showDashboard(session);});
+    // Primo login: mostra video explainer, poi segna come visto
+    showVideoAd(function(){
+      localStorage.setItem('first_login_video_shown','1');
+      showDashboard(session);
+    });
   }
 }
 
@@ -1409,10 +1508,19 @@ async function sbGet(path,token){
   const res=await fetch(SB_URL+'/rest/v1/'+path,{headers:h});
   return res.ok?await res.json():[];
 }
+async function sbPatch(path,data,token){
+  var res=await fetch(SB_URL+'/rest/v1/'+path,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(token||SB_KEY),'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
+  if(!res.ok)throw new Error('PATCH failed: '+res.status);
+}
+async function sbDel(path,token){
+  var res=await fetch(SB_URL+'/rest/v1/'+path,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(token||SB_KEY),'Prefer':'return=minimal'}});
+  if(!res.ok)throw new Error('DELETE failed: '+res.status);
+}
 
 // ── Auth UI ──
 function openAuth(mode){
   track('cta_click', {mode, source: location.hash || 'landing'});
+  location.hash=mode==='login'?'login':'signup';
   document.getElementById('auth-overlay').classList.add('active');
   document.body.style.overflow='hidden';
   if(mode==='login')showLogin();else showSignup();
@@ -1421,7 +1529,7 @@ function openAuth(mode){
   var refInput=document.getElementById('signup-ref');
   if(ref&&refInput){refInput.value=ref;refInput.style.color='var(--gold)';}
 }
-function closeAuth(){document.getElementById('auth-overlay').classList.remove('active');document.body.style.overflow='';clearErrors()}
+function closeAuth(){document.getElementById('auth-overlay').classList.remove('active');document.body.style.overflow='';clearErrors();if(location.hash==='#login'||location.hash==='#signup')history.replaceState(null,null,' ')}
 function showLogin(){document.getElementById('auth-signup').style.display='none';document.getElementById('auth-login').style.display='block';clearErrors()}
 function showSignup(){document.getElementById('auth-signup').style.display='block';document.getElementById('auth-login').style.display='none';clearErrors()}
 function clearErrors(){document.querySelectorAll('.auth-error,.auth-success').forEach(e=>e.style.display='none')}
@@ -1756,8 +1864,6 @@ async function updateNavCounters(session){
       var rpts=profiles[0].total_points||0;
       var rptsEl=document.getElementById('nav-rpts-val');
       if(rptsEl)rptsEl.textContent=rpts;
-      var ariaEl=document.getElementById('nav-aria-val');
-      if(ariaEl)ariaEl.textContent='—';
     }
     // Real NFT count
     const nfts=await sbGet('nft_rewards?user_id=eq.'+session.user.id+'&select=id',session.access_token);
@@ -2245,51 +2351,82 @@ async function loadReferralTab(){
 
 
 // ══ INVESTOR PAGE ══
+var _invChartsRendered=false;
 function openInvestor(){
-  const overlay=document.getElementById('investor-overlay');
-  overlay.classList.add('active');
+  track('investor_page_viewed');
+  document.getElementById('investor-overlay').classList.add('active');
   document.body.style.overflow='hidden';
-  // Set logo (black logo for white bg)
-  var logoSrc=document.querySelector('.nav-logo')?.src||'';
-  document.getElementById('investor-logo').src=logoSrc;
   // Load waitlist count
-  sbCount().then(function(c){document.getElementById('inv-waitlist').textContent=c||'—';});
+  sbCount().then(function(c){var el=document.getElementById('inv-waitlist');if(el)el.textContent=c||'—';});
+  // Render charts (once)
+  if(!_invChartsRendered&&typeof Chart!=='undefined'){
+    _invChartsRendered=true;
+    renderInvestorCharts();
+  }else if(!_invChartsRendered){
+    // Chart.js might not be loaded yet — wait
+    var ci=setInterval(function(){if(typeof Chart!=='undefined'){clearInterval(ci);_invChartsRendered=true;renderInvestorCharts();}},200);
+    setTimeout(function(){clearInterval(ci);},5000);
+  }
 }
 function closeInvestor(){
   document.getElementById('investor-overlay').classList.remove('active');
   document.body.style.overflow='';
 }
 
-async function sendInvestorForm(){
-  var name=document.getElementById('inv-name').value.trim();
-  var email=document.getElementById('inv-email').value.trim();
-  var org=document.getElementById('inv-org').value.trim();
-  var msg=document.getElementById('inv-msg').value.trim();
-  var msgEl=document.getElementById('inv-form-msg');
-  
-  if(!name||!email||!msg){
-    msgEl.style.color='#B91C1C';
-    msgEl.textContent='Please fill in name, email and message.';
-    return;
-  }
-  
-  // Send via Supabase (store in a table or just send email)
-  // For now, store in a simple table
-  try{
-    await fetch(SB_URL+'/rest/v1/investor_leads',{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({name:name,email:email,organization:org,message:msg})
+function renderInvestorCharts(){
+  // 1. Community growth chart (simulated monthly data — will be replaced with real data)
+  var growthCtx=document.getElementById('inv-chart-growth');
+  if(growthCtx){
+    new Chart(growthCtx,{
+      type:'line',
+      data:{
+        labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],
+        datasets:[{
+          label:'Community',
+          data:[0,0,0,0,0,0,12,48,120],
+          borderColor:'#B8960C',
+          backgroundColor:'rgba(184,150,12,.1)',
+          fill:true,
+          tension:.4,
+          pointBackgroundColor:'#B8960C',
+          pointRadius:4
+        }]
+      },
+      options:{
+        responsive:true,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{ticks:{color:'#888',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,.05)'}},
+          y:{beginAtZero:true,ticks:{color:'#888',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,.05)'}}
+        }
+      }
     });
-    msgEl.style.color='var(--gold)';
-    msgEl.textContent='Message sent! We will be in touch soon.';
-    document.getElementById('inv-name').value='';
-    document.getElementById('inv-email').value='';
-    document.getElementById('inv-org').value='';
-    document.getElementById('inv-msg').value='';
-  }catch(e){
-    // Fallback: mailto
-    window.location.href='mailto:investor@airoobi.com?subject=Investment Inquiry from '+encodeURIComponent(name)+'&body='+encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nOrganization: '+org+'\n\n'+msg);
+  }
+  // 2. Roadmap phases visual (horizontal bar)
+  var roadCtx=document.getElementById('inv-chart-roadmap');
+  if(roadCtx){
+    new Chart(roadCtx,{
+      type:'bar',
+      data:{
+        labels:['Alpha Brave','Alpha Wise','Beta','Pre-Prod','Mainnet'],
+        datasets:[{
+          label:'Target utenti',
+          data:[1000,2500,5000,10000,15000],
+          backgroundColor:['#B8960C','rgba(184,150,12,.7)','rgba(184,150,12,.5)','rgba(184,150,12,.3)','rgba(184,150,12,.15)'],
+          borderColor:'#B8960C',
+          borderWidth:1
+        }]
+      },
+      options:{
+        indexAxis:'y',
+        responsive:true,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{ticks:{color:'#888',font:{family:'DM Mono',size:10},callback:function(v){return v>=1000?(v/1000)+'K':v}},grid:{color:'rgba(255,255,255,.05)'}},
+          y:{ticks:{color:'#B8960C',font:{family:'DM Mono',size:11,weight:'bold'}},grid:{display:false}}
+        }
+      }
+    });
   }
 }
 
@@ -2365,7 +2502,259 @@ async function loadAdminData(){
       document.getElementById('adm-inv-leads').textContent=leads?leads.length:0;
     }catch(e){document.getElementById('adm-inv-leads').textContent='—';}
     
+    // Cost Tracker
+    loadCostTracker();
+
   }catch(e){console.error('Admin load error:',e);}
+}
+
+// ── Cost Tracker ──
+var CT_STATUS_LABELS={'da_pagare':'Da pagare','pagato':'Pagato','free':'Free','freemium':'Freemium','a_pagamento':'A pagamento','abbandonato':'Abbandonato','in_ritardo':'In ritardo','non_pagato':'Non pagato'};
+var CT_CAT_LABELS={'fisso':'Fisso','variabile':'Variabile','una_tantum':'Una tantum'};
+var CT_FREQ_LABELS={'mensile':'Mensile','annuale':'Annuale','una_tantum':'Una tantum'};
+
+async function loadCostTracker(){
+  var s=getSession();if(!s)return;
+  var t=s.access_token;
+  var monthEl=document.getElementById('ct-month-filter');
+  if(!monthEl.value){var now=new Date();monthEl.value=now.getFullYear()+'-'+(''+(now.getMonth()+1)).padStart(2,'0');}
+  var ym=monthEl.value;
+  var startDate=ym+'-01';
+  var endY=parseInt(ym.split('-')[0]),endM=parseInt(ym.split('-')[1]);
+  if(endM===12){endY++;endM=1;}else{endM++;}
+  var endDate=endY+'-'+((''+endM).padStart(2,'0'))+'-01';
+
+  try{
+    var rows=await sbGet('cost_tracker?ref_month=gte.'+startDate+'&ref_month=lt.'+endDate+'&order=name.asc',t);
+    var allRows=await sbGet('cost_tracker?select=amount,frequency,status,ref_month&order=ref_month.asc',t);
+    renderCostTable(rows||[]);
+    calcCostSummary(rows||[],allRows||[]);
+  }catch(e){console.error('CT load error:',e);}
+}
+
+function renderCostTable(rows){
+  var tbody=document.getElementById('ct-body');
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="8" style="color:var(--gray-400)">Nessun costo per questo mese.</td></tr>';return;}
+  tbody.innerHTML=rows.map(function(r){
+    var month=r.ref_month?new Date(r.ref_month+'T00:00:00').toLocaleDateString('it-IT',{month:'short',year:'numeric'}):'—';
+    var paid=r.paid_date?new Date(r.paid_date+'T00:00:00').toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'}):'—';
+    return '<tr>'+
+      '<td>'+(r.name||'')+(r.notes?'<br><span style="font-size:10px;color:var(--gray-400)">'+r.notes+'</span>':'')+'</td>'+
+      '<td>'+(CT_CAT_LABELS[r.category]||r.category)+'</td>'+
+      '<td style="font-family:var(--font-m)">€'+(parseFloat(r.amount)||0).toFixed(2)+'</td>'+
+      '<td>'+(CT_FREQ_LABELS[r.frequency]||r.frequency)+'</td>'+
+      '<td>'+month+'</td>'+
+      '<td><span class="ct-status ct-s-'+r.status+'">'+(CT_STATUS_LABELS[r.status]||r.status)+'</span></td>'+
+      '<td>'+paid+'</td>'+
+      '<td class="ct-actions"><button onclick="ctEdit(\''+r.id+'\')">EDIT</button></td>'+
+    '</tr>';
+  }).join('');
+}
+
+function calcCostSummary(monthRows,allRows){
+  var prev=0,paid=0;
+  monthRows.forEach(function(r){
+    var a=parseFloat(r.amount)||0;
+    if(r.status!=='abbandonato')prev+=a;
+    if(r.status==='pagato')paid+=a;
+  });
+  document.getElementById('ct-total-prev').textContent='€'+prev.toFixed(2);
+  document.getElementById('ct-total-paid').textContent='€'+paid.toFixed(2);
+  // Annual estimate: sum all monthly + annuals prorated
+  var yearTotal=0;
+  allRows.forEach(function(r){
+    var a=parseFloat(r.amount)||0;
+    if(r.status==='abbandonato')return;
+    if(r.frequency==='mensile')yearTotal+=a;
+    else if(r.frequency==='annuale')yearTotal+=a/12;
+    else yearTotal+=a/12;
+  });
+  // Use unique months count to get avg monthly, then x12
+  var months={};allRows.forEach(function(r){if(r.status!=='abbandonato')months[r.ref_month]=true;});
+  var nMonths=Object.keys(months).length||1;
+  var totalAll=0;allRows.forEach(function(r){if(r.status!=='abbandonato')totalAll+=parseFloat(r.amount)||0;});
+  var annualEst=(totalAll/nMonths)*12;
+  document.getElementById('ct-total-year').textContent='€'+annualEst.toFixed(2);
+}
+
+function ctOpenModal(editData){
+  document.getElementById('ct-edit-id').value='';
+  document.getElementById('ct-name').value='';
+  document.getElementById('ct-category').value='fisso';
+  document.getElementById('ct-amount').value='';
+  document.getElementById('ct-frequency').value='mensile';
+  document.getElementById('ct-ref-month').value=document.getElementById('ct-month-filter').value;
+  document.getElementById('ct-status').value='da_pagare';
+  document.getElementById('ct-paid-date').value='';
+  document.getElementById('ct-notes').value='';
+  document.getElementById('ct-del-btn').style.display='none';
+  document.getElementById('ct-modal-title').textContent='Aggiungi costo';
+  if(editData){
+    document.getElementById('ct-edit-id').value=editData.id;
+    document.getElementById('ct-name').value=editData.name||'';
+    document.getElementById('ct-category').value=editData.category||'fisso';
+    document.getElementById('ct-amount').value=editData.amount||'';
+    document.getElementById('ct-frequency').value=editData.frequency||'mensile';
+    document.getElementById('ct-ref-month').value=editData.ref_month?editData.ref_month.substring(0,7):'';
+    document.getElementById('ct-status').value=editData.status||'da_pagare';
+    document.getElementById('ct-paid-date').value=editData.paid_date||'';
+    document.getElementById('ct-notes').value=editData.notes||'';
+    document.getElementById('ct-del-btn').style.display='';
+    document.getElementById('ct-modal-title').textContent='Modifica costo';
+  }
+  document.getElementById('ct-modal-bg').classList.add('active');
+}
+
+function ctCloseModal(){document.getElementById('ct-modal-bg').classList.remove('active');}
+
+async function ctEdit(id){
+  var s=getSession();if(!s)return;
+  try{
+    var rows=await sbGet('cost_tracker?id=eq.'+id,s.access_token);
+    if(rows&&rows.length)ctOpenModal(rows[0]);
+  }catch(e){console.error('CT edit load:',e);}
+}
+
+async function ctSave(){
+  var s=getSession();if(!s)return;
+  var id=document.getElementById('ct-edit-id').value;
+  var refMonth=document.getElementById('ct-ref-month').value;
+  var data={
+    name:document.getElementById('ct-name').value.trim(),
+    category:document.getElementById('ct-category').value,
+    amount:parseFloat(document.getElementById('ct-amount').value)||0,
+    frequency:document.getElementById('ct-frequency').value,
+    ref_month:refMonth?refMonth+'-01':null,
+    status:document.getElementById('ct-status').value,
+    paid_date:document.getElementById('ct-paid-date').value||null,
+    notes:document.getElementById('ct-notes').value.trim()||null,
+    updated_at:new Date().toISOString()
+  };
+  if(!data.name){alert('Inserisci un nome');return;}
+  try{
+    if(id){
+      await sbPatch('cost_tracker?id=eq.'+id,data,s.access_token);
+    }else{
+      // POST with auth token for RLS
+      var res=await fetch(SB_URL+'/rest/v1/cost_tracker',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
+      if(!res.ok)throw new Error('POST failed: '+res.status);
+    }
+    ctCloseModal();
+    loadCostTracker();
+  }catch(e){console.error('CT save error:',e);alert('Errore salvataggio: '+e.message);}
+}
+
+async function ctDelete(){
+  if(!confirm('Eliminare questo costo?'))return;
+  var s=getSession();if(!s)return;
+  var id=document.getElementById('ct-edit-id').value;
+  if(!id)return;
+  try{
+    await sbDel('cost_tracker?id=eq.'+id,s.access_token);
+    ctCloseModal();
+    loadCostTracker();
+  }catch(e){console.error('CT delete error:',e);alert('Errore eliminazione: '+e.message);}
+}
+
+// ── Roadmap Detail ──
+var RD_PHASES={
+  alpha:{
+    tag:'Alpha',active:true,
+    title_it:'Fase Alpha — Alpha Brave',
+    title_en:'Alpha Phase — Alpha Brave',
+    desc_it:'La prima fase di AIROOBI. Sei tra i primi 1.000 utenti a testare la piattaforma. Ogni azione che fai genera ARIA reali. Chi partecipa in Alpha accumula di più e ottiene vantaggi permanenti su tutte le fasi successive.',
+    desc_en:'The first phase of AIROOBI. You are among the first 1,000 users to test the platform. Every action you take generates real ARIA. Alpha participants accumulate more and get permanent advantages in all subsequent phases.',
+    features_it:['Guadagna ARIA con check-in, video e referral','Badge Fondatore NFT gratuito per i primi 1.000','Accesso prioritario ai primi airdrop','Moltiplicatori ARIA più alti di qualsiasi tier futuro','Partecipazione alla governance community'],
+    features_en:['Earn ARIA through check-ins, videos and referrals','Free Founder NFT Badge for the first 1,000','Priority access to first airdrops','Highest ARIA multipliers of any future tier','Community governance participation'],
+    showStats:true
+  },
+  beta:{
+    tag:'Beta',active:false,
+    title_it:'Fase Beta — Community Bootstrap',
+    title_en:'Beta Phase — Community Bootstrap',
+    desc_it:'DApp navigabile con dati simulati. Primi airdrop di test. Community building e programma referral attivo. Target: 5.000 utenti.',
+    desc_en:'Navigable DApp with simulated data. First test airdrops. Community building and active referral program. Target: 5,000 users.',
+    features_it:['Marketplace con oggetti simulati','Primi airdrop di test (no valore reale)','Sistema referral potenziato','Community voting sulle categorie','NFT Reveal Event per i primi supporter'],
+    features_en:['Marketplace with simulated objects','First test airdrops (no real value)','Enhanced referral system','Community voting on categories','NFT Reveal Event for early supporters'],
+    showStats:false
+  },
+  preprod:{
+    tag:'Pre-Prod',active:false,
+    title_it:'Fase Pre-Produzione',
+    title_en:'Pre-Production Phase',
+    desc_it:'Test reali con community ristretta. Integrazione pagamenti, verifica identità, stress test del sistema. Tutto viene validato prima del lancio pubblico.',
+    desc_en:'Real testing with restricted community. Payment integration, identity verification, system stress testing. Everything is validated before public launch.',
+    features_it:['KYC e verifica identità','Integrazione pagamenti reali','Smart contract su Kaspa testnet','Stress test con airdrop reali limitati','Audit sicurezza completo'],
+    features_en:['KYC and identity verification','Real payment integration','Smart contracts on Kaspa testnet','Stress testing with limited real airdrops','Complete security audit'],
+    showStats:false
+  },
+  mainnet:{
+    tag:'Mainnet',active:false,
+    title_it:'Mainnet — Lancio Reale',
+    title_en:'Mainnet — Real Launch',
+    desc_it:'Blockchain live su Kaspa. Primo airdrop con oggetto reale. Tessere, Fondo Comune, pagamenti — tutto operativo. Target: 15.000+ utenti.',
+    desc_en:'Live blockchain on Kaspa. First airdrop with a real object. Cards, Common Fund, payments — all operational. Target: 15,000+ users.',
+    features_it:['Smart contract KRC-20 on-chain','Primo airdrop con oggetto fisico reale','Tessere Rendimento convertibili in KAS','Fondo Comune trasparente e verificabile','Marketplace aperto a venditori P2P e business'],
+    features_en:['KRC-20 on-chain smart contracts','First airdrop with a real physical object','Yield Cards convertible to KAS','Transparent and verifiable Common Fund','Marketplace open to P2P and business sellers'],
+    showStats:false
+  }
+};
+
+async function openRoadmapDetail(phaseKey){
+  var phase=RD_PHASES[phaseKey];if(!phase)return;
+  track('roadmap_detail_viewed',{phase:phaseKey});
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var isIt=lang==='it';
+  var html='';
+  html+='<span class="rd-phase-tag'+(phase.active?' rd-active':'')+'">'+phase.tag+'</span>';
+  html+='<h1>'+(isIt?phase.title_it:phase.title_en)+'</h1>';
+  html+='<p class="rd-desc">'+(isIt?phase.desc_it:phase.desc_en)+'</p>';
+
+  if(phase.showStats){
+    html+='<div class="rd-stats">';
+    html+='<div class="rd-stat"><div class="rd-stat-val" id="rd-stat-users">—</div><div class="rd-stat-label">'+(isIt?'Utenti registrati':'Registered users')+'</div></div>';
+    html+='<div class="rd-stat"><div class="rd-stat-val" id="rd-stat-waitlist">—</div><div class="rd-stat-label">'+(isIt?'Waitlist':'Waitlist')+'</div></div>';
+    html+='<div class="rd-stat"><div class="rd-stat-val" id="rd-stat-target">1,000</div><div class="rd-stat-label">'+(isIt?'Target Alpha Brave':'Alpha Brave target')+'</div></div>';
+    html+='<div class="rd-stat"><div class="rd-stat-val" id="rd-stat-aria">—</div><div class="rd-stat-label">'+(isIt?'ARIA distribuiti':'ARIA distributed')+'</div></div>';
+    html+='</div>';
+  }else{
+    html+='<div class="rd-coming"><h3>'+(isIt?'Prossimamente':'Coming Soon')+'</h3>';
+    html+='<p>'+(isIt?'Questa fase non è ancora attiva. Registrati per essere tra i primi a sapere quando verrà lanciata.':'This phase is not yet active. Sign up to be among the first to know when it launches.')+'</p></div>';
+  }
+
+  var feats=isIt?phase.features_it:phase.features_en;
+  html+='<div class="rd-features"><h3>'+(isIt?'Cosa include':'What\'s included')+'</h3><ul>';
+  feats.forEach(function(f){html+='<li>'+f+'</li>';});
+  html+='</ul></div>';
+
+  // Ads banner
+  html+='<div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--gray-700)">';
+  html+='<iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>';
+  html+='</div>';
+
+  document.getElementById('rd-content').innerHTML=html;
+  document.getElementById('rd-overlay').classList.add('active');
+  document.body.style.overflow='hidden';
+
+  // Load live stats for Alpha
+  if(phase.showStats){
+    try{
+      var s=getSession();
+      var token=s?s.access_token:SB_KEY;
+      var users=await sbGet('profiles?select=id',token);
+      var wl=await sbGet('waitlist?select=id',token);
+      var pts=await sbGet('points_ledger?select=amount',token);
+      var totalAria=pts?pts.reduce(function(a,b){return a+(b.amount||0)},0):0;
+      var ue=document.getElementById('rd-stat-users');if(ue)ue.textContent=users?users.length:0;
+      var we=document.getElementById('rd-stat-waitlist');if(we)we.textContent=wl?wl.length:0;
+      var ae=document.getElementById('rd-stat-aria');if(ae)ae.textContent=totalAria.toLocaleString();
+    }catch(e){console.error('RD stats error:',e);}
+  }
+}
+
+function closeRoadmapDetail(){
+  document.getElementById('rd-overlay').classList.remove('active');
+  document.body.style.overflow='';
 }
 
 // Show admin menu item only for admin user
@@ -2799,8 +3188,11 @@ async function loadReferralHistory(){
 </div>
 </div>
 
-<!-- ═══ AUTH MODAL ═══ -->
+<!-- ═══ AUTH PAGES ═══ -->
 <div class="auth-overlay" id="auth-overlay">
+<div class="auth-logo-wrap">
+  <img src="/public/images/Logo_long_airoobi_transparent.png" alt="AIROOBI">
+</div>
 <div class="auth-box">
   <button class="auth-close" onclick="closeAuth()">&times;</button>
   <div id="auth-signup">
@@ -2846,6 +3238,20 @@ async function loadReferralHistory(){
     <p class="auth-toggle"><span class="it">Non hai un account?</span><span class="en">Don't have an account?</span> <a onclick="showSignup()"><span class="it">Registrati</span><span class="en">Sign Up</span></a></p>
   </div>
 </div>
+<!-- A-ADS banner 728x90 desktop -->
+<div class="auth-ad-slot">
+  <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+</div>
+<!-- A-ADS banner 320x50 mobile -->
+<div class="auth-ad-slot-mobile">
+  <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=320x50" style="width:320px;height:50px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+</div>
+<!-- TODO: AdSense — attivare quando approvato
+<div class="auth-ad-slot">
+  <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-XXXXXXX" data-ad-slot="YYYYYYY"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
+-->
 </div>
 
 <!-- ═══ EMAIL CONFIRM OVERLAY ═══ -->
@@ -2987,6 +3393,10 @@ async function loadReferralHistory(){
       <button class="delete-account-trigger" onclick="openDeleteModal()">
         <span class="it">Elimina il mio account</span><span class="en">Delete my account</span>
       </button>
+    </div>
+    <!-- ADS: tab overview -->
+    <div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--gray-700)">
+      <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
     </div>
   </div>
 
@@ -3171,21 +3581,19 @@ async function loadReferralHistory(){
           <div style="font-size:13px;color:var(--gray-400);line-height:1.8">
             <span class="it">
               AIROOBI ha tre valute che lavorano insieme:<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--white)">ARIA</strong> — La stable coin che guadagni con le azioni quotidiane. Sono la tua ricompensa per testare e far crescere AIROOBI.<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — La valuta di AIROOBI. Con gli ARIA compri i <strong style="color:var(--white)">blocchi</strong>, cioè le quote di partecipazione a un oggetto.<br><br>
+              <span style="display:inline-block;width:10px;height:10px;background:var(--aria);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--aria)">ARIA</strong> — La valuta di AIROOBI. La guadagni gratis con azioni quotidiane (check-in, video, referral) e la usi per comprare i <strong style="color:var(--white)">blocchi</strong>, cioè le quote di partecipazione agli airdrop.<br><br>
               <span style="font-family:var(--font-h);font-size:13px;color:var(--gold);font-weight:700;letter-spacing:-1px;vertical-align:middle">Oo</span> <strong style="color:var(--gold)">TESSERA RENDIMENTO</strong> — Il tuo saldo garantito su AIROOBI. Non si compra: si ottiene partecipando. Ogni tier ne riceve almeno una. Il saldo cresce con il Fondo Comune.<br><br>
               <strong style="color:var(--gold)">Come si collega tutto:</strong><br>
-              Punti → crediti → partecipazione agli airdrop → Tessera Rendimento<br>
+              ARIA → blocchi → partecipazione agli airdrop → Tessera Rendimento<br>
               Tessera → rimborsabile in qualsiasi momento<br><br>
               Gli Alpha Brave accumulano ARIA alle <strong style="color:var(--gold)">condizioni migliori che esisteranno mai</strong>. Ogni tier successivo avrà moltiplicatori più bassi.
             </span>
             <span class="en">
               AIROOBI has three currencies that work together:<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--gold);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--white)">ARIA</strong> — The stable coin you earn through daily actions. They are your reward for testing and growing AIROOBI.<br><br>
-              <span style="display:inline-block;width:10px;height:10px;background:var(--white);border:1.5px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle"></span> <strong style="color:var(--gold)">ARIA</strong> — AIROOBI's currency. With ARIA you buy <strong style="color:var(--white)">blocks</strong>, i.e. participation shares in an object. With a Tessera Rendimento NFT your ARIA convert to KAS (Kaspa).<br><br>
+              <span style="display:inline-block;width:10px;height:10px;background:var(--aria);border-radius:50%;vertical-align:middle"></span> <strong style="color:var(--aria)">ARIA</strong> — AIROOBI's currency. Earn it free through daily actions (check-ins, videos, referrals) and use it to buy <strong style="color:var(--white)">blocks</strong>, i.e. participation shares in airdrops.<br><br>
               <span style="font-family:var(--font-h);font-size:13px;color:var(--gold);font-weight:700;letter-spacing:-1px;vertical-align:middle">Oo</span> <strong style="color:var(--gold)">YIELD CARD</strong> — Your guaranteed balance on AIROOBI. You can't buy it: you earn it by participating. Each tier receives at least one. Balance grows with the Common Fund.<br><br>
               <strong style="color:var(--gold)">How it all connects:</strong><br>
-              Points → credits → airdrop participation → Yield Card<br>
+              ARIA → blocks → airdrop participation → Yield Card<br>
               Card → redeemable at any time<br><br>
               Alpha Brave accumulate ARIA at the <strong style="color:var(--gold)">best conditions that will ever exist</strong>. Every subsequent tier will have lower multipliers.
             </span>
@@ -3244,6 +3652,10 @@ async function loadReferralHistory(){
         <p style="font-size:13px;color:var(--gray-400)"><span class="it">Nessuna attività ancora.</span><span class="en">No activity yet.</span></p>
       </div>
     </div>
+    <!-- ADS: tab earnings -->
+    <div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--gray-700)">
+      <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+    </div>
   </div>
 
   <!-- ═══ TAB: PORTAFOGLIO ═══ -->
@@ -3273,6 +3685,10 @@ async function loadReferralHistory(){
           <div class="wcard-amount-block">
             <div class="wcard-amount" style="color:var(--aria)" id="wcard-aria-amount">—</div>
             <div class="wcard-unit" style="color:rgba(74,158,255,.5)"><span class="it">ARIA ACCUMULATI</span><span class="en">ARIA ACCUMULATED</span></div>
+          </div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:8px;font-style:italic;line-height:1.4">
+            <span class="it">Gli ARIA sono attualmente simbolici — il Treasury si attiverà al lancio della piattaforma.</span>
+            <span class="en">ARIA are currently symbolic — the Treasury will activate at platform launch.</span>
           </div>
         </div>
         <div class="wcard-desc">
@@ -3525,6 +3941,10 @@ async function loadReferralHistory(){
       </div>
     </div>
 
+    <!-- ADS: tab tessere -->
+    <div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--gray-700)">
+      <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+    </div>
   </div><!-- /tab-tessere -->
 
     <!-- ═══ TAB: REFERRAL ═══ -->
@@ -3574,6 +3994,10 @@ async function loadReferralHistory(){
         <p style="font-size:13px;color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></p>
       </div>
     </div>
+    <!-- ADS: tab referral -->
+    <div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--gray-700)">
+      <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+    </div>
   </div>
 </div>
 </div>
@@ -3582,112 +4006,70 @@ async function loadReferralHistory(){
 <!-- ═══ INVESTOR PAGE ═══ -->
 <div class="investor-overlay" id="investor-overlay">
 <div class="investor-nav">
-  <img src="" id="investor-logo" alt="AIROOBI" style="height:32px">
-  <button class="lang-toggle" onclick="toggleLang()" style="color:var(--black);border-color:#ccc;margin-right:12px" id="inv-lang-btn">EN</button>
-  <button class="investor-close" onclick="closeInvestor()">Close</button>
+  <img src="/public/images/Logo_long_airoobi_transparent.png" id="investor-logo" alt="AIROOBI">
+  <div style="display:flex;gap:12px;align-items:center">
+    <button class="lang-toggle" onclick="toggleLang()" style="color:var(--gray-400);border-color:var(--gray-700)" id="inv-lang-btn">EN</button>
+    <button class="investor-close" onclick="closeInvestor()">Close</button>
+  </div>
 </div>
 <div class="investor-content">
-  <h1><span class="it">AIROOBI<br><em>Opportunità di Investimento</em></span><span class="en">AIROOBI<br><em>Investment Opportunity</em></span></h1>
-  <p style="font-size:18px;color:#666;margin-bottom:48px;"><span class="it">Un nuovo modello di commercio costruito su trasparenza, partecipazione e valore garantito.</span><span class="en">A new commerce model built on transparency, participation, and guaranteed value.</span></p>
+  <h1><span class="it">AIROOBI<br><em>Un nuovo modello di commercio.</em></span><span class="en">AIROOBI<br><em>A new commerce model.</em></span></h1>
+  <p style="font-size:18px;color:var(--gray-400);margin-bottom:48px"><span class="it">Fairness. Trasparenza. Blockchain. Accessibilità per tutti.</span><span class="en">Fairness. Transparency. Blockchain. Accessible to everyone.</span></p>
+
+  <h2>Vision</h2>
+  <p><span class="it">Diventare il marketplace #1 al mondo per airdrop di oggetti fisici reali. Un ecosistema dove ogni partecipante riceve valore — non promesse.</span><span class="en">Become the world's #1 marketplace for real physical object airdrops. An ecosystem where every participant receives value — not promises.</span></p>
 
   <h2><span class="it">Il Problema</span><span class="en">The Problem</span></h2>
-  <p><span class="it">Il commercio online è rotto. Le aste favoriscono chi ha più soldi. Le lotterie sono puro azzardo. I marketplace sono saturi. Non esiste una piattaforma dove le persone normali possano accedere a oggetti premium con un meccanismo equo e trasparente.</span><span class="en">Online commerce is broken. Auctions favor the wealthy. Lotteries are pure gambling. Marketplaces are saturated. There is no platform where ordinary people can access premium objects with a fair, transparent mechanism.</span></p>
+  <p><span class="it">Il commercio online favorisce chi ha più risorse. Le aste premiano il portafoglio, non il merito. I marketplace sono saturi e impersonali. Non esiste una piattaforma dove le persone normali possano accedere a oggetti premium con un meccanismo <strong>equo, trasparente e verificabile</strong>.</span><span class="en">Online commerce favors those with more resources. Auctions reward the wallet, not merit. Marketplaces are saturated and impersonal. There is no platform where ordinary people can access premium objects through a <strong>fair, transparent and verifiable</strong> mechanism.</span></p>
 
-  <h2><span class="it">La Soluzione</span><span class="en">The Solution</span></h2>
-  <p><span class="it">AIROOBI è una <strong>piattaforma di commercio equo</strong> per oggetti fisici reali. Gli utenti accumulano punti attraverso l'engagement (check-in giornalieri, video, referral) e acquisti. Chi contribuisce di più riceve l'oggetto. <strong>Tutti gli altri ricevono una Tessera Rendimento con saldo garantito</strong>, sostenuto da un fondo trasparente.</span><span class="en">AIROOBI is a <strong>fair commerce platform</strong> for real physical objects. Users accumulate ARIA through engagement (daily check-ins, video views, referrals) and purchases. The top contributor receives the object. <strong>Everyone else receives a Yield Card with a guaranteed balance</strong>, backed by a transparent fund.</span></p>
-  
+  <h2><span class="it">Il Meccanismo</span><span class="en">The Mechanism</span></h2>
+  <p><span class="it">AIROOBI è una piattaforma di <strong>commercio equo</strong> per oggetti fisici reali. Gli utenti partecipano con engagement e acquisti. Chi contribuisce di più realizza il proprio desiderio. <strong>Tutti gli altri ricevono un NFT certificato con valore garantito</strong>, sostenuto da un fondo trasparente on-chain.</span><span class="en">AIROOBI is a <strong>fair commerce platform</strong> for real physical objects. Users participate through engagement and purchases. The top contributor makes their dream real. <strong>Everyone else receives a certified NFT with guaranteed value</strong>, backed by a transparent on-chain fund.</span></p>
   <div class="investor-highlight">
-    <span class="it"><strong>Innovazione chiave:</strong> A differenza di lotterie o aste, AIROOBI garantisce che ogni partecipante riceva valore in cambio. Il fondo di garanzia è trasparente e verificabile. Non è azzardo — è un sistema di commercio basato sul merito con protezione del consumatore integrata.</span><span class="en"><strong>Key innovation:</strong> Unlike lotteries or auctions, AIROOBI guarantees that every participant receives value back. The guarantee fund is transparent and verifiable. This is not gambling — it is a merit-based commerce system with built-in consumer protection.</span>
+    <span class="it"><strong>Nessuno perde.</strong> Ogni partecipante riceve valore reale e verificabile. Non è azzardo. Non è un'asta. È un sistema di commercio basato sul merito con protezione del consumatore integrata nella blockchain.</span><span class="en"><strong>Nobody loses.</strong> Every participant receives real, verifiable value. It's not gambling. It's not an auction. It's a merit-based commerce system with consumer protection built into the blockchain.</span>
   </div>
 
-  <h2><span class="it">Opportunità di Mercato</span><span class="en">Market Opportunity</span></h2>
-  <p><span class="it">AIROOBI opera all'intersezione di tre mercati enormi:</span><span class="en">AIROOBI operates at the intersection of three massive markets:</span></p>
-  <div class="investor-grid">
-    <div class="investor-metric">
-      <div class="investor-metric-val">$200B+</div>
-      <div class="investor-metric-label">Global resale market (projected)</div>
-    </div>
-    <div class="investor-metric">
-      <div class="investor-metric-val">$65B</div>
-      <div class="investor-metric-label">Online lottery & sweepstakes</div>
-    </div>
-    <div class="investor-metric">
-      <div class="investor-metric-val">Blue Ocean</div>
-      <div class="investor-metric-label">No direct competitors in this model</div>
-    </div>
-    <div class="investor-metric">
-      <div class="investor-metric-val">3-Sided</div>
-      <div class="investor-metric-label">Consumers + Sellers + Brands</div>
-    </div>
-  </div>
-
-  <h2><span class="it">Modello di Business</span><span class="en">Business Model</span></h2>
-  <p><span class="it">Quattro flussi di ricavi dal Giorno 1:</span><span class="en">Four revenue streams from Day 1:</span></p>
-  <div class="investor-highlight">
-    <strong>1. Platform fees</strong> — 0.5% + 1% on each transaction<br>
-    <strong>2. Video advertising</strong> — Mandatory video views before key actions (Google IMA SDK)<br>
-    <strong>3. Corporate campaigns</strong> — Brands use AIROOBI for product launches and engagement<br>
-    <strong>4. Community contribution</strong> — 1% to social impact fund
-  </div>
-
-  <h2><span class="it">Tecnologia</span><span class="en">Technology</span></h2>
-  <p><span class="it">Costruito su <strong>blockchain Kaspa</strong> — la blockchain Proof-of-Work più veloce al mondo. Conferme sotto il secondo, commissioni trascurabili, decentralizzazione reale. Il fondo di garanzia è interamente on-chain, trasparente e immutabile.</span><span class="en">Built on <strong>Kaspa blockchain</strong> — the fastest Proof-of-Work blockchain in the world. Sub-second confirmations, negligible fees, real decentralization. The guarantee fund is fully on-chain, transparent and immutable.</span></p>
-
-  <h2><span class="it">Stato Attuale</span><span class="en">Current Status</span></h2>
+  <h2><span class="it">Trazione</span><span class="en">Traction</span></h2>
   <div class="investor-grid">
     <div class="investor-metric">
       <div class="investor-metric-val">Alpha</div>
-      <div class="investor-metric-label">Current phase — waitlist + early community</div>
+      <div class="investor-metric-label"><span class="it">Fase corrente</span><span class="en">Current phase</span></div>
     </div>
     <div class="investor-metric">
       <div class="investor-metric-val" id="inv-waitlist">—</div>
-      <div class="investor-metric-label">People on the waitlist</div>
+      <div class="investor-metric-label"><span class="it">Community early adopter</span><span class="en">Early adopter community</span></div>
     </div>
     <div class="investor-metric">
-      <div class="investor-metric-val">€12/yr</div>
-      <div class="investor-metric-label">Current operating cost (fully bootstrapped)</div>
+      <div class="investor-metric-val">Kaspa</div>
+      <div class="investor-metric-label"><span class="it">Blockchain PoW più veloce al mondo</span><span class="en">World's fastest PoW blockchain</span></div>
     </div>
     <div class="investor-metric">
-      <div class="investor-metric-val">1 FTE</div>
-      <div class="investor-metric-label">Founder + AI-assisted development</div>
+      <div class="investor-metric-val">Blue Ocean</div>
+      <div class="investor-metric-label"><span class="it">Zero competitor diretti</span><span class="en">Zero direct competitors</span></div>
     </div>
   </div>
 
-  <h2><span class="it">Roadmap</span><span class="en">Roadmap</span></h2>
-  <div class="investor-highlight">
-    <strong>Alpha (now)</strong> — Landing page, waitlist, points system, community building, ad revenue<br><br>
-    <strong>Beta (Q2-Q3 2026)</strong> — Full DApp mockup, simulated airdrops, 2,500 users target<br><br>
-    <strong>Mainnet (Q4 2026)</strong> — Kaspa integration, real NFTs, first real airdrop, payment processing<br><br>
-    <strong>Scale (2027)</strong> — 16 product categories, corporate campaigns, EU expansion
+  <!-- Waitlist growth chart -->
+  <div class="investor-chart">
+    <h3 style="font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white);margin-bottom:16px"><span class="it">Crescita Community</span><span class="en">Community Growth</span></h3>
+    <canvas id="inv-chart-growth" height="240"></canvas>
   </div>
 
-  <h2><span class="it">Cosa Cerchiamo</span><span class="en">What We're Looking For</span></h2>
-  <p><span class="it">AIROOBI cerca <strong>partner strategici e investitori early-stage</strong> che credano nel costruire un commercio equo e trasparente. Siamo aperti a:</span><span class="en">AIROOBI is seeking <strong>strategic partners and early-stage investors</strong> who believe in building fair, transparent commerce. We are open to:</span></p>
-  <div class="investor-highlight">
-    • Pre-seed / Seed investment (€100K-€500K range)<br>
-    • Strategic advisory (blockchain, legal, marketing, marketplace ops)<br>
-    • Corporate partnerships (brands interested in the platform)<br>
-    • C-level talent (CTO, CMO, Head of Legal)
+  <h2>Roadmap</h2>
+  <!-- Roadmap phases chart -->
+  <div class="investor-chart">
+    <canvas id="inv-chart-roadmap" height="200"></canvas>
   </div>
 
-  <h2><span class="it">Contatti</span><span class="en">Contact</span></h2>
-  <p><span class="it">Interessato? Ci farebbe piacere sentirti.</span><span class="en">Interested? We'd love to hear from you.</span></p>
-  
-  <div class="investor-form" id="investor-form">
-    <h3><span class="it">Scrivici</span><span class="en">Get in touch</span></h3>
-    <label>Name</label>
-    <input type="text" id="inv-name" placeholder="Your name">
-    <label>Email</label>
-    <input type="email" id="inv-email" placeholder="your@email.com">
-    <label>Organization</label>
-    <input type="text" id="inv-org" placeholder="Company or fund (optional)">
-    <label>Message</label>
-    <textarea id="inv-msg" placeholder="Tell us about your interest in AIROOBI..."></textarea>
-    <button onclick="sendInvestorForm()">Send Message</button>
-    <div class="investor-form-msg" id="inv-form-msg"></div>
+  <h2><span class="it">Tecnologia</span><span class="en">Technology</span></h2>
+  <p><span class="it">Costruito su <strong>Kaspa</strong> — la blockchain Proof-of-Work più veloce al mondo. Conferme sotto il secondo, commissioni trascurabili, decentralizzazione reale. NFT certificati on-chain. Fondo di garanzia pubblico e verificabile in tempo reale.</span><span class="en">Built on <strong>Kaspa</strong> — the world's fastest Proof-of-Work blockchain. Sub-second confirmations, negligible fees, real decentralization. On-chain certified NFTs. Guarantee fund publicly verifiable in real-time.</span></p>
+
+  <div class="investor-cta-box">
+    <h3><span class="it">Vuoi saperne di più?</span><span class="en">Want to know more?</span></h3>
+    <p><span class="it">I dettagli si discutono di persona. Scriveteci per fissare un incontro.</span><span class="en">The details are discussed in person. Contact us to schedule a meeting.</span></p>
+    <a href="mailto:investor@airoobi.com">CONTATTACI</a>
   </div>
 
-  <p style="font-size:12px;color:#aaa;margin-top:48px;text-align:center;">© 2026 AIROOBI — Dream Robe E-Commerce · <a href="/cdn-cgi/l/email-protection#3b52554d5e484f54497b5a52495454595215585456" style="color:var(--gold)"><span class="__cf_email__" data-cfemail="d7beb9a1b2a4a3b8a597b6bea5b8b8b5bef9b4b8ba">[email&#160;protected]</span></a></p>
+  <p style="font-size:12px;color:var(--gray-400);margin-top:48px;text-align:center">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce</p>
 </div>
 </div>
 
@@ -3810,35 +4192,80 @@ async function loadReferralHistory(){
     <p class="admin-note" style="margin-top:12px">Logica: <strong>Valore NFT = Treasury ÷ NFT Minati</strong> · <strong>Market Cap = Valore NFT × Circolante</strong> · <strong>Fully Diluted = Valore NFT × Max Supply</strong></p>
   </div>
 
-  <!-- COSTS -->
+  <!-- COST TRACKER -->
   <div class="admin-section">
-    <h2>Costi operativi</h2>
-    <table class="admin-table">
-      <thead>
-        <tr><th>Voce</th><th>Costo</th><th>Frequenza</th><th>Stato</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Google Gemini (prototipo/feasibility/no-go)</td><td>€40.00</td><td>2 mesi (Apr-Mag 2025)</td><td><span class="admin-badge" style="background:rgba(255,255,255,.05);color:var(--gray-400);border:1px solid var(--gray-700)">Chiuso</span></td></tr>
-        <tr><td>Claude Max 20x</td><td>€200.00</td><td>Mensile</td><td><span class="admin-badge admin-badge-green">Attivo</span></td></tr>
-        <tr><td>Claude API (ARIA)</td><td>€45.00</td><td>Mensile</td><td><span class="admin-badge admin-badge-green">Attivo</span></td></tr>
-        <tr><td>Raspberry Pi 5 (elettricità)</td><td>€1.00</td><td>Mensile</td><td><span class="admin-badge admin-badge-green">Attivo</span></td></tr>
-        <tr><td>Cloudflare (2 domini)</td><td>€24.00</td><td>Annuale</td><td><span class="admin-badge admin-badge-green">Attivo</span></td></tr>
-        <tr><td>Supabase</td><td>€0.00</td><td>Free tier</td><td><span class="admin-badge admin-badge-green">Attivo</span></td></tr>
-        <tr><td>Vercel</td><td>€0.00</td><td>Hobby</td><td><span class="admin-badge admin-badge-green">Attivo</span></td></tr>
-        <tr><td>A-Ads</td><td>€0.00</td><td>Revenue share</td><td><span class="admin-badge admin-badge-green">Attivo</span></td></tr>
-        <tr><td>Google AdSense</td><td>€0.00</td><td>Revenue share</td><td><span class="admin-badge admin-badge-gold">In review</span></td></tr>
-        <tr><td>Google Ad Manager</td><td>€0.00</td><td>Gratuito</td><td><span class="admin-badge admin-badge-gold">Pending AdSense</span></td></tr>
-        <tr><td>Trade Republic (Treasury)</td><td>€0.00</td><td>Gratuito</td><td><span class="admin-badge admin-badge-gold">Da attivare</span></td></tr>
-      </tbody>
-    </table>
-    <div class="admin-grid" style="margin-top:16px">
-      <div class="admin-card">
-        <div class="admin-card-val">~€248/mo</div>
-        <div class="admin-card-label">Costo mensile totale</div>
+    <h2>Cost Tracker</h2>
+    <div class="admin-grid" style="margin-bottom:20px">
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)">
+        <div class="admin-card-val" id="ct-total-prev" style="color:var(--gold)">€0.00</div>
+        <div class="admin-card-label">Previsto (mese)</div>
+      </div>
+      <div class="admin-card" style="border-color:rgba(73,181,131,.3)">
+        <div class="admin-card-val" id="ct-total-paid" style="color:#49b583">€0.00</div>
+        <div class="admin-card-label">Pagato (mese)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val">~€2,976/yr</div>
-        <div class="admin-card-label">Costo annuale totale</div>
+        <div class="admin-card-val" id="ct-total-year">€0.00</div>
+        <div class="admin-card-label">Totale annuale stimato</div>
+      </div>
+    </div>
+    <div class="ct-toolbar">
+      <input type="month" id="ct-month-filter" onchange="loadCostTracker()">
+      <button onclick="ctOpenModal()">+ AGGIUNGI</button>
+    </div>
+    <table class="admin-table" id="ct-table">
+      <thead>
+        <tr><th>Nome</th><th>Categoria</th><th>Importo</th><th>Frequenza</th><th>Mese</th><th>Status</th><th>Pagato il</th><th></th></tr>
+      </thead>
+      <tbody id="ct-body">
+        <tr><td colspan="8" style="color:var(--gray-400)">Caricamento...</td></tr>
+      </tbody>
+    </table>
+    <p class="admin-note" style="margin-top:12px">I dati sono salvati in Supabase (tabella cost_tracker). Filtra per mese o aggiungi previsioni future.</p>
+  </div>
+
+  <!-- Cost Tracker Modal -->
+  <div class="ct-modal-bg" id="ct-modal-bg">
+    <div class="ct-modal">
+      <h3 id="ct-modal-title">Aggiungi costo</h3>
+      <input type="hidden" id="ct-edit-id">
+      <label>Nome costo</label>
+      <input type="text" id="ct-name" placeholder="Es. Claude Max 20x">
+      <label>Categoria</label>
+      <select id="ct-category">
+        <option value="fisso">Fisso</option>
+        <option value="variabile">Variabile</option>
+        <option value="una_tantum">Una tantum</option>
+      </select>
+      <label>Importo (€)</label>
+      <input type="number" id="ct-amount" placeholder="0.00" step="0.01" min="0">
+      <label>Frequenza</label>
+      <select id="ct-frequency">
+        <option value="mensile">Mensile</option>
+        <option value="annuale">Annuale</option>
+        <option value="una_tantum">Una tantum</option>
+      </select>
+      <label>Mese di riferimento</label>
+      <input type="month" id="ct-ref-month">
+      <label>Status pagamento</label>
+      <select id="ct-status">
+        <option value="da_pagare">Da pagare</option>
+        <option value="pagato">Pagato</option>
+        <option value="free">Versione free</option>
+        <option value="freemium">Versione freemium</option>
+        <option value="a_pagamento">Versione a pagamento</option>
+        <option value="abbandonato">Abbandonato</option>
+        <option value="in_ritardo">In ritardo</option>
+        <option value="non_pagato">Non pagato</option>
+      </select>
+      <label>Data pagamento <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(solo se pagato)</span></label>
+      <input type="date" id="ct-paid-date">
+      <label>Note <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(opzionale)</span></label>
+      <input type="text" id="ct-notes" placeholder="">
+      <div class="ct-modal-actions">
+        <button class="ct-btn-cancel" onclick="ctCloseModal()">ANNULLA</button>
+        <button class="ct-btn-del" id="ct-del-btn" style="display:none" onclick="ctDelete()">ELIMINA</button>
+        <button class="ct-btn-save" onclick="ctSave()">SALVA</button>
       </div>
     </div>
   </div>
