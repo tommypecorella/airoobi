@@ -1919,6 +1919,19 @@ async function showDashboard(session){
     if(refBy){try{await autoConfirmReferral(session.user.id,session.access_token);}catch(e){}}
   }
   
+  // Safety net: patch referred_by if missing but localStorage has it
+  if(profiles&&profiles.length>0&&!profiles[0].referred_by){
+    var pendRef2=session.user?.user_metadata?.referred_by||localStorage.getItem('airoobi_pending_ref')||null;
+    if(pendRef2){
+      try{
+        await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+session.user.id,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({referred_by:pendRef2})});
+        profiles[0].referred_by=pendRef2;
+        localStorage.removeItem('airoobi_pending_ref');
+        try{await autoConfirmReferral(session.user.id,session.access_token);}catch(e){}
+      }catch(e){}
+    }
+  }
+
   if(profiles&&profiles.length>0){
     const p=profiles[0];
     const refLink='https://airoobi.com/signup.html?ref='+p.referral_code;
@@ -2201,9 +2214,28 @@ function updateNavAuth(loggedIn, email){
       window._currentSession=s;
       updateNavAuth(true,user.email);
       updateNavCounters(s);
-      // If arriving from login/signup page, award bonuses (no auto-open dashboard)
+      // If arriving from login/signup page, ensure profile + award bonuses
       var fromAuth=document.referrer&&(document.referrer.includes('/login.html')||document.referrer.includes('/signup.html'));
       if(fromAuth){
+        // Create profile BEFORE bonuses so referred_by is set
+        try{
+          var ep=await sbGet('profiles?id=eq.'+user.id+'&select=id,referred_by',s.access_token);
+          if(!ep||ep.length===0){
+            var code=Math.random().toString(36).substring(2,10);
+            var refBy=user.user_metadata?.referred_by||localStorage.getItem('airoobi_pending_ref')||null;
+            var pd={id:user.id,email:user.email,referral_code:code};
+            if(refBy)pd.referred_by=refBy;
+            await fetch(SB_URL+'/rest/v1/profiles',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:JSON.stringify(pd)});
+            if(refBy)localStorage.removeItem('airoobi_pending_ref');
+          }else if(!ep[0].referred_by){
+            // Profile exists but referred_by missing — patch it
+            var pendRef=user.user_metadata?.referred_by||localStorage.getItem('airoobi_pending_ref')||null;
+            if(pendRef){
+              await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+user.id,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({referred_by:pendRef})});
+              localStorage.removeItem('airoobi_pending_ref');
+            }
+          }
+        }catch(e){}
         try{await awardLoginBonus(user.id,s.access_token);}catch(e){}
         try{await awardWelcomeBonus(user.id,s.access_token);}catch(e){}
         try{await autoConfirmReferral(user.id,s.access_token);}catch(e){}

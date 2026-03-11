@@ -267,9 +267,9 @@ async function doSignup(){
   if(status===200||status===201){
     await sbPost('waitlist',{email:email,lang:lang,referred_by:ref}).catch(function(){});
 
-    if(data.session){
+    if(data.session||data.access_token){
       // Auto-confirmed — save session and redirect
-      saveSession(data.session);
+      saveSession(data.session||data);
       if(ref)localStorage.setItem('airoobi_pending_ref',ref);
       track('signup_complete',{method:'auto_confirm',has_ref:!!ref,lang:lang});
       if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user.id});
@@ -281,6 +281,7 @@ async function doSignup(){
       var loginResult=await sbAuth('token?grant_type=password',{email:email,password:pw});
       if(loginResult.status===200&&loginResult.data.access_token){
         saveSession(loginResult.data);
+        if(ref)localStorage.setItem('airoobi_pending_ref',ref);
         track('signup_complete',{method:'auto_login',has_ref:!!ref,lang:lang});
         showSignupSuccess(lang);
       }else{
