@@ -3088,7 +3088,9 @@ function updateNftMetrics(){
   // Update cards
   var v1=document.getElementById('adm-treasury-val');if(v1)v1.textContent='€ '+treasury.toFixed(2);
   var v2=document.getElementById('adm-nft-minted');if(v2)v2.textContent=minted;
+  var v2b=document.getElementById('adm-nft-minted-2');if(v2b)v2b.textContent=minted;
   var v3=document.getElementById('adm-nft-value');if(v3)v3.textContent='€ '+nftValue.toFixed(2);
+  var v3b=document.getElementById('adm-nft-value-2');if(v3b)v3b.textContent='€ '+nftValue.toFixed(2);
   var v4=document.getElementById('adm-nft-marketcap');if(v4)v4.textContent='€ '+(nftValue*circulating).toFixed(2);
   var v5=document.getElementById('adm-nft-circulating');if(v5)v5.textContent=circulating+' NFT';
   var v6=document.getElementById('adm-nft-fully-diluted');if(v6)v6.textContent='€ '+(nftValue*maxSupply).toFixed(2);
@@ -4631,15 +4633,15 @@ async function loadReferralHistory(){
     <h2>Treasury</h2>
     <div class="admin-grid">
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-revenue-ads">$0.00</div>
+        <div class="admin-card-val" id="adm-revenue-ads">—</div>
         <div class="admin-card-label">Revenue Ads (A-Ads)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-revenue-adsense">$0.00</div>
+        <div class="admin-card-val" id="adm-revenue-adsense">—</div>
         <div class="admin-card-label">Revenue AdSense</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-treasury-balance">€0.00</div>
+        <div class="admin-card-val" id="adm-treasury-balance">—</div>
         <div class="admin-card-label">Treasury Balance</div>
       </div>
       <div class="admin-card">
@@ -4655,27 +4657,27 @@ async function loadReferralHistory(){
     <h2>NFT Economics</h2>
     <div class="admin-grid">
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-treasury-val">€ 0.00</div>
+        <div class="admin-card-val" id="adm-treasury-val">—</div>
         <div class="admin-card-label">Treasury (€)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-minted">0</div>
+        <div class="admin-card-val" id="adm-nft-minted">—</div>
         <div class="admin-card-label">NFT Minati</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-value">€ 0.00</div>
+        <div class="admin-card-val" id="adm-nft-value">—</div>
         <div class="admin-card-label">Valore NFT stimato</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-marketcap">€ 0.00</div>
+        <div class="admin-card-val" id="adm-nft-marketcap">—</div>
         <div class="admin-card-label">Market Cap (circolante)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-circulating">0 NFT</div>
+        <div class="admin-card-val" id="adm-nft-circulating">—</div>
         <div class="admin-card-label">Circolante</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-fully-diluted">€ 0.00</div>
+        <div class="admin-card-val" id="adm-nft-fully-diluted">—</div>
         <div class="admin-card-label">Fully Diluted (1.000 NFT)</div>
       </div>
     </div>
@@ -4713,15 +4715,15 @@ async function loadReferralHistory(){
     <h2>Cost Tracker</h2>
     <div class="admin-grid" style="margin-bottom:20px">
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)">
-        <div class="admin-card-val" id="ct-total-prev" style="color:var(--gold)">€0.00</div>
+        <div class="admin-card-val" id="ct-total-prev" style="color:var(--gold)">—</div>
         <div class="admin-card-label">Previsto (mese)</div>
       </div>
       <div class="admin-card" style="border-color:rgba(73,181,131,.3)">
-        <div class="admin-card-val" id="ct-total-paid" style="color:#49b583">€0.00</div>
+        <div class="admin-card-val" id="ct-total-paid" style="color:#49b583">—</div>
         <div class="admin-card-label">Pagato (mese)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="ct-total-year">€0.00</div>
+        <div class="admin-card-val" id="ct-total-year">—</div>
         <div class="admin-card-label">Totale annuale stimato</div>
       </div>
     </div>
@@ -4804,11 +4806,11 @@ async function loadReferralHistory(){
     <h2>NFT Tracker</h2>
     <div class="admin-grid">
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-brave-count">0</div>
+        <div class="admin-card-val" id="adm-nft-brave-count">—</div>
         <div class="admin-card-label">NFT Alpha Brave (emessi)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-earn-count">0</div>
+        <div class="admin-card-val" id="adm-nft-earn-count">—</div>
         <div class="admin-card-label">NFT EARN (emessi)</div>
       </div>
     </div>
@@ -4846,23 +4848,23 @@ async function loadReferralHistory(){
     <!-- METRICHE PRINCIPALI -->
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)">
-        <div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">€0.00</div>
+        <div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">—</div>
         <div class="admin-card-label">Treasury totale</div>
       </div>
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)">
-        <div class="admin-card-val" id="adm-nft-minted" style="color:var(--gold)">0</div>
+        <div class="admin-card-val" id="adm-nft-minted-2" style="color:var(--gold)">—</div>
         <div class="admin-card-label">NFT emessi (minati)</div>
       </div>
       <div class="admin-card" style="border:2px solid var(--gold)">
-        <div class="admin-card-val" id="adm-nft-value" style="color:var(--gold);font-size:28px">€—</div>
+        <div class="admin-card-val" id="adm-nft-value-2" style="color:var(--gold);font-size:28px">—</div>
         <div class="admin-card-label" style="color:var(--gold)">Valore probabile NFT</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-buyback">€0.00</div>
+        <div class="admin-card-val" id="adm-nft-buyback">—</div>
         <div class="admin-card-label">Buyback garantito (95%)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-nft-upside">€0.00</div>
+        <div class="admin-card-val" id="adm-nft-upside">—</div>
         <div class="admin-card-label">Upside potenziale (5%)</div>
       </div>
     </div>
@@ -4875,15 +4877,15 @@ async function loadReferralHistory(){
         <div class="admin-card-label">Prezzo ARIA (pegged)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-coin-supply">0</div>
+        <div class="admin-card-val" id="adm-coin-supply">—</div>
         <div class="admin-card-label">Circolante (ARIA)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-coin-marketcap">€0.00</div>
+        <div class="admin-card-val" id="adm-coin-marketcap">—</div>
         <div class="admin-card-label">Market Cap</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-coin-fdv">€0.00</div>
+        <div class="admin-card-val" id="adm-coin-fdv">—</div>
         <div class="admin-card-label">Fully Diluted Val. (FDV)</div>
       </div>
       <div class="admin-card">
