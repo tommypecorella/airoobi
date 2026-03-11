@@ -88,7 +88,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:none}
 .avatar-dropdown .ad-divider{height:1px;background:var(--gray-700);margin:0}
 .avatar-upload-label{display:flex;align-items:center;gap:8px;padding:10px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);cursor:pointer;transition:color .2s;border-bottom:1px solid rgba(255,255,255,.04)}
 .avatar-upload-label:hover{color:var(--gold)}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-link-btn span{display:none}.nav-link-btn{padding:8px 10px}.nav-menu a{display:none}}
+@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-link-btn span{display:none}.nav-link-btn{padding:8px 10px}.nav-menu a{display:none}.nav-avatar-wrap{display:none!important}.nav-logged-in.active{display:none!important}}
 .nav-cta{background:var(--gold);color:var(--black);padding:10px 24px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;border:none;cursor:pointer;transition:all .3s}
 .nav-cta:hover{background:var(--white)}
 
@@ -558,19 +558,28 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 
 .gold-sep{width:60px;height:1px;background:var(--gold);margin:0 auto}
 
+/* ── Mobile header actions (after logo) ── */
+.nav-mobile-actions{display:none;align-items:center;gap:8px;margin-left:auto;margin-right:8px}
+@media(max-width:768px){.nav-mobile-actions{display:flex}}
+
 /* ── Burger Menu ── */
-.burger-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:none;cursor:pointer;padding:8px;margin-left:auto}
+.burger-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:none;cursor:pointer;padding:8px}
 .burger-btn span{display:block;width:22px;height:1.5px;background:var(--white);transition:all .3s;transform-origin:center}
 .burger-btn.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
 .burger-btn.open span:nth-child(2){opacity:0;transform:scaleX(0)}
 .burger-btn.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-.mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;background:#000;border-bottom:1px solid rgba(184,150,12,.3);z-index:9998;padding:16px 0;flex-direction:column}
+.mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;bottom:0;background:#000;border-bottom:1px solid rgba(184,150,12,.3);z-index:9998;padding:16px 0;flex-direction:column;overflow-y:auto}
 .mobile-menu.open{display:flex}
-.mobile-menu a{color:var(--gray-300);text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:14px 24px;border-bottom:1px solid rgba(255,255,255,.04);transition:color .2s}
-.mobile-menu a:hover{color:var(--gold)}
+.mobile-menu a,.mobile-menu button.mm-item{color:var(--gray-300);text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:14px 24px;border-bottom:1px solid rgba(255,255,255,.04);transition:color .2s;background:none;border-left:none;border-right:none;border-top:none;width:100%;text-align:left;cursor:pointer;font-family:var(--font-b);display:block}
+.mobile-menu a:hover,.mobile-menu button.mm-item:hover{color:var(--gold)}
 .mobile-menu a[style*="gold"]{color:var(--gold)!important}
 .mobile-menu-actions{display:flex;gap:10px;padding:16px 24px}
 .mobile-menu-actions .nav-link-btn,.mobile-menu-actions .nav-cta{flex:1;justify-content:center}
+.mm-section-label{padding:16px 24px 8px;font-family:var(--font-m);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);border-bottom:none}
+.mm-sub a,.mm-sub button.mm-item{padding-left:40px;font-size:11px;letter-spacing:1.5px;color:var(--gray-400)}
+.mm-sub a:hover,.mm-sub button.mm-item:hover{color:var(--gold)}
+.mm-divider{height:1px;background:var(--gray-700);margin:8px 24px}
+.mm-section-logged{display:none}
 @media(max-width:768px){.burger-btn{display:flex}}
 
 /* ── GLOSSARY TOOLTIPS ── */
@@ -808,6 +817,11 @@ html:not([data-lang]) .video-nosee .it{display:inline}
         </div>
       </div>
     </div>
+    <!-- Mobile: lang + login after logo -->
+    <div class="nav-mobile-actions">
+      <button class="lang-toggle" onclick="toggleLang()" id="lang-btn-mobile2" style="padding:4px 8px;font-size:10px">EN</button>
+      <a href="/login.html" class="nav-link-btn" id="nav-login-btn-mobile" style="text-decoration:none;padding:6px 10px;font-size:10px"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></a>
+    </div>
     <button class="burger-btn" id="burger-btn" onclick="toggleBurger()" aria-label="Menu">
       <span></span><span></span><span></span>
     </button>
@@ -817,17 +831,38 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 
 <!-- ═══ MOBILE MENU ═══ -->
 <div class="mobile-menu" id="mobile-menu">
-  <a href="#what" onclick="closeBurger()"><span class="it">Cos'è</span><span class="en">What</span></a>
-  <a href="#how" onclick="closeBurger()"><span class="it">Utilizzo</span><span class="en">Usage</span></a>
-  <a href="#why" onclick="closeBurger()"><span class="it">Perché</span><span class="en">Why</span></a>
-  <a href="#kaspa" onclick="closeBurger()">Blockchain</a>
-  <a href="#roadmap" onclick="closeBurger()">Roadmap</a>
-  <a href="javascript:void(0)" onclick="openExplainerVideo();closeBurger();" style="color:var(--gold)"><span class="it">▶ Video</span><span class="en">▶ Video</span></a>
-  <a href="javascript:void(0)" onclick="openInvestor();closeBurger();" style="color:var(--gold)">Investor</a>
-  <div class="mobile-menu-actions">
-    <button class="lang-toggle" onclick="toggleLang();closeBurger();" id="lang-btn-mobile">EN</button>
-    <a href="/login.html" class="nav-link-btn" style="text-decoration:none"><span class="it">Accedi</span><span class="en">Login</span></a>
+  <!-- AIROOBI section -->
+  <div class="mm-section-label">AIROOBI</div>
+  <div class="mm-sub">
+    <a href="#what" onclick="closeBurger()"><span class="it">Cos'è</span><span class="en">What</span></a>
+    <a href="#how" onclick="closeBurger()"><span class="it">Utilizzo</span><span class="en">Usage</span></a>
+    <a href="#why" onclick="closeBurger()"><span class="it">Perché</span><span class="en">Why</span></a>
+    <a href="#kaspa" onclick="closeBurger()">Blockchain</a>
+    <a href="#roadmap" onclick="closeBurger()">Roadmap</a>
+    <a href="javascript:void(0)" onclick="openExplainerVideo();closeBurger();" style="color:var(--gold)"><span class="it">▶ Video</span><span class="en">▶ Video</span></a>
+    <a href="javascript:void(0)" onclick="openInvestor();closeBurger();" style="color:var(--gold)">Investor</a>
+  </div>
+  <!-- PROFILO section (logged in only) -->
+  <div class="mm-section-logged" id="mm-logged-section">
+    <div class="mm-divider"></div>
+    <div class="mm-section-label"><span class="it">Profilo</span><span class="en">Profile</span></div>
+    <div class="mm-sub">
+      <a href="javascript:void(0)" onclick="openDashTab('overview');closeBurger()"><span class="it">Profilo</span><span class="en">Profile</span></a>
+      <a href="javascript:void(0)" onclick="openDashTab('earnings');closeBurger()"><span class="it">Guadagni</span><span class="en">Earnings</span></a>
+      <a href="javascript:void(0)" onclick="openDashTab('tessere');closeBurger()"><span class="it">Portafoglio</span><span class="en">Wallet</span></a>
+      <a href="javascript:void(0)" onclick="openDashTab('referral');closeBurger()">Referral</a>
+      <label class="mm-item" style="padding:14px 40px;font-size:11px;letter-spacing:1.5px;color:var(--gray-400);cursor:pointer;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-family:var(--font-b);border-bottom:1px solid rgba(255,255,255,.04)"><span class="it">Cambia foto</span><span class="en">Change photo</span><input type="file" accept="image/*" onchange="uploadAvatar(this)" style="display:none"></label>
+      <a id="mm-admin-link" href="javascript:void(0)" onclick="closeBurger();openAdmin()" style="display:none">Admin</a>
+      <button class="mm-item" onclick="doLogout();closeBurger()">Logout</button>
+    </div>
+  </div>
+  <!-- Actions (logged out only) -->
+  <div class="mobile-menu-actions" id="mm-logged-out-actions">
     <a href="/signup.html" class="nav-cta" style="text-decoration:none"><span class="it">Registrati</span><span class="en">Sign Up</span></a>
+  </div>
+  <!-- Actions (logged in only) -->
+  <div class="mobile-menu-actions" id="mm-logged-in-actions" style="display:none">
+    <a href="javascript:void(0)" onclick="openDashTab('referral');closeBurger()" class="nav-cta" style="text-decoration:none"><span class="it">Invita un amico</span><span class="en">Invite a friend</span></a>
   </div>
 </div>
 
@@ -1279,6 +1314,8 @@ function toggleLang(){
   root.setAttribute('data-lang',next);
   root.setAttribute('lang',next);
   btn.textContent=next==='it'?'EN':'IT';
+  // Sync all lang buttons
+  document.querySelectorAll('.lang-toggle').forEach(function(b){b.textContent=next==='it'?'EN':'IT';});
   // Update placeholders
   document.querySelectorAll('input[data-it]').forEach(el=>{
     el.placeholder=next==='it'?el.dataset.it:el.dataset.en;
@@ -2057,20 +2094,41 @@ function updateNavAuth(loggedIn, email){
   const signupBtn=document.getElementById('nav-signup-btn');
   const loggedInDiv=document.getElementById('nav-logged-in');
   const adminBtn=document.getElementById('nav-admin-btn');
+  // Mobile elements
+  const loginBtnMobile=document.getElementById('nav-login-btn-mobile');
+  const mmLoggedSection=document.getElementById('mm-logged-section');
+  const mmLoggedOutActions=document.getElementById('mm-logged-out-actions');
+  const mmLoggedInActions=document.getElementById('mm-logged-in-actions');
   if(loggedIn){
     if(loginBtn)loginBtn.style.display='none';
-    if(signupBtn)signupBtn.style.display='none';
+    // Desktop: replace signup with "Invita un amico"
+    if(signupBtn){
+      signupBtn.href='javascript:void(0)';
+      signupBtn.onclick=function(){openDashTab('referral')};
+      signupBtn.innerHTML='<span class="it">Invita un amico</span><span class="en">Invite a friend</span>';
+    }
     if(loggedInDiv){loggedInDiv.classList.add('active');document.getElementById('nav-avatar').textContent=(email||'?')[0].toUpperCase();}
     loadNavAvatar();
-    // Show admin link in avatar dropdown if admin
+    // Mobile: hide login, show profile section
+    if(loginBtnMobile)loginBtnMobile.style.display='none';
+    if(mmLoggedSection)mmLoggedSection.style.display='block';
+    if(mmLoggedOutActions)mmLoggedOutActions.style.display='none';
+    if(mmLoggedInActions)mmLoggedInActions.style.display='flex';
+    // Show admin link in avatar dropdown + mobile menu if admin
     if(typeof ADMIN_EMAILS!=='undefined'&&ADMIN_EMAILS.indexOf(email)!==-1){
       var aal=document.getElementById('avatar-admin-link');if(aal)aal.style.display='';
+      var mmal=document.getElementById('mm-admin-link');if(mmal)mmal.style.display='';
     }
   }else{
     if(loginBtn)loginBtn.style.display='';
-    if(signupBtn)signupBtn.style.display='';
+    if(signupBtn){signupBtn.href='/signup.html';signupBtn.onclick=null;signupBtn.innerHTML='<span class="it">Registrati</span><span class="en">Sign Up</span>';}
     if(loggedInDiv)loggedInDiv.classList.remove('active');
     if(adminBtn)adminBtn.remove();
+    // Mobile: show login, hide profile section
+    if(loginBtnMobile)loginBtnMobile.style.display='';
+    if(mmLoggedSection)mmLoggedSection.style.display='none';
+    if(mmLoggedOutActions)mmLoggedOutActions.style.display='flex';
+    if(mmLoggedInActions)mmLoggedInActions.style.display='none';
   }
 }
 
