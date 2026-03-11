@@ -1,7 +1,7 @@
 # AIROOBI — Sitemap & Product Structure
-**TECH-002 · Version 2.1 · Final · 10 Marzo 2026**
+**TECH-002 · Version 2.2 · Final · 11 Marzo 2026**
 
-> v2.0: File unico index.html (non più app.html + index.html). Hash-based routing. /contact → 404. Tutte le schermate integrate.
+> v2.2: Hash routing esteso (#dashboard, #portafoglio, #guadagni, #referral, #admin, #profilo). Tabelle DB aggiornate. RPC corretti. Autoconfirm email ON.
 
 ---
 
@@ -11,7 +11,7 @@
 
 | File | Percorso | Contenuto | Note |
 |---|---|---|---|
-| index.html | / | Intera SPA: landing, auth, app, admin | File unico ~3.400 righe — CSS/JS inline |
+| index.html | / | Intera SPA: landing, auth, app, admin | File unico ~4.500+ righe — CSS/JS inline |
 | Logo wordmark | /public/images/Logo_long_airoobi_transparent.png | Logo esteso | PNG trasparente |
 | Logo symbol | /public/images/Logo_short_airoobi_transparent.png | Solo OO | PNG trasparente |
 | ads.txt | /ads.txt | Google AdSense + A-ADS | Necessario per AdSense |
@@ -31,19 +31,26 @@
 | Termini | `openModal('terms-modal')` | Termini di servizio — modale overlay bilingue IT/EN |
 | Contatti | `mailto:info@airoobi.com` | Link mailto diretto — NON più pagina /contact |
 
-### 2.2 App Pages (Post-Auth)
+### 2.2 App Pages (Post-Auth) — Implementati
 
-| Page | Tab / Sezione | Descrizione |
+| Page | Hash | Tab switchTab() | Descrizione |
+|---|---|---|---|
+| Dashboard / Profilo | #dashboard / #profilo | overview | Stats personali, profilo, posizione, admin link |
+| Portafoglio | #portafoglio | tessere | Le 3 Tessere (Coin, Rendimento, Kaspa), saldi |
+| Guadagni | #guadagni | earnings | Check-in, video, streak, storico punti |
+| Referral | #referral | referral | Link personale, statistiche, reward |
+| Admin Panel | #admin (solo admin) | — | Visibile solo a tommaso.pecorella+ceo@outlook.com, ceo@airoobi.com |
+
+> Ogni pagina ha breadcrumb `AIROOBI > [Sezione]` e bottone `← Torna alla home`.
+
+### 2.2b App Pages — Pianificati (non ancora implementati)
+
+| Page | Hash | Stato |
 |---|---|---|
-| Marketplace | #marketplace | Grid airdrop P2P + Business, filtri categoria, search |
-| Portafoglio | #portafoglio | Le 3 Tessere (Coin, Rendimento, Kaspa), swap, Fondo Comune |
-| Dashboard | #dashboard | Stats personali, check-in, streak, missioni |
-| NFT Portfolio | #nft | Lista NFT posseduti, valore, storico |
-| Leaderboard | #leaderboard | Classifica utenti per ARIA/blocchi |
-| Referral | #referral | Link personale, statistiche, reward |
-| Profilo / KYC | #profilo | Dati utente, info account, verifica email, elimina account |
-| Help / FAQ | #help | Guide, FAQ, chat support |
-| Admin Panel | #admin (solo admin) | Visibile solo a tommaso.pecorella@outlook.com |
+| Marketplace | #marketplace | Stage 1 |
+| NFT Portfolio | #nft | Stage 1 |
+| Leaderboard | #leaderboard | Stage 1 |
+| Help / FAQ | #help | Stage 1 |
 
 ### 2.3 Business Section
 
@@ -68,7 +75,7 @@
 1. User inserisce email/password → validazione password robusta (min 8 char, maiuscola, minuscola, numero, speciale)
 2. Indicatore forza password (debole/media/forte)
 3. Cloudflare Turnstile verifica anti-bot
-4. Conferma email via link → redirect su airoobi.com con overlay "Email verificata!"
+4. **Autoconfirm ON** — nessuna conferma email richiesta. L'utente entra subito.
 5. Primo login: welcome bonus +10 ARIA + auto-confirm referral se presente
 
 ### 3.2 Flusso Acquisto Blocchi
@@ -109,15 +116,17 @@
 | events | POST | Analytics/tracking eventi |
 | profiles | GET/POST/PATCH | Profilo utente, total_points, streak, referral_code |
 | points_ledger | GET/POST | Registro punti (login_bonus, daily_checkin, video_view...) |
-| nft_rewards | GET/POST | NFT EARN + NFT ALPHA BRAVE |
-| checkins | GET/POST | Check-in giornaliero |
+| nft_rewards | GET/POST | NFT_REWARD, NFT_ALPHA_TIER0, BADGE_FONDATORE (status: active/revoked) |
+| checkins | GET/POST | Check-in giornaliero (checked_at = data) |
 | video_views | GET/POST | Visualizzazioni video |
 | referral_confirmations | GET | Stato conferma referral |
-| treasury_stats | GET | Bilancio fondo EUR, NFT mintati, valore unitario |
+| treasury_stats | GET/PATCH | Bilancio fondo EUR, NFT mintati, aico_circulating (legacy = ARIA) |
 | investor_leads | POST/GET | Form contatto investitori |
+| cost_tracker | GET/POST/DELETE | Tracking costi operativi (admin only) |
+| asset_registry | GET | Censimento asset ufficiali: ARIA, NFT_REWARD, NFT_ALPHA_TIER0, BADGE_FONDATORE |
 | rpc/confirm_referral | POST | Conferma referral (+10 ARIA referrer, +15 ARIA invitato) |
 | rpc/link_referral | POST | Collega referral a profilo |
-| rpc/daily_checkin | POST | Esegue check-in |
-| rpc/get_user_position | POST | Posizione utente server-side (aggiunto Stage 0) |
+| rpc/do_checkin | POST | Esegue check-in (blocca duplicati server-side) |
+| rpc/get_user_position | POST | Posizione utente server-side |
 | Auth /auth/v1/signup | POST | Registrazione |
 | Auth /auth/v1/token | POST | Login |

@@ -1,7 +1,7 @@
 # AIROOBI — Business Foundations
-**BUS-001 · Version 3.0 · Final · 08 Marzo 2026**
+**BUS-001 · Version 3.1 · Final · 11 Marzo 2026**
 
-> v3.0: Terminologia aggiornata AICO → ARIA. Meccanismo earn confermato (non acquisto). Stage 0 CHIUSO e live su airoobi.com.
+> v3.1: Importi ARIA corretti. Stage Alpha 0 APERTO (DB reset 11 Mar 2026). Terminologia "vincere" rimossa.
 
 ---
 
@@ -36,14 +36,14 @@ AIROOBI nasce da una constatazione semplice: l'accesso alle opportunità non è 
 
 | Attore | Ruolo | Motivazione |
 |---|---|---|
-| Utente Partecipante | Guadagna ARIA, compra blocchi, accumula Tessere | Opportunità di vincere oggetti di valore. Zero rischio perdita secca |
+| Utente Partecipante | Guadagna ARIA, compra blocchi, accumula Tessere | Opportunità di ottenere oggetti di valore. Zero rischio perdita secca |
 | Venditore P2P | Mette in palio oggetti propri tramite AIROOBI | Liquidità rapida a prezzo di mercato garantito |
 | Azienda (Business) | Crea campagne airdrop marketing su AIROOBI | Reach su utenti KYC-verified, ROI tracciato on-chain |
 | AIROOBI | Opera la piattaforma, valuta oggetti, garantisce fairness | Fee (1,5% su airdrop, 15% su campagne Business) |
 
 ### 4.2 Il Flusso Core — ARIA → Blocchi → Tessere
 
-**Passo 1 — Guadagna ARIA:** daily check-in (+10), video views (+10, max 5/giorno), referral (+100), streak settimanale (+100). ARIA non scade.
+**Passo 1 — Guadagna ARIA:** daily check-in (+1), video views (+1, max 5/giorno), referral (+10 referrer / +15 invitato), streak settimanale (+1). Welcome bonus +10 una tantum. ARIA non scade.
 
 **Passo 2 — Acquisto Blocchi:** ogni airdrop ha un prezzo blocco variabile in ARIA (5, 10, 25 ARIA a seconda del valore dell'oggetto).
 
@@ -68,7 +68,7 @@ AIROOBI nasce da una constatazione semplice: l'accesso alle opportunità non è 
 
 | Stage | Stato | Data | Milestone |
 |---|---|---|---|
-| Stage 0 — Alpha Setup | ✅ CHIUSO | 08 Mar 2026 | Piattaforma live su airoobi.com, auth Supabase, UI completa |
+| Alpha 0 — Alpha Setup | ✅ APERTO | 11 Mar 2026 | Piattaforma live su airoobi.com, auth Supabase, UI completa, DB reset |
 | Stage 1 — Alpha Launch | ⏳ Prossimo | 2026 Q2 | Primo airdrop reale, 1.000 utenti Alpha Brave |
 | Stage 2 — Beta | ⏳ Futuro | 2026 Q3-Q4 | Smart contract on-chain, KAS integration |
 | Stage 3 — Mainnet | ⏳ Futuro | 2027 | Launch pubblico, 15.000+ utenti |

@@ -1,7 +1,7 @@
 # AIROOBI — Cost Structure Analysis
-**BUS-004 · Version 2.0 · Final · 08 Marzo 2026**
+**BUS-004 · Version 2.1 · Final · 11 Marzo 2026**
 
-> v2.0: Resend eliminato, sostituito da Postmark. Stack infrastruttura aggiornato. Stage 0 chiuso. Target infrastruttura produzione: €60/mese.
+> v2.1: Alpha 0 APERTO (DB reset 11 Mar 2026). Claude Code su Pi 5 confermato operativo.
 
 ---
 
@@ -63,7 +63,7 @@
 
 | Scenario | Revenue/mese | Costi fissi/mese | Break-Even? |
 |---|---|---|---|
-| Stage 0 (chiuso) | €0–3.000 | €0 (infra free) | ✅ Operativo |
+| Alpha 0 (aperto) | €0–3.000 | €0 (infra free) | ✅ Operativo |
 | Alpha Brave / Stage 1 early | €4.000 | €28.233 | ❌ -€24.233 (investimento) |
 | Beta / M3-4 | €12.000 | €28.233 | ❌ -€20.233 |
 | Mainnet M5 | €35.000 | €28.233 | ⚡ -€1.233 (quasi break-even) |
@@ -74,9 +74,9 @@
 ---
 
 # AIROOBI — Organizational Structure
-**BUS-006 · Version 2.0 · Final · 08 Marzo 2026**
+**BUS-006 · Version 2.1 · Final · 11 Marzo 2026**
 
-> v2.0: AI-first model confermato in produzione. ARIA dev agent operativo su Pi 5. Claude Max attivo.
+> v2.1: AI-first model confermato in produzione. ARIA dev agent operativo su Pi 5 via Claude Code.
 
 ---
 

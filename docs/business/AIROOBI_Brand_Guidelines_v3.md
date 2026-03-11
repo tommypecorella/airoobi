@@ -1,7 +1,7 @@
 # AIROOBI — Brand Guidelines
-**BRAND-001 · Version 3.0 · Final · 08 Marzo 2026**
+**BRAND-001 · Version 3.1 · Final · 11 Marzo 2026**
 
-> ⚠️ v3.0: Corretti i valori esatti di nero e bianco. Aggiunta palette UI ARIA/KAS. Rimossi colori non approvati (#2563EB, #1A7A3F).
+> v3.1: Revisione confermata, nessuna modifica sostanziale. Palette e tipografia invariati.
 
 ---
 
