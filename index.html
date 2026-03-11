@@ -1936,9 +1936,18 @@ function updateNavAuth(loggedIn, email){
     }).then(r=>{
       if(r.ok)return r.json();
       throw new Error('expired');
-    }).then(user=>{
+    }).then(async function(user){
       s.user=user;
+      window._currentSession=s;
       updateNavAuth(true,user.email);
+      // If arriving from login/signup page, open dashboard and award bonuses
+      var fromAuth=document.referrer&&(document.referrer.includes('/login.html')||document.referrer.includes('/signup.html'));
+      if(fromAuth){
+        try{await awardLoginBonus(user.id,s.access_token);}catch(e){}
+        try{await awardWelcomeBonus(user.id,s.access_token);}catch(e){}
+        try{await autoConfirmReferral(user.id,s.access_token);}catch(e){}
+        gatedDashboard(s);
+      }
     }).catch(()=>clearSession());
   }
 })();
@@ -2846,6 +2855,9 @@ function checkAdminAccess(email){
       var loggedIn=document.getElementById('nav-logged-in');
       menu.insertBefore(btn,loggedIn);
     }
+    // Show admin link in profile
+    var profileAdminLink=document.getElementById('profile-admin-link');
+    if(profileAdminLink)profileAdminLink.style.display='block';
   }
 }
 
@@ -3461,6 +3473,14 @@ async function loadReferralHistory(){
         <span class="it">La fase Alpha è live. Ogni azione ti fa guadagnare ARIA. Accumulali ora: li userai per comprare blocchi e partecipare agli airdrop.</span>
         <span class="en">Alpha phase is live. Every action earns you ARIA. Accumulate now: you'll use them to buy blocks and join airdrops.</span>
       </p>
+    </div>
+
+    <!-- ADMIN LINK (visible only to admins) -->
+    <div id="profile-admin-link" style="display:none;text-align:center;margin-top:24px">
+      <button onclick="closeDashboard();openAdmin()" style="display:inline-flex;align-items:center;gap:8px;padding:12px 24px;background:none;border:1px solid var(--gold);color:var(--gold);font-family:var(--font-m);font-size:11px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s" onmouseover="this.style.background='var(--gold)';this.style.color='var(--black)'" onmouseout="this.style.background='none';this.style.color='var(--gold)'">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        Dashboard Admin
+      </button>
     </div>
 
     <!-- DELETE ACCOUNT -->
