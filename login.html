@@ -67,7 +67,20 @@ footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
     <div class="cf-turnstile" data-sitekey="0x4AAAAAACovg89u9bGYrc0E" data-theme="dark"></div>
   </div>
   <button class="auth-btn" id="login-btn" onclick="doLogin()">Login</button>
+  <p class="auth-toggle" style="margin-bottom:8px"><a onclick="showForgot()" style="cursor:pointer;color:var(--gold);font-size:12px"><span class="it">Hai dimenticato la password?</span><span class="en">Forgot your password?</span></a></p>
   <p class="auth-toggle"><span class="it">Non hai un account?</span><span class="en">Don't have an account?</span> <a href="/signup.html"><span class="it">Registrati</span><span class="en">Sign Up</span></a></p>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div class="auth-box" id="forgot-box" style="display:none">
+  <h2><span class="it">Recupera password</span><span class="en">Reset password</span></h2>
+  <p class="auth-sub"><span class="it">Inserisci la tua email e ti invieremo un link per reimpostare la password.</span><span class="en">Enter your email and we'll send you a link to reset your password.</span></p>
+  <div class="auth-error" id="forgot-error"></div>
+  <div class="auth-success" id="forgot-success" style="display:none;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#34d399;padding:10px 14px;font-size:13px;margin-bottom:16px"></div>
+  <label>Email</label>
+  <input type="email" id="forgot-email" placeholder="email@example.com">
+  <button class="auth-btn" id="forgot-btn" onclick="doForgot()"><span class="it">Invia link di recupero</span><span class="en">Send reset link</span></button>
+  <p class="auth-toggle"><a onclick="hideForgot()" style="cursor:pointer;color:var(--gold)"><span class="it">&larr; Torna al login</span><span class="en">&larr; Back to login</span></a></p>
 </div>
 
 <!-- A-ADS banner 728x90 desktop -->
@@ -171,8 +184,51 @@ document.addEventListener('keydown',function(e){
   if(e.key==='Enter'){
     var active=document.activeElement;
     if(active&&(active.id==='login-email'||active.id==='login-password'))doLogin();
+    if(active&&active.id==='forgot-email')doForgot();
   }
 });
+
+// ── Forgot password ──
+function showForgot(){
+  document.querySelector('.auth-box:not(#forgot-box)').style.display='none';
+  document.getElementById('forgot-box').style.display='block';
+  document.getElementById('forgot-error').style.display='none';
+  document.getElementById('forgot-success').style.display='none';
+  // Pre-fill email if already typed
+  var loginEmail=document.getElementById('login-email').value.trim();
+  if(loginEmail)document.getElementById('forgot-email').value=loginEmail;
+}
+function hideForgot(){
+  document.getElementById('forgot-box').style.display='none';
+  document.querySelector('.auth-box:not(#forgot-box)').style.display='block';
+}
+async function doForgot(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var email=document.getElementById('forgot-email').value.trim();
+  document.getElementById('forgot-error').style.display='none';
+  document.getElementById('forgot-success').style.display='none';
+  if(!email||!email.includes('@'))return showError('forgot-error',lang==='it'?'Inserisci un\'email valida':'Enter a valid email');
+  document.getElementById('forgot-btn').disabled=true;
+  try{
+    var res=await fetch(SB_URL+'/auth/v1/recover',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,redirectTo:'https://airoobi.com/reset-password.html'})
+    });
+    if(res.ok||res.status===200){
+      track('password_reset_requested',{email:email});
+      var el=document.getElementById('forgot-success');
+      el.innerHTML=lang==='it'?'Se l\'email esiste, riceverai un link di recupero a breve. Controlla la tua casella di posta (anche lo spam).':'If the email exists, you\'ll receive a reset link shortly. Check your inbox (and spam folder).';
+      el.style.display='block';
+    }else{
+      // Supabase returns 200 even if email doesn't exist (security), so this is a real error
+      showError('forgot-error',lang==='it'?'Errore. Riprova tra poco.':'Error. Try again shortly.');
+    }
+  }catch(e){
+    showError('forgot-error',lang==='it'?'Errore di rete. Riprova.':'Network error. Try again.');
+  }
+  document.getElementById('forgot-btn').disabled=false;
+}
 
 // ── Track pageview ──
 track('pageview',{page:'login'});
