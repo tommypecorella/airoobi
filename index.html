@@ -350,7 +350,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .video-overlay.active{display:flex}
 .video-inner{max-width:640px;width:100%;padding:0 24px;text-align:center}
 .video-label{font-family:var(--font-m);font-size:11px;letter-spacing:3px;color:var(--gold);margin-bottom:24px;text-transform:uppercase}
-.video-container{width:100%;aspect-ratio:16/9;background:var(--gray-800);position:relative;margin-bottom:16px;overflow:hidden}
+.video-container{width:100%;aspect-ratio:16/10;background:var(--gray-800);position:relative;margin-bottom:16px;overflow:hidden}
 .video-countdown{font-family:var(--font-m);font-size:13px;color:var(--gray-400);letter-spacing:1px;margin-bottom:24px}
 .video-countdown span{color:var(--gold);font-weight:700}
 .video-progress{width:100%;height:3px;background:var(--gray-700);margin-bottom:24px;overflow:hidden}
@@ -1476,17 +1476,8 @@ function openExplainerVideo(){
 }
 
 function gatedDashboard(session){
-  var seen=localStorage.getItem('first_login_video_shown');
-  if(seen){
-    // Utente ha già visto il video al primo login: vai dritto alla dashboard
-    showDashboard(session);
-  } else {
-    // Primo login: mostra video explainer, poi segna come visto
-    showVideoAd(function(){
-      localStorage.setItem('first_login_video_shown','1');
-      showDashboard(session);
-    });
-  }
+  // Video gate disabilitato — accesso diretto alla dashboard
+  showDashboard(session);
 }
 
 // ══ SUPABASE AUTH ══
@@ -2653,22 +2644,57 @@ async function ctDelete(){
 // ── Admin Treasury (persist to DB) ──
 async function loadAdminTreasury(){
   var s=getSession();if(!s)return;
+  var tk=s.access_token;
   try{
-    var rows=await sbGet('treasury_stats?select=*&order=created_at.desc&limit=1',s.access_token);
+    var rows=await sbGet('treasury_stats?select=*&order=created_at.desc&limit=1',tk);
     if(!rows||!rows.length)return;
     var t=rows[0];
     // Populate first form (NFT Metrics)
     var i1=document.getElementById('adm-input-treasury');if(i1)i1.value=t.balance_eur||0;
     var i2=document.getElementById('adm-input-minted');if(i2)i2.value=t.nft_minted||0;
-    var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=t.nft_circulating||0;
     var i4=document.getElementById('adm-input-maxsupply');if(i4)i4.value=t.nft_max_supply||1000;
     // Populate second form (Tokenomics)
     var i5=document.getElementById('adm-treasury-input');if(i5)i5.value=t.balance_eur||0;
-    var i6=document.getElementById('adm-aico-input');if(i6)i6.value=t.aico_circulating||0;
     // Populate revenue cards
     var ra=document.getElementById('adm-revenue-ads');if(ra)ra.textContent='$'+(parseFloat(t.revenue_ads)||0).toFixed(2);
     var rs=document.getElementById('adm-revenue-adsense');if(rs)rs.textContent='$'+(parseFloat(t.revenue_adsense)||0).toFixed(2);
     var tb=document.getElementById('adm-treasury-balance');if(tb)tb.textContent='€'+(parseFloat(t.balance_eur)||0).toFixed(2);
+
+    // Auto-calculate CIRCOLANTE (NFT) from nft_rewards table
+    try{
+      var nfts=await sbGet('nft_rewards?select=id,nft_type',tk);
+      var nftCount=nfts?nfts.length:0;
+      var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
+      // NFT breakdown per tipo
+      var breakdown={};
+      if(nfts&&nfts.length){
+        nfts.forEach(function(n){var tp=n.nft_type||'unknown';breakdown[tp]=(breakdown[tp]||0)+1;});
+      }
+      var bTbody=document.getElementById('adm-nft-breakdown');
+      if(bTbody){
+        var types=Object.keys(breakdown);
+        if(types.length===0){
+          bTbody.innerHTML='<tr><td colspan="4" style="color:var(--gray-400)">Nessun NFT emesso</td></tr>';
+        }else{
+          bTbody.innerHTML=types.map(function(tp){
+            var cnt=breakdown[tp];
+            var pct=nftCount>0?((cnt/nftCount)*100).toFixed(1):'0';
+            var treasury=parseFloat(document.getElementById('adm-input-treasury')?.value)||0;
+            var minted=parseInt(document.getElementById('adm-input-minted')?.value)||0;
+            var val=minted>0?(treasury/minted).toFixed(2):'0.00';
+            return '<tr><td>'+tp+'</td><td>'+cnt+'</td><td>'+pct+'%</td><td>€'+val+'</td></tr>';
+          }).join('');
+        }
+      }
+    }catch(e){console.error('NFT auto-calc error:',e);}
+
+    // Auto-calculate AICO IN CIRCOLAZIONE from points_ledger
+    try{
+      var pts=await sbGet('points_ledger?select=amount',tk);
+      var totalAico=pts?pts.reduce(function(a,b){return a+b.amount},0):0;
+      var i6=document.getElementById('adm-aico-input');if(i6)i6.value=totalAico;
+    }catch(e){console.error('AICO auto-calc error:',e);}
+
     // Trigger calculations
     recalcNFTValue();
     updateNftMetrics();
@@ -2726,6 +2752,8 @@ async function saveAdminTokenomics(){
     aico_circulating:parseInt(document.getElementById('adm-aico-input')?.value)||0,
     updated_at:new Date().toISOString()
   };
+  // Note: nft_circulating and aico_circulating are auto-calculated from DB
+  // but we still persist them to treasury_stats for historical reference
   try{
     // Get existing row
     var rows=await sbGet('treasury_stats?select=id&order=created_at.desc&limit=1',s.access_token);
@@ -3263,15 +3291,6 @@ async function loadReferralHistory(){
   <button class="video-skip" id="video-skip" onclick="skipVideo()">
     <span class="it">Continua</span><span class="en">Continue</span>
   </button>
-  <label class="video-nosee" id="video-nosee-wrap">
-    <input type="checkbox" id="video-nosee-check">
-    <span class="it">Non ricordarmelo più — posso rivederlo dall'Explainer in homepage</span>
-    <span class="en">Don't show again — I can rewatch it from the Explainer on homepage</span>
-  </label>
-  <p class="video-msg">
-    <span class="it">Questo video supporta il <em>Treasury di AIROOBI</em>. Il 50% di ogni visione va direttamente al Fondo Comune — il fondo che garantisce il saldo delle tue Tessere.</span>
-    <span class="en">This video supports the <em>AIROOBI Treasury</em>. 50% of every view goes directly to the Common Fund — the fund that backs your Card balance.</span>
-  </p>
 </div>
 </div>
 
@@ -4274,8 +4293,8 @@ async function loadReferralHistory(){
           <input type="number" id="adm-input-minted" placeholder="0" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
         </div>
         <div>
-          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">CIRCOLANTE (NFT)</label>
-          <input type="number" id="adm-input-circulating" placeholder="0" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
+          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">CIRCOLANTE (NFT) <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+          <input type="number" id="adm-input-circulating" placeholder="0" readonly style="width:100%;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);font-family:var(--font-m);font-size:13px;padding:10px 12px;cursor:not-allowed">
         </div>
         <div>
           <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">MAX SUPPLY</label>
@@ -4408,10 +4427,9 @@ async function loadReferralHistory(){
           oninput="recalcNFTValue()">
       </div>
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">AICO IN CIRCOLAZIONE</label>
-        <input type="number" id="adm-aico-input" placeholder="0" step="1" min="0"
-          style="background:#111;border:1px solid rgba(255,255,255,.2);color:var(--white);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none"
-          oninput="recalcNFTValue()">
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">AICO IN CIRCOLAZIONE <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+        <input type="number" id="adm-aico-input" placeholder="0" readonly
+          style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none;cursor:not-allowed">
       </div>
       <button onclick="saveAdminTokenomics()"
         style="padding:10px 20px;background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700">
@@ -4488,7 +4506,7 @@ async function loadReferralHistory(){
         <tr><td colspan="4" style="color:var(--gray-400)">Caricamento...</td></tr>
       </tbody>
     </table>
-    <p class="admin-note" style="margin-top:16px">⚠️ I dati treasury sono inseriti manualmente. NFT conteggiati da Supabase nft_rewards. AICO circolante da inserire manualmente (integrare con exchange al mainnet).</p>
+    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> e <strong>AICO IN CIRCOLAZIONE</strong> calcolati automaticamente da Supabase (nft_rewards e points_ledger).</p>
   </div>
 
 </div>
