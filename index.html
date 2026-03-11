@@ -1235,14 +1235,13 @@ window.addEventListener('scroll',function(){closeBurger()},{passive:true});
 var glossary={
   'NFT':{tag:'Tecnologia · Dietro le quinte',def:'NFT sta per "Non-Fungible Token": un oggetto digitale unico registrato sulla blockchain, impossibile da copiare o falsificare. Su AIROOBI lo chiamiamo Tessera — è più semplice. Dietro ogni Tessera c\'è una quota del Fondo Comune, con saldo garantito e rimborsabile. Non devi capire la tecnologia per usarla.'},
   'ARIA':{tag:'Valuta AIROOBI',def:'ARIA è la valuta di AIROOBI. La guadagni gratis ogni giorno con check-in, video e referral. Quando vuoi partecipare a un airdrop, compri blocchi usando i tuoi ARIA.'},
-  'AICO':{tag:'Token · Valuta',def:'AICO è il token di utilità di AIROOBI. Viene usato per acquistare blocchi negli airdrop. Il valore è stabile by design: non è una crypto speculativa.'},
   'Airdrop':{tag:'Meccanismo core',def:'Un airdrop su AIROOBI è la distribuzione di un oggetto reale di valore (da €500 in su) alla community. Chi partecipa accumula ARIA e riceve Tessere che crescono di valore nel tempo.'},
   'Blockchain':{tag:'Tecnologia',def:'Una blockchain è un registro digitale distribuito e immutabile: ogni operazione viene registrata in modo permanente e verificabile da chiunque. Su AIROOBI usiamo Kaspa — una blockchain di nuova generazione, veloce e sicura — per garantire che le regole del gioco non possano essere cambiate.'},
   'Kaspa':{tag:'Blockchain · Tecnologia',def:'Kaspa è la blockchain su cui è costruito AIROOBI. È una delle più veloci e scalabili in assoluto, con blocchi confermati in meno di un secondo. A differenza di Ethereum, le fee di transazione sono bassissime — ideale per un marketplace come il nostro.'},
   'Treasury':{tag:'Finanza · Garanzia',def:'Il Fondo Comune di AIROOBI è il fondo in euro che garantisce il saldo delle Tessere emesse. Una parte di ogni transazione viene accantonata qui. Saldo per Tessera = Fondo totale ÷ numero di Tessere emesse. Se il fondo cresce, cresce anche il saldo delle tue Tessere.'},
   'Alpha Brave':{tag:'Fase · Community',def:'Gli Alpha Brave sono i primi 1.000 utenti di AIROOBI. Ottengono vantaggi permanenti su tutti gli airdrop futuri, Badge Fondatore + Tessera Rendimento di benvenuto e un moltiplicatore sugli ARIA guadagnati. È un riconoscimento per chi crede nel progetto prima che diventi ovvio.'},
   'Buyback':{tag:'Garanzia · Rimborso',def:'Il rimborso garantito è l\'impegno di AIROOBI a riacquistare le tue Tessere al 95% del loro saldo calcolato. Significa che puoi sempre "uscire" e recuperare ciò che hai accumulato. Non è un\'opzione teorica — è una garanzia scritta nelle regole.'},
-  'Token':{tag:'Tecnologia · Crypto',def:'Un token è un\'unità digitale registrata su blockchain che rappresenta un diritto, un valore o un\'utilità. Su AIROOBI ci sono due tipi: AICO (per partecipare agli airdrop) e Tessere (che rappresentano quote del Fondo Comune con saldo garantito).'},
+  'Token':{tag:'Tecnologia · Crypto',def:'Un token è un\'unità digitale registrata su blockchain che rappresenta un diritto, un valore o un\'utilità. Su AIROOBI ci sono due tipi: ARIA (la valuta della piattaforma) e Tessere Rendimento (NFT che rappresentano quote del Fondo Comune con saldo garantito).'},
   'Wallet':{tag:'Strumento · Crypto',def:'Un wallet (portafoglio digitale) è il tuo "conto" sulla blockchain: conserva i tuoi token e le tue Tessere in modo sicuro. Su AIROOBI nelle fasi iniziali non serve un wallet crypto — puoi usare email e password come un normale sito. Il wallet sarà introdotto gradualmente.'},
   'Smart Contract':{tag:'Tecnologia · Blockchain',def:'Un smart contract è un programma che vive sulla blockchain ed esegue automaticamente le regole scritte nel codice. Su AIROOBI gestisce la distribuzione degli airdrop, il calcolo degli ARIA e il saldo delle Tessere — senza possibilità di manipolazione da parte di nessuno, nemmeno del team.'},
   'Market Cap':{tag:'Finanza',def:'Il market cap (capitalizzazione di mercato) degli NFT AIROOBI è il valore totale di tutti gli NFT in circolazione: valore singolo NFT × numero di NFT emessi. È un indicatore della "dimensione" del progetto, simile a come si misura una società in borsa.'},
@@ -1275,7 +1274,7 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeGloss()
     'Buyback','buyback','Treasury','treasury',
     'blockchain','Blockchain','Kaspa','Wallet','wallet',
     'Referral','referral','Airdrop','airdrop',
-    'ARIA','AICO','NFT','Token','token'
+    'ARIA','NFT','Token','token'
   ];
   // Canonical key for glossary lookup
   var canonical={
@@ -2688,12 +2687,12 @@ async function loadAdminTreasury(){
       }
     }catch(e){console.error('NFT auto-calc error:',e);}
 
-    // Auto-calculate AICO IN CIRCOLAZIONE from points_ledger
+    // Auto-calculate ARIA IN CIRCOLAZIONE from points_ledger
     try{
       var pts=await sbGet('points_ledger?select=amount',tk);
-      var totalAico=pts?pts.reduce(function(a,b){return a+b.amount},0):0;
-      var i6=document.getElementById('adm-aico-input');if(i6)i6.value=totalAico;
-    }catch(e){console.error('AICO auto-calc error:',e);}
+      var totalAria=pts?pts.reduce(function(a,b){return a+b.amount},0):0;
+      var i6=document.getElementById('adm-aico-input');if(i6)i6.value=totalAria;
+    }catch(e){console.error('ARIA auto-calc error:',e);}
 
     // Trigger calculations
     recalcNFTValue();
@@ -2703,21 +2702,21 @@ async function loadAdminTreasury(){
 
 function recalcNFTValue(){
   var treasury=parseFloat(document.getElementById('adm-treasury-input')?.value)||0;
-  var aico=parseInt(document.getElementById('adm-aico-input')?.value)||0;
+  var aria=parseInt(document.getElementById('adm-aico-input')?.value)||0;
   var price=0.10;
   // Update coin metrics cards
-  var cs=document.getElementById('adm-coin-supply');if(cs)cs.textContent=aico.toLocaleString();
-  var mc=document.getElementById('adm-coin-marketcap');if(mc)mc.textContent='€'+(aico*price).toFixed(2);
+  var cs=document.getElementById('adm-coin-supply');if(cs)cs.textContent=aria.toLocaleString();
+  var mc=document.getElementById('adm-coin-marketcap');if(mc)mc.textContent='€'+(aria*price).toFixed(2);
   var fdv=document.getElementById('adm-coin-fdv');if(fdv)fdv.textContent='€'+(10000000*price).toFixed(2);
   var tr=document.getElementById('adm-coin-treasury-ratio');
-  if(tr)tr.textContent=aico>0?((treasury/(aico*price))*100).toFixed(1)+'%':'—%';
-  // NFT per AICO
+  if(tr)tr.textContent=aria>0?((treasury/(aria*price))*100).toFixed(1)+'%':'—%';
+  // ARIA per NFT
   var minted=parseInt(document.getElementById('adm-input-minted')?.value)||0;
   var nr=document.getElementById('adm-coin-nft-ratio');
-  if(nr)nr.textContent=minted>0?Math.round(aico/minted):'—';
+  if(nr)nr.textContent=minted>0?Math.round(aria/minted):'—';
   // Backing ratio
   var br=document.getElementById('adm-coin-backing');
-  if(br)br.textContent=aico>0?((treasury*0.95/(aico*price))*100).toFixed(1)+'%':'—%';
+  if(br)br.textContent=aria>0?((treasury*0.95/(aria*price))*100).toFixed(1)+'%':'—%';
   // Treasury cards
   var nt=document.getElementById('adm-nft-treasury');if(nt)nt.textContent='€'+treasury.toFixed(2);
 }
@@ -3447,11 +3446,7 @@ async function loadReferralHistory(){
     <div class="ref-stats ref-stats-4col">
       <div class="ref-stat">
         <div class="ref-stat-val" id="overview-points" style="font-size:clamp(20px,4vw,28px)">0</div>
-        <div class="ref-stat-label" style="font-size:10px"><span style="display:inline-block;width:8px;height:8px;background:var(--gold);border-radius:50%;vertical-align:middle;margin-right:4px"></span>ARIA</div>
-      </div>
-      <div class="ref-stat">
-        <div class="ref-stat-val" id="overview-aria" style="font-size:clamp(20px,4vw,28px);color:var(--gold)">—</div>
-        <div class="ref-stat-label" style="font-size:10px"><span style="display:inline-block;width:8px;height:8px;background:var(--white);border:1px solid var(--black);border-radius:50%;box-shadow:0 0 0 1px var(--white);vertical-align:middle;margin-right:4px"></span>ARIA</div>
+        <div class="ref-stat-label" style="font-size:10px"><span style="display:inline-block;width:8px;height:8px;background:var(--aria);border-radius:50%;vertical-align:middle;margin-right:4px"></span>ARIA</div>
       </div>
       <div class="ref-stat">
         <div class="ref-stat-val" id="overview-nft" style="font-size:clamp(20px,4vw,28px);color:var(--gold)">1</div>
@@ -4427,7 +4422,7 @@ async function loadReferralHistory(){
           oninput="recalcNFTValue()">
       </div>
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">AICO IN CIRCOLAZIONE <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">ARIA IN CIRCOLAZIONE <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
         <input type="number" id="adm-aico-input" placeholder="0" readonly
           style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none;cursor:not-allowed">
       </div>
@@ -4462,15 +4457,15 @@ async function loadReferralHistory(){
     </div>
 
     <!-- COIN METRICS -->
-    <h3 style="font-family:var(--font-h);font-size:16px;letter-spacing:2px;color:var(--white);margin:24px 0 14px;text-transform:uppercase">Coin Metrics (AICO)</h3>
+    <h3 style="font-family:var(--font-h);font-size:16px;letter-spacing:2px;color:var(--white);margin:24px 0 14px;text-transform:uppercase">Coin Metrics (ARIA)</h3>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
       <div class="admin-card">
         <div class="admin-card-val" id="adm-coin-price">€0.10</div>
-        <div class="admin-card-label">Prezzo AICO (pegged)</div>
+        <div class="admin-card-label">Prezzo ARIA (pegged)</div>
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-coin-supply">0</div>
-        <div class="admin-card-label">Circolante (AICO)</div>
+        <div class="admin-card-label">Circolante (ARIA)</div>
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-coin-marketcap">€0.00</div>
@@ -4482,7 +4477,7 @@ async function loadReferralHistory(){
       </div>
       <div class="admin-card">
         <div class="admin-card-val">10,000,000</div>
-        <div class="admin-card-label">Max Supply (AICO)</div>
+        <div class="admin-card-label">Max Supply (ARIA)</div>
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-coin-treasury-ratio">—%</div>
@@ -4490,7 +4485,7 @@ async function loadReferralHistory(){
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-coin-nft-ratio">—</div>
-        <div class="admin-card-label">AICO per NFT (circolante)</div>
+        <div class="admin-card-label">ARIA per NFT (circolante)</div>
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-coin-backing">—%</div>
@@ -4506,7 +4501,7 @@ async function loadReferralHistory(){
         <tr><td colspan="4" style="color:var(--gray-400)">Caricamento...</td></tr>
       </tbody>
     </table>
-    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> e <strong>AICO IN CIRCOLAZIONE</strong> calcolati automaticamente da Supabase (nft_rewards e points_ledger).</p>
+    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> e <strong>ARIA IN CIRCOLAZIONE</strong> calcolati automaticamente da Supabase (nft_rewards e points_ledger).</p>
   </div>
 
 </div>

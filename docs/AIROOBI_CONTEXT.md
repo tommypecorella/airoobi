@@ -72,7 +72,7 @@ AIROOBI è un marketplace di airdrop decentralizzato su blockchain Kaspa. Gli ut
 **Versione live:** v0.7.7 · 08 Mar 2026  
 **File:** `index.html` (singolo file, hash routing, CSS/JS inline)
 
-**Schermate implementate:** landing, login/registrazione (individual + business), video interstitial, marketplace, acquisto AICO, portafoglio tessere, swap Tessera→KAS, dashboard, NFT portfolio, stats, referral, business campaign, charity, leaderboard, missioni/rewards, KYC, help, legal pages, admin panel.
+**Schermate implementate:** landing, login/registrazione (individual + business), video interstitial, marketplace, acquisto ARIA, portafoglio tessere, swap Tessera→KAS, dashboard, NFT portfolio, stats, referral, business campaign, charity, leaderboard, missioni/rewards, KYC, help, legal pages, admin panel.
 
 **Admin panel:** visibile solo a `tommaso.pecorella@outlook.com`
 

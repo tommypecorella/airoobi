@@ -109,7 +109,7 @@ scripts/       → Utility and automation scripts
 - Font titoli: Cormorant Garamond
 - Font body: Instrument Sans
 - Dark mode default
-- 1 AICO = €0.10 (unica certezza comunicabile)
+- 1 ARIA = €0.10 (unica certezza comunicabile)
 EOF
 
 # Brand colors CSS custom properties
