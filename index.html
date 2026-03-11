@@ -1065,7 +1065,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.4.0 · 17:05 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.5.0 · 17:20 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -2727,35 +2727,29 @@ async function loadAdminTreasury(){
       var nftCount=nfts?nfts.length:0;
       var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
       var nu=document.getElementById('adm-nft-updated');if(nu)nu.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-      // NFT breakdown per tipo — LEFT JOIN asset_registry + nft_rewards (client-side)
+      // NFT breakdown per tipo — GROUP BY nft_type da nft_rewards
       var bTbody=document.getElementById('adm-nft-breakdown');
       if(bTbody){
-        bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)"><span class="spinner" style="display:inline-block;width:12px;height:12px;border:2px solid var(--gray-600);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px"></span>Caricamento...</td></tr>';
-        try{
-          var registry=await sbGet('asset_registry?select=asset_code,asset_name&asset_type=in.(nft,badge)&order=asset_code',tk);
-          // Build nft_rewards breakdown
-          var breakdown={};var owners={};
-          if(nfts&&nfts.length){
-            nfts.forEach(function(n){
-              var tp=n.nft_type||'unknown';
-              breakdown[tp]=(breakdown[tp]||0)+1;
-              if(!owners[tp])owners[tp]={};
-              if(n.user_id)owners[tp][n.user_id]=true;
-            });
-          }
-          if(registry&&registry.length>0){
-            bTbody.innerHTML=registry.map(function(r){
-              var code=r.asset_code;
-              var cnt=breakdown[code]||0;
-              var ownerCount=Object.keys(owners[code]||{}).length;
-              return '<tr><td>'+r.asset_name+'</td><td>'+(ownerCount||'&mdash;')+'</td><td>'+(cnt||'&mdash;')+'</td></tr>';
-            }).join('');
-          }else{
-            bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun dato disponibile</td></tr>';
-          }
-        }catch(e){
-          console.error('NFT breakdown error:',e);
-          bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun dato disponibile</td></tr>';
+        bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)"><span style="display:inline-block;width:12px;height:12px;border:2px solid var(--gray-600);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px"></span>Caricamento...</td></tr>';
+        var breakdown={};var owners={};
+        if(nfts&&nfts.length){
+          nfts.forEach(function(n){
+            var tp=n.nft_type||'unknown';
+            breakdown[tp]=(breakdown[tp]||0)+1;
+            if(!owners[tp])owners[tp]={};
+            if(n.user_id)owners[tp][n.user_id]=true;
+          });
+        }
+        var types=Object.keys(breakdown);
+        if(types.length>0){
+          types.sort(function(a,b){return breakdown[b]-breakdown[a]});
+          bTbody.innerHTML=types.map(function(tp){
+            var cnt=breakdown[tp];
+            var ownerCount=Object.keys(owners[tp]||{}).length;
+            return '<tr><td>'+tp+'</td><td>'+ownerCount+'</td><td>'+cnt+'</td></tr>';
+          }).join('');
+        }else{
+          bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';
         }
       }
     }catch(e){console.error('NFT auto-calc error:',e);}
@@ -2791,6 +2785,26 @@ async function refreshNftCircolante(){
     var cnt=nfts?nfts.length:0;
     var i=document.getElementById('adm-input-circulating');if(i)i.value=cnt;
     var u=document.getElementById('adm-nft-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    // Aggiorna anche la tabella NFT per tipo
+    var bTbody=document.getElementById('adm-nft-breakdown');
+    if(bTbody&&nfts){
+      var breakdown={};var owners={};
+      nfts.forEach(function(n){
+        var tp=n.nft_type||'unknown';
+        breakdown[tp]=(breakdown[tp]||0)+1;
+        if(!owners[tp])owners[tp]={};
+        if(n.user_id)owners[tp][n.user_id]=true;
+      });
+      var types=Object.keys(breakdown);
+      if(types.length>0){
+        types.sort(function(a,b){return breakdown[b]-breakdown[a]});
+        bTbody.innerHTML=types.map(function(tp){
+          return '<tr><td>'+tp+'</td><td>'+Object.keys(owners[tp]||{}).length+'</td><td>'+breakdown[tp]+'</td></tr>';
+        }).join('');
+      }else{
+        bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';
+      }
+    }
     updateNftMetrics();
   }catch(e){console.error('Refresh NFT error:',e);}
 }
@@ -2838,6 +2852,12 @@ function updateNftMetrics(){
 
 async function saveAdminTokenomics(){
   var s=getSession();if(!s)return;
+  // Refresh AUTO values before saving
+  await refreshAriaCircolante();
+  await refreshNftCircolante();
+  recalcNFTValue();
+  updateNftMetrics();
+  // Build payload with ALL values (manual + auto)
   var data={
     balance_eur:parseFloat(document.getElementById('adm-input-treasury')?.value)||0,
     nft_minted:parseInt(document.getElementById('adm-input-minted')?.value)||0,
@@ -2846,10 +2866,7 @@ async function saveAdminTokenomics(){
     aico_circulating:parseInt(document.getElementById('adm-aico-input')?.value)||0,
     updated_at:new Date().toISOString()
   };
-  // Note: nft_circulating and aico_circulating are auto-calculated from DB
-  // but we still persist them to treasury_stats for historical reference
   try{
-    // Get existing row
     var rows=await sbGet('treasury_stats?select=id&order=created_at.desc&limit=1',s.access_token);
     if(rows&&rows.length){
       await sbPatch('treasury_stats?id=eq.'+rows[0].id,data,s.access_token);
@@ -2857,7 +2874,7 @@ async function saveAdminTokenomics(){
       var postRes=await fetch(SB_URL+'/rest/v1/treasury_stats',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
       if(!postRes.ok)throw new Error('POST failed: '+postRes.status+' '+(await postRes.text()));
     }
-    // Feedback — find the button that triggered the save
+    // Feedback
     document.querySelectorAll('[onclick*="saveAdminTokenomics"]').forEach(function(btn){
       var orig=btn.textContent;btn.textContent='SALVATO ✓';btn.style.background='#49b583';
       setTimeout(function(){btn.textContent=orig;btn.style.background='var(--gold)';},1500);
