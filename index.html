@@ -2426,11 +2426,11 @@ function renderInvestorCharts(){
 
 
 // ══ ADMIN AREA ══
-const ADMIN_EMAIL='tommaso.pecorella+ceo@outlook.com'; // flag: only this user sees admin
+const ADMIN_EMAILS=['tommaso.pecorella+ceo@outlook.com','ceo@airoobi.com'];
 
 function openAdmin(){
   const s=getSession();
-  if(!s||s.user?.email!==ADMIN_EMAIL)return;
+  if(!s||ADMIN_EMAILS.indexOf(s.user?.email)===-1)return;
   document.getElementById('admin-overlay').classList.add('active');
   document.body.style.overflow='hidden';
   loadAdminData();
@@ -2844,7 +2844,7 @@ function closeRoadmapDetail(){
 
 // Show admin menu item only for admin user
 function checkAdminAccess(email){
-  if(email===ADMIN_EMAIL){
+  if(ADMIN_EMAILS.indexOf(email)!==-1){
     // Add admin link to nav if not there
     var menu=document.querySelector('.nav-menu');
     if(menu&&!document.getElementById('nav-admin-btn')){
