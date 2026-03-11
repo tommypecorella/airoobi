@@ -216,6 +216,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .fomo-text{font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold)}
 .fomo-pulse{display:inline-block;width:6px;height:6px;background:var(--gold);border-radius:50%;margin-right:8px;animation:pulse 2s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+@keyframes spin{to{transform:rotate(360deg)}}
 .fomo-big{font-family:var(--font-h);font-size:clamp(36px,6vw,56px);font-weight:300;color:var(--gold);letter-spacing:-1px}
 .fomo-big span{color:var(--gray-400);font-size:.5em}
 
@@ -766,12 +767,12 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     <a href="/login.html" class="nav-link-btn" id="nav-login-btn" style="text-decoration:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg><span class="it">Accedi</span><span class="en">Login</span></a>
     <a href="/signup.html" class="nav-cta" id="nav-signup-btn" style="text-decoration:none"><span class="it">Registrati</span><span class="en">Sign Up</span></a>
     <div class="nav-logged-in" id="nav-logged-in">
-      <div id="nav-rpts-counter" onclick="showDashFromNav()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
+      <div id="nav-rpts-counter" onclick="showDashFromNav('tessere')" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
         <span style="display:inline-block;width:8px;height:8px;background:var(--aria);border-radius:50%"></span>
         <span id="nav-rpts-val" style="font-family:var(--font-m);font-size:11px;color:var(--aria);letter-spacing:.5px">0</span>
         <span style="font-family:var(--font-m);font-size:8px;color:var(--aria);letter-spacing:1px">ARIA</span>
       </div>
-      <div id="nav-nft-counter" onclick="showDashFromNav()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
+      <div id="nav-nft-counter" onclick="showDashFromNav('tessere')" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
         <span style="font-family:var(--font-h);font-size:10px;color:var(--gold);font-weight:700;letter-spacing:-1px">Oo</span>
         <span id="nav-nft-val" style="font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:.5px">0</span>
         <span style="font-family:var(--font-m);font-size:8px;color:var(--gray-400);letter-spacing:1px">Tessere</span>
@@ -1063,7 +1064,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.1.0 · 15:15 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.2.0 · 15:30 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1113,15 +1114,19 @@ async function track(event, props={}) {
 // Track pageview al caricamento
 window.addEventListener('DOMContentLoaded', ()=>{
   track('pageview', {lang: document.documentElement.lang || 'it'});
-  // Hash routing for auth pages
-  var h=location.hash;
-  if(h==='#login')openAuth('login');
-  else if(h==='#signup')openAuth('signup');
-  window.addEventListener('hashchange',function(){
+  // Hash routing
+  function handleHash(){
     var hh=location.hash;
     if(hh==='#login')openAuth('login');
     else if(hh==='#signup')openAuth('signup');
-  });
+    else if(hh==='#dashboard'||hh==='#profilo'){var s=getSession();if(s){gatedDashboard(s);switchTab('overview');}}
+    else if(hh==='#portafoglio'){var s=getSession();if(s){gatedDashboard(s);switchTab('tessere');}}
+    else if(hh==='#guadagni'){var s=getSession();if(s){gatedDashboard(s);switchTab('earnings');}}
+    else if(hh==='#referral'){var s=getSession();if(s){gatedDashboard(s);switchTab('referral');}}
+    else if(hh==='#admin'){openAdmin();}
+  }
+  handleHash();
+  window.addEventListener('hashchange',handleHash);
 });
 
 async function sbPost(table,data){
@@ -1853,11 +1858,12 @@ async function updateNavCounters(session){
 function closeDashboard(){
   document.getElementById('dash-overlay').classList.remove('active');
   document.body.style.overflow='';
+  history.replaceState(null,null,' ');
 }
 
-function showDashFromNav(){
+function showDashFromNav(tab){
   const s=getSession();
-  if(s)gatedDashboard(s);
+  if(s){gatedDashboard(s);if(tab)setTimeout(function(){switchTab(tab)},100);}
 }
 function updateNavAuth(loggedIn, email){
   const loginBtn=document.getElementById('nav-login-btn');
@@ -1975,6 +1981,7 @@ document.addEventListener('keydown',e=>{
 
 // ══ TABS ══
 const TAB_LABELS={overview:{it:'Profilo',en:'Profile'},earnings:{it:'Guadagni',en:'Earnings'},tessere:{it:'Oo Portafoglio',en:'Oo Wallet'},referral:{it:'Referral',en:'Referral'}};
+var TAB_HASH={overview:'#dashboard',earnings:'#guadagni',tessere:'#portafoglio',referral:'#referral'};
 function switchTab(tab){
   document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
@@ -1986,6 +1993,12 @@ function switchTab(tab){
   const el=document.getElementById('dash-tab-current-it');
   if(el)el.textContent=lbl.it;
   document.querySelectorAll('.dash-tab-option').forEach(o=>o.classList.toggle('active',o.dataset.tab===tab));
+  // Update hash without triggering hashchange loop
+  var newHash=TAB_HASH[tab]||'#dashboard';
+  if(location.hash!==newHash)history.replaceState(null,null,newHash);
+  // Update breadcrumb
+  var bc=document.getElementById('dash-breadcrumb-label');
+  if(bc)bc.textContent=lbl.it;
   if(tab==='earnings')loadEarnings();
   if(tab==='referral'){loadReferralTab();loadReferralHistory();}
   if(tab==='tessere')loadTessere();
@@ -2439,11 +2452,13 @@ function openAdmin(){
   if(!s||ADMIN_EMAILS.indexOf(s.user?.email)===-1)return;
   document.getElementById('admin-overlay').classList.add('active');
   document.body.style.overflow='hidden';
+  history.replaceState(null,null,'#admin');
   loadAdminData();
 }
 function closeAdmin(){
   document.getElementById('admin-overlay').classList.remove('active');
   document.body.style.overflow='';
+  history.replaceState(null,null,' ');
 }
 
 async function loadAdminData(){
@@ -2681,29 +2696,36 @@ async function loadAdminTreasury(){
       var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id&status=eq.active',tk);
       var nftCount=nfts?nfts.length:0;
       var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
-      // NFT breakdown per tipo (tipo, possessori unici, totale emessi)
-      var breakdown={};
-      var owners={};
-      if(nfts&&nfts.length){
-        nfts.forEach(function(n){
-          var tp=n.nft_type||'unknown';
-          breakdown[tp]=(breakdown[tp]||0)+1;
-          if(!owners[tp])owners[tp]={};
-          if(n.user_id)owners[tp][n.user_id]=true;
-        });
-      }
+      var nu=document.getElementById('adm-nft-updated');if(nu)nu.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      // NFT breakdown per tipo — LEFT JOIN asset_registry + nft_rewards (client-side)
       var bTbody=document.getElementById('adm-nft-breakdown');
       if(bTbody){
-        var types=Object.keys(breakdown);
-        if(types.length===0){
-          bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';
-        }else{
-          types.sort(function(a,b){return breakdown[b]-breakdown[a]});
-          bTbody.innerHTML=types.map(function(tp){
-            var cnt=breakdown[tp];
-            var ownerCount=Object.keys(owners[tp]||{}).length;
-            return '<tr><td>'+tp+'</td><td>'+ownerCount+'</td><td>'+cnt+'</td></tr>';
-          }).join('');
+        bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)"><span class="spinner" style="display:inline-block;width:12px;height:12px;border:2px solid var(--gray-600);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px"></span>Caricamento...</td></tr>';
+        try{
+          var registry=await sbGet('asset_registry?select=asset_code,asset_name&asset_type=in.(nft,badge)&order=asset_code',tk);
+          // Build nft_rewards breakdown
+          var breakdown={};var owners={};
+          if(nfts&&nfts.length){
+            nfts.forEach(function(n){
+              var tp=n.nft_type||'unknown';
+              breakdown[tp]=(breakdown[tp]||0)+1;
+              if(!owners[tp])owners[tp]={};
+              if(n.user_id)owners[tp][n.user_id]=true;
+            });
+          }
+          if(registry&&registry.length>0){
+            bTbody.innerHTML=registry.map(function(r){
+              var code=r.asset_code;
+              var cnt=breakdown[code]||0;
+              var ownerCount=Object.keys(owners[code]||{}).length;
+              return '<tr><td>'+r.asset_name+'</td><td>'+(ownerCount||'&mdash;')+'</td><td>'+(cnt||'&mdash;')+'</td></tr>';
+            }).join('');
+          }else{
+            bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun dato disponibile</td></tr>';
+          }
+        }catch(e){
+          console.error('NFT breakdown error:',e);
+          bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun dato disponibile</td></tr>';
         }
       }
     }catch(e){console.error('NFT auto-calc error:',e);}
@@ -2713,12 +2735,34 @@ async function loadAdminTreasury(){
       var ariaProfiles=await sbGet('profiles?select=total_points',tk);
       var totalAria=ariaProfiles?ariaProfiles.reduce(function(a,b){return a+(b.total_points||0)},0):0;
       var i6=document.getElementById('adm-aico-input');if(i6)i6.value=totalAria;
+      var au=document.getElementById('adm-aria-updated');if(au)au.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     }catch(e){console.error('ARIA auto-calc error:',e);}
 
     // Trigger calculations
     recalcNFTValue();
     updateNftMetrics();
   }catch(e){console.error('Admin treasury load:',e);}
+}
+
+async function refreshAriaCircolante(){
+  var s=getSession();if(!s)return;
+  try{
+    var p=await sbGet('profiles?select=total_points',s.access_token);
+    var total=p?p.reduce(function(a,b){return a+(b.total_points||0)},0):0;
+    var i=document.getElementById('adm-aico-input');if(i)i.value=total;
+    var u=document.getElementById('adm-aria-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    recalcNFTValue();
+  }catch(e){console.error('Refresh ARIA error:',e);}
+}
+async function refreshNftCircolante(){
+  var s=getSession();if(!s)return;
+  try{
+    var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id&status=eq.active',s.access_token);
+    var cnt=nfts?nfts.length:0;
+    var i=document.getElementById('adm-input-circulating');if(i)i.value=cnt;
+    var u=document.getElementById('adm-nft-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    updateNftMetrics();
+  }catch(e){console.error('Refresh NFT error:',e);}
 }
 
 function recalcNFTValue(){
@@ -3424,9 +3468,12 @@ async function loadReferralHistory(){
   </div>
 </div>
 <div class="dash-content">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <button onclick="closeDashboard()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 12px;cursor:pointer;font-family:var(--font-m);font-size:11px;letter-spacing:1px;transition:all .3s;white-space:nowrap" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'">&larr; <span class="it">Torna alla home</span><span class="en">Back to home</span></button>
+    <span style="font-family:var(--font-m);font-size:11px;color:var(--gray-500);letter-spacing:1px">AIROOBI &rsaquo; <span id="dash-breadcrumb-label">Profilo</span></span>
+  </div>
   <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
     <h1 class="dash-welcome" style="margin:0"><span class="it">Benvenuto, <em>Alpha Brave.</em></span><span class="en">Welcome, <em>Alpha Brave.</em></span></h1>
-    <button onclick="closeDashboard()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);width:40px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:18px;flex-shrink:0;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'">&times;</button>
   </div>
   <p class="dash-email"><span class="it">Il tuo posto è confermato. Sei tra i primi.</span><span class="en">Your spot is confirmed. You're among the first.</span></p>
   
@@ -4211,6 +4258,10 @@ async function loadReferralHistory(){
   <button class="admin-close" onclick="closeAdmin()">Close</button>
 </div>
 <div class="admin-content">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+    <button onclick="closeAdmin()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 12px;cursor:pointer;font-family:var(--font-m);font-size:11px;letter-spacing:1px;transition:all .3s;white-space:nowrap" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'">&larr; Torna alla home</button>
+    <span style="font-family:var(--font-m);font-size:11px;color:var(--gray-500);letter-spacing:1px">AIROOBI &rsaquo; Admin</span>
+  </div>
   <h1>Dashboard Admin</h1>
 
   <!-- OVERVIEW -->
@@ -4310,7 +4361,11 @@ async function loadReferralHistory(){
         </div>
         <div>
           <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">CIRCOLANTE (NFT) <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
-          <input type="number" id="adm-input-circulating" placeholder="0" readonly style="width:100%;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);font-family:var(--font-m);font-size:13px;padding:10px 12px;cursor:not-allowed">
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" id="adm-input-circulating" placeholder="0" readonly style="flex:1;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);font-family:var(--font-m);font-size:13px;padding:10px 12px;cursor:not-allowed">
+            <button onclick="refreshNftCircolante()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 10px;cursor:pointer;font-size:14px;transition:all .3s;flex-shrink:0" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'" title="Refresh">&#8635;</button>
+          </div>
+          <div id="adm-nft-updated" style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px"></div>
         </div>
         <div>
           <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">MAX SUPPLY</label>
@@ -4444,8 +4499,12 @@ async function loadReferralHistory(){
       </div>
       <div>
         <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">ARIA IN CIRCOLAZIONE <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
-        <input type="number" id="adm-aico-input" placeholder="0" readonly
-          style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none;cursor:not-allowed">
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="number" id="adm-aico-input" placeholder="0" readonly
+            style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:140px;outline:none;cursor:not-allowed">
+          <button onclick="refreshAriaCircolante()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 10px;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'" title="Refresh">&#8635;</button>
+        </div>
+        <div id="adm-aria-updated" style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px"></div>
       </div>
       <button onclick="saveAdminTokenomics()"
         style="padding:10px 20px;background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700">
@@ -4519,7 +4578,7 @@ async function loadReferralHistory(){
     <table class="admin-table">
       <thead><tr><th>Tipo NFT</th><th>Possessori unici</th><th>Totale emessi</th></tr></thead>
       <tbody id="adm-nft-breakdown">
-        <tr><td colspan="4" style="color:var(--gray-400)">Caricamento...</td></tr>
+        <tr><td colspan="3" style="color:var(--gray-400)"><span style="display:inline-block;width:12px;height:12px;border:2px solid var(--gray-600);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px"></span>Caricamento...</td></tr>
       </tbody>
     </table>
     <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> calcolato da nft_rewards (active). <strong>ARIA IN CIRCOLAZIONE</strong> calcolato da profiles.total_points.</p>
