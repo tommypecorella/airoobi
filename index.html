@@ -251,7 +251,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .investor-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:200;background:var(--black);overflow-y:auto;color:var(--white)}
 .investor-overlay.active{display:block}
 .investor-nav{display:flex;align-items:center;justify-content:space-between;padding:20px 48px;border-bottom:1px solid var(--gray-700)}
-.investor-nav img{height:32px;filter:invert(1)}
+.investor-nav img{height:32px}
 .investor-close{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 20px;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .3s}
 .investor-close:hover{border-color:var(--gold);color:var(--gold)}
 .investor-content{max-width:760px;margin:0 auto;padding:80px 24px}
@@ -372,7 +372,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .auth-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:300;background:var(--black);overflow-y:auto;padding:40px 24px}
 .auth-overlay.active{display:flex;flex-direction:column;align-items:center;justify-content:center}
 .auth-logo-wrap{margin-bottom:32px;text-align:center}
-.auth-logo-wrap img{height:36px;filter:invert(1)}
+.auth-logo-wrap img{height:36px}
 .auth-box{background:var(--gray-800);border:1px solid var(--gray-700);max-width:420px;width:100%;padding:48px 40px;position:relative}
 .auth-ad-slot{max-width:728px;width:100%;margin-top:32px;text-align:center;min-height:90px}
 .auth-ad-slot-mobile{display:none}
@@ -825,7 +825,6 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 <!-- ═══ EXPLAINER VIDEO ═══ -->
 <section id="explainer-section" style="padding:80px 0;background:#000;border-bottom:1px solid rgba(184,150,12,.12)">
 <div class="container reveal" style="max-width:800px;text-align:center">
-  <img src="/public/images/Logo_long_airoobi_transparent.png" alt="AIROOBI" style="height:40px;margin-bottom:24px;filter:invert(1)">
   <h2 style="font-family:var(--font-h);font-size:clamp(28px,4vw,42px);font-weight:300;color:var(--white);margin-bottom:8px">
     <span class="it">Scopri AIROOBI in 2 minuti</span><span class="en">Discover AIROOBI in 2 minutes</span>
   </h2>
@@ -1606,10 +1605,19 @@ async function doSignup(){
       closeAuth();
       gatedDashboard(data.session);
     }else{
+      // No session — try auto-login immediately
       track('signup_email_sent', {has_ref: !!ref, lang});
       if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user?.id||'pending'});
-      showSuccess('signup-success',lang==='it'?'Controlla la tua email per confermare il tuo account su airoobi.com — guarda anche nello spam.':'Check your email to confirm your account on airoobi.com — also check your spam folder.');
-      document.getElementById('resend-email-wrap').style.display='block';
+      const loginResult=await sbAuth('token?grant_type=password',{email,password:pw});
+      if(loginResult.status===200&&loginResult.data.access_token){
+        saveSession(loginResult.data);
+        window._currentSession=loginResult.data;
+        closeAuth();
+        track('signup_complete',{method:'auto_login',has_ref:!!ref,lang});
+        gatedDashboard(loginResult.data);
+      }else{
+        showSuccess('signup-success',lang==='it'?'Congratulazioni! Il tuo account è stato creato. Puoi già accedere con le tue credenziali. Riceverai istruzioni per verificare la tua email.':'Congratulations! Your account has been created. You can already log in with your credentials. You will receive instructions to verify your email.');
+      }
     }
   }else{
     const msg=data.error_description||data.msg||data.message||'Error';
@@ -1689,43 +1697,26 @@ async function doLogin(){
   const {status,data}=await sbAuth('token?grant_type=password',{email,password:pw});
   
   if(status===200&&data.access_token){
-    if(!data.user.email_confirmed_at){
-      track('login_email_not_confirmed', {lang});
-      const errEl=document.getElementById('login-error');
-      errEl.style.display='block';
-      errEl.style.color='#B8960C';
-      errEl.innerHTML=(lang==='it'
-        ?'Controlla la tua email per confermare l\'account.<br>Hai ricevuto: <strong>'+email+'</strong>'
-        :'Check your email to confirm your account.<br>Sent to: <strong>'+email+'</strong>')
-        +'<br><button id="resend-confirm-btn" style="margin-top:10px;padding:8px 18px;background:#B8960C;color:#000;border:none;border-radius:6px;cursor:pointer;font-weight:600">'
-        +(lang==='it'?'Reinvia email di conferma':'Resend confirmation email')+'</button>';
-      document.getElementById('resend-confirm-btn').onclick=async function(){
-        this.disabled=true;
-        this.textContent=lang==='it'?'Invio in corso...':'Sending...';
-        await sbAuth('resend',{type:'signup',email});
-        this.textContent=lang==='it'?'Email reinviata ✓':'Email resent ✓';
-      };
-    }else{
-      saveSession(data);
-      window._currentSession = data;
-      closeAuth();
-      try{
-        await awardLoginBonus(data.user.id,data.access_token);
-      }catch(e){console.error('[AIROOBI] awardLoginBonus failed:',e);}
-      try{
-        await awardWelcomeBonus(data.user.id,data.access_token);
-      }catch(e){console.error('[AIROOBI] awardWelcomeBonus failed:',e);}
-      try{
-        await autoConfirmReferral(data.user.id,data.access_token);
-      }catch(e){console.error('[AIROOBI] autoConfirmReferral failed:',e);}
-      track('login', {lang});
-      gatedDashboard(data);
-    }
+    // Let user in regardless of email confirmation status
+    saveSession(data);
+    window._currentSession = data;
+    closeAuth();
+    try{
+      await awardLoginBonus(data.user.id,data.access_token);
+    }catch(e){console.error('[AIROOBI] awardLoginBonus failed:',e);}
+    try{
+      await awardWelcomeBonus(data.user.id,data.access_token);
+    }catch(e){console.error('[AIROOBI] awardWelcomeBonus failed:',e);}
+    try{
+      await autoConfirmReferral(data.user.id,data.access_token);
+    }catch(e){console.error('[AIROOBI] autoConfirmReferral failed:',e);}
+    track('login', {lang, email_confirmed: !!data.user.email_confirmed_at});
+    gatedDashboard(data);
   }else{
     const msg=data.error_description||data.msg||data.message||'';
     if(msg.toLowerCase().includes('email not confirmed')){
       track('login_email_not_confirmed', {lang});
-      showError('login-error',lang==='it'?'Devi confermare la tua email prima di accedere. Controlla la tua casella di posta.':'You must confirm your email before logging in. Check your inbox.');
+      showError('login-error',lang==='it'?'Stiamo attivando il tuo account. Riprova tra qualche minuto.':'We are activating your account. Please try again in a few minutes.');
     }else{
       track('login_error', {lang});
       showError('login-error',lang==='it'?'Email o password errati':'Wrong email or password');
@@ -3285,7 +3276,7 @@ async function loadReferralHistory(){
 <!-- ═══ AUTH PAGES ═══ -->
 <div class="auth-overlay" id="auth-overlay">
 <div class="auth-logo-wrap">
-  <img src="/public/images/Logo_long_airoobi_transparent.png" alt="AIROOBI">
+  <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI">
 </div>
 <div class="auth-box">
   <button class="auth-close" onclick="closeAuth()">&times;</button>
@@ -4100,7 +4091,7 @@ async function loadReferralHistory(){
 <!-- ═══ INVESTOR PAGE ═══ -->
 <div class="investor-overlay" id="investor-overlay">
 <div class="investor-nav">
-  <img src="/public/images/Logo_long_airoobi_transparent.png" id="investor-logo" alt="AIROOBI">
+  <img src="/public/images/AIROOBI_Logo_White.png" id="investor-logo" alt="AIROOBI">
   <div style="display:flex;gap:12px;align-items:center">
     <button class="lang-toggle" onclick="toggleLang()" style="color:var(--gray-400);border-color:var(--gray-700)" id="inv-lang-btn">EN</button>
     <button class="investor-close" onclick="closeInvestor()">Close</button>

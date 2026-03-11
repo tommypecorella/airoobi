@@ -19,7 +19,7 @@
 html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased}
 body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:var(--black)}
 .auth-logo-wrap{margin-bottom:32px;text-align:center}
-.auth-logo-wrap img{height:36px;filter:invert(1)}
+.auth-logo-wrap img{height:36px}
 .auth-box{background:var(--gray-800);border:1px solid var(--gray-700);max-width:420px;width:100%;padding:48px 40px;position:relative}
 .auth-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:8px}
 .auth-box .auth-sub{font-size:13px;color:var(--gray-400);margin-bottom:32px}
@@ -52,7 +52,7 @@ footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
 <a href="/" class="back-link">&larr; <span class="it">Torna su AIROOBI</span><span class="en">Back to AIROOBI</span></a>
 
 <div class="auth-logo-wrap">
-  <img src="/public/images/Logo_long_airoobi_transparent.png" alt="AIROOBI">
+  <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI">
 </div>
 
 <div class="auth-box">
@@ -112,9 +112,8 @@ function getSession(){try{return JSON.parse(localStorage.getItem('airoobi_sessio
 // ── Tracking ──
 async function track(event,props){
   try{
-    var lang=document.documentElement.getAttribute('data-lang')||'it';
-    var payload={event_type:event,page:location.pathname,referrer:document.referrer,lang:lang,user_agent:navigator.userAgent,props:JSON.stringify(props||{})};
-    var s=getSession();if(s&&s.user)payload.user_id=s.user.id;
+    var s=getSession();
+    var payload={event:event,user_id:s&&s.user?s.user.id:null,props:Object.keys(props||{}).length?props:null,url:location.pathname+location.hash,referrer:document.referrer||null,ua:navigator.userAgent.substring(0,120),created_at:new Date().toISOString()};
     fetch(SB_URL+'/rest/v1/events',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(payload)}).catch(function(){});
   }catch(e){}
 }
@@ -150,28 +149,10 @@ async function doLogin(){
   var status=result.status;var data=result.data;
 
   if(status===200&&data.access_token){
-    if(!data.user.email_confirmed_at){
-      track('login_email_not_confirmed',{lang:lang});
-      var errEl=document.getElementById('login-error');
-      errEl.style.display='block';
-      errEl.style.color='#B8960C';
-      errEl.innerHTML=(lang==='it'
-        ?'Controlla la tua email per confermare l\'account.<br>Hai ricevuto: <strong>'+email+'</strong>'
-        :'Check your email to confirm your account.<br>Sent to: <strong>'+email+'</strong>')
-        +'<br><button id="resend-confirm-btn" style="margin-top:10px;padding:8px 18px;background:#B8960C;color:#000;border:none;cursor:pointer;font-weight:600;letter-spacing:1px">'
-        +(lang==='it'?'Reinvia email di conferma':'Resend confirmation email')+'</button>';
-      document.getElementById('resend-confirm-btn').onclick=async function(){
-        this.disabled=true;
-        this.textContent=lang==='it'?'Invio in corso...':'Sending...';
-        await sbAuth('resend',{type:'signup',email:email});
-        this.textContent=lang==='it'?'Email reinviata':'Email resent';
-      };
-    }else{
-      // Success — save session and redirect to main
-      saveSession(data);
-      track('login',{lang:lang});
-      window.location.href='/';
-    }
+    // Let user in regardless of email confirmation status
+    saveSession(data);
+    track('login',{lang:lang,email_confirmed:!!data.user.email_confirmed_at});
+    window.location.href='/';
   }else{
     var msg=data.error_description||data.msg||data.message||'';
     if(msg.toLowerCase().includes('email not confirmed')){
