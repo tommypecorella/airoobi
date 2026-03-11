@@ -2074,13 +2074,20 @@ async function loadTessere(){
   }
 
   // ── Treasury / Fondo Comune ──
-  // treasury_stats non ancora attivo — mostra placeholder
-  var tEl=document.getElementById('tessere-treasury');
-  var mEl=document.getElementById('tessere-minted');
-  var uEl=document.getElementById('tessere-unit-value');
-  if(tEl)tEl.textContent='—';
-  if(mEl)mEl.textContent='0';
-  if(uEl)uEl.textContent='—';
+  try{
+    var tRows=await sbGet('treasury_stats?select=*&order=created_at.desc&limit=1',token);
+    if(tRows&&tRows.length){
+      var treasury=parseFloat(tRows[0].balance_eur)||0;
+      var minted=tRows[0].nft_minted||cards.length||1;
+      var unitVal=minted>0?(treasury/minted).toFixed(2):'—';
+      var tEl=document.getElementById('tessere-treasury');
+      var mEl=document.getElementById('tessere-minted');
+      var uEl=document.getElementById('tessere-unit-value');
+      if(tEl)tEl.textContent='€ '+treasury.toFixed(2);
+      if(mEl)mEl.textContent=minted;
+      if(uEl)uEl.textContent='€ '+unitVal;
+    }
+  }catch(e){}
 }
 
 // ══ EARNINGS SYSTEM ══
@@ -2492,8 +2499,9 @@ async function loadAdminData(){
       document.getElementById('adm-inv-leads').textContent=leads?leads.length:0;
     }catch(e){document.getElementById('adm-inv-leads').textContent='—';}
     
-    // Cost Tracker
+    // Cost Tracker + Treasury
     loadCostTracker();
+    loadAdminTreasury();
 
   }catch(e){console.error('Admin load error:',e);}
 }
@@ -2644,6 +2652,96 @@ async function ctDelete(){
     ctCloseModal();
     loadCostTracker();
   }catch(e){console.error('CT delete error:',e);alert('Errore eliminazione: '+e.message);}
+}
+
+// ── Admin Treasury (persist to DB) ──
+async function loadAdminTreasury(){
+  var s=getSession();if(!s)return;
+  try{
+    var rows=await sbGet('treasury_stats?select=*&order=created_at.desc&limit=1',s.access_token);
+    if(!rows||!rows.length)return;
+    var t=rows[0];
+    // Populate first form (NFT Metrics)
+    var i1=document.getElementById('adm-input-treasury');if(i1)i1.value=t.balance_eur||0;
+    var i2=document.getElementById('adm-input-minted');if(i2)i2.value=t.nft_minted||0;
+    var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=t.nft_circulating||0;
+    var i4=document.getElementById('adm-input-maxsupply');if(i4)i4.value=t.nft_max_supply||1000;
+    // Populate second form (Tokenomics)
+    var i5=document.getElementById('adm-treasury-input');if(i5)i5.value=t.balance_eur||0;
+    var i6=document.getElementById('adm-aico-input');if(i6)i6.value=t.aico_circulating||0;
+    // Populate revenue cards
+    var ra=document.getElementById('adm-revenue-ads');if(ra)ra.textContent='$'+(parseFloat(t.revenue_ads)||0).toFixed(2);
+    var rs=document.getElementById('adm-revenue-adsense');if(rs)rs.textContent='$'+(parseFloat(t.revenue_adsense)||0).toFixed(2);
+    var tb=document.getElementById('adm-treasury-balance');if(tb)tb.textContent='€'+(parseFloat(t.balance_eur)||0).toFixed(2);
+    // Trigger calculations
+    recalcNFTValue();
+    updateNftMetrics();
+  }catch(e){console.error('Admin treasury load:',e);}
+}
+
+function recalcNFTValue(){
+  var treasury=parseFloat(document.getElementById('adm-treasury-input')?.value)||0;
+  var aico=parseInt(document.getElementById('adm-aico-input')?.value)||0;
+  var price=0.10;
+  // Update coin metrics cards
+  var cs=document.getElementById('adm-coin-supply');if(cs)cs.textContent=aico.toLocaleString();
+  var mc=document.getElementById('adm-coin-marketcap');if(mc)mc.textContent='€'+(aico*price).toFixed(2);
+  var fdv=document.getElementById('adm-coin-fdv');if(fdv)fdv.textContent='€'+(10000000*price).toFixed(2);
+  var tr=document.getElementById('adm-coin-treasury-ratio');
+  if(tr)tr.textContent=aico>0?((treasury/(aico*price))*100).toFixed(1)+'%':'—%';
+  // NFT per AICO
+  var minted=parseInt(document.getElementById('adm-input-minted')?.value)||0;
+  var nr=document.getElementById('adm-coin-nft-ratio');
+  if(nr)nr.textContent=minted>0?Math.round(aico/minted):'—';
+  // Backing ratio
+  var br=document.getElementById('adm-coin-backing');
+  if(br)br.textContent=aico>0?((treasury*0.95/(aico*price))*100).toFixed(1)+'%':'—%';
+  // Treasury cards
+  var nt=document.getElementById('adm-nft-treasury');if(nt)nt.textContent='€'+treasury.toFixed(2);
+}
+
+function updateNftMetrics(){
+  var treasury=parseFloat(document.getElementById('adm-input-treasury')?.value)||0;
+  var minted=parseInt(document.getElementById('adm-input-minted')?.value)||0;
+  var circulating=parseInt(document.getElementById('adm-input-circulating')?.value)||0;
+  var maxSupply=parseInt(document.getElementById('adm-input-maxsupply')?.value)||1000;
+  var nftValue=minted>0?treasury/minted:0;
+  // Update cards
+  var v1=document.getElementById('adm-treasury-val');if(v1)v1.textContent='€ '+treasury.toFixed(2);
+  var v2=document.getElementById('adm-nft-minted');if(v2)v2.textContent=minted;
+  var v3=document.getElementById('adm-nft-value');if(v3)v3.textContent='€ '+nftValue.toFixed(2);
+  var v4=document.getElementById('adm-nft-marketcap');if(v4)v4.textContent='€ '+(nftValue*circulating).toFixed(2);
+  var v5=document.getElementById('adm-nft-circulating');if(v5)v5.textContent=circulating+' NFT';
+  var v6=document.getElementById('adm-nft-fully-diluted');if(v6)v6.textContent='€ '+(nftValue*maxSupply).toFixed(2);
+  var v7=document.getElementById('adm-nft-buyback');if(v7)v7.textContent='€ '+(nftValue*0.95).toFixed(2);
+  var v8=document.getElementById('adm-nft-upside');if(v8)v8.textContent='€ '+(nftValue*0.05).toFixed(2);
+  // Sync treasury input in second form
+  var i5=document.getElementById('adm-treasury-input');if(i5&&i5.value!=treasury)i5.value=treasury;
+  recalcNFTValue();
+}
+
+async function saveAdminTokenomics(){
+  var s=getSession();if(!s)return;
+  var data={
+    balance_eur:parseFloat(document.getElementById('adm-input-treasury')?.value)||0,
+    nft_minted:parseInt(document.getElementById('adm-input-minted')?.value)||0,
+    nft_circulating:parseInt(document.getElementById('adm-input-circulating')?.value)||0,
+    nft_max_supply:parseInt(document.getElementById('adm-input-maxsupply')?.value)||1000,
+    aico_circulating:parseInt(document.getElementById('adm-aico-input')?.value)||0,
+    updated_at:new Date().toISOString()
+  };
+  try{
+    // Get existing row
+    var rows=await sbGet('treasury_stats?select=id&order=created_at.desc&limit=1',s.access_token);
+    if(rows&&rows.length){
+      await sbPatch('treasury_stats?id=eq.'+rows[0].id,data,s.access_token);
+    }else{
+      await fetch(SB_URL+'/rest/v1/treasury_stats',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
+    }
+    // Feedback
+    var btn=event?.target;
+    if(btn){var orig=btn.textContent;btn.textContent='SALVATO ✓';btn.style.background='#49b583';setTimeout(function(){btn.textContent=orig;btn.style.background='var(--gold)';},1500);}
+  }catch(e){console.error('Save treasury error:',e);alert('Errore salvataggio: '+e.message);}
 }
 
 // ── Roadmap Detail ──
@@ -4177,7 +4275,7 @@ async function loadReferralHistory(){
           <input type="number" id="adm-input-maxsupply" value="1000" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
         </div>
       </div>
-      <button onclick="updateNftMetrics()" style="background:var(--gold);color:#000;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:10px 24px;border:none;cursor:pointer">CALCOLA &amp; AGGIORNA</button>
+      <button onclick="updateNftMetrics();saveAdminTokenomics()" style="background:var(--gold);color:#000;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:10px 24px;border:none;cursor:pointer">CALCOLA &amp; SALVA</button>
     </div>
     <p class="admin-note" style="margin-top:12px">Logica: <strong>Valore NFT = Treasury ÷ NFT Minati</strong> · <strong>Market Cap = Valore NFT × Circolante</strong> · <strong>Fully Diluted = Valore NFT × Max Supply</strong></p>
   </div>

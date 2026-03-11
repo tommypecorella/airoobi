@@ -155,19 +155,22 @@ CREATE TABLE public.cost_tracker (
   CONSTRAINT cost_tracker_pkey PRIMARY KEY (id)
 );
 
--- ══════════════════════════════════════════════════
--- NOTA: treasury_stats NON esiste nel DB attuale.
--- Da creare se/quando necessario:
---
--- CREATE TABLE public.treasury_stats (
---   id uuid NOT NULL DEFAULT gen_random_uuid(),
---   balance_eur numeric(12,2) DEFAULT 0,
---   nft_minted integer DEFAULT 0,
---   nft_value numeric(12,4) DEFAULT 0,
---   created_at timestamp with time zone DEFAULT now(),
---   CONSTRAINT treasury_stats_pkey PRIMARY KEY (id)
--- );
--- ══════════════════════════════════════════════════
+-- ──────────────────────────────────────────────────
+-- 11. TREASURY_STATS
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.treasury_stats (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  balance_eur numeric(12,2) DEFAULT 0,
+  nft_minted integer DEFAULT 0,
+  nft_circulating integer DEFAULT 0,
+  nft_max_supply integer DEFAULT 1000,
+  aico_circulating integer DEFAULT 0,
+  revenue_ads numeric(12,2) DEFAULT 0,
+  revenue_adsense numeric(12,2) DEFAULT 0,
+  updated_at timestamp with time zone DEFAULT now(),
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT treasury_stats_pkey PRIMARY KEY (id)
+);
 
 -- ══════════════════════════════════════════════════
 -- RLS POLICIES — vedi schema_rls.sql separato
