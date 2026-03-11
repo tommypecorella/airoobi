@@ -1869,9 +1869,7 @@ function clearSession(){localStorage.removeItem('airoobi_session')}
 // ── Logout ──
 function doLogout(){
   clearSession();
-  updateNavAuth(false);
-  document.getElementById('dash-overlay').classList.remove('active');
-  document.body.style.overflow='';
+  window.location.href='/';
 }
 
 // ── Link referral ──
