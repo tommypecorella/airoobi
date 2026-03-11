@@ -2452,7 +2452,7 @@ async function loadEarnings(){
   
   // Streak info
   const infoEl=document.getElementById('streak-info');
-  const remaining=7-dayInWeek;
+  const remaining=7-dayOfWeek;
   if(remaining===7&&streak>0&&streak%7===0){
     infoEl.innerHTML=lang==='it'?'<span>Streak completata! +1 bonus!</span>':'<span>Streak complete! +1 bonus!</span>';
   }else{
