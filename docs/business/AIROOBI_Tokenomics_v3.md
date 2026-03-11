@@ -1,7 +1,7 @@
 # AIROOBI — Tokenomics & Economic Model
-**TECH-001 · Version 3.1 · Final · 10 Marzo 2026**
+**TECH-001 · Version 3.2 · Final · 11 Marzo 2026**
 
-> Stage 0 CHIUSO. Questo documento riflette il sistema definitivo in produzione su airoobi.com.
+> Alpha 0 APERTO (DB resettato 11 Mar 2026). Questo documento riflette il sistema in produzione su airoobi.com.
 
 ---
 
@@ -59,12 +59,17 @@ Le Tessere sono carte ricaricabili (proxy wallet) che mostrano il totale delle t
 
 ---
 
-## 4. NFT Types
+## 4. NFT Types & Asset Registry
 
-| Tipo NFT | DB Key | Cosa rappresenta | Come si ottiene |
-|---|---|---|---|
-| Tessera Rendimento | NFT_EARN | Certificato di resa — valore KAS garantito al 95% | Automatico ad ogni blocco acquistato |
-| Badge Fondatore | NFT_ALPHA_BRAVE | Badge Early Adopter (non trasferibile) | Primi 1.000 utenti Alpha Brave |
+Tutti gli asset ufficiali sono censiti nella tabella `asset_registry` su Supabase.
+
+| Tipo NFT | DB Key (`nft_type`) | `asset_type` | Cosa rappresenta | Come si ottiene |
+|---|---|---|---|---|
+| Tessera Rendimento | `NFT_REWARD` | nft | Certificato di resa — valore KAS garantito al 95% | Automatico ad ogni blocco acquistato |
+| NFT Alpha Tier 0 | `NFT_ALPHA_TIER0` | nft | NFT esclusivo prima generazione fondatori | Primi utenti Alpha Brave |
+| Badge Fondatore | `BADGE_FONDATORE` | badge | Badge Early Adopter (non trasferibile) | Primi 1.000 utenti Alpha Brave |
+
+> La tabella `asset_registry` elenca anche ARIA (`currency`). I tipi NFT/badge sono visibili nella sezione "NFT per tipo" del pannello admin.
 
 ---
 
@@ -116,7 +121,7 @@ Le Tessere sono carte ricaricabili (proxy wallet) che mostrano il totale delle t
 
 | Fase | Stato | Obiettivo | Target utenti |
 |---|---|---|---|
-| Alpha Brave | ✅ ATTIVA (Stage 0 chiuso) | Primi 1.000 utenti, invitation-only | 1.000 |
+| Alpha Brave | ✅ ATTIVA (Alpha 0 aperto, DB reset 11 Mar 2026) | Primi 1.000 utenti, invitation-only | 1.000 |
 | Alpha Wise | ⏳ Prossima | Apertura graduale, referral attivo | 2.500 |
 | Beta | ⏳ Futuro | Community bootstrap, NFT reveal event | 5.000 |
 | Mainnet | ⏳ Futuro | Launch pubblico, smart contract on-chain | 15.000+ |
