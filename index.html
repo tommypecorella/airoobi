@@ -2785,6 +2785,8 @@ async function loadAdminData(){
     const ptsProfiles=await sbGet('profiles?select=total_points',t);
     const totalPts=ptsProfiles?ptsProfiles.reduce(function(a,b){return a+(b.total_points||0)},0):0;
     document.getElementById('adm-points').textContent=totalPts.toLocaleString();
+    var aicoIn=document.getElementById('adm-aico-input');if(aicoIn)aicoIn.value=totalPts;
+    var coinSup=document.getElementById('adm-coin-supply');if(coinSup)coinSup.textContent=totalPts.toLocaleString();
     
     // Today's checkins
     var today=new Date().toISOString().split('T')[0];
