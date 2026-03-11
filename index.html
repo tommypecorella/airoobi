@@ -702,6 +702,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 
 /* ── MOBILE FIX: admin param grid ── */
 @media(max-width:480px){.admin-param-grid{grid-template-columns:1fr!important}}
+@media(max-width:768px){.admin-content{padding:24px 16px}.admin-content h1{font-size:24px;margin-bottom:20px}.admin-nav{padding:12px 16px}.admin-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.admin-card{padding:16px}.admin-card-val{font-size:22px}}
 
 /* ── COST TRACKER ── */
 .ct-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
@@ -1064,7 +1065,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.3.0 · 15:45 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.4.0 · 17:05 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -2497,11 +2498,13 @@ async function loadAdminData(){
   try{
     // Users
     const users=await sbGet('profiles?select=*&order=created_at.desc',t);
-    document.getElementById('adm-users').textContent=users?users.length:0;
-    
-    // Waitlist
-    const wl=await sbGet('waitlist?select=id',t);
-    document.getElementById('adm-waitlist').textContent=wl?wl.length:0;
+    var userCount=users?users.length:0;
+    document.getElementById('adm-users').textContent=userCount;
+
+    // Posti rimasti Alpha Brave
+    var remaining=Math.max(0,1000-userCount);
+    var remEl=document.getElementById('adm-remaining');
+    if(remEl){remEl.textContent=remaining;remEl.style.color=remaining<=0?'#B91C1C':remaining<=100?'#F59E0B':'var(--gold)';}
     
     // Total ARIA in circolazione (sum of profiles.total_points)
     const ptsProfiles=await sbGet('profiles?select=total_points',t);
@@ -2706,8 +2709,7 @@ async function loadAdminTreasury(){
   var tk=s.access_token;
   try{
     var rows=await sbGet('treasury_stats?select=*&order=created_at.desc&limit=1',tk);
-    if(!rows||!rows.length)return;
-    var t=rows[0];
+    var t=(rows&&rows.length)?rows[0]:{};
     // Populate first form (NFT Metrics)
     var i1=document.getElementById('adm-input-treasury');if(i1)i1.value=t.balance_eur||0;
     var i2=document.getElementById('adm-input-minted');if(i2)i2.value=t.nft_minted||0;
@@ -2852,11 +2854,14 @@ async function saveAdminTokenomics(){
     if(rows&&rows.length){
       await sbPatch('treasury_stats?id=eq.'+rows[0].id,data,s.access_token);
     }else{
-      await fetch(SB_URL+'/rest/v1/treasury_stats',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
+      var postRes=await fetch(SB_URL+'/rest/v1/treasury_stats',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
+      if(!postRes.ok)throw new Error('POST failed: '+postRes.status+' '+(await postRes.text()));
     }
-    // Feedback
-    var btn=event?.target;
-    if(btn){var orig=btn.textContent;btn.textContent='SALVATO ✓';btn.style.background='#49b583';setTimeout(function(){btn.textContent=orig;btn.style.background='var(--gold)';},1500);}
+    // Feedback — find the button that triggered the save
+    document.querySelectorAll('[onclick*="saveAdminTokenomics"]').forEach(function(btn){
+      var orig=btn.textContent;btn.textContent='SALVATO ✓';btn.style.background='#49b583';
+      setTimeout(function(){btn.textContent=orig;btn.style.background='var(--gold)';},1500);
+    });
   }catch(e){console.error('Save treasury error:',e);alert('Errore salvataggio: '+e.message);}
 }
 
@@ -4301,8 +4306,8 @@ async function loadReferralHistory(){
         <div class="admin-card-label">Utenti registrati</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val" id="adm-waitlist">—</div>
-        <div class="admin-card-label">Waitlist</div>
+        <div class="admin-card-val" id="adm-remaining">—</div>
+        <div class="admin-card-label">Posti rimasti (Alpha Brave)</div>
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-points">—</div>
