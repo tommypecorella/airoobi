@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // ══════════════════════════════════════════════════
-// AIROOBI — Bi-Hourly Report Email
-// Cron: 0 */2 * * * node /home/drskeezu/projects/airoobi/scripts/report.js
+// AIROOBI — Report Email (su richiesta del Founder)
+// Comando: node /home/drskeezu/projects/airoobi/scripts/report.js
 //
 // Env vars required (in .env at project root):
 //   SUPABASE_URL
@@ -136,7 +136,10 @@ async function main() {
     sbGet('events?select=event,created_at&order=created_at.desc&limit=5')
   ]);
 
+  const ALPHA_BRAVE_MAX = 1000;
   const totalUsers = Array.isArray(allUsers) ? allUsers.length : 0;
+  const remaining = Math.max(0, ALPHA_BRAVE_MAX - totalUsers);
+  const alphaBraveFull = remaining <= 0;
   const newUsersCount = Array.isArray(newUsers) ? newUsers.length : 0;
   const waitlistCount = Array.isArray(waitlist) ? waitlist.length : 0;
   const totalAria = Array.isArray(allPoints) ? allPoints.reduce((a, b) => a + (b.amount || 0), 0) : 0;
@@ -146,6 +149,11 @@ async function main() {
 
   // ── Suggestions ──
   const suggestions = [];
+  if (alphaBraveFull) {
+    suggestions.push('⚠️ ALPHA BRAVE PIENO: 1.000 utenti raggiunti. Le registrazioni sono state disabilitate automaticamente. Valuta apertura Alpha Wise (Stage 1).');
+  } else if (remaining <= 100) {
+    suggestions.push('🔥 Alpha Brave quasi pieno: ' + remaining + ' posti rimasti su 1.000. Preparati per Alpha Wise.');
+  }
   if (newUsersCount < 1) {
     suggestions.push('Nessuna nuova registrazione nelle ultime 2 ore. Valuta di condividere il link referral sui tuoi canali.');
   }
@@ -219,8 +227,8 @@ async function main() {
         <div style="font-size:10px;color:#888;letter-spacing:1px;margin-top:4px">NUOVI (2H)</div>
       </td>
       <td style="padding:16px;background:#111;border:1px solid #222;text-align:center;width:33%">
-        <div style="font-size:28px;color:#B8960C;font-weight:300">${waitlistCount}</div>
-        <div style="font-size:10px;color:#888;letter-spacing:1px;margin-top:4px">WAITLIST</div>
+        <div style="font-size:28px;color:${alphaBraveFull ? '#B91C1C' : '#49b583'};font-weight:300">${remaining}</div>
+        <div style="font-size:10px;color:#888;letter-spacing:1px;margin-top:4px">POSTI RIMASTI${alphaBraveFull ? ' ⚠️' : ''}</div>
       </td>
     </tr>
     <tr>
@@ -257,7 +265,7 @@ async function main() {
   </table>
 
   <div style="text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid #222">
-    <div style="font-size:10px;color:#666;letter-spacing:1px">AIROOBI · Report automatico ogni 2 ore</div>
+    <div style="font-size:10px;color:#666;letter-spacing:1px">AIROOBI · Report su richiesta del Founder</div>
     <div style="font-size:10px;color:#444;margin-top:4px">airoobi.com</div>
   </div>
 </div>

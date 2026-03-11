@@ -202,12 +202,26 @@ function showSuccess(id,msg){var e=document.getElementById(id);e.textContent=msg
   if(email){document.getElementById('signup-email').value=email;}
 })();
 
+// ── Cap check ──
+var ALPHA_BRAVE_MAX=1000;
+async function checkAlphaBraveFull(){
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    if(res.ok){var d=await res.json();return d.length>=ALPHA_BRAVE_MAX}
+  }catch(e){}
+  return false;
+}
+
 // ── Signup ──
 async function doSignup(){
   clearErrors();
   var email=document.getElementById('signup-email').value.trim();
   var pw=document.getElementById('signup-password').value;
   var lang=document.documentElement.getAttribute('data-lang')||'it';
+
+  // Block if Alpha Brave is full
+  var full=await checkAlphaBraveFull();
+  if(full)return showError('signup-error',lang==='it'?'Alpha Brave: posti esauriti. Registrazioni chiuse.':'Alpha Brave: sold out. Registrations closed.');
 
   if(!email||!email.includes('@'))return showError('signup-error',lang==='it'?'Email non valida':'Invalid email');
 
