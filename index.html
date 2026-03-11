@@ -1063,7 +1063,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">v0.10.0 · Last update: 10 Mar 2026 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.0.0 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -2074,23 +2074,13 @@ async function loadTessere(){
   }
 
   // ── Treasury / Fondo Comune ──
-  try{
-    const tRes=await fetch(SB_URL+'/rest/v1/treasury_stats?select=*&order=created_at.desc&limit=1',{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
-    });
-    const tData=await tRes.json();
-    if(tData&&tData.length){
-      const treasury=tData[0].balance_eur||0;
-      const minted=tData[0].nft_minted||cards.length||1;
-      const unitVal=minted>0?(treasury/minted).toFixed(2):'—';
-      const tEl=document.getElementById('tessere-treasury');
-      const mEl=document.getElementById('tessere-minted');
-      const uEl=document.getElementById('tessere-unit-value');
-      if(tEl)tEl.textContent='€ '+treasury.toFixed(2);
-      if(mEl)mEl.textContent=minted;
-      if(uEl)uEl.textContent='€ '+unitVal;
-    }
-  }catch(e){}
+  // treasury_stats non ancora attivo — mostra placeholder
+  var tEl=document.getElementById('tessere-treasury');
+  var mEl=document.getElementById('tessere-minted');
+  var uEl=document.getElementById('tessere-unit-value');
+  if(tEl)tEl.textContent='—';
+  if(mEl)mEl.textContent='0';
+  if(uEl)uEl.textContent='—';
 }
 
 // ══ EARNINGS SYSTEM ══

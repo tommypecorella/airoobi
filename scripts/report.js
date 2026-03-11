@@ -133,7 +133,7 @@ async function main() {
     sbGet('checkins?select=id&checked_at=gte.' + todayStart.split('T')[0]),
     sbGet('video_views?select=id&viewed_at=gte.' + twoHoursAgo),
     sbGet('referral_confirmations?select=id&status=eq.confirmed'),
-    sbGet('events?select=action,created_at&order=created_at.desc&limit=5')
+    sbGet('events?select=event,created_at&order=created_at.desc&limit=5')
   ]);
 
   const totalUsers = Array.isArray(allUsers) ? allUsers.length : 0;
@@ -170,7 +170,7 @@ async function main() {
   if (Array.isArray(recentEvents) && recentEvents.length > 0) {
     eventsHtml = recentEvents.map(e => {
       const d = new Date(e.created_at).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Rome' });
-      return `<tr><td style="padding:6px 12px;border-bottom:1px solid #333;color:#ccc;font-size:13px">${e.action || '—'}</td><td style="padding:6px 12px;border-bottom:1px solid #333;color:#888;font-size:13px">${d}</td></tr>`;
+      return `<tr><td style="padding:6px 12px;border-bottom:1px solid #333;color:#ccc;font-size:13px">${e.event || '—'}</td><td style="padding:6px 12px;border-bottom:1px solid #333;color:#888;font-size:13px">${d}</td></tr>`;
     }).join('');
   } else {
     eventsHtml = '<tr><td colspan="2" style="padding:6px 12px;color:#888">Nessun evento recente.</td></tr>';
