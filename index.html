@@ -1914,6 +1914,9 @@ async function showDashboard(session){
     });
     if(refBy)localStorage.removeItem('airoobi_pending_ref');
     profiles=await sbGet('profiles?id=eq.'+session.user.id+'&select=*',session.access_token);
+    // Profile just created — run bonuses + referral confirmation now
+    try{await awardWelcomeBonus(session.user.id,session.access_token);}catch(e){}
+    if(refBy){try{await autoConfirmReferral(session.user.id,session.access_token);}catch(e){}}
   }
   
   if(profiles&&profiles.length>0){
