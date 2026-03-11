@@ -2962,6 +2962,8 @@ async function loadAdminTreasury(){
       var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',tk);
       var nftCount=nfts?nfts.length:0;
       var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
+      // Auto-sync minted = circulating (all NFTs are minted on creation)
+      var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=nftCount;
       var nu=document.getElementById('adm-nft-updated');if(nu)nu.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
       // NFT breakdown per tipo — GROUP BY nft_type da nft_rewards
       var bTbody=document.getElementById('adm-nft-breakdown');
@@ -2987,6 +2989,11 @@ async function loadAdminTreasury(){
         }else{
           bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';
         }
+      // Update NFT Tracker cards
+      var braveEl=document.getElementById('adm-nft-brave-count');
+      if(braveEl)braveEl.textContent=breakdown['NFT_ALPHA_BRAVE']||0;
+      var earnEl=document.getElementById('adm-nft-earn-count');
+      if(earnEl)earnEl.textContent=breakdown['NFT_EARN']||0;
       }
     }catch(e){console.error('NFT auto-calc error:',e);}
 
@@ -3020,6 +3027,7 @@ async function refreshNftCircolante(){
     var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',s.access_token);
     var cnt=nfts?nfts.length:0;
     var i=document.getElementById('adm-input-circulating');if(i)i.value=cnt;
+    var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=cnt;
     var u=document.getElementById('adm-nft-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     // Aggiorna anche la tabella NFT per tipo
     var bTbody=document.getElementById('adm-nft-breakdown');
@@ -3040,6 +3048,11 @@ async function refreshNftCircolante(){
       }else{
         bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';
       }
+      // Update NFT Tracker cards
+      var braveEl=document.getElementById('adm-nft-brave-count');
+      if(braveEl)braveEl.textContent=breakdown['NFT_ALPHA_BRAVE']||0;
+      var earnEl=document.getElementById('adm-nft-earn-count');
+      if(earnEl)earnEl.textContent=breakdown['NFT_EARN']||0;
     }
     updateNftMetrics();
   }catch(e){console.error('Refresh NFT error:',e);}
@@ -4791,12 +4804,12 @@ async function loadReferralHistory(){
     <h2>NFT Tracker</h2>
     <div class="admin-grid">
       <div class="admin-card">
-        <div class="admin-card-val">0</div>
-        <div class="admin-card-label">NFT Alpha Brave (da emettere)</div>
+        <div class="admin-card-val" id="adm-nft-brave-count">0</div>
+        <div class="admin-card-label">NFT Alpha Brave (emessi)</div>
       </div>
       <div class="admin-card">
-        <div class="admin-card-val">0</div>
-        <div class="admin-card-label">NFT Alpha Wise (futuro)</div>
+        <div class="admin-card-val" id="adm-nft-earn-count">0</div>
+        <div class="admin-card-label">NFT EARN (emessi)</div>
       </div>
     </div>
     <p class="admin-note">NFT tracking sarà collegato a Kaspa al mainnet. Per ora monitoriamo i candidati per tier.</p>
