@@ -1630,9 +1630,9 @@ function openExplainerVideo(){
   showVideoAd(function(){});
 }
 
-function gatedDashboard(session){
+async function gatedDashboard(session){
   // Video gate disabilitato — accesso diretto alla dashboard
-  showDashboard(session);
+  await showDashboard(session);
 }
 
 // ══ SUPABASE AUTH ══
@@ -2650,9 +2650,10 @@ async function doConfirmReferralReal(){
 
 // ── LOAD REFERRAL TAB ──
 async function loadReferralTab(){
-  if(!earnSession)return;
-  const token=earnSession.access_token;
-  const uid=earnSession.user.id;
+  var rs=earnSession||getSession();
+  if(!rs||!rs.access_token)return;
+  const token=rs.access_token;
+  const uid=rs.user.id;
   const profiles=await sbGet('profiles?id=eq.'+uid+'&select=referral_count',token);
   if(profiles&&profiles.length>0){
     document.getElementById('ref-count-2').textContent=profiles[0].referral_count||0;
