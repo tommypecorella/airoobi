@@ -2967,9 +2967,10 @@ async function loadAdminTreasury(){
     // Auto-calculate CIRCOLANTE (NFT) from nft_rewards
     try{
       var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',tk);
-      var nftCount=nfts?nfts.length:0;
+      // Circulating/minted = solo NFT_EARN (reward), non badge come ALPHA_BRAVE
+      var earnOnly=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}):[];
+      var nftCount=earnOnly.length;
       var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
-      // Auto-sync minted = circulating (all NFTs are minted on creation)
       var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=nftCount;
       var nu=document.getElementById('adm-nft-updated');if(nu)nu.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
       // NFT breakdown per tipo — GROUP BY nft_type da nft_rewards
@@ -3032,7 +3033,8 @@ async function refreshNftCircolante(){
   var s=getSession();if(!s)return;
   try{
     var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',s.access_token);
-    var cnt=nfts?nfts.length:0;
+    var earnOnly=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}):[];
+    var cnt=earnOnly.length;
     var i=document.getElementById('adm-input-circulating');if(i)i.value=cnt;
     var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=cnt;
     var u=document.getElementById('adm-nft-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
