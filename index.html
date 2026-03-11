@@ -2708,6 +2708,7 @@ function renderInvestorCharts(){
 // ══ ADMIN AREA ══
 const ADMIN_EMAILS=['tommaso.pecorella+ceo@outlook.com','ceo@airoobi.com'];
 
+var _adminRefreshInterval=null;
 function openAdmin(){
   const s=getSession();
   if(!s||ADMIN_EMAILS.indexOf(s.user?.email)===-1)return;
@@ -2715,11 +2716,14 @@ function openAdmin(){
   document.body.style.overflow='hidden';
   history.replaceState(null,null,'#admin');
   loadAdminData();
+  if(_adminRefreshInterval)clearInterval(_adminRefreshInterval);
+  _adminRefreshInterval=setInterval(loadAdminData,60000);
 }
 function closeAdmin(){
   document.getElementById('admin-overlay').classList.remove('active');
   document.body.style.overflow='';
   history.replaceState(null,null,' ');
+  if(_adminRefreshInterval){clearInterval(_adminRefreshInterval);_adminRefreshInterval=null;}
 }
 
 async function loadAdminData(){
