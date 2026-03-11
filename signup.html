@@ -270,6 +270,7 @@ async function doSignup(){
     if(data.session){
       // Auto-confirmed — save session and redirect
       saveSession(data.session);
+      if(ref)localStorage.setItem('airoobi_pending_ref',ref);
       track('signup_complete',{method:'auto_confirm',has_ref:!!ref,lang:lang});
       if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user.id});
       window.location.href='/';

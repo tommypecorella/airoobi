@@ -1905,11 +1905,16 @@ async function showDashboard(session){
   // If no profile exists, create one manually
   if(!profiles||profiles.length===0){
     const code=Math.random().toString(36).substring(2,10);
+    // Get referred_by from user_metadata (set at signup) or localStorage
+    var refBy=session.user?.user_metadata?.referred_by||localStorage.getItem('airoobi_pending_ref')||null;
+    var profileData={id:session.user.id,email:email,referral_code:code};
+    if(refBy)profileData.referred_by=refBy;
     await fetch(SB_URL+'/rest/v1/profiles',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+session.access_token,'Content-Type':'application/json'},
-      body:JSON.stringify({id:session.user.id,email:email,referral_code:code})
+      body:JSON.stringify(profileData)
     });
+    if(refBy)localStorage.removeItem('airoobi_pending_ref');
     profiles=await sbGet('profiles?id=eq.'+session.user.id+'&select=*',session.access_token);
   }
   
