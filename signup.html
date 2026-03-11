@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>Registrati — AIROOBI</title>
+<meta name="description" content="Registrati su AIROOBI e unisciti agli Alpha Brave. Guadagna ARIA ogni giorno — gratis.">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#000000;--white:#FFFFFF;--gold:#B8960C;--gold-dim:rgba(184,150,12,.3);--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-700:#374151;--gray-800:#1F2937;--aria:#4A9EFF;--kas:#49EACB;--font-h:'Cormorant Garamond',Georgia,serif;--font-b:'Instrument Sans','Helvetica Neue',sans-serif;--font-m:'DM Mono','Courier New',monospace}
+html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:var(--black)}
+.auth-logo-wrap{margin-bottom:32px;text-align:center}
+.auth-logo-wrap img{height:36px;filter:invert(1)}
+.auth-box{background:var(--gray-800);border:1px solid var(--gray-700);max-width:420px;width:100%;padding:48px 40px;position:relative}
+.auth-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:8px}
+.auth-box .auth-sub{font-size:13px;color:var(--gray-400);margin-bottom:32px}
+.auth-box label{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px}
+.auth-box input[type="email"],.auth-box input[type="password"],.auth-box input[type="text"]{width:100%;padding:14px 16px;background:var(--black);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;margin-bottom:20px;transition:border-color .3s}
+.auth-box input:focus{border-color:var(--gold)}
+.auth-btn{width:100%;padding:14px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:16px}
+.auth-btn:hover{background:var(--white)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed}
+.auth-toggle{font-size:13px;color:var(--gray-400);text-align:center}
+.auth-toggle a{color:var(--gold);cursor:pointer;text-decoration:none}
+.auth-toggle a:hover{text-decoration:underline}
+.auth-error{background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+.auth-success{background:rgba(184,150,12,.1);border:1px solid var(--gold-dim);color:var(--gold);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+.pw-strength{height:4px;margin:-12px 0 16px;display:flex;gap:3px}
+.pw-strength-bar{flex:1;height:100%;background:var(--gray-700);transition:background .3s}
+.pw-strength-bar.weak{background:#B91C1C}
+.pw-strength-bar.medium{background:#B8960C}
+.pw-strength-bar.strong{background:#1a7a3f}
+.pw-strength-label{font-size:11px;margin:-8px 0 16px;letter-spacing:1px}
+.cf-turnstile-wrap{margin-bottom:16px;display:flex;justify-content:center}
+.auth-ad-slot{max-width:728px;width:100%;margin-top:32px;text-align:center;min-height:90px}
+.auth-ad-slot-mobile{display:none}
+@media(max-width:768px){.auth-ad-slot{display:none}.auth-ad-slot-mobile{display:block;max-width:320px;width:100%;margin-top:24px;text-align:center;min-height:50px}.auth-box{padding:32px 24px}}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--gray-400);font-size:12px;letter-spacing:1px;text-decoration:none;margin-bottom:24px;transition:color .3s}
+.back-link:hover{color:var(--gold)}
+.it{display:none}.en{display:none}
+html[data-lang="it"] .it{display:inline}
+html[data-lang="en"] .en{display:inline}
+html:not([data-lang]) .it{display:inline}
+footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
+.footer-copy{font-size:11px;color:var(--gray-400)}
+</style>
+</head>
+<body>
+
+<a href="/" class="back-link">&larr; <span class="it">Torna su AIROOBI</span><span class="en">Back to AIROOBI</span></a>
+
+<div class="auth-logo-wrap">
+  <img src="/public/images/Logo_long_airoobi_transparent.png" alt="AIROOBI">
+</div>
+
+<div class="auth-box">
+  <h2><span class="it">Unisciti agli Alpha Brave</span><span class="en">Join the Alpha Brave</span></h2>
+  <p class="auth-sub"><span class="it">I primi 1.000 coraggiosi. Vantaggi permanenti esclusivi.</span><span class="en">The first 1,000 brave ones. Exclusive permanent perks.</span></p>
+  <div class="auth-error" id="signup-error"></div>
+  <div class="auth-success" id="signup-success"></div>
+  <div id="resend-email-wrap" style="display:none;text-align:center;margin:8px 0">
+    <a href="javascript:void(0)" onclick="resendConfirmation()" style="color:var(--gold);font-size:13px;text-decoration:underline">
+      <span class="it">Non hai ricevuto l'email? Reinvia</span><span class="en">Didn't receive the email? Resend</span>
+    </a>
+  </div>
+  <label>Email</label>
+  <input type="email" id="signup-email" placeholder="email@example.com">
+  <label>Password</label>
+  <input type="password" id="signup-password" placeholder="Min. 8 caratteri, maiuscola, numero, speciale" data-it="Min. 8 caratteri, maiuscola, numero, speciale" data-en="Min. 8 chars, uppercase, number, special">
+  <div class="pw-strength"><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div><div class="pw-strength-bar"></div></div>
+  <div class="pw-strength-label" id="pw-strength-label"></div>
+  <label><span class="it">Ripeti Password</span><span class="en">Repeat Password</span></label>
+  <input type="password" id="signup-password2" placeholder="Ripeti password" data-it="Ripeti password" data-en="Repeat password">
+  <label><span class="it">Invitato con affetto da</span><span class="en">Warmly invited by</span></label>
+  <input type="text" id="signup-ref" placeholder="Codice referral (opzionale)" data-it="Codice referral (opzionale)" data-en="Referral code (optional)" style="font-family:var(--font-m);letter-spacing:1px;width:100%;box-sizing:border-box">
+  <div class="cf-turnstile-wrap" id="signup-turnstile">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAACovg89u9bGYrc0E" data-theme="dark"></div>
+  </div>
+  <button class="auth-btn" id="signup-btn" onclick="doSignup()">
+    <span class="it">Registrati</span><span class="en">Sign Up</span>
+  </button>
+  <p class="auth-toggle"><span class="it">Hai già un account?</span><span class="en">Already have an account?</span> <a href="/login.html">Login</a></p>
+</div>
+
+<!-- A-ADS banner 728x90 desktop -->
+<div class="auth-ad-slot">
+  <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+</div>
+<!-- A-ADS banner 320x50 mobile -->
+<div class="auth-ad-slot-mobile">
+  <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=320x50" style="width:320px;height:50px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+</div>
+
+<footer>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.0.0</span></p>
+</footer>
+
+<script>
+// ── Lang ──
+(function(){
+  var saved=localStorage.getItem('airoobi_lang');
+  if(saved)document.documentElement.setAttribute('data-lang',saved);
+  // Update placeholders
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  document.querySelectorAll('input[data-'+lang+']').forEach(function(el){el.placeholder=el.getAttribute('data-'+lang)});
+})();
+
+function toggleLang(){
+  var cur=document.documentElement.getAttribute('data-lang')||'it';
+  var next=cur==='it'?'en':'it';
+  document.documentElement.setAttribute('data-lang',next);
+  localStorage.setItem('airoobi_lang',next);
+  document.querySelectorAll('input[data-'+next+']').forEach(function(el){el.placeholder=el.getAttribute('data-'+next)});
+}
+
+// ── Supabase ──
+var SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+async function sbAuth(endpoint,body){
+  var res=await fetch(SB_URL+'/auth/v1/'+endpoint,{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return {status:res.status,data:await res.json()};
+}
+async function sbGet(path,token){
+  var h={'apikey':SB_KEY,'Authorization':'Bearer '+(token||SB_KEY)};
+  var res=await fetch(SB_URL+'/rest/v1/'+path,{headers:h});
+  return res.ok?await res.json():[];
+}
+async function sbPost(table,data){
+  var res=await fetch(SB_URL+'/rest/v1/'+table,{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(data)});
+  return res;
+}
+
+function saveSession(s){localStorage.setItem('airoobi_session',JSON.stringify(s))}
+function getSession(){try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch(e){return null}}
+
+// ── Tracking ──
+async function track(event,props){
+  try{
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    var payload={event_type:event,page:location.pathname,referrer:document.referrer,lang:lang,user_agent:navigator.userAgent,props:JSON.stringify(props||{})};
+    var s=getSession();if(s&&s.user)payload.user_id=s.user.id;
+    fetch(SB_URL+'/rest/v1/events',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
+}
+
+// ── Turnstile ──
+function getTurnstileToken(formId){
+  var container=document.getElementById(formId);
+  if(!container)return null;
+  var input=container.querySelector('[name="cf-turnstile-response"]');
+  return input?input.value:null;
+}
+
+// ── Password strength ──
+var PW_REGEX=/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/;
+function checkPasswordStrength(pw){
+  if(!pw||pw.length<4)return 0;
+  var score=0;
+  if(pw.length>=8)score++;
+  if(/[a-z]/.test(pw)&&/[A-Z]/.test(pw))score++;
+  if(/\d/.test(pw))score++;
+  if(/[!@#$%^&*]/.test(pw))score++;
+  return score;
+}
+function updatePwStrength(){
+  var pw=document.getElementById('signup-password').value;
+  var bars=document.querySelectorAll('.pw-strength-bar');
+  var label=document.getElementById('pw-strength-label');
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var score=checkPasswordStrength(pw);
+  bars.forEach(function(b,i){b.className='pw-strength-bar';if(i<score){b.classList.add(score<=1?'weak':score<=2?'medium':'strong')}});
+  var labels={it:['','Debole','Discreta','Buona','Forte'],en:['','Weak','Fair','Good','Strong']};
+  var colors=['','#B91C1C','#B8960C','#B8960C','#1a7a3f'];
+  label.textContent=labels[lang][score]||'';label.style.color=colors[score]||'';
+}
+document.getElementById('signup-password').addEventListener('input',updatePwStrength);
+
+// ── Helpers ──
+function clearErrors(){document.querySelectorAll('.auth-error,.auth-success').forEach(function(e){e.style.display='none'})}
+function showError(id,msg){var e=document.getElementById(id);e.textContent=msg;e.style.display='block'}
+function showSuccess(id,msg){var e=document.getElementById(id);e.textContent=msg;e.style.display='block'}
+
+// ── Auto-fill ref from URL ──
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var ref=params.get('ref');
+  var email=params.get('email');
+  if(ref){
+    var refInput=document.getElementById('signup-ref');
+    if(refInput){refInput.value=ref;refInput.style.color='var(--gold)';}
+    localStorage.setItem('airoobi_pending_ref',ref);
+  }
+  if(email){document.getElementById('signup-email').value=email;}
+})();
+
+// ── Signup ──
+async function doSignup(){
+  clearErrors();
+  var email=document.getElementById('signup-email').value.trim();
+  var pw=document.getElementById('signup-password').value;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+
+  if(!email||!email.includes('@'))return showError('signup-error',lang==='it'?'Email non valida':'Invalid email');
+
+  if(!PW_REGEX.test(pw)){
+    return showError('signup-error',lang==='it'
+      ?'La password deve avere almeno 8 caratteri, 1 maiuscola, 1 minuscola, 1 numero e 1 carattere speciale (!@#$%^&*).'
+      :'Password must have at least 8 characters, 1 uppercase, 1 lowercase, 1 number and 1 special character (!@#$%^&*).');
+  }
+
+  var pw2=document.getElementById('signup-password2').value;
+  if(pw!==pw2)return showError('signup-error',lang==='it'?'Le password non coincidono':'Passwords don\'t match');
+
+  var turnstileToken=getTurnstileToken('signup-turnstile');
+  if(!turnstileToken){
+    return showError('signup-error',lang==='it'?'Completa la verifica anti-bot.':'Complete the anti-bot verification.');
+  }
+
+  document.getElementById('signup-btn').disabled=true;
+  var ref=new URLSearchParams(window.location.search).get('ref')||document.getElementById('signup-ref').value.trim()||null;
+
+  // Validate referral code
+  if(ref){
+    var currentSession=getSession();
+    if(currentSession&&currentSession.user){
+      var myProfile=await sbGet('profiles?id=eq.'+currentSession.user.id+'&select=referral_code',currentSession.access_token).catch(function(){return []});
+      if(myProfile&&myProfile.length>0&&myProfile[0].referral_code===ref){
+        document.getElementById('signup-ref').value='';
+        ref=null;
+      }
+    }
+    if(ref){
+      var refProfiles=await sbGet('profiles?referral_code=eq.'+ref+'&select=id',SB_KEY).catch(function(){return []});
+      if(!refProfiles||refProfiles.length===0){
+        document.getElementById('signup-btn').disabled=false;
+        return showError('signup-error',lang==='it'?'Codice referral non valido.':'Invalid referral code.');
+      }
+    }
+  }
+
+  var result=await sbAuth('signup',{email:email,password:pw,data:{referred_by:ref}});
+  var status=result.status;var data=result.data;
+
+  if(status===200||status===201){
+    await sbPost('waitlist',{email:email,lang:lang,referred_by:ref}).catch(function(){});
+
+    if(data.session){
+      // Auto-confirmed — save session and redirect
+      saveSession(data.session);
+      track('signup_complete',{method:'auto_confirm',has_ref:!!ref,lang:lang});
+      if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user.id});
+      window.location.href='/';
+    }else{
+      track('signup_email_sent',{has_ref:!!ref,lang:lang});
+      if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user?.id||'pending'});
+      showSuccess('signup-success',lang==='it'?'Controlla la tua email per confermare il tuo account su airoobi.com — guarda anche nello spam.':'Check your email to confirm your account on airoobi.com — also check your spam folder.');
+      document.getElementById('resend-email-wrap').style.display='block';
+    }
+  }else{
+    var msg=data.error_description||data.msg||data.message||'Error';
+    track('signup_error',{error:msg.substring(0,80),lang:lang});
+    showError('signup-error',msg);
+  }
+  document.getElementById('signup-btn').disabled=false;
+}
+
+// ── Resend confirmation ──
+async function resendConfirmation(){
+  var email=document.getElementById('signup-email').value.trim();
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(!email)return;
+  var result=await sbAuth('resend',{type:'signup',email:email});
+  if(result.status===200){
+    showSuccess('signup-success',lang==='it'?'Email reinviata! Controlla la tua casella di posta.':'Email resent! Check your inbox.');
+  }else{
+    showError('signup-error',lang==='it'?'Impossibile reinviare. Riprova tra qualche minuto.':'Unable to resend. Try again in a few minutes.');
+  }
+}
+
+// ── Enter key ──
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    var active=document.activeElement;
+    if(active&&(active.id==='signup-email'||active.id==='signup-password'||active.id==='signup-password2'||active.id==='signup-ref'))doSignup();
+  }
+});
+
+// ── Track pageview ──
+track('pageview',{page:'signup'});
+</script>
+</body>
+</html>

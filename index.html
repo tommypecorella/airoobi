@@ -535,6 +535,8 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .investor-content{padding:40px 16px}
   .investor-grid{grid-template-columns:1fr}
   .footer-inner{flex-direction:column;text-align:center;gap:16px}
+  .footer-ad-desktop{display:none!important}
+  .footer-ad-mobile{display:block!important}
   .footer-links{flex-wrap:wrap;justify-content:center;gap:16px}
   .video-inner{padding:0 16px}
   .cta-section{padding:clamp(60px,10vw,120px) 16px}
@@ -762,8 +764,8 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     <a href="javascript:void(0)" onclick="openExplainerVideo()" style="color:var(--gold)"><span class="it">▶ Video Explainer</span><span class="en">▶ Video Explainer</span></a>
     <a href="javascript:void(0)" onclick="openInvestor()" style="color:var(--gold)">Investor</a>
     <button class="lang-toggle" onclick="toggleLang()" id="lang-btn">EN</button>
-    <button class="nav-link-btn" onclick="openAuth('login')" id="nav-login-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg><span class="it">Accedi</span><span class="en">Login</span></button>
-    <button class="nav-cta" onclick="openAuth('signup')" id="nav-signup-btn"><span class="it">Registrati</span><span class="en">Sign Up</span></button>
+    <a href="/login.html" class="nav-link-btn" id="nav-login-btn" style="text-decoration:none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg><span class="it">Accedi</span><span class="en">Login</span></a>
+    <a href="/signup.html" class="nav-cta" id="nav-signup-btn" style="text-decoration:none"><span class="it">Registrati</span><span class="en">Sign Up</span></a>
     <div class="nav-logged-in" id="nav-logged-in">
       <div id="nav-rpts-counter" onclick="showDashFromNav()" style="display:flex;align-items:center;gap:5px;cursor:pointer;padding:5px 10px;border:1px solid var(--gray-700);transition:border-color .3s" onmouseover="this.style.borderColor='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)'">
         <span style="display:inline-block;width:8px;height:8px;background:var(--aria);border-radius:50%"></span>
@@ -795,8 +797,8 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   <a href="javascript:void(0)" onclick="openInvestor();closeBurger();" style="color:var(--gold)">Investor</a>
   <div class="mobile-menu-actions">
     <button class="lang-toggle" onclick="toggleLang();closeBurger();" id="lang-btn-mobile">EN</button>
-    <button class="nav-link-btn" onclick="openAuth('login');closeBurger();"><span class="it">Accedi</span><span class="en">Login</span></button>
-    <button class="nav-cta" onclick="openAuth('signup');closeBurger();"><span class="it">Registrati</span><span class="en">Sign Up</span></button>
+    <a href="/login.html" class="nav-link-btn" style="text-decoration:none"><span class="it">Accedi</span><span class="en">Login</span></a>
+    <a href="/signup.html" class="nav-cta" style="text-decoration:none"><span class="it">Registrati</span><span class="en">Sign Up</span></a>
   </div>
 </div>
 
@@ -1065,6 +1067,14 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   </div>
   <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.0.0 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
+  <!-- A-ADS footer banner desktop -->
+  <div style="max-width:728px;width:100%;margin:0 auto 24px;text-align:center;min-height:90px" class="footer-ad-desktop">
+    <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+  </div>
+  <!-- A-ADS footer banner mobile -->
+  <div style="max-width:320px;width:100%;margin:0 auto 24px;text-align:center;min-height:50px;display:none" class="footer-ad-mobile">
+    <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=320x50" style="width:320px;height:50px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+  </div>
 </footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
@@ -1520,14 +1530,10 @@ async function sbDel(path,token){
 // ── Auth UI ──
 function openAuth(mode){
   track('cta_click', {mode, source: location.hash || 'landing'});
-  location.hash=mode==='login'?'login':'signup';
-  document.getElementById('auth-overlay').classList.add('active');
-  document.body.style.overflow='hidden';
-  if(mode==='login')showLogin();else showSignup();
-  // Auto-fill ref code from URL or stored ref
   var ref=new URLSearchParams(window.location.search).get('ref')||window._airoobi_ref||'';
-  var refInput=document.getElementById('signup-ref');
-  if(ref&&refInput){refInput.value=ref;refInput.style.color='var(--gold)';}
+  var refParam=ref?'?ref='+encodeURIComponent(ref):'';
+  if(mode==='login'){window.location.href='/login.html'+refParam}
+  else{window.location.href='/signup.html'+refParam}
 }
 function closeAuth(){document.getElementById('auth-overlay').classList.remove('active');document.body.style.overflow='';clearErrors();if(location.hash==='#login'||location.hash==='#signup')history.replaceState(null,null,' ')}
 function showLogin(){document.getElementById('auth-signup').style.display='none';document.getElementById('auth-login').style.display='block';clearErrors()}
@@ -1971,10 +1977,10 @@ async function handleOrAuth(inputId){
   const ref=new URLSearchParams(window.location.search).get('ref')||null;
   await sbPost('waitlist',{email,lang,referred_by:ref}).catch(()=>{});
   updateCounter();
-  // Pre-fill auth and open
-  document.getElementById('signup-email').value=email;
-  openAuth();
-  input.value='';
+  // Redirect to signup page with email pre-filled
+  var params='?email='+encodeURIComponent(email);
+  if(ref)params+='&ref='+encodeURIComponent(ref);
+  window.location.href='/signup.html'+params;
 }
 
 // ── Enter key on auth forms ──
