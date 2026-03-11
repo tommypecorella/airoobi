@@ -2957,9 +2957,9 @@ async function loadAdminTreasury(){
     var rs=document.getElementById('adm-revenue-adsense');if(rs)rs.textContent='$'+(parseFloat(t.revenue_adsense)||0).toFixed(2);
     var tb=document.getElementById('adm-treasury-balance');if(tb)tb.textContent='€'+(parseFloat(t.balance_eur)||0).toFixed(2);
 
-    // Auto-calculate CIRCOLANTE (NFT) from nft_rewards (active only)
+    // Auto-calculate CIRCOLANTE (NFT) from nft_rewards
     try{
-      var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id&status=eq.active',tk);
+      var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',tk);
       var nftCount=nfts?nfts.length:0;
       var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
       var nu=document.getElementById('adm-nft-updated');if(nu)nu.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
@@ -3017,7 +3017,7 @@ async function refreshAriaCircolante(){
 async function refreshNftCircolante(){
   var s=getSession();if(!s)return;
   try{
-    var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id&status=eq.active',s.access_token);
+    var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',s.access_token);
     var cnt=nfts?nfts.length:0;
     var i=document.getElementById('adm-input-circulating');if(i)i.value=cnt;
     var u=document.getElementById('adm-nft-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
@@ -4899,7 +4899,7 @@ async function loadReferralHistory(){
         <tr><td colspan="3" style="color:var(--gray-400)"><span style="display:inline-block;width:12px;height:12px;border:2px solid var(--gray-600);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px"></span>Caricamento...</td></tr>
       </tbody>
     </table>
-    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> calcolato da nft_rewards (active). <strong>ARIA IN CIRCOLAZIONE</strong> calcolato da profiles.total_points.</p>
+    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> calcolato da nft_rewards. <strong>ARIA IN CIRCOLAZIONE</strong> calcolato da profiles.total_points.</p>
   </div>
 
 </div>
