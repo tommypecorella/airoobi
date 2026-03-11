@@ -2820,6 +2820,7 @@ async function loadAdminData(){
       document.getElementById('adm-avg-points').textContent=avgPts;
       var maxStreak=Math.max.apply(null,users.map(function(u){return u.longest_streak||0}));
       document.getElementById('adm-max-streak').textContent=maxStreak+'d';
+      var wl=await sbGet('waitlist?select=id',t);
       document.getElementById('adm-conversion').textContent=users.length+'/'+(wl?wl.length:0);
     }
     
@@ -2831,7 +2832,7 @@ async function loadAdminData(){
     
     // Cost Tracker + Treasury
     loadCostTracker();
-    loadAdminTreasury();
+    await loadAdminTreasury();
 
   }catch(e){console.error('Admin load error:',e);}
 }
