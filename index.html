@@ -305,6 +305,7 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .streak-dot{width:32px;height:32px;border:1px solid var(--gray-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:10px;color:var(--gray-400);transition:all .3s}
 .streak-dot.done{border-color:var(--gold);color:var(--gold);background:rgba(184,150,12,.1)}
 .streak-dot.today{border-color:var(--gold);animation:pulse 2s ease-in-out infinite}
+.streak-dot.missed{border-color:var(--gray-800);color:var(--gray-600);background:rgba(255,255,255,.02);opacity:.5}
 .streak-bonus{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:16px}
 
 .earn-video-container{width:100%;aspect-ratio:16/9;background:var(--gray-800);margin-bottom:12px;display:none;position:relative;overflow:hidden}
@@ -1062,7 +1063,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openModal('terms-modal')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.0.0 · 13:46 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.1.0 · 15:15 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -2107,16 +2108,32 @@ async function loadEarnings(){
   document.getElementById('overview-points').textContent=p.total_points||0;
   document.getElementById('overview-streak').textContent=p.current_streak||0;
   
-  // Streak dots
+  // Streak dots — show actual current week (Mon-Sun) with real check-in status
   const streak=p.current_streak||0;
-  const dayInWeek=streak%7;
   const dotsEl=document.getElementById('streak-dots');
-  const days=lang==='it'?['L','M','M','G','V','S','D']:['M','T','W','T','F','S','S'];
+  const dayLabels=lang==='it'?['L','M','M','G','V','S','D']:['M','T','W','T','F','S','S'];
+  // Get Monday of current week
+  const now=new Date();
+  const todayDate=now.toISOString().split('T')[0];
+  const dayOfWeek=now.getDay();// 0=Sun
+  const mondayOffset=dayOfWeek===0?-6:1-dayOfWeek;
+  const monday=new Date(now);monday.setDate(now.getDate()+mondayOffset);
+  // Fetch this week's checkins
+  const weekStart=monday.toISOString().split('T')[0];
+  const weekCheckins=await sbGet('checkins?user_id=eq.'+uid+'&checked_at=gte.'+weekStart+'&checked_at=lte.'+todayDate+'&select=checked_at',token);
+  const checkedDays=new Set(weekCheckins?weekCheckins.map(function(c){return c.checked_at}):[]);
   let dotsHtml='';
   for(let i=0;i<7;i++){
-    const done=i<dayInWeek;
-    const today=i===dayInWeek&&p.last_checkin!==new Date().toISOString().split('T')[0];
-    dotsHtml+='<div class="streak-dot'+(done?' done':'')+(today?' today':'')+'">'+days[i]+'</div>';
+    const d=new Date(monday);d.setDate(monday.getDate()+i);
+    const dStr=d.toISOString().split('T')[0];
+    const isPast=dStr<todayDate;
+    const isToday=dStr===todayDate;
+    const isDone=checkedDays.has(dStr);
+    let cls='streak-dot';
+    if(isDone)cls+=' done';
+    else if(isPast)cls+=' missed';
+    else if(isToday)cls+=' today';
+    dotsHtml+='<div class="'+cls+'">'+dayLabels[i]+'</div>';
   }
   dotsEl.innerHTML=dotsHtml;
   
@@ -2443,9 +2460,9 @@ async function loadAdminData(){
     const wl=await sbGet('waitlist?select=id',t);
     document.getElementById('adm-waitlist').textContent=wl?wl.length:0;
     
-    // Total points issued
-    const points=await sbGet('points_ledger?select=amount',t);
-    const totalPts=points?points.reduce(function(a,b){return a+b.amount},0):0;
+    // Total ARIA in circolazione (sum of profiles.total_points)
+    const ptsProfiles=await sbGet('profiles?select=total_points',t);
+    const totalPts=ptsProfiles?ptsProfiles.reduce(function(a,b){return a+(b.total_points||0)},0):0;
     document.getElementById('adm-points').textContent=totalPts.toLocaleString();
     
     // Today's checkins
@@ -2659,38 +2676,42 @@ async function loadAdminTreasury(){
     var rs=document.getElementById('adm-revenue-adsense');if(rs)rs.textContent='$'+(parseFloat(t.revenue_adsense)||0).toFixed(2);
     var tb=document.getElementById('adm-treasury-balance');if(tb)tb.textContent='€'+(parseFloat(t.balance_eur)||0).toFixed(2);
 
-    // Auto-calculate CIRCOLANTE (NFT) from nft_rewards table
+    // Auto-calculate CIRCOLANTE (NFT) from nft_rewards (active only)
     try{
-      var nfts=await sbGet('nft_rewards?select=id,nft_type',tk);
+      var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id&status=eq.active',tk);
       var nftCount=nfts?nfts.length:0;
       var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
-      // NFT breakdown per tipo
+      // NFT breakdown per tipo (tipo, possessori unici, totale emessi)
       var breakdown={};
+      var owners={};
       if(nfts&&nfts.length){
-        nfts.forEach(function(n){var tp=n.nft_type||'unknown';breakdown[tp]=(breakdown[tp]||0)+1;});
+        nfts.forEach(function(n){
+          var tp=n.nft_type||'unknown';
+          breakdown[tp]=(breakdown[tp]||0)+1;
+          if(!owners[tp])owners[tp]={};
+          if(n.user_id)owners[tp][n.user_id]=true;
+        });
       }
       var bTbody=document.getElementById('adm-nft-breakdown');
       if(bTbody){
         var types=Object.keys(breakdown);
         if(types.length===0){
-          bTbody.innerHTML='<tr><td colspan="4" style="color:var(--gray-400)">Nessun NFT emesso</td></tr>';
+          bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';
         }else{
+          types.sort(function(a,b){return breakdown[b]-breakdown[a]});
           bTbody.innerHTML=types.map(function(tp){
             var cnt=breakdown[tp];
-            var pct=nftCount>0?((cnt/nftCount)*100).toFixed(1):'0';
-            var treasury=parseFloat(document.getElementById('adm-input-treasury')?.value)||0;
-            var minted=parseInt(document.getElementById('adm-input-minted')?.value)||0;
-            var val=minted>0?(treasury/minted).toFixed(2):'0.00';
-            return '<tr><td>'+tp+'</td><td>'+cnt+'</td><td>'+pct+'%</td><td>€'+val+'</td></tr>';
+            var ownerCount=Object.keys(owners[tp]||{}).length;
+            return '<tr><td>'+tp+'</td><td>'+ownerCount+'</td><td>'+cnt+'</td></tr>';
           }).join('');
         }
       }
     }catch(e){console.error('NFT auto-calc error:',e);}
 
-    // Auto-calculate ARIA IN CIRCOLAZIONE from points_ledger
+    // Auto-calculate ARIA IN CIRCOLAZIONE from profiles.total_points
     try{
-      var pts=await sbGet('points_ledger?select=amount',tk);
-      var totalAria=pts?pts.reduce(function(a,b){return a+b.amount},0):0;
+      var ariaProfiles=await sbGet('profiles?select=total_points',tk);
+      var totalAria=ariaProfiles?ariaProfiles.reduce(function(a,b){return a+(b.total_points||0)},0):0;
       var i6=document.getElementById('adm-aico-input');if(i6)i6.value=totalAria;
     }catch(e){console.error('ARIA auto-calc error:',e);}
 
@@ -4206,7 +4227,7 @@ async function loadReferralHistory(){
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-points">—</div>
-        <div class="admin-card-label">Punti totali emessi</div>
+        <div class="admin-card-label">ARIA in circolazione</div>
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-checkins">—</div>
@@ -4496,12 +4517,12 @@ async function loadReferralHistory(){
     <!-- NFT BREAKDOWN PER TIPO -->
     <h3 style="font-family:var(--font-h);font-size:16px;letter-spacing:2px;color:var(--white);margin:24px 0 14px;text-transform:uppercase">NFT per tipo</h3>
     <table class="admin-table">
-      <thead><tr><th>Tipo</th><th>Emessi</th><th>% sul totale</th><th>Valore stimato/NFT</th></tr></thead>
+      <thead><tr><th>Tipo NFT</th><th>Possessori unici</th><th>Totale emessi</th></tr></thead>
       <tbody id="adm-nft-breakdown">
         <tr><td colspan="4" style="color:var(--gray-400)">Caricamento...</td></tr>
       </tbody>
     </table>
-    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> e <strong>ARIA IN CIRCOLAZIONE</strong> calcolati automaticamente da Supabase (nft_rewards e points_ledger).</p>
+    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> calcolato da nft_rewards (active). <strong>ARIA IN CIRCOLAZIONE</strong> calcolato da profiles.total_points.</p>
   </div>
 
 </div>
