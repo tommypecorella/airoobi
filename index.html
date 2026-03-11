@@ -1630,9 +1630,9 @@ function openExplainerVideo(){
   showVideoAd(function(){});
 }
 
-async function gatedDashboard(session){
+function gatedDashboard(session){
   // Video gate disabilitato — accesso diretto alla dashboard
-  await showDashboard(session);
+  showDashboard(session);
 }
 
 // ══ SUPABASE AUTH ══
