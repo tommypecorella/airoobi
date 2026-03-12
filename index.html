@@ -1141,7 +1141,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="#termini" onclick="openLegalPage('termini')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.11-1.8.0 · 20:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.12-1.9.0 · 20:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -2754,7 +2754,10 @@ function openAdmin(){
   document.getElementById('admin-overlay').classList.add('active');
   document.body.style.overflow='hidden';
   history.replaceState(null,null,'#admin');
-  loadAdminData();
+  loadAdminData().then(function(){
+    refreshAriaCircolante();
+    refreshNftCircolante();
+  });
   if(_adminRefreshInterval)clearInterval(_adminRefreshInterval);
   _adminRefreshInterval=setInterval(loadAdminData,60000);
 }
@@ -2804,7 +2807,14 @@ async function loadAdminData(){
     // Users with profile image
     var withAvatar=users?users.filter(function(u){return !!u.avatar_url}).length:0;
     document.getElementById('adm-avatars').textContent=withAvatar+'/'+userCount;
-    
+
+    // NFT Rewards in circolazione
+    try{
+      var nfts=await sbGet('nft_rewards?select=id,nft_type',t);
+      var earnCount=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}).length:0;
+      document.getElementById('adm-nft-circulating').textContent=earnCount;
+    }catch(e){document.getElementById('adm-nft-circulating').textContent='—';}
+
     // Users table
     if(users&&users.length>0){
       var tbody=document.getElementById('adm-users-body');
@@ -4672,6 +4682,10 @@ async function loadReferralHistory(){
       <div class="admin-card">
         <div class="admin-card-val" id="adm-avatars">—</div>
         <div class="admin-card-label">Foto profilo impostata</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-nft-circulating">—</div>
+        <div class="admin-card-label">NFT Rewards in circolazione</div>
       </div>
     </div>
   </div>
