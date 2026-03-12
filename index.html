@@ -111,9 +111,9 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:none}
 .hero-badge{display:inline-block;margin-top:20px;font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:2px;opacity:.7}
 .hero-scroll{position:absolute;bottom:32px;left:50%;transform:translateX(-50%);animation:float 3s ease-in-out infinite}
 .hero-scroll span{display:block;width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent)}
-#video-wrap:fullscreen,#video-wrap:-webkit-full-screen{padding-bottom:0;height:100vh;background:#000}
-#video-wrap:fullscreen iframe,#video-wrap:-webkit-full-screen iframe{position:absolute;top:0;left:0;width:100%;height:100%}
-#video-wrap:fullscreen button,#video-wrap:-webkit-full-screen button{display:none}
+#video-wrap:fullscreen,#video-wrap:-webkit-full-screen,#airdrop-video-wrap:fullscreen,#airdrop-video-wrap:-webkit-full-screen{padding-bottom:0;height:100vh;background:#000}
+#video-wrap:fullscreen iframe,#video-wrap:-webkit-full-screen iframe,#airdrop-video-wrap:fullscreen iframe,#airdrop-video-wrap:-webkit-full-screen iframe{position:absolute;top:0;left:0;width:100%;height:100%}
+#video-wrap:fullscreen button,#video-wrap:-webkit-full-screen button,#airdrop-video-wrap:fullscreen button,#airdrop-video-wrap:-webkit-full-screen button{display:none}
 
 /* ── SECTIONS ── */
 section{padding:clamp(80px,12vw,160px) 0;position:relative}
@@ -851,28 +851,45 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 
 <!-- ═══ MOBILE MENU ═══ -->
 <div class="mobile-menu" id="mobile-menu">
-  <!-- AIROOBI section -->
-  <div class="mm-section-label">AIROOBI</div>
-  <div class="mm-sub">
-    <a href="#what" onclick="closeBurger()"><span class="it">Cos'è</span><span class="en">What</span></a>
-    <a href="#how" onclick="closeBurger()"><span class="it">Utilizzo</span><span class="en">Usage</span></a>
-    <a href="#why" onclick="closeBurger()"><span class="it">Perché</span><span class="en">Why</span></a>
-    <a href="#kaspa" onclick="closeBurger()">Blockchain</a>
-    <a href="#roadmap" onclick="closeBurger()">Roadmap</a>
-    <a href="javascript:void(0)" onclick="openExplainerVideo();closeBurger();" style="color:var(--gold)"><span class="it">▶ Video</span><span class="en">▶ Video</span></a>
-    <a href="javascript:void(0)" onclick="openInvestor();closeBurger();" style="color:var(--gold)">Investor</a>
+  <!-- LOGGED OUT: site navigation -->
+  <div id="mm-site-nav">
+    <div class="mm-section-label">AIROOBI</div>
+    <div class="mm-sub">
+      <a href="#what" onclick="closeBurger()"><span class="it">Cos'è</span><span class="en">What</span></a>
+      <a href="#how" onclick="closeBurger()"><span class="it">Utilizzo</span><span class="en">Usage</span></a>
+      <a href="#why" onclick="closeBurger()"><span class="it">Perché</span><span class="en">Why</span></a>
+      <a href="#kaspa" onclick="closeBurger()">Blockchain</a>
+      <a href="#roadmap" onclick="closeBurger()">Roadmap</a>
+      <a href="javascript:void(0)" onclick="openExplainerVideo();closeBurger();" style="color:var(--gold)"><span class="it">▶ Video</span><span class="en">▶ Video</span></a>
+      <a href="javascript:void(0)" onclick="openInvestor();closeBurger();" style="color:var(--gold)">Investor</a>
+    </div>
   </div>
-  <!-- PROFILO section (logged in only) -->
-  <div class="mm-section-logged" id="mm-logged-section">
+  <!-- LOGGED IN: profile page style -->
+  <div id="mm-profile-page" style="display:none">
+    <!-- Profile header with photo -->
+    <div style="text-align:center;padding:32px 24px 24px">
+      <div id="mm-profile-avatar" style="width:80px;height:80px;border-radius:50%;border:2px solid var(--gold);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:32px;font-weight:300;color:var(--gold);background:rgba(184,150,12,.06);overflow:hidden;background-size:cover;background-position:center">?</div>
+      <div id="mm-profile-email" style="font-family:var(--font-m);font-size:12px;color:var(--gray-300);letter-spacing:1px"></div>
+      <div style="font-family:var(--font-m);font-size:10px;color:var(--gold);letter-spacing:2px;margin-top:4px;text-transform:uppercase">Alpha Brave</div>
+    </div>
+    <!-- Quick actions -->
+    <div style="display:flex;gap:10px;padding:0 24px 20px">
+      <button onclick="openDashTab('earnings');closeBurger()" style="flex:1;padding:14px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-b);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer"><span class="it">Guadagna</span><span class="en">Earn</span></button>
+      <button onclick="openDashTab('referral');closeBurger()" style="flex:1;padding:14px;background:none;border:1px solid var(--gold);color:var(--gold);font-family:var(--font-b);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer"><span class="it">Invita</span><span class="en">Invite</span></button>
+    </div>
     <div class="mm-divider"></div>
-    <div class="mm-section-label"><span class="it">Profilo</span><span class="en">Profile</span></div>
+    <!-- Profile menu -->
     <div class="mm-sub">
       <a href="javascript:void(0)" onclick="openDashTab('overview');closeBurger()"><span class="it">Profilo</span><span class="en">Profile</span></a>
-      <a href="javascript:void(0)" onclick="openDashTab('earnings');closeBurger()"><span class="it">Guadagni</span><span class="en">Earnings</span></a>
       <a href="javascript:void(0)" onclick="openDashTab('tessere');closeBurger()"><span class="it">Portafoglio</span><span class="en">Wallet</span></a>
-      <a href="javascript:void(0)" onclick="openDashTab('referral');closeBurger()">Referral</a>
+      <a href="javascript:void(0)" onclick="closeBurger();scrollToSection('#how')"><span class="it">▶ Come funziona un airdrop</span><span class="en">▶ How an airdrop works</span></a>
       <label class="mm-item" style="padding:14px 40px;font-size:11px;letter-spacing:1.5px;color:var(--gray-400);cursor:pointer;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-family:var(--font-b);border-bottom:1px solid rgba(255,255,255,.04)"><span class="it">Cambia foto</span><span class="en">Change photo</span><input type="file" accept="image/*" onchange="uploadAvatar(this)" style="display:none"></label>
       <a id="mm-admin-link" href="javascript:void(0)" onclick="closeBurger();openAdmin()" style="display:none">Admin</a>
+    </div>
+    <div class="mm-divider"></div>
+    <!-- Site link + logout -->
+    <div class="mm-sub">
+      <a href="#" onclick="closeBurger();window.scrollTo({top:0,behavior:'smooth'})" style="color:var(--gold)"><span class="it">↑ Vai al sito</span><span class="en">↑ Go to site</span></a>
       <button class="mm-item" onclick="doLogout();closeBurger()">Logout</button>
     </div>
   </div>
@@ -880,10 +897,6 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   <div class="mobile-menu-actions" id="mm-logged-out-actions" style="flex-direction:column;gap:10px">
     <a href="/login.html" class="nav-cta" style="text-decoration:none;text-align:center;background:none;border:1px solid var(--gold);color:var(--gold)"><span class="it">Accedi</span><span class="en">Login</span></a>
     <a href="/signup.html" class="nav-cta" style="text-decoration:none;text-align:center"><span class="it">Registrati</span><span class="en">Sign Up</span></a>
-  </div>
-  <!-- Actions (logged in only) -->
-  <div class="mobile-menu-actions" id="mm-logged-in-actions" style="display:none">
-    <a href="javascript:void(0)" onclick="openDashTab('referral');closeBurger()" class="nav-cta" style="text-decoration:none"><span class="it">Invita un amico</span><span class="en">Invite a friend</span></a>
   </div>
 </div>
 
@@ -918,7 +931,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   </p>
   <div id="video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border:1px solid rgba(184,150,12,.2);background:#111">
     <iframe id="video-iframe" src="https://airoobi.com/video-intro.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen loading="lazy"></iframe>
-    <button onclick="goFullscreen()" style="position:absolute;bottom:12px;right:12px;width:36px;height:36px;background:rgba(0,0,0,.6);border:1px solid rgba(184,150,12,.4);color:var(--gold);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:background .2s;z-index:2" title="Fullscreen">&#x26F6;</button>
+    <button onclick="goFullscreen('video-wrap')" style="position:absolute;bottom:12px;right:12px;width:36px;height:36px;background:rgba(0,0,0,.6);border:1px solid rgba(184,150,12,.4);color:var(--gold);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:background .2s;z-index:2" title="Fullscreen">&#x26F6;</button>
   </div>
 </div>
 </section>
@@ -997,6 +1010,13 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <div class="step-num">4</div>
       <h3><span class="it">Tutti ricevono valore</span><span class="en">Everyone receives value</span></h3>
       <p><span class="it">Ogni partecipante riceve una Tessera Rendimento con saldo garantito, rimborsabile in qualsiasi momento. Partecipare ha sempre un ritorno.</span><span class="en">Every participant receives a Yield Card with a guaranteed balance, redeemable at any time. Participating always has a return.</span></p>
+    </div>
+  </div>
+  <div style="max-width:800px;margin:48px auto 0;text-align:center">
+    <p style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px"><span class="it">Guarda un esempio</span><span class="en">Watch an example</span></p>
+    <div id="airdrop-video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border:1px solid rgba(184,150,12,.2);background:#111">
+      <iframe src="https://airoobi.com/video-airdrop.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen loading="lazy"></iframe>
+      <button onclick="goFullscreen('airdrop-video-wrap')" style="position:absolute;bottom:12px;right:12px;width:36px;height:36px;background:rgba(0,0,0,.6);border:1px solid rgba(184,150,12,.4);color:var(--gold);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:background .2s;z-index:2" title="Fullscreen">&#x26F6;</button>
     </div>
   </div>
 </div>
@@ -1162,7 +1182,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="#termini" onclick="openLegalPage('termini')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.12-1.15.0 · 20:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.12-1.16.0 · 20:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1180,8 +1200,8 @@ document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 const SUPABASE_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
 // ── Fullscreen video ──
-function goFullscreen(){
-  var el=document.getElementById('video-wrap');
+function goFullscreen(id){
+  var el=document.getElementById(id||'video-wrap');
   if(el.requestFullscreen)el.requestFullscreen();
   else if(el.webkitRequestFullscreen)el.webkitRequestFullscreen();
   else if(el.msRequestFullscreen)el.msRequestFullscreen();
@@ -1363,8 +1383,9 @@ function closeBurger(){
   document.getElementById('burger-btn').classList.remove('open');
   document.getElementById('mobile-menu').classList.remove('open');
 }
+function scrollToSection(sel){var el=document.querySelector(sel);if(el)el.scrollIntoView({behavior:'smooth'});}
 // Close burger on scroll
-window.addEventListener('scroll',function(){closeBurger()},{passive:true});
+window.addEventListener('scroll',function(){if(!document.getElementById('mm-profile-page')||document.getElementById('mm-profile-page').style.display==='none')closeBurger();},{passive:true});
 
 // Restore saved language
 (function(){
@@ -2137,6 +2158,8 @@ async function loadNavAvatar(){
     var data=await sbGet('profiles?id=eq.'+s.user.id+'&select=avatar_url',s.access_token);
     if(data&&data[0]&&data[0].avatar_url){
       setNavAvatar(data[0].avatar_url+'?t='+Date.now());
+      var mmAvatar=document.getElementById('mm-profile-avatar');
+      if(mmAvatar){mmAvatar.style.backgroundImage='url('+data[0].avatar_url+'?t='+Date.now()+')';mmAvatar.textContent='';}
     }
   }catch(e){}
 }
@@ -2165,6 +2188,15 @@ function updateNavAuth(loggedIn, email){
     if(mmLoggedSection)mmLoggedSection.style.display='block';
     if(mmLoggedOutActions)mmLoggedOutActions.style.display='none';
     if(mmLoggedInActions)mmLoggedInActions.style.display='flex';
+    // Mobile: switch to profile page, hide site nav
+    var mmSiteNav=document.getElementById('mm-site-nav');
+    var mmProfilePage=document.getElementById('mm-profile-page');
+    if(mmSiteNav)mmSiteNav.style.display='none';
+    if(mmProfilePage){
+      mmProfilePage.style.display='block';
+      document.getElementById('mm-profile-email').textContent=email||'';
+      document.getElementById('mm-profile-avatar').textContent=(email||'?')[0].toUpperCase();
+    }
     // Replace hero/CTA signup forms with "Invita un amico"
     var formTop=document.getElementById('waitlist-form-top');
     var formBottom=document.getElementById('waitlist-form-bottom');
@@ -2185,6 +2217,10 @@ function updateNavAuth(loggedIn, email){
     if(mmLoggedSection)mmLoggedSection.style.display='none';
     if(mmLoggedOutActions)mmLoggedOutActions.style.display='flex';
     if(mmLoggedInActions)mmLoggedInActions.style.display='none';
+    var mmSiteNav=document.getElementById('mm-site-nav');
+    var mmProfilePage=document.getElementById('mm-profile-page');
+    if(mmSiteNav)mmSiteNav.style.display='block';
+    if(mmProfilePage)mmProfilePage.style.display='none';
   }
 }
 
