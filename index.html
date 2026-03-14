@@ -531,6 +531,8 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .lb-rank{font-family:var(--font-m);font-size:13px;color:var(--gray-400);width:36px;text-align:right;flex-shrink:0;letter-spacing:.5px}
 .lb-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--gray-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:12px;font-weight:700;color:var(--gray-400);flex-shrink:0;overflow:hidden;background-size:cover;background-position:center}
 .lb-name{flex:1;font-family:var(--font-m);font-size:11px;color:var(--gray-300);letter-spacing:.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-date{font-family:var(--font-m);font-size:10px;color:var(--gray-500);letter-spacing:.3px;flex-shrink:0;white-space:nowrap}
+.lb-podium-date{font-family:var(--font-m);font-size:9px;color:var(--gray-500);letter-spacing:.3px;margin-top:-2px}
 .lb-score{font-family:var(--font-m);font-size:12px;color:var(--white);letter-spacing:.5px;flex-shrink:0}
 .lb-badge-you{font-family:var(--font-m);font-size:9px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;border:1px solid var(--gold);padding:2px 6px;flex-shrink:0}
 .lb-row-top3 .lb-rank{color:var(--gold);font-weight:700}
@@ -589,6 +591,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .lb-avatar-sm{width:28px;height:28px;font-size:10px}
   .lb-name{font-size:10px}
   .lb-score{font-size:11px}
+  .lb-date{font-size:9px}
   .earn-card{padding:20px}
   .earn-header{flex-direction:column;align-items:flex-start}
   .earn-balance{text-align:left}
@@ -3729,6 +3732,8 @@ async function loadLeaderboard(){
         }
         idEl.textContent=entry.public_id?entry.public_id.substring(0,8)+'…':'—';
         ptsEl.textContent=(entry.total_points||0)+' ARIA';
+        var dateEl=document.getElementById('lb-date-'+i);
+        if(dateEl&&entry.created_at){var d=new Date(entry.created_at);dateEl.textContent=d.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{day:'2-digit',month:'short',year:'numeric'});}
       }else{
         avEl.textContent=i;
         idEl.textContent='—';
@@ -3747,6 +3752,8 @@ async function loadLeaderboard(){
       highlightEl.style.display='block';
       document.getElementById('lb-me-rank').textContent='#'+userEntry.rank;
       document.getElementById('lb-me-pts').textContent=(userEntry.total_points||0)+' ARIA';
+      var meDateEl=document.getElementById('lb-me-date');
+      if(meDateEl&&userEntry.created_at){var md=new Date(userEntry.created_at);meDateEl.textContent=md.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{day:'2-digit',month:'short',year:'numeric'});}
       var meIdEl=document.getElementById('lb-me-id');
       meIdEl.textContent=userEntry.public_id?userEntry.public_id.substring(0,8)+'…':'—';
       var meAvEl=document.getElementById('lb-me-av');
@@ -3780,6 +3787,9 @@ async function loadLeaderboard(){
       html+='<span class="lb-rank">#'+(e.rank||j+1)+'</span>';
       html+=avHtml;
       html+='<span class="lb-name">'+shortId+'</span>';
+      var regDate='';
+      if(e.created_at){var dd=new Date(e.created_at);regDate=dd.toLocaleDateString(lang==='it'?'it-IT':'en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+      html+='<span class="lb-date">'+regDate+'</span>';
       html+='<span class="lb-score">'+(e.total_points||0)+' ARIA</span>';
       if(isMe)html+='<span class="lb-badge-you">'+(lang==='it'?'Tu':'You')+'</span>';
       html+='</div>';
@@ -4855,6 +4865,7 @@ async function loadReferralHistory(){
       <div class="lb-podium-col lb-podium-2nd" id="lb-podium-2">
         <div class="lb-podium-avatar" id="lb-av-2">2</div>
         <div class="lb-podium-id" id="lb-id-2">—</div>
+        <div class="lb-podium-date" id="lb-date-2"></div>
         <div class="lb-podium-pts" id="lb-pts-2">0 ARIA</div>
         <div class="lb-podium-bar lb-bar-silver">2°</div>
       </div>
@@ -4862,12 +4873,14 @@ async function loadReferralHistory(){
         <div class="lb-podium-crown">&#9812;</div>
         <div class="lb-podium-avatar lb-av-gold" id="lb-av-1">1</div>
         <div class="lb-podium-id" id="lb-id-1">—</div>
+        <div class="lb-podium-date" id="lb-date-1"></div>
         <div class="lb-podium-pts" id="lb-pts-1">0 ARIA</div>
         <div class="lb-podium-bar lb-bar-gold">1°</div>
       </div>
       <div class="lb-podium-col lb-podium-3rd" id="lb-podium-3">
         <div class="lb-podium-avatar" id="lb-av-3">3</div>
         <div class="lb-podium-id" id="lb-id-3">—</div>
+        <div class="lb-podium-date" id="lb-date-3"></div>
         <div class="lb-podium-pts" id="lb-pts-3">0 ARIA</div>
         <div class="lb-podium-bar lb-bar-bronze">3°</div>
       </div>
@@ -4879,6 +4892,7 @@ async function loadReferralHistory(){
         <span class="lb-rank" id="lb-me-rank">—</span>
         <span class="lb-avatar-sm" id="lb-me-av"></span>
         <span class="lb-name" id="lb-me-id">—</span>
+        <span class="lb-date" id="lb-me-date"></span>
         <span class="lb-score" id="lb-me-pts">0</span>
         <span class="lb-badge-you"><span class="it">Tu</span><span class="en">You</span></span>
       </div>
