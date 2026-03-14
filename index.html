@@ -520,23 +520,23 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .lb-podium-avatar{width:48px;height:48px;border-radius:50%;background:var(--gray-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:16px;font-weight:700;color:var(--gray-400);overflow:hidden;background-size:cover;background-position:center}
 .lb-av-gold{border:2px solid var(--gold);width:56px;height:56px;font-size:20px}
 .lb-podium-id{font-family:var(--font-m);font-size:9px;color:var(--gray-400);letter-spacing:.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lb-podium-pts{font-family:var(--font-m);font-size:11px;color:var(--white);letter-spacing:.5px}
+.lb-podium-pts{font-family:var(--font-m);font-size:12px;color:var(--gold);font-weight:700;letter-spacing:.5px}
 .lb-podium-bar{width:100%;text-align:center;font-family:var(--font-h);font-size:18px;font-weight:300;padding:12px 0;color:var(--black)}
 .lb-bar-gold{background:var(--gold);height:80px;display:flex;align-items:center;justify-content:center}
 .lb-bar-silver{background:linear-gradient(180deg,#c0c0c0,#8a8a8a);height:60px;display:flex;align-items:center;justify-content:center}
 .lb-bar-bronze{background:linear-gradient(180deg,#cd7f32,#8b5a2b);height:48px;display:flex;align-items:center;justify-content:center}
 .lb-user-highlight{margin-bottom:8px;background:rgba(184,150,12,.08);border:1px solid var(--gold-dim);padding:4px 0}
 .lb-list{display:flex;flex-direction:column;gap:0}
-.lb-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--gray-800);transition:background .2s}
+.lb-row{display:grid;grid-template-columns:36px 32px 1fr auto auto auto;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--gray-800);transition:background .2s}
 .lb-row:hover{background:rgba(255,255,255,.02)}
 .lb-row-me{background:rgba(184,150,12,.1)!important;border:1px solid var(--gold-dim)}
-.lb-rank{font-family:var(--font-m);font-size:13px;color:var(--gray-400);width:36px;text-align:right;flex-shrink:0;letter-spacing:.5px}
-.lb-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--gray-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:12px;font-weight:700;color:var(--gray-400);flex-shrink:0;overflow:hidden;background-size:cover;background-position:center}
-.lb-name{flex:1;font-family:var(--font-m);font-size:11px;color:var(--gray-300);letter-spacing:.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.lb-date{font-family:var(--font-m);font-size:10px;color:var(--gray-500);letter-spacing:.3px;flex-shrink:0;white-space:nowrap}
+.lb-rank{font-family:var(--font-m);font-size:13px;color:var(--gray-400);text-align:right;letter-spacing:.5px}
+.lb-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--gray-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:12px;font-weight:700;color:var(--gray-400);overflow:hidden;background-size:cover;background-position:center}
+.lb-name{font-family:var(--font-m);font-size:11px;color:var(--gray-300);letter-spacing:.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.lb-date{font-family:var(--font-m);font-size:10px;color:var(--gray-500);letter-spacing:.3px;white-space:nowrap;text-align:right}
 .lb-podium-date{font-family:var(--font-m);font-size:9px;color:var(--gray-500);letter-spacing:.3px;margin-top:-2px}
-.lb-score{font-family:var(--font-m);font-size:12px;color:var(--white);letter-spacing:.5px;flex-shrink:0}
-.lb-badge-you{font-family:var(--font-m);font-size:9px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;border:1px solid var(--gold);padding:2px 6px;flex-shrink:0}
+.lb-score{font-family:var(--font-m);font-size:13px;color:var(--gold);font-weight:700;letter-spacing:.5px;white-space:nowrap;text-align:right}
+.lb-badge-you{font-family:var(--font-m);font-size:9px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;border:1px solid var(--gold);padding:2px 6px}
 .lb-row-top3 .lb-rank{color:var(--gold);font-weight:700}
 
 /* ── KASPA GREEN ── */
@@ -591,8 +591,8 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .lb-podium{gap:4px;padding:0 8px}
   .lb-podium-avatar{width:40px;height:40px;font-size:14px}
   .lb-av-gold{width:48px;height:48px;font-size:16px}
-  .lb-row{padding:10px 12px;gap:8px}
-  .lb-rank{width:28px;font-size:12px}
+  .lb-row{grid-template-columns:28px 28px 1fr auto auto auto;padding:10px 12px;gap:6px}
+  .lb-rank{font-size:12px}
   .lb-avatar-sm{width:28px;height:28px;font-size:10px}
   .lb-name{font-size:10px}
   .lb-score{font-size:11px}
@@ -615,6 +615,9 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .hero-logo{width:220px}
   .ref-share-btn{min-width:100%}
   .dash-nav-email{max-width:100px;font-size:10px}
+  .lb-row{grid-template-columns:24px 24px 1fr auto auto;gap:4px;padding:8px 10px}
+  .lb-date{display:none}
+  .lb-avatar-sm{width:24px;height:24px;font-size:9px}
 }
 
 .gold-sep{width:60px;height:1px;background:var(--gold);margin:0 auto}
