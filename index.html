@@ -483,9 +483,11 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 /* ── DASHBOARD ── */
 .dash-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:250;background:var(--black);overflow-y:auto}
 .dash-overlay.active{display:block}
-.dash-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--gray-700)}
+.dash-nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--gray-700);gap:4px 12px}
 .dash-nav img{height:28px}
-.dash-logout{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 16px;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .3s}
+.dash-nav-right{display:flex;align-items:center;gap:12px}
+.dash-nav-email{font-size:12px;color:var(--gray-400);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:220px}
+.dash-logout{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 16px;font-size:12px;letter-spacing:1.5px;cursor:pointer;transition:all .3s;flex-shrink:0;white-space:nowrap}
 .dash-logout:hover{border-color:var(--gold);color:var(--gold)}
 .dash-content{max-width:640px;margin:0 auto;padding:60px 24px}
 .dash-welcome{font-family:var(--font-h);font-size:clamp(28px,5vw,42px);font-weight:300;margin-bottom:8px}
@@ -574,6 +576,9 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .nav-link-btn span{display:none}
   .nav-cta{padding:8px 14px;font-size:10px;letter-spacing:1px}
   .auth-box{padding:32px 24px}
+  .dash-nav{padding:12px 16px}
+  .dash-nav-email{max-width:140px;font-size:11px}
+  .dash-logout{padding:6px 12px;font-size:11px}
   .dash-content{padding:32px 16px}
   .dash-welcome{font-size:clamp(24px,6vw,36px)}
   .ref-stats{grid-template-columns:1fr 1fr;gap:2px}
@@ -609,6 +614,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .nav-cta{display:none}
   .hero-logo{width:220px}
   .ref-share-btn{min-width:100%}
+  .dash-nav-email{max-width:100px;font-size:10px}
 }
 
 .gold-sep{width:60px;height:1px;background:var(--gold);margin:0 auto}
@@ -4122,8 +4128,8 @@ async function loadReferralHistory(){
 <div class="dash-overlay" id="dash-overlay">
 <div class="dash-nav">
   <img src="" id="dash-logo" alt="AIROOBI" style="height:28px">
-  <div style="display:flex;gap:12px;align-items:center">
-    <span id="dash-user-email" style="font-size:12px;color:var(--gray-400)"></span>
+  <div class="dash-nav-right">
+    <span id="dash-user-email" class="dash-nav-email"></span>
     <button class="dash-logout" onclick="doLogout()">Logout</button>
   </div>
 </div>
