@@ -511,7 +511,29 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .ad-slot{background:var(--gray-800);border:1px solid var(--gray-700);padding:20px;text-align:center;margin-bottom:32px;min-height:90px;display:flex;align-items:center;justify-content:center}
 .ad-slot-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px}
 
-
+/* ── LEADERBOARD ── */
+.lb-podium{display:flex;align-items:flex-end;justify-content:center;gap:8px;margin-bottom:32px;padding:0 16px}
+.lb-podium-col{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;max-width:140px}
+.lb-podium-crown{font-size:24px;color:var(--gold);line-height:1}
+.lb-podium-avatar{width:48px;height:48px;border-radius:50%;background:var(--gray-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:16px;font-weight:700;color:var(--gray-400);overflow:hidden;background-size:cover;background-position:center}
+.lb-av-gold{border:2px solid var(--gold);width:56px;height:56px;font-size:20px}
+.lb-podium-id{font-family:var(--font-m);font-size:9px;color:var(--gray-400);letter-spacing:.5px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-podium-pts{font-family:var(--font-m);font-size:11px;color:var(--white);letter-spacing:.5px}
+.lb-podium-bar{width:100%;text-align:center;font-family:var(--font-h);font-size:18px;font-weight:300;padding:12px 0;color:var(--black)}
+.lb-bar-gold{background:var(--gold);height:80px;display:flex;align-items:center;justify-content:center}
+.lb-bar-silver{background:linear-gradient(180deg,#c0c0c0,#8a8a8a);height:60px;display:flex;align-items:center;justify-content:center}
+.lb-bar-bronze{background:linear-gradient(180deg,#cd7f32,#8b5a2b);height:48px;display:flex;align-items:center;justify-content:center}
+.lb-user-highlight{margin-bottom:8px;background:rgba(184,150,12,.08);border:1px solid var(--gold-dim);padding:4px 0}
+.lb-list{display:flex;flex-direction:column;gap:0}
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--gray-800);transition:background .2s}
+.lb-row:hover{background:rgba(255,255,255,.02)}
+.lb-row-me{background:rgba(184,150,12,.1)!important;border:1px solid var(--gold-dim)}
+.lb-rank{font-family:var(--font-m);font-size:13px;color:var(--gray-400);width:36px;text-align:right;flex-shrink:0;letter-spacing:.5px}
+.lb-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--gray-700);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:12px;font-weight:700;color:var(--gray-400);flex-shrink:0;overflow:hidden;background-size:cover;background-position:center}
+.lb-name{flex:1;font-family:var(--font-m);font-size:11px;color:var(--gray-300);letter-spacing:.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-score{font-family:var(--font-m);font-size:12px;color:var(--white);letter-spacing:.5px;flex-shrink:0}
+.lb-badge-you{font-family:var(--font-m);font-size:9px;color:var(--gold);letter-spacing:1px;text-transform:uppercase;border:1px solid var(--gold);padding:2px 6px;flex-shrink:0}
+.lb-row-top3 .lb-rank{color:var(--gold);font-weight:700}
 
 /* ── KASPA GREEN ── */
 .kaspa{background:var(--black);position:relative}
@@ -559,6 +581,14 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   .ref-share-btn{flex:1;min-width:calc(50% - 8px);justify-content:center;padding:10px 12px;font-size:11px}
   .dash-tabs{display:none}
   .dash-tab-mobile{display:block}
+  .lb-podium{gap:4px;padding:0 8px}
+  .lb-podium-avatar{width:40px;height:40px;font-size:14px}
+  .lb-av-gold{width:48px;height:48px;font-size:16px}
+  .lb-row{padding:10px 12px;gap:8px}
+  .lb-rank{width:28px;font-size:12px}
+  .lb-avatar-sm{width:28px;height:28px;font-size:10px}
+  .lb-name{font-size:10px}
+  .lb-score{font-size:11px}
   .earn-card{padding:20px}
   .earn-header{flex-direction:column;align-items:flex-start}
   .earn-balance{text-align:left}
@@ -836,6 +866,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
           <a href="javascript:void(0)" onclick="openDashTab('earnings')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v12m-4-4l4 4 4-4"/></svg><span class="it">Guadagni</span><span class="en">Earnings</span></a>
           <a href="javascript:void(0)" onclick="openDashTab('tessere')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg><span class="it">Portafoglio</span><span class="en">Wallet</span></a>
           <a href="javascript:void(0)" onclick="openDashTab('referral')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Referral</a>
+          <a href="javascript:void(0)" onclick="openDashTab('leaderboard')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8V4H8v4M4 20h16V10H4v10zM12 10v10M8 14H4M20 14h-4"/></svg><span class="it">Classifica</span><span class="en">Leaderboard</span></a>
           <div class="ad-divider"></div>
           <a id="avatar-admin-link" href="javascript:void(0)" onclick="closeAvatarDropdown();openAdmin()" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Admin</a>
           <button onclick="doLogout()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Logout</button>
@@ -887,6 +918,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     <div class="mm-sub">
       <a href="javascript:void(0)" onclick="openDashTab('overview');closeBurger()"><span class="it">Profilo</span><span class="en">Profile</span></a>
       <a href="javascript:void(0)" onclick="openDashTab('tessere');closeBurger()"><span class="it">Portafoglio</span><span class="en">Wallet</span></a>
+      <a href="javascript:void(0)" onclick="openDashTab('leaderboard');closeBurger()"><span class="it">Classifica</span><span class="en">Leaderboard</span></a>
       <a href="javascript:void(0)" onclick="closeBurger();scrollToSection('#how')"><span class="it">▶ Come funziona un airdrop</span><span class="en">▶ How an airdrop works</span></a>
       <label class="mm-item" style="padding:14px 40px;font-size:11px;letter-spacing:1.5px;color:var(--gray-400);cursor:pointer;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-family:var(--font-b);border-bottom:1px solid rgba(255,255,255,.04)"><span class="it">Cambia foto</span><span class="en">Change photo</span><input type="file" accept="image/*" onchange="uploadAvatar(this)" style="display:none"></label>
       <a id="mm-admin-link" href="javascript:void(0)" onclick="closeBurger();openAdmin()" style="display:none">Admin</a>
@@ -1190,7 +1222,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="#termini" onclick="openLegalPage('termini')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.12-1.19.0 · 20:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.14-1.20.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1257,6 +1289,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
     else if(hh==='#portafoglio'){var s=getSession();if(s){gatedDashboard(s);switchTab('tessere');}}
     else if(hh==='#guadagni'){var s=getSession();if(s){gatedDashboard(s);switchTab('earnings');}}
     else if(hh==='#referral'){var s=getSession();if(s){gatedDashboard(s);switchTab('referral');}}
+    else if(hh==='#classifica'){var s=getSession();if(s){gatedDashboard(s);switchTab('leaderboard');}}
     else if(hh==='#admin'){openAdmin();}
     else if(hh==='#contatti'){openLegalPage('contatti');}
     else if(hh==='#privacy'){openLegalPage('privacy');}
@@ -2354,8 +2387,8 @@ document.addEventListener('keydown',e=>{
 
 
 // ══ TABS ══
-const TAB_LABELS={overview:{it:'Profilo',en:'Profile'},earnings:{it:'Guadagni',en:'Earnings'},tessere:{it:'Oo Portafoglio',en:'Oo Wallet'},referral:{it:'Referral',en:'Referral'}};
-var TAB_HASH={overview:'#dashboard',earnings:'#guadagni',tessere:'#portafoglio',referral:'#referral'};
+const TAB_LABELS={overview:{it:'Profilo',en:'Profile'},earnings:{it:'Guadagni',en:'Earnings'},tessere:{it:'Oo Portafoglio',en:'Oo Wallet'},referral:{it:'Referral',en:'Referral'},leaderboard:{it:'Classifica',en:'Leaderboard'}};
+var TAB_HASH={overview:'#dashboard',earnings:'#guadagni',tessere:'#portafoglio',referral:'#referral',leaderboard:'#classifica'};
 function switchTab(tab){
   document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
@@ -2376,6 +2409,7 @@ function switchTab(tab){
   if(tab==='earnings')loadEarnings();
   if(tab==='referral'){loadReferralTab();loadReferralHistory();}
   if(tab==='tessere')loadTessere();
+  if(tab==='leaderboard')loadLeaderboard();
 }
 function toggleTabMobile(){
   document.getElementById('dash-tab-mobile').classList.toggle('open');
@@ -3628,24 +3662,131 @@ async function loadProfileInfo(){
     dateEl.textContent=d.toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'});
   }
 
-  // User ID (first 8 chars)
+  // Public ID (set from profile data below)
   var idEl=document.getElementById('profile-uid');
-  if(idEl)idEl.textContent=(user.id||'').substring(0,8);
 
   // Avatar preview in profile
   var preview=document.getElementById('profile-avatar-preview');
   if(preview){
     try{
-      var pData=await sbGet('profiles?id=eq.'+user.id+'&select=avatar_url',s.access_token);
+      var pData=await sbGet('profiles?id=eq.'+user.id+'&select=avatar_url,public_id',s.access_token);
       if(pData&&pData[0]&&pData[0].avatar_url){
         preview.style.backgroundImage='url('+pData[0].avatar_url+'?t='+Date.now()+')';
         preview.textContent='';
       }else{
         preview.textContent=(user.email||'?')[0].toUpperCase();
       }
+      // Public ID (anonymous UUID)
+      if(pData&&pData[0]&&pData[0].public_id&&idEl){
+        idEl.textContent=pData[0].public_id;
+        idEl.title=pData[0].public_id;
+      }
     }catch(e){
       preview.textContent=(user.email||'?')[0].toUpperCase();
     }
+  }
+}
+
+function copyPublicId(){
+  var el=document.getElementById('profile-uid');
+  if(!el||el.textContent==='—')return;
+  navigator.clipboard.writeText(el.textContent).then(function(){
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    var orig=el.textContent;
+    el.textContent=lang==='it'?'Copiato!':'Copied!';
+    el.style.color='var(--gold)';
+    setTimeout(function(){el.textContent=orig;el.style.color='';},1500);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// 5b. LEADERBOARD — Top 100 + podium
+// ══════════════════════════════════════════════════
+async function loadLeaderboard(){
+  var s=window._currentSession||getSession();
+  var token=s?s.access_token:SB_KEY;
+  var uid=s?s.user.id:null;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+
+  try{
+    var data=await sbRpc('get_leaderboard',{p_user_id:uid},token);
+    if(!data)return;
+    var top100=data.top100||[];
+    var userEntry=data.user_entry;
+
+    // ── Podium (top 3) ──
+    for(var i=1;i<=3;i++){
+      var entry=top100[i-1];
+      var avEl=document.getElementById('lb-av-'+i);
+      var idEl=document.getElementById('lb-id-'+i);
+      var ptsEl=document.getElementById('lb-pts-'+i);
+      if(entry){
+        if(entry.avatar_url){
+          avEl.style.backgroundImage='url('+entry.avatar_url+')';
+          avEl.textContent='';
+        }else{
+          avEl.textContent=i;
+        }
+        idEl.textContent=entry.public_id?entry.public_id.substring(0,8)+'…':'—';
+        ptsEl.textContent=(entry.total_points||0)+' ARIA';
+      }else{
+        avEl.textContent=i;
+        idEl.textContent='—';
+        ptsEl.textContent='0 ARIA';
+      }
+    }
+
+    // ── Check if user is in top 100 ──
+    var userInTop100=false;
+    var userRank=userEntry?userEntry.rank:0;
+    if(userEntry&&userRank>0&&userRank<=100)userInTop100=true;
+
+    // ── User highlight (if outside top 100) ──
+    var highlightEl=document.getElementById('lb-user-highlight');
+    if(userEntry&&!userInTop100){
+      highlightEl.style.display='block';
+      document.getElementById('lb-me-rank').textContent='#'+userEntry.rank;
+      document.getElementById('lb-me-pts').textContent=(userEntry.total_points||0)+' ARIA';
+      var meIdEl=document.getElementById('lb-me-id');
+      meIdEl.textContent=userEntry.public_id?userEntry.public_id.substring(0,8)+'…':'—';
+      var meAvEl=document.getElementById('lb-me-av');
+      if(userEntry.avatar_url){
+        meAvEl.style.backgroundImage='url('+userEntry.avatar_url+')';
+        meAvEl.textContent='';
+      }
+    }else{
+      highlightEl.style.display='none';
+    }
+
+    // ── Top 100 list (skip first 3 — they're on podium) ──
+    var listEl=document.getElementById('lb-list');
+    if(top100.length<=3){
+      listEl.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-500)">'+(lang==='it'?'Non ci sono abbastanza utenti per la classifica completa.':'Not enough users for the full leaderboard.')+'</div>';
+      return;
+    }
+    var html='';
+    for(var j=3;j<top100.length;j++){
+      var e=top100[j];
+      var isMe=userEntry&&e.public_id===userEntry.public_id;
+      var rowClass='lb-row'+(isMe?' lb-row-me':'');
+      var shortId=e.public_id?e.public_id.substring(0,8)+'…':'—';
+      var avHtml='';
+      if(e.avatar_url){
+        avHtml='<span class="lb-avatar-sm" style="background-image:url('+e.avatar_url+')"></span>';
+      }else{
+        avHtml='<span class="lb-avatar-sm">'+(j+1)+'</span>';
+      }
+      html+='<div class="'+rowClass+'">';
+      html+='<span class="lb-rank">#'+(e.rank||j+1)+'</span>';
+      html+=avHtml;
+      html+='<span class="lb-name">'+shortId+'</span>';
+      html+='<span class="lb-score">'+(e.total_points||0)+' ARIA</span>';
+      if(isMe)html+='<span class="lb-badge-you">'+(lang==='it'?'Tu':'You')+'</span>';
+      html+='</div>';
+    }
+    listEl.innerHTML=html;
+  }catch(err){
+    console.error('[AIROOBI] loadLeaderboard failed:',err);
   }
 }
 
@@ -3998,6 +4139,7 @@ async function loadReferralHistory(){
       <button class="dash-tab-option" onclick="switchTab('earnings');closeTabMobile()" data-tab="earnings"><span class="it">Guadagni</span><span class="en">Earnings</span></button>
       <button class="dash-tab-option" onclick="switchTab('tessere');closeTabMobile()" data-tab="tessere"><span style="font-family:var(--font-h);font-size:13px;font-weight:600;letter-spacing:-1px;vertical-align:middle;margin-right:4px">Oo</span><span class="it">Portafoglio</span><span class="en">Wallet</span></button>
       <button class="dash-tab-option" onclick="switchTab('referral');closeTabMobile()" data-tab="referral">Referral</button>
+      <button class="dash-tab-option" onclick="switchTab('leaderboard');closeTabMobile()" data-tab="leaderboard"><span class="it">Classifica</span><span class="en">Leaderboard</span></button>
     </div>
   </div>
 
@@ -4006,6 +4148,7 @@ async function loadReferralHistory(){
     <button class="dash-tab" onclick="switchTab('earnings')"><span class="it">Guadagni</span><span class="en">Earnings</span></button>
     <button class="dash-tab" onclick="switchTab('tessere')"><span style="font-family:var(--font-h);font-size:13px;font-weight:600;letter-spacing:-1px;vertical-align:middle;margin-right:4px;color:inherit">Oo</span><span class="it">Portafoglio</span><span class="en">Wallet</span></button>
     <button class="dash-tab" onclick="switchTab('referral')"><span class="it">Referral</span><span class="en">Referral</span></button>
+    <button class="dash-tab" onclick="switchTab('leaderboard')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8V4H8v4M4 20h16V10H4v10zM12 10v10M8 14H4M20 14h-4"/></svg><span class="it">Classifica</span><span class="en">Leaderboard</span></button>
   </div>
 
   <!-- ═══ TAB: OVERVIEW ═══ -->
@@ -4059,8 +4202,11 @@ async function loadReferralHistory(){
         <span class="profile-info-val" id="profile-created">—</span>
       </div>
       <div class="profile-info-row">
-        <span class="profile-info-label">ID</span>
-        <span class="profile-info-val" style="font-family:var(--font-m);font-size:12px;letter-spacing:1px" id="profile-uid">—</span>
+        <span class="profile-info-label"><span class="it">ID Pubblico</span><span class="en">Public ID</span></span>
+        <span class="profile-info-val" style="font-family:var(--font-m);font-size:10px;letter-spacing:.5px;word-break:break-all;display:flex;align-items:center;gap:6px">
+          <span id="profile-uid">—</span>
+          <button onclick="copyPublicId()" style="background:none;border:none;color:var(--gray-400);cursor:pointer;padding:2px;transition:color .2s" onmouseover="this.style.color='var(--gold)'" onmouseout="this.style.color='var(--gray-400)'" title="Copy"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg></button>
+        </span>
       </div>
       <div class="profile-info-row">
         <span class="profile-info-label"><span class="it">Piano</span><span class="en">Plan</span></span>
@@ -4696,6 +4842,60 @@ async function loadReferralHistory(){
       <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
     </div>
   </div>
+
+  <!-- ═══ TAB: LEADERBOARD ═══ -->
+  <div class="dash-page" id="tab-leaderboard">
+    <div style="text-align:center;margin-bottom:32px">
+      <h2 style="font-family:var(--font-h);font-size:clamp(24px,5vw,32px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Classifica</span><span class="en">Leaderboard</span></h2>
+      <p style="font-size:13px;color:var(--gray-400);margin:0"><span class="it">Top 100 utenti per ARIA accumulati</span><span class="en">Top 100 users by ARIA earned</span></p>
+    </div>
+
+    <!-- PODIUM: top 3 -->
+    <div class="lb-podium" id="lb-podium">
+      <div class="lb-podium-col lb-podium-2nd" id="lb-podium-2">
+        <div class="lb-podium-avatar" id="lb-av-2">2</div>
+        <div class="lb-podium-id" id="lb-id-2">—</div>
+        <div class="lb-podium-pts" id="lb-pts-2">0 ARIA</div>
+        <div class="lb-podium-bar lb-bar-silver">2°</div>
+      </div>
+      <div class="lb-podium-col lb-podium-1st" id="lb-podium-1">
+        <div class="lb-podium-crown">&#9812;</div>
+        <div class="lb-podium-avatar lb-av-gold" id="lb-av-1">1</div>
+        <div class="lb-podium-id" id="lb-id-1">—</div>
+        <div class="lb-podium-pts" id="lb-pts-1">0 ARIA</div>
+        <div class="lb-podium-bar lb-bar-gold">1°</div>
+      </div>
+      <div class="lb-podium-col lb-podium-3rd" id="lb-podium-3">
+        <div class="lb-podium-avatar" id="lb-av-3">3</div>
+        <div class="lb-podium-id" id="lb-id-3">—</div>
+        <div class="lb-podium-pts" id="lb-pts-3">0 ARIA</div>
+        <div class="lb-podium-bar lb-bar-bronze">3°</div>
+      </div>
+    </div>
+
+    <!-- User highlight (if outside top 100) -->
+    <div class="lb-user-highlight" id="lb-user-highlight" style="display:none">
+      <div class="lb-row lb-row-me">
+        <span class="lb-rank" id="lb-me-rank">—</span>
+        <span class="lb-avatar-sm" id="lb-me-av"></span>
+        <span class="lb-name" id="lb-me-id">—</span>
+        <span class="lb-score" id="lb-me-pts">0</span>
+        <span class="lb-badge-you"><span class="it">Tu</span><span class="en">You</span></span>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--gray-500);padding:4px 0"><span class="it">⋯ non nella top 100 ⋯</span><span class="en">⋯ not in top 100 ⋯</span></div>
+    </div>
+
+    <!-- Top 100 list -->
+    <div class="lb-list" id="lb-list">
+      <div style="text-align:center;padding:40px;color:var(--gray-500)"><span class="it">Caricamento classifica...</span><span class="en">Loading leaderboard...</span></div>
+    </div>
+
+    <!-- ADS: tab leaderboard -->
+    <div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--gray-700)">
+      <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+    </div>
+  </div>
+
 </div>
 </div>
 
