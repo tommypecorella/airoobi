@@ -29,6 +29,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 a{color:inherit;text-decoration:none}
 button{font-family:inherit}
 input{font-family:inherit}
+/* Language toggle */
+[data-lang="en"] .it{display:none!important}
+[data-lang="it"] .en{display:none!important}
 
 /* ── TOPBAR ── */
 .topbar{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--gray-700);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between}
@@ -202,6 +205,10 @@ input{font-family:inherit}
 .dapp-footer{text-align:center;padding:40px 16px 24px;font-size:11px;color:var(--gray-400)}
 .dapp-footer a{color:var(--gold);text-decoration:underline}
 
+/* ── LANG TOGGLE ── */
+.lang-toggle{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s}
+.lang-toggle:hover{border-color:var(--gold);color:var(--gold)}
+
 /* ── RESPONSIVE ── */
 @media(min-width:640px){
   .main{padding:32px 24px 100px}
@@ -220,6 +227,7 @@ input{font-family:inherit}
   <a href="https://airoobi.com"><img src="/public/images/AIROOBI_Logo_White.png" class="topbar-logo" alt="AIROOBI"></a>
   <div class="topbar-right">
     <span class="topbar-bal" id="topbar-bal">— ARIA</span>
+    <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
     <div class="topbar-avatar" id="topbar-avatar" onclick="toggleUserMenu()">
       <span id="avatar-letter">?</span>
     </div>
@@ -346,9 +354,14 @@ async function sbGet(path,token){
 async function sbRpc(fn,body,token){
   var res=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{
     method:'POST',
-    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=representation'},
     body:JSON.stringify(body)
   });
+  if(!res.ok){
+    var errText=await res.text();
+    console.error('RPC error',res.status,errText);
+    return {ok:false,error:'HTTP_'+res.status,detail:errText};
+  }
   return res.json();
 }
 
@@ -371,9 +384,60 @@ function doLogout(){
   window.location.href='https://airoobi.com';
 }
 
+// ── Language ──
+function toggleLang(){
+  var root=document.documentElement;
+  var current=root.getAttribute('data-lang');
+  var next=current==='it'?'en':'it';
+  root.setAttribute('data-lang',next);
+  root.setAttribute('lang',next);
+  document.getElementById('lang-btn').textContent=next==='it'?'EN':'IT';
+  localStorage.setItem('airoobi_lang',next);
+}
+// Restore saved language
+(function(){
+  var saved=localStorage.getItem('airoobi_lang');
+  if(saved&&saved!=='it'){toggleLang();}
+})();
+
+// ── Token refresh ──
+async function refreshToken(){
+  if(!_session||!_session.refresh_token)return false;
+  try{
+    var res=await fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({refresh_token:_session.refresh_token})
+    });
+    if(!res.ok)return false;
+    var data=await res.json();
+    _session.access_token=data.access_token;
+    _session.refresh_token=data.refresh_token;
+    // Update localStorage so main site also gets fresh token
+    localStorage.setItem('airoobi_session',JSON.stringify(_session));
+    return true;
+  }catch(e){return false}
+}
+
+async function getValidToken(){
+  // Check if token is expired by decoding JWT
+  try{
+    var payload=JSON.parse(atob(_session.access_token.split('.')[1]));
+    if(payload.exp*1000<Date.now()+60000){
+      // Token expires in less than 60s, refresh it
+      var ok=await refreshToken();
+      if(!ok){window.location.href='https://airoobi.com/#login';return null;}
+    }
+  }catch(e){}
+  return _session.access_token;
+}
+
 // ── Init ──
 document.addEventListener('DOMContentLoaded',async function(){
   if(!requireAuth())return;
+  // Refresh token if needed before anything
+  var token=await getValidToken();
+  if(!token)return;
   setupUI();
   await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations()]);
   renderGrid();
@@ -637,8 +701,12 @@ async function confirmBuy(){
   hideMsg();
 
   try{
-    var data=await sbRpc('buy_blocks',{p_airdrop_id:buy.airdropId,p_blocks:buy.qty},_session.access_token);
-    if(data.ok){
+    // Ensure fresh token
+    var token=await getValidToken();
+    if(!token){showMsg('err','Sessione scaduta. Ricarica la pagina.');return;}
+    var data=await sbRpc('buy_blocks',{p_airdrop_id:buy.airdropId,p_blocks:buy.qty},token);
+    console.log('buy_blocks response:',data);
+    if(data&&data.ok){
       _balance=data.new_balance;
       document.getElementById('topbar-bal').textContent=_balance+' ARIA';
       showToast(data.blocks_bought+' <span class="it">blocchi acquistati!</span><span class="en">blocks purchased!</span>');
@@ -655,7 +723,7 @@ async function confirmBuy(){
         'AIRDROP_NOT_ACTIVE':'<span class="it">Airdrop non attivo.</span><span class="en">Airdrop not active.</span>',
         'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>'
       };
-      showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown'));
+      showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown')+(data.detail?' — '+data.detail:''));
       btn.disabled=false;
       btn.classList.remove('loading');
       btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
