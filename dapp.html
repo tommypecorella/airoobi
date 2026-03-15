@@ -128,18 +128,11 @@ input{font-family:inherit}
 .donut-center-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gray-800),var(--gray-700));z-index:1}
 .donut-center-placeholder svg{width:40%;height:40%;stroke:var(--gray-600);stroke-width:1}
 
-/* Floating bubbles */
+/* Floating bubbles — positioned by JS physics */
 .bubbles-layer{position:absolute;inset:0;z-index:2;pointer-events:none}
-.bubble{position:absolute;border-radius:50%;overflow:hidden;border:2px solid var(--gray-700);background:var(--gray-800);display:flex;align-items:center;justify-content:center;animation:bubbleFloat var(--dur,8s) ease-in-out infinite;animation-delay:var(--delay,0s);will-change:transform;box-shadow:0 2px 8px rgba(0,0,0,.4)}
+.bubble{position:absolute;border-radius:50%;overflow:hidden;border:2px solid rgba(184,150,12,.3);background:var(--gray-800);display:flex;align-items:center;justify-content:center;will-change:transform;box-shadow:0 2px 10px rgba(0,0,0,.5);transition:border-color .3s}
 .bubble img{width:100%;height:100%;object-fit:cover}
-.bubble-symbol{width:60%;height:60%;opacity:.5}
-@keyframes bubbleFloat{
-  0%{transform:translate(var(--x0),var(--y0)) scale(1)}
-  25%{transform:translate(var(--x1),var(--y1)) scale(1.05)}
-  50%{transform:translate(var(--x2),var(--y2)) scale(1)}
-  75%{transform:translate(var(--x3),var(--y3)) scale(.95)}
-  100%{transform:translate(var(--x0),var(--y0)) scale(1)}
-}
+.bubble-symbol{width:60%;height:60%;opacity:.4}
 .donut-pct{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-family:var(--font-m);font-size:12px;color:var(--gold);background:var(--black);padding:2px 10px;border:1px solid var(--gray-700)}
 
 /* Donut legend */
@@ -640,32 +633,27 @@ async function openDetail(id){
     ?'<img class="donut-center-img" src="'+a.image_url+'" alt="" style="'+imgStyle+'" id="donut-img">'
     :'';
 
-  // Build floating bubbles HTML
+  // Build floating bubbles HTML — physics-driven
   var symbolUrl='/public/images/AIROOBI_Symbol_White.png';
-  var bubblesHtml='<div class="bubbles-layer">';
-  var maxP=Math.min(participants.length,12); // max 12 bubbles
+  var bubblesHtml='<div class="bubbles-layer" id="bubbles-layer">';
+  var maxP=Math.min(participants.length,12);
+  _bubbles=[];
   for(var pi=0;pi<maxP;pi++){
     var pp=participants[pi];
-    var sz=Math.max(24,Math.min(44,18+pp.blocks*3)); // size 24-44px based on blocks
+    var sz=Math.max(26,Math.min(46,20+pp.blocks*3));
     var innerHtml=pp.avatar_url
       ?'<img src="'+pp.avatar_url+'" alt="">'
       :'<img class="bubble-symbol" src="'+symbolUrl+'" alt="">';
-    // Random positions within circle (keep within ~70% radius to avoid clipping)
-    var angle1=Math.random()*360,angle2=angle1+90+Math.random()*60,angle3=angle1+180+Math.random()*60,angle4=angle1+270+Math.random()*60;
-    var r0=10+Math.random()*25,r1=10+Math.random()*25,r2=10+Math.random()*25,r3=10+Math.random()*25;
-    var cx=20+Math.random()*60,cy=20+Math.random()*60;
-    var dur=(6+Math.random()*6).toFixed(1);
-    var delay=(Math.random()*-8).toFixed(1);
-    bubblesHtml+='<div class="bubble" style="'
-      +'width:'+sz+'px;height:'+sz+'px;'
-      +'left:calc('+cx.toFixed(0)+'% - '+Math.round(sz/2)+'px);'
-      +'top:calc('+cy.toFixed(0)+'% - '+Math.round(sz/2)+'px);'
-      +'--x0:0px;--y0:0px;'
-      +'--x1:'+Math.round(Math.cos(angle1)*r0)+'px;--y1:'+Math.round(Math.sin(angle1)*r0)+'px;'
-      +'--x2:'+Math.round(Math.cos(angle2)*r1)+'px;--y2:'+Math.round(Math.sin(angle2)*r1)+'px;'
-      +'--x3:'+Math.round(Math.cos(angle3)*r2)+'px;--y3:'+Math.round(Math.sin(angle3)*r2)+'px;'
-      +'--dur:'+dur+'s;--delay:'+delay+'s'
-      +'">'+innerHtml+'</div>';
+    bubblesHtml+='<div class="bubble" id="bubble-'+pi+'" style="width:'+sz+'px;height:'+sz+'px">'+innerHtml+'</div>';
+    // Init physics: random position inside circle, random velocity
+    var angle=Math.random()*Math.PI*2;
+    var dist=Math.random()*0.25; // start near center (normalized 0-0.5 = edge)
+    _bubbles.push({
+      idx:pi, r:sz/2,
+      x:0.5+Math.cos(angle)*dist, y:0.5+Math.sin(angle)*dist, // normalized 0..1
+      vx:(Math.random()-0.5)*0.0008,
+      vy:(Math.random()-0.5)*0.0008
+    });
   }
   bubblesHtml+='</div>';
 
@@ -743,6 +731,113 @@ async function openDetail(id){
     +'</div>';
 
   document.getElementById('detail-content').innerHTML=html;
+
+  // Start physics simulation for bubbles
+  if(_bubbles.length>0)startBubblePhysics();
+}
+
+// ── Bubble Physics Engine ──
+var _bubbles=[];
+var _bubbleRaf=null;
+
+function startBubblePhysics(){
+  if(_bubbleRaf)cancelAnimationFrame(_bubbleRaf);
+  var layer=document.getElementById('bubbles-layer');
+  if(!layer||_bubbles.length===0)return;
+  var containerSize=layer.offsetWidth; // px (it's a circle)
+  if(containerSize===0)containerSize=160;
+  var center=containerSize/2;
+  var boundaryR=center-4; // slightly inside the circle edge
+
+  function tick(){
+    var dt=1; // fixed timestep
+    // Move bubbles
+    for(var i=0;i<_bubbles.length;i++){
+      var b=_bubbles[i];
+      b.x+=b.vx*dt;
+      b.y+=b.vy*dt;
+
+      // Boundary collision (circular)
+      var dx=(b.x-0.5)*containerSize;
+      var dy=(b.y-0.5)*containerSize;
+      var dist=Math.sqrt(dx*dx+dy*dy);
+      var maxDist=boundaryR-b.r;
+      if(dist>maxDist&&dist>0){
+        // Reflect velocity along the normal (center→bubble)
+        var nx=dx/dist, ny=dy/dist;
+        var dot=b.vx*nx+b.vy*ny;
+        if(dot>0){
+          b.vx-=2*dot*nx;
+          b.vy-=2*dot*ny;
+          // Dampen slightly
+          b.vx*=0.9; b.vy*=0.9;
+        }
+        // Push back inside
+        b.x=0.5+(nx*maxDist)/containerSize;
+        b.y=0.5+(ny*maxDist)/containerSize;
+      }
+
+      // Bubble-bubble collisions
+      for(var j=i+1;j<_bubbles.length;j++){
+        var b2=_bubbles[j];
+        var bx=(b.x-b2.x)*containerSize;
+        var by=(b.y-b2.y)*containerSize;
+        var bDist=Math.sqrt(bx*bx+by*by);
+        var minDist=b.r+b2.r+2; // +2 for border
+        if(bDist<minDist&&bDist>0){
+          // Normal
+          var cnx=bx/bDist, cny=by/bDist;
+          // Relative velocity
+          var dvx=b.vx-b2.vx, dvy=b.vy-b2.vy;
+          var dvDot=dvx*cnx+dvy*cny;
+          if(dvDot>0){
+            // Mass proportional to radius
+            var m1=b.r*b.r, m2=b2.r*b2.r;
+            var totalM=m1+m2;
+            var impulse=dvDot/totalM;
+            b.vx-=impulse*m2*cnx;
+            b.vy-=impulse*m2*cny;
+            b2.vx+=impulse*m1*cnx;
+            b2.vy+=impulse*m1*cny;
+          }
+          // Separate
+          var overlap=(minDist-bDist)/2;
+          b.x+=cnx*overlap/containerSize;
+          b.y+=cny*overlap/containerSize;
+          b2.x-=cnx*overlap/containerSize;
+          b2.y-=cny*overlap/containerSize;
+        }
+      }
+
+      // Tiny random force to keep things moving
+      b.vx+=(Math.random()-0.5)*0.00005;
+      b.vy+=(Math.random()-0.5)*0.00005;
+
+      // Speed limit
+      var speed=Math.sqrt(b.vx*b.vx+b.vy*b.vy);
+      var maxSpeed=0.0015;
+      if(speed>maxSpeed){b.vx=(b.vx/speed)*maxSpeed;b.vy=(b.vy/speed)*maxSpeed;}
+
+      // Min speed (keep them moving)
+      var minSpeed=0.0003;
+      if(speed<minSpeed&&speed>0){b.vx=(b.vx/speed)*minSpeed;b.vy=(b.vy/speed)*minSpeed;}
+
+      // Update DOM
+      var el=document.getElementById('bubble-'+b.idx);
+      if(el){
+        var px=b.x*containerSize-b.r;
+        var py=b.y*containerSize-b.r;
+        el.style.transform='translate('+px.toFixed(1)+'px,'+py.toFixed(1)+'px)';
+      }
+    }
+    _bubbleRaf=requestAnimationFrame(tick);
+  }
+  _bubbleRaf=requestAnimationFrame(tick);
+}
+
+function stopBubblePhysics(){
+  if(_bubbleRaf){cancelAnimationFrame(_bubbleRaf);_bubbleRaf=null;}
+  _bubbles=[];
 }
 
 // ── Slider / Buy controls ──
@@ -772,6 +867,7 @@ function updateBuyDisplay(){
 }
 
 function backToList(){
+  stopBubblePhysics();
   document.getElementById('list-view').classList.remove('hidden');
   document.getElementById('detail').classList.remove('active');
   _currentDetail=null;
