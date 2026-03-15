@@ -111,73 +111,78 @@ input{font-family:inherit}
 
 .detail-back{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 14px;cursor:pointer;font-family:var(--font-m);font-size:11px;letter-spacing:1px;transition:all .2s;margin-bottom:20px}
 .detail-back:hover{border-color:var(--gold);color:var(--gold)}
-
-.detail-img{width:100%;max-height:360px;object-fit:cover;border:1px solid var(--gray-700);margin-bottom:20px}
-.detail-img-placeholder{width:100%;height:200px;background:linear-gradient(135deg,var(--gray-800) 0%,var(--gray-700) 100%);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
-.detail-img-placeholder svg{width:64px;height:64px;stroke:var(--gray-600);stroke-width:1}
 .detail-cat{font-family:var(--font-m);font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
-.detail-title{font-family:var(--font-h);font-size:clamp(26px,5vw,38px);font-weight:300;line-height:1.2;margin-bottom:16px}
-.detail-desc{font-size:15px;color:var(--gray-300);line-height:1.7;margin-bottom:24px}
+.detail-title{font-family:var(--font-h);font-size:clamp(26px,5vw,38px);font-weight:300;line-height:1.2;margin-bottom:16px;text-align:center}
+.detail-desc{font-size:15px;color:var(--gray-300);line-height:1.7;margin-bottom:24px;text-align:center;max-width:500px;margin-left:auto;margin-right:auto}
 
-.detail-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;margin-bottom:24px;background:var(--gray-700);border:1px solid var(--gray-700)}
-.detail-stat{background:var(--gray-900);padding:20px 16px;text-align:center}
-.detail-stat-val{font-family:var(--font-h);font-size:clamp(24px,5vw,32px);font-weight:300;color:var(--gold)}
-.detail-stat-label{font-size:10px;color:var(--gray-400);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+/* ── DONUT RING ── */
+.donut-wrap{position:relative;width:280px;height:280px;margin:0 auto 24px}
+@media(min-width:400px){.donut-wrap{width:320px;height:320px}}
+@media(min-width:640px){.donut-wrap{width:360px;height:360px}}
+.donut-svg{width:100%;height:100%;transform:rotate(-90deg)}
+.donut-bg{fill:none;stroke:var(--gray-800);stroke-width:18}
+.donut-others{fill:none;stroke:var(--gray-700);stroke-width:18;transition:stroke-dasharray 1s ease}
+.donut-mine{fill:none;stroke:var(--gold);stroke-width:18;transition:stroke-dasharray 1s ease;filter:drop-shadow(0 0 6px rgba(184,150,12,.4))}
+.donut-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:58%;height:58%;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:var(--gray-900);border:1px solid var(--gray-700)}
+.donut-center img{width:100%;height:100%;object-fit:cover;transition:filter 1s ease}
+.donut-center-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gray-800),var(--gray-700))}
+.donut-center-placeholder svg{width:40%;height:40%;stroke:var(--gray-600);stroke-width:1}
+.donut-pct{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-family:var(--font-m);font-size:12px;color:var(--gold);background:var(--black);padding:2px 10px;border:1px solid var(--gray-700)}
 
-.detail-progress-wrap{margin-bottom:24px}
-.detail-progress{height:6px;background:var(--gray-700);border-radius:3px;overflow:hidden}
-.detail-progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),#d4b445);border-radius:3px;transition:width .6s ease}
-.detail-progress-label{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--gray-400)}
+/* Donut legend */
+.donut-legend{display:flex;justify-content:center;gap:20px;margin-bottom:24px;flex-wrap:wrap}
+.donut-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-400)}
+.donut-legend-dot{width:10px;height:10px;border-radius:50%}
+.donut-legend-dot.mine{background:var(--gold)}
+.donut-legend-dot.others{background:var(--gray-700)}
+.donut-legend-dot.avail{background:var(--gray-800);border:1px solid var(--gray-700)}
 
-.detail-myblocks{display:flex;align-items:center;gap:8px;padding:16px;background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.15);margin-bottom:20px;font-family:var(--font-m);font-size:13px;color:var(--aria)}
+/* ── DETAIL STATS ── */
+.detail-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:24px;background:var(--gray-700);border:1px solid var(--gray-700)}
+.detail-stat{background:var(--gray-900);padding:16px 8px;text-align:center}
+.detail-stat-val{font-family:var(--font-h);font-size:clamp(20px,4vw,28px);font-weight:300;color:var(--gold)}
+.detail-stat-label{font-size:9px;color:var(--gray-400);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+
+.detail-myblocks{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.2);margin-bottom:20px;font-family:var(--font-m);font-size:13px;color:var(--gold)}
 .detail-myblocks strong{color:var(--white);font-size:18px}
 
-.detail-deadline{font-family:var(--font-m);font-size:12px;color:var(--gray-400);margin-bottom:20px;display:flex;align-items:center;gap:6px}
+.detail-deadline{font-family:var(--font-m);font-size:12px;color:var(--gray-400);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:6px}
 
-/* ── MOSAIC GRID ── */
-.mosaic-wrap{margin-bottom:24px}
-.mosaic-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
-.mosaic-label-count{color:var(--gold)}
-.mosaic{display:grid;gap:2px;position:relative}
-.mosaic-cell{aspect-ratio:1;background:var(--gray-800);border:1px solid var(--gray-700);cursor:pointer;transition:all .2s;position:relative;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:9px;color:transparent;user-select:none;-webkit-user-select:none}
-.mosaic-cell:hover{border-color:var(--gray-400)}
-.mosaic-cell.sold{background:var(--gray-700);border-color:var(--gray-600);cursor:default;opacity:.5}
-.mosaic-cell.mine{background:rgba(184,150,12,.25);border-color:var(--gold);cursor:default;box-shadow:inset 0 0 8px rgba(184,150,12,.3)}
-.mosaic-cell.mine::after{content:'';position:absolute;inset:3px;border:1px solid rgba(184,150,12,.4)}
-.mosaic-cell.selected{background:rgba(74,158,255,.2);border-color:var(--aria);box-shadow:0 0 12px rgba(74,158,255,.3)}
-.mosaic-cell.selected::after{content:'';position:absolute;inset:3px;border:1px solid rgba(74,158,255,.4)}
-.mosaic-cell.just-bought{animation:blockReveal .6s ease forwards}
-@keyframes blockReveal{
-  0%{background:rgba(74,158,255,.2);border-color:var(--aria);transform:scale(1)}
-  40%{background:rgba(184,150,12,.6);border-color:var(--gold);transform:scale(1.15)}
-  100%{background:rgba(184,150,12,.25);border-color:var(--gold);transform:scale(1);box-shadow:inset 0 0 8px rgba(184,150,12,.3)}
-}
-.mosaic-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
-.mosaic-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-400)}
-.mosaic-legend-swatch{width:14px;height:14px;border:1px solid var(--gray-700)}
-.mosaic-legend-swatch.avail{background:var(--gray-800)}
-.mosaic-legend-swatch.sel{background:rgba(74,158,255,.2);border-color:var(--aria)}
-.mosaic-legend-swatch.own{background:rgba(184,150,12,.25);border-color:var(--gold)}
-.mosaic-legend-swatch.other{background:var(--gray-700);opacity:.5}
-
-/* ── BUY BAR (sticky bottom) ── */
-.buy-bar{position:sticky;bottom:0;left:0;right:0;background:rgba(13,13,13,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--gray-700);padding:12px 16px;display:none;z-index:50}
-.buy-bar.active{display:block}
-.buy-bar-inner{display:flex;align-items:center;gap:12px;max-width:960px;margin:0 auto}
-.buy-bar-info{flex:1;min-width:0}
-.buy-bar-count{font-family:var(--font-m);font-size:14px;color:var(--white)}
-.buy-bar-cost{font-family:var(--font-m);font-size:12px;color:var(--aria)}
-.buy-bar-btn{padding:12px 24px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:12px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:all .2s;text-transform:uppercase;white-space:nowrap}
-.buy-bar-btn:hover{background:var(--white)}
-.buy-bar-btn:active{transform:scale(.97)}
-.buy-bar-btn:disabled{opacity:.35;cursor:not-allowed}
-.buy-bar-btn.loading{background:var(--gray-700);color:var(--gray-400)}
-.buy-bar-clear{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:10px 14px;font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap}
-.buy-bar-clear:hover{border-color:var(--white);color:var(--white)}
-.buy-msg{font-size:13px;margin-top:8px;text-align:center;padding:10px;display:none}
+/* ── BUY SECTION ── */
+.buy-box{border:1px solid var(--gray-700);background:var(--gray-900);padding:24px;margin-bottom:24px}
+.buy-box-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;text-align:center}
+.buy-box-framing{font-size:13px;color:var(--gray-300);text-align:center;margin-bottom:20px;line-height:1.5}
+.buy-slider-wrap{margin-bottom:16px}
+.buy-slider{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--gray-700);outline:none;border-radius:3px;cursor:pointer}
+.buy-slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:28px;height:28px;background:var(--gold);border-radius:50%;cursor:pointer;border:3px solid var(--black);box-shadow:0 0 10px rgba(184,150,12,.4)}
+.buy-slider::-moz-range-thumb{width:28px;height:28px;background:var(--gold);border-radius:50%;cursor:pointer;border:3px solid var(--black);box-shadow:0 0 10px rgba(184,150,12,.4)}
+.buy-slider-labels{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--gray-400)}
+.buy-display{text-align:center;margin-bottom:20px}
+.buy-display-count{font-family:var(--font-h);font-size:clamp(36px,8vw,52px);font-weight:300;color:var(--white)}
+.buy-display-count span{color:var(--gold)}
+.buy-display-cost{font-family:var(--font-m);font-size:16px;color:var(--aria);margin-top:4px}
+.buy-display-balance{font-size:12px;color:var(--gray-400);margin-top:4px}
+.buy-presets{display:flex;gap:8px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+.buy-preset{padding:8px 16px;border:1px solid var(--gray-700);background:none;color:var(--gray-400);font-family:var(--font-m);font-size:11px;cursor:pointer;transition:all .2s}
+.buy-preset:hover{border-color:var(--gold);color:var(--gold)}
+.buy-preset.active{background:var(--gold);color:var(--black);border-color:var(--gold)}
+.buy-btn{width:100%;padding:16px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.buy-btn:hover{background:var(--white)}
+.buy-btn:active{transform:scale(.98)}
+.buy-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.buy-btn.loading{background:var(--gray-700);color:var(--gray-400)}
+.buy-msg{font-size:13px;margin-top:12px;text-align:center;padding:10px;display:none}
 .buy-msg.active{display:block}
 .buy-msg.ok{background:rgba(73,234,203,.06);border:1px solid rgba(73,234,203,.2);color:var(--kas)}
 .buy-msg.err{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);color:var(--red)}
+
+/* Donut pulse animation on purchase */
+@keyframes donutPulse{
+  0%{filter:drop-shadow(0 0 6px rgba(184,150,12,.4))}
+  50%{filter:drop-shadow(0 0 20px rgba(184,150,12,.8))}
+  100%{filter:drop-shadow(0 0 6px rgba(184,150,12,.4))}
+}
+.donut-mine.pulse{animation:donutPulse .8s ease 3}
 
 /* ── MY AIRDROPS TAB ── */
 .my-list{display:flex;flex-direction:column;gap:12px}
@@ -232,8 +237,6 @@ input{font-family:inherit}
 /* ── RESPONSIVE ── */
 @media(min-width:640px){
   .main{padding:32px 24px 100px}
-  .detail-stats{grid-template-columns:repeat(4,1fr)}
-  .buy-row{flex-wrap:nowrap}
 }
 @media(min-width:800px){
   .topbar{padding:0 32px}
@@ -326,18 +329,6 @@ input{font-family:inherit}
     </div>
   </div>
 
-</div>
-
-<!-- BUY BAR (sticky bottom) -->
-<div class="buy-bar" id="buy-bar">
-  <div class="buy-bar-inner">
-    <div class="buy-bar-info">
-      <div class="buy-bar-count" id="buy-bar-count">0 blocchi</div>
-      <div class="buy-bar-cost" id="buy-bar-cost">0 ARIA</div>
-    </div>
-    <button class="buy-bar-clear" onclick="clearSelection()"><span class="it">Annulla</span><span class="en">Clear</span></button>
-    <button class="buy-bar-btn" id="buy-bar-btn" onclick="initBuy()"><span class="it">Acquista</span><span class="en">Buy</span></button>
-  </div>
 </div>
 
 <!-- CONFIRM MODAL -->
@@ -594,152 +585,172 @@ function renderGrid(){
 }
 
 // ── Detail ──
-var _selectedBlocks=[];
 var _gridData=[];
+var _buyQty=1;
 
-function calcGridCols(total){
-  // Find best cols for mobile-first (min ~40px cells on 360px screen)
-  // ~8 cols max on mobile, more on desktop
-  var w=window.innerWidth-32; // padding
-  var maxCols=Math.floor(w/38);
-  if(maxCols<4)maxCols=4;
-  if(maxCols>15)maxCols=15;
-  // Find cols that evenly divide or close
-  var best=maxCols;
-  for(var c=maxCols;c>=4;c--){
-    if(total%c===0){best=c;break;}
-  }
-  return best;
-}
+// SVG donut helpers
+var DONUT_R=110;
+var DONUT_C=2*Math.PI*DONUT_R; // circumference
+
+function donutArc(pct){return (pct/100)*DONUT_C;}
 
 async function openDetail(id){
   var a=_airdrops.find(function(x){return x.id===id});
   if(!a)return;
   _currentDetail=a;
-  _selectedBlocks=[];
+  _buyQty=1;
   document.getElementById('list-view').classList.add('hidden');
   document.getElementById('detail').classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 
-  // Load grid data from RPC
+  // Load grid data for ownership info
   var token=await getValidToken();
   _gridData=await sbRpc('get_airdrop_grid',{p_airdrop_id:id},token)||[];
   if(!Array.isArray(_gridData))_gridData=[];
 
   var remaining=a.total_blocks-a.blocks_sold;
-  var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
+  var pct=a.total_blocks>0?(a.blocks_sold/a.total_blocks*100):0;
   var myBlocks=_gridData.filter(function(b){return b.is_mine}).length;
+  var myPct=a.total_blocks>0?(myBlocks/a.total_blocks*100):0;
+  var othersPct=pct-myPct;
   var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'';
 
-  var cols=calcGridCols(a.total_blocks);
+  // Image blur: 20px at 0%, 0px at 100%
+  var blurVal=Math.max(0,20-(pct/100*20));
+  var imgStyle='filter:blur('+blurVal.toFixed(1)+'px)';
 
-  // Build sold/mine lookup
-  var soldSet={},mineSet={};
-  _gridData.forEach(function(b){
-    soldSet[b.block_number]=true;
-    if(b.is_mine)mineSet[b.block_number]=true;
-  });
+  var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
+  var centerHtml=a.image_url
+    ?'<img src="'+a.image_url+'" alt="" style="'+imgStyle+'" id="donut-img">'
+    :'<div class="donut-center-placeholder">'+placeholderSvg+'</div>';
 
-  // Build mosaic HTML
-  var mosaicHtml='';
-  for(var i=1;i<=a.total_blocks;i++){
-    var cls='mosaic-cell';
-    if(mineSet[i])cls+=' mine';
-    else if(soldSet[i])cls+=' sold';
-    else cls+='" onclick="toggleBlock('+i+')';
-    mosaicHtml+='<div class="'+cls+'" data-bn="'+i+'">'+i+'</div>';
-  }
+  var maxBuy=Math.min(remaining,Math.floor(_balance/a.block_price_aria));
+  if(maxBuy<1)maxBuy=0;
 
-  var html='<div class="detail-cat">'+a.category+'</div>'
+  var html='<div class="detail-cat" style="text-align:center">'+a.category+'</div>'
     +'<h2 class="detail-title">'+a.title+'</h2>'
     +(a.description?'<p class="detail-desc">'+a.description+'</p>':'')
+
+    // DONUT
+    +'<div class="donut-wrap">'
+    +'<svg class="donut-svg" viewBox="0 0 240 240">'
+    +'<circle class="donut-bg" cx="120" cy="120" r="'+DONUT_R+'" />'
+    +'<circle class="donut-others" cx="120" cy="120" r="'+DONUT_R+'" stroke-dasharray="'+donutArc(othersPct)+' '+DONUT_C+'" />'
+    +'<circle class="donut-mine" id="donut-mine" cx="120" cy="120" r="'+DONUT_R+'" stroke-dasharray="'+donutArc(myPct)+' '+DONUT_C+'" stroke-dashoffset="-'+donutArc(othersPct)+'" />'
+    +'</svg>'
+    +'<div class="donut-center">'+centerHtml+'</div>'
+    +'<div class="donut-pct">'+Math.round(pct)+'%</div>'
+    +'</div>'
+
+    // LEGEND
+    +'<div class="donut-legend">'
+    +'<div class="donut-legend-item"><div class="donut-legend-dot mine"></div><span class="it">Tuoi ('+myBlocks+')</span><span class="en">Yours ('+myBlocks+')</span></div>'
+    +'<div class="donut-legend-item"><div class="donut-legend-dot others"></div><span class="it">Altri ('+(a.blocks_sold-myBlocks)+')</span><span class="en">Others ('+(a.blocks_sold-myBlocks)+')</span></div>'
+    +'<div class="donut-legend-item"><div class="donut-legend-dot avail"></div><span class="it">Disponibili ('+remaining+')</span><span class="en">Available ('+remaining+')</span></div>'
+    +'</div>'
+
+    // STATS
     +'<div class="detail-stats">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'</div><div class="detail-stat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+pct+'%</div><div class="detail-stat-label"><span class="it">Venduti</span><span class="en">Sold</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
     +'</div>'
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong></span></div>':'')
+
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*a.block_price_aria)+' ARIA <span class="it">investiti</span><span class="en">invested</span></span></div>':'')
     +(dl?'<div class="detail-deadline"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="it">Scadenza: '+dl+'</span><span class="en">Deadline: '+dl+'</span></div>':'')
-    +'<div class="mosaic-wrap">'
-    +'<div class="mosaic-label"><span><span class="it">Seleziona i blocchi</span><span class="en">Select blocks</span></span><span class="mosaic-label-count" id="mosaic-count">0 <span class="it">selezionati</span><span class="en">selected</span></span></div>'
-    +'<div class="mosaic" id="mosaic" style="grid-template-columns:repeat('+cols+',1fr)">'+mosaicHtml+'</div>'
-    +'<div class="mosaic-legend">'
-    +'<div class="mosaic-legend-item"><div class="mosaic-legend-swatch avail"></div><span class="it">Disponibile</span><span class="en">Available</span></div>'
-    +'<div class="mosaic-legend-item"><div class="mosaic-legend-swatch sel"></div><span class="it">Selezionato</span><span class="en">Selected</span></div>'
-    +'<div class="mosaic-legend-item"><div class="mosaic-legend-swatch own"></div><span class="it">Tuo</span><span class="en">Yours</span></div>'
-    +'<div class="mosaic-legend-item"><div class="mosaic-legend-swatch other"></div><span class="it">Occupato</span><span class="en">Taken</span></div>'
+
+    // BUY BOX
+    +'<div class="buy-box">'
+    +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
+    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e genera una Tessera Rendimento con valore garantito.</span><span class="en">Each block brings you closer to the item and generates a Tessera with guaranteed value.</span></p>'
+
+    // DISPLAY
+    +'<div class="buy-display">'
+    +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
+    +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' ARIA</div>'
+    +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA</div>'
     +'</div>'
+
+    // SLIDER
+    +'<div class="buy-slider-wrap">'
+    +'<input type="range" class="buy-slider" id="buy-slider" min="1" max="'+(maxBuy||1)+'" value="1" '+(maxBuy<1?'disabled':'')+' oninput="onSlider()">'
+    +'<div class="buy-slider-labels"><span>1</span><span>'+(maxBuy||0)+'</span></div>'
     +'</div>'
-    +'<div class="buy-msg" id="buy-msg"></div>';
+
+    // PRESETS
+    +'<div class="buy-presets">'
+    +(maxBuy>=5?'<button class="buy-preset" onclick="setSlider(5)">5</button>':'')
+    +(maxBuy>=10?'<button class="buy-preset" onclick="setSlider(10)">10</button>':'')
+    +(maxBuy>=25?'<button class="buy-preset" onclick="setSlider(25)">25</button>':'')
+    +(maxBuy>=50?'<button class="buy-preset" onclick="setSlider(50)">50</button>':'')
+    +(maxBuy>0?'<button class="buy-preset" onclick="setSlider('+maxBuy+')">Max</button>':'')
+    +'</div>'
+
+    // BUY BUTTON
+    +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
+    +(remaining>0&&maxBuy>=1
+      ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
+      :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
+    +'</button>'
+    +'<div class="buy-msg" id="buy-msg"></div>'
+    +'</div>';
 
   document.getElementById('detail-content').innerHTML=html;
-  updateBuyBar();
 }
 
-function toggleBlock(n){
-  var idx=_selectedBlocks.indexOf(n);
-  var cell=document.querySelector('.mosaic-cell[data-bn="'+n+'"]');
-  if(idx>=0){
-    _selectedBlocks.splice(idx,1);
-    if(cell)cell.classList.remove('selected');
-  } else {
-    // Check if user can afford one more
-    var a=_currentDetail;
-    var cost=((_selectedBlocks.length+1)*a.block_price_aria);
-    if(cost>_balance){
-      showMsg('err','<span class="it">ARIA insufficienti per selezionare altri blocchi.</span><span class="en">Not enough ARIA to select more blocks.</span>');
-      return;
-    }
-    _selectedBlocks.push(n);
-    if(cell)cell.classList.add('selected');
-  }
-  // Update count label
-  var countEl=document.getElementById('mosaic-count');
-  if(countEl)countEl.innerHTML=_selectedBlocks.length+' <span class="it">selezionati</span><span class="en">selected</span>';
-  updateBuyBar();
+// ── Slider / Buy controls ──
+function onSlider(){
+  var sl=document.getElementById('buy-slider');
+  _buyQty=parseInt(sl.value)||1;
+  updateBuyDisplay();
 }
 
-function updateBuyBar(){
-  var bar=document.getElementById('buy-bar');
-  if(!_currentDetail||_selectedBlocks.length===0){
-    bar.classList.remove('active');
-    return;
-  }
-  var cost=_selectedBlocks.length*_currentDetail.block_price_aria;
-  document.getElementById('buy-bar-count').innerHTML=_selectedBlocks.length+' <span class="it">blocchi</span><span class="en">blocks</span>';
-  document.getElementById('buy-bar-cost').textContent=cost+' ARIA';
-  bar.classList.add('active');
+function setSlider(n){
+  var sl=document.getElementById('buy-slider');
+  _buyQty=n;
+  sl.value=n;
+  updateBuyDisplay();
+  // Highlight active preset
+  document.querySelectorAll('.buy-preset').forEach(function(p){p.classList.remove('active')});
 }
 
-function clearSelection(){
-  _selectedBlocks.forEach(function(n){
-    var cell=document.querySelector('.mosaic-cell[data-bn="'+n+'"]');
-    if(cell)cell.classList.remove('selected');
-  });
-  _selectedBlocks=[];
-  var countEl=document.getElementById('mosaic-count');
-  if(countEl)countEl.innerHTML='0 <span class="it">selezionati</span><span class="en">selected</span>';
-  updateBuyBar();
+function updateBuyDisplay(){
+  var a=_currentDetail;
+  if(!a)return;
+  var cost=_buyQty*a.block_price_aria;
+  var countEl=document.getElementById('buy-display-count');
+  var costEl=document.getElementById('buy-display-cost');
+  if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'blocco':'blocchi')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
+  if(costEl)costEl.textContent='= '+cost+' ARIA';
 }
 
 function backToList(){
   document.getElementById('list-view').classList.remove('hidden');
   document.getElementById('detail').classList.remove('active');
-  document.getElementById('buy-bar').classList.remove('active');
   _currentDetail=null;
-  _selectedBlocks=[];
 }
 
 function initBuy(){
-  if(!_currentDetail||_selectedBlocks.length===0)return;
-  var cost=_selectedBlocks.length*_currentDetail.block_price_aria;
+  if(!_currentDetail||_buyQty<=0)return;
+  var cost=_buyQty*_currentDetail.block_price_aria;
   if(cost>_balance){
     showMsg('err','<span class="it">ARIA insufficienti.</span><span class="en">Not enough ARIA.</span>');
     return;
   }
-  _pendingBuy={airdropId:_currentDetail.id,blocks:_selectedBlocks.slice(),cost:cost};
-  document.getElementById('modal-desc').innerHTML='<span class="it">Stai per acquistare <strong>'+_selectedBlocks.length+'</strong> blocchi.</span><span class="en">You are about to buy <strong>'+_selectedBlocks.length+'</strong> blocks.</span>';
+  // Pick random available block numbers
+  var soldSet={};
+  _gridData.forEach(function(b){soldSet[b.block_number]=true});
+  var available=[];
+  for(var i=1;i<=_currentDetail.total_blocks;i++){if(!soldSet[i])available.push(i)}
+  // Shuffle and pick
+  for(var j=available.length-1;j>0;j--){
+    var k=Math.floor(Math.random()*(j+1));
+    var tmp=available[j];available[j]=available[k];available[k]=tmp;
+  }
+  var chosen=available.slice(0,_buyQty);
+
+  _pendingBuy={airdropId:_currentDetail.id,blocks:chosen,cost:cost,qty:_buyQty};
+  document.getElementById('modal-desc').innerHTML='<span class="it">Stai per acquisire <strong>'+_buyQty+'</strong> '+(_buyQty===1?'blocco':'blocchi')+'.</span><span class="en">You are about to acquire <strong>'+_buyQty+'</strong> block'+(_buyQty===1?'':'s')+'.</span>';
   document.getElementById('modal-cost').textContent=cost+' ARIA';
   document.getElementById('modal-bg').classList.add('active');
 }
@@ -754,65 +765,49 @@ async function confirmBuy(){
   if(!_pendingBuy)return;
   var buy=_pendingBuy;
   document.getElementById('modal-bg').classList.remove('active');
-  var btn=document.getElementById('buy-bar-btn');
+  var btn=document.getElementById('buy-btn');
   btn.disabled=true;
   btn.classList.add('loading');
-  btn.textContent='...';
+  btn.innerHTML='<span class="it">Acquisto in corso...</span><span class="en">Processing...</span>';
   hideMsg();
 
   try{
     var token=await getValidToken();
-    if(!token){showMsg('err','Sessione scaduta. Ricarica la pagina.');return;}
+    if(!token){showMsg('err','Sessione scaduta.');return;}
     var data=await sbRpc('buy_blocks',{p_airdrop_id:buy.airdropId,p_block_numbers:buy.blocks},token);
     console.log('buy_blocks response:',data);
     if(data&&data.ok){
       _balance=data.new_balance;
       document.getElementById('topbar-bal').textContent=_balance+' ARIA';
-      // Animate blocks: selected → gold with staggered animation
-      buy.blocks.forEach(function(n,i){
-        setTimeout(function(){
-          var cell=document.querySelector('.mosaic-cell[data-bn="'+n+'"]');
-          if(cell){
-            cell.classList.remove('selected');
-            cell.classList.add('just-bought');
-            cell.onclick=null;
-            cell.style.cursor='default';
-            // After animation, switch to mine
-            setTimeout(function(){
-              cell.classList.remove('just-bought');
-              cell.classList.add('mine');
-            },600);
-          }
-        },i*120); // stagger 120ms per block
-      });
-      _selectedBlocks=[];
-      updateBuyBar();
-      showToast(data.blocks_bought+' <span class="it">blocchi acquistati!</span><span class="en">blocks purchased!</span>');
-      // Update mosaic count label
-      var countEl=document.getElementById('mosaic-count');
-      if(countEl)countEl.innerHTML='0 <span class="it">selezionati</span><span class="en">selected</span>';
-      // Refresh data in background
+      showToast(data.blocks_bought+' <span class="it">blocchi acquisiti!</span><span class="en">blocks acquired!</span>');
+
+      // Animate donut: pulse the gold ring
+      var mineRing=document.getElementById('donut-mine');
+      if(mineRing)mineRing.classList.add('pulse');
+
+      // Refresh and re-render detail
       await Promise.all([loadAirdrops(),loadMyParticipations(),loadBalance()]);
       renderGrid();
+      setTimeout(function(){openDetail(buy.airdropId)},400);
     } else {
       var errMsg={
         'INSUFFICIENT_ARIA':'<span class="it">ARIA insufficienti (saldo: '+(data.balance||0)+', costo: '+(data.cost||0)+').</span><span class="en">Not enough ARIA (balance: '+(data.balance||0)+', cost: '+(data.cost||0)+').</span>',
         'NOT_ENOUGH_BLOCKS':'<span class="it">Blocchi non disponibili.</span><span class="en">Blocks not available.</span>',
-        'BLOCKS_ALREADY_TAKEN':'<span class="it">Alcuni blocchi sono stati presi da qualcun altro.</span><span class="en">Some blocks were taken by someone else.</span>',
+        'BLOCKS_ALREADY_TAKEN':'<span class="it">Qualcuno ha preso quei blocchi. Riprova.</span><span class="en">Someone took those blocks. Try again.</span>',
         'AIRDROP_NOT_ACTIVE':'<span class="it">Airdrop non attivo.</span><span class="en">Airdrop not active.</span>',
         'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>',
-        'INVALID_BLOCK_NUMBER':'<span class="it">Numero blocco non valido.</span><span class="en">Invalid block number.</span>'
+        'INVALID_BLOCK_NUMBER':'<span class="it">Errore blocco.</span><span class="en">Block error.</span>'
       };
       showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown')+(data.detail?' — '+data.detail:''));
+      btn.disabled=false;
+      btn.classList.remove('loading');
+      btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
     }
-    btn.disabled=false;
-    btn.classList.remove('loading');
-    btn.innerHTML='<span class="it">Acquista</span><span class="en">Buy</span>';
   }catch(e){
     showMsg('err','<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>');
     btn.disabled=false;
     btn.classList.remove('loading');
-    btn.innerHTML='<span class="it">Acquista</span><span class="en">Buy</span>';
+    btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
   }
   _pendingBuy=null;
 }
