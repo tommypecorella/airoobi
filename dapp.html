@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="robots" content="noindex, nofollow">
+<title>AIROOBI dApp — Airdrop Marketplace</title>
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#000000;--white:#FFFFFF;--gold:#B8960C;
+  --gold-dim:rgba(184,150,12,.3);--gold-glow:rgba(184,150,12,.08);
+  --gray-900:#0d0d0d;--gray-800:#1a1a1a;--gray-700:#2a2a2a;--gray-600:#3a3a3a;
+  --gray-400:#888;--gray-300:#aaa;
+  --aria:#4A9EFF;--kas:#49EACB;--red:#ff6b6b;
+  --font-h:'Cormorant Garamond',Georgia,serif;
+  --font-b:'Instrument Sans',system-ui,sans-serif;
+  --font-m:'DM Mono',monospace;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+}
+html{background:var(--black);-webkit-tap-highlight-color:transparent}
+body{font-family:var(--font-b);color:var(--white);background:var(--black);overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;padding-top:var(--safe-top);padding-bottom:var(--safe-bottom)}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit}
+input{font-family:inherit}
+
+/* ── TOPBAR ── */
+.topbar{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--gray-700);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.topbar-logo{height:22px;opacity:.9}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-bal{font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:.5px;background:rgba(74,158,255,.08);padding:6px 12px;border-radius:20px;border:1px solid rgba(74,158,255,.15)}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:var(--gray-700);border:1px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gray-400);cursor:pointer;overflow:hidden}
+.topbar-avatar img{width:100%;height:100%;object-fit:cover}
+
+/* ── USER MENU ── */
+.user-menu{display:none;position:fixed;top:56px;right:8px;background:var(--gray-800);border:1px solid var(--gray-700);z-index:200;min-width:200px;padding:8px 0}
+.user-menu.active{display:block}
+.user-menu-item{display:block;width:100%;padding:12px 16px;background:none;border:none;color:var(--gray-300);font-size:13px;text-align:left;cursor:pointer;transition:all .2s}
+.user-menu-item:hover{background:var(--gray-700);color:var(--white)}
+.user-menu-email{padding:12px 16px;font-family:var(--font-m);font-size:11px;color:var(--gray-400);border-bottom:1px solid var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── MAIN CONTENT ── */
+.main{max-width:960px;margin:0 auto;padding:24px 16px 100px}
+
+/* ── HERO BANNER ── */
+.dapp-hero{padding:32px 0 24px;text-align:center}
+.dapp-hero h1{font-family:var(--font-h);font-size:clamp(32px,7vw,48px);font-weight:300;line-height:1.1;margin-bottom:8px}
+.dapp-hero h1 em{color:var(--gold);font-style:italic}
+.dapp-hero-sub{font-size:14px;color:var(--gray-400);max-width:400px;margin:0 auto;line-height:1.5}
+
+/* ── TABS (Esplora / I miei) ── */
+.dapp-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--gray-700)}
+.dapp-tab{flex:1;padding:12px 0;background:none;border:none;color:var(--gray-400);font-family:var(--font-m);font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;text-align:center}
+.dapp-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.dapp-tab:hover{color:var(--white)}
+
+/* ── CATEGORY FILTER ── */
+.cat-filter{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.cat-filter::-webkit-scrollbar{display:none}
+.cat-pill{padding:8px 16px;border:1px solid var(--gray-700);background:none;color:var(--gray-400);font-family:var(--font-m);font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0}
+.cat-pill.active{background:var(--gold);color:var(--black);border-color:var(--gold)}
+.cat-pill:hover{border-color:var(--gold);color:var(--gold)}
+.cat-pill.active:hover{color:var(--black)}
+
+/* ── STATS BAR ── */
+.stats-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:24px;background:var(--gray-700);border:1px solid var(--gray-700)}
+.stats-bar-item{background:var(--gray-900);padding:16px 12px;text-align:center}
+.stats-bar-val{font-family:var(--font-h);font-size:clamp(22px,5vw,28px);font-weight:300;color:var(--gold)}
+.stats-bar-label{font-size:10px;color:var(--gray-400);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+
+/* ── AIRDROP CARDS ── */
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:520px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:800px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+.card{border:1px solid var(--gray-700);background:var(--gray-900);overflow:hidden;cursor:pointer;transition:all .3s;position:relative}
+.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.card:active{transform:translateY(0)}
+.card-badge{position:absolute;top:12px;right:12px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;z-index:2}
+.card-badge.hot{background:var(--gold);color:var(--black)}
+.card-badge.new{background:var(--aria);color:var(--black)}
+.card-badge.ending{background:var(--red);color:var(--white)}
+.card-img{width:100%;aspect-ratio:16/10;object-fit:cover;background:var(--gray-800);display:block}
+.card-img-placeholder{width:100%;aspect-ratio:16/10;background:linear-gradient(135deg,var(--gray-800) 0%,var(--gray-700) 100%);display:flex;align-items:center;justify-content:center}
+.card-img-placeholder svg{width:48px;height:48px;stroke:var(--gray-600);stroke-width:1}
+.card-body{padding:16px}
+.card-cat{font-family:var(--font-m);font-size:9px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+.card-title{font-family:var(--font-h);font-size:18px;font-weight:400;line-height:1.3;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.card-progress{height:3px;background:var(--gray-700);border-radius:2px;overflow:hidden;margin-bottom:10px}
+.card-progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),#d4b445);border-radius:2px;transition:width .6s ease}
+.card-footer{display:flex;justify-content:space-between;align-items:center}
+.card-price{font-family:var(--font-m);font-size:12px;color:var(--aria)}
+.card-remain{font-size:11px;color:var(--gray-400)}
+.card-pct{font-family:var(--font-m);font-size:11px;color:var(--gold)}
+
+/* ── DETAIL VIEW ── */
+.detail{display:none;animation:fadeIn .3s ease}
+.detail.active{display:block}
+.list-view{display:block;animation:fadeIn .3s ease}
+.list-view.hidden{display:none}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.detail-back{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 14px;cursor:pointer;font-family:var(--font-m);font-size:11px;letter-spacing:1px;transition:all .2s;margin-bottom:20px}
+.detail-back:hover{border-color:var(--gold);color:var(--gold)}
+
+.detail-img{width:100%;max-height:360px;object-fit:cover;border:1px solid var(--gray-700);margin-bottom:20px}
+.detail-img-placeholder{width:100%;height:200px;background:linear-gradient(135deg,var(--gray-800) 0%,var(--gray-700) 100%);display:flex;align-items:center;justify-content:center;margin-bottom:20px}
+.detail-img-placeholder svg{width:64px;height:64px;stroke:var(--gray-600);stroke-width:1}
+.detail-cat{font-family:var(--font-m);font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.detail-title{font-family:var(--font-h);font-size:clamp(26px,5vw,38px);font-weight:300;line-height:1.2;margin-bottom:16px}
+.detail-desc{font-size:15px;color:var(--gray-300);line-height:1.7;margin-bottom:24px}
+
+.detail-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;margin-bottom:24px;background:var(--gray-700);border:1px solid var(--gray-700)}
+.detail-stat{background:var(--gray-900);padding:20px 16px;text-align:center}
+.detail-stat-val{font-family:var(--font-h);font-size:clamp(24px,5vw,32px);font-weight:300;color:var(--gold)}
+.detail-stat-label{font-size:10px;color:var(--gray-400);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
+
+.detail-progress-wrap{margin-bottom:24px}
+.detail-progress{height:6px;background:var(--gray-700);border-radius:3px;overflow:hidden}
+.detail-progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),#d4b445);border-radius:3px;transition:width .6s ease}
+.detail-progress-label{display:flex;justify-content:space-between;margin-top:8px;font-size:11px;color:var(--gray-400)}
+
+.detail-myblocks{display:flex;align-items:center;gap:8px;padding:16px;background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.15);margin-bottom:20px;font-family:var(--font-m);font-size:13px;color:var(--aria)}
+.detail-myblocks strong{color:var(--white);font-size:18px}
+
+.detail-deadline{font-family:var(--font-m);font-size:12px;color:var(--gray-400);margin-bottom:20px;display:flex;align-items:center;gap:6px}
+
+/* ── BUY SECTION ── */
+.buy-box{border:1px solid var(--gray-700);background:var(--gray-900);padding:20px;margin-bottom:24px}
+.buy-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.buy-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.buy-qty-wrap{display:flex;align-items:center;border:1px solid var(--gray-700);background:var(--gray-800)}
+.buy-qty-btn{width:40px;height:44px;background:none;border:none;color:var(--white);font-size:18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
+.buy-qty-btn:hover{color:var(--gold)}
+.buy-qty-btn:active{background:var(--gray-700)}
+.buy-qty-input{width:56px;height:44px;background:var(--gray-800);border:none;border-left:1px solid var(--gray-700);border-right:1px solid var(--gray-700);color:var(--white);font-family:var(--font-m);font-size:15px;text-align:center;-moz-appearance:textfield}
+.buy-qty-input::-webkit-outer-spin-button,.buy-qty-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.buy-cost{font-family:var(--font-m);font-size:14px;color:var(--aria);flex:1}
+.buy-balance{font-size:12px;color:var(--gray-400)}
+.buy-presets{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+.buy-preset{padding:6px 14px;border:1px solid var(--gray-700);background:none;color:var(--gray-400);font-family:var(--font-m);font-size:11px;cursor:pointer;transition:all .2s}
+.buy-preset:hover{border-color:var(--gold);color:var(--gold)}
+.buy-btn{width:100%;padding:16px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .2s;text-transform:uppercase}
+.buy-btn:hover{background:var(--white)}
+.buy-btn:active{transform:scale(.98)}
+.buy-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
+.buy-btn.loading{background:var(--gray-700);color:var(--gray-400)}
+.buy-msg{font-size:13px;margin-top:12px;text-align:center;padding:10px;display:none}
+.buy-msg.active{display:block}
+.buy-msg.ok{background:rgba(73,234,203,.06);border:1px solid rgba(73,234,203,.2);color:var(--kas)}
+.buy-msg.err{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);color:var(--red)}
+
+/* ── MY AIRDROPS TAB ── */
+.my-list{display:flex;flex-direction:column;gap:12px}
+.my-card{display:flex;gap:16px;border:1px solid var(--gray-700);background:var(--gray-900);padding:16px;cursor:pointer;transition:all .2s}
+.my-card:hover{border-color:var(--gold)}
+.my-card-img{width:72px;height:72px;object-fit:cover;flex-shrink:0;background:var(--gray-800)}
+.my-card-img-placeholder{width:72px;height:72px;background:var(--gray-800);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.my-card-img-placeholder svg{width:28px;height:28px;stroke:var(--gray-600);stroke-width:1}
+.my-card-info{flex:1;min-width:0}
+.my-card-title{font-family:var(--font-h);font-size:16px;font-weight:400;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.my-card-meta{font-size:12px;color:var(--gray-400);margin-bottom:6px}
+.my-card-blocks{font-family:var(--font-m);font-size:13px;color:var(--aria)}
+
+/* ── EMPTY STATE ── */
+.empty{text-align:center;padding:60px 24px}
+.empty svg{width:56px;height:56px;stroke:var(--gray-600);stroke-width:1;margin-bottom:16px}
+.empty-title{font-family:var(--font-h);font-size:22px;font-weight:300;margin-bottom:8px}
+.empty-sub{font-size:13px;color:var(--gray-400);line-height:1.5}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--gray-800);border:1px solid var(--gold);padding:12px 24px;z-index:999;font-family:var(--font-m);font-size:12px;color:var(--gold);text-align:center;transition:transform .3s ease;max-width:90vw;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ── LOADING SKELETON ── */
+.skel{background:linear-gradient(90deg,var(--gray-800) 25%,var(--gray-700) 50%,var(--gray-800) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:2px}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-card{height:260px;border:1px solid var(--gray-700)}
+.skel-stat{height:70px}
+
+/* ── MODAL CONFIRM ── */
+.modal-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:300;align-items:center;justify-content:center;padding:16px}
+.modal-bg.active{display:flex}
+.modal{background:var(--gray-900);border:1px solid var(--gray-700);max-width:400px;width:100%;padding:32px 24px;text-align:center;animation:fadeIn .2s ease}
+.modal h3{font-family:var(--font-h);font-size:24px;font-weight:300;margin-bottom:8px}
+.modal p{font-size:14px;color:var(--gray-400);margin-bottom:24px;line-height:1.5}
+.modal-highlight{font-family:var(--font-m);font-size:18px;color:var(--aria);margin-bottom:24px}
+.modal-actions{display:flex;gap:12px}
+.modal-actions button{flex:1;padding:14px;border:none;font-family:var(--font-m);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.modal-cancel{background:var(--gray-800);color:var(--gray-400);border:1px solid var(--gray-700)!important}
+.modal-cancel:hover{border-color:var(--white)!important;color:var(--white)}
+.modal-confirm{background:var(--gold);color:var(--black)}
+.modal-confirm:hover{background:var(--white)}
+
+/* ── FOOTER ── */
+.dapp-footer{text-align:center;padding:40px 16px 24px;font-size:11px;color:var(--gray-400)}
+.dapp-footer a{color:var(--gold);text-decoration:underline}
+
+/* ── RESPONSIVE ── */
+@media(min-width:640px){
+  .main{padding:32px 24px 100px}
+  .detail-stats{grid-template-columns:repeat(4,1fr)}
+  .buy-row{flex-wrap:nowrap}
+}
+@media(min-width:800px){
+  .topbar{padding:0 32px}
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="https://airoobi.com"><img src="/public/images/AIROOBI_Logo_White.png" class="topbar-logo" alt="AIROOBI"></a>
+  <div class="topbar-right">
+    <span class="topbar-bal" id="topbar-bal">— ARIA</span>
+    <div class="topbar-avatar" id="topbar-avatar" onclick="toggleUserMenu()">
+      <span id="avatar-letter">?</span>
+    </div>
+  </div>
+</div>
+
+<!-- USER MENU DROPDOWN -->
+<div class="user-menu" id="user-menu">
+  <div class="user-menu-email" id="user-menu-email">—</div>
+  <button class="user-menu-item" onclick="window.location.href='https://airoobi.com/#dashboard'">
+    <span class="it">Vai alla Dashboard</span><span class="en">Go to Dashboard</span>
+  </button>
+  <button class="user-menu-item" onclick="doLogout()">Logout</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="dapp-hero">
+    <h1><span class="it">Airdrop <em>Marketplace</em></span><span class="en">Airdrop <em>Marketplace</em></span></h1>
+    <p class="dapp-hero-sub"><span class="it">Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all'oggetto.</span><span class="en">Use your ARIA to participate. Each block purchased brings you closer.</span></p>
+  </div>
+
+  <!-- TABS -->
+  <div class="dapp-tabs">
+    <button class="dapp-tab active" id="tab-btn-explore" onclick="switchDappTab('explore')"><span class="it">Esplora</span><span class="en">Explore</span></button>
+    <button class="dapp-tab" id="tab-btn-my" onclick="switchDappTab('my')"><span class="it">I miei airdrop</span><span class="en">My airdrops</span></button>
+  </div>
+
+  <!-- ═══ EXPLORE TAB ═══ -->
+  <div id="tab-explore">
+
+    <!-- CATEGORY FILTER -->
+    <div class="cat-filter" id="cat-filter">
+      <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
+    </div>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar" id="stats-bar">
+      <div class="stats-bar-item"><div class="stats-bar-val" id="stat-active">—</div><div class="stats-bar-label"><span class="it">Attivi</span><span class="en">Active</span></div></div>
+      <div class="stats-bar-item"><div class="stats-bar-val" id="stat-blocks">—</div><div class="stats-bar-label"><span class="it">Blocchi totali</span><span class="en">Total blocks</span></div></div>
+      <div class="stats-bar-item"><div class="stats-bar-val" id="stat-sold">—</div><div class="stats-bar-label"><span class="it">Venduti</span><span class="en">Sold</span></div></div>
+    </div>
+
+    <!-- LIST VIEW -->
+    <div class="list-view" id="list-view">
+      <div class="grid" id="grid">
+        <div class="skel skel-card"></div>
+        <div class="skel skel-card"></div>
+      </div>
+      <div class="empty" id="empty" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+        <div class="empty-title"><span class="it">Nessun airdrop attivo</span><span class="en">No active airdrops</span></div>
+        <p class="empty-sub"><span class="it">Torna presto — nuovi oggetti in arrivo.</span><span class="en">Come back soon — new items incoming.</span></p>
+      </div>
+    </div>
+
+    <!-- DETAIL VIEW -->
+    <div class="detail" id="detail">
+      <button class="detail-back" onclick="backToList()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span class="it">Tutti gli airdrop</span><span class="en">All airdrops</span>
+      </button>
+      <div id="detail-content"></div>
+    </div>
+  </div>
+
+  <!-- ═══ MY AIRDROPS TAB ═══ -->
+  <div id="tab-my" style="display:none">
+    <div class="my-list" id="my-list"></div>
+    <div class="empty" id="my-empty" style="display:none">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <div class="empty-title"><span class="it">Nessuna partecipazione</span><span class="en">No participations yet</span></div>
+      <p class="empty-sub"><span class="it">Esplora gli airdrop e acquista i tuoi primi blocchi.</span><span class="en">Explore airdrops and buy your first blocks.</span></p>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <h3 id="modal-title"><span class="it">Conferma acquisto</span><span class="en">Confirm purchase</span></h3>
+    <p id="modal-desc"></p>
+    <div class="modal-highlight" id="modal-cost"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button class="modal-confirm" id="modal-ok" onclick="confirmBuy()"><span class="it">Acquista</span><span class="en">Buy</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- FOOTER -->
+<div class="dapp-footer">
+  <span class="it">AIROOBI dApp &middot; <a href="https://airoobi.com">airoobi.com</a></span>
+  <span class="en">AIROOBI dApp &middot; <a href="https://airoobi.com">airoobi.com</a></span>
+</div>
+
+<script>
+// ── Config ──
+var SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+// ── State ──
+var _session=null;
+var _balance=0;
+var _airdrops=[];
+var _myParts=[];
+var _currentFilter='all';
+var _currentDetail=null;
+var _pendingBuy=null;
+
+// ── Supabase helpers ──
+async function sbGet(path,token){
+  var h={'apikey':SB_KEY,'Authorization':'Bearer '+(token||SB_KEY)};
+  var res=await fetch(SB_URL+'/rest/v1/'+path,{headers:h});
+  return res.ok?await res.json():[];
+}
+
+async function sbRpc(fn,body,token){
+  var res=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify(body)
+  });
+  return res.json();
+}
+
+// ── Session ──
+function getSession(){
+  try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch(e){return null}
+}
+
+function requireAuth(){
+  _session=getSession();
+  if(!_session){
+    window.location.href='https://airoobi.com/#login';
+    return false;
+  }
+  return true;
+}
+
+function doLogout(){
+  localStorage.removeItem('airoobi_session');
+  window.location.href='https://airoobi.com';
+}
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded',async function(){
+  if(!requireAuth())return;
+  setupUI();
+  await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations()]);
+  renderGrid();
+  renderStats();
+  renderCategoryFilter();
+});
+
+function setupUI(){
+  var email=_session.user?.email||'';
+  document.getElementById('user-menu-email').textContent=email;
+  var letter=email?email[0].toUpperCase():'?';
+  document.getElementById('avatar-letter').textContent=letter;
+  // Close menu on outside click
+  document.addEventListener('click',function(e){
+    var menu=document.getElementById('user-menu');
+    var avatar=document.getElementById('topbar-avatar');
+    if(!menu.contains(e.target)&&!avatar.contains(e.target)){menu.classList.remove('active')}
+  });
+}
+
+function toggleUserMenu(){
+  document.getElementById('user-menu').classList.toggle('active');
+}
+
+// ── Data loading ──
+async function loadBalance(){
+  var profs=await sbGet('profiles?id=eq.'+_session.user.id+'&select=total_points',_session.access_token);
+  if(profs&&profs.length>0)_balance=profs[0].total_points||0;
+  document.getElementById('topbar-bal').textContent=_balance+' ARIA';
+}
+
+async function loadAirdrops(){
+  _airdrops=await sbGet('airdrops?status=eq.active&order=created_at.desc',_session.access_token)||[];
+}
+
+async function loadMyParticipations(){
+  _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status)&order=created_at.desc',_session.access_token)||[];
+}
+
+// ── Tabs ──
+function switchDappTab(tab){
+  document.getElementById('tab-btn-explore').classList.toggle('active',tab==='explore');
+  document.getElementById('tab-btn-my').classList.toggle('active',tab==='my');
+  document.getElementById('tab-explore').style.display=tab==='explore'?'block':'none';
+  document.getElementById('tab-my').style.display=tab==='my'?'block':'none';
+  if(tab==='my')renderMyAirdrops();
+}
+
+// ── Category filter ──
+function renderCategoryFilter(){
+  var cats=new Set();
+  _airdrops.forEach(function(a){if(a.category)cats.add(a.category)});
+  var wrap=document.getElementById('cat-filter');
+  var html='<button class="cat-pill active" onclick="filterCat(\'all\')"><span class="it">Tutti</span><span class="en">All</span></button>';
+  var catLabels={mobile:'Mobile',tech:'Tech',luxury:'Luxury',ultra_luxury:'Ultra Luxury'};
+  cats.forEach(function(c){
+    html+='<button class="cat-pill" onclick="filterCat(\''+c+'\')">'+( catLabels[c]||c)+'</button>';
+  });
+  wrap.innerHTML=html;
+}
+
+function filterCat(cat){
+  _currentFilter=cat;
+  // Update pills
+  document.querySelectorAll('.cat-pill').forEach(function(p){
+    var isCat=cat==='all'?p.textContent.match(/Tutti|All/):p.textContent.toLowerCase()===cat.toLowerCase();
+    p.classList.toggle('active',!!isCat);
+  });
+  renderGrid();
+}
+
+// ── Stats ──
+function renderStats(){
+  var filtered=_currentFilter==='all'?_airdrops:_airdrops.filter(function(a){return a.category===_currentFilter});
+  var totalBlocks=0,totalSold=0;
+  filtered.forEach(function(a){totalBlocks+=a.total_blocks;totalSold+=a.blocks_sold});
+  document.getElementById('stat-active').textContent=filtered.length;
+  document.getElementById('stat-blocks').textContent=totalBlocks.toLocaleString('it-IT');
+  document.getElementById('stat-sold').textContent=totalSold.toLocaleString('it-IT');
+}
+
+// ── Grid ──
+function renderGrid(){
+  var grid=document.getElementById('grid');
+  var empty=document.getElementById('empty');
+  var list=_currentFilter==='all'?_airdrops:_airdrops.filter(function(a){return a.category===_currentFilter});
+  renderStats();
+
+  if(!list||list.length===0){
+    grid.innerHTML='';
+    empty.style.display='block';
+    return;
+  }
+  empty.style.display='none';
+
+  var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
+
+  grid.innerHTML=list.map(function(a){
+    var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
+    var remaining=a.total_blocks-a.blocks_sold;
+    var badge='';
+    if(pct>=80)badge='<div class="card-badge ending"><span class="it">Ultimi</span><span class="en">Ending</span></div>';
+    else if(pct>=50)badge='<div class="card-badge hot">Hot</div>';
+    else badge='<div class="card-badge new">New</div>';
+
+    var imgHtml=a.image_url
+      ?'<img class="card-img" src="'+a.image_url+'" alt="" loading="lazy">'
+      :'<div class="card-img-placeholder">'+placeholderSvg+'</div>';
+
+    return '<div class="card" onclick="openDetail(\''+a.id+'\')">'
+      +badge+imgHtml
+      +'<div class="card-body">'
+      +'<div class="card-cat">'+(a.category||'')+'</div>'
+      +'<div class="card-title">'+a.title+'</div>'
+      +'<div class="card-progress"><div class="card-progress-bar" style="width:'+pct+'%"></div></div>'
+      +'<div class="card-footer">'
+      +'<span class="card-price">'+a.block_price_aria+' ARIA / <span class="it">blocco</span><span class="en">block</span></span>'
+      +'<span class="card-remain">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
+      +'</div>'
+      +'</div></div>';
+  }).join('');
+}
+
+// ── Detail ──
+async function openDetail(id){
+  var a=_airdrops.find(function(x){return x.id===id});
+  if(!a)return;
+  _currentDetail=a;
+  document.getElementById('list-view').classList.add('hidden');
+  document.getElementById('detail').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  // My blocks for this airdrop
+  var myParts=await sbGet('airdrop_participations?airdrop_id=eq.'+id+'&user_id=eq.'+_session.user.id+'&select=blocks_count,aria_spent,created_at&order=created_at.desc',_session.access_token);
+  var myBlocks=0,mySpent=0;
+  if(myParts)myParts.forEach(function(p){myBlocks+=p.blocks_count;mySpent+=p.aria_spent});
+
+  var remaining=a.total_blocks-a.blocks_sold;
+  var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
+  var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
+  var imgHtml=a.image_url
+    ?'<img class="detail-img" src="'+a.image_url+'" alt="" loading="lazy">'
+    :'<div class="detail-img-placeholder">'+placeholderSvg+'</div>';
+
+  var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'';
+
+  var maxBuy=Math.min(remaining,Math.floor(_balance/a.block_price_aria));
+
+  var html=imgHtml
+    +'<div class="detail-cat">'+a.category+'</div>'
+    +'<h2 class="detail-title">'+a.title+'</h2>'
+    +(a.description?'<p class="detail-desc">'+a.description+'</p>':'')
+    +'<div class="detail-stats">'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'</div><div class="detail-stat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+pct+'%</div><div class="detail-stat-label"><span class="it">Venduti</span><span class="en">Sold</span></div></div>'
+    +'</div>'
+    +'<div class="detail-progress-wrap">'
+    +'<div class="detail-progress"><div class="detail-progress-bar" style="width:'+pct+'%"></div></div>'
+    +'<div class="detail-progress-label"><span>'+a.blocks_sold+' <span class="it">venduti</span><span class="en">sold</span></span><span>'+a.total_blocks+' <span class="it">totali</span><span class="en">total</span></span></div>'
+    +'</div>'
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> ('+mySpent+' ARIA <span class="it">spesi</span><span class="en">spent</span>)</span></div>':'')
+    +(dl?'<div class="detail-deadline"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="it">Scadenza: '+dl+'</span><span class="en">Deadline: '+dl+'</span></div>':'')
+    +'<div class="buy-box">'
+    +'<div class="buy-label"><span class="it">Acquista blocchi</span><span class="en">Buy blocks</span></div>'
+    +'<div class="buy-row">'
+    +'<div class="buy-qty-wrap">'
+    +'<button class="buy-qty-btn" onclick="adjustQty(-1,'+a.block_price_aria+','+remaining+')">−</button>'
+    +'<input type="number" class="buy-qty-input" id="buy-qty" value="1" min="1" max="'+remaining+'" oninput="updateCost('+a.block_price_aria+','+remaining+')">'
+    +'<button class="buy-qty-btn" onclick="adjustQty(1,'+a.block_price_aria+','+remaining+')">+</button>'
+    +'</div>'
+    +'<div class="buy-cost" id="buy-cost">= '+a.block_price_aria+' ARIA</div>'
+    +'<div class="buy-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA</div>'
+    +'</div>'
+    +'<div class="buy-presets" id="buy-presets">'
+    +(maxBuy>=5?'<button class="buy-preset" onclick="setQty(5,'+a.block_price_aria+','+remaining+')">5</button>':'')
+    +(maxBuy>=10?'<button class="buy-preset" onclick="setQty(10,'+a.block_price_aria+','+remaining+')">10</button>':'')
+    +(maxBuy>=25?'<button class="buy-preset" onclick="setQty(25,'+a.block_price_aria+','+remaining+')">25</button>':'')
+    +(maxBuy>0?'<button class="buy-preset" onclick="setQty('+maxBuy+','+a.block_price_aria+','+remaining+')">Max ('+maxBuy+')</button>':'')
+    +'</div>'
+    +'<button class="buy-btn" id="buy-btn" onclick="initBuy(\''+a.id+'\','+a.block_price_aria+')"'+(remaining<=0?' disabled':'')+'>'
+    +(remaining>0?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>':'<span class="it">Esaurito</span><span class="en">Sold out</span>')
+    +'</button>'
+    +'<div class="buy-msg" id="buy-msg"></div>'
+    +'</div>';
+
+  // Purchase history for this airdrop
+  if(myParts&&myParts.length>0){
+    html+='<div style="margin-top:16px;border:1px solid var(--gray-700);padding:16px">'
+      +'<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px"><span class="it">Storico acquisti</span><span class="en">Purchase history</span></div>';
+    myParts.forEach(function(p){
+      var d=new Date(p.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      html+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-700);font-size:13px">'
+        +'<span style="color:var(--gray-300)">'+d+'</span>'
+        +'<span><strong style="color:var(--white)">'+p.blocks_count+'</strong> <span style="color:var(--gray-400)"><span class="it">blocchi</span><span class="en">blocks</span></span> &middot; <span style="color:var(--aria)">'+p.aria_spent+' ARIA</span></span>'
+        +'</div>';
+    });
+    html+='</div>';
+  }
+
+  document.getElementById('detail-content').innerHTML=html;
+}
+
+function backToList(){
+  document.getElementById('list-view').classList.remove('hidden');
+  document.getElementById('detail').classList.remove('active');
+  _currentDetail=null;
+}
+
+// ── Buy controls ──
+function adjustQty(delta,price,max){
+  var inp=document.getElementById('buy-qty');
+  var val=parseInt(inp.value)||1;
+  val=Math.max(1,Math.min(max,val+delta));
+  inp.value=val;
+  updateCost(price,max);
+}
+
+function setQty(n,price,max){
+  var inp=document.getElementById('buy-qty');
+  inp.value=Math.min(n,max);
+  updateCost(price,max);
+}
+
+function updateCost(price,max){
+  var qty=parseInt(document.getElementById('buy-qty').value)||1;
+  if(qty<1)qty=1;
+  if(qty>max)qty=max;
+  document.getElementById('buy-cost').textContent='= '+(qty*price)+' ARIA';
+}
+
+function initBuy(airdropId,price){
+  var qty=parseInt(document.getElementById('buy-qty').value)||0;
+  if(qty<=0)return;
+  var cost=qty*price;
+  if(cost>_balance){
+    showMsg('err','<span class="it">ARIA insufficienti. Ti servono '+cost+' ARIA, ne hai '+_balance+'.</span><span class="en">Not enough ARIA. You need '+cost+', you have '+_balance+'.</span>');
+    return;
+  }
+  _pendingBuy={airdropId:airdropId,qty:qty,cost:cost};
+  document.getElementById('modal-desc').innerHTML='<span class="it">Stai per acquistare <strong>'+qty+'</strong> blocchi.</span><span class="en">You are about to buy <strong>'+qty+'</strong> blocks.</span>';
+  document.getElementById('modal-cost').textContent=cost+' ARIA';
+  document.getElementById('modal-bg').classList.add('active');
+}
+
+function closeModal(e){
+  if(e&&e.target!==document.getElementById('modal-bg'))return;
+  document.getElementById('modal-bg').classList.remove('active');
+  _pendingBuy=null;
+}
+
+async function confirmBuy(){
+  if(!_pendingBuy)return;
+  var buy=_pendingBuy;
+  document.getElementById('modal-bg').classList.remove('active');
+  var btn=document.getElementById('buy-btn');
+  btn.disabled=true;
+  btn.classList.add('loading');
+  btn.innerHTML='<span class="it">Acquisto in corso...</span><span class="en">Processing...</span>';
+  hideMsg();
+
+  try{
+    var data=await sbRpc('buy_blocks',{p_airdrop_id:buy.airdropId,p_blocks:buy.qty},_session.access_token);
+    if(data.ok){
+      _balance=data.new_balance;
+      document.getElementById('topbar-bal').textContent=_balance+' ARIA';
+      showToast(data.blocks_bought+' <span class="it">blocchi acquistati!</span><span class="en">blocks purchased!</span>');
+      showMsg('ok','<span class="it">Acquisto completato! '+data.blocks_bought+' blocchi, '+data.blocks_remaining+' rimasti.</span><span class="en">Purchase complete! '+data.blocks_bought+' blocks, '+data.blocks_remaining+' remaining.</span>');
+      // Refresh data
+      await Promise.all([loadAirdrops(),loadMyParticipations()]);
+      renderGrid();
+      // Re-open detail with fresh data
+      setTimeout(function(){openDetail(buy.airdropId)},200);
+    } else {
+      var errMsg={
+        'INSUFFICIENT_ARIA':'<span class="it">ARIA insufficienti (saldo: '+(data.balance||0)+', costo: '+(data.cost||0)+').</span><span class="en">Not enough ARIA (balance: '+(data.balance||0)+', cost: '+(data.cost||0)+').</span>',
+        'NOT_ENOUGH_BLOCKS':'<span class="it">Solo '+(data.available||0)+' blocchi disponibili.</span><span class="en">Only '+(data.available||0)+' blocks available.</span>',
+        'AIRDROP_NOT_ACTIVE':'<span class="it">Airdrop non attivo.</span><span class="en">Airdrop not active.</span>',
+        'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>'
+      };
+      showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown'));
+      btn.disabled=false;
+      btn.classList.remove('loading');
+      btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
+    }
+  }catch(e){
+    showMsg('err','<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>');
+    btn.disabled=false;
+    btn.classList.remove('loading');
+    btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
+  }
+  _pendingBuy=null;
+}
+
+// ── My airdrops ──
+function renderMyAirdrops(){
+  var list=document.getElementById('my-list');
+  var empty=document.getElementById('my-empty');
+  // Aggregate by airdrop
+  var map={};
+  _myParts.forEach(function(p){
+    var aid=p.airdrop_id||p.airdrops?.id;
+    if(!aid)return;
+    if(!map[aid])map[aid]={blocks:0,spent:0,airdrop:p.airdrops,lastDate:p.created_at};
+    map[aid].blocks+=p.blocks_count;
+    map[aid].spent+=p.aria_spent;
+  });
+  var items=Object.values(map);
+  if(!items.length){
+    list.innerHTML='';
+    empty.style.display='block';
+    return;
+  }
+  empty.style.display='none';
+  var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
+  list.innerHTML=items.map(function(item){
+    var a=item.airdrop;
+    if(!a)return '';
+    var imgHtml=a.image_url
+      ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy">'
+      :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
+    return '<div class="my-card" onclick="switchDappTab(\'explore\');setTimeout(function(){openDetail(\''+a.id+'\')},100)">'
+      +imgHtml
+      +'<div class="my-card-info">'
+      +'<div class="my-card-title">'+a.title+'</div>'
+      +'<div class="my-card-meta">'+a.category+' &middot; '+(a.status==='active'?'<span style="color:var(--kas)"><span class="it">Attivo</span><span class="en">Active</span></span>':'<span>'+a.status+'</span>')+'</div>'
+      +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
+      +'</div></div>';
+  }).join('');
+}
+
+// ── Messages & Toast ──
+function showMsg(type,html){
+  var el=document.getElementById('buy-msg');
+  el.innerHTML=html;
+  el.className='buy-msg active '+type;
+}
+function hideMsg(){
+  var el=document.getElementById('buy-msg');
+  el.className='buy-msg';
+  el.innerHTML='';
+}
+
+function showToast(html){
+  var t=document.getElementById('toast');
+  t.innerHTML=html;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},3000);
+}
+</script>
+</body>
+</html>
