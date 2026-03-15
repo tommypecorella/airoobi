@@ -194,7 +194,7 @@ input{font-family:inherit}
 .detail-stat-val{font-family:var(--font-h);font-size:clamp(20px,4vw,28px);font-weight:300;color:var(--gold)}
 .detail-stat-label{font-size:9px;color:var(--gray-400);margin-top:4px;letter-spacing:1px;text-transform:uppercase}
 
-.detail-myblocks{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.2);margin-bottom:20px;font-family:var(--font-m);font-size:13px;color:var(--gold)}
+.detail-myblocks{display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 0;margin-bottom:16px;font-family:var(--font-m);font-size:13px;color:var(--gold)}
 .detail-myblocks strong{color:var(--white);font-size:18px}
 
 .detail-deadline{font-family:var(--font-m);font-size:12px;color:var(--gray-400);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:6px}
@@ -517,6 +517,11 @@ document.addEventListener('DOMContentLoaded',async function(){
   renderGrid();
   renderStats();
   renderCategoryFilter();
+  // Deep link: ?id=uuid → open detail directly
+  var urlId=new URLSearchParams(window.location.search).get('id');
+  if(urlId){
+    openDetail(urlId);
+  }
 });
 
 function setupUI(){
@@ -621,7 +626,7 @@ function renderGrid(){
       ?'<img class="card-img" src="'+a.image_url+'" alt="" loading="lazy">'
       :'<div class="card-img-placeholder">'+placeholderSvg+'</div>';
 
-    return '<div class="card" onclick="openDetail(\''+a.id+'\')">'
+    return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
       +badge+imgHtml
       +'<div class="card-body">'
       +'<div class="card-cat">'+(a.category||'')+'</div>'
@@ -784,7 +789,7 @@ async function openDetail(id){
     +'</div>'
 
     // MY BLOCKS (above donut)
-    +(myBlocks>0?'<div class="detail-myblocks"><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*a.block_price_aria)+' ARIA <span class="it">investiti</span><span class="en">invested</span></div>':'')
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*a.block_price_aria)+' ARIA <span class="it">investiti</span><span class="en">invested</span></div>':'')
 
     // DONUT
     +'<div class="donut-wrap">'
@@ -992,11 +997,13 @@ function updateBuyDisplay(){
   if(costEl)costEl.textContent='= '+cost+' ARIA';
 }
 
+function goToAirdrop(id){
+  window.location.href='dapp.html?id='+id;
+}
+
 function backToList(){
   stopBubblePhysics();
-  document.getElementById('list-view').classList.remove('hidden');
-  document.getElementById('detail').classList.remove('active');
-  _currentDetail=null;
+  window.location.href='dapp.html';
 }
 
 function initBuy(){
@@ -1108,7 +1115,7 @@ function renderMyAirdrops(){
     var imgHtml=a.image_url
       ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy">'
       :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
-    return '<div class="my-card" onclick="switchDappTab(\'explore\');setTimeout(function(){openDetail(\''+a.id+'\')},100)">'
+    return '<div class="my-card" onclick="goToAirdrop(\''+a.id+'\')">'
       +imgHtml
       +'<div class="my-card-info">'
       +'<div class="my-card-title">'+a.title+'</div>'
