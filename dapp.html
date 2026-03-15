@@ -134,27 +134,47 @@ input{font-family:inherit}
 
 .detail-deadline{font-family:var(--font-m);font-size:12px;color:var(--gray-400);margin-bottom:20px;display:flex;align-items:center;gap:6px}
 
-/* ── BUY SECTION ── */
-.buy-box{border:1px solid var(--gray-700);background:var(--gray-900);padding:20px;margin-bottom:24px}
-.buy-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
-.buy-row{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
-.buy-qty-wrap{display:flex;align-items:center;border:1px solid var(--gray-700);background:var(--gray-800)}
-.buy-qty-btn{width:40px;height:44px;background:none;border:none;color:var(--white);font-size:18px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center}
-.buy-qty-btn:hover{color:var(--gold)}
-.buy-qty-btn:active{background:var(--gray-700)}
-.buy-qty-input{width:56px;height:44px;background:var(--gray-800);border:none;border-left:1px solid var(--gray-700);border-right:1px solid var(--gray-700);color:var(--white);font-family:var(--font-m);font-size:15px;text-align:center;-moz-appearance:textfield}
-.buy-qty-input::-webkit-outer-spin-button,.buy-qty-input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
-.buy-cost{font-family:var(--font-m);font-size:14px;color:var(--aria);flex:1}
-.buy-balance{font-size:12px;color:var(--gray-400)}
-.buy-presets{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
-.buy-preset{padding:6px 14px;border:1px solid var(--gray-700);background:none;color:var(--gray-400);font-family:var(--font-m);font-size:11px;cursor:pointer;transition:all .2s}
-.buy-preset:hover{border-color:var(--gold);color:var(--gold)}
-.buy-btn{width:100%;padding:16px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .2s;text-transform:uppercase}
-.buy-btn:hover{background:var(--white)}
-.buy-btn:active{transform:scale(.98)}
-.buy-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}
-.buy-btn.loading{background:var(--gray-700);color:var(--gray-400)}
-.buy-msg{font-size:13px;margin-top:12px;text-align:center;padding:10px;display:none}
+/* ── MOSAIC GRID ── */
+.mosaic-wrap{margin-bottom:24px}
+.mosaic-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center}
+.mosaic-label-count{color:var(--gold)}
+.mosaic{display:grid;gap:2px;position:relative}
+.mosaic-cell{aspect-ratio:1;background:var(--gray-800);border:1px solid var(--gray-700);cursor:pointer;transition:all .2s;position:relative;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:9px;color:transparent;user-select:none;-webkit-user-select:none}
+.mosaic-cell:hover{border-color:var(--gray-400)}
+.mosaic-cell.sold{background:var(--gray-700);border-color:var(--gray-600);cursor:default;opacity:.5}
+.mosaic-cell.mine{background:rgba(184,150,12,.25);border-color:var(--gold);cursor:default;box-shadow:inset 0 0 8px rgba(184,150,12,.3)}
+.mosaic-cell.mine::after{content:'';position:absolute;inset:3px;border:1px solid rgba(184,150,12,.4)}
+.mosaic-cell.selected{background:rgba(74,158,255,.2);border-color:var(--aria);box-shadow:0 0 12px rgba(74,158,255,.3)}
+.mosaic-cell.selected::after{content:'';position:absolute;inset:3px;border:1px solid rgba(74,158,255,.4)}
+.mosaic-cell.just-bought{animation:blockReveal .6s ease forwards}
+@keyframes blockReveal{
+  0%{background:rgba(74,158,255,.2);border-color:var(--aria);transform:scale(1)}
+  40%{background:rgba(184,150,12,.6);border-color:var(--gold);transform:scale(1.15)}
+  100%{background:rgba(184,150,12,.25);border-color:var(--gold);transform:scale(1);box-shadow:inset 0 0 8px rgba(184,150,12,.3)}
+}
+.mosaic-legend{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.mosaic-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-400)}
+.mosaic-legend-swatch{width:14px;height:14px;border:1px solid var(--gray-700)}
+.mosaic-legend-swatch.avail{background:var(--gray-800)}
+.mosaic-legend-swatch.sel{background:rgba(74,158,255,.2);border-color:var(--aria)}
+.mosaic-legend-swatch.own{background:rgba(184,150,12,.25);border-color:var(--gold)}
+.mosaic-legend-swatch.other{background:var(--gray-700);opacity:.5}
+
+/* ── BUY BAR (sticky bottom) ── */
+.buy-bar{position:sticky;bottom:0;left:0;right:0;background:rgba(13,13,13,.95);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--gray-700);padding:12px 16px;display:none;z-index:50}
+.buy-bar.active{display:block}
+.buy-bar-inner{display:flex;align-items:center;gap:12px;max-width:960px;margin:0 auto}
+.buy-bar-info{flex:1;min-width:0}
+.buy-bar-count{font-family:var(--font-m);font-size:14px;color:var(--white)}
+.buy-bar-cost{font-family:var(--font-m);font-size:12px;color:var(--aria)}
+.buy-bar-btn{padding:12px 24px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:12px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:all .2s;text-transform:uppercase;white-space:nowrap}
+.buy-bar-btn:hover{background:var(--white)}
+.buy-bar-btn:active{transform:scale(.97)}
+.buy-bar-btn:disabled{opacity:.35;cursor:not-allowed}
+.buy-bar-btn.loading{background:var(--gray-700);color:var(--gray-400)}
+.buy-bar-clear{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:10px 14px;font-size:11px;cursor:pointer;transition:all .2s;white-space:nowrap}
+.buy-bar-clear:hover{border-color:var(--white);color:var(--white)}
+.buy-msg{font-size:13px;margin-top:8px;text-align:center;padding:10px;display:none}
 .buy-msg.active{display:block}
 .buy-msg.ok{background:rgba(73,234,203,.06);border:1px solid rgba(73,234,203,.2);color:var(--kas)}
 .buy-msg.err{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);color:var(--red)}
@@ -306,6 +326,18 @@ input{font-family:inherit}
     </div>
   </div>
 
+</div>
+
+<!-- BUY BAR (sticky bottom) -->
+<div class="buy-bar" id="buy-bar">
+  <div class="buy-bar-inner">
+    <div class="buy-bar-info">
+      <div class="buy-bar-count" id="buy-bar-count">0 blocchi</div>
+      <div class="buy-bar-cost" id="buy-bar-cost">0 ARIA</div>
+    </div>
+    <button class="buy-bar-clear" onclick="clearSelection()"><span class="it">Annulla</span><span class="en">Clear</span></button>
+    <button class="buy-bar-btn" id="buy-bar-btn" onclick="initBuy()"><span class="it">Acquista</span><span class="en">Buy</span></button>
+  </div>
 </div>
 
 <!-- CONFIRM MODAL -->
@@ -562,32 +594,63 @@ function renderGrid(){
 }
 
 // ── Detail ──
+var _selectedBlocks=[];
+var _gridData=[];
+
+function calcGridCols(total){
+  // Find best cols for mobile-first (min ~40px cells on 360px screen)
+  // ~8 cols max on mobile, more on desktop
+  var w=window.innerWidth-32; // padding
+  var maxCols=Math.floor(w/38);
+  if(maxCols<4)maxCols=4;
+  if(maxCols>15)maxCols=15;
+  // Find cols that evenly divide or close
+  var best=maxCols;
+  for(var c=maxCols;c>=4;c--){
+    if(total%c===0){best=c;break;}
+  }
+  return best;
+}
+
 async function openDetail(id){
   var a=_airdrops.find(function(x){return x.id===id});
   if(!a)return;
   _currentDetail=a;
+  _selectedBlocks=[];
   document.getElementById('list-view').classList.add('hidden');
   document.getElementById('detail').classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 
-  // My blocks for this airdrop
-  var myParts=await sbGet('airdrop_participations?airdrop_id=eq.'+id+'&user_id=eq.'+_session.user.id+'&select=blocks_count,aria_spent,created_at&order=created_at.desc',_session.access_token);
-  var myBlocks=0,mySpent=0;
-  if(myParts)myParts.forEach(function(p){myBlocks+=p.blocks_count;mySpent+=p.aria_spent});
+  // Load grid data from RPC
+  var token=await getValidToken();
+  _gridData=await sbRpc('get_airdrop_grid',{p_airdrop_id:id},token)||[];
+  if(!Array.isArray(_gridData))_gridData=[];
 
   var remaining=a.total_blocks-a.blocks_sold;
   var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
-  var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
-  var imgHtml=a.image_url
-    ?'<img class="detail-img" src="'+a.image_url+'" alt="" loading="lazy">'
-    :'<div class="detail-img-placeholder">'+placeholderSvg+'</div>';
-
+  var myBlocks=_gridData.filter(function(b){return b.is_mine}).length;
   var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'';
 
-  var maxBuy=Math.min(remaining,Math.floor(_balance/a.block_price_aria));
+  var cols=calcGridCols(a.total_blocks);
 
-  var html=imgHtml
-    +'<div class="detail-cat">'+a.category+'</div>'
+  // Build sold/mine lookup
+  var soldSet={},mineSet={};
+  _gridData.forEach(function(b){
+    soldSet[b.block_number]=true;
+    if(b.is_mine)mineSet[b.block_number]=true;
+  });
+
+  // Build mosaic HTML
+  var mosaicHtml='';
+  for(var i=1;i<=a.total_blocks;i++){
+    var cls='mosaic-cell';
+    if(mineSet[i])cls+=' mine';
+    else if(soldSet[i])cls+=' sold';
+    else cls+='" onclick="toggleBlock('+i+')';
+    mosaicHtml+='<div class="'+cls+'" data-bn="'+i+'">'+i+'</div>';
+  }
+
+  var html='<div class="detail-cat">'+a.category+'</div>'
     +'<h2 class="detail-title">'+a.title+'</h2>'
     +(a.description?'<p class="detail-desc">'+a.description+'</p>':'')
     +'<div class="detail-stats">'
@@ -596,90 +659,87 @@ async function openDetail(id){
     +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+pct+'%</div><div class="detail-stat-label"><span class="it">Venduti</span><span class="en">Sold</span></div></div>'
     +'</div>'
-    +'<div class="detail-progress-wrap">'
-    +'<div class="detail-progress"><div class="detail-progress-bar" style="width:'+pct+'%"></div></div>'
-    +'<div class="detail-progress-label"><span>'+a.blocks_sold+' <span class="it">venduti</span><span class="en">sold</span></span><span>'+a.total_blocks+' <span class="it">totali</span><span class="en">total</span></span></div>'
-    +'</div>'
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> ('+mySpent+' ARIA <span class="it">spesi</span><span class="en">spent</span>)</span></div>':'')
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong></span></div>':'')
     +(dl?'<div class="detail-deadline"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="it">Scadenza: '+dl+'</span><span class="en">Deadline: '+dl+'</span></div>':'')
-    +'<div class="buy-box">'
-    +'<div class="buy-label"><span class="it">Acquista blocchi</span><span class="en">Buy blocks</span></div>'
-    +'<div class="buy-row">'
-    +'<div class="buy-qty-wrap">'
-    +'<button class="buy-qty-btn" onclick="adjustQty(-1,'+a.block_price_aria+','+remaining+')">−</button>'
-    +'<input type="number" class="buy-qty-input" id="buy-qty" value="1" min="1" max="'+remaining+'" oninput="updateCost('+a.block_price_aria+','+remaining+')">'
-    +'<button class="buy-qty-btn" onclick="adjustQty(1,'+a.block_price_aria+','+remaining+')">+</button>'
+    +'<div class="mosaic-wrap">'
+    +'<div class="mosaic-label"><span><span class="it">Seleziona i blocchi</span><span class="en">Select blocks</span></span><span class="mosaic-label-count" id="mosaic-count">0 <span class="it">selezionati</span><span class="en">selected</span></span></div>'
+    +'<div class="mosaic" id="mosaic" style="grid-template-columns:repeat('+cols+',1fr)">'+mosaicHtml+'</div>'
+    +'<div class="mosaic-legend">'
+    +'<div class="mosaic-legend-item"><div class="mosaic-legend-swatch avail"></div><span class="it">Disponibile</span><span class="en">Available</span></div>'
+    +'<div class="mosaic-legend-item"><div class="mosaic-legend-swatch sel"></div><span class="it">Selezionato</span><span class="en">Selected</span></div>'
+    +'<div class="mosaic-legend-item"><div class="mosaic-legend-swatch own"></div><span class="it">Tuo</span><span class="en">Yours</span></div>'
+    +'<div class="mosaic-legend-item"><div class="mosaic-legend-swatch other"></div><span class="it">Occupato</span><span class="en">Taken</span></div>'
     +'</div>'
-    +'<div class="buy-cost" id="buy-cost">= '+a.block_price_aria+' ARIA</div>'
-    +'<div class="buy-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA</div>'
     +'</div>'
-    +'<div class="buy-presets" id="buy-presets">'
-    +(maxBuy>=5?'<button class="buy-preset" onclick="setQty(5,'+a.block_price_aria+','+remaining+')">5</button>':'')
-    +(maxBuy>=10?'<button class="buy-preset" onclick="setQty(10,'+a.block_price_aria+','+remaining+')">10</button>':'')
-    +(maxBuy>=25?'<button class="buy-preset" onclick="setQty(25,'+a.block_price_aria+','+remaining+')">25</button>':'')
-    +(maxBuy>0?'<button class="buy-preset" onclick="setQty('+maxBuy+','+a.block_price_aria+','+remaining+')">Max ('+maxBuy+')</button>':'')
-    +'</div>'
-    +'<button class="buy-btn" id="buy-btn" onclick="initBuy(\''+a.id+'\','+a.block_price_aria+')"'+(remaining<=0?' disabled':'')+'>'
-    +(remaining>0?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>':'<span class="it">Esaurito</span><span class="en">Sold out</span>')
-    +'</button>'
-    +'<div class="buy-msg" id="buy-msg"></div>'
-    +'</div>';
-
-  // Purchase history for this airdrop
-  if(myParts&&myParts.length>0){
-    html+='<div style="margin-top:16px;border:1px solid var(--gray-700);padding:16px">'
-      +'<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px"><span class="it">Storico acquisti</span><span class="en">Purchase history</span></div>';
-    myParts.forEach(function(p){
-      var d=new Date(p.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-      html+='<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--gray-700);font-size:13px">'
-        +'<span style="color:var(--gray-300)">'+d+'</span>'
-        +'<span><strong style="color:var(--white)">'+p.blocks_count+'</strong> <span style="color:var(--gray-400)"><span class="it">blocchi</span><span class="en">blocks</span></span> &middot; <span style="color:var(--aria)">'+p.aria_spent+' ARIA</span></span>'
-        +'</div>';
-    });
-    html+='</div>';
-  }
+    +'<div class="buy-msg" id="buy-msg"></div>';
 
   document.getElementById('detail-content').innerHTML=html;
+  updateBuyBar();
+}
+
+function toggleBlock(n){
+  var idx=_selectedBlocks.indexOf(n);
+  var cell=document.querySelector('.mosaic-cell[data-bn="'+n+'"]');
+  if(idx>=0){
+    _selectedBlocks.splice(idx,1);
+    if(cell)cell.classList.remove('selected');
+  } else {
+    // Check if user can afford one more
+    var a=_currentDetail;
+    var cost=((_selectedBlocks.length+1)*a.block_price_aria);
+    if(cost>_balance){
+      showMsg('err','<span class="it">ARIA insufficienti per selezionare altri blocchi.</span><span class="en">Not enough ARIA to select more blocks.</span>');
+      return;
+    }
+    _selectedBlocks.push(n);
+    if(cell)cell.classList.add('selected');
+  }
+  // Update count label
+  var countEl=document.getElementById('mosaic-count');
+  if(countEl)countEl.innerHTML=_selectedBlocks.length+' <span class="it">selezionati</span><span class="en">selected</span>';
+  updateBuyBar();
+}
+
+function updateBuyBar(){
+  var bar=document.getElementById('buy-bar');
+  if(!_currentDetail||_selectedBlocks.length===0){
+    bar.classList.remove('active');
+    return;
+  }
+  var cost=_selectedBlocks.length*_currentDetail.block_price_aria;
+  document.getElementById('buy-bar-count').innerHTML=_selectedBlocks.length+' <span class="it">blocchi</span><span class="en">blocks</span>';
+  document.getElementById('buy-bar-cost').textContent=cost+' ARIA';
+  bar.classList.add('active');
+}
+
+function clearSelection(){
+  _selectedBlocks.forEach(function(n){
+    var cell=document.querySelector('.mosaic-cell[data-bn="'+n+'"]');
+    if(cell)cell.classList.remove('selected');
+  });
+  _selectedBlocks=[];
+  var countEl=document.getElementById('mosaic-count');
+  if(countEl)countEl.innerHTML='0 <span class="it">selezionati</span><span class="en">selected</span>';
+  updateBuyBar();
 }
 
 function backToList(){
   document.getElementById('list-view').classList.remove('hidden');
   document.getElementById('detail').classList.remove('active');
+  document.getElementById('buy-bar').classList.remove('active');
   _currentDetail=null;
+  _selectedBlocks=[];
 }
 
-// ── Buy controls ──
-function adjustQty(delta,price,max){
-  var inp=document.getElementById('buy-qty');
-  var val=parseInt(inp.value)||1;
-  val=Math.max(1,Math.min(max,val+delta));
-  inp.value=val;
-  updateCost(price,max);
-}
-
-function setQty(n,price,max){
-  var inp=document.getElementById('buy-qty');
-  inp.value=Math.min(n,max);
-  updateCost(price,max);
-}
-
-function updateCost(price,max){
-  var qty=parseInt(document.getElementById('buy-qty').value)||1;
-  if(qty<1)qty=1;
-  if(qty>max)qty=max;
-  document.getElementById('buy-cost').textContent='= '+(qty*price)+' ARIA';
-}
-
-function initBuy(airdropId,price){
-  var qty=parseInt(document.getElementById('buy-qty').value)||0;
-  if(qty<=0)return;
-  var cost=qty*price;
+function initBuy(){
+  if(!_currentDetail||_selectedBlocks.length===0)return;
+  var cost=_selectedBlocks.length*_currentDetail.block_price_aria;
   if(cost>_balance){
-    showMsg('err','<span class="it">ARIA insufficienti. Ti servono '+cost+' ARIA, ne hai '+_balance+'.</span><span class="en">Not enough ARIA. You need '+cost+', you have '+_balance+'.</span>');
+    showMsg('err','<span class="it">ARIA insufficienti.</span><span class="en">Not enough ARIA.</span>');
     return;
   }
-  _pendingBuy={airdropId:airdropId,qty:qty,cost:cost};
-  document.getElementById('modal-desc').innerHTML='<span class="it">Stai per acquistare <strong>'+qty+'</strong> blocchi.</span><span class="en">You are about to buy <strong>'+qty+'</strong> blocks.</span>';
+  _pendingBuy={airdropId:_currentDetail.id,blocks:_selectedBlocks.slice(),cost:cost};
+  document.getElementById('modal-desc').innerHTML='<span class="it">Stai per acquistare <strong>'+_selectedBlocks.length+'</strong> blocchi.</span><span class="en">You are about to buy <strong>'+_selectedBlocks.length+'</strong> blocks.</span>';
   document.getElementById('modal-cost').textContent=cost+' ARIA';
   document.getElementById('modal-bg').classList.add('active');
 }
@@ -694,45 +754,65 @@ async function confirmBuy(){
   if(!_pendingBuy)return;
   var buy=_pendingBuy;
   document.getElementById('modal-bg').classList.remove('active');
-  var btn=document.getElementById('buy-btn');
+  var btn=document.getElementById('buy-bar-btn');
   btn.disabled=true;
   btn.classList.add('loading');
-  btn.innerHTML='<span class="it">Acquisto in corso...</span><span class="en">Processing...</span>';
+  btn.textContent='...';
   hideMsg();
 
   try{
-    // Ensure fresh token
     var token=await getValidToken();
     if(!token){showMsg('err','Sessione scaduta. Ricarica la pagina.');return;}
-    var data=await sbRpc('buy_blocks',{p_airdrop_id:buy.airdropId,p_blocks:buy.qty},token);
+    var data=await sbRpc('buy_blocks',{p_airdrop_id:buy.airdropId,p_block_numbers:buy.blocks},token);
     console.log('buy_blocks response:',data);
     if(data&&data.ok){
       _balance=data.new_balance;
       document.getElementById('topbar-bal').textContent=_balance+' ARIA';
+      // Animate blocks: selected → gold with staggered animation
+      buy.blocks.forEach(function(n,i){
+        setTimeout(function(){
+          var cell=document.querySelector('.mosaic-cell[data-bn="'+n+'"]');
+          if(cell){
+            cell.classList.remove('selected');
+            cell.classList.add('just-bought');
+            cell.onclick=null;
+            cell.style.cursor='default';
+            // After animation, switch to mine
+            setTimeout(function(){
+              cell.classList.remove('just-bought');
+              cell.classList.add('mine');
+            },600);
+          }
+        },i*120); // stagger 120ms per block
+      });
+      _selectedBlocks=[];
+      updateBuyBar();
       showToast(data.blocks_bought+' <span class="it">blocchi acquistati!</span><span class="en">blocks purchased!</span>');
-      showMsg('ok','<span class="it">Acquisto completato! '+data.blocks_bought+' blocchi, '+data.blocks_remaining+' rimasti.</span><span class="en">Purchase complete! '+data.blocks_bought+' blocks, '+data.blocks_remaining+' remaining.</span>');
-      // Refresh data
-      await Promise.all([loadAirdrops(),loadMyParticipations()]);
+      // Update mosaic count label
+      var countEl=document.getElementById('mosaic-count');
+      if(countEl)countEl.innerHTML='0 <span class="it">selezionati</span><span class="en">selected</span>';
+      // Refresh data in background
+      await Promise.all([loadAirdrops(),loadMyParticipations(),loadBalance()]);
       renderGrid();
-      // Re-open detail with fresh data
-      setTimeout(function(){openDetail(buy.airdropId)},200);
     } else {
       var errMsg={
         'INSUFFICIENT_ARIA':'<span class="it">ARIA insufficienti (saldo: '+(data.balance||0)+', costo: '+(data.cost||0)+').</span><span class="en">Not enough ARIA (balance: '+(data.balance||0)+', cost: '+(data.cost||0)+').</span>',
-        'NOT_ENOUGH_BLOCKS':'<span class="it">Solo '+(data.available||0)+' blocchi disponibili.</span><span class="en">Only '+(data.available||0)+' blocks available.</span>',
+        'NOT_ENOUGH_BLOCKS':'<span class="it">Blocchi non disponibili.</span><span class="en">Blocks not available.</span>',
+        'BLOCKS_ALREADY_TAKEN':'<span class="it">Alcuni blocchi sono stati presi da qualcun altro.</span><span class="en">Some blocks were taken by someone else.</span>',
         'AIRDROP_NOT_ACTIVE':'<span class="it">Airdrop non attivo.</span><span class="en">Airdrop not active.</span>',
-        'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>'
+        'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>',
+        'INVALID_BLOCK_NUMBER':'<span class="it">Numero blocco non valido.</span><span class="en">Invalid block number.</span>'
       };
       showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown')+(data.detail?' — '+data.detail:''));
-      btn.disabled=false;
-      btn.classList.remove('loading');
-      btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
     }
+    btn.disabled=false;
+    btn.classList.remove('loading');
+    btn.innerHTML='<span class="it">Acquista</span><span class="en">Buy</span>';
   }catch(e){
     showMsg('err','<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>');
     btn.disabled=false;
     btn.classList.remove('loading');
-    btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
+    btn.innerHTML='<span class="it">Acquista</span><span class="en">Buy</span>';
   }
   _pendingBuy=null;
 }
