@@ -149,8 +149,10 @@ input{font-family:inherit}
 .acc-list.neutral li::before{background:var(--gray-400)}
 .acc-desc{font-size:14px;color:var(--gray-300);line-height:1.7}
 
-.product-divider{height:1px;background:var(--gray-700);margin:32px 0}
-.product-participate-label{font-family:var(--font-m);font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:20px}
+.product-divider{margin:40px -16px 0;padding:40px 16px 32px;background:var(--gray-900);border-top:1px solid var(--gray-700)}
+.product-participate-label{font-family:var(--font-h);font-size:clamp(22px,5vw,32px);font-weight:300;color:var(--white);text-align:center;margin-bottom:6px}
+.product-participate-label em{color:var(--gold);font-style:italic}
+.product-participate-sub{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1px;text-align:center;margin-bottom:28px}
 
 @media(min-width:640px){
   .product-hero{flex-direction:row;align-items:flex-start;gap:32px}
@@ -776,8 +778,10 @@ async function openDetail(id){
       +'</ul>',false)
 
     // DIVIDER → PARTECIPA
-    +'<div class="product-divider"></div>'
-    +'<div class="product-participate-label"><span class="it">Partecipa all\'airdrop</span><span class="en">Join the airdrop</span></div>'
+    +'<div class="product-divider">'
+    +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
+    +'<p class="product-participate-sub"><span class="it">Ogni blocco genera una Tessera Rendimento con valore garantito</span><span class="en">Each block generates a Tessera with guaranteed value</span></p>'
+    +'</div>'
 
     // DONUT
     +'<div class="donut-wrap">'
@@ -841,7 +845,8 @@ async function openDetail(id){
       :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
     +'</button>'
     +'<div class="buy-msg" id="buy-msg"></div>'
-    +'</div>';
+    +'</div>'
+    +'</div>'; // close product-divider wrapper
 
   document.getElementById('detail-content').innerHTML=html;
 
