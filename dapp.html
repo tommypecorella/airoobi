@@ -116,7 +116,7 @@ input{font-family:inherit}
 .detail-desc{font-size:15px;color:var(--gray-300);line-height:1.7;margin-bottom:24px}
 
 /* ── PRODUCT SHEET ── */
-.product-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:32px}
+.product-hero{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
 .product-img-wrap{width:100%;max-width:320px;aspect-ratio:1;background:var(--gray-900);border:1px solid var(--gray-700);display:flex;align-items:center;justify-content:center;margin-bottom:24px;overflow:hidden;position:relative}
 .product-img-wrap img{width:85%;height:85%;object-fit:contain}
 .product-img-placeholder{width:60%;height:60%;opacity:.3}
@@ -124,16 +124,31 @@ input{font-family:inherit}
 .product-info{width:100%}
 .product-brand{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
 .product-title{font-family:var(--font-h);font-size:clamp(26px,5vw,38px);font-weight:300;line-height:1.2;margin-bottom:6px}
-.product-model{font-size:14px;color:var(--gray-400);margin-bottom:16px}
+.product-model{font-size:14px;color:var(--gray-400);margin-bottom:12px}
+.product-price-row{display:flex;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.product-price{font-family:var(--font-h);font-size:clamp(28px,6vw,40px);font-weight:400;color:var(--gold)}
+.product-price-aria{font-family:var(--font-m);font-size:13px;color:var(--aria)}
 .product-condition{display:inline-block;font-family:var(--font-m);font-size:10px;color:var(--kas);letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border:1px solid rgba(73,234,203,.2);background:rgba(73,234,203,.06);margin-bottom:16px}
-.product-desc{font-size:15px;color:var(--gray-300);line-height:1.7;margin-bottom:24px}
-.product-section{margin-bottom:24px}
-.product-section-title{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gray-700)}
-.product-highlights{list-style:none;padding:0}
-.product-highlights li{position:relative;padding:8px 0 8px 20px;font-size:14px;color:var(--gray-300);border-bottom:1px solid var(--gray-700)}
-.product-highlights li:last-child{border-bottom:none}
-.product-highlights li::before{content:'';position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
-.product-included li::before{background:var(--gray-400)}
+
+/* ── ACCORDION SECTIONS ── */
+.acc{border:1px solid var(--gray-700);margin-bottom:-1px}
+.acc:first-of-type{border-top-left-radius:0;border-top-right-radius:0}
+.acc:last-of-type{margin-bottom:24px}
+.acc-header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:none;border:none;width:100%;cursor:pointer;color:var(--white);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;transition:all .2s;text-align:left}
+.acc-header:hover{background:var(--gray-800)}
+.acc-chevron{width:16px;height:16px;stroke:var(--gray-400);transition:transform .3s;flex-shrink:0}
+.acc.open .acc-chevron{transform:rotate(180deg);stroke:var(--gold)}
+.acc.open .acc-header{color:var(--gold)}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.acc.open .acc-body{max-height:600px}
+.acc-inner{padding:0 16px 16px}
+.acc-list{list-style:none;padding:0;margin:0}
+.acc-list li{position:relative;padding:8px 0 8px 20px;font-size:14px;color:var(--gray-300);border-bottom:1px solid var(--gray-700)}
+.acc-list li:last-child{border-bottom:none}
+.acc-list li::before{content:'';position:absolute;left:0;top:14px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
+.acc-list.neutral li::before{background:var(--gray-400)}
+.acc-desc{font-size:14px;color:var(--gray-300);line-height:1.7}
+
 .product-divider{height:1px;background:var(--gray-700);margin:32px 0}
 .product-participate-label{font-family:var(--font-m);font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:20px}
 
@@ -702,6 +717,20 @@ async function openDetail(id){
     ?'<img src="'+a.image_url+'" alt="'+a.title+'">'
     :'<img class="product-img-placeholder" src="/public/images/AIROOBI_Symbol_White.png" alt="">';
 
+  // Price: total ARIA cost for 1 block, and total to fill
+  var totalAriaCost=a.block_price_aria*a.total_blocks;
+
+  // Accordion helper
+  function acc(id,labelIt,labelEn,bodyHtml,openByDefault){
+    return '<div class="acc'+(openByDefault?' open':'')+'" id="acc-'+id+'">'
+      +'<button class="acc-header" onclick="toggleAcc(\''+id+'\')">'
+      +'<span><span class="it">'+labelIt+'</span><span class="en">'+labelEn+'</span></span>'
+      +'<svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'
+      +'</button>'
+      +'<div class="acc-body"><div class="acc-inner">'+bodyHtml+'</div></div>'
+      +'</div>';
+  }
+
   var html=''
     // ── PRODUCT SHEET ──
     +'<div class="product-hero">'
@@ -713,27 +742,38 @@ async function openDetail(id){
     +(brand?'<div class="product-brand">'+brand+'</div>':'')
     +'<h2 class="product-title">'+a.title+'</h2>'
     +(model?'<div class="product-model">'+model+'</div>':'')
+    +'<div class="product-price-row">'
+    +'<div class="product-price">'+a.block_price_aria+' ARIA</div>'
+    +'<div class="product-price-aria"><span class="it">per blocco</span><span class="en">per block</span> &middot; '+a.total_blocks.toLocaleString('it-IT')+' <span class="it">blocchi totali</span><span class="en">total blocks</span></div>'
+    +'</div>'
     +(condition?'<div class="product-condition">'+condition+'</div>':'')
-    +(a.description?'<p class="product-desc">'+a.description+'</p>':'')
     +'<div class="detail-cat">'+a.category+'</div>'
     +'</div>'
     +'</div>'
 
-    // HIGHLIGHTS
-    +(highlights.length>0?
-      '<div class="product-section">'
-      +'<div class="product-section-title"><span class="it">Caratteristiche</span><span class="en">Highlights</span></div>'
-      +'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
-      +'</div>'
+    // ── ACCORDION SECTIONS ──
+    // Description (open by default)
+    +(a.description?acc('desc','Descrizione','Description','<p class="acc-desc">'+a.description+'</p>',true):'')
+
+    // Highlights
+    +(highlights.length>0?acc('highlights','Caratteristiche','Highlights',
+      '<ul class="acc-list">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>',false)
     :'')
 
-    // WHAT'S INCLUDED
-    +(included.length>0?
-      '<div class="product-section">'
-      +'<div class="product-section-title"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
-      +'<ul class="product-highlights product-included">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
-      +'</div>'
+    // What's included
+    +(included.length>0?acc('included','Contenuto della confezione','What\'s included',
+      '<ul class="acc-list neutral">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>',false)
     :'')
+
+    // Airdrop details
+    +acc('airdrop','Dettagli airdrop','Airdrop details',
+      '<ul class="acc-list neutral">'
+      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'
+      +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
+      +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
+      +'<li><span class="it">Costo totale airdrop:</span><span class="en">Total airdrop cost:</span> <strong style="color:var(--aria)">'+totalAriaCost.toLocaleString('it-IT')+' ARIA</strong></li>'
+      +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
+      +'</ul>',false)
 
     // DIVIDER → PARTECIPA
     +'<div class="product-divider"></div>'
@@ -911,6 +951,12 @@ function startBubblePhysics(){
 function stopBubblePhysics(){
   if(_bubbleRaf){cancelAnimationFrame(_bubbleRaf);_bubbleRaf=null;}
   _bubbles=[];
+}
+
+// ── Accordion ──
+function toggleAcc(id){
+  var el=document.getElementById('acc-'+id);
+  if(el)el.classList.toggle('open');
 }
 
 // ── Slider / Buy controls ──
