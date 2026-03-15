@@ -822,6 +822,62 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 
 /* ── MOBILE FIX: privacy/terms modali ── */
 @media(max-width:480px){.legal-modal{padding:20px 12px!important}.legal-modal-inner{padding:20px 0!important}.legal-modal h2{font-size:24px!important}.legal-modal h3{font-size:17px!important;margin:24px 0 10px!important}}
+
+/* ── DAPP (Airdrop Marketplace) ── */
+.dapp-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:250;background:var(--black);overflow-y:auto}
+.dapp-overlay.active{display:block}
+.dapp-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 32px;border-bottom:1px solid var(--gray-700)}
+.dapp-nav img{height:28px}
+.dapp-nav-right{display:flex;align-items:center;gap:12px}
+.dapp-nav-bal{font-family:var(--font-m);font-size:13px;color:#4A9EFF;letter-spacing:0.5px}
+.dapp-content{max-width:900px;margin:0 auto;padding:40px 24px 80px}
+.dapp-back{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 12px;cursor:pointer;font-family:var(--font-m);font-size:11px;letter-spacing:1px;transition:all .3s;white-space:nowrap}
+.dapp-back:hover{border-color:var(--gold);color:var(--gold)}
+.dapp-title{font-family:var(--font-h);font-size:clamp(28px,5vw,42px);font-weight:300;margin:24px 0 8px}
+.dapp-title em{color:var(--gold);font-style:italic}
+.dapp-subtitle{font-size:14px;color:var(--gray-400);margin-bottom:40px}
+.dapp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+.dapp-card{border:1px solid var(--gray-700);background:var(--gray-800);overflow:hidden;cursor:pointer;transition:all .3s}
+.dapp-card:hover{border-color:var(--gold)}
+.dapp-card-img{width:100%;height:180px;object-fit:cover;background:var(--gray-700)}
+.dapp-card-img-placeholder{width:100%;height:180px;background:var(--gray-700);display:flex;align-items:center;justify-content:center;font-size:48px;color:var(--gray-400)}
+.dapp-card-body{padding:16px}
+.dapp-card-cat{font-family:var(--font-m);font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.dapp-card-title{font-family:var(--font-h);font-size:20px;font-weight:400;margin-bottom:12px}
+.dapp-card-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--gray-400);margin-bottom:12px}
+.dapp-progress{height:4px;background:var(--gray-700);border-radius:2px;overflow:hidden}
+.dapp-progress-bar{height:100%;background:var(--gold);transition:width .4s}
+.dapp-card-price{font-family:var(--font-m);font-size:13px;color:#4A9EFF;margin-top:12px}
+
+/* Airdrop detail view */
+.dapp-detail{display:none}
+.dapp-detail.active{display:block}
+.dapp-list{display:block}
+.dapp-list.hidden{display:none}
+.dapp-detail-img{width:100%;max-height:320px;object-fit:cover;border:1px solid var(--gray-700);margin-bottom:24px}
+.dapp-detail-cat{font-family:var(--font-m);font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.dapp-detail-title{font-family:var(--font-h);font-size:clamp(24px,4vw,36px);font-weight:400;margin-bottom:16px}
+.dapp-detail-desc{font-size:15px;color:var(--gray-300);line-height:1.7;margin-bottom:24px}
+.dapp-detail-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:24px}
+.dapp-detail-stat{padding:16px;background:var(--gray-800);text-align:center}
+.dapp-detail-stat-val{font-family:var(--font-h);font-size:28px;font-weight:300;color:var(--gold)}
+.dapp-detail-stat-label{font-size:11px;color:var(--gray-400);margin-top:4px}
+.dapp-buy-section{border:1px solid var(--gray-700);padding:24px;margin-bottom:24px}
+.dapp-buy-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.dapp-buy-input{width:80px;padding:10px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-m);font-size:14px;text-align:center}
+.dapp-buy-input:focus{outline:none;border-color:var(--gold)}
+.dapp-buy-cost{font-family:var(--font-m);font-size:14px;color:#4A9EFF}
+.dapp-buy-btn{width:100%;padding:14px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:13px;font-weight:700;letter-spacing:1.5px;cursor:pointer;transition:all .3s;text-transform:uppercase}
+.dapp-buy-btn:hover{background:var(--white)}
+.dapp-buy-btn:disabled{opacity:.4;cursor:not-allowed}
+.dapp-buy-msg{font-size:13px;margin-top:12px;text-align:center}
+.dapp-buy-msg.ok{color:#49EACB}
+.dapp-buy-msg.err{color:#ff6b6b}
+.dapp-my-blocks{font-family:var(--font-m);font-size:13px;color:var(--gray-400);margin-bottom:16px}
+.dapp-empty{text-align:center;padding:80px 24px;color:var(--gray-400)}
+.dapp-empty-icon{font-size:48px;margin-bottom:16px}
+.dapp-empty-text{font-family:var(--font-h);font-size:22px;font-weight:300;color:var(--white);margin-bottom:8px}
+@media(max-width:600px){.dapp-detail-stats{grid-template-columns:1fr}.dapp-nav{padding:12px 16px}.dapp-content{padding:24px 16px 60px}}
 </style>
 <!-- Chart.js (Investor page) -->
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
@@ -1234,7 +1290,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="#termini" onclick="openLegalPage('termini')"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.14-1.20.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.15-1.21.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1307,6 +1363,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
     else if(hh==='#privacy'){openLegalPage('privacy');}
     else if(hh==='#termini'){openLegalPage('termini');}
     else if(hh==='#investitori'){openLegalPage('investitori');}
+    else if(hh==='#dapp'){openDapp();}
   }
   handleHash();
   window.addEventListener('hashchange',handleHash);
@@ -2133,6 +2190,162 @@ function closeDashboard(){
   document.getElementById('dash-overlay').classList.remove('active');
   document.body.style.overflow='';
   history.replaceState(null,null,' ');
+}
+
+// ── dApp (Airdrop Marketplace) ──
+var _dappAirdrops=[];
+var _dappSession=null;
+var _dappBalance=0;
+
+function openDapp(){
+  var s=getSession();
+  if(!s){openAuth('login');return;}
+  _dappSession=s;
+  document.getElementById('dapp-overlay').classList.add('active');
+  document.body.style.overflow='auto';
+  loadDappAirdrops();
+}
+
+function closeDapp(){
+  document.getElementById('dapp-overlay').classList.remove('active');
+  document.body.style.overflow='';
+  history.replaceState(null,null,' ');
+}
+
+function dappBackToList(){
+  document.getElementById('dapp-list').classList.remove('hidden');
+  document.getElementById('dapp-detail').classList.remove('active');
+}
+
+async function loadDappAirdrops(){
+  if(!_dappSession)return;
+  var tk=_dappSession.access_token;
+  // Load balance
+  var profs=await sbGet('profiles?id=eq.'+_dappSession.user.id+'&select=total_points',tk);
+  if(profs&&profs.length>0){_dappBalance=profs[0].total_points||0;}
+  document.getElementById('dapp-bal').textContent=_dappBalance+' ARIA';
+  // Load active airdrops
+  var airdrops=await sbGet('airdrops?status=eq.active&order=created_at.desc',tk);
+  _dappAirdrops=airdrops||[];
+  renderDappGrid();
+}
+
+function renderDappGrid(){
+  var grid=document.getElementById('dapp-grid');
+  var empty=document.getElementById('dapp-empty');
+  if(!_dappAirdrops||_dappAirdrops.length===0){
+    grid.innerHTML='';
+    empty.style.display='block';
+    return;
+  }
+  empty.style.display='none';
+  grid.innerHTML=_dappAirdrops.map(function(a){
+    var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
+    var remaining=a.total_blocks-a.blocks_sold;
+    var imgHtml=a.image_url
+      ?'<img class="dapp-card-img" src="'+a.image_url+'" alt="'+a.title+'">'
+      :'<div class="dapp-card-img-placeholder">&#9733;</div>';
+    return '<div class="dapp-card" onclick="openDappDetail(\''+a.id+'\')">'
+      +imgHtml
+      +'<div class="dapp-card-body">'
+      +'<div class="dapp-card-cat">'+a.category+'</div>'
+      +'<div class="dapp-card-title">'+a.title+'</div>'
+      +'<div class="dapp-card-meta"><span>'+remaining+' <span class="it">blocchi rimasti</span><span class="en">blocks left</span></span><span>'+pct+'%</span></div>'
+      +'<div class="dapp-progress"><div class="dapp-progress-bar" style="width:'+pct+'%"></div></div>'
+      +'<div class="dapp-card-price">'+a.block_price_aria+' ARIA / <span class="it">blocco</span><span class="en">block</span></div>'
+      +'</div></div>';
+  }).join('');
+}
+
+async function openDappDetail(id){
+  var a=_dappAirdrops.find(function(x){return x.id===id});
+  if(!a)return;
+  document.getElementById('dapp-list').classList.add('hidden');
+  document.getElementById('dapp-detail').classList.add('active');
+  var remaining=a.total_blocks-a.blocks_sold;
+  var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
+  // Load user's existing blocks for this airdrop
+  var myParts=await sbGet('airdrop_participations?airdrop_id=eq.'+id+'&user_id=eq.'+_dappSession.user.id+'&select=blocks_count',_dappSession.access_token);
+  var myBlocks=0;
+  if(myParts&&myParts.length>0)myParts.forEach(function(p){myBlocks+=p.blocks_count});
+
+  var imgHtml=a.image_url
+    ?'<img class="dapp-detail-img" src="'+a.image_url+'" alt="'+a.title+'">'
+    :'';
+  var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'—';
+
+  document.getElementById('dapp-detail-content').innerHTML=
+    imgHtml
+    +'<div class="dapp-detail-cat">'+a.category+'</div>'
+    +'<h2 class="dapp-detail-title">'+a.title+'</h2>'
+    +(a.description?'<p class="dapp-detail-desc">'+a.description+'</p>':'')
+    +'<div class="dapp-detail-stats">'
+    +'<div class="dapp-detail-stat"><div class="dapp-detail-stat-val">'+remaining+'</div><div class="dapp-detail-stat-label"><span class="it">Blocchi rimasti</span><span class="en">Blocks left</span></div></div>'
+    +'<div class="dapp-detail-stat"><div class="dapp-detail-stat-val">'+a.block_price_aria+'</div><div class="dapp-detail-stat-label">ARIA / <span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="dapp-detail-stat"><div class="dapp-detail-stat-val">'+pct+'%</div><div class="dapp-detail-stat-label"><span class="it">Completamento</span><span class="en">Completion</span></div></div>'
+    +'</div>'
+    +(myBlocks>0?'<div class="dapp-my-blocks"><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong style="color:var(--gold)">'+myBlocks+'</strong></div>':'')
+    +(dl!=='—'?'<p style="font-size:12px;color:var(--gray-400);margin-bottom:16px"><span class="it">Scadenza:</span><span class="en">Deadline:</span> '+dl+'</p>':'')
+    +'<div class="dapp-buy-section">'
+    +'<div style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:12px;text-transform:uppercase"><span class="it">Acquista blocchi</span><span class="en">Buy blocks</span></div>'
+    +'<div class="dapp-buy-row">'
+    +'<input type="number" class="dapp-buy-input" id="dapp-buy-qty" value="1" min="1" max="'+remaining+'" onchange="dappUpdateCost('+a.block_price_aria+')" oninput="dappUpdateCost('+a.block_price_aria+')">'
+    +'<span class="dapp-buy-cost" id="dapp-buy-cost">= '+a.block_price_aria+' ARIA</span>'
+    +'<span style="font-size:12px;color:var(--gray-400)">(<span class="it">Saldo:</span><span class="en">Balance:</span> '+_dappBalance+' ARIA)</span>'
+    +'</div>'
+    +'<button class="dapp-buy-btn" id="dapp-buy-btn" onclick="dappBuyBlocks(\''+a.id+'\')"'+(remaining<=0?' disabled':'')+'>'
+    +(remaining>0?'<span class="it">Conferma acquisto</span><span class="en">Confirm purchase</span>':'<span class="it">Esaurito</span><span class="en">Sold out</span>')
+    +'</button>'
+    +'<div class="dapp-buy-msg" id="dapp-buy-msg"></div>'
+    +'</div>';
+}
+
+function dappUpdateCost(pricePerBlock){
+  var qty=parseInt(document.getElementById('dapp-buy-qty').value)||1;
+  if(qty<1)qty=1;
+  document.getElementById('dapp-buy-cost').textContent='= '+(qty*pricePerBlock)+' ARIA';
+}
+
+async function dappBuyBlocks(airdropId){
+  var qty=parseInt(document.getElementById('dapp-buy-qty').value)||0;
+  var btn=document.getElementById('dapp-buy-btn');
+  var msg=document.getElementById('dapp-buy-msg');
+  msg.textContent='';msg.className='dapp-buy-msg';
+  if(qty<=0){msg.textContent='Inserisci un numero valido';msg.className='dapp-buy-msg err';return;}
+  btn.disabled=true;
+  btn.innerHTML='<span class="it">Acquisto in corso...</span><span class="en">Processing...</span>';
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/buy_blocks',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+_dappSession.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId,p_blocks:qty})
+    });
+    var data=await res.json();
+    if(data.ok){
+      _dappBalance=data.new_balance;
+      document.getElementById('dapp-bal').textContent=_dappBalance+' ARIA';
+      msg.innerHTML='<span class="it">'+data.blocks_bought+' blocchi acquistati! Rimangono '+data.blocks_remaining+' blocchi.</span><span class="en">'+data.blocks_bought+' blocks purchased! '+data.blocks_remaining+' blocks remaining.</span>';
+      msg.className='dapp-buy-msg ok';
+      // Refresh airdrop list and re-open detail
+      await loadDappAirdrops();
+      setTimeout(function(){openDappDetail(airdropId)},300);
+    } else {
+      var errMap={
+        'INSUFFICIENT_ARIA':'<span class="it">ARIA insufficienti. Saldo: '+((data.balance)||0)+', Costo: '+((data.cost)||0)+'</span><span class="en">Not enough ARIA. Balance: '+((data.balance)||0)+', Cost: '+((data.cost)||0)+'</span>',
+        'NOT_ENOUGH_BLOCKS':'<span class="it">Solo '+((data.available)||0)+' blocchi disponibili.</span><span class="en">Only '+((data.available)||0)+' blocks available.</span>',
+        'AIRDROP_NOT_ACTIVE':'<span class="it">Airdrop non attivo.</span><span class="en">Airdrop not active.</span>',
+        'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>'
+      };
+      msg.innerHTML=errMap[data.error]||('<span class="it">Errore: '+(data.error||'sconosciuto')+'</span><span class="en">Error: '+(data.error||'unknown')+'</span>');
+      msg.className='dapp-buy-msg err';
+      btn.disabled=false;
+      btn.innerHTML='<span class="it">Conferma acquisto</span><span class="en">Confirm purchase</span>';
+    }
+  }catch(e){
+    msg.textContent='Errore di rete';msg.className='dapp-buy-msg err';
+    btn.disabled=false;
+    btn.innerHTML='<span class="it">Conferma acquisto</span><span class="en">Confirm purchase</span>';
+  }
 }
 
 function showDashFromNav(tab){
@@ -4922,6 +5135,42 @@ async function loadReferralHistory(){
 </div>
 </div>
 
+
+<!-- ═══ DAPP (Airdrop Marketplace) ═══ -->
+<div class="dapp-overlay" id="dapp-overlay">
+<div class="dapp-nav">
+  <img src="/public/images/AIROOBI_Logo_White.png" id="dapp-logo" alt="AIROOBI" style="height:28px">
+  <div class="dapp-nav-right">
+    <span class="dapp-nav-bal" id="dapp-bal">0 ARIA</span>
+    <button class="dapp-back" onclick="closeDapp()">&larr; <span class="it">Chiudi</span><span class="en">Close</span></button>
+  </div>
+</div>
+<div class="dapp-content">
+
+  <!-- LIST VIEW -->
+  <div class="dapp-list" id="dapp-list">
+    <h1 class="dapp-title"><span class="it">Airdrop <em>Marketplace</em></span><span class="en">Airdrop <em>Marketplace</em></span></h1>
+    <p class="dapp-subtitle"><span class="it">Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all'oggetto.</span><span class="en">Use your ARIA to participate. Each block brings you closer to the item.</span></p>
+    <div class="dapp-grid" id="dapp-grid">
+      <!-- Cards injected by JS -->
+    </div>
+    <div class="dapp-empty" id="dapp-empty" style="display:none">
+      <div class="dapp-empty-icon">&#9744;</div>
+      <div class="dapp-empty-text"><span class="it">Nessun airdrop attivo</span><span class="en">No active airdrops</span></div>
+      <p style="color:var(--gray-400);font-size:13px"><span class="it">Torna presto, nuovi oggetti in arrivo.</span><span class="en">Come back soon, new items coming.</span></p>
+    </div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div class="dapp-detail" id="dapp-detail">
+    <button class="dapp-back" onclick="dappBackToList()" style="margin-bottom:20px">&larr; <span class="it">Tutti gli airdrop</span><span class="en">All airdrops</span></button>
+    <div id="dapp-detail-content">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+</div>
+</div>
 
 <!-- ═══ INVESTOR PAGE ═══ -->
 <div class="investor-overlay" id="investor-overlay">

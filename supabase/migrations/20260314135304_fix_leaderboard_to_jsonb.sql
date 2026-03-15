@@ -1,19 +1,4 @@
--- ═══════════════════════════════════════════════════════════
--- 1. Add public_id (UUID v4) to profiles
--- ═══════════════════════════════════════════════════════════
-ALTER TABLE profiles
-  ADD COLUMN IF NOT EXISTS public_id uuid DEFAULT gen_random_uuid() NOT NULL;
-
--- Backfill existing rows that might have NULL
-UPDATE profiles SET public_id = gen_random_uuid() WHERE public_id IS NULL;
-
--- Unique index
-CREATE UNIQUE INDEX IF NOT EXISTS idx_profiles_public_id ON profiles(public_id);
-
--- ═══════════════════════════════════════════════════════════
--- 2. Leaderboard RPC — top 100 + caller position
--- Returns JSON: { top100: [...], user_entry: {...} | null }
--- ═══════════════════════════════════════════════════════════
+-- Fix: row_to_jsonb does not exist, use to_jsonb instead
 CREATE OR REPLACE FUNCTION get_leaderboard(p_user_id uuid DEFAULT NULL)
 RETURNS jsonb
 LANGUAGE plpgsql
@@ -70,6 +55,3 @@ BEGIN
   );
 END;
 $$;
-
--- Grant execute to authenticated + anon (leaderboard is public)
-GRANT EXECUTE ON FUNCTION get_leaderboard(uuid) TO authenticated, anon;
