@@ -651,7 +651,7 @@ async function loadBalance(){
 }
 
 async function loadAirdrops(){
-  _airdrops=await sbGet('airdrops?status=eq.active&order=created_at.desc',_session.access_token)||[];
+  _airdrops=await sbGet('airdrops?status=in.(presale,sale)&order=created_at.desc',_session.access_token)||[];
 }
 
 async function loadMyParticipations(){
@@ -1236,7 +1236,7 @@ function renderMyAirdrops(){
       +imgHtml
       +'<div class="my-card-info">'
       +'<div class="my-card-title">'+a.title+'</div>'
-      +'<div class="my-card-meta">'+a.category+' &middot; '+(a.status==='active'?'<span style="color:var(--kas)"><span class="it">Attivo</span><span class="en">Active</span></span>':'<span>'+a.status+'</span>')+'</div>'
+      +'<div class="my-card-meta">'+a.category+' &middot; '+(a.status==='presale'?'<span style="color:var(--aria)">Presale</span>':a.status==='sale'?'<span style="color:var(--kas)">Live</span>':'<span>'+a.status+'</span>')+'</div>'
       +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
       +'</div></div>';
   }).join('');
