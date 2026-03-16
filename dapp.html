@@ -285,6 +285,39 @@ input{font-family:inherit}
 .lang-toggle{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s}
 .lang-toggle:hover{border-color:var(--gold);color:var(--gold)}
 
+/* ── VALUATION BANNER ── */
+.val-banner{display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.15);margin-bottom:20px;font-family:var(--font-m);font-size:12px;color:var(--gold);text-align:center}
+.val-banner strong{font-size:16px;color:var(--white)}
+
+/* ── STATUS BADGES on cards ── */
+.card-badge.presale{background:var(--aria);color:var(--black)}
+.card-badge.sale{background:var(--gold);color:var(--black)}
+.card-badge.dropped{background:var(--kas);color:var(--black)}
+.card-presale-price{font-family:var(--font-m);font-size:11px;color:var(--gray-400);text-decoration:line-through;margin-left:6px}
+
+/* ── SUBMIT FORM ── */
+.submit-wrap{max-width:500px;margin:0 auto}
+.submit-title{font-family:var(--font-h);font-size:clamp(24px,5vw,34px);font-weight:300;margin-bottom:8px;text-align:center}
+.submit-title em{color:var(--gold);font-style:italic}
+.submit-sub{font-size:14px;color:var(--gray-400);text-align:center;margin-bottom:32px;line-height:1.5}
+.submit-field{margin-bottom:20px}
+.submit-label{display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.submit-input,.submit-textarea,.submit-select{width:100%;padding:12px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;transition:border-color .2s}
+.submit-input:focus,.submit-textarea:focus,.submit-select:focus{outline:none;border-color:var(--gold)}
+.submit-textarea{min-height:100px;resize:vertical}
+.submit-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.submit-select option{background:var(--gray-800);color:var(--white)}
+.submit-hint{font-size:11px;color:var(--gray-400);margin-top:4px}
+.submit-btn{width:100%;padding:16px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .2s;text-transform:uppercase;margin-top:8px}
+.submit-btn:hover{background:var(--white)}
+.submit-btn:disabled{opacity:.35;cursor:not-allowed}
+.submit-btn.loading{background:var(--gray-700);color:var(--gray-400)}
+.submit-msg{font-size:13px;margin-top:12px;text-align:center;padding:12px}
+.submit-msg.ok{background:rgba(73,234,203,.06);border:1px solid rgba(73,234,203,.2);color:var(--kas)}
+.submit-msg.err{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);color:var(--red)}
+.submit-rules{margin-top:24px;padding:16px;border:1px solid var(--gray-700);font-size:12px;color:var(--gray-400);line-height:1.6}
+.submit-rules strong{color:var(--white)}
+
 /* ── RESPONSIVE ── */
 @media(min-width:640px){
   .main{padding:32px 24px 100px}
@@ -330,10 +363,17 @@ input{font-family:inherit}
   <div class="dapp-tabs">
     <button class="dapp-tab active" id="tab-btn-explore" onclick="switchDappTab('explore')"><span class="it">Esplora</span><span class="en">Explore</span></button>
     <button class="dapp-tab" id="tab-btn-my" onclick="switchDappTab('my')"><span class="it">I miei airdrop</span><span class="en">My airdrops</span></button>
+    <button class="dapp-tab" id="tab-btn-submit" onclick="switchDappTab('submit')"><span class="it">Proponi</span><span class="en">Submit</span></button>
   </div>
 
   <!-- ═══ EXPLORE TAB ═══ -->
   <div id="tab-explore">
+
+    <!-- VALUATION BANNER -->
+    <div class="val-banner" id="val-banner" style="display:none">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span><strong id="val-count">0</strong> <span class="it">oggetti in valutazione</span><span class="en">items under evaluation</span></span>
+    </div>
 
     <!-- CATEGORY FILTER -->
     <div class="cat-filter" id="cat-filter">
@@ -377,6 +417,67 @@ input{font-family:inherit}
       <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <div class="empty-title"><span class="it">Nessuna partecipazione</span><span class="en">No participations yet</span></div>
       <p class="empty-sub"><span class="it">Esplora gli airdrop e acquista i tuoi primi blocchi.</span><span class="en">Explore airdrops and buy your first blocks.</span></p>
+    </div>
+  </div>
+
+  <!-- ═══ SUBMIT TAB ═══ -->
+  <div id="tab-submit" style="display:none">
+    <div class="submit-wrap">
+      <h2 class="submit-title"><span class="it">Proponi il tuo <em>oggetto</em></span><span class="en">Submit your <em>item</em></span></h2>
+      <p class="submit-sub"><span class="it">Hai un oggetto di valore che vuoi mettere in airdrop? Compila il form e il nostro team lo valuterà.</span><span class="en">Have a valuable item for airdrop? Fill the form and our team will evaluate it.</span></p>
+
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Nome dell'oggetto</span><span class="en">Item name</span> *</label>
+        <input class="submit-input" id="sub-title" type="text" placeholder="es. iPhone 16 Pro Max 256GB">
+      </div>
+
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Descrizione</span><span class="en">Description</span> *</label>
+        <textarea class="submit-textarea" id="sub-desc" placeholder="Descrivi l'oggetto: condizione, anno, accessori inclusi..."></textarea>
+      </div>
+
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Categoria</span><span class="en">Category</span> *</label>
+        <select class="submit-select" id="sub-cat">
+          <option value="">—</option>
+          <option value="mobile">Mobile / Tech entry (€500–€1.500)</option>
+          <option value="tech">Tech / Strumenti (€1.500–€3.000)</option>
+          <option value="luxury">Luxury / 2 Ruote (€3.000–€15.000)</option>
+          <option value="ultra_luxury">Ultra Luxury (€15.000+)</option>
+        </select>
+      </div>
+
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Valore stimato (€)</span><span class="en">Estimated value (€)</span> *</label>
+        <input class="submit-input" id="sub-value" type="number" min="500" step="1" placeholder="500">
+        <div class="submit-hint"><span class="it">Valore minimo: €500. AIROOBI verificherà il valore reale.</span><span class="en">Minimum value: €500. AIROOBI will verify the real value.</span></div>
+      </div>
+
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Link immagine (opzionale)</span><span class="en">Image URL (optional)</span></label>
+        <input class="submit-input" id="sub-img" type="url" placeholder="https://...">
+      </div>
+
+      <button class="submit-btn" id="sub-btn" onclick="submitObject()"><span class="it">Invia per valutazione</span><span class="en">Submit for evaluation</span></button>
+      <div id="sub-msg"></div>
+
+      <div class="submit-rules">
+        <strong><span class="it">Regole:</span><span class="en">Rules:</span></strong><br>
+        <span class="it">
+          &bull; Valore minimo dell'oggetto: <strong>€500</strong><br>
+          &bull; L'oggetto deve essere reale, verificabile e in tuo possesso<br>
+          &bull; AIROOBI valuterà l'oggetto e fisserà prezzo e numero blocchi<br>
+          &bull; Incasso garantito a prezzo di mercato per il venditore<br>
+          &bull; La valutazione richiede circa 24-48h
+        </span>
+        <span class="en">
+          &bull; Minimum item value: <strong>€500</strong><br>
+          &bull; The item must be real, verifiable and in your possession<br>
+          &bull; AIROOBI will evaluate and set the price and block count<br>
+          &bull; Guaranteed payout at market price for the seller<br>
+          &bull; Evaluation takes approximately 24-48h
+        </span>
+      </div>
     </div>
   </div>
 
@@ -517,6 +618,7 @@ document.addEventListener('DOMContentLoaded',async function(){
   renderGrid();
   renderStats();
   renderCategoryFilter();
+  loadValuationCount();
   // Deep link: ?id=uuid → open detail directly
   var urlId=new URLSearchParams(window.location.search).get('id');
   if(urlId){
@@ -560,8 +662,10 @@ async function loadMyParticipations(){
 function switchDappTab(tab){
   document.getElementById('tab-btn-explore').classList.toggle('active',tab==='explore');
   document.getElementById('tab-btn-my').classList.toggle('active',tab==='my');
+  document.getElementById('tab-btn-submit').classList.toggle('active',tab==='submit');
   document.getElementById('tab-explore').style.display=tab==='explore'?'block':'none';
   document.getElementById('tab-my').style.display=tab==='my'?'block':'none';
+  document.getElementById('tab-submit').style.display=tab==='submit'?'block':'none';
   if(tab==='my')renderMyAirdrops();
 }
 
@@ -617,14 +721,22 @@ function renderGrid(){
   grid.innerHTML=list.map(function(a){
     var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
     var remaining=a.total_blocks-a.blocks_sold;
+    // Badge: presale vs sale, then fill status
     var badge='';
-    if(pct>=80)badge='<div class="card-badge ending"><span class="it">Ultimi</span><span class="en">Ending</span></div>';
+    var isPresale=a.status==='presale';
+    if(isPresale)badge='<div class="card-badge presale">Presale</div>';
+    else if(pct>=80)badge='<div class="card-badge ending"><span class="it">Ultimi</span><span class="en">Ending</span></div>';
     else if(pct>=50)badge='<div class="card-badge hot">Hot</div>';
-    else badge='<div class="card-badge new">New</div>';
+    else badge='<div class="card-badge sale">Live</div>';
 
     var imgHtml=a.image_url
       ?'<img class="card-img" src="'+a.image_url+'" alt="" loading="lazy">'
       :'<div class="card-img-placeholder">'+placeholderSvg+'</div>';
+
+    // Price display: presale shows discounted price + strikethrough sale price
+    var currentPrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
+    var priceHtml=currentPrice+' ARIA / <span class="it">blocco</span><span class="en">block</span>';
+    if(isPresale&&a.presale_block_price)priceHtml+='<span class="card-presale-price">'+a.block_price_aria+'</span>';
 
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
       +badge+imgHtml
@@ -633,7 +745,7 @@ function renderGrid(){
       +'<div class="card-title">'+a.title+'</div>'
       +'<div class="card-progress"><div class="card-progress-bar" style="width:'+pct+'%"></div></div>'
       +'<div class="card-footer">'
-      +'<span class="card-price">'+a.block_price_aria+' ARIA / <span class="it">blocco</span><span class="en">block</span></span>'
+      +'<span class="card-price">'+priceHtml+'</span>'
       +'<span class="card-remain">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
       +'</div>'
       +'</div></div>';
@@ -670,6 +782,7 @@ async function openDetail(id){
 
   var remaining=a.total_blocks-a.blocks_sold;
   var pct=a.total_blocks>0?(a.blocks_sold/a.total_blocks*100):0;
+  var isPresale=a.status==='presale';
   var myBlocks=_gridData.filter(function(b){return b.is_mine}).length;
   var myPct=a.total_blocks>0?(myBlocks/a.total_blocks*100):0;
   var othersPct=pct-myPct;
@@ -750,8 +863,12 @@ async function openDetail(id){
     +'<h2 class="product-title">'+a.title+'</h2>'
     +(model?'<div class="product-model">'+model+'</div>':'')
     +'<div class="product-price-row">'
-    +'<div class="product-price">'+a.block_price_aria+' ARIA</div>'
-    +'<div class="product-price-aria"><span class="it">per blocco</span><span class="en">per block</span> &middot; '+a.total_blocks.toLocaleString('it-IT')+' <span class="it">blocchi totali</span><span class="en">total blocks</span></div>'
+    +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' ARIA</div>'
+    +'<div class="product-price-aria">'
+    +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-400);margin-right:6px">'+a.block_price_aria+'</span>':'')
+    +'<span class="it">per blocco</span><span class="en">per block</span> &middot; '+a.total_blocks.toLocaleString('it-IT')+' <span class="it">blocchi totali</span><span class="en">total blocks</span>'
+    +(isPresale?' &middot; <span style="color:var(--aria)">PRESALE</span>':'')
+    +'</div>'
     +'</div>'
     +(condition?'<div class="product-condition">'+condition+'</div>':'')
     +'<div class="detail-cat">'+a.category+'</div>'
@@ -1123,6 +1240,82 @@ function renderMyAirdrops(){
       +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
       +'</div></div>';
   }).join('');
+}
+
+// ── Valuation banner ──
+async function loadValuationCount(){
+  var token=await getValidToken();
+  if(!token)return;
+  var count=await sbRpc('get_valuation_count',{},token);
+  if(typeof count==='number'&&count>0){
+    var banner=document.getElementById('val-banner');
+    if(banner){
+      banner.style.display='flex';
+      document.getElementById('val-count').textContent=count;
+    }
+  }
+}
+
+// ── Submit object ──
+async function submitObject(){
+  var title=document.getElementById('sub-title').value.trim();
+  var desc=document.getElementById('sub-desc').value.trim();
+  var cat=document.getElementById('sub-cat').value;
+  var value=parseFloat(document.getElementById('sub-value').value);
+  var imgUrl=document.getElementById('sub-img').value.trim()||null;
+  var msgEl=document.getElementById('sub-msg');
+  msgEl.innerHTML='';msgEl.className='';
+
+  if(!title||!desc||!cat||!value){
+    msgEl.innerHTML='<span class="it">Compila tutti i campi obbligatori.</span><span class="en">Fill all required fields.</span>';
+    msgEl.className='submit-msg err';return;
+  }
+  if(value<500){
+    msgEl.innerHTML='<span class="it">Valore minimo: €500.</span><span class="en">Minimum value: €500.</span>';
+    msgEl.className='submit-msg err';return;
+  }
+
+  var btn=document.getElementById('sub-btn');
+  btn.disabled=true;btn.classList.add('loading');
+
+  try{
+    var token=await getValidToken();
+    var res=await fetch(SB_URL+'/rest/v1/airdrops',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({
+        title:title,
+        description:desc,
+        category:cat,
+        object_value_eur:value,
+        image_url:imgUrl,
+        block_price_aria:0,
+        total_blocks:0,
+        status:'in_valutazione',
+        submitted_by:_session.user.id
+      })
+    });
+    if(res.ok){
+      msgEl.innerHTML='<span class="it">Oggetto inviato per valutazione! Riceverai un riscontro entro 24-48h.</span><span class="en">Item submitted for evaluation! You\'ll hear back within 24-48h.</span>';
+      msgEl.className='submit-msg ok';
+      // Clear form
+      document.getElementById('sub-title').value='';
+      document.getElementById('sub-desc').value='';
+      document.getElementById('sub-cat').value='';
+      document.getElementById('sub-value').value='';
+      document.getElementById('sub-img').value='';
+      showToast('<span class="it">Proposta inviata!</span><span class="en">Submission sent!</span>');
+    } else {
+      var err=await res.text();
+      console.error('Submit error:',err);
+      msgEl.innerHTML='<span class="it">Errore nell\'invio. Riprova.</span><span class="en">Submission error. Try again.</span>';
+      msgEl.className='submit-msg err';
+    }
+  }catch(e){
+    msgEl.innerHTML='<span class="it">Errore di rete.</span><span class="en">Network error.</span>';
+    msgEl.className='submit-msg err';
+  }
+  btn.disabled=false;btn.classList.remove('loading');
 }
 
 // ── Messages & Toast ──
