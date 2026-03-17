@@ -34,12 +34,30 @@ input{font-family:inherit}
 [data-lang="it"] .en{display:none!important}
 
 /* ── TOPBAR ── */
-.topbar{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--gray-700);padding:0 16px;height:56px;display:flex;align-items:center;justify-content:space-between}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(0,0,0,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--gray-700);padding:0 16px;height:56px;display:flex;align-items:center;gap:0}
 .topbar-logo{height:22px;opacity:.9}
-.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-nav{display:flex;align-items:center;gap:0;margin-left:24px;height:100%}
+.topbar-nav a{display:flex;align-items:center;gap:6px;padding:0 14px;height:56px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);text-decoration:none;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.topbar-nav a:hover{color:var(--white)}
+.topbar-nav a.active{color:var(--gold);border-bottom-color:var(--gold)}
+.topbar-nav a svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;flex-shrink:0}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto}
 .topbar-bal{font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:.5px;background:rgba(74,158,255,.08);padding:6px 12px;border-radius:20px;border:1px solid rgba(74,158,255,.15)}
 .topbar-avatar{width:32px;height:32px;border-radius:50%;background:var(--gray-700);border:1px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gray-400);cursor:pointer;overflow:hidden}
 .topbar-avatar img{width:100%;height:100%;object-fit:cover}
+/* ── MOBILE BURGER ── */
+.topbar-burger{display:none;background:none;border:none;cursor:pointer;padding:8px;margin-left:auto}
+.topbar-burger span{display:block;width:18px;height:2px;background:var(--gray-400);margin:3px 0;transition:all .3s}
+.topbar-mobile-menu{display:none;position:fixed;top:56px;left:0;right:0;background:var(--gray-900);border-bottom:1px solid var(--gray-700);z-index:99;padding:8px 0}
+.topbar-mobile-menu.active{display:block}
+.topbar-mobile-menu a{display:flex;align-items:center;gap:10px;padding:14px 20px;color:var(--gray-400);font-family:var(--font-m);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all .2s}
+.topbar-mobile-menu a:hover{background:var(--gray-800);color:var(--white)}
+.topbar-mobile-menu a.active{color:var(--gold)}
+.topbar-mobile-menu a svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+@media(max-width:768px){
+  .topbar-nav{display:none}
+  .topbar-burger{display:block}
+}
 
 /* ── USER MENU ── */
 .user-menu{display:none;position:fixed;top:56px;right:8px;background:var(--gray-800);border:1px solid var(--gray-700);z-index:200;min-width:200px;padding:8px 0}
@@ -57,11 +75,7 @@ input{font-family:inherit}
 .dapp-hero h1 em{color:var(--gold);font-style:italic}
 .dapp-hero-sub{font-size:14px;color:var(--gray-400);max-width:400px;margin:0 auto;line-height:1.5}
 
-/* ── TABS (Esplora / I miei) ── */
-.dapp-tabs{display:flex;gap:0;margin-bottom:24px;border-bottom:1px solid var(--gray-700)}
-.dapp-tab{flex:1;padding:12px 0;background:none;border:none;color:var(--gray-400);font-family:var(--font-m);font-size:12px;letter-spacing:1px;text-transform:uppercase;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;text-align:center}
-.dapp-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
-.dapp-tab:hover{color:var(--white)}
+/* ── (legacy tabs removed — nav is in topbar now) ── */
 
 /* ── CATEGORY FILTER ── */
 .cat-filter{display:flex;gap:8px;overflow-x:auto;padding-bottom:8px;margin-bottom:20px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
@@ -391,6 +405,27 @@ input{font-family:inherit}
 <!-- TOPBAR -->
 <div class="topbar">
   <a href="https://airoobi.com"><img src="/public/images/AIROOBI_Logo_White.png" class="topbar-logo" alt="AIROOBI"></a>
+  <nav class="topbar-nav" id="topbar-nav">
+    <a href="/esplora" data-page="explore" onclick="navigateTo('explore',event)">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+      <span class="it">Esplora</span><span class="en">Explore</span>
+    </a>
+    <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="it">I miei</span><span class="en">My drops</span>
+    </a>
+    <a href="/proponi" data-page="submit" onclick="navigateTo('submit',event)">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <span class="it">Proponi</span><span class="en">Submit</span>
+    </a>
+    <a href="/gestione" data-page="manage" id="nav-manage" onclick="navigateTo('manage',event)" style="display:none">
+      <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <span class="it">Gestione</span><span class="en">Manage</span>
+    </a>
+  </nav>
+  <button class="topbar-burger" id="topbar-burger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
   <div class="topbar-right">
     <span class="topbar-bal" id="topbar-bal">— ARIA</span>
     <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
@@ -400,16 +435,36 @@ input{font-family:inherit}
   </div>
 </div>
 
+<!-- MOBILE NAV -->
+<div class="topbar-mobile-menu" id="topbar-mobile-menu">
+  <a href="/esplora" data-page="explore" onclick="navigateTo('explore',event)">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+    <span class="it">Esplora</span><span class="en">Explore</span>
+  </a>
+  <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
+  </a>
+  <a href="/proponi" data-page="submit" onclick="navigateTo('submit',event)">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    <span class="it">Proponi</span><span class="en">Submit</span>
+  </a>
+  <a href="/gestione" data-page="manage" id="nav-manage-mobile" onclick="navigateTo('manage',event)" style="display:none">
+    <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+    <span class="it">Gestione</span><span class="en">Manage</span>
+  </a>
+</div>
+
 <!-- USER MENU DROPDOWN -->
 <div class="user-menu" id="user-menu">
   <div class="user-menu-email" id="user-menu-email">—</div>
-  <button class="user-menu-item" onclick="window.location.href='/dapp.html'">
+  <button class="user-menu-item" onclick="navigateTo('explore');toggleUserMenu()">
     <span class="it">Dashboard</span><span class="en">Dashboard</span>
   </button>
   <button class="user-menu-item" onclick="window.location.href='/dashboard'">
     <span class="it">Dashboard C</span><span class="en">Dashboard C</span>
   </button>
-  <button class="user-menu-item" onclick="switchDappTab('submit');toggleUserMenu()">
+  <button class="user-menu-item" onclick="navigateTo('submit');toggleUserMenu()">
     <span class="it">Vendi (airdroppa)</span><span class="en">Sell (airdrop)</span>
   </button>
   <button class="user-menu-item" id="dapp-admin-link" onclick="window.location.href='/admin'" style="display:none">Admin</button>
@@ -419,18 +474,10 @@ input{font-family:inherit}
 <!-- MAIN -->
 <div class="main">
 
-  <!-- HERO -->
-  <div class="dapp-hero">
+  <!-- PAGE HEADER (dynamic per page) -->
+  <div class="dapp-hero" id="page-header">
     <h1><span class="it">Airdrop <em>Marketplace</em></span><span class="en">Airdrop <em>Marketplace</em></span></h1>
     <p class="dapp-hero-sub"><span class="it">Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all'oggetto.</span><span class="en">Use your ARIA to participate. Each block purchased brings you closer.</span></p>
-  </div>
-
-  <!-- TABS -->
-  <div class="dapp-tabs">
-    <button class="dapp-tab active" id="tab-btn-explore" onclick="switchDappTab('explore')"><span class="it">Esplora</span><span class="en">Explore</span></button>
-    <button class="dapp-tab" id="tab-btn-my" onclick="switchDappTab('my')"><span class="it">I miei airdrop</span><span class="en">My airdrops</span></button>
-    <button class="dapp-tab" id="tab-btn-submit" onclick="switchDappTab('submit')"><span class="it">Proponi</span><span class="en">Submit</span></button>
-    <button class="dapp-tab" id="tab-btn-manage" onclick="switchDappTab('manage')" style="display:none"><span class="it">Gestione</span><span class="en">Manage</span></button>
   </div>
 
   <!-- ═══ EXPLORE TAB ═══ -->
@@ -714,9 +761,14 @@ document.addEventListener('DOMContentLoaded',async function(){
   renderStats();
   renderCategoryFilter();
   loadValuationCount();
+  // Route to correct page based on URL path
+  var initialPage=PATH_TO_PAGE[location.pathname]||'explore';
+  showPage(initialPage);
+  history.replaceState({page:initialPage},null,PAGE_PATHS[initialPage]||'/esplora');
   // Deep link: ?id=uuid → open detail directly
   var urlId=new URLSearchParams(window.location.search).get('id');
   if(urlId){
+    showPage('explore');
     openDetail(urlId);
   }
 });
@@ -755,6 +807,16 @@ function toggleUserMenu(){
   document.getElementById('user-menu').classList.toggle('active');
 }
 
+function toggleMobileNav(){
+  document.getElementById('topbar-mobile-menu').classList.toggle('active');
+}
+
+// ── Browser back/forward ──
+window.addEventListener('popstate',function(e){
+  var page=(e.state&&e.state.page)?e.state.page:(PATH_TO_PAGE[location.pathname]||'explore');
+  showPage(page);
+});
+
 // ── Data loading ──
 async function loadBalance(){
   var profs=await sbGet('profiles?id=eq.'+_session.user.id+'&select=total_points',_session.access_token);
@@ -770,16 +832,46 @@ async function loadMyParticipations(){
   _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status)&order=created_at.desc',_session.access_token)||[];
 }
 
-// ── Tabs ──
-function switchDappTab(tab){
+// ── Page routing ──
+var PAGE_PATHS={explore:'/esplora',my:'/miei-airdrop',submit:'/proponi',manage:'/gestione'};
+var PATH_TO_PAGE={'/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/gestione':'manage','/dapp.html':'explore'};
+var PAGE_HEADERS={
+  explore:{it:'Airdrop <em>Marketplace</em>',en:'Airdrop <em>Marketplace</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
+  my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
+  submit:{it:'Proponi il tuo <em>oggetto</em>',en:'Submit your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
+  manage:{it:'<em>Gestione</em> Airdrop',en:'Airdrop <em>Management</em>',sub_it:'Backoffice valutazione e gestione airdrop.',sub_en:'Evaluation and airdrop management backoffice.'}
+};
+
+function navigateTo(page,event){
+  if(event)event.preventDefault();
+  showPage(page);
+  var path=PAGE_PATHS[page]||'/esplora';
+  if(location.pathname!==path)history.pushState({page:page},null,path);
+  // Close mobile menu
+  var mob=document.getElementById('topbar-mobile-menu');
+  if(mob)mob.classList.remove('active');
+}
+
+function showPage(page){
   ['explore','my','submit','manage'].forEach(function(t){
-    var btn=document.getElementById('tab-btn-'+t);
     var panel=document.getElementById('tab-'+t);
-    if(btn)btn.classList.toggle('active',tab===t);
-    if(panel)panel.style.display=tab===t?'block':'none';
+    if(panel)panel.style.display=page===t?'block':'none';
   });
-  if(tab==='my')renderMyAirdrops();
-  if(tab==='manage'&&_isManager)loadBoData();
+  // Update nav active state
+  document.querySelectorAll('.topbar-nav a, .topbar-mobile-menu a').forEach(function(a){
+    a.classList.toggle('active',a.dataset.page===page);
+  });
+  // Update page header
+  var hdr=PAGE_HEADERS[page];
+  if(hdr){
+    var h=document.getElementById('page-header');
+    if(h){
+      h.querySelector('h1').innerHTML='<span class="it">'+hdr.it+'</span><span class="en">'+hdr.en+'</span>';
+      h.querySelector('.dapp-hero-sub').innerHTML='<span class="it">'+hdr.sub_it+'</span><span class="en">'+hdr.sub_en+'</span>';
+    }
+  }
+  if(page==='my')renderMyAirdrops();
+  if(page==='manage'&&_isManager)loadBoData();
 }
 
 // ── Category filter ──
@@ -1387,7 +1479,10 @@ async function checkUserRoles(){
     }
   });
   if(_isManager){
-    document.getElementById('tab-btn-manage').style.display='';
+    var nm=document.getElementById('nav-manage');
+    var nmm=document.getElementById('nav-manage-mobile');
+    if(nm)nm.style.display='';
+    if(nmm)nmm.style.display='';
   }
 }
 

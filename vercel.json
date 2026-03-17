@@ -2,6 +2,10 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/esplora", "destination": "/dapp.html" },
+    { "source": "/miei-airdrop", "destination": "/dapp.html" },
+    { "source": "/proponi", "destination": "/dapp.html" },
+    { "source": "/gestione", "destination": "/dapp.html" },
     { "source": "/dashboard", "destination": "/index.html" },
     { "source": "/profilo", "destination": "/index.html" },
     { "source": "/portafoglio", "destination": "/index.html" },
