@@ -1332,7 +1332,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.17-1.25.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.17-1.26.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1390,9 +1390,20 @@ async function track(event, props={}) {
 // Track pageview al caricamento
 window.addEventListener('DOMContentLoaded', ()=>{
   track('pageview', {lang: document.documentElement.lang || 'it'});
-  // Hash routing
-  function handleHash(){
+  // Path + hash routing
+  var PATH_ROUTES={
+    '/dashboard':'overview','/profilo':'overview',
+    '/portafoglio':'tessere','/guadagni':'earnings',
+    '/referral':'referral','/classifica':'leaderboard',
+    '/vendi':'sell'
+  };
+  function handleRoute(){
+    var pp=location.pathname;
     var hh=location.hash;
+    // Path-based routing (Vercel rewrites)
+    if(PATH_ROUTES[pp]){var s=getSession();if(s){gatedDashboard(s);switchTab(PATH_ROUTES[pp]);}return;}
+    if(pp==='/admin'){openAdmin();return;}
+    // Legacy hash routing (backwards compat)
     if(hh==='#login')openAuth('login');
     else if(hh==='#signup')openAuth('signup');
     else if(hh==='#dashboard'||hh==='#profilo'){var s=getSession();if(s){gatedDashboard(s);switchTab('overview');}}
@@ -1409,8 +1420,8 @@ window.addEventListener('DOMContentLoaded', ()=>{
     else if(hh==='#blog'){openBlog();}
     else if(hh.startsWith('#blog-')){openBlogArticle(hh.substring(1));}
   }
-  handleHash();
-  window.addEventListener('hashchange',handleHash);
+  handleRoute();
+  window.addEventListener('hashchange',handleRoute);
 });
 
 async function sbPost(table,data){
@@ -2566,7 +2577,7 @@ document.addEventListener('keydown',e=>{
 
 // ══ TABS ══
 const TAB_LABELS={overview:{it:'Profilo',en:'Profile'},earnings:{it:'Guadagni',en:'Earnings'},tessere:{it:'Oo Portafoglio',en:'Oo Wallet'},referral:{it:'Referral',en:'Referral'},leaderboard:{it:'Classifica',en:'Leaderboard'},sell:{it:'Vendi',en:'Sell'}};
-var TAB_HASH={overview:'#dashboard',earnings:'#guadagni',tessere:'#portafoglio',referral:'#referral',leaderboard:'#classifica',sell:'#vendi'};
+var TAB_HASH={overview:'/dashboard',earnings:'/guadagni',tessere:'/portafoglio',referral:'/referral',leaderboard:'/classifica',sell:'/vendi'};
 function switchTab(tab){
   document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
@@ -2580,9 +2591,9 @@ function switchTab(tab){
   document.querySelectorAll('.dash-tab-option').forEach(o=>o.classList.toggle('active',o.dataset.tab===tab));
   // Update dApp nav menu active state
   document.querySelectorAll('.dash-nav-menu a, .dash-mobile-menu a').forEach(function(a){a.classList.toggle('active',a.dataset.tab===tab)});
-  // Update hash without triggering hashchange loop
-  var newHash=TAB_HASH[tab]||'#dashboard';
-  if(location.hash!==newHash)history.replaceState(null,null,newHash);
+  // Update URL to clean path
+  var newPath=TAB_HASH[tab]||'/dashboard';
+  if(location.pathname!==newPath)history.replaceState(null,null,newPath);
   // Update breadcrumb
   var bc=document.getElementById('dash-breadcrumb-label');
   if(bc)bc.textContent=lbl.it;
@@ -3047,7 +3058,7 @@ function openAdmin(){
   if(!s||ADMIN_EMAILS.indexOf(s.user?.email)===-1)return;
   document.getElementById('admin-overlay').classList.add('active');
   document.body.style.overflow='hidden';
-  history.replaceState(null,null,'#admin');
+  history.replaceState(null,null,'/admin');
   loadAdminData().then(function(){
     refreshAriaCircolante();
     refreshNftCircolante();

@@ -403,13 +403,16 @@ input{font-family:inherit}
 <!-- USER MENU DROPDOWN -->
 <div class="user-menu" id="user-menu">
   <div class="user-menu-email" id="user-menu-email">—</div>
-  <button class="user-menu-item" onclick="window.location.href='https://airoobi.com/#dashboard'">
-    <span class="it">Vai alla Dashboard</span><span class="en">Go to Dashboard</span>
+  <button class="user-menu-item" onclick="window.location.href='/dapp.html'">
+    <span class="it">Dashboard</span><span class="en">Dashboard</span>
   </button>
-  <button class="user-menu-item" onclick="window.location.href='https://airoobi.com/#vendi'">
-    <span class="it">Vendi</span><span class="en">Sell</span>
+  <button class="user-menu-item" onclick="window.location.href='/dashboard'">
+    <span class="it">Dashboard C</span><span class="en">Dashboard C</span>
   </button>
-  <button class="user-menu-item" id="dapp-admin-link" onclick="window.location.href='https://airoobi.com/#admin'" style="display:none">Admin</button>
+  <button class="user-menu-item" onclick="switchDappTab('submit');toggleUserMenu()">
+    <span class="it">Vendi (airdroppa)</span><span class="en">Sell (airdrop)</span>
+  </button>
+  <button class="user-menu-item" id="dapp-admin-link" onclick="window.location.href='/admin'" style="display:none">Admin</button>
   <button class="user-menu-item" onclick="doLogout()">Logout</button>
 </div>
 
@@ -640,7 +643,7 @@ function getSession(){
 function requireAuth(){
   _session=getSession();
   if(!_session){
-    window.location.href='https://airoobi.com/#login';
+    window.location.href='/login.html';
     return false;
   }
   return true;
@@ -693,7 +696,7 @@ async function getValidToken(){
     if(payload.exp*1000<Date.now()+60000){
       // Token expires in less than 60s, refresh it
       var ok=await refreshToken();
-      if(!ok){window.location.href='https://airoobi.com/#login';return null;}
+      if(!ok){window.location.href='/login.html';return null;}
     }
   }catch(e){}
   return _session.access_token;
@@ -723,12 +726,29 @@ function setupUI(){
   document.getElementById('user-menu-email').textContent=email;
   var letter=email?email[0].toUpperCase():'?';
   document.getElementById('avatar-letter').textContent=letter;
+  // Load avatar image from profile
+  loadDappAvatar();
   // Close menu on outside click
   document.addEventListener('click',function(e){
     var menu=document.getElementById('user-menu');
     var avatar=document.getElementById('topbar-avatar');
     if(!menu.contains(e.target)&&!avatar.contains(e.target)){menu.classList.remove('active')}
   });
+}
+
+async function loadDappAvatar(){
+  try{
+    var data=await sbGet('profiles?id=eq.'+_session.user.id+'&select=avatar_url',_session.access_token);
+    if(data&&data[0]&&data[0].avatar_url){
+      var avatarEl=document.getElementById('topbar-avatar');
+      var letterEl=document.getElementById('avatar-letter');
+      if(letterEl)letterEl.style.display='none';
+      var img=document.createElement('img');
+      img.src=data[0].avatar_url+'?t='+Date.now();
+      img.alt='';
+      avatarEl.appendChild(img);
+    }
+  }catch(e){}
 }
 
 function toggleUserMenu(){

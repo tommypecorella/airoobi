@@ -1,0 +1,14 @@
+{
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/dashboard", "destination": "/index.html" },
+    { "source": "/profilo", "destination": "/index.html" },
+    { "source": "/portafoglio", "destination": "/index.html" },
+    { "source": "/guadagni", "destination": "/index.html" },
+    { "source": "/referral", "destination": "/index.html" },
+    { "source": "/classifica", "destination": "/index.html" },
+    { "source": "/vendi", "destination": "/index.html" },
+    { "source": "/admin", "destination": "/index.html" }
+  ]
+}
