@@ -438,6 +438,10 @@ input{font-family:inherit}
 <div class="topbar">
   <a href="https://airoobi.com"><img src="/public/images/AIROOBI_Logo_White.png" class="topbar-logo" alt="AIROOBI"></a>
   <nav class="topbar-nav" id="topbar-nav">
+    <a href="/dapp" data-page="home" onclick="navigateTo('home',event)">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Dashboard
+    </a>
     <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
       <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
       AIRDROPS
@@ -469,6 +473,10 @@ input{font-family:inherit}
 
 <!-- MOBILE NAV -->
 <div class="topbar-mobile-menu" id="topbar-mobile-menu">
+  <a href="/dapp" data-page="home" onclick="navigateTo('home',event)">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Dashboard
+  </a>
   <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
     <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
     AIRDROPS
@@ -862,14 +870,22 @@ document.addEventListener('DOMContentLoaded',async function(){
   renderCategoryFilter();
   loadValuationCount();
   // Route to correct page based on URL path
-  var initialPage=PATH_TO_PAGE[location.pathname]||'home';
-  showPage(initialPage);
-  history.replaceState({page:initialPage},null,PAGE_PATHS[initialPage]||'/dapp');
-  // Deep link: ?id=uuid → open detail directly
-  var urlId=new URLSearchParams(window.location.search).get('id');
+  var pp=location.pathname;
+  var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':'home');
+  // Check for /airdrops/UUID deep link
+  var airdropMatch=pp.match(/^\/airdrops\/([0-9a-f-]{36})$/);
+  // Also support legacy ?id= param
+  var urlId=airdropMatch?airdropMatch[1]:new URLSearchParams(location.search).get('id');
   if(urlId){
-    showPage('explore');
+    initialPage='explore';
+  }
+  showPage(initialPage);
+  if(!urlId){
+    history.replaceState({page:initialPage},null,PAGE_PATHS[initialPage]||'/dapp');
+  }
+  if(urlId){
     openDetail(urlId);
+    history.replaceState({page:'explore',detail:urlId},null,'/airdrops/'+urlId);
   }
 });
 
@@ -915,6 +931,14 @@ function toggleMobileNav(){
 window.addEventListener('popstate',function(e){
   var page=(e.state&&e.state.page)?e.state.page:(PATH_TO_PAGE[location.pathname]||'home');
   showPage(page);
+  if(e.state&&e.state.detail){
+    openDetail(e.state.detail);
+  } else if(page==='explore'){
+    // Back to list
+    document.getElementById('detail').style.display='none';
+    document.getElementById('list-view').style.display='block';
+    try{stopBubblePhysics();}catch(ex){}
+  }
 });
 
 // ── Home Dashboard ──
@@ -1459,12 +1483,15 @@ function updateBuyDisplay(){
 }
 
 function goToAirdrop(id){
-  window.location.href='dapp.html?id='+id;
+  openDetail(id);
+  history.pushState({page:'explore',detail:id},null,'/airdrops/'+id);
 }
 
 function backToList(){
   stopBubblePhysics();
-  window.location.href='dapp.html';
+  document.getElementById('detail').style.display='none';
+  document.getElementById('list-view').style.display='block';
+  history.pushState({page:'explore'},null,'/airdrops');
 }
 
 function initBuy(){

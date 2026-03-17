@@ -4,6 +4,7 @@
   "rewrites": [
     { "source": "/dapp", "destination": "/dapp.html" },
     { "source": "/airdrops", "destination": "/dapp.html" },
+    { "source": "/airdrops/:id", "destination": "/dapp.html" },
     { "source": "/esplora", "destination": "/dapp.html" },
     { "source": "/miei-airdrop", "destination": "/dapp.html" },
     { "source": "/proponi", "destination": "/dapp.html" },
