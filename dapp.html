@@ -40,6 +40,9 @@ input{font-family:inherit}
 .topbar-nav a{display:flex;align-items:center;gap:6px;padding:0 14px;height:56px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);text-decoration:none;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
 .topbar-nav a:hover{color:var(--white)}
 .topbar-nav a.active{color:var(--gold);border-bottom-color:var(--gold)}
+.topbar-nav a.nav-primary{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:2px}
+.topbar-nav a.nav-primary.active{border-bottom-color:var(--gold)}
+.topbar-nav a.nav-bold{font-weight:600}
 .topbar-nav a svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5;flex-shrink:0}
 .topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto}
 .topbar-bal{font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:.5px;background:rgba(74,158,255,.08);padding:6px 12px;border-radius:20px;border:1px solid rgba(74,158,255,.15)}
@@ -53,6 +56,8 @@ input{font-family:inherit}
 .topbar-mobile-menu a{display:flex;align-items:center;gap:10px;padding:14px 20px;color:var(--gray-400);font-family:var(--font-m);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;text-decoration:none;transition:all .2s}
 .topbar-mobile-menu a:hover{background:var(--gray-800);color:var(--white)}
 .topbar-mobile-menu a.active{color:var(--gold)}
+.topbar-mobile-menu a.nav-primary{color:var(--gold);font-weight:700;letter-spacing:2px}
+.topbar-mobile-menu a.nav-bold{font-weight:600}
 .topbar-mobile-menu a svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
 @media(max-width:768px){
   .topbar-nav{display:none}
@@ -65,6 +70,32 @@ input{font-family:inherit}
 .user-menu-item{display:block;width:100%;padding:12px 16px;background:none;border:none;color:var(--gray-300);font-size:13px;text-align:left;cursor:pointer;transition:all .2s}
 .user-menu-item:hover{background:var(--gray-700);color:var(--white)}
 .user-menu-email{padding:12px 16px;font-family:var(--font-m);font-size:11px;color:var(--gray-400);border-bottom:1px solid var(--gray-700);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.um-logout{border-top:1px solid var(--gray-700)!important;margin-top:4px;color:var(--red)!important}
+
+/* ── DASHBOARD HOME ── */
+.dash-home{padding-top:8px}
+.dash-welcome{font-family:var(--font-h);font-size:clamp(22px,5vw,28px);font-weight:300;margin-bottom:24px}
+.dash-welcome em{color:var(--gold);font-style:normal}
+.dash-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px}
+@media(min-width:640px){.dash-stats{grid-template-columns:repeat(4,1fr)}}
+.dash-stat{background:var(--gray-900);border:1px solid var(--gray-700);padding:20px 16px;text-align:center;transition:border-color .3s}
+.dash-stat:hover{border-color:var(--gold)}
+.dash-stat-val{font-family:var(--font-h);font-size:clamp(24px,5vw,32px);font-weight:300;color:var(--gold);line-height:1}
+.dash-stat-val.blue{color:var(--aria)}
+.dash-stat-val.green{color:var(--kas)}
+.dash-stat-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);margin-top:8px;text-transform:uppercase;letter-spacing:1px}
+.dash-section{margin-bottom:28px}
+.dash-section-title{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gray-700)}
+.dash-activity{display:flex;flex-direction:column;gap:8px}
+.dash-activity-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--gray-900);border:1px solid var(--gray-700);font-size:13px}
+.dash-activity-row span:first-child{color:var(--gray-300)}
+.dash-activity-row span:last-child{font-family:var(--font-m);color:var(--gold);font-size:12px}
+.dash-testnet-badge{display:inline-block;padding:2px 8px;background:rgba(73,234,203,.1);border:1px solid rgba(73,234,203,.2);color:var(--kas);font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-left:8px}
+.dash-quick-links{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:640px){.dash-quick-links{grid-template-columns:repeat(4,1fr)}}
+.dash-quick-link{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 12px;background:var(--gray-900);border:1px solid var(--gray-700);cursor:pointer;transition:all .3s;text-decoration:none;color:var(--gray-300);font-size:11px;font-family:var(--font-m);letter-spacing:1px;text-transform:uppercase}
+.dash-quick-link:hover{border-color:var(--gold);color:var(--gold)}
+.dash-quick-link svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
 
 /* ── MAIN CONTENT ── */
 .main{max-width:960px;margin:0 auto;padding:24px 16px 100px}
@@ -406,17 +437,17 @@ input{font-family:inherit}
 <div class="topbar">
   <a href="https://airoobi.com"><img src="/public/images/AIROOBI_Logo_White.png" class="topbar-logo" alt="AIROOBI"></a>
   <nav class="topbar-nav" id="topbar-nav">
-    <a href="/esplora" data-page="explore" onclick="navigateTo('explore',event)">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-      <span class="it">Esplora</span><span class="en">Explore</span>
+    <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
+      <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+      AIRDROPS
     </a>
     <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="it">I miei</span><span class="en">My drops</span>
     </a>
-    <a href="/proponi" data-page="submit" onclick="navigateTo('submit',event)">
+    <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      <span class="it">Proponi</span><span class="en">Submit</span>
+      <span class="it"><b>Proponi il tuo</b></span><span class="en"><b>Submit yours</b></span>
     </a>
     <a href="/gestione" data-page="manage" id="nav-manage" onclick="navigateTo('manage',event)" style="display:none">
       <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -437,17 +468,17 @@ input{font-family:inherit}
 
 <!-- MOBILE NAV -->
 <div class="topbar-mobile-menu" id="topbar-mobile-menu">
-  <a href="/esplora" data-page="explore" onclick="navigateTo('explore',event)">
-    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-    <span class="it">Esplora</span><span class="en">Explore</span>
+  <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
+    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+    AIRDROPS
   </a>
   <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
   </a>
-  <a href="/proponi" data-page="submit" onclick="navigateTo('submit',event)">
+  <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
     <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-    <span class="it">Proponi</span><span class="en">Submit</span>
+    <span class="it"><b>Proponi il tuo</b></span><span class="en"><b>Submit yours</b></span>
   </a>
   <a href="/gestione" data-page="manage" id="nav-manage-mobile" onclick="navigateTo('manage',event)" style="display:none">
     <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -458,24 +489,95 @@ input{font-family:inherit}
 <!-- USER MENU DROPDOWN -->
 <div class="user-menu" id="user-menu">
   <div class="user-menu-email" id="user-menu-email">—</div>
-  <button class="user-menu-item" onclick="navigateTo('explore');toggleUserMenu()">
+  <button class="user-menu-item" onclick="navigateTo('home');toggleUserMenu()">
     <span class="it">Dashboard</span><span class="en">Dashboard</span>
   </button>
-  <button class="user-menu-item" onclick="window.location.href='/dashboard'">
-    <span class="it">Dashboard C</span><span class="en">Dashboard C</span>
+  <button class="user-menu-item" onclick="window.location.href='/portafoglio'">
+    <span class="it">Portafoglio</span><span class="en">Wallet</span>
+  </button>
+  <button class="user-menu-item" onclick="window.location.href='/referral'">
+    Referral
   </button>
   <button class="user-menu-item" onclick="navigateTo('submit');toggleUserMenu()">
     <span class="it">Vendi (airdroppa)</span><span class="en">Sell (airdrop)</span>
   </button>
   <button class="user-menu-item" id="dapp-admin-link" onclick="window.location.href='/admin'" style="display:none">Admin</button>
-  <button class="user-menu-item" onclick="doLogout()">Logout</button>
+  <button class="user-menu-item um-logout" onclick="doLogout()">Logout</button>
 </div>
 
 <!-- MAIN -->
 <div class="main">
 
-  <!-- PAGE HEADER (dynamic per page) -->
-  <div class="dapp-hero" id="page-header">
+  <!-- ═══ HOME DASHBOARD ═══ -->
+  <div id="tab-home" class="dash-home" style="display:none">
+    <div class="dash-welcome"><span class="it">Ciao, <em id="home-user-name">—</em></span><span class="en">Hi, <em id="home-user-name-en">—</em></span><span class="dash-testnet-badge">testnet</span></div>
+
+    <div class="dash-stats">
+      <div class="dash-stat">
+        <div class="dash-stat-val blue" id="home-aria">0</div>
+        <div class="dash-stat-label">ARIA</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-val" id="home-nft">0</div>
+        <div class="dash-stat-label">NFT</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-val green" id="home-kas">0</div>
+        <div class="dash-stat-label">KAS (testnet)</div>
+      </div>
+      <div class="dash-stat">
+        <div class="dash-stat-val" id="home-airdrops">0</div>
+        <div class="dash-stat-label"><span class="it">Partecipazioni</span><span class="en">Participations</span></div>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <div class="dash-section-title"><span class="it">Guadagni Testnet</span><span class="en">Testnet Earnings</span></div>
+      <div class="dash-activity" id="home-earnings">
+        <div class="dash-activity-row"><span><span class="it">Login giornaliero</span><span class="en">Daily login</span></span><span>+1 ARIA/<span class="it">giorno</span><span class="en">day</span></span></div>
+        <div class="dash-activity-row"><span>Check-in</span><span>+1 ARIA/<span class="it">giorno</span><span class="en">day</span></span></div>
+        <div class="dash-activity-row"><span>Video</span><span>+1 ARIA (max 5/<span class="it">giorno</span><span class="en">day</span>)</span></div>
+        <div class="dash-activity-row"><span>Streak 7 <span class="it">giorni</span><span class="en">days</span></span><span>+1 ARIA</span></div>
+        <div class="dash-activity-row"><span>Referral (<span class="it">tu</span><span class="en">you</span>)</span><span>+10 ARIA</span></div>
+        <div class="dash-activity-row"><span>Referral (<span class="it">invitato</span><span class="en">invited</span>)</span><span>+15 ARIA</span></div>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <div class="dash-section-title"><span class="it">Riepilogo attività</span><span class="en">Activity Summary</span></div>
+      <div class="dash-activity" id="home-activity">
+        <div class="dash-activity-row"><span><span class="it">Punti guadagnati oggi</span><span class="en">Points earned today</span></span><span id="home-today">0 ARIA</span></div>
+        <div class="dash-activity-row"><span><span class="it">Streak attuale</span><span class="en">Current streak</span></span><span id="home-streak">0 <span class="it">giorni</span><span class="en">days</span></span></div>
+        <div class="dash-activity-row"><span><span class="it">Blocchi acquistati</span><span class="en">Blocks purchased</span></span><span id="home-blocks">0</span></div>
+        <div class="dash-activity-row"><span><span class="it">ARIA spesi in airdrop</span><span class="en">ARIA spent on airdrops</span></span><span id="home-spent">0</span></div>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <div class="dash-section-title"><span class="it">Azioni rapide</span><span class="en">Quick Actions</span></div>
+      <div class="dash-quick-links">
+        <a class="dash-quick-link" onclick="navigateTo('explore')">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          Airdrops
+        </a>
+        <a class="dash-quick-link" href="/portafoglio">
+          <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+          <span class="it">Portafoglio</span><span class="en">Wallet</span>
+        </a>
+        <a class="dash-quick-link" href="/referral">
+          <svg viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+          Referral
+        </a>
+        <a class="dash-quick-link" onclick="navigateTo('submit')">
+          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span class="it">Proponi</span><span class="en">Submit</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGE HEADER (for non-home pages) -->
+  <div class="dapp-hero" id="page-header" style="display:none">
     <h1><span class="it">Airdrop <em>Marketplace</em></span><span class="en">Airdrop <em>Marketplace</em></span></h1>
     <p class="dapp-hero-sub"><span class="it">Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all'oggetto.</span><span class="en">Use your ARIA to participate. Each block purchased brings you closer.</span></p>
   </div>
@@ -484,7 +586,7 @@ input{font-family:inherit}
   <div id="tab-explore">
 
     <!-- VALUATION BANNER -->
-    <div class="val-banner" id="val-banner" style="display:none;cursor:pointer" onclick="switchDappTab('submit')">
+    <div class="val-banner" id="val-banner" style="display:none;cursor:pointer" onclick="navigateTo('submit')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
       <span><strong id="val-count">0</strong> <span class="it">oggetti in valutazione — proponi il tuo</span><span class="en">items under evaluation — submit yours</span></span>
     </div>
@@ -494,12 +596,7 @@ input{font-family:inherit}
       <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
     </div>
 
-    <!-- STATS BAR -->
-    <div class="stats-bar" id="stats-bar">
-      <div class="stats-bar-item"><div class="stats-bar-val" id="stat-active">—</div><div class="stats-bar-label"><span class="it">Attivi</span><span class="en">Active</span></div></div>
-      <div class="stats-bar-item"><div class="stats-bar-val" id="stat-blocks">—</div><div class="stats-bar-label"><span class="it">Blocchi totali</span><span class="en">Total blocks</span></div></div>
-      <div class="stats-bar-item"><div class="stats-bar-val" id="stat-sold">—</div><div class="stats-bar-label"><span class="it">Venduti</span><span class="en">Sold</span></div></div>
-    </div>
+    <!-- stats-bar removed -->
 
     <!-- LIST VIEW -->
     <div class="list-view" id="list-view">
@@ -762,9 +859,9 @@ document.addEventListener('DOMContentLoaded',async function(){
   renderCategoryFilter();
   loadValuationCount();
   // Route to correct page based on URL path
-  var initialPage=PATH_TO_PAGE[location.pathname]||'explore';
+  var initialPage=PATH_TO_PAGE[location.pathname]||'home';
   showPage(initialPage);
-  history.replaceState({page:initialPage},null,PAGE_PATHS[initialPage]||'/esplora');
+  history.replaceState({page:initialPage},null,PAGE_PATHS[initialPage]||'/dapp');
   // Deep link: ?id=uuid → open detail directly
   var urlId=new URLSearchParams(window.location.search).get('id');
   if(urlId){
@@ -813,9 +910,49 @@ function toggleMobileNav(){
 
 // ── Browser back/forward ──
 window.addEventListener('popstate',function(e){
-  var page=(e.state&&e.state.page)?e.state.page:(PATH_TO_PAGE[location.pathname]||'explore');
+  var page=(e.state&&e.state.page)?e.state.page:(PATH_TO_PAGE[location.pathname]||'home');
   showPage(page);
 });
+
+// ── Home Dashboard ──
+async function loadHomeDashboard(){
+  var token=await getValidToken();
+  if(!token)return;
+  var email=_session.user?.email||'';
+  var name=email.split('@')[0]||'—';
+  var elIt=document.getElementById('home-user-name');
+  var elEn=document.getElementById('home-user-name-en');
+  if(elIt)elIt.textContent=name;
+  if(elEn)elEn.textContent=name;
+  // ARIA balance
+  document.getElementById('home-aria').textContent=_balance;
+  // NFT count
+  try{
+    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&select=id',token);
+    document.getElementById('home-nft').textContent=(nfts&&nfts.length)||0;
+  }catch(e){document.getElementById('home-nft').textContent='0'}
+  // KAS testnet (placeholder — no on-chain yet)
+  document.getElementById('home-kas').textContent='0.00';
+  // Participations count + blocks + spent
+  var totalBlocks=0,totalSpent=0;
+  _myParts.forEach(function(p){totalBlocks+=p.blocks_count||0;totalSpent+=p.aria_spent||0});
+  document.getElementById('home-airdrops').textContent=_myParts.length;
+  document.getElementById('home-blocks').textContent=totalBlocks;
+  document.getElementById('home-spent').textContent=totalSpent+' ARIA';
+  // Today's points
+  try{
+    var today=new Date().toISOString().slice(0,10);
+    var pts=await sbGet('points_ledger?user_id=eq.'+_session.user.id+'&created_at=gte.'+today+'T00:00:00&select=points',token);
+    var todayPts=0;
+    if(pts)pts.forEach(function(p){todayPts+=p.points||0});
+    document.getElementById('home-today').textContent=todayPts+' ARIA';
+  }catch(e){}
+  // Streak
+  try{
+    var prof=await sbGet('profiles?id=eq.'+_session.user.id+'&select=streak_count',token);
+    if(prof&&prof[0])document.getElementById('home-streak').innerHTML=prof[0].streak_count+' <span class="it">giorni</span><span class="en">days</span>';
+  }catch(e){}
+}
 
 // ── Data loading ──
 async function loadBalance(){
@@ -833,12 +970,12 @@ async function loadMyParticipations(){
 }
 
 // ── Page routing ──
-var PAGE_PATHS={explore:'/esplora',my:'/miei-airdrop',submit:'/proponi',manage:'/gestione'};
-var PATH_TO_PAGE={'/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/gestione':'manage','/dapp.html':'explore'};
+var PAGE_PATHS={home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',manage:'/gestione'};
+var PATH_TO_PAGE={'/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/gestione':'manage'};
 var PAGE_HEADERS={
-  explore:{it:'Airdrop <em>Marketplace</em>',en:'Airdrop <em>Marketplace</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
+  explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
-  submit:{it:'Proponi il tuo <em>oggetto</em>',en:'Submit your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
+  submit:{it:'<b>Proponi il tuo</b> <em>oggetto</em>',en:'<b>Submit your</b> <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
   manage:{it:'<em>Gestione</em> Airdrop',en:'Airdrop <em>Management</em>',sub_it:'Backoffice valutazione e gestione airdrop.',sub_en:'Evaluation and airdrop management backoffice.'}
 };
 
@@ -853,10 +990,13 @@ function navigateTo(page,event){
 }
 
 function showPage(page){
-  ['explore','my','submit','manage'].forEach(function(t){
+  ['home','explore','my','submit','manage'].forEach(function(t){
     var panel=document.getElementById('tab-'+t);
     if(panel)panel.style.display=page===t?'block':'none';
   });
+  // Show/hide page header (not on home page)
+  var pageHeader=document.getElementById('page-header');
+  if(pageHeader)pageHeader.style.display=page==='home'?'none':'block';
   // Update nav active state
   document.querySelectorAll('.topbar-nav a, .topbar-mobile-menu a').forEach(function(a){
     a.classList.toggle('active',a.dataset.page===page);
@@ -870,6 +1010,7 @@ function showPage(page){
       h.querySelector('.dapp-hero-sub').innerHTML='<span class="it">'+hdr.sub_it+'</span><span class="en">'+hdr.sub_en+'</span>';
     }
   }
+  if(page==='home')loadHomeDashboard();
   if(page==='my')renderMyAirdrops();
   if(page==='manage'&&_isManager)loadBoData();
 }
