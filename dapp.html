@@ -934,10 +934,13 @@ window.addEventListener('popstate',function(e){
   if(e.state&&e.state.detail){
     openDetail(e.state.detail);
   } else if(page==='explore'){
-    // Back to list
-    document.getElementById('detail').style.display='none';
-    document.getElementById('list-view').style.display='block';
     try{stopBubblePhysics();}catch(ex){}
+    document.getElementById('detail').classList.remove('active');
+    document.getElementById('detail').style.display='';
+    document.getElementById('list-view').classList.remove('hidden');
+    document.getElementById('list-view').style.display='';
+    document.getElementById('cat-filter').style.display='';
+    loadValuationCount();
   }
 });
 
@@ -1136,6 +1139,8 @@ async function openDetail(id){
   _currentDetail=a;
   _buyQty=1;
   document.getElementById('list-view').classList.add('hidden');
+  document.getElementById('val-banner').style.display='none';
+  document.getElementById('cat-filter').style.display='none';
   document.getElementById('detail').classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 
@@ -1489,8 +1494,12 @@ function goToAirdrop(id){
 
 function backToList(){
   stopBubblePhysics();
-  document.getElementById('detail').style.display='none';
-  document.getElementById('list-view').style.display='block';
+  document.getElementById('detail').classList.remove('active');
+  document.getElementById('detail').style.display='';
+  document.getElementById('list-view').classList.remove('hidden');
+  document.getElementById('list-view').style.display='';
+  document.getElementById('cat-filter').style.display='';
+  loadValuationCount();
   history.pushState({page:'explore'},null,'/airdrops');
 }
 
