@@ -1040,12 +1040,7 @@ function filterCat(cat){
 
 // ── Stats ──
 function renderStats(){
-  var filtered=_currentFilter==='all'?_airdrops:_airdrops.filter(function(a){return a.category===_currentFilter});
-  var totalBlocks=0,totalSold=0;
-  filtered.forEach(function(a){totalBlocks+=a.total_blocks;totalSold+=a.blocks_sold});
-  document.getElementById('stat-active').textContent=filtered.length;
-  document.getElementById('stat-blocks').textContent=totalBlocks.toLocaleString('it-IT');
-  document.getElementById('stat-sold').textContent=totalSold.toLocaleString('it-IT');
+  // stats-bar removed from UI — function kept for internal use
 }
 
 // ── Grid ──
