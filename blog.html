@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AIROOBI Blog — Airdrop, Blockchain Kaspa, NFT</title>
+  <meta name="description" content="Approfondimenti su airdrop equi, blockchain Kaspa, NFT come garanzia e il futuro del commercio digitale. Il blog ufficiale di AIROOBI.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="AIROOBI Blog — Airdrop, Blockchain Kaspa, NFT">
+  <meta property="og:description" content="Approfondimenti su airdrop equi, blockchain Kaspa, NFT come garanzia e il futuro del commercio digitale.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.airoobi.com/blog.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Topbar */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img {
+      height: 32px;
+      display: block;
+    }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-family: 'Instrument Sans', sans-serif;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+
+    /* Hero */
+    .blog-hero {
+      text-align: center;
+      padding: 5rem 1.5rem 3rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .blog-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 600;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      letter-spacing: -0.02em;
+    }
+    .blog-hero h1 em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .blog-hero p {
+      color: var(--gray-300);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* Grid */
+    .blog-grid-section {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 5rem;
+    }
+    .blog-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    @media (min-width: 640px) {
+      .blog-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 960px) {
+      .blog-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+
+    /* Card */
+    .blog-card {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 10px;
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      transition: border-color 0.2s, transform 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .blog-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-2px);
+    }
+    .card-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+    }
+    .card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.35rem;
+      font-weight: 600;
+      line-height: 1.3;
+      color: var(--white);
+    }
+    .card-excerpt {
+      font-size: 0.875rem;
+      color: var(--gray-300);
+      line-height: 1.65;
+      flex: 1;
+    }
+    .card-link {
+      display: inline-block;
+      margin-top: 0.25rem;
+      color: var(--gold);
+      font-size: 0.875rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .blog-card:hover .card-link { opacity: 0.75; }
+
+    /* Ads */
+    .ads-section {
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+    }
+
+    /* Footer */
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar -->
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <!-- Hero -->
+  <section class="blog-hero">
+    <h1>Il <em>Blog</em> di AIROOBI</h1>
+    <p>Approfondimenti su airdrop equi, blockchain Kaspa, NFT come garanzia e il futuro del commercio digitale.</p>
+  </section>
+
+  <!-- Article Grid -->
+  <main class="blog-grid-section">
+    <div class="blog-grid">
+
+      <a class="blog-card" href="/blog/alpha-brave-airoobi-prima-fase.html">
+        <span class="card-date">15 Marzo 2026</span>
+        <div class="card-title">Cos'è la fase Alpha Brave di AIROOBI e perché dovresti farne parte</div>
+        <p class="card-excerpt">Ogni grande piattaforma ha una fase zero — quel momento iniziale in cui tutto è ancora in costruzione ma le fondamenta vengono gettate. Per AIROOBI, quella fase si chiama Alpha Brave.</p>
+        <span class="card-link">Leggi →</span>
+      </a>
+
+      <a class="blog-card" href="/blog/come-guadagnare-punti-aria-airoobi.html">
+        <span class="card-date">14 Marzo 2026</span>
+        <div class="card-title">Come guadagnare punti ARIA su AIROOBI: la guida completa</div>
+        <p class="card-excerpt">ARIA è la valuta di piattaforma di AIROOBI. Accumularla è semplice, ma farlo in modo strategico può fare la differenza tra aggiudicarsi un oggetto ambito o lasciarlo ad altri.</p>
+        <span class="card-link">Leggi →</span>
+      </a>
+
+      <a class="blog-card" href="/blog/nft-garanzia-uso-concreto.html">
+        <span class="card-date">13 Marzo 2026</span>
+        <div class="card-title">NFT come garanzia: un uso concreto oltre la speculazione</div>
+        <p class="card-excerpt">Gli NFT hanno avuto anni di hype, crolli di mercato e reputazione controversa. Eppure, al di là della speculazione sulle immagini digitali, esiste un utilizzo degli NFT profondamente pratico.</p>
+        <span class="card-link">Leggi →</span>
+      </a>
+
+      <a class="blog-card" href="/blog/kaspa-blockchain-commercio-digitale.html">
+        <span class="card-date">12 Marzo 2026</span>
+        <div class="card-title">Kaspa: perché è la blockchain giusta per il futuro del commercio digitale</div>
+        <p class="card-excerpt">Quando si parla di blockchain, i nomi più noti sono Bitcoin ed Ethereum. Eppure nel panorama delle tecnologie distribuite esiste un progetto che sta attirando sempre più attenzione.</p>
+        <span class="card-link">Leggi →</span>
+      </a>
+
+      <a class="blog-card" href="/blog/cos-e-airoobi-piattaforma-airdrop-equi.html">
+        <span class="card-date">11 Marzo 2026</span>
+        <div class="card-title">Cos'è AIROOBI: la piattaforma che reinventa gli airdrop</div>
+        <p class="card-excerpt">AIROOBI è una piattaforma di commercio basata sugli airdrop di oggetti fisici reali, costruita sulla blockchain Kaspa. Il principio fondante è semplice: invece di vendere al miglior offerente.</p>
+        <span class="card-link">Leggi →</span>
+      </a>
+
+      <a class="blog-card" href="/blog/cosa-sono-gli-airdrop-crypto.html">
+        <span class="card-date">10 Marzo 2026</span>
+        <div class="card-title">Cosa sono gli airdrop crypto e perché la maggior parte non è equa</div>
+        <p class="card-excerpt">Gli airdrop sono uno degli strumenti più usati nel mondo delle criptovalute per distribuire token a un pubblico ampio. In teoria, l'idea è semplice e democratica. In pratica, però, la realtà è spesso molto diversa.</p>
+        <span class="card-link">Leggi →</span>
+      </a>
+
+    </div>
+  </main>
+
+  <!-- A-ADS Banner -->
+  <div class="ads-section">
+    <script async src="//www.a-ads.com/2429619/aads.js"></script>
+  </div>
+
+  <!-- Footer -->
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a></p>
+  </footer>
+
+</body>
+</html>

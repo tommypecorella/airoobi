@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cos'è AIROOBI: la piattaforma che reinventa gli airdrop — AIROOBI Blog</title>
+  <meta name="description" content="Cos'è AIROOBI, come funziona la piattaforma di airdrop equi su blockchain Kaspa e perché è diversa da tutto il resto.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Cos'è AIROOBI: la piattaforma che reinventa gli airdrop">
+  <meta property="og:description" content="Cos'è AIROOBI, come funziona la piattaforma di airdrop equi su blockchain Kaspa e perché è diversa da tutto il resto.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/cos-e-airoobi-piattaforma-airdrop-equi.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/cos-e-airoobi-piattaforma-airdrop-equi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Cos'è AIROOBI</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">11 Marzo 2026</div>
+
+    <article>
+      <h1>Cos'è AIROOBI: la piattaforma che reinventa gli airdrop</h1>
+
+      <p>AIROOBI è una piattaforma di commercio basata sugli airdrop di oggetti fisici reali, costruita sulla blockchain Kaspa. Il principio fondante è semplice: invece di vendere un oggetto al miglior offerente, il venditore lo "airdroppa" — lo distribuisce attraverso un meccanismo equo che garantisce valore a tutti i partecipanti, non solo a chi vince.</p>
+
+      <h2>Come funziona in pratica</h2>
+      <p>Un venditore carica il proprio oggetto su AIROOBI e avvia un airdrop. I partecipanti accumulano punti ARIA attraverso attività quotidiane sulla piattaforma: check-in giornalieri, visualizzazione di contenuti, referral di nuovi utenti. Questi punti determinano la posizione di ciascun partecipante nella competizione per l'oggetto.</p>
+      <p>La caratteristica che distingue AIROOBI da qualsiasi altra piattaforma è la garanzia: anche chi non ottiene l'oggetto fisico riceve un valore certificato sotto forma di NFT. Non si perde mai completamente. Il sistema è progettato per essere equo per definizione.</p>
+
+      <h2>La blockchain Kaspa</h2>
+      <p>La scelta di costruire AIROOBI su Kaspa non è casuale. Kaspa è una delle blockchain più innovative nel panorama attuale, caratterizzata da velocità di transazione eccezionale e costi minimi. Queste caratteristiche la rendono ideale per una piattaforma che deve gestire micropagamenti, distribuzioni di valore e certificazioni di proprietà in tempo reale.</p>
+
+      <h2>Chi può partecipare</h2>
+      <p>AIROOBI è pensato per tutti. Non servono conoscenze tecniche avanzate, non servono grandi capitali, non serve essere esperti di criptovalute. La piattaforma è accessibile da qualsiasi dispositivo, con un'interfaccia semplice e intuitiva. L'unico requisito è la voglia di partecipare in modo costante e attivo.</p>
+
+      <h2>Lo stato attuale</h2>
+      <p>AIROOBI è attualmente in fase Alpha Brave, la prima fase di accesso alla piattaforma riservata ai primi mille utenti. Questa fase permette ai partecipanti più precoci di accumulare punti ARIA, familiarizzare con la piattaforma e ottenere vantaggi esclusivi che non saranno più disponibili nelle fasi successive.</p>
+
+      <div class="cta-box">
+        <h2>Scopri AIROOBI</h2>
+        <p>Registrati ora e fai parte della prima generazione di utenti della piattaforma di airdrop equi su Kaspa.</p>
+        <a href="https://airoobi.com/#signup" class="cta-btn">Inizia ora — è gratis</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cos'è la fase Alpha Brave di AIROOBI e perché dovresti farne parte — AIROOBI Blog</title>
+  <meta name="description" content="Scopri la fase Alpha Brave di AIROOBI: vantaggi esclusivi, badge fondatore e perché entrare tra i primi 1000 utenti.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Cos'è la fase Alpha Brave di AIROOBI e perché dovresti farne parte">
+  <meta property="og:description" content="Scopri la fase Alpha Brave di AIROOBI: vantaggi esclusivi, badge fondatore e perché entrare tra i primi 1000 utenti.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/alpha-brave-airoobi-prima-fase.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/alpha-brave-airoobi-prima-fase.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Alpha Brave</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">15 Marzo 2026</div>
+
+    <article>
+      <h1>Cos'è la fase Alpha Brave di AIROOBI e perché dovresti farne parte</h1>
+
+      <p>Ogni grande piattaforma ha una fase zero — quel momento iniziale in cui tutto è ancora in costruzione ma le fondamenta vengono gettate. Per AIROOBI, quella fase si chiama Alpha Brave, ed è aperta ai primi mille utenti che scelgono di credere nel progetto prima che diventi mainstream.</p>
+
+      <h2>Cosa significa Alpha Brave</h2>
+      <p>Alpha Brave è il primo tier di accesso a AIROOBI, riservato alle prime mille persone che completano la registrazione. Non è solo un numero d'ordine: gli utenti Alpha Brave ricevono vantaggi permanenti che nessun utente futuro potrà ottenere, indipendentemente da quanto sarà disposto a pagare.</p>
+
+      <h2>I vantaggi esclusivi</h2>
+      <p>Gli utenti Alpha Brave ricevono il Badge Fondatore — un riconoscimento permanente nel profilo che attesta la loro presenza fin dall'inizio. Ricevono un NFT Alpha Tier 0, certificato della loro posizione nella prima generazione di utenti della piattaforma. Accumulano ARIA fin da subito, costruendo un vantaggio sulla classifica che gli utenti futuri non potranno mai colmare completamente.</p>
+
+      <h2>Perché essere early mover conta</h2>
+      <p>Nella storia di internet, chi è entrato presto nei progetti giusti ha sempre avuto un vantaggio enorme. Non si tratta di fortuna ma di lungimiranza. AIROOBI sta costruendo qualcosa di nuovo nel settore degli airdrop e del commercio digitale equo. Essere presenti nella fase Alpha significa fare parte della storia del progetto, non solo usufruire di un servizio già maturo.</p>
+
+      <h2>Come iscriversi</h2>
+      <p>La registrazione è aperta su airoobi.com. Il processo richiede pochi minuti: un indirizzo email, una password sicura e la conferma via email. Non serve inserire dati di pagamento, non serve possedere criptovalute, non serve alcuna competenza tecnica. L'unico requisito è voler essere tra i primi.</p>
+
+      <h2>I prossimi passi</h2>
+      <p>Dopo Alpha Brave arriverà Alpha Wise — il secondo tier — e successivamente le fasi di lancio completo della piattaforma con i primi airdrop reali di oggetti fisici. Chi è già dentro con Alpha Brave avrà un posto in prima fila per ogni novità.</p>
+
+      <div class="cta-box">
+        <h2>Scopri AIROOBI</h2>
+        <p>I posti Alpha Brave sono limitati ai primi 1000 utenti. Registrati ora e assicurati il tuo posto in prima fila.</p>
+        <a href="https://airoobi.com/#signup" class="cta-btn">Entra in Alpha Brave — è gratis</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>
