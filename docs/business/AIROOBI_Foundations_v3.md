@@ -37,7 +37,7 @@ AIROOBI nasce da una constatazione semplice: l'accesso alle opportunità non è 
 | Attore | Ruolo | Motivazione |
 |---|---|---|
 | Utente Partecipante | Guadagna ARIA, compra blocchi, accumula Tessere | Opportunità di ottenere oggetti di valore. Zero rischio perdita secca |
-| Venditore P2P | Mette in palio oggetti propri tramite AIROOBI | Liquidità rapida a prezzo di mercato garantito |
+| Venditore P2P | Mette in palio oggetti propri tramite AIROOBI. Indica un prezzo desiderato e un prezzo minimo accettabile (≥ €500); AIROOBI assegna la quotazione finale dopo valutazione | Liquidità rapida a prezzo di mercato garantito |
 | Azienda (Business) | Crea campagne airdrop marketing su AIROOBI | Reach su utenti KYC-verified, ROI tracciato on-chain |
 | AIROOBI | Opera la piattaforma, valuta oggetti, garantisce fairness | Fee (1,5% su airdrop, 15% su campagne Business) |
 

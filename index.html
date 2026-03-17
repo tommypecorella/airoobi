@@ -480,6 +480,44 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .session-toast{position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--gray-800);border:1px solid var(--gold);padding:16px 32px;z-index:9999;font-size:14px;color:var(--gold);display:none;text-align:center;max-width:400px}
 .session-toast.active{display:block}
 
+/* ── NOTIFICATION TOAST ── */
+.notif-toast-container{position:fixed;top:80px;left:50%;transform:translateX(-50%);z-index:10000;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.notif-toast{pointer-events:auto;background:var(--gray-800);border:1px solid var(--gold);padding:14px 24px;font-size:13px;color:var(--white);text-align:center;max-width:420px;min-width:280px;animation:toastIn .3s ease-out;position:relative}
+.notif-toast.toast-success{border-color:#49b583;color:#49b583}
+.notif-toast.toast-warning{border-color:#F59E0B;color:#F59E0B}
+.notif-toast.toast-error{border-color:#ef4444;color:#ef4444}
+.notif-toast.toast-info{border-color:var(--gold);color:var(--gold)}
+.notif-toast.fade-out{animation:toastOut .3s ease-in forwards}
+@keyframes toastIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-12px)}}
+
+/* ── NOTIFICATION BELL ── */
+.notif-bell{position:relative;display:flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--gray-700);color:var(--gray-400);cursor:pointer;transition:all .3s}
+.notif-bell:hover{border-color:var(--gold);color:var(--gold)}
+.notif-bell-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:var(--white);font-family:var(--font-m);font-size:9px;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1}
+.notif-bell-badge:empty{display:none}
+
+/* ── NOTIFICATION PANEL ── */
+.notif-panel{display:none;position:absolute;top:calc(100% + 8px);right:0;width:360px;max-height:400px;background:#0a0a0a;border:1px solid var(--gray-700);z-index:9999;flex-direction:column;overflow:hidden}
+.notif-panel.open{display:flex}
+.notif-panel-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--gray-700)}
+.notif-panel-header h4{font-family:var(--font-h);font-size:16px;font-weight:400;color:var(--white);margin:0}
+.notif-panel-mark-all{background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer;padding:4px 8px;transition:color .2s}
+.notif-panel-mark-all:hover{color:var(--white)}
+.notif-panel-list{overflow-y:auto;flex:1;max-height:340px}
+.notif-item{display:flex;gap:10px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .2s}
+.notif-item:hover{background:rgba(184,150,12,.04)}
+.notif-item.unread{background:rgba(184,150,12,.06)}
+.notif-item-dot{width:8px;height:8px;border-radius:50%;background:var(--gold);flex-shrink:0;margin-top:5px}
+.notif-item.unread .notif-item-dot{background:var(--gold)}
+.notif-item:not(.unread) .notif-item-dot{background:var(--gray-700)}
+.notif-item-content{flex:1;min-width:0}
+.notif-item-title{font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notif-item-body{font-size:11px;color:var(--gray-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.notif-item-time{font-family:var(--font-m);font-size:10px;color:var(--gray-500);flex-shrink:0}
+.notif-empty{padding:32px;text-align:center;color:var(--gray-500);font-size:12px}
+@media(max-width:480px){.notif-panel{width:calc(100vw - 24px);right:-60px}}
+
 /* ── DASHBOARD ── */
 .dash-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:250;background:var(--black);overflow-y:auto}
 .dash-overlay.active{display:block}
@@ -909,6 +947,21 @@ html:not([data-lang]) .video-nosee .it{display:inline}
         </div>
       </div>
       <a href="javascript:void(0)" onclick="closeBurger();scrollToSection('#how')" style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;border:1px solid var(--gray-700);color:var(--gray-400);cursor:pointer;transition:all .3s;text-decoration:none" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'" title="Video"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="5 3 19 12 5 21 5 3"/></svg></a>
+      <div style="position:relative">
+        <div class="notif-bell" id="notif-bell" onclick="toggleNotifPanel(event)" title="Notifiche">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+          <span class="notif-bell-badge" id="notif-badge"></span>
+        </div>
+        <div class="notif-panel" id="notif-panel">
+          <div class="notif-panel-header">
+            <h4>Notifiche</h4>
+            <button class="notif-panel-mark-all" onclick="markAllRead()">Segna tutte lette</button>
+          </div>
+          <div class="notif-panel-list" id="notif-list">
+            <div class="notif-empty">Nessuna notifica</div>
+          </div>
+        </div>
+      </div>
       <div class="nav-avatar-wrap">
         <div class="nav-avatar" id="nav-avatar" onclick="toggleAvatarDropdown(event)">?</div>
         <div class="avatar-dropdown" id="avatar-dropdown">
@@ -918,6 +971,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
           <a href="javascript:void(0)" onclick="openDashTab('tessere')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg><span class="it">Portafoglio</span><span class="en">Wallet</span></a>
           <a href="javascript:void(0)" onclick="openDashTab('referral')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Referral</a>
           <a href="javascript:void(0)" onclick="openDashTab('leaderboard')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8V4H8v4M4 20h16V10H4v10zM12 10v10M8 14H4M20 14h-4"/></svg><span class="it">Classifica</span><span class="en">Leaderboard</span></a>
+          <a href="javascript:void(0)" onclick="openDashTab('sell')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span class="it">Vendi</span><span class="en">Sell</span></a>
           <div class="ad-divider"></div>
           <a id="avatar-admin-link" href="javascript:void(0)" onclick="closeAvatarDropdown();openAdmin()" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Admin</a>
           <button onclick="doLogout()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Logout</button>
@@ -1280,7 +1334,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.17-1.23.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.17-1.24.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1348,6 +1402,7 @@ window.addEventListener('DOMContentLoaded', ()=>{
     else if(hh==='#guadagni'){var s=getSession();if(s){gatedDashboard(s);switchTab('earnings');}}
     else if(hh==='#referral'){var s=getSession();if(s){gatedDashboard(s);switchTab('referral');}}
     else if(hh==='#classifica'){var s=getSession();if(s){gatedDashboard(s);switchTab('leaderboard');}}
+    else if(hh==='#vendi'){var s=getSession();if(s){gatedDashboard(s);switchTab('sell');}}
     else if(hh==='#admin'){openAdmin();}
     else if(hh==='#contatti'){location.href='/contatti.html';return;}
     else if(hh==='#privacy'){location.href='/privacy.html';return;}
@@ -2166,6 +2221,7 @@ async function showDashboard(session){
     updateNavCounters(session);
     loadProfileInfo();
     loadReferralHistory();
+    loadNotifications();
     
     // Position (server-side via RPC)
     try{
@@ -2517,8 +2573,8 @@ document.addEventListener('keydown',e=>{
 
 
 // ══ TABS ══
-const TAB_LABELS={overview:{it:'Profilo',en:'Profile'},earnings:{it:'Guadagni',en:'Earnings'},tessere:{it:'Oo Portafoglio',en:'Oo Wallet'},referral:{it:'Referral',en:'Referral'},leaderboard:{it:'Classifica',en:'Leaderboard'}};
-var TAB_HASH={overview:'#dashboard',earnings:'#guadagni',tessere:'#portafoglio',referral:'#referral',leaderboard:'#classifica'};
+const TAB_LABELS={overview:{it:'Profilo',en:'Profile'},earnings:{it:'Guadagni',en:'Earnings'},tessere:{it:'Oo Portafoglio',en:'Oo Wallet'},referral:{it:'Referral',en:'Referral'},leaderboard:{it:'Classifica',en:'Leaderboard'},sell:{it:'Vendi',en:'Sell'}};
+var TAB_HASH={overview:'#dashboard',earnings:'#guadagni',tessere:'#portafoglio',referral:'#referral',leaderboard:'#classifica',sell:'#vendi'};
 function switchTab(tab){
   document.querySelectorAll('.dash-tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.dash-page').forEach(p=>p.classList.remove('active'));
@@ -3140,8 +3196,256 @@ async function loadAdminData(){
     // Cost Tracker + Treasury
     loadCostTracker();
     await loadAdminTreasury();
+    loadAdminAirdrops();
 
   }catch(e){console.error('Admin load error:',e);}
+}
+
+// ── Notifications ──
+function showToast(message,type){
+  type=type||'info';
+  var container=document.getElementById('notif-toast-container');
+  if(!container)return;
+  var t=document.createElement('div');
+  t.className='notif-toast toast-'+type;
+  t.textContent=message;
+  container.appendChild(t);
+  setTimeout(function(){t.classList.add('fade-out');setTimeout(function(){t.remove()},300)},5000);
+}
+
+async function loadNotifications(){
+  var s=window._currentSession||getSession();
+  if(!s)return;
+  try{
+    var notifs=await sbGet('notifications?user_id=eq.'+s.user.id+'&order=created_at.desc&limit=30',s.access_token);
+    var badge=document.getElementById('notif-badge');
+    var list=document.getElementById('notif-list');
+    if(!notifs||!notifs.length){
+      if(badge)badge.textContent='';
+      if(list)list.innerHTML='<div class="notif-empty">Nessuna notifica</div>';
+      return;
+    }
+    var unread=notifs.filter(function(n){return !n.read}).length;
+    if(badge)badge.textContent=unread>0?unread:'';
+    if(list){
+      var html='';
+      notifs.forEach(function(n){
+        var ago=timeAgo(n.created_at);
+        html+='<div class="notif-item'+(n.read?'':' unread')+'" onclick="markNotifRead(\''+n.id+'\')">';
+        html+='<div class="notif-item-dot"></div>';
+        html+='<div class="notif-item-content"><div class="notif-item-title">'+escHtml(n.title)+'</div>';
+        if(n.body)html+='<div class="notif-item-body">'+escHtml(n.body)+'</div>';
+        html+='</div><div class="notif-item-time">'+ago+'</div></div>';
+      });
+      list.innerHTML=html;
+    }
+  }catch(e){console.error('Notif load:',e);}
+}
+
+function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+
+function timeAgo(dateStr){
+  var d=new Date(dateStr);var now=new Date();var diff=Math.floor((now-d)/1000);
+  if(diff<60)return 'ora';if(diff<3600)return Math.floor(diff/60)+'m';
+  if(diff<86400)return Math.floor(diff/3600)+'h';return Math.floor(diff/86400)+'g';
+}
+
+function toggleNotifPanel(e){
+  if(e)e.stopPropagation();
+  var panel=document.getElementById('notif-panel');
+  if(!panel)return;
+  panel.classList.toggle('open');
+  if(panel.classList.contains('open'))loadNotifications();
+}
+
+async function markNotifRead(id){
+  var s=window._currentSession||getSession();
+  if(!s)return;
+  try{
+    await sbPatch('notifications?id=eq.'+id,{read:true},s.access_token);
+    loadNotifications();
+  }catch(e){console.error('Mark read:',e);}
+}
+
+async function markAllRead(){
+  var s=window._currentSession||getSession();
+  if(!s)return;
+  try{
+    await sbPatch('notifications?user_id=eq.'+s.user.id+'&read=eq.false',{read:true},s.access_token);
+    loadNotifications();
+  }catch(e){console.error('Mark all read:',e);}
+}
+
+// Close notif panel on outside click
+document.addEventListener('click',function(e){
+  var panel=document.getElementById('notif-panel');
+  var bell=document.getElementById('notif-bell');
+  if(panel&&panel.classList.contains('open')&&!panel.contains(e.target)&&!bell.contains(e.target)){
+    panel.classList.remove('open');
+  }
+});
+
+// ── Sell Form (Vendi) ──
+async function submitSellForm(){
+  var s=window._currentSession||getSession();
+  if(!s){showToast('Devi essere loggato','error');return;}
+  var title=document.getElementById('sell-title').value.trim();
+  var desc=document.getElementById('sell-description').value.trim();
+  var cat=document.getElementById('sell-category').value;
+  var img=document.getElementById('sell-image').value.trim();
+  var desired=parseFloat(document.getElementById('sell-desired-price').value);
+  var minP=parseFloat(document.getElementById('sell-min-price').value);
+  if(!title){showToast('Inserisci il titolo dell\'oggetto','warning');return;}
+  if(!desired||desired<500){showToast('Il prezzo desiderato deve essere almeno €500','warning');return;}
+  if(!minP||minP<500){showToast('Il prezzo minimo deve essere almeno €500','warning');return;}
+  if(minP>desired){showToast('Il prezzo minimo non può superare il desiderato','warning');return;}
+  var data={
+    title:title,
+    description:desc||null,
+    category:cat,
+    image_url:img||null,
+    seller_desired_price:desired,
+    seller_min_price:minP,
+    object_value_eur:0,
+    block_price_aria:0,
+    total_blocks:0,
+    status:'in_valutazione',
+    submitted_by:s.user.id
+  };
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/airdrops',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:JSON.stringify(data)
+    });
+    if(!res.ok){var err=await res.text();throw new Error(err);}
+    // Insert notification for the user
+    try{
+      await fetch(SB_URL+'/rest/v1/rpc/insert_notification',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+        body:JSON.stringify({p_user_id:s.user.id,p_title:'Richiesta inviata!',p_body:'Riceverai feedback entro 24-48 ore.',p_type:'success'})
+      });
+    }catch(ne){}
+    showToast('Richiesta inviata! Riceverai feedback entro 24-48 ore.','success');
+    loadNotifications();
+    // Reset form
+    document.getElementById('sell-title').value='';
+    document.getElementById('sell-description').value='';
+    document.getElementById('sell-category').value='mobile';
+    document.getElementById('sell-image').value='';
+    document.getElementById('sell-desired-price').value='';
+    document.getElementById('sell-min-price').value='';
+  }catch(e){
+    console.error('Sell submit:',e);
+    showToast('Errore invio: '+e.message,'error');
+  }
+}
+
+// ── Admin Airdrop Management ──
+async function loadAdminAirdrops(){
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_all_airdrops',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    if(!res.ok)throw new Error('RPC failed: '+res.status);
+    var airdrops=await res.json();
+    var tbody=document.getElementById('adm-airdrop-body');
+    if(!airdrops||!airdrops.length){
+      tbody.innerHTML='<tr><td colspan="8" style="color:var(--gray-400)">Nessun airdrop</td></tr>';
+      return;
+    }
+    var html='';
+    airdrops.forEach(function(a){
+      var statusColor=a.status==='sale'?'#49b583':a.status==='presale'?'var(--gold)':a.status.indexOf('rifiutato')===0?'#ef4444':'var(--gray-400)';
+      html+='<tr>';
+      html+='<td style="font-weight:600">'+escHtml(a.title)+'</td>';
+      html+='<td>'+escHtml(a.category||'—')+'</td>';
+      html+='<td style="color:'+statusColor+'">'+escHtml(a.status)+'</td>';
+      html+='<td>'+(a.seller_desired_price?'€'+parseFloat(a.seller_desired_price).toFixed(0):'—')+'</td>';
+      html+='<td>'+(a.seller_min_price?'€'+parseFloat(a.seller_min_price).toFixed(0):'—')+'</td>';
+      html+='<td style="color:var(--gold)">'+(a.object_value_eur?'€'+parseFloat(a.object_value_eur).toFixed(0):'—')+'</td>';
+      html+='<td>'+(a.total_blocks||'—')+'</td>';
+      html+='<td><button onclick="adOpenModal(\''+a.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">MODIFICA</button></td>';
+      html+='</tr>';
+    });
+    tbody.innerHTML=html;
+  }catch(e){
+    console.error('Admin airdrops load:',e);
+    document.getElementById('adm-airdrop-body').innerHTML='<tr><td colspan="8" style="color:#ef4444">Errore: '+escHtml(e.message)+'</td></tr>';
+  }
+}
+
+var _adAirdropsCache=[];
+async function adOpenModal(id){
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_all_airdrops',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    var all=await res.json();
+    var a=all.find(function(x){return x.id===id});
+    if(!a){showToast('Airdrop non trovato','error');return;}
+    document.getElementById('ad-edit-id').value=a.id;
+    document.getElementById('ad-desired-price').value=a.seller_desired_price||'';
+    document.getElementById('ad-min-price').value=a.seller_min_price||'';
+    document.getElementById('ad-object-value').value=a.object_value_eur||'';
+    document.getElementById('ad-block-price').value=a.block_price_aria||'';
+    document.getElementById('ad-total-blocks').value=a.total_blocks||'';
+    document.getElementById('ad-presale-price').value=a.presale_block_price||'';
+    document.getElementById('ad-deadline').value=a.deadline?a.deadline.substring(0,16):'';
+    document.getElementById('ad-status').value=a.status||'in_valutazione';
+    document.getElementById('ad-rejection').value=a.rejection_reason||'';
+    document.getElementById('ad-modal-title').textContent='Modifica: '+a.title;
+    document.getElementById('ad-modal-bg').classList.add('active');
+  }catch(e){console.error('adOpenModal:',e);showToast('Errore caricamento','error');}
+}
+
+function adCloseModal(){document.getElementById('ad-modal-bg').classList.remove('active');}
+
+function adAutoCalcBlocks(){
+  var val=parseFloat(document.getElementById('ad-object-value').value)||0;
+  var bp=parseInt(document.getElementById('ad-block-price').value)||0;
+  if(val>0&&bp>0){
+    var blocks=Math.ceil(val/(bp*0.10));
+    document.getElementById('ad-total-blocks').value=blocks;
+  }
+}
+
+async function adSaveAirdrop(){
+  var s=getSession();if(!s)return;
+  var id=document.getElementById('ad-edit-id').value;
+  if(!id)return;
+  var params={
+    p_airdrop_id:id,
+    p_status:document.getElementById('ad-status').value,
+    p_block_price_aria:parseInt(document.getElementById('ad-block-price').value)||null,
+    p_total_blocks:parseInt(document.getElementById('ad-total-blocks').value)||null,
+    p_presale_block_price:parseInt(document.getElementById('ad-presale-price').value)||null,
+    p_deadline:document.getElementById('ad-deadline').value?new Date(document.getElementById('ad-deadline').value).toISOString():null,
+    p_rejection_reason:document.getElementById('ad-rejection').value.trim()||null,
+    p_object_value_eur:parseFloat(document.getElementById('ad-object-value').value)||null
+  };
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/manager_update_airdrop',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify(params)
+    });
+    var result=await res.json();
+    if(result&&result.ok){
+      showToast('Airdrop aggiornato','success');
+      adCloseModal();
+      loadAdminAirdrops();
+    }else{
+      showToast('Errore: '+(result.error||'sconosciuto'),'error');
+    }
+  }catch(e){console.error('adSave:',e);showToast('Errore salvataggio: '+e.message,'error');}
 }
 
 // ── Cost Tracker ──
@@ -4227,6 +4531,7 @@ async function loadReferralHistory(){
   <span class="it">La tua sessione è scaduta. Accedi di nuovo.</span>
   <span class="en">Your session has expired. Please log in again.</span>
 </div>
+<div class="notif-toast-container" id="notif-toast-container"></div>
 
 <!-- ═══ DELETE ACCOUNT MODAL ═══ -->
 <div class="delete-modal" id="delete-modal">
@@ -4277,6 +4582,7 @@ async function loadReferralHistory(){
       <button class="dash-tab-option" onclick="switchTab('tessere');closeTabMobile()" data-tab="tessere"><span style="font-family:var(--font-h);font-size:13px;font-weight:600;letter-spacing:-1px;vertical-align:middle;margin-right:4px">Oo</span><span class="it">Portafoglio</span><span class="en">Wallet</span></button>
       <button class="dash-tab-option" onclick="switchTab('referral');closeTabMobile()" data-tab="referral">Referral</button>
       <button class="dash-tab-option" onclick="switchTab('leaderboard');closeTabMobile()" data-tab="leaderboard"><span class="it">Classifica</span><span class="en">Leaderboard</span></button>
+      <button class="dash-tab-option" onclick="switchTab('sell');closeTabMobile()" data-tab="sell"><span class="it">Vendi</span><span class="en">Sell</span></button>
     </div>
   </div>
 
@@ -4286,6 +4592,7 @@ async function loadReferralHistory(){
     <button class="dash-tab" onclick="switchTab('tessere')"><span style="font-family:var(--font-h);font-size:13px;font-weight:600;letter-spacing:-1px;vertical-align:middle;margin-right:4px;color:inherit">Oo</span><span class="it">Portafoglio</span><span class="en">Wallet</span></button>
     <button class="dash-tab" onclick="switchTab('referral')"><span class="it">Referral</span><span class="en">Referral</span></button>
     <button class="dash-tab" onclick="switchTab('leaderboard')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8V4H8v4M4 20h16V10H4v10zM12 10v10M8 14H4M20 14h-4"/></svg><span class="it">Classifica</span><span class="en">Leaderboard</span></button>
+    <button class="dash-tab" onclick="switchTab('sell')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span class="it">Vendi</span><span class="en">Sell</span></button>
   </div>
 
   <!-- ═══ TAB: OVERVIEW ═══ -->
@@ -5037,6 +5344,50 @@ async function loadReferralHistory(){
     </div>
   </div>
 
+  <!-- ═══ TAB: SELL (VENDI) ═══ -->
+  <div class="dash-page" id="tab-sell">
+    <div style="text-align:center;margin-bottom:32px">
+      <h2 style="font-family:var(--font-h);font-size:clamp(24px,5vw,32px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Vendi il tuo oggetto</span><span class="en">Sell your object</span></h2>
+      <p style="font-size:13px;color:var(--gray-400);margin:0"><span class="it">Hai un oggetto di valore (da &euro;500 in su)? Lancialo come airdrop su AIROOBI.</span><span class="en">Have a valuable object (&euro;500+)? Launch it as an airdrop on AIROOBI.</span></p>
+    </div>
+
+    <div class="ref-card" style="max-width:520px;margin:0 auto">
+      <h3 style="margin-bottom:24px"><span class="it">Richiesta di valutazione</span><span class="en">Valuation request</span></h3>
+
+      <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Titolo oggetto</span><span class="en">Object title</span></label>
+      <input type="text" id="sell-title" placeholder="Es. iPhone 16 Pro Max 256GB" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px;margin-bottom:16px">
+
+      <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Descrizione</span><span class="en">Description</span></label>
+      <textarea id="sell-description" rows="3" placeholder="Condizioni, accessori inclusi, dettagli rilevanti..." style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px;margin-bottom:16px;resize:vertical"></textarea>
+
+      <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Categoria</span><span class="en">Category</span></label>
+      <select id="sell-category" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px;margin-bottom:16px;appearance:none;cursor:pointer">
+        <option value="mobile">Mobile / Tech Entry</option>
+        <option value="tech">Tech / Strumenti</option>
+        <option value="luxury">Luxury / 2 Ruote</option>
+        <option value="ultra_luxury">Ultra Luxury</option>
+      </select>
+
+      <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">URL immagine</span><span class="en">Image URL</span></label>
+      <input type="text" id="sell-image" placeholder="https://..." style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px;margin-bottom:16px">
+
+      <div style="display:flex;gap:16px;margin-bottom:16px">
+        <div style="flex:1">
+          <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Prezzo desiderato (&euro;)</span><span class="en">Desired price (&euro;)</span></label>
+          <input type="number" id="sell-desired-price" placeholder="1200.00" step="0.01" min="500" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
+        </div>
+        <div style="flex:1">
+          <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Prezzo minimo (&euro;)</span><span class="en">Min price (&euro;)</span></label>
+          <input type="number" id="sell-min-price" placeholder="900.00" step="0.01" min="500" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
+        </div>
+      </div>
+
+      <p style="font-size:11px;color:var(--gray-500);margin-bottom:20px"><span class="it">Il prezzo minimo accettabile deve essere almeno &euro;500. AIROOBI valuterà il tuo oggetto e ti proporrà una quotazione entro 24-48 ore.</span><span class="en">The minimum acceptable price must be at least &euro;500. AIROOBI will evaluate your object and propose a quote within 24-48 hours.</span></p>
+
+      <button onclick="submitSellForm()" style="width:100%;padding:14px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer;font-weight:700;transition:background .3s" onmouseover="this.style.background='var(--white)'" onmouseout="this.style.background='var(--gold)'"><span class="it">INVIA RICHIESTA</span><span class="en">SUBMIT REQUEST</span></button>
+    </div>
+  </div>
+
 </div>
 </div>
 
@@ -5408,6 +5759,76 @@ async function loadReferralHistory(){
       </tbody>
     </table>
     <p class="admin-note" style="margin-top:12px">I dati sono salvati in Supabase (tabella cost_tracker). Filtra per mese o aggiungi previsioni future.</p>
+  </div>
+
+  <!-- ═══ GESTIONE AIRDROP ═══ -->
+  <div class="admin-section">
+    <h2>Gestione Airdrop</h2>
+    <div style="margin-bottom:16px">
+      <button onclick="loadAdminAirdrops()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RICARICA</button>
+    </div>
+    <table class="admin-table" id="adm-airdrop-table">
+      <thead>
+        <tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Desid.</th><th>Min.</th><th>Quotaz.</th><th>Blocchi</th><th></th></tr>
+      </thead>
+      <tbody id="adm-airdrop-body">
+        <tr><td colspan="8" style="color:var(--gray-400)">Caricamento...</td></tr>
+      </tbody>
+    </table>
+    <p class="admin-note" style="margin-top:12px">Lista completa degli airdrop sottomessi. Clicca "Modifica" per valutare e gestire.</p>
+  </div>
+
+  <!-- Airdrop Edit Modal -->
+  <div class="ct-modal-bg" id="ad-modal-bg">
+    <div class="ct-modal" style="max-width:540px">
+      <h3 id="ad-modal-title">Modifica Airdrop</h3>
+      <input type="hidden" id="ad-edit-id">
+
+      <div style="display:flex;gap:12px">
+        <div style="flex:1">
+          <label>Prezzo desiderato (venditore)</label>
+          <input type="number" id="ad-desired-price" readonly style="opacity:.6;cursor:not-allowed">
+        </div>
+        <div style="flex:1">
+          <label>Prezzo minimo (venditore)</label>
+          <input type="number" id="ad-min-price" readonly style="opacity:.6;cursor:not-allowed">
+        </div>
+      </div>
+
+      <label>Quotazione AIROOBI (&euro;)</label>
+      <input type="number" id="ad-object-value" step="0.01" min="0" placeholder="Valore proposto dalla piattaforma" oninput="adAutoCalcBlocks()">
+
+      <label>Block price (ARIA)</label>
+      <input type="number" id="ad-block-price" min="1" placeholder="5" oninput="adAutoCalcBlocks()">
+
+      <label>N&ordm; Blocchi <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(auto-calcolato, modificabile)</span></label>
+      <input type="number" id="ad-total-blocks" min="0" placeholder="Auto">
+
+      <label>Presale block price <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(opzionale)</span></label>
+      <input type="number" id="ad-presale-price" min="0" placeholder="">
+
+      <label>Deadline</label>
+      <input type="datetime-local" id="ad-deadline">
+
+      <label>Status</label>
+      <select id="ad-status">
+        <option value="in_valutazione">In valutazione</option>
+        <option value="presale">Presale</option>
+        <option value="sale">Sale</option>
+        <option value="rifiutato_min500">Rifiutato (min &euro;500)</option>
+        <option value="rifiutato_generico">Rifiutato (generico)</option>
+        <option value="dropped">Dropped</option>
+        <option value="closed">Closed</option>
+      </select>
+
+      <label>Motivo rifiuto <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(se rifiutato)</span></label>
+      <input type="text" id="ad-rejection" placeholder="">
+
+      <div class="ct-modal-actions">
+        <button class="ct-btn-cancel" onclick="adCloseModal()">ANNULLA</button>
+        <button class="ct-btn-save" onclick="adSaveAirdrop()">SALVA</button>
+      </div>
+    </div>
   </div>
 
   <!-- Cost Tracker Modal -->

@@ -82,6 +82,23 @@ Tutti gli asset ufficiali sono censiti nella tabella `asset_registry` su Supabas
 | Luxury / 2 Ruote | €3.000 – €15.000 | 15–20 ARIA | 2.000 – 8.000 |
 | Ultra Luxury | €15.000+ | 25+ ARIA | 6.000 – 20.000 |
 
+### 5.1 Meccanismo Tre Prezzi Venditore
+
+Quando un venditore sottomette un oggetto, il sistema gestisce tre livelli di prezzo:
+
+| Prezzo | Campo DB | Chi lo imposta | Descrizione |
+|---|---|---|---|
+| Prezzo desiderato | `seller_desired_price` | Venditore | Quanto il venditore vorrebbe ottenere |
+| Prezzo minimo accettabile | `seller_min_price` | Venditore | Il minimo che il venditore accetterebbe (≥ €500) |
+| Quotazione AIROOBI | `object_value_eur` | AIROOBI (admin) | Il prezzo finale proposto dalla piattaforma dopo valutazione |
+
+**Formula calcolo blocchi:**
+```
+N° Blocchi = ceil(quotazione_airoobi / (prezzo_blocco_aria × 0.10))
+```
+
+Il prezzo desiderato del venditore serve come riferimento per la valutazione AIROOBI. La quotazione AIROOBI è sempre compresa tra il prezzo minimo accettabile e il prezzo desiderato, salvo eccezioni motivate.
+
 ---
 
 ## 6. Distribuzione Revenue per Airdrop
