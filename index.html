@@ -3218,27 +3218,25 @@ async function loadNotifications(){
   if(!s)return;
   try{
     var notifs=await sbGet('notifications?user_id=eq.'+s.user.id+'&order=created_at.desc&limit=30',s.access_token);
-    var badge=document.getElementById('notif-badge');
-    var list=document.getElementById('notif-list');
+    var badges=document.querySelectorAll('#notif-badge,#dash-notif-badge');
+    var lists=document.querySelectorAll('#notif-list,#dash-notif-list');
     if(!notifs||!notifs.length){
-      if(badge)badge.textContent='';
-      if(list)list.innerHTML='<div class="notif-empty">Nessuna notifica</div>';
+      badges.forEach(function(b){b.textContent=''});
+      lists.forEach(function(l){l.innerHTML='<div class="notif-empty">Nessuna notifica</div>'});
       return;
     }
     var unread=notifs.filter(function(n){return !n.read}).length;
-    if(badge)badge.textContent=unread>0?unread:'';
-    if(list){
-      var html='';
-      notifs.forEach(function(n){
-        var ago=timeAgo(n.created_at);
-        html+='<div class="notif-item'+(n.read?'':' unread')+'" onclick="markNotifRead(\''+n.id+'\')">';
-        html+='<div class="notif-item-dot"></div>';
-        html+='<div class="notif-item-content"><div class="notif-item-title">'+escHtml(n.title)+'</div>';
-        if(n.body)html+='<div class="notif-item-body">'+escHtml(n.body)+'</div>';
-        html+='</div><div class="notif-item-time">'+ago+'</div></div>';
-      });
-      list.innerHTML=html;
-    }
+    badges.forEach(function(b){b.textContent=unread>0?unread:''});
+    var html='';
+    notifs.forEach(function(n){
+      var ago=timeAgo(n.created_at);
+      html+='<div class="notif-item'+(n.read?'':' unread')+'" onclick="markNotifRead(\''+n.id+'\')">';
+      html+='<div class="notif-item-dot"></div>';
+      html+='<div class="notif-item-content"><div class="notif-item-title">'+escHtml(n.title)+'</div>';
+      if(n.body)html+='<div class="notif-item-body">'+escHtml(n.body)+'</div>';
+      html+='</div><div class="notif-item-time">'+ago+'</div></div>';
+    });
+    lists.forEach(function(l){l.innerHTML=html});
   }catch(e){console.error('Notif load:',e);}
 }
 
@@ -3255,6 +3253,18 @@ function toggleNotifPanel(e){
   var panel=document.getElementById('notif-panel');
   if(!panel)return;
   panel.classList.toggle('open');
+  // Close the other panel if open
+  var other=document.getElementById('dash-notif-panel');
+  if(other)other.classList.remove('open');
+  if(panel.classList.contains('open'))loadNotifications();
+}
+function toggleDashNotifPanel(e){
+  if(e)e.stopPropagation();
+  var panel=document.getElementById('dash-notif-panel');
+  if(!panel)return;
+  panel.classList.toggle('open');
+  var other=document.getElementById('notif-panel');
+  if(other)other.classList.remove('open');
   if(panel.classList.contains('open'))loadNotifications();
 }
 
@@ -3276,13 +3286,15 @@ async function markAllRead(){
   }catch(e){console.error('Mark all read:',e);}
 }
 
-// Close notif panel on outside click
+// Close notif panels on outside click
 document.addEventListener('click',function(e){
-  var panel=document.getElementById('notif-panel');
-  var bell=document.getElementById('notif-bell');
-  if(panel&&panel.classList.contains('open')&&!panel.contains(e.target)&&!bell.contains(e.target)){
-    panel.classList.remove('open');
-  }
+  ['notif','dash-notif'].forEach(function(prefix){
+    var panel=document.getElementById(prefix+'-panel');
+    var bell=document.getElementById(prefix+'-bell');
+    if(panel&&panel.classList.contains('open')&&!panel.contains(e.target)&&(!bell||!bell.contains(e.target))){
+      panel.classList.remove('open');
+    }
+  });
 });
 
 // ── Sell Form (Vendi) ──
@@ -4555,6 +4567,21 @@ async function loadReferralHistory(){
 <div class="dash-nav">
   <img src="" id="dash-logo" alt="AIROOBI" style="height:28px">
   <div class="dash-nav-right">
+    <div style="position:relative">
+      <div class="notif-bell" id="dash-notif-bell" onclick="toggleDashNotifPanel(event)" title="Notifiche">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span class="notif-bell-badge" id="dash-notif-badge"></span>
+      </div>
+      <div class="notif-panel" id="dash-notif-panel">
+        <div class="notif-panel-header">
+          <h4>Notifiche</h4>
+          <button class="notif-panel-mark-all" onclick="markAllRead()">Segna tutte lette</button>
+        </div>
+        <div class="notif-panel-list" id="dash-notif-list">
+          <div class="notif-empty">Nessuna notifica</div>
+        </div>
+      </div>
+    </div>
     <span id="dash-user-email" class="dash-nav-email"></span>
     <button class="dash-logout" onclick="doLogout()">Logout</button>
   </div>
