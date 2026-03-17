@@ -143,6 +143,7 @@ input{font-family:inherit}
 .card-progress{height:3px;background:var(--gray-700);border-radius:2px;overflow:hidden;margin-bottom:10px}
 .card-progress-bar{height:100%;background:linear-gradient(90deg,var(--gold),#d4b445);border-radius:2px;transition:width .6s ease}
 .card-footer{display:flex;justify-content:space-between;align-items:center}
+.card-eur{color:var(--gray-400);font-size:10px}
 .card-price{font-family:var(--font-m);font-size:12px;color:var(--aria)}
 .card-remain{font-size:11px;color:var(--gray-400)}
 .card-pct{font-family:var(--font-m);font-size:11px;color:var(--gold)}
@@ -746,6 +747,8 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 // ── State ──
 var _session=null;
 var _balance=0;
+var ARIA_EUR=0.20; // 1 ARIA = €0.20
+function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 var _airdrops=[];
 var _myParts=[];
 var _currentFilter='all';
@@ -925,7 +928,7 @@ async function loadHomeDashboard(){
   if(elIt)elIt.textContent=name;
   if(elEn)elEn.textContent=name;
   // ARIA balance
-  document.getElementById('home-aria').textContent=_balance;
+  document.getElementById('home-aria').innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
   // NFT count
   try{
     var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&select=id',token);
@@ -938,14 +941,14 @@ async function loadHomeDashboard(){
   _myParts.forEach(function(p){totalBlocks+=p.blocks_count||0;totalSpent+=p.aria_spent||0});
   document.getElementById('home-airdrops').textContent=_myParts.length;
   document.getElementById('home-blocks').textContent=totalBlocks;
-  document.getElementById('home-spent').textContent=totalSpent+' ARIA';
+  document.getElementById('home-spent').textContent=totalSpent+' ARIA ('+eur(totalSpent)+')';
   // Today's points
   try{
     var today=new Date().toISOString().slice(0,10);
     var pts=await sbGet('points_ledger?user_id=eq.'+_session.user.id+'&created_at=gte.'+today+'T00:00:00&select=points',token);
     var todayPts=0;
     if(pts)pts.forEach(function(p){todayPts+=p.points||0});
-    document.getElementById('home-today').textContent=todayPts+' ARIA';
+    document.getElementById('home-today').textContent=todayPts+' ARIA ('+eur(todayPts)+')';
   }catch(e){}
   // Streak
   try{
@@ -958,7 +961,7 @@ async function loadHomeDashboard(){
 async function loadBalance(){
   var profs=await sbGet('profiles?id=eq.'+_session.user.id+'&select=total_points',_session.access_token);
   if(profs&&profs.length>0)_balance=profs[0].total_points||0;
-  document.getElementById('topbar-bal').textContent=_balance+' ARIA';
+  document.getElementById('topbar-bal').textContent=_balance+' ARIA ('+eur(_balance)+')';
 }
 
 async function loadAirdrops(){
@@ -1076,7 +1079,7 @@ function renderGrid(){
 
     // Price display: presale shows discounted price + strikethrough sale price
     var currentPrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
-    var priceHtml=currentPrice+' ARIA / <span class="it">blocco</span><span class="en">block</span>';
+    var priceHtml=currentPrice+' ARIA <span class="card-eur">('+eur(currentPrice)+')</span> / <span class="it">blocco</span><span class="en">block</span>';
     if(isPresale&&a.presale_block_price)priceHtml+='<span class="card-presale-price">'+a.block_price_aria+'</span>';
 
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
@@ -1270,7 +1273,7 @@ async function openDetail(id){
     // STATS
     +'<div class="detail-stats">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'</div><div class="detail-stat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'<small style="font-size:50%;color:var(--gray-400)"> ('+eur(a.block_price_aria)+')</small></div><div class="detail-stat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
     +'</div>'
 
@@ -1284,8 +1287,8 @@ async function openDetail(id){
     // DISPLAY
     +'<div class="buy-display">'
     +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-    +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' ARIA</div>'
-    +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA</div>'
+    +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' ARIA ('+eur(a.block_price_aria)+')</div>'
+    +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA ('+eur(_balance)+')</div>'
     +'</div>'
 
     // SLIDER
@@ -1452,7 +1455,7 @@ function updateBuyDisplay(){
   var countEl=document.getElementById('buy-display-count');
   var costEl=document.getElementById('buy-display-cost');
   if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'blocco':'blocchi')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
-  if(costEl)costEl.textContent='= '+cost+' ARIA';
+  if(costEl)costEl.textContent='= '+cost+' ARIA ('+eur(cost)+')';
 }
 
 function goToAirdrop(id){
@@ -1485,7 +1488,7 @@ function initBuy(){
 
   _pendingBuy={airdropId:_currentDetail.id,blocks:chosen,cost:cost,qty:_buyQty};
   document.getElementById('modal-desc').innerHTML='<span class="it">Stai per acquisire <strong>'+_buyQty+'</strong> '+(_buyQty===1?'blocco':'blocchi')+'.</span><span class="en">You are about to acquire <strong>'+_buyQty+'</strong> block'+(_buyQty===1?'':'s')+'.</span>';
-  document.getElementById('modal-cost').textContent=cost+' ARIA';
+  document.getElementById('modal-cost').textContent=cost+' ARIA ('+eur(cost)+')';
   document.getElementById('modal-bg').classList.add('active');
 }
 
@@ -1512,7 +1515,7 @@ async function confirmBuy(){
     console.log('buy_blocks response:',data);
     if(data&&data.ok){
       _balance=data.new_balance;
-      document.getElementById('topbar-bal').textContent=_balance+' ARIA';
+      document.getElementById('topbar-bal').textContent=_balance+' ARIA ('+eur(_balance)+')';
       showToast(data.blocks_bought+' <span class="it">blocchi acquisiti!</span><span class="en">blocks acquired!</span>');
 
       // Animate donut: pulse the gold ring
