@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investitori — AIROOBI</title>
+  <meta name="description" content="AIROOBI per gli investitori. Un nuovo modello di commercio basato su airdrop equi, blockchain Kaspa e NFT con valore garantito.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Investitori — AIROOBI">
+  <meta property="og:description" content="Un nuovo modello di commercio. Fairness, trasparenza, blockchain, accessibilità per tutti.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.airoobi.com/investitori.html">
+  <link rel="canonical" href="https://www.airoobi.com/investitori.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --font-h: 'Cormorant Garamond', serif;
+      --font-b: 'Instrument Sans', sans-serif;
+      --font-m: 'DM Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-b);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Lang toggle */
+    [data-lang="it"] .en { display: none !important; }
+    [data-lang="en"] .it { display: none !important; }
+
+    .investor-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--gray-700);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .investor-nav img { height: 32px; }
+    .investor-nav-right { display: flex; gap: 12px; align-items: center; }
+    .lang-toggle {
+      background: none;
+      border: 1px solid var(--gray-700);
+      color: var(--gray-400);
+      padding: 6px 12px;
+      font-family: var(--font-m);
+      font-size: 11px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .lang-toggle:hover { border-color: var(--gold); color: var(--gold); }
+    .investor-back {
+      background: none;
+      border: 1px solid var(--gray-700);
+      color: var(--gray-400);
+      padding: 8px 20px;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .investor-back:hover { border-color: var(--gold); color: var(--gold); }
+
+    .investor-content {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .investor-content h1 {
+      font-family: var(--font-h);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 300;
+      margin-bottom: 16px;
+      color: var(--white);
+    }
+    .investor-content h1 em { color: var(--gold); font-style: italic; }
+    .investor-content h2 {
+      font-family: var(--font-h);
+      font-size: 24px;
+      font-weight: 400;
+      margin: 48px 0 16px;
+      color: var(--white);
+      border-bottom: 1px solid var(--gray-700);
+      padding-bottom: 8px;
+    }
+    .investor-content p {
+      font-size: 15px;
+      color: var(--gray-300);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .investor-content strong { color: var(--white); }
+    .investor-highlight {
+      padding: 24px;
+      background: rgba(184,150,12,.06);
+      border-left: 3px solid var(--gold);
+      margin: 24px 0;
+      font-size: 14px;
+      color: var(--gray-300);
+      line-height: 1.8;
+    }
+    .investor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+    .investor-metric {
+      padding: 24px;
+      border: 1px solid var(--gray-700);
+      background: var(--gray-800);
+    }
+    .investor-metric-val {
+      font-family: var(--font-h);
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--gold);
+    }
+    .investor-metric-label {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin-top: 4px;
+    }
+    .investor-chart {
+      margin: 32px 0;
+      padding: 24px;
+      border: 1px solid var(--gray-700);
+      background: var(--gray-800);
+    }
+    .investor-chart canvas { width: 100% !important; max-height: 280px; }
+    .investor-cta-box {
+      text-align: center;
+      padding: 48px 32px;
+      border: 2px solid var(--gold);
+      margin-top: 48px;
+    }
+    .investor-cta-box h3 {
+      font-family: var(--font-h);
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .investor-cta-box p {
+      font-size: 14px;
+      color: var(--gray-400);
+      margin-bottom: 24px;
+    }
+    .investor-cta-box a {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      padding: 14px 40px;
+      font-family: var(--font-m);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+    .investor-cta-box a:hover { background: var(--white); }
+
+    .legal-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .legal-footer a { color: var(--gray-400); text-decoration: none; }
+    .legal-footer a:hover { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .investor-nav { padding: 16px; }
+      .investor-content { padding: 40px 16px; }
+      .investor-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="investor-nav">
+    <a href="https://airoobi.com">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI">
+    </a>
+    <div class="investor-nav-right">
+      <button class="lang-toggle" onclick="toggleLang()" id="inv-lang-btn">EN</button>
+      <a href="https://airoobi.com" class="investor-back"><span class="it">Torna ad AIROOBI</span><span class="en">Back to AIROOBI</span></a>
+    </div>
+  </header>
+
+  <main class="investor-content">
+    <h1><span class="it">AIROOBI<br><em>Un nuovo modello di commercio.</em></span><span class="en">AIROOBI<br><em>A new commerce model.</em></span></h1>
+    <p style="font-size:18px;color:var(--gray-400);margin-bottom:48px"><span class="it">Fairness. Trasparenza. Blockchain. Accessibilità per tutti.</span><span class="en">Fairness. Transparency. Blockchain. Accessible to everyone.</span></p>
+
+    <h2>Vision</h2>
+    <p><span class="it">Diventare il marketplace #1 al mondo per airdrop di oggetti fisici reali. Un ecosistema dove ogni partecipante riceve valore — non promesse.</span><span class="en">Become the world's #1 marketplace for real physical object airdrops. An ecosystem where every participant receives value — not promises.</span></p>
+
+    <h2><span class="it">Il Problema</span><span class="en">The Problem</span></h2>
+    <p><span class="it">Il commercio online favorisce chi ha più risorse. Le aste premiano il portafoglio, non il merito. I marketplace sono saturi e impersonali. Non esiste una piattaforma dove le persone normali possano accedere a oggetti premium con un meccanismo <strong>equo, trasparente e verificabile</strong>.</span><span class="en">Online commerce favors those with more resources. Auctions reward the wallet, not merit. Marketplaces are saturated and impersonal. There is no platform where ordinary people can access premium objects through a <strong>fair, transparent and verifiable</strong> mechanism.</span></p>
+
+    <h2><span class="it">Il Meccanismo</span><span class="en">The Mechanism</span></h2>
+    <p><span class="it">AIROOBI è una piattaforma di <strong>commercio equo</strong> per oggetti fisici reali. Gli utenti partecipano con engagement e acquisti. Chi contribuisce di più realizza il proprio desiderio. <strong>Tutti gli altri ricevono un NFT certificato con valore garantito</strong>, sostenuto da un fondo trasparente on-chain.</span><span class="en">AIROOBI is a <strong>fair commerce platform</strong> for real physical objects. Users participate through engagement and purchases. The top contributor makes their dream real. <strong>Everyone else receives a certified NFT with guaranteed value</strong>, backed by a transparent on-chain fund.</span></p>
+    <div class="investor-highlight">
+      <span class="it"><strong>Nessuno perde.</strong> Ogni partecipante riceve valore reale e verificabile. Non è azzardo. Non è un'asta. È un sistema di commercio basato sul merito con protezione del consumatore integrata nella blockchain.</span><span class="en"><strong>Nobody loses.</strong> Every participant receives real, verifiable value. It's not gambling. It's not an auction. It's a merit-based commerce system with consumer protection built into the blockchain.</span>
+    </div>
+
+    <h2><span class="it">Trazione</span><span class="en">Traction</span></h2>
+    <div class="investor-grid">
+      <div class="investor-metric">
+        <div class="investor-metric-val">Alpha</div>
+        <div class="investor-metric-label"><span class="it">Fase corrente</span><span class="en">Current phase</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val" id="inv-waitlist">&mdash;</div>
+        <div class="investor-metric-label"><span class="it">Community early adopter</span><span class="en">Early adopter community</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val">Kaspa</div>
+        <div class="investor-metric-label"><span class="it">Blockchain PoW più veloce al mondo</span><span class="en">World's fastest PoW blockchain</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val">Blue Ocean</div>
+        <div class="investor-metric-label"><span class="it">Zero competitor diretti</span><span class="en">Zero direct competitors</span></div>
+      </div>
+    </div>
+
+    <div class="investor-chart">
+      <h3 style="font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white);margin-bottom:16px"><span class="it">Crescita Community</span><span class="en">Community Growth</span></h3>
+      <canvas id="inv-chart-growth" height="240"></canvas>
+    </div>
+
+    <h2>Roadmap</h2>
+    <div class="investor-chart">
+      <canvas id="inv-chart-roadmap" height="200"></canvas>
+    </div>
+
+    <h2><span class="it">Tecnologia</span><span class="en">Technology</span></h2>
+    <p><span class="it">Costruito su <strong>Kaspa</strong> — la blockchain Proof-of-Work più veloce al mondo. Conferme sotto il secondo, commissioni trascurabili, decentralizzazione reale. NFT certificati on-chain. Fondo di garanzia pubblico e verificabile in tempo reale.</span><span class="en">Built on <strong>Kaspa</strong> — the world's fastest Proof-of-Work blockchain. Sub-second confirmations, negligible fees, real decentralization. On-chain certified NFTs. Guarantee fund publicly verifiable in real-time.</span></p>
+
+    <div class="investor-cta-box">
+      <h3><span class="it">Vuoi saperne di più?</span><span class="en">Want to know more?</span></h3>
+      <p><span class="it">I dettagli si discutono di persona. Scriveteci per fissare un incontro.</span><span class="en">The details are discussed in person. Contact us to schedule a meeting.</span></p>
+      <a href="mailto:investor@airoobi.com">CONTATTACI</a>
+    </div>
+
+    <p style="font-size:12px;color:var(--gray-400);margin-top:48px;text-align:center">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce</p>
+  </main>
+
+  <footer class="legal-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a></p>
+  </footer>
+
+  <script>
+    var SUPABASE_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+    var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+    function toggleLang(){
+      var root=document.documentElement;
+      var btn=document.getElementById('inv-lang-btn');
+      var current=root.getAttribute('data-lang');
+      var next=current==='it'?'en':'it';
+      root.setAttribute('data-lang',next);
+      btn.textContent=next==='it'?'EN':'IT';
+    }
+
+    // Load waitlist count
+    fetch(SUPABASE_URL+'/rest/v1/profiles?select=id',{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    }).then(function(r){return r.ok?r.json():[]}).then(function(d){
+      var el=document.getElementById('inv-waitlist');
+      if(el)el.textContent=d.length||'\u2014';
+    }).catch(function(){});
+
+    // Charts
+    window.addEventListener('DOMContentLoaded',function(){
+      // Community growth
+      var growthCtx=document.getElementById('inv-chart-growth');
+      if(growthCtx){
+        new Chart(growthCtx,{
+          type:'line',
+          data:{
+            labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],
+            datasets:[{
+              label:'Community',
+              data:[0,0,0,0,0,0,12,48,120],
+              borderColor:'#B8960C',
+              backgroundColor:'rgba(184,150,12,.1)',
+              fill:true,
+              tension:.4,
+              pointBackgroundColor:'#B8960C',
+              pointRadius:4
+            }]
+          },
+          options:{
+            responsive:true,
+            plugins:{legend:{display:false}},
+            scales:{
+              x:{ticks:{color:'#888',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,.05)'}},
+              y:{beginAtZero:true,ticks:{color:'#888',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,.05)'}}
+            }
+          }
+        });
+      }
+      // Roadmap
+      var roadCtx=document.getElementById('inv-chart-roadmap');
+      if(roadCtx){
+        new Chart(roadCtx,{
+          type:'bar',
+          data:{
+            labels:['Alpha Brave','Alpha Wise','Beta','Pre-Prod','Mainnet'],
+            datasets:[{
+              label:'Target utenti',
+              data:[1000,2500,5000,10000,15000],
+              backgroundColor:['#B8960C','rgba(184,150,12,.7)','rgba(184,150,12,.5)','rgba(184,150,12,.3)','rgba(184,150,12,.15)'],
+              borderColor:'#B8960C',
+              borderWidth:1
+            }]
+          },
+          options:{
+            indexAxis:'y',
+            responsive:true,
+            plugins:{legend:{display:false}},
+            scales:{
+              x:{ticks:{color:'#888',font:{family:'DM Mono',size:10},callback:function(v){return v>=1000?(v/1000)+'K':v}},grid:{color:'rgba(255,255,255,.05)'}},
+              y:{ticks:{color:'#B8960C',font:{family:'DM Mono',size:11,weight:'bold'}},grid:{display:false}}
+            }
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>
