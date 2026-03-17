@@ -49,20 +49,20 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.airoobi.com/#contatti</loc>
-    <lastmod>2026-03-01</lastmod>
+    <loc>https://www.airoobi.com/contatti.html</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://www.airoobi.com/#privacy</loc>
-    <lastmod>2026-03-01</lastmod>
+    <loc>https://www.airoobi.com/privacy.html</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://www.airoobi.com/#termini</loc>
-    <lastmod>2026-03-01</lastmod>
+    <loc>https://www.airoobi.com/termini.html</loc>
+    <lastmod>2026-03-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
