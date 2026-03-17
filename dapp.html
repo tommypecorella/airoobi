@@ -296,6 +296,87 @@ input{font-family:inherit}
 .card-presale-price{font-family:var(--font-m);font-size:11px;color:var(--gray-400);text-decoration:line-through;margin-left:6px}
 
 
+/* ── SUBMIT FORM ── */
+.submit-wrap{max-width:500px;margin:0 auto}
+.submit-title{font-family:var(--font-h);font-size:clamp(24px,5vw,34px);font-weight:300;margin-bottom:8px;text-align:center}
+.submit-title em{color:var(--gold);font-style:italic}
+.submit-sub{font-size:14px;color:var(--gray-400);text-align:center;margin-bottom:32px;line-height:1.5}
+.submit-field{margin-bottom:20px}
+.submit-label{display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.submit-input,.submit-textarea,.submit-select{width:100%;padding:12px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;transition:border-color .2s}
+.submit-input:focus,.submit-textarea:focus,.submit-select:focus{outline:none;border-color:var(--gold)}
+.submit-textarea{min-height:100px;resize:vertical}
+.submit-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+.submit-select option{background:var(--gray-800);color:var(--white)}
+.submit-hint{font-size:11px;color:var(--gray-400);margin-top:4px}
+.submit-btn{width:100%;padding:16px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .2s;text-transform:uppercase;margin-top:8px}
+.submit-btn:hover{background:var(--white)}
+.submit-btn:disabled{opacity:.35;cursor:not-allowed}
+.submit-btn.loading{background:var(--gray-700);color:var(--gray-400)}
+.submit-msg{font-size:13px;margin-top:12px;text-align:center;padding:12px}
+.submit-msg.ok{background:rgba(73,234,203,.06);border:1px solid rgba(73,234,203,.2);color:var(--kas)}
+.submit-msg.err{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);color:var(--red)}
+.submit-rules{margin-top:24px;padding:16px;border:1px solid var(--gray-700);font-size:12px;color:var(--gray-400);line-height:1.6}
+.submit-rules strong{color:var(--white)}
+
+/* ── BACKOFFICE ── */
+.bo-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--gray-700);overflow-x:auto}
+.bo-tab{padding:10px 16px;background:none;border:none;color:var(--gray-400);font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;cursor:pointer}
+.bo-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.bo-tab:hover{color:var(--white)}
+.bo-tab-count{font-size:9px;background:var(--gray-700);color:var(--gray-300);padding:1px 6px;border-radius:8px;margin-left:4px;vertical-align:middle}
+.bo-tab.active .bo-tab-count{background:var(--gold);color:var(--black)}
+.bo-tab-count.alert{background:var(--red);color:var(--white)}
+.bo-table{width:100%;border-collapse:collapse}
+.bo-table th{font-family:var(--font-m);font-size:9px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;text-align:left;padding:8px 10px;border-bottom:1px solid var(--gray-700);white-space:nowrap}
+.bo-table td{padding:10px;border-bottom:1px solid var(--gray-700);font-size:13px;vertical-align:middle}
+.bo-table tr:hover td{background:var(--gray-900)}
+.bo-table .mono{font-family:var(--font-m);font-size:11px}
+.bo-table .truncate{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bo-status{font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;display:inline-block;white-space:nowrap}
+.bo-status.in_valutazione{background:#f0a030;color:var(--black)}
+.bo-status.presale{background:var(--aria);color:var(--black)}
+.bo-status.sale{background:var(--gold);color:var(--black)}
+.bo-status.dropped{background:var(--kas);color:var(--black)}
+.bo-status.rifiutato_min500,.bo-status.rifiutato_generico{background:var(--red);color:var(--white)}
+.bo-status.draft{background:var(--gray-700);color:var(--gray-300)}
+.bo-actions{display:flex;gap:6px;flex-wrap:wrap}
+.bo-btn{font-family:var(--font-m);font-size:10px;padding:5px 10px;border:1px solid var(--gray-700);background:none;color:var(--gray-400);cursor:pointer;transition:all .2s}
+.bo-btn:hover{border-color:var(--gold);color:var(--gold)}
+.bo-btn.approve{border-color:var(--kas);color:var(--kas)}
+.bo-btn.approve:hover{background:var(--kas);color:var(--black)}
+.bo-btn.reject{border-color:var(--red);color:var(--red)}
+.bo-btn.reject:hover{background:var(--red);color:var(--white)}
+.bo-empty{text-align:center;padding:48px 24px;color:var(--gray-400);font-size:14px}
+.bo-detail{border:1px solid var(--gray-700);background:var(--gray-900);padding:20px;margin-bottom:20px;animation:fadeIn .2s ease}
+.bo-detail-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.bo-detail-title{font-family:var(--font-h);font-size:20px;font-weight:300}
+.bo-detail-close{background:none;border:none;color:var(--gray-400);font-size:18px;cursor:pointer;padding:4px 8px}
+.bo-detail-close:hover{color:var(--white)}
+.bo-detail-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:12px}
+.bo-detail-item{padding:8px;border:1px solid var(--gray-700)}
+.bo-detail-item-label{font-family:var(--font-m);font-size:9px;color:var(--gray-400);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px}
+.bo-detail-item-val{font-size:13px}
+.bo-detail-desc{font-size:13px;color:var(--gray-300);line-height:1.6;margin-bottom:12px}
+.bo-detail-img{max-width:160px;max-height:160px;object-fit:contain;border:1px solid var(--gray-700);margin-bottom:12px}
+/* Approve/reject modal extensions */
+.modal-wide{max-width:500px}
+.modal-wide h3{text-align:left}
+.modal-wide h3 em{color:var(--gold);font-style:italic}
+.modal-field{margin-bottom:14px}
+.modal-label{display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
+.modal-input,.modal-select,.modal-textarea{width:100%;padding:10px 12px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:14px;font-family:var(--font-b)}
+.modal-input:focus,.modal-select:focus,.modal-textarea:focus{outline:none;border-color:var(--gold)}
+.modal-textarea{min-height:70px;resize:vertical}
+.modal-select{appearance:none;-webkit-appearance:none}
+.modal-row{display:flex;gap:12px}
+.modal-row .modal-field{flex:1}
+.modal-info{font-size:12px;color:var(--gray-400);margin-bottom:14px;line-height:1.6;padding:10px;border:1px solid var(--gray-700)}
+.modal-info strong{color:var(--white)}
+.modal-confirm.reject-btn{background:var(--red);color:var(--white)}
+.modal-confirm.reject-btn:hover{background:var(--white);color:var(--red)}
+@media(max-width:768px){.bo-table th,.bo-table td{padding:6px 4px}.hide-mobile{display:none}}
+
 /* ── RESPONSIVE ── */
 @media(min-width:640px){
   .main{padding:32px 24px 100px}
@@ -341,17 +422,18 @@ input{font-family:inherit}
   <div class="dapp-tabs">
     <button class="dapp-tab active" id="tab-btn-explore" onclick="switchDappTab('explore')"><span class="it">Esplora</span><span class="en">Explore</span></button>
     <button class="dapp-tab" id="tab-btn-my" onclick="switchDappTab('my')"><span class="it">I miei airdrop</span><span class="en">My airdrops</span></button>
-    <a class="dapp-tab" href="/valutazione.html"><span class="it">Proponi</span><span class="en">Submit</span></a>
+    <button class="dapp-tab" id="tab-btn-submit" onclick="switchDappTab('submit')"><span class="it">Proponi</span><span class="en">Submit</span></button>
+    <button class="dapp-tab" id="tab-btn-manage" onclick="switchDappTab('manage')" style="display:none"><span class="it">Gestione</span><span class="en">Manage</span></button>
   </div>
 
   <!-- ═══ EXPLORE TAB ═══ -->
   <div id="tab-explore">
 
     <!-- VALUATION BANNER -->
-    <a class="val-banner" id="val-banner" href="/valutazione.html" style="display:none;text-decoration:none">
+    <div class="val-banner" id="val-banner" style="display:none;cursor:pointer" onclick="switchDappTab('submit')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
       <span><strong id="val-count">0</strong> <span class="it">oggetti in valutazione — proponi il tuo</span><span class="en">items under evaluation — submit yours</span></span>
-    </a>
+    </div>
 
     <!-- CATEGORY FILTER -->
     <div class="cat-filter" id="cat-filter">
@@ -398,6 +480,60 @@ input{font-family:inherit}
     </div>
   </div>
 
+  <!-- ═══ SUBMIT TAB ═══ -->
+  <div id="tab-submit" style="display:none">
+    <div class="submit-wrap">
+      <h2 class="submit-title"><span class="it">Proponi il tuo <em>oggetto</em></span><span class="en">Submit your <em>item</em></span></h2>
+      <p class="submit-sub"><span class="it">Hai un oggetto di valore che vuoi mettere in airdrop? Compila il form e il nostro team lo valuterà.</span><span class="en">Have a valuable item for airdrop? Fill the form and our team will evaluate it.</span></p>
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Nome dell'oggetto</span><span class="en">Item name</span> *</label>
+        <input class="submit-input" id="sub-title" type="text" placeholder="es. iPhone 16 Pro Max 256GB">
+      </div>
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Descrizione</span><span class="en">Description</span> *</label>
+        <textarea class="submit-textarea" id="sub-desc" placeholder="Descrivi l'oggetto: condizione, anno, accessori inclusi..."></textarea>
+      </div>
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Categoria</span><span class="en">Category</span> *</label>
+        <select class="submit-select" id="sub-cat">
+          <option value="">—</option>
+          <option value="mobile">Mobile / Tech entry (€500–€1.500)</option>
+          <option value="tech">Tech / Strumenti (€1.500–€3.000)</option>
+          <option value="luxury">Luxury / 2 Ruote (€3.000–€15.000)</option>
+          <option value="ultra_luxury">Ultra Luxury (€15.000+)</option>
+        </select>
+      </div>
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Valore stimato (€)</span><span class="en">Estimated value (€)</span> *</label>
+        <input class="submit-input" id="sub-value" type="number" min="500" step="1" placeholder="500">
+        <div class="submit-hint"><span class="it">Valore minimo: €500. AIROOBI verificherà il valore reale.</span><span class="en">Minimum value: €500. AIROOBI will verify the real value.</span></div>
+      </div>
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Link immagine (opzionale)</span><span class="en">Image URL (optional)</span></label>
+        <input class="submit-input" id="sub-img" type="url" placeholder="https://...">
+      </div>
+      <button class="submit-btn" id="sub-btn" onclick="submitObject()"><span class="it">Invia per valutazione</span><span class="en">Submit for evaluation</span></button>
+      <div id="sub-msg"></div>
+      <div class="submit-rules">
+        <strong><span class="it">Regole:</span><span class="en">Rules:</span></strong><br>
+        <span class="it">&bull; Valore minimo dell'oggetto: <strong>€500</strong><br>&bull; L'oggetto deve essere reale, verificabile e in tuo possesso<br>&bull; AIROOBI valuterà l'oggetto e fisserà prezzo e numero blocchi<br>&bull; Incasso garantito a prezzo di mercato per il venditore<br>&bull; La valutazione richiede circa 24-48h</span>
+        <span class="en">&bull; Minimum item value: <strong>€500</strong><br>&bull; The item must be real, verifiable and in your possession<br>&bull; AIROOBI will evaluate and set the price and block count<br>&bull; Guaranteed payout at market price for the seller<br>&bull; Evaluation takes approximately 24-48h</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MANAGE TAB (backoffice) ═══ -->
+  <div id="tab-manage" style="display:none">
+    <div class="bo-tabs" id="bo-tabs">
+      <button class="bo-tab active" data-bo="in_valutazione" onclick="boFilter('in_valutazione')">In valutazione <span class="bo-tab-count alert" id="cnt-in_valutazione">0</span></button>
+      <button class="bo-tab" data-bo="presale" onclick="boFilter('presale')">Presale <span class="bo-tab-count" id="cnt-presale">0</span></button>
+      <button class="bo-tab" data-bo="sale" onclick="boFilter('sale')">Sale <span class="bo-tab-count" id="cnt-sale">0</span></button>
+      <button class="bo-tab" data-bo="rifiutato" onclick="boFilter('rifiutato')">Rifiutati <span class="bo-tab-count" id="cnt-rifiutato">0</span></button>
+      <button class="bo-tab" data-bo="all" onclick="boFilter('all')">Tutti <span class="bo-tab-count" id="cnt-all">0</span></button>
+    </div>
+    <div id="bo-detail-panel"></div>
+    <div id="bo-table-wrap"></div>
+  </div>
 
 </div>
 
@@ -411,6 +547,34 @@ input{font-family:inherit}
       <button class="modal-cancel" onclick="closeModal()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
       <button class="modal-confirm" id="modal-ok" onclick="confirmBuy()"><span class="it">Acquista</span><span class="en">Buy</span></button>
     </div>
+  </div>
+</div>
+
+<!-- APPROVE MODAL -->
+<div class="modal-bg" id="approve-modal" onclick="if(event.target===this)closeBoModals()">
+  <div class="modal modal-wide">
+    <h3><span class="it">Approva</span><span class="en">Approve</span> <em id="approve-title"></em></h3>
+    <div class="modal-info" id="approve-info"></div>
+    <div class="modal-row">
+      <div class="modal-field"><label class="modal-label">Prezzo blocco (ARIA)</label><input class="modal-input" id="approve-price" type="number" min="1" placeholder="20"></div>
+      <div class="modal-field"><label class="modal-label">Blocchi totali</label><input class="modal-input" id="approve-blocks" type="number" min="10" placeholder="500"></div>
+    </div>
+    <div class="modal-row">
+      <div class="modal-field"><label class="modal-label">Presale price (opzionale)</label><input class="modal-input" id="approve-presale" type="number" min="1" placeholder="—"></div>
+      <div class="modal-field"><label class="modal-label">Status iniziale</label><select class="modal-select" id="approve-status"><option value="presale">Presale</option><option value="sale">Sale (live)</option></select></div>
+    </div>
+    <div class="modal-field"><label class="modal-label">Deadline (opzionale)</label><input class="modal-input" id="approve-deadline" type="date"></div>
+    <div class="modal-actions"><button class="modal-cancel" onclick="closeBoModals()"><span class="it">Annulla</span><span class="en">Cancel</span></button><button class="modal-confirm" id="approve-ok" onclick="doApprove()"><span class="it">Approva</span><span class="en">Approve</span></button></div>
+  </div>
+</div>
+
+<!-- REJECT MODAL -->
+<div class="modal-bg" id="reject-modal" onclick="if(event.target===this)closeBoModals()">
+  <div class="modal modal-wide">
+    <h3><span class="it">Rifiuta</span><span class="en">Reject</span> <em id="reject-title"></em></h3>
+    <div class="modal-field"><label class="modal-label"><span class="it">Motivo rifiuto</span><span class="en">Rejection reason</span></label><select class="modal-select" id="reject-reason"><option value="rifiutato_min500">Valore sotto €500</option><option value="rifiutato_generico">Rifiuto generico</option></select></div>
+    <div class="modal-field"><label class="modal-label"><span class="it">Note (opzionale)</span><span class="en">Notes (optional)</span></label><textarea class="modal-textarea" id="reject-note" placeholder="Motivo dettagliato..."></textarea></div>
+    <div class="modal-actions"><button class="modal-cancel" onclick="closeBoModals()"><span class="it">Annulla</span><span class="en">Cancel</span></button><button class="modal-confirm reject-btn" id="reject-ok" onclick="doReject()"><span class="it">Rifiuta</span><span class="en">Reject</span></button></div>
   </div>
 </div>
 
@@ -436,6 +600,11 @@ var _myParts=[];
 var _currentFilter='all';
 var _currentDetail=null;
 var _pendingBuy=null;
+var _isManager=false;
+var _managerCats=[];
+var _allAirdrops=[];
+var _boFilter='in_valutazione';
+var _boTarget=null;
 
 // ── Supabase helpers ──
 async function sbGet(path,token){
@@ -532,7 +701,7 @@ document.addEventListener('DOMContentLoaded',async function(){
   var token=await getValidToken();
   if(!token)return;
   setupUI();
-  await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations()]);
+  await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkManagerPerms()]);
   renderGrid();
   renderStats();
   renderCategoryFilter();
@@ -578,11 +747,14 @@ async function loadMyParticipations(){
 
 // ── Tabs ──
 function switchDappTab(tab){
-  document.getElementById('tab-btn-explore').classList.toggle('active',tab==='explore');
-  document.getElementById('tab-btn-my').classList.toggle('active',tab==='my');
-  document.getElementById('tab-explore').style.display=tab==='explore'?'block':'none';
-  document.getElementById('tab-my').style.display=tab==='my'?'block':'none';
+  ['explore','my','submit','manage'].forEach(function(t){
+    var btn=document.getElementById('tab-btn-'+t);
+    var panel=document.getElementById('tab-'+t);
+    if(btn)btn.classList.toggle('active',tab===t);
+    if(panel)panel.style.display=tab===t?'block':'none';
+  });
   if(tab==='my')renderMyAirdrops();
+  if(tab==='manage'&&_isManager)loadBoData();
 }
 
 // ── Category filter ──
@@ -1172,6 +1344,229 @@ async function loadValuationCount(){
   }
 }
 
+
+// ── Manager permissions ──
+async function checkManagerPerms(){
+  var token=await getValidToken();
+  if(!token)return;
+  var perms=await sbRpc('get_my_manager_permissions',{},token);
+  if(Array.isArray(perms)&&perms.length>0){
+    _isManager=true;
+    _managerCats=perms.map(function(p){return p.category}); // null = all
+    document.getElementById('tab-btn-manage').style.display='';
+  }
+}
+
+// ── Submit object ──
+async function submitObject(){
+  var title=document.getElementById('sub-title').value.trim();
+  var desc=document.getElementById('sub-desc').value.trim();
+  var cat=document.getElementById('sub-cat').value;
+  var value=parseFloat(document.getElementById('sub-value').value);
+  var imgUrl=document.getElementById('sub-img').value.trim()||null;
+  var msgEl=document.getElementById('sub-msg');
+  msgEl.innerHTML='';msgEl.className='';
+  if(!title||!desc||!cat||!value){
+    msgEl.innerHTML='<span class="it">Compila tutti i campi obbligatori.</span><span class="en">Fill all required fields.</span>';
+    msgEl.className='submit-msg err';return;
+  }
+  if(value<500){
+    msgEl.innerHTML='<span class="it">Valore minimo: €500.</span><span class="en">Minimum value: €500.</span>';
+    msgEl.className='submit-msg err';return;
+  }
+  var btn=document.getElementById('sub-btn');
+  btn.disabled=true;btn.classList.add('loading');
+  try{
+    var token=await getValidToken();
+    var res=await fetch(SB_URL+'/rest/v1/airdrops',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({title:title,description:desc,category:cat,object_value_eur:value,image_url:imgUrl,block_price_aria:0,total_blocks:0,status:'in_valutazione',submitted_by:_session.user.id})
+    });
+    if(res.ok){
+      msgEl.innerHTML='<span class="it">Oggetto inviato per valutazione! Riceverai un riscontro entro 24-48h.</span><span class="en">Item submitted for evaluation! You\'ll hear back within 24-48h.</span>';
+      msgEl.className='submit-msg ok';
+      document.getElementById('sub-title').value='';document.getElementById('sub-desc').value='';
+      document.getElementById('sub-cat').value='';document.getElementById('sub-value').value='';document.getElementById('sub-img').value='';
+      showToast('<span class="it">Proposta inviata!</span><span class="en">Submission sent!</span>');
+    } else {
+      console.error('Submit error:',await res.text());
+      msgEl.innerHTML='<span class="it">Errore nell\'invio. Riprova.</span><span class="en">Submission error. Try again.</span>';
+      msgEl.className='submit-msg err';
+    }
+  }catch(e){
+    msgEl.innerHTML='<span class="it">Errore di rete.</span><span class="en">Network error.</span>';
+    msgEl.className='submit-msg err';
+  }
+  btn.disabled=false;btn.classList.remove('loading');
+}
+
+// ══════════════════════════════
+// ── BACKOFFICE (manage tab) ──
+// ══════════════════════════════
+async function loadBoData(){
+  var token=await getValidToken();
+  if(!token)return;
+  _allAirdrops=await sbRpc('get_all_airdrops',{},token)||[];
+  if(!Array.isArray(_allAirdrops))_allAirdrops=[];
+  renderBoCounts();
+  renderBoTable();
+}
+
+function boFilter(status){
+  _boFilter=status;
+  document.querySelectorAll('.bo-tab').forEach(function(t){t.classList.toggle('active',t.getAttribute('data-bo')===status)});
+  closeBoDetail();
+  renderBoTable();
+}
+
+function getBoFiltered(){
+  if(_boFilter==='all')return _allAirdrops;
+  if(_boFilter==='rifiutato')return _allAirdrops.filter(function(a){return a.status==='rifiutato_min500'||a.status==='rifiutato_generico'});
+  return _allAirdrops.filter(function(a){return a.status===_boFilter});
+}
+
+function renderBoCounts(){
+  var c={in_valutazione:0,presale:0,sale:0,rifiutato:0,all:_allAirdrops.length};
+  _allAirdrops.forEach(function(a){
+    if(a.status==='in_valutazione')c.in_valutazione++;
+    else if(a.status==='presale')c.presale++;
+    else if(a.status==='sale')c.sale++;
+    else if(a.status.startsWith('rifiutato'))c.rifiutato++;
+  });
+  Object.keys(c).forEach(function(k){var el=document.getElementById('cnt-'+k);if(el)el.textContent=c[k]});
+}
+
+function renderBoTable(){
+  var list=getBoFiltered();
+  var wrap=document.getElementById('bo-table-wrap');
+  if(!list.length){wrap.innerHTML='<div class="bo-empty"><span class="it">Nessun airdrop in questa sezione</span><span class="en">No airdrops in this section</span></div>';return;}
+  var catLabels={mobile:'Mobile',tech:'Tech',luxury:'Luxury',ultra_luxury:'Ultra Luxury'};
+  var html='<table class="bo-table"><thead><tr><th>Oggetto</th><th>Cat.</th><th>Valore</th><th class="hide-mobile">Status</th><th class="hide-mobile">Blocchi</th><th class="hide-mobile">Data</th><th>Azioni</th></tr></thead><tbody>';
+  list.forEach(function(a){
+    var date=new Date(a.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});
+    var blocksInfo=a.total_blocks>0?(a.blocks_sold+'/'+a.total_blocks):'—';
+    html+='<tr><td class="truncate" title="'+a.title+'">'+a.title+'</td>'
+      +'<td class="mono">'+(catLabels[a.category]||a.category)+'</td>'
+      +'<td class="mono">€'+Number(a.object_value_eur).toLocaleString('it-IT')+'</td>'
+      +'<td class="hide-mobile"><span class="bo-status '+a.status+'">'+a.status.replace(/_/g,' ')+'</span></td>'
+      +'<td class="mono hide-mobile">'+blocksInfo+'</td>'
+      +'<td class="mono hide-mobile">'+date+'</td>'
+      +'<td><div class="bo-actions">'
+      +'<button class="bo-btn" onclick="viewBoDetail(\''+a.id+'\')">&#9432;</button>';
+    if(a.status==='in_valutazione'){
+      html+='<button class="bo-btn approve" onclick="openApprove(\''+a.id+'\')">&#10003;</button>'
+        +'<button class="bo-btn reject" onclick="openReject(\''+a.id+'\')">&#10005;</button>';
+    }
+    html+='</div></td></tr>';
+  });
+  html+='</tbody></table>';
+  wrap.innerHTML=html;
+}
+
+function viewBoDetail(id){
+  var a=_allAirdrops.find(function(x){return x.id===id});
+  if(!a)return;
+  var panel=document.getElementById('bo-detail-panel');
+  var date=new Date(a.created_at).toLocaleString('it-IT');
+  var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT'):'—';
+  var html='<div class="bo-detail"><div class="bo-detail-header"><div class="bo-detail-title">'+a.title+' <span class="bo-status '+a.status+'">'+a.status.replace(/_/g,' ')+'</span></div><button class="bo-detail-close" onclick="closeBoDetail()">&times;</button></div>';
+  if(a.image_url)html+='<img class="bo-detail-img" src="'+a.image_url+'" alt="">';
+  if(a.description)html+='<div class="bo-detail-desc">'+a.description+'</div>';
+  html+='<div class="bo-detail-grid">'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">ID</div><div class="bo-detail-item-val mono" style="font-size:10px">'+a.id+'</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Categoria</div><div class="bo-detail-item-val">'+a.category+'</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Valore EUR</div><div class="bo-detail-item-val" style="color:var(--gold)">€'+Number(a.object_value_eur).toLocaleString('it-IT')+'</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Prezzo blocco</div><div class="bo-detail-item-val" style="color:var(--aria)">'+(a.block_price_aria||'—')+' ARIA</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Blocchi</div><div class="bo-detail-item-val">'+(a.total_blocks>0?a.blocks_sold+'/'+a.total_blocks:'—')+'</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Deadline</div><div class="bo-detail-item-val">'+dl+'</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Creato</div><div class="bo-detail-item-val">'+date+'</div></div>'
+    +'</div>';
+  if(a.rejection_reason)html+='<div style="color:var(--red);font-size:12px;margin-top:8px">Motivo: '+a.rejection_reason+'</div>';
+  if(a.status==='in_valutazione')html+='<div class="bo-actions" style="margin-top:12px"><button class="bo-btn approve" onclick="openApprove(\''+a.id+'\')"><span class="it">Approva</span><span class="en">Approve</span></button><button class="bo-btn reject" onclick="openReject(\''+a.id+'\')"><span class="it">Rifiuta</span><span class="en">Reject</span></button></div>';
+  html+='</div>';
+  panel.innerHTML=html;
+  panel.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function closeBoDetail(){var p=document.getElementById('bo-detail-panel');if(p)p.innerHTML='';}
+
+// ── Approve ──
+function openApprove(id){
+  var a=_allAirdrops.find(function(x){return x.id===id});
+  if(!a)return;
+  _boTarget=a;
+  document.getElementById('approve-title').textContent=a.title;
+  var val=Number(a.object_value_eur);
+  var sugBlocks=Math.max(10,Math.round(val/4)*2);
+  var sugPrice=Math.max(1,Math.round(val*1.43/sugBlocks));
+  document.getElementById('approve-info').innerHTML='<strong>'+a.title+'</strong><br>Categoria: '+a.category+' &middot; Valore: <strong>€'+val.toLocaleString('it-IT')+'</strong><br>Suggerimento: ~'+sugBlocks+' blocchi × '+sugPrice+' ARIA = €'+(sugBlocks*sugPrice*0.20).toLocaleString('it-IT')+' revenue';
+  document.getElementById('approve-price').value=sugPrice;
+  document.getElementById('approve-blocks').value=sugBlocks;
+  document.getElementById('approve-presale').value='';
+  document.getElementById('approve-deadline').value='';
+  document.getElementById('approve-status').value='presale';
+  document.getElementById('approve-modal').classList.add('active');
+}
+
+async function doApprove(){
+  if(!_boTarget)return;
+  var price=parseInt(document.getElementById('approve-price').value);
+  var blocks=parseInt(document.getElementById('approve-blocks').value);
+  var presale=document.getElementById('approve-presale').value?parseInt(document.getElementById('approve-presale').value):null;
+  var status=document.getElementById('approve-status').value;
+  var deadline=document.getElementById('approve-deadline').value||null;
+  if(!price||price<1||!blocks||blocks<1){alert('Prezzo e blocchi obbligatori');return;}
+  var btn=document.getElementById('approve-ok');
+  btn.disabled=true;
+  var token=await getValidToken();
+  var args={p_airdrop_id:_boTarget.id,p_status:status,p_block_price_aria:price,p_total_blocks:blocks};
+  if(presale)args.p_presale_block_price=presale;
+  if(deadline)args.p_deadline=deadline+'T23:59:59Z';
+  var res=await sbRpc('manager_update_airdrop',args,token);
+  btn.disabled=false;
+  if(res&&res.ok){
+    closeBoModals();
+    showToast('Approvato: '+_boTarget.title);
+    await loadBoData();
+    await loadAirdrops();renderGrid();renderStats();renderCategoryFilter();
+  } else alert('Errore: '+JSON.stringify(res));
+}
+
+// ── Reject ──
+function openReject(id){
+  var a=_allAirdrops.find(function(x){return x.id===id});
+  if(!a)return;
+  _boTarget=a;
+  document.getElementById('reject-title').textContent=a.title;
+  document.getElementById('reject-reason').value='rifiutato_generico';
+  document.getElementById('reject-note').value='';
+  document.getElementById('reject-modal').classList.add('active');
+}
+
+async function doReject(){
+  if(!_boTarget)return;
+  var reason=document.getElementById('reject-reason').value;
+  var note=document.getElementById('reject-note').value.trim()||null;
+  var btn=document.getElementById('reject-ok');
+  btn.disabled=true;
+  var token=await getValidToken();
+  var args={p_airdrop_id:_boTarget.id,p_status:reason};
+  if(note)args.p_rejection_reason=note;
+  var res=await sbRpc('manager_update_airdrop',args,token);
+  btn.disabled=false;
+  if(res&&res.ok){
+    closeBoModals();
+    showToast('Rifiutato: '+_boTarget.title);
+    await loadBoData();
+  } else alert('Errore: '+JSON.stringify(res));
+}
+
+function closeBoModals(){
+  document.getElementById('approve-modal').classList.remove('active');
+  document.getElementById('reject-modal').classList.remove('active');
+  _boTarget=null;
+}
 
 // ── Messages & Toast ──
 function showMsg(type,html){
