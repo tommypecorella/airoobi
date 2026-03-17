@@ -406,6 +406,10 @@ input{font-family:inherit}
   <button class="user-menu-item" onclick="window.location.href='https://airoobi.com/#dashboard'">
     <span class="it">Vai alla Dashboard</span><span class="en">Go to Dashboard</span>
   </button>
+  <button class="user-menu-item" onclick="window.location.href='https://airoobi.com/#vendi'">
+    <span class="it">Vendi</span><span class="en">Sell</span>
+  </button>
+  <button class="user-menu-item" id="dapp-admin-link" onclick="window.location.href='https://airoobi.com/#admin'" style="display:none">Admin</button>
   <button class="user-menu-item" onclick="doLogout()">Logout</button>
 </div>
 
@@ -600,6 +604,7 @@ var _myParts=[];
 var _currentFilter='all';
 var _currentDetail=null;
 var _pendingBuy=null;
+var _isAdmin=false;
 var _isManager=false;
 var _managerCats=[];
 var _allAirdrops=[];
@@ -701,7 +706,7 @@ document.addEventListener('DOMContentLoaded',async function(){
   var token=await getValidToken();
   if(!token)return;
   setupUI();
-  await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkManagerPerms()]);
+  await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles()]);
   renderGrid();
   renderStats();
   renderCategoryFilter();
@@ -1345,14 +1350,23 @@ async function loadValuationCount(){
 }
 
 
-// ── Manager permissions ──
-async function checkManagerPerms(){
+// ── User roles ──
+async function checkUserRoles(){
   var token=await getValidToken();
   if(!token)return;
-  var perms=await sbRpc('get_my_manager_permissions',{},token);
-  if(Array.isArray(perms)&&perms.length>0){
-    _isManager=true;
-    _managerCats=perms.map(function(p){return p.category}); // null = all
+  var roles=await sbRpc('get_my_roles',{},token);
+  if(!Array.isArray(roles))return;
+  roles.forEach(function(r){
+    if(r.role==='admin'){
+      _isAdmin=true;
+      document.getElementById('dapp-admin-link').style.display='';
+    }
+    if(r.role==='evaluator'){
+      _isManager=true;
+      _managerCats.push(r.category); // null = all
+    }
+  });
+  if(_isManager){
     document.getElementById('tab-btn-manage').style.display='';
   }
 }

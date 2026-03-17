@@ -973,9 +973,6 @@ html:not([data-lang]) .video-nosee .it{display:inline}
           <a href="javascript:void(0)" onclick="openDashTab('tessere')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg><span class="it">Portafoglio</span><span class="en">Wallet</span></a>
           <a href="javascript:void(0)" onclick="openDashTab('referral')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Referral</a>
           <a href="javascript:void(0)" onclick="openDashTab('leaderboard')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 8V4H8v4M4 20h16V10H4v10zM12 10v10M8 14H4M20 14h-4"/></svg><span class="it">Classifica</span><span class="en">Leaderboard</span></a>
-          <a href="javascript:void(0)" onclick="openDashTab('sell')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg><span class="it">Vendi</span><span class="en">Sell</span></a>
-          <div class="ad-divider"></div>
-          <a id="avatar-admin-link" href="javascript:void(0)" onclick="closeAvatarDropdown();openAdmin()" style="display:none"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>Admin</a>
           <button onclick="doLogout()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>Logout</button>
         </div>
       </div>
@@ -1029,7 +1026,6 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="javascript:void(0)" onclick="openDashTab('leaderboard');closeBurger()"><span class="it">Classifica</span><span class="en">Leaderboard</span></a>
       <a href="javascript:void(0)" onclick="closeBurger();scrollToSection('#how')"><span class="it">▶ Come funziona un airdrop</span><span class="en">▶ How an airdrop works</span></a>
       <label class="mm-item" style="padding:14px 40px;font-size:11px;letter-spacing:1.5px;color:var(--gray-400);cursor:pointer;display:flex;align-items:center;gap:8px;text-transform:uppercase;font-family:var(--font-b);border-bottom:1px solid rgba(255,255,255,.04)"><span class="it">Cambia foto</span><span class="en">Change photo</span><input type="file" accept="image/*" onchange="uploadAvatar(this)" style="display:none"></label>
-      <a id="mm-admin-link" href="javascript:void(0)" onclick="closeBurger();openAdmin()" style="display:none">Admin</a>
     </div>
     <div class="mm-divider"></div>
     <!-- Site link + logout -->
@@ -1336,7 +1332,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.17-1.24.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.17-1.25.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -2219,7 +2215,6 @@ async function showDashboard(session){
     document.getElementById('overview-points').textContent=p.total_points||0;
     document.getElementById('overview-streak').textContent=p.current_streak||0;
     earnSession=session;
-    checkAdminAccess(email);
     updateNavCounters(session);
     loadProfileInfo();
     loadReferralHistory();
@@ -2432,11 +2427,6 @@ function updateNavAuth(loggedIn, email){
     var formBottom=document.getElementById('waitlist-form-bottom');
     if(formTop)formTop.innerHTML='<button type="button" onclick="openDashTab(\'referral\')" style="flex:1;padding:16px 28px;background:transparent;color:var(--gold);border:1px solid var(--gold);font-family:var(--font-b);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s"><span class="it">Invita</span><span class="en">Invite</span></button><button type="button" onclick="openDashTab(\'earnings\')" style="flex:1;padding:16px 28px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-b);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s"><span class="it">Guadagna</span><span class="en">Earn</span></button>';
     if(formBottom)formBottom.innerHTML='<button type="button" onclick="openDashTab(\'referral\')" style="flex:1;padding:16px 28px;background:transparent;color:var(--gold);border:1px solid var(--gold);font-family:var(--font-b);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s"><span class="it">Invita</span><span class="en">Invite</span></button><button type="button" onclick="openDashTab(\'earnings\')" style="flex:1;padding:16px 28px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-b);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s"><span class="it">Guadagna</span><span class="en">Earn</span></button>';
-    // Show admin link in avatar dropdown + mobile menu if admin
-    if(typeof ADMIN_EMAILS!=='undefined'&&ADMIN_EMAILS.indexOf(email)!==-1){
-      var aal=document.getElementById('avatar-admin-link');if(aal)aal.style.display='';
-      var mmal=document.getElementById('mm-admin-link');if(mmal)mmal.style.display='';
-    }
   }else{
     if(loginBtn)loginBtn.style.display='';
     if(signupBtn){signupBtn.href='/signup.html';signupBtn.onclick=null;signupBtn.innerHTML='<span class="it">Registrati</span><span class="en">Sign Up</span>';}
@@ -3907,25 +3897,6 @@ function closeRoadmapDetail(){
   document.body.style.overflow='';
 }
 
-// Show admin menu item only for admin user
-function checkAdminAccess(email){
-  if(ADMIN_EMAILS.indexOf(email)!==-1){
-    // Add admin link to nav if not there
-    var menu=document.querySelector('.nav-menu');
-    if(menu&&!document.getElementById('nav-admin-btn')){
-      var btn=document.createElement('button');
-      btn.id='nav-admin-btn';
-      btn.className='nav-link-btn';
-      btn.onclick=openAdmin;
-      btn.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>';
-      var loggedIn=document.getElementById('nav-logged-in');
-      menu.insertBefore(btn,loggedIn);
-    }
-    // Show admin link in profile
-    var profileAdminLink=document.getElementById('profile-admin-link');
-    if(profileAdminLink)profileAdminLink.style.display='block';
-  }
-}
 
 // ══════════════════════════════════════════════════
 // 1. AUTO LOGOUT — Session expiry
