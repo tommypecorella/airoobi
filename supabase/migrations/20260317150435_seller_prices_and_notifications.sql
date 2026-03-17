@@ -14,35 +14,32 @@ ALTER TABLE airdrops DROP CONSTRAINT IF EXISTS valid_value;
 ALTER TABLE airdrops ADD CONSTRAINT valid_value CHECK (object_value_eur >= 0);
 
 -- ── 2. Tabella notifications ──
-CREATE TABLE notifications (
+CREATE TABLE IF NOT EXISTS notifications (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES auth.users(id) NOT NULL,
   title TEXT NOT NULL,
   body TEXT,
-  type TEXT DEFAULT 'info',          -- info, success, warning, error
+  type TEXT DEFAULT 'info',
   read BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
-CREATE INDEX idx_notifications_user ON notifications(user_id, created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, created_at DESC);
 
 ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;
 
--- User legge solo le proprie
-CREATE POLICY "Users read own notifications"
-  ON notifications FOR SELECT TO authenticated
-  USING (user_id = auth.uid());
-
--- User può marcare come lette
-CREATE POLICY "Users update own notifications"
-  ON notifications FOR UPDATE TO authenticated
-  USING (user_id = auth.uid())
-  WITH CHECK (user_id = auth.uid());
-
--- Insert via RPC (SECURITY DEFINER) — policy permissiva, controllo nel codice
-CREATE POLICY "System can insert notifications"
-  ON notifications FOR INSERT TO authenticated
-  WITH CHECK (TRUE);
+-- Policies idempotenti
+DO $$ BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users read own notifications' AND tablename = 'notifications') THEN
+    CREATE POLICY "Users read own notifications" ON notifications FOR SELECT TO authenticated USING (user_id = auth.uid());
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'Users update own notifications' AND tablename = 'notifications') THEN
+    CREATE POLICY "Users update own notifications" ON notifications FOR UPDATE TO authenticated USING (user_id = auth.uid()) WITH CHECK (user_id = auth.uid());
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_policies WHERE policyname = 'System can insert notifications' AND tablename = 'notifications') THEN
+    CREATE POLICY "System can insert notifications" ON notifications FOR INSERT TO authenticated WITH CHECK (TRUE);
+  END IF;
+END $$;
 
 -- ── 3. RPC: insert_notification (SECURITY DEFINER) ──
 CREATE OR REPLACE FUNCTION insert_notification(
@@ -65,9 +62,12 @@ BEGIN
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION insert_notification TO authenticated;
+GRANT EXECUTE ON FUNCTION insert_notification(UUID, TEXT, TEXT, TEXT) TO authenticated;
 
--- ── 4. Aggiornare manager_update_airdrop con seller prices + object_value_eur ──
+-- ── 4. Drop old manager_update_airdrop signature first ──
+DROP FUNCTION IF EXISTS manager_update_airdrop(UUID, TEXT, INTEGER, INTEGER, INTEGER, TIMESTAMPTZ, TEXT);
+
+-- ── 5. Recreate with seller prices + object_value_eur ──
 CREATE OR REPLACE FUNCTION manager_update_airdrop(
   p_airdrop_id UUID,
   p_status TEXT,
@@ -88,13 +88,11 @@ DECLARE
   v_airdrop RECORD;
   v_has_perm BOOLEAN;
 BEGIN
-  -- Get airdrop
   SELECT * INTO v_airdrop FROM airdrops WHERE id = p_airdrop_id;
   IF NOT FOUND THEN
     RETURN jsonb_build_object('ok', false, 'error', 'NOT_FOUND');
   END IF;
 
-  -- Check permission: user must have NULL category (all) or matching category
   SELECT EXISTS(
     SELECT 1 FROM airdrop_manager_permissions
     WHERE user_id = auth.uid()
@@ -105,12 +103,10 @@ BEGIN
     RETURN jsonb_build_object('ok', false, 'error', 'NO_PERMISSION');
   END IF;
 
-  -- Validate status transition
   IF p_status NOT IN ('in_valutazione', 'presale', 'sale', 'rifiutato_min500', 'rifiutato_generico', 'dropped', 'closed') THEN
     RETURN jsonb_build_object('ok', false, 'error', 'INVALID_STATUS');
   END IF;
 
-  -- Update
   UPDATE airdrops SET
     status = p_status,
     block_price_aria = COALESCE(p_block_price_aria, block_price_aria),
@@ -128,4 +124,4 @@ BEGIN
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION manager_update_airdrop TO authenticated;
+GRANT EXECUTE ON FUNCTION manager_update_airdrop(UUID, TEXT, INTEGER, INTEGER, INTEGER, TIMESTAMPTZ, TEXT, NUMERIC, NUMERIC, NUMERIC) TO authenticated;
