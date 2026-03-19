@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // ══════════════════════════════════════════════════
 // AIROOBI — Auto Draw Cron
-// Ogni 15 minuti controlla airdrop con auto_draw=true
-// e deadline scaduta, poi esegue il draw.
+// Ogni 15 minuti chiama la RPC check_auto_draw()
+// che trova airdrop con auto_draw=true + deadline scaduta
+// e esegue il draw per ciascuno.
 //
 // Comando: node /home/drskeezu/projects/airoobi/scripts/auto_draw.js
 //
@@ -14,6 +15,8 @@
 const https = require('https');
 const path = require('path');
 const fs = require('fs');
+
+const TIMEOUT_MS = 30000;
 
 // ── Load .env ──
 const envPath = path.join(__dirname, '..', '.env');
@@ -64,9 +67,18 @@ function rpc(fnName, params) {
       let data = '';
       res.on('data', chunk => { data += chunk; });
       res.on('end', () => {
+        if (res.statusCode >= 400) {
+          reject(new Error('HTTP ' + res.statusCode + ': ' + data.substring(0, 300)));
+          return;
+        }
         try { resolve(JSON.parse(data)); }
         catch (e) { reject(new Error('Parse error: ' + data.substring(0, 200))); }
       });
+    });
+
+    req.setTimeout(TIMEOUT_MS, () => {
+      req.destroy();
+      reject(new Error('Request timeout after ' + TIMEOUT_MS + 'ms'));
     });
 
     req.on('error', reject);
@@ -79,55 +91,26 @@ async function main() {
   log('INFO', '── Auto Draw check start ──');
 
   try {
-    // Find airdrops with auto_draw=true, deadline passed, not yet drawn
-    const url = new URL(SB_URL + '/rest/v1/airdrops');
-    url.searchParams.set('auto_draw', 'eq.true');
-    url.searchParams.set('draw_executed_at', 'is.null');
-    url.searchParams.set('status', 'in.(sale,presale,active)');
-    url.searchParams.set('deadline', 'lte.' + new Date().toISOString());
-    url.searchParams.set('select', 'id,title,deadline,status');
+    // Chiama la RPC check_auto_draw che fa tutto server-side
+    // Usa p_service_call=true internamente per bypassare admin check
+    const result = await rpc('check_auto_draw', {});
 
-    const airdrops = await new Promise((resolve, reject) => {
-      const options = {
-        method: 'GET',
-        headers: {
-          'apikey': SB_SERVICE_KEY,
-          'Authorization': 'Bearer ' + SB_SERVICE_KEY
-        }
-      };
-      const req = https.request(url, options, res => {
-        let data = '';
-        res.on('data', chunk => { data += chunk; });
-        res.on('end', () => {
-          try { resolve(JSON.parse(data)); }
-          catch (e) { reject(new Error('Parse error')); }
-        });
-      });
-      req.on('error', reject);
-      req.end();
-    });
-
-    if (!airdrops || !airdrops.length) {
-      log('INFO', 'Nessun airdrop da processare');
+    if (!result || !result.ok) {
+      log('WARN', 'check_auto_draw failed: ' + JSON.stringify(result));
       return;
     }
 
-    log('INFO', airdrops.length + ' airdrop da processare');
-
-    for (const a of airdrops) {
-      log('INFO', 'Eseguo draw per: ' + a.title + ' (id: ' + a.id + ')');
-      try {
-        const result = await rpc('execute_draw', { p_airdrop_id: a.id });
-        if (result && result.ok) {
-          log('INFO', 'Draw OK — success=' + result.success +
-            ', winner=' + (result.winner_id || 'nessuno') +
-            ', ARIA=' + result.aria_incassato +
-            ', NFT=' + result.nft_distribuiti);
-        } else {
-          log('WARN', 'Draw failed: ' + JSON.stringify(result));
-        }
-      } catch (e) {
-        log('ERROR', 'Draw error per ' + a.id + ': ' + e.message);
+    if (result.draws_processed === 0) {
+      log('INFO', 'Nessun airdrop da processare');
+    } else {
+      log('INFO', result.draws_processed + ' draw processati');
+      if (result.results) {
+        result.results.forEach(r => {
+          const res = r.result || {};
+          log('INFO', '  → ' + r.title + ': ' +
+            (res.ok ? 'OK (success=' + res.success + ', winner=' + (res.winner_id || 'nessuno') + ')' :
+             'FAILED (' + (res.error || 'unknown') + ')'));
+        });
       }
     }
   } catch (e) {
@@ -137,4 +120,7 @@ async function main() {
   log('INFO', '── Auto Draw check end ──');
 }
 
-main();
+main().catch(e => {
+  log('ERROR', 'Unhandled error: ' + e.message);
+  process.exit(1);
+});

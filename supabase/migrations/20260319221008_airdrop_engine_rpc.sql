@@ -114,6 +114,15 @@ BEGIN
     LEFT JOIN cat_history ch ON ch.user_id = f1c.user_id
     CROSS JOIN max_cat mc
   ),
+  -- Primo blocco per utente (pre-calcolato per evitare aggregate in window)
+  first_block AS (
+    SELECT
+      ab.owner_id AS user_id,
+      MIN(ab.purchased_at) AS first_purchased_at
+    FROM airdrop_blocks ab
+    WHERE ab.airdrop_id = p_airdrop_id
+    GROUP BY ab.owner_id
+  ),
   -- Seniority: rank registrazione + rank primo blocco
   seniority AS (
     SELECT
@@ -121,15 +130,10 @@ BEGIN
       -- Rank per data registrazione (1 = più vecchio)
       ROW_NUMBER() OVER (ORDER BY p.created_at ASC) AS rank_reg,
       -- Rank per primo blocco in questo airdrop (1 = primo a comprare)
-      ROW_NUMBER() OVER (
-        ORDER BY MIN(ab.purchased_at) ASC
-      ) AS rank_block
+      ROW_NUMBER() OVER (ORDER BY fb.first_purchased_at ASC NULLS LAST) AS rank_block
     FROM f1_calc f1c
     JOIN profiles p ON p.id = f1c.user_id
-    LEFT JOIN airdrop_blocks ab
-      ON ab.airdrop_id = p_airdrop_id
-      AND ab.owner_id = f1c.user_id
-    GROUP BY f1c.user_id, p.created_at
+    LEFT JOIN first_block fb ON fb.user_id = f1c.user_id
   ),
   -- F3: seniority (normalizzato 0→1)
   f3_calc AS (
@@ -335,7 +339,7 @@ GRANT EXECUTE ON FUNCTION get_draw_preview(UUID) TO authenticated;
 -- Segue esattamente il flow della sezione 6 del documento.
 -- ══════════════════════════════════════════════════════════════
 
-CREATE OR REPLACE FUNCTION execute_draw(p_airdrop_id UUID)
+CREATE OR REPLACE FUNCTION execute_draw(p_airdrop_id UUID, p_service_call BOOLEAN DEFAULT false)
 RETURNS JSONB
 LANGUAGE plpgsql
 SECURITY DEFINER
@@ -382,12 +386,14 @@ BEGIN
     RETURN '{"ok":false,"error":"INVALID_STATUS","current_status":"' || v_airdrop.status || '"}'::JSONB;
   END IF;
 
-  -- Verifica admin
-  IF NOT EXISTS (
-    SELECT 1 FROM user_roles
-    WHERE user_id = auth.uid() AND role = 'admin'
-  ) THEN
-    RETURN '{"ok":false,"error":"NOT_ADMIN"}'::JSONB;
+  -- Verifica admin (skip se chiamato da service_role via cron)
+  IF NOT p_service_call THEN
+    IF NOT EXISTS (
+      SELECT 1 FROM user_roles
+      WHERE user_id = auth.uid() AND role = 'admin'
+    ) THEN
+      RETURN '{"ok":false,"error":"NOT_ADMIN"}'::JSONB;
+    END IF;
   END IF;
 
   -- Calcola totale ARIA incassato
@@ -638,7 +644,7 @@ BEGIN
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION execute_draw(UUID) TO authenticated;
+GRANT EXECUTE ON FUNCTION execute_draw(UUID, BOOLEAN) TO authenticated;
 
 
 -- ══════════════════════════════════════════════════════════════
@@ -653,10 +659,11 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 DECLARE
-  v_airdrop    RECORD;
-  v_results    JSONB := '[]'::JSONB;
+  v_airdrop     RECORD;
+  v_results     JSONB := '[]'::JSONB;
   v_draw_result JSONB;
 BEGIN
+  -- Chiamata dal cron via service_role — bypassa admin check con p_service_call=true
   FOR v_airdrop IN
     SELECT id, title
     FROM airdrops
@@ -666,8 +673,8 @@ BEGIN
       AND deadline IS NOT NULL
       AND deadline <= NOW()
   LOOP
-    -- Esegui il draw (la funzione fa tutti i check interni)
-    v_draw_result := execute_draw(v_airdrop.id);
+    -- Esegui il draw con bypass admin (p_service_call = true)
+    v_draw_result := execute_draw(v_airdrop.id, true);
 
     v_results := v_results || jsonb_build_object(
       'airdrop_id', v_airdrop.id,
@@ -684,62 +691,6 @@ BEGIN
 END;
 $$;
 
--- check_auto_draw è chiamata via service_role dal cron, non serve GRANT authenticated
--- Nota: execute_draw dentro check_auto_draw verifica admin via auth.uid().
--- Per il cron (service_role), l'auth.uid() è NULL. Creiamo un override:
-
-CREATE OR REPLACE FUNCTION check_auto_draw_cron()
-RETURNS JSONB
-LANGUAGE plpgsql
-SECURITY DEFINER
-AS $$
-DECLARE
-  v_airdrop     RECORD;
-  v_results     JSONB := '[]'::JSONB;
-  v_aria_inc    INTEGER;
-  v_success     BOOLEAN;
-  v_scores      JSONB;
-  v_draw_result JSONB;
-BEGIN
-  -- Questa funzione bypassa il check admin perché è chiamata dal cron service_role
-  FOR v_airdrop IN
-    SELECT id, title, seller_min_price
-    FROM airdrops
-    WHERE auto_draw = true
-      AND draw_executed_at IS NULL
-      AND status IN ('sale', 'presale', 'active')
-      AND deadline IS NOT NULL
-      AND deadline <= NOW()
-  LOOP
-    -- Segna draw come eseguito per prevenire race condition
-    UPDATE airdrops SET draw_executed_at = NOW()
-    WHERE id = v_airdrop.id AND draw_executed_at IS NULL;
-
-    IF NOT FOUND THEN
-      CONTINUE; -- Qualcun altro ha già eseguito il draw
-    END IF;
-
-    -- Reset draw_executed_at — lo ri-setterà execute_draw_internal
-    UPDATE airdrops SET draw_executed_at = NULL WHERE id = v_airdrop.id;
-
-    -- Usa execute_draw_internal (senza check admin)
-    -- Per semplicità, chiamiamo la logica inline qui
-    -- In realtà il cron Node.js chiamerà la RPC con service_role key
-    v_results := v_results || jsonb_build_object(
-      'airdrop_id', v_airdrop.id,
-      'title', v_airdrop.title,
-      'status', 'queued_for_draw'
-    );
-  END LOOP;
-
-  RETURN jsonb_build_object(
-    'ok', true,
-    'draws_queued', jsonb_array_length(v_results),
-    'results', v_results
-  );
-END;
-$$;
-
 
 -- ══════════════════════════════════════════════════════════════
 -- GRANT & PERMISSIONS
@@ -748,4 +699,3 @@ $$;
 GRANT EXECUTE ON FUNCTION calculate_winner_score(UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION refund_airdrop(UUID) TO authenticated;
 GRANT EXECUTE ON FUNCTION check_auto_draw() TO service_role;
-GRANT EXECUTE ON FUNCTION check_auto_draw_cron() TO service_role;
