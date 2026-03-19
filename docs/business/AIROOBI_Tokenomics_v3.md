@@ -103,12 +103,14 @@ Il prezzo desiderato del venditore serve come riferimento per la valutazione AIR
 
 ## 6. Distribuzione Revenue per Airdrop
 
-| Destinatario | Percentuale | Su €8.500 | Note |
+> Split definitiva — vedi `docs/AIROOBI_Airdrop_Engine_v1.md` per dettagli implementativi.
+
+| Destinatario | Percentuale | Su €1.000 (10.000 ARIA) | Note |
 |---|---|---|---|
-| Venditore P2P | 76,5% | €6.502,50 | Al netto delle fee |
-| Fondo Comune | 22% | €1.870,00 | Sostiene il valore delle Tessere Rendimento |
-| Charity | 1% | €85,00 | DAO, causa selezionata dalla community |
-| Fee Piattaforma | 1,5% | €127,50 | 0,5% valutazione + 1% piattaforma |
+| Venditore P2P | 67,99% | €679,90 | Pagato in KAS, 24-48h dopo draw |
+| Fondo Comune | 22,00% | €220,00 | Sostiene il valore delle Tessere Rendimento |
+| Fee Piattaforma | 10,00% | €100,00 | AIROOBI operational revenue |
+| Charity Pool | 0,01% | €0,10 | Accumulo DAO, causa selezionata dalla community |
 
 ---
 

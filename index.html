@@ -3375,16 +3375,27 @@ async function loadAdminAirdrops(){
     }
     var html='';
     airdrops.forEach(function(a){
-      var statusColor=a.status==='sale'?'#49b583':a.status==='presale'?'var(--gold)':a.status.indexOf('rifiutato')===0?'#ef4444':'var(--gray-400)';
+      var statusColor=a.status==='sale'?'#49b583':a.status==='presale'?'var(--gold)':a.status==='completed'?'#4A9EFF':a.status==='annullato'?'#ef4444':a.status.indexOf('rifiutato')===0?'#ef4444':'var(--gray-400)';
+      var canDraw=(['sale','presale','active'].indexOf(a.status)!==-1)&&!a.draw_executed_at;
+      var isDone=a.draw_executed_at!=null;
       html+='<tr>';
       html+='<td style="font-weight:600">'+escHtml(a.title)+'</td>';
       html+='<td>'+escHtml(a.category||'—')+'</td>';
-      html+='<td style="color:'+statusColor+'">'+escHtml(a.status)+'</td>';
+      html+='<td style="color:'+statusColor+'">'+escHtml(a.status)+(isDone?' ✓':'')+'</td>';
       html+='<td>'+(a.seller_desired_price?'€'+parseFloat(a.seller_desired_price).toFixed(0):'—')+'</td>';
       html+='<td>'+(a.seller_min_price?'€'+parseFloat(a.seller_min_price).toFixed(0):'—')+'</td>';
       html+='<td style="color:var(--gold)">'+(a.object_value_eur?'€'+parseFloat(a.object_value_eur).toFixed(0):'—')+'</td>';
-      html+='<td>'+(a.total_blocks||'—')+'</td>';
-      html+='<td><button onclick="adOpenModal(\''+a.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">MODIFICA</button></td>';
+      html+='<td>'+((a.blocks_sold||0)+'/'+(a.total_blocks||'—'))+'</td>';
+      html+='<td style="display:flex;gap:4px;flex-wrap:wrap">';
+      html+='<button onclick="adOpenModal(\''+a.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">MODIFICA</button>';
+      if(canDraw){
+        html+='<button onclick="adDrawPreview(\''+a.id+'\')" style="background:none;border:1px solid #4A9EFF;color:#4A9EFF;padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px;transition:all .2s" onmouseover="this.style.background=\'#4A9EFF\';this.style.color=\'#000\'" onmouseout="this.style.background=\'none\';this.style.color=\'#4A9EFF\'">ANTEPRIMA</button>';
+        html+='<button onclick="adExecuteDraw(\''+a.id+'\',\''+escHtml(a.title)+'\')" style="background:none;border:1px solid #49b583;color:#49b583;padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px;transition:all .2s" onmouseover="this.style.background=\'#49b583\';this.style.color=\'#000\'" onmouseout="this.style.background=\'none\';this.style.color=\'#49b583\'">DRAW</button>';
+      }
+      if(isDone){
+        html+='<button onclick="adDrawPreview(\''+a.id+'\')" style="background:none;border:1px solid var(--gray-600);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px">RISULTATI</button>';
+      }
+      html+='</td>';
       html+='</tr>';
     });
     tbody.innerHTML=html;
@@ -3416,6 +3427,7 @@ async function adOpenModal(id){
     document.getElementById('ad-deadline').value=a.deadline?a.deadline.substring(0,16):'';
     document.getElementById('ad-status').value=a.status||'in_valutazione';
     document.getElementById('ad-rejection').value=a.rejection_reason||'';
+    document.getElementById('ad-auto-draw').checked=!!a.auto_draw;
     document.getElementById('ad-modal-title').textContent='Modifica: '+a.title;
     document.getElementById('ad-modal-bg').classList.add('active');
   }catch(e){console.error('adOpenModal:',e);showToast('Errore caricamento','error');}
@@ -3461,6 +3473,183 @@ async function adSaveAirdrop(){
       showToast('Errore: '+(result.error||'sconosciuto'),'error');
     }
   }catch(e){console.error('adSave:',e);showToast('Errore salvataggio: '+e.message,'error');}
+}
+
+// ── Draw Engine ──
+async function adDrawPreview(airdropId){
+  var s=getSession();if(!s)return;
+  var modal=document.getElementById('draw-modal-bg');
+  var body=document.getElementById('draw-modal-body');
+  body.innerHTML='<p style="color:var(--gray-400);text-align:center;padding:24px">Calcolo in corso...</p>';
+  document.getElementById('draw-modal-title').textContent='Anteprima Draw';
+  modal.classList.add('active');
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_draw_preview',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId})
+    });
+    var d=await res.json();
+    if(!d||!d.ok){body.innerHTML='<p style="color:#ef4444">Errore: '+(d&&d.error?d.error:'sconosciuto')+'</p>';return;}
+    var h='';
+    // Header info
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px">';
+    h+='<div style="background:var(--gray-900);padding:12px;border:1px solid var(--gray-700)">';
+    h+='<div style="font-size:10px;color:var(--gray-500);letter-spacing:1px;text-transform:uppercase;font-family:var(--font-m)">ARIA Incassato</div>';
+    h+='<div style="font-size:20px;color:#4A9EFF;font-weight:600">'+d.aria_incassato.toLocaleString()+' <span style="font-size:12px;color:var(--gray-400)">ARIA</span></div>';
+    h+='<div style="font-size:12px;color:var(--gray-400)">€'+d.eur_incassato+'</div>';
+    h+='</div>';
+    h+='<div style="background:var(--gray-900);padding:12px;border:1px solid var(--gray-700)">';
+    h+='<div style="font-size:10px;color:var(--gray-500);letter-spacing:1px;text-transform:uppercase;font-family:var(--font-m)">Esito</div>';
+    h+='<div style="font-size:20px;color:'+(d.success?'#49b583':'#ef4444')+';font-weight:600">'+(d.success?'SUCCESSO':'ANNULLAMENTO')+'</div>';
+    if(d.seller_min_price)h+='<div style="font-size:12px;color:var(--gray-400)">Min venditore: €'+d.seller_min_price+'</div>';
+    h+='</div>';
+    h+='</div>';
+    // Split economica
+    if(d.split){
+      h+='<div style="margin-bottom:16px">';
+      h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-m);margin-bottom:8px">SPLIT ECONOMICA</div>';
+      h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">';
+      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-800);text-align:center"><div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">VENDITORE</div><div style="color:#49b583;font-weight:600">€'+d.split.venditore_eur+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-800);text-align:center"><div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">FONDO</div><div style="color:var(--gold);font-weight:600">€'+d.split.fondo_eur+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-800);text-align:center"><div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">AIROOBI</div><div style="color:var(--white);font-weight:600">€'+d.split.airoobi_eur+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-800);text-align:center"><div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">CHARITY</div><div style="color:var(--gray-300);font-weight:600">€'+d.split.charity_eur+'</div></div>';
+      h+='</div></div>';
+    }
+    // Classifica score
+    if(d.scores&&d.scores.length){
+      h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-m);margin-bottom:8px">CLASSIFICA SCORE</div>';
+      h+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
+      h+='<thead><tr style="border-bottom:1px solid var(--gray-700)">';
+      h+='<th style="text-align:left;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">#</th>';
+      h+='<th style="text-align:left;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">UTENTE</th>';
+      h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">BLOCCHI</th>';
+      h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">F1</th>';
+      h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">F2</th>';
+      h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">F3</th>';
+      h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">SCORE</th>';
+      h+='</tr></thead><tbody>';
+      d.scores.forEach(function(sc){
+        var isWinner=sc.rank===1&&d.success;
+        var rowBg=isWinner?'rgba(73,181,131,.1)':'transparent';
+        var rowBorder=isWinner?'1px solid rgba(73,181,131,.3)':'none';
+        h+='<tr style="background:'+rowBg+';border:'+rowBorder+'">';
+        h+='<td style="padding:6px 8px;color:var(--gray-400)">'+(isWinner?'👑 ':'')+sc.rank+'</td>';
+        h+='<td style="padding:6px 8px;color:var(--gray-300);font-family:var(--font-mono);font-size:11px">'+sc.user_id.substring(0,8)+'...</td>';
+        h+='<td style="padding:6px 8px;color:#4A9EFF;text-align:right">'+sc.blocks+'</td>';
+        h+='<td style="padding:6px 8px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f1).toFixed(3)+'</td>';
+        h+='<td style="padding:6px 8px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f2).toFixed(3)+'</td>';
+        h+='<td style="padding:6px 8px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f3).toFixed(3)+'</td>';
+        h+='<td style="padding:6px 8px;color:'+(isWinner?'#49b583':'var(--white)')+';text-align:right;font-weight:600">'+parseFloat(sc.score).toFixed(4)+'</td>';
+        h+='</tr>';
+      });
+      h+='</tbody></table>';
+    }
+    if(d.draw_executed){
+      h+='<p style="color:var(--gray-500);font-size:11px;margin-top:12px;font-style:italic">Draw già eseguito</p>';
+    }
+    body.innerHTML=h;
+  }catch(e){
+    console.error('drawPreview:',e);
+    body.innerHTML='<p style="color:#ef4444">Errore: '+e.message+'</p>';
+  }
+}
+
+async function adExecuteDraw(airdropId,title){
+  if(!confirm('⚠️ ESEGUI DRAW per "'+title+'"?\n\nQuesta azione è IRREVERSIBILE.\n- Seleziona il vincitore\n- Distribuisce NFT ai perdenti\n- Aggiorna il treasury\n\nConfermi?'))return;
+  if(!confirm('Seconda conferma: sei sicuro di eseguire il draw?'))return;
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/execute_draw',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId})
+    });
+    var d=await res.json();
+    if(!d||!d.ok){showToast('Errore draw: '+(d&&d.error?d.error:'sconosciuto'),'error');return;}
+    showToast('Draw completato! '+(d.success?'Vincitore selezionato':'Airdrop annullato — ARIA rimborsati'),'success');
+    // Mostra risultati nel modal
+    var modal=document.getElementById('draw-modal-bg');
+    var body=document.getElementById('draw-modal-body');
+    document.getElementById('draw-modal-title').textContent='Risultati Draw';
+    var h='<div style="text-align:center;padding:16px">';
+    h+='<div style="font-size:28px;margin-bottom:8px">'+(d.success?'🏆':'❌')+'</div>';
+    h+='<div style="font-size:18px;font-weight:600;color:'+(d.success?'#49b583':'#ef4444')+';margin-bottom:16px">'+(d.success?'AIRDROP COMPLETATO':'AIRDROP ANNULLATO')+'</div>';
+    if(d.success&&d.winner_id){
+      h+='<div style="background:rgba(73,181,131,.1);border:1px solid rgba(73,181,131,.3);padding:12px;margin-bottom:12px">';
+      h+='<div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m);letter-spacing:1px">VINCITORE</div>';
+      h+='<div style="font-family:var(--font-mono);font-size:13px;color:#49b583;margin-top:4px">'+d.winner_id+'</div>';
+      h+='<div style="font-size:12px;color:var(--gray-400);margin-top:4px">Score: '+d.winner_score+'</div>';
+      h+='</div>';
+    }
+    h+='<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px">';
+    h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">ARIA</div><div style="color:#4A9EFF;font-weight:600">'+d.aria_incassato.toLocaleString()+'</div></div>';
+    h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">EUR</div><div style="color:var(--gold);font-weight:600">€'+d.eur_incassato+'</div></div>';
+    h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">NFT DISTRIBUITI</div><div style="color:var(--white);font-weight:600">'+d.nft_distribuiti+'</div></div>';
+    h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">FONDO +</div><div style="color:var(--gold);font-weight:600">€'+d.split.fondo_eur+'</div></div>';
+    h+='</div>';
+    if(d.refund){
+      h+='<div style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);padding:10px;margin-bottom:12px">';
+      h+='<div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">RIMBORSO</div>';
+      h+='<div style="color:#ef4444;font-size:13px">'+d.refund.users_refunded+' utenti — '+d.refund.total_aria_refunded+' ARIA rimborsati</div>';
+      h+='</div>';
+    }
+    h+='</div>';
+    body.innerHTML=h;
+    modal.classList.add('active');
+    loadAdminAirdrops();
+  }catch(e){
+    console.error('executeDraw:',e);
+    showToast('Errore draw: '+e.message,'error');
+  }
+}
+
+function drawModalClose(){document.getElementById('draw-modal-bg').classList.remove('active');}
+
+// ── Engine Config ──
+async function loadEngineConfig(){
+  var s=getSession();if(!s)return;
+  try{
+    var rows=await sbGet('airdrop_config?order=key.asc',s.access_token);
+    var tbody=document.getElementById('engine-config-body');
+    if(!rows||!rows.length){tbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessuna config trovata</td></tr>';return;}
+    var h='';
+    rows.forEach(function(r){
+      var isSplit=r.key.indexOf('split_')===0;
+      var isWeight=r.key.indexOf('score_')===0;
+      var isNft=r.key.indexOf('nft_')===0;
+      var tagColor=isSplit?'#49b583':isWeight?'#4A9EFF':isNft?'var(--gold)':'var(--gray-400)';
+      var tag=isSplit?'SPLIT':isWeight?'SCORE':isNft?'NFT':'SYS';
+      h+='<tr>';
+      h+='<td><span style="background:'+tagColor+';color:#000;padding:1px 5px;font-size:9px;font-family:var(--font-m);letter-spacing:1px;margin-right:6px">'+tag+'</span>'+escHtml(r.key)+'</td>';
+      h+='<td><input type="text" value="'+escHtml(r.value)+'" data-key="'+escHtml(r.key)+'" class="engine-cfg-input" style="background:var(--gray-900);border:1px solid var(--gray-700);color:var(--white);padding:4px 8px;font-family:var(--font-mono);font-size:12px;width:100px"></td>';
+      h+='<td style="color:var(--gray-500);font-size:11px">'+escHtml(r.description||'')+'</td>';
+      h+='</tr>';
+    });
+    tbody.innerHTML=h;
+  }catch(e){
+    console.error('loadEngineConfig:',e);
+  }
+}
+
+async function saveEngineConfig(){
+  var s=getSession();if(!s)return;
+  var inputs=document.querySelectorAll('.engine-cfg-input');
+  var updates=[];
+  inputs.forEach(function(inp){updates.push({key:inp.dataset.key,value:inp.value});});
+  try{
+    for(var i=0;i<updates.length;i++){
+      await fetch(SB_URL+'/rest/v1/airdrop_config?key=eq.'+encodeURIComponent(updates[i].key),{
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({value:updates[i].value,updated_at:new Date().toISOString()})
+      });
+    }
+    showToast('Engine config salvata','success');
+  }catch(e){
+    console.error('saveEngineConfig:',e);
+    showToast('Errore salvataggio config: '+e.message,'error');
+  }
 }
 
 // ── Cost Tracker ──
@@ -5850,16 +6039,54 @@ async function loadReferralHistory(){
         <option value="rifiutato_generico">Rifiutato (generico)</option>
         <option value="dropped">Dropped</option>
         <option value="closed">Closed</option>
+        <option value="completed">Completed</option>
+        <option value="annullato">Annullato</option>
       </select>
 
       <label>Motivo rifiuto <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(se rifiutato)</span></label>
       <input type="text" id="ad-rejection" placeholder="">
+
+      <div style="margin-top:12px;display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="ad-auto-draw" style="width:auto;accent-color:var(--gold)">
+        <label style="margin:0;font-size:12px;color:var(--gray-300)">Auto Draw <span style="color:var(--gray-500);text-transform:none;letter-spacing:0">(draw automatico alla deadline)</span></label>
+      </div>
 
       <div class="ct-modal-actions">
         <button class="ct-btn-cancel" onclick="adCloseModal()">ANNULLA</button>
         <button class="ct-btn-save" onclick="adSaveAirdrop()">SALVA</button>
       </div>
     </div>
+  </div>
+
+  <!-- Draw Preview/Results Modal -->
+  <div class="ct-modal-bg" id="draw-modal-bg">
+    <div class="ct-modal" style="max-width:640px">
+      <h3 id="draw-modal-title">Draw</h3>
+      <div id="draw-modal-body" style="max-height:60vh;overflow-y:auto">
+        <p style="color:var(--gray-400);text-align:center;padding:24px">Caricamento...</p>
+      </div>
+      <div class="ct-modal-actions" style="margin-top:16px">
+        <button class="ct-btn-cancel" onclick="drawModalClose()">CHIUDI</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ ENGINE CONFIG ═══ -->
+  <div class="admin-section">
+    <h2>Engine Config</h2>
+    <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Pesi algoritmo vincitore, split economica, divisori NFT per fase. <span style="color:#ef4444">Modificare con cautela.</span></p>
+    <div style="margin-bottom:12px">
+      <button onclick="loadEngineConfig()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;margin-right:8px">RICARICA</button>
+      <button onclick="saveEngineConfig()" style="background:none;border:1px solid #49b583;color:#49b583;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;transition:all .2s" onmouseover="this.style.background='#49b583';this.style.color='#000'" onmouseout="this.style.background='none';this.style.color='#49b583'">SALVA CONFIG</button>
+    </div>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Chiave</th><th>Valore</th><th>Descrizione</th></tr>
+      </thead>
+      <tbody id="engine-config-body">
+        <tr><td colspan="3" style="color:var(--gray-400)">Clicca RICARICA per caricare la config</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- Cost Tracker Modal -->

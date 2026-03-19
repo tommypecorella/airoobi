@@ -16,3 +16,6 @@
 
 # Report email ogni 2 ore (minuto 0, ogni 2 ore)
 0 */2 * * * /usr/bin/node /home/drskeezu/projects/airoobi/scripts/report.js >> /home/drskeezu/projects/airoobi/scripts/report.log 2>&1
+
+# Auto Draw — controlla ogni 15 minuti se ci sono airdrop con auto_draw + deadline scaduta
+*/15 * * * * /usr/bin/node /home/drskeezu/projects/airoobi/scripts/auto_draw.js >> /home/drskeezu/projects/airoobi/scripts/auto_draw.log 2>&1
