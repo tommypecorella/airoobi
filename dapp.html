@@ -2355,10 +2355,8 @@ function showToast(html){
 // ── Wallet tab ──
 async function loadDappWallet(){
   var token=await getValidToken();
-  if(!token)return;
-  var sess=JSON.parse(localStorage.getItem('sb_session')||'null');
-  if(!sess||!sess.user)return;
-  var userId=sess.user.id;
+  if(!token||!_session||!_session.user)return;
+  var userId=_session.user.id;
 
   // ARIA balance
   var el=document.getElementById('dapp-wcard-aria-amount');
