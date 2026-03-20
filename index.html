@@ -1334,7 +1334,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.20-1.32.0 · 19:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.20-1.33.0 · 19:15 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1438,7 +1438,7 @@ async function sbPost(table,data){
   return res
 }
 async function sbCount(){
-  const res=await fetch(SUPABASE_URL+'/rest/v1/profiles?select=id',{
+  const res=await fetch(SUPABASE_URL+'/rest/v1/profiles?select=id&is_test_user=not.is.true',{
     headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
   });
   if(res.ok){const d=await res.json();return d.length}
