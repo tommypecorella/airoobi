@@ -248,10 +248,10 @@ footer{padding:60px 0;border-top:1px solid var(--gray-700)}
 .admin-close{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:5px 14px;font-size:11px;cursor:pointer;transition:all .2s;font-family:var(--font-m);letter-spacing:1px}
 .admin-close:hover{border-color:var(--gold);color:var(--gold)}
 .admin-layout{display:contents}
-.admin-sidebar{grid-area:side;background:var(--gray-900);border-right:1px solid var(--gray-800);overflow-y:auto;overflow-x:hidden;padding:16px 0}
+.admin-sidebar{grid-area:side;background:var(--gray-900);border-right:1px solid var(--gray-800);overflow:hidden;padding:16px 0;min-width:0}
 .admin-sidebar-group{margin-bottom:8px}
 .admin-sidebar-label{font-family:var(--font-m);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-600);padding:16px 20px 6px;display:block}
-.admin-sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:.3px;color:var(--gray-400);cursor:pointer;transition:all .15s;border-left:3px solid transparent;background:none;border-top:none;border-bottom:none;border-right:none;width:100%;text-align:left}
+.admin-sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:.3px;color:var(--gray-400);cursor:pointer;transition:all .15s;border-left:3px solid transparent;background:none;border-top:none;border-bottom:none;border-right:none;width:100%;max-width:100%;box-sizing:border-box;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .admin-sidebar-item:hover{color:var(--white);background:rgba(255,255,255,.03)}
 .admin-sidebar-item:focus,.admin-sidebar-item:focus-visible,.admin-sidebar-item:active{outline:0!important;outline-style:none!important;box-shadow:none!important;-webkit-appearance:none!important;-webkit-tap-highlight-color:transparent!important}
 .admin-sidebar-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(184,150,12,.04)}
