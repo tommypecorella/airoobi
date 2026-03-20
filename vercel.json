@@ -9,6 +9,8 @@
     { "source": "/miei-airdrop", "destination": "/dapp.html" },
     { "source": "/proponi", "destination": "/dapp.html" },
     { "source": "/referral-dapp", "destination": "/dapp.html" },
+    { "source": "/portafoglio-dapp", "destination": "/dapp.html" },
+    { "source": "/archivio", "destination": "/dapp.html" },
     { "source": "/gestione", "destination": "/dapp.html" },
     { "source": "/dashboard", "destination": "/index.html" },
     { "source": "/profilo", "destination": "/index.html" },

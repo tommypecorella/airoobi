@@ -142,26 +142,6 @@ section{padding:clamp(80px,12vw,160px) 0;position:relative}
 .step-arrow{position:absolute;right:16px;top:50%;transform:translateY(-50%);color:var(--gold-dim);font-size:24px}
 @media(max-width:768px){.step-arrow{display:none}}
 
-/* ── PAST AIRDROPS ── */
-.past-airdrops{background:var(--black);padding:100px 0}
-.past-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px;margin-top:48px}
-.past-card{background:rgba(255,255,255,.02);border:1px solid var(--gray-800);overflow:hidden;transition:border-color .3s,transform .3s}
-.past-card:hover{border-color:var(--gold);transform:translateY(-2px)}
-.past-card-img{width:100%;height:180px;object-fit:cover;background:var(--gray-900);display:block}
-.past-card-body{padding:16px 20px 20px}
-.past-card-cat{font-family:var(--font-m);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
-.past-card-title{font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white);margin-bottom:12px;line-height:1.3}
-.past-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.past-card-stat{display:flex;flex-direction:column}
-.past-card-stat-label{font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-500)}
-.past-card-stat-value{font-family:var(--font-m);font-size:13px;color:var(--white);font-weight:600}
-.past-card-winner{margin-top:12px;padding-top:12px;border-top:1px solid var(--gray-800);display:flex;align-items:center;gap:8px}
-.past-card-winner-dot{width:8px;height:8px;background:var(--kas);border-radius:50%;flex-shrink:0}
-.past-card-winner-id{font-family:var(--font-m);font-size:11px;color:var(--kas);letter-spacing:.5px}
-.past-card-date{font-family:var(--font-m);font-size:10px;color:var(--gray-500);margin-top:8px}
-.past-empty{text-align:center;color:var(--gray-500);font-size:14px;padding:48px 0}
-@media(max-width:768px){.past-grid{grid-template-columns:1fr 1fr;gap:12px}.past-card-img{height:140px}.past-card-body{padding:12px 14px 16px}.past-card-title{font-size:15px}}
-@media(max-width:480px){.past-grid{grid-template-columns:1fr}.past-card-img{height:180px}}
 
 /* ── DIFFERENT (white) ── */
 .different{background:var(--white);color:var(--black)}
@@ -1184,17 +1164,6 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 </div>
 </section>
 
-<!-- ═══ PAST AIRDROPS ═══ -->
-<section class="past-airdrops" id="past-airdrops">
-<div class="container reveal">
-  <span class="section-label"><span class="it">Airdrop completati</span><span class="en">Completed airdrops</span></span>
-  <h2 class="section-title"><span class="it">Chi ha già <em>realizzato il suo desiderio.</em></span><span class="en">Those who already <em>made their wish real.</em></span></h2>
-  <p class="section-text"><span class="it">Ogni airdrop completato è trasparente. Oggetto, partecipanti, chi ha ottenuto l'oggetto — tutto verificabile.</span><span class="en">Every completed airdrop is transparent. Object, participants, who got it — all verifiable.</span></p>
-  <div class="past-grid" id="past-airdrops-grid">
-    <div class="past-empty"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
-  </div>
-</div>
-</section>
 
 <!-- ═══ DIFFERENT ═══ -->
 <section class="different" id="why">
@@ -1365,7 +1334,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.20-1.31.0 · 18:30 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.20-1.32.0 · 19:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1423,7 +1392,6 @@ async function track(event, props={}) {
 // Track pageview al caricamento
 window.addEventListener('DOMContentLoaded', ()=>{
   track('pageview', {lang: document.documentElement.lang || 'it'});
-  loadPastAirdrops();
   // Path + hash routing
   var PATH_ROUTES={
     '/dashboard':'overview','/profilo':'overview',
@@ -1475,55 +1443,6 @@ async function sbCount(){
   });
   if(res.ok){const d=await res.json();return d.length}
   return 0
-}
-
-// ── Past Airdrops (public landing) ──
-var AIRDROP_CAT_LABELS={mobile:'Mobile / Tech',tech:'Tech / Strumenti',luxury:'Luxury / 2 Ruote',ultra_luxury:'Ultra Luxury'};
-async function loadPastAirdrops(){
-  var grid=document.getElementById('past-airdrops-grid');
-  if(!grid)return;
-  try{
-    var res=await fetch(SUPABASE_URL+'/rest/v1/rpc/get_completed_airdrops',{
-      method:'POST',
-      headers:{'apikey':SUPABASE_KEY,'Content-Type':'application/json'},
-      body:'{}'
-    });
-    var data=await res.json();
-    if(!data||!data.length){
-      var isIt=document.documentElement.lang!=='en';
-      grid.innerHTML='<div class="past-empty">'+(isIt?'Nessun airdrop completato ancora. Il primo è in arrivo!':'No completed airdrops yet. The first one is coming!')+'</div>';
-      return;
-    }
-    var isIt=document.documentElement.lang!=='en';
-    var html='';
-    data.forEach(function(a){
-      var esc=function(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''};
-      var catLabel=AIRDROP_CAT_LABELS[a.category]||a.category||'—';
-      var imgSrc=a.image_url||'';
-      var imgHtml=imgSrc?'<img class="past-card-img" src="'+esc(imgSrc)+'" alt="'+esc(a.title)+'" loading="lazy">':'<div class="past-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px">'+(isIt?'NESSUNA IMMAGINE':'NO IMAGE')+'</div>';
-      var drawDate=a.draw_executed_at?new Date(a.draw_executed_at).toLocaleDateString(isIt?'it-IT':'en-GB',{day:'numeric',month:'short',year:'numeric'}):'—';
-      var winnerId=a.winner_public_id||'—';
-      html+='<div class="past-card">';
-      html+=imgHtml;
-      html+='<div class="past-card-body">';
-      html+='<div class="past-card-cat">'+esc(catLabel)+'</div>';
-      html+='<div class="past-card-title">'+esc(a.title)+'</div>';
-      html+='<div class="past-card-stats">';
-      html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'PARTECIPANTI':'PARTICIPANTS')+'</span><span class="past-card-stat-value">'+((a.partecipanti||0).toLocaleString())+'</span></div>';
-      html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'BLOCCHI':'BLOCKS')+'</span><span class="past-card-stat-value">'+(a.blocks_sold||0)+'/'+(a.total_blocks||0)+'</span></div>';
-      html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'VALORE RACCOLTO':'VALUE RAISED')+'</span><span class="past-card-stat-value" style="color:var(--kas)">&euro;'+parseFloat(a.eur_raccolti||0).toFixed(2)+'</span></div>';
-      html+='<div class="past-card-stat"><span class="past-card-stat-label">DRAW</span><span class="past-card-stat-value">'+drawDate+'</span></div>';
-      html+='</div>';
-      if(winnerId!=='—'){
-        html+='<div class="past-card-winner"><div class="past-card-winner-dot"></div><span class="past-card-winner-id">'+(isIt?'Ottenuto da ':'Got by ')+esc(winnerId)+'</span></div>';
-      }
-      html+='</div></div>';
-    });
-    grid.innerHTML=html;
-  }catch(e){
-    console.error('loadPastAirdrops:',e);
-    grid.innerHTML='<div class="past-empty">Errore caricamento</div>';
-  }
 }
 
 // ── Waitlist handler ──

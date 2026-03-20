@@ -452,6 +452,73 @@ input{font-family:inherit}
 @media(min-width:800px){
   .topbar{padding:0 32px}
 }
+
+/* ── WALLET CARDS (from index.html) ── */
+.wallet-section-label{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gray-400);text-transform:uppercase;margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--gray-800);display:flex;align-items:center;gap:10px}
+.wallet-section-label span{color:var(--gray-700)}
+.wallet-cards{display:flex;flex-direction:column;gap:16px;margin-bottom:32px}
+.wcard{position:relative;border-radius:2px;padding:20px 24px;overflow:hidden;cursor:pointer;transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column;animation:wcardIn .55s ease both}
+.wcard:nth-child(1){animation-delay:.04s}.wcard:nth-child(2){animation-delay:.1s}.wcard:nth-child(3){animation-delay:.16s}
+@keyframes wcardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.wcard:hover{transform:translateX(4px)}
+.wcard-locked{opacity:.32;pointer-events:none}
+.wcard-aria{background:linear-gradient(135deg,#020810,#040c1a 60%,#020608);box-shadow:0 8px 40px rgba(74,158,255,.08),0 0 0 1px rgba(74,158,255,.18)}
+.wcard-aria:hover{box-shadow:0 12px 55px rgba(74,158,255,.16),0 0 0 1px rgba(74,158,255,.4)}
+.wcard-rendimento{background:linear-gradient(135deg,#0c0900,#1c1400 60%,#0a0800);box-shadow:0 8px 40px rgba(184,150,12,.1),0 0 0 1px rgba(184,150,12,.25)}
+.wcard-rendimento:hover{box-shadow:0 12px 55px rgba(184,150,12,.2),0 0 0 1px rgba(184,150,12,.5)}
+.wcard-shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 38%,rgba(184,150,12,.04) 50%,transparent 62%);animation:wshimmer 4s ease-in-out infinite;pointer-events:none}
+@keyframes wshimmer{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
+.wcard-kaspa{background:linear-gradient(135deg,#010d0b,#021510 60%,#010a07);box-shadow:0 8px 40px rgba(73,234,203,.05),0 0 0 1px rgba(73,234,203,.14)}
+.wcard-kaspa:hover{box-shadow:0 12px 55px rgba(73,234,203,.12),0 0 0 1px rgba(73,234,203,.35)}
+.wcard-ring{position:absolute;border-radius:50%;pointer-events:none;border-width:1px;border-style:solid}
+.wcard-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.wcard-title-group{display:flex;flex-direction:column;gap:3px}
+.wcard-label{font-family:var(--font-m);font-size:10px;letter-spacing:3px;text-transform:uppercase;line-height:1}
+.wcard-sublabel{font-family:var(--font-h);font-size:12px;font-style:italic;opacity:.45}
+.wcard-icons{display:flex;align-items:center;gap:8px}
+.wcard-badge{font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;border:1px solid;background:rgba(0,0,0,.6)}
+.wcard-chip{width:30px;height:22px;border:1px solid rgba(255,255,255,.1);border-radius:3px;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:4px;background:rgba(255,255,255,.03);flex-shrink:0}
+.wcard-chip-dot{border-radius:1px;background:currentColor}
+.wcard-chip-dot:nth-child(1){opacity:.35}.wcard-chip-dot:nth-child(2){opacity:.15}.wcard-chip-dot:nth-child(3){opacity:.2}.wcard-chip-dot:nth-child(4){opacity:.4}
+.wcard-body{display:flex;align-items:baseline;gap:12px;margin-bottom:0}
+.wcard-amount-block{display:flex;flex-direction:column;gap:4px}
+.wcard-desc{font-family:var(--font-b);font-size:12px;line-height:1.6;color:rgba(255,255,255,.42);margin-top:14px;padding-top:12px;border-top:1px solid rgba(255,255,255,.06);flex:1}
+.wcard-amount{font-family:var(--font-m);font-size:clamp(30px,3.5vw,48px);font-weight:300;letter-spacing:-3px;line-height:1}
+.wcard-unit{font-family:var(--font-m);font-size:9px;letter-spacing:2px;opacity:.35}
+.wcard-footer{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,.05)}
+.wcard-serial{font-family:var(--font-m);font-size:10px;letter-spacing:2px;opacity:.25}
+.wcard-holder{font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.25}
+.wallet-flow{display:flex;align-items:center;border:1px solid var(--gray-800);background:var(--gray-900);padding:18px 24px;margin-bottom:32px;gap:0}
+.wflow-node{display:flex;flex-direction:column;gap:3px;flex:1}
+.wflow-icon{font-family:var(--font-m);font-size:9px;letter-spacing:1px}
+.wflow-label{font-family:var(--font-h);font-size:17px;font-weight:300;font-style:italic}
+.wflow-desc{font-family:var(--font-m);font-size:9px;letter-spacing:.5px}
+.wflow-arrow{padding:0 16px;font-size:16px;color:var(--gray-700);flex-shrink:0}
+@media(max-width:768px){
+  .wallet-cards{grid-template-columns:1fr}
+  .wcard{aspect-ratio:auto;min-height:160px}
+  .wallet-flow{flex-direction:column;gap:8px;align-items:flex-start}
+  .wflow-arrow{transform:rotate(90deg);padding:4px 0}
+}
+
+/* ── PAST AIRDROPS / ARCHIVE ── */
+.past-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.past-card{background:rgba(255,255,255,.02);border:1px solid var(--gray-800);overflow:hidden;transition:border-color .3s,transform .3s}
+.past-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.past-card-img{width:100%;height:180px;object-fit:cover;background:var(--gray-900);display:block}
+.past-card-body{padding:16px 20px 20px}
+.past-card-cat{font-family:var(--font-m);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.past-card-title{font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white);margin-bottom:12px;line-height:1.3}
+.past-card-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.past-card-stat{display:flex;flex-direction:column}
+.past-card-stat-label{font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400)}
+.past-card-stat-value{font-family:var(--font-m);font-size:13px;color:var(--white);font-weight:600}
+.past-card-winner{margin-top:12px;padding-top:12px;border-top:1px solid var(--gray-800);display:flex;align-items:center;gap:8px}
+.past-card-winner-dot{width:8px;height:8px;background:var(--kas);border-radius:50%;flex-shrink:0}
+.past-card-winner-id{font-family:var(--font-m);font-size:11px;color:var(--kas);letter-spacing:.5px}
+.past-empty{text-align:center;color:var(--gray-400);font-size:14px;padding:48px 0}
+@media(max-width:768px){.past-grid{grid-template-columns:1fr 1fr;gap:12px}.past-card-img{height:140px}.past-card-body{padding:12px 14px 16px}.past-card-title{font-size:15px}}
+@media(max-width:480px){.past-grid{grid-template-columns:1fr}.past-card-img{height:180px}}
 </style>
 </head>
 <body>
@@ -471,6 +538,14 @@ input{font-family:inherit}
     <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="it">I miei</span><span class="en">My drops</span>
+    </a>
+    <a href="/portafoglio-dapp" data-page="wallet" onclick="navigateTo('wallet',event)">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+      <span class="it">Portafoglio</span><span class="en">Wallet</span>
+    </a>
+    <a href="/archivio" data-page="archive" onclick="navigateTo('archive',event)">
+      <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+      <span class="it">Archivio</span><span class="en">Archive</span>
     </a>
     <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -506,6 +581,14 @@ input{font-family:inherit}
   <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
+  </a>
+  <a href="/portafoglio-dapp" data-page="wallet" onclick="navigateTo('wallet',event)">
+    <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+    <span class="it">Portafoglio</span><span class="en">Wallet</span>
+  </a>
+  <a href="/archivio" data-page="archive" onclick="navigateTo('archive',event)">
+    <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
+    <span class="it">Archivio</span><span class="en">Archive</span>
   </a>
   <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
     <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -748,6 +831,168 @@ input{font-family:inherit}
       <div id="dapp-ref-inviter-info">
         <p style="font-size:13px;color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></p>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ WALLET TAB ═══ -->
+  <div id="tab-wallet" style="display:none">
+
+    <div class="wallet-section-label"><span class="it">Le tue Tessere</span><span class="en">Your Cards</span> <span>· guadagna ARIA · riscuoti in KAS</span></div>
+    <div class="wallet-cards">
+
+      <!-- TESSERA COIN — ARIA -->
+      <div class="wcard wcard-aria" id="dapp-wcard-aria">
+        <div class="wcard-ring" style="width:350px;height:350px;right:-100px;bottom:-100px;border-color:rgba(74,158,255,.04)"></div>
+        <div class="wcard-header">
+          <div class="wcard-title-group">
+            <div class="wcard-label" style="color:var(--aria)"><span class="it">Tessera Coin</span><span class="en">Coin Card</span></div>
+            <div class="wcard-sublabel" style="color:var(--aria)"><span class="it">Il tuo ARIA</span><span class="en">Your ARIA</span></div>
+          </div>
+          <div class="wcard-icons">
+            <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)"><span class="it">Guadagno</span><span class="en">Earning</span></div>
+            <div class="wcard-chip" style="border-color:rgba(74,158,255,.18)">
+              <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
+              <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="wcard-body">
+          <div class="wcard-amount-block">
+            <div class="wcard-amount" style="color:var(--aria)" id="dapp-wcard-aria-amount">—</div>
+            <div class="wcard-unit" style="color:rgba(74,158,255,.5)"><span class="it">ARIA ACCUMULATI</span><span class="en">ARIA ACCUMULATED</span></div>
+          </div>
+          <div style="font-size:11px;color:var(--gray-400);margin-top:8px;font-style:italic;line-height:1.4">
+            <span class="it">Gli ARIA sono attualmente simbolici — il Treasury si attiverà al lancio della piattaforma.</span>
+            <span class="en">ARIA are currently symbolic — the Treasury will activate at platform launch.</span>
+          </div>
+        </div>
+        <div class="wcard-desc">
+          <span class="it">Il tuo portafoglio ARIA. Ricaricato ogni volta che guadagni — check-in, referral, bonus. Mostra l'importo totale disponibile: puoi usarne parte o tutto per comprare blocchi di partecipazione agli airdrop.</span>
+          <span class="en">Your ARIA wallet. Recharged every time you earn — check-ins, referrals, bonuses. Shows your total available balance: use part or all of it to buy airdrop participation blocks.</span>
+        </div>
+        <div class="wcard-footer">
+          <div class="wcard-serial" style="color:rgba(74,158,255,.3)">ALPHA · #<span id="dapp-wcard-aria-serial">—</span></div>
+          <div class="wcard-holder" style="color:rgba(74,158,255,.3)"><span class="it">Check-in · Referral · Bonus</span><span class="en">Check-in · Referral · Bonus</span></div>
+          <div style="font-family:var(--font-m);font-size:11px;color:rgba(74,158,255,.2);letter-spacing:3px">ARIA</div>
+        </div>
+      </div>
+
+      <!-- TESSERA RENDIMENTO — GOLD NFT -->
+      <div class="wcard wcard-rendimento" id="dapp-wcard-rendimento" style="display:none">
+        <div class="wcard-shimmer"></div>
+        <div class="wcard-ring" style="width:300px;height:300px;right:-80px;top:-80px;border-color:rgba(184,150,12,.05)"></div>
+        <div class="wcard-header">
+          <div class="wcard-title-group">
+            <div class="wcard-label" style="color:var(--gold)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
+            <div class="wcard-sublabel" style="color:var(--gold)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
+          </div>
+          <div class="wcard-icons">
+            <div class="wcard-badge" style="color:var(--gold);border-color:rgba(184,150,12,.5)">NFT</div>
+            <div class="wcard-chip" style="border-color:rgba(184,150,12,.18)">
+              <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
+              <div class="wcard-chip-dot" style="color:var(--gold)"></div><div class="wcard-chip-dot" style="color:var(--gold)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="wcard-body">
+          <div class="wcard-amount-block">
+            <div class="wcard-amount" style="color:var(--gold)" id="dapp-wcard-rend-count">1</div>
+            <div class="wcard-unit" style="color:rgba(184,150,12,.5)"><span class="it">NFT IN PORTAFOGLIO</span><span class="en">NFT IN WALLET</span></div>
+          </div>
+        </div>
+        <div class="wcard-desc">
+          <span class="it">Il tuo certificato di resa. Mostra il valore KAS che hai diritto a riscuotere. Puoi convertire parte o tutto l'importo in KAS reale sulla blockchain Kaspa — rimborso garantito al 95%, elaborato in 24–48h.</span>
+          <span class="en">Your yield certificate. Shows the KAS value you're entitled to redeem. Convert part or all of the balance into real KAS on the Kaspa blockchain — 95% guaranteed refund, processed in 24–48h.</span>
+        </div>
+        <div class="wcard-footer">
+          <div class="wcard-serial" style="color:rgba(184,150,12,.3)">GENESIS · #<span id="dapp-wcard-rend-serial">—</span></div>
+          <div class="wcard-holder" style="color:rgba(184,150,12,.3)"><span class="it">NFT · Chiave di riscossione KAS</span><span class="en">NFT · KAS redemption key</span></div>
+          <div style="font-family:var(--font-h);font-size:20px;color:rgba(184,150,12,.2);letter-spacing:-1px">Oo</div>
+        </div>
+      </div>
+
+      <!-- TESSERA RENDIMENTO — LOCKED -->
+      <div class="wcard wcard-rendimento wcard-locked" id="dapp-wcard-rendimento-locked">
+        <div class="wcard-header">
+          <div class="wcard-title-group">
+            <div class="wcard-label" style="color:rgba(184,150,12,.35)"><span class="it">Tessera Rendimento</span><span class="en">Yield Card</span></div>
+            <div class="wcard-sublabel" style="color:rgba(184,150,12,.2)"><span class="it">Chiave di riscossione</span><span class="en">Redemption key</span></div>
+          </div>
+          <div class="wcard-badge" style="color:rgba(184,150,12,.4);border-color:rgba(184,150,12,.2)">NFT</div>
+        </div>
+        <div class="wcard-body">
+          <div class="wcard-amount-block">
+            <div class="wcard-amount" style="color:rgba(184,150,12,.2)">—</div>
+            <div class="wcard-unit" style="color:rgba(184,150,12,.2)"><span class="it">NON IN POSSESSO</span><span class="en">NOT OWNED</span></div>
+          </div>
+        </div>
+        <div class="wcard-desc">
+          <span class="it">Non hai ancora una Tessera Rendimento. Partecipa agli airdrop per ottenerne una — sarà il tuo portafoglio per riscuotere KAS reale in qualsiasi momento.</span>
+          <span class="en">You don't have a Yield Card yet. Join airdrops to earn one — it will be your wallet to redeem real KAS at any time.</span>
+        </div>
+        <div class="wcard-footer">
+          <div class="wcard-holder" style="color:rgba(184,150,12,.2)"><span class="it">Partecipa agli airdrop per ottenerla</span><span class="en">Join airdrops to earn one</span></div>
+        </div>
+      </div>
+
+      <!-- TESSERA KASPA — VERDE -->
+      <div class="wcard wcard-kaspa">
+        <div class="wcard-ring" style="width:320px;height:320px;right:-90px;bottom:-90px;border-color:rgba(73,234,203,.04)"></div>
+        <div class="wcard-header">
+          <div class="wcard-title-group">
+            <div class="wcard-label" style="color:var(--kas)"><span class="it">Tessera Kaspa</span><span class="en">Kaspa Card</span></div>
+            <div class="wcard-sublabel" style="color:var(--kas)"><span class="it">Il tuo KAS</span><span class="en">Your KAS</span></div>
+          </div>
+          <div class="wcard-icons">
+            <div class="wcard-badge" style="color:var(--kas);border-color:rgba(73,234,203,.35)"><span class="it">Presto</span><span class="en">Soon</span></div>
+          </div>
+        </div>
+        <div class="wcard-body">
+          <div class="wcard-amount-block">
+            <div class="wcard-amount" style="color:var(--kas)">—</div>
+            <div class="wcard-unit" style="color:rgba(73,234,203,.45)"><span class="it">KAS · CON MAINNET</span><span class="en">KAS · AT MAINNET</span></div>
+          </div>
+        </div>
+        <div class="wcard-desc">
+          <span class="it">Il tuo portafoglio KAS su AIROOBI. Mostra il totale dei KAS ricevuti: ogni conversione dalla Tessera Rendimento accredita qui l'importo — on-chain, tuo per sempre.</span>
+          <span class="en">Your KAS wallet on AIROOBI. Shows total KAS received: each Yield Card conversion credits the amount here — on-chain, yours forever.</span>
+        </div>
+        <div class="wcard-footer">
+          <div class="wcard-serial" style="color:rgba(73,234,203,.2)">KASPA NETWORK</div>
+          <div class="wcard-holder" style="color:rgba(73,234,203,.2)"><span class="it">Ricevi dopo ogni conversione</span><span class="en">Received after each swap</span></div>
+          <div style="font-family:var(--font-m);font-size:11px;color:rgba(73,234,203,.15);letter-spacing:3px">KAS</div>
+        </div>
+      </div>
+
+    </div><!-- /wallet-cards -->
+
+    <!-- FLUSSO -->
+    <div class="wallet-flow">
+      <div class="wflow-node">
+        <div class="wflow-icon" style="color:var(--aria)">▸ ARIA</div>
+        <div class="wflow-label" style="color:var(--aria)"><span class="it">Guadagni</span><span class="en">You earn</span></div>
+        <div class="wflow-desc" style="color:var(--gray-600)"><span class="it">check-in · referral · bonus</span><span class="en">check-in · referral · bonus</span></div>
+      </div>
+      <div class="wflow-arrow">→</div>
+      <div class="wflow-node">
+        <div class="wflow-icon" style="color:var(--gray-600)">▸ <span class="it">TESSERA RENDIMENTO</span><span class="en">YIELD CARD</span></div>
+        <div class="wflow-label" style="color:var(--gold)"><span class="it">Riscuoti</span><span class="en">You redeem</span></div>
+        <div class="wflow-desc" style="color:var(--gray-600)"><span class="it">NFT · chiave di conversione</span><span class="en">NFT · conversion key</span></div>
+      </div>
+      <div class="wflow-arrow">→</div>
+      <div class="wflow-node">
+        <div class="wflow-icon" style="color:var(--kas)">▸ KAS</div>
+        <div class="wflow-label" style="color:var(--kas)"><span class="it">Ricevi</span><span class="en">You receive</span></div>
+        <div class="wflow-desc" style="color:var(--gray-600)"><span class="it">kaspa · on-chain · tuo per sempre</span><span class="en">kaspa · on-chain · yours forever</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══ ARCHIVE TAB ═══ -->
+  <div id="tab-archive" style="display:none">
+    <div class="past-grid" id="archive-grid">
+      <div class="past-empty"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
     </div>
   </div>
 
@@ -1165,13 +1410,15 @@ async function loadMyParticipations(){
 }
 
 // ── Page routing ──
-var PAGE_PATHS={home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral-dapp',manage:'/gestione'};
-var PATH_TO_PAGE={'/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/gestione':'manage'};
+var PAGE_PATHS={home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral-dapp',wallet:'/portafoglio-dapp',archive:'/archivio',manage:'/gestione'};
+var PATH_TO_PAGE={'/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/gestione':'manage'};
 var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
   submit:{it:'<b>Proponi il tuo</b> <em>oggetto</em>',en:'<b>Submit your</b> <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
   referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e guadagna ARIA bonus.',sub_en:'Invite friends and earn bonus ARIA.'},
+  wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'Le tue Tessere, i tuoi asset. ARIA, NFT Rendimento e KAS.',sub_en:'Your Cards, your assets. ARIA, Yield NFTs and KAS.'},
+  archive:{it:'<em>Archivio</em> Airdrop',en:'Airdrop <em>Archive</em>',sub_it:'Tutti gli airdrop completati. Trasparenza totale.',sub_en:'All completed airdrops. Full transparency.'},
   manage:{it:'<em>Gestione</em> Airdrop',en:'Airdrop <em>Management</em>',sub_it:'Backoffice valutazione e gestione airdrop.',sub_en:'Evaluation and airdrop management backoffice.'}
 };
 
@@ -1186,7 +1433,7 @@ function navigateTo(page,event){
 }
 
 function showPage(page){
-  ['home','explore','my','submit','referral','manage'].forEach(function(t){
+  ['home','explore','my','submit','referral','wallet','archive','manage'].forEach(function(t){
     var panel=document.getElementById('tab-'+t);
     if(panel)panel.style.display=page===t?'block':'none';
   });
@@ -1209,6 +1456,8 @@ function showPage(page){
   if(page==='home')loadHomeDashboard();
   if(page==='my')renderMyAirdrops();
   if(page==='referral')loadDappReferral();
+  if(page==='wallet')loadDappWallet();
+  if(page==='archive')loadDappArchive();
   if(page==='manage'&&_isManager)loadBoData();
 }
 
@@ -2056,6 +2305,85 @@ function showToast(html){
   t.innerHTML=html;
   t.classList.add('show');
   setTimeout(function(){t.classList.remove('show')},3000);
+}
+
+// ── Wallet tab ──
+function loadDappWallet(){
+  var el=document.getElementById('dapp-wcard-aria-amount');
+  if(el)el.textContent=_balance.toLocaleString();
+  var serial=document.getElementById('dapp-wcard-aria-serial');
+  var sess=JSON.parse(localStorage.getItem('sb_session')||'null');
+  if(serial&&sess&&sess.user)serial.textContent=sess.user.id.substring(0,8).toUpperCase();
+  // NFT rendimento: check nft_rewards
+  (async function(){
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/nft_rewards?user_id=eq.'+sess.user.id+'&select=id',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(res.ok){
+      var nfts=await res.json();
+      var count=nfts?nfts.length:0;
+      if(count>0){
+        var wc=document.getElementById('dapp-wcard-rendimento');if(wc)wc.style.display='';
+        var wl=document.getElementById('dapp-wcard-rendimento-locked');if(wl)wl.style.display='none';
+        var cn=document.getElementById('dapp-wcard-rend-count');if(cn)cn.textContent=count;
+        var sn=document.getElementById('dapp-wcard-rend-serial');if(sn)sn.textContent=nfts[0].id.substring(0,8).toUpperCase();
+      }
+    }
+  })();
+}
+
+// ── Archive tab ──
+var ARCH_CAT_LABELS={mobile:'Mobile / Tech',tech:'Tech / Strumenti',luxury:'Luxury / 2 Ruote',ultra_luxury:'Ultra Luxury'};
+var _archiveLoaded=false;
+async function loadDappArchive(){
+  if(_archiveLoaded)return;
+  var grid=document.getElementById('archive-grid');
+  if(!grid)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_completed_airdrops',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    var data=await res.json();
+    var isIt=document.documentElement.lang!=='en';
+    if(!data||!data.length){
+      grid.innerHTML='<div class="past-empty">'+(isIt?'Nessun airdrop completato ancora. Il primo è in arrivo!':'No completed airdrops yet. The first one is coming!')+'</div>';
+      _archiveLoaded=true;
+      return;
+    }
+    var esc=function(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''};
+    var html='';
+    data.forEach(function(a){
+      var catLabel=ARCH_CAT_LABELS[a.category]||a.category||'—';
+      var imgSrc=a.image_url||'';
+      var imgHtml=imgSrc?'<img class="past-card-img" src="'+esc(imgSrc)+'" alt="'+esc(a.title)+'" loading="lazy">':'<div class="past-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px">'+(isIt?'NESSUNA IMMAGINE':'NO IMAGE')+'</div>';
+      var drawDate=a.draw_executed_at?new Date(a.draw_executed_at).toLocaleDateString(isIt?'it-IT':'en-GB',{day:'numeric',month:'short',year:'numeric'}):'—';
+      var winnerId=a.winner_public_id?a.winner_public_id.substring(0,8)+'...':'—';
+      html+='<div class="past-card">';
+      html+=imgHtml;
+      html+='<div class="past-card-body">';
+      html+='<div class="past-card-cat">'+esc(catLabel)+'</div>';
+      html+='<div class="past-card-title">'+esc(a.title)+'</div>';
+      html+='<div class="past-card-stats">';
+      html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'PARTECIPANTI':'PARTICIPANTS')+'</span><span class="past-card-stat-value">'+((a.partecipanti||0).toLocaleString())+'</span></div>';
+      html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'BLOCCHI':'BLOCKS')+'</span><span class="past-card-stat-value">'+(a.blocks_sold||0)+'/'+(a.total_blocks||0)+'</span></div>';
+      html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'VALORE RACCOLTO':'VALUE RAISED')+'</span><span class="past-card-stat-value" style="color:var(--kas)">&euro;'+parseFloat(a.eur_raccolti||0).toFixed(2)+'</span></div>';
+      html+='<div class="past-card-stat"><span class="past-card-stat-label">DRAW</span><span class="past-card-stat-value">'+drawDate+'</span></div>';
+      html+='</div>';
+      if(winnerId!=='—'){
+        html+='<div class="past-card-winner"><div class="past-card-winner-dot"></div><span class="past-card-winner-id">'+(isIt?'Ottenuto da ':'Got by ')+esc(winnerId)+'</span></div>';
+      }
+      html+='</div></div>';
+    });
+    grid.innerHTML=html;
+    _archiveLoaded=true;
+  }catch(e){
+    console.error('loadDappArchive:',e);
+    grid.innerHTML='<div class="past-empty">Errore caricamento</div>';
+  }
 }
 </script>
 </body>
