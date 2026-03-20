@@ -346,8 +346,12 @@ input{font-family:inherit}
 .modal-confirm:hover{background:var(--white)}
 
 /* ── FOOTER ── */
-.dapp-footer{text-align:center;padding:40px 16px 24px;font-size:11px;color:var(--gray-400)}
-.dapp-footer a{color:var(--gold);text-decoration:underline}
+.dapp-footer{text-align:center;padding:48px 16px 32px;border-top:1px solid var(--gray-800);margin-top:48px}
+.dapp-footer-brand{font-family:var(--font-h);font-size:18px;font-weight:300;color:var(--white);letter-spacing:2px}
+.dapp-footer-brand em{color:var(--gold);font-style:normal;font-weight:400}
+.dapp-footer-link{font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gray-400);text-decoration:none;display:inline-block;margin-top:6px;transition:color .2s}
+.dapp-footer-link:hover{color:var(--gold)}
+.dapp-footer-copy{font-size:11px;color:var(--gray-500);margin-top:16px}
 
 /* ── LANG TOGGLE ── */
 .lang-toggle{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s}
@@ -1057,9 +1061,13 @@ input{font-family:inherit}
 
 <!-- FOOTER -->
 <div class="dapp-footer">
-  <span class="it">AIROOBI dApp &middot; <a href="https://airoobi.com">airoobi.com</a></span>
-  <span class="en">AIROOBI dApp &middot; <a href="https://airoobi.com">airoobi.com</a></span>
-  <br><span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:6px">alfa-2026.03.20-1.33.0 &middot; 19:15 CET &middot; <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span>
+  <div class="dapp-footer-brand">AIROOBI <em>dApp</em></div>
+  <a href="https://airoobi.com" class="dapp-footer-link">airoobi.com</a>
+  <div class="dapp-footer-copy">
+    &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
+  </div>
+  <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.03.20-1.33.0</div>
 </div>
 
 <script>
