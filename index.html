@@ -1334,7 +1334,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.20-1.34.0 · 20:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.20-1.35.0 · 20:30 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -3210,6 +3210,7 @@ async function loadAdminData(){
     loadCostTracker();
     await loadAdminTreasury();
     loadAdminAirdrops();
+    loadFairnessAirdrops();
 
   }catch(e){console.error('Admin load error:',e);}
 }
@@ -3839,6 +3840,179 @@ async function toggleAnalysisDetail(row,airdropId){
   }catch(e){
     console.error('analysisDetail:',e);
     detailRow.querySelector('td').innerHTML='<p style="color:#ef4444">'+e.message+'</p>';
+  }
+}
+
+// ── Test Users Table ──
+async function loadTestUsersTable(){
+  var s=getSession();if(!s)return;
+  var tbody=document.getElementById('test-users-body');
+  var countEl=document.getElementById('test-users-count');
+  tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-400)">Caricamento...</td></tr>';
+  try{
+    var profiles=await sbGet('profiles?is_test_user=eq.true&select=id,email,total_points,created_at&order=total_points.desc&limit=200',s.access_token);
+    if(!profiles||!profiles.length){
+      tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-400)">Nessun utente test</td></tr>';
+      countEl.textContent='0 utenti';
+      return;
+    }
+    // Get participation stats for test users
+    var parts=await sbGet('airdrop_participations?select=user_id,blocks_count,aria_spent,airdrop_id',s.access_token);
+    var partMap={};
+    if(parts)parts.forEach(function(p){
+      if(!partMap[p.user_id])partMap[p.user_id]={airdrops:{},blocks:0,aria:0};
+      partMap[p.user_id].airdrops[p.airdrop_id]=true;
+      partMap[p.user_id].blocks+=(p.blocks_count||0);
+      partMap[p.user_id].aria+=(p.aria_spent||0);
+    });
+    var html='';
+    profiles.forEach(function(u,i){
+      var pm=partMap[u.id]||{airdrops:{},blocks:0,aria:0};
+      var nAirdrops=Object.keys(pm.airdrops).length;
+      var regDate=new Date(u.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});
+      html+='<tr>';
+      html+='<td style="color:var(--gray-500)">'+(i+1)+'</td>';
+      html+='<td style="font-family:var(--font-m);font-size:10px">'+escHtml(u.email)+'</td>';
+      html+='<td style="color:var(--aria)">'+u.total_points.toLocaleString()+'</td>';
+      html+='<td>'+regDate+'</td>';
+      html+='<td style="color:'+(nAirdrops>0?'var(--gold)':'var(--gray-600)')+'">'+nAirdrops+'</td>';
+      html+='<td style="color:#4A9EFF">'+(pm.blocks||0)+'</td>';
+      html+='<td style="color:#f59e0b">'+(pm.aria||0)+'</td>';
+      html+='</tr>';
+    });
+    tbody.innerHTML=html;
+    countEl.textContent=profiles.length+' utenti (top 200 per ARIA)';
+  }catch(e){
+    console.error('loadTestUsers:',e);
+    tbody.innerHTML='<tr><td colspan="7" style="color:#ef4444">'+escHtml(e.message)+'</td></tr>';
+  }
+}
+
+// ── Fairness Analysis ──
+async function loadFairnessAirdrops(){
+  var s=getSession();if(!s)return;
+  var sel=document.getElementById('fairness-airdrop-select');
+  if(!sel)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_all_airdrops',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    var airdrops=await res.json();
+    if(!airdrops)return;
+    sel.innerHTML='<option value="">— Seleziona —</option>';
+    airdrops.forEach(function(a){
+      if(a.blocks_sold>0){
+        var opt=document.createElement('option');
+        opt.value=a.id;
+        opt.textContent=a.title+' ('+a.status+', '+a.blocks_sold+'/'+a.total_blocks+' blocchi)';
+        sel.appendChild(opt);
+      }
+    });
+  }catch(e){}
+}
+
+async function loadFairnessAnalysis(){
+  var s=getSession();if(!s)return;
+  var sel=document.getElementById('fairness-airdrop-select');
+  var airdropId=sel.value;
+  if(!airdropId){showToast('Seleziona un airdrop','warning');return;}
+  var resultEl=document.getElementById('fairness-result');
+  resultEl.innerHTML='<p style="color:var(--gray-400)">Calcolo in corso...</p>';
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_fairness_analysis',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId})
+    });
+    var d=await res.json();
+    if(!d||!d.ok){
+      resultEl.innerHTML='<p style="color:#ef4444">Errore: '+(d.error||d.warning||'sconosciuto')+'</p>';
+      return;
+    }
+    var fs=d.fairness_score;
+    var gradeColor=fs.grade==='A'?'#49b583':fs.grade==='B'?'#4A9EFF':fs.grade==='C'?'var(--gold)':fs.grade==='D'?'#f59e0b':'#ef4444';
+
+    var h='';
+    // Big score
+    h+='<div style="display:flex;align-items:center;gap:24px;margin-bottom:20px;padding:20px;background:rgba(255,255,255,.02);border:1px solid var(--gray-800)">';
+    h+='<div style="text-align:center">';
+    h+='<div style="font-family:var(--font-m);font-size:48px;font-weight:300;color:'+gradeColor+';line-height:1">'+fs.value+'</div>';
+    h+='<div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gray-500);margin-top:4px">FAIRNESS SCORE</div>';
+    h+='</div>';
+    h+='<div style="text-align:center">';
+    h+='<div style="font-family:var(--font-h);font-size:36px;font-weight:300;color:'+gradeColor+'">'+fs.grade+'</div>';
+    h+='<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-400)">'+fs.label+'</div>';
+    h+='</div>';
+    h+='<div style="flex:1;font-size:12px;color:var(--gray-400)">';
+    h+='<strong>'+d.participants+'</strong> partecipanti · <strong>'+d.total_blocks_sold+'</strong> blocchi venduti<br>';
+    h+='Gini: <strong>'+d.gini.value+'</strong> ('+d.gini.interpretation+')';
+    h+='</div>';
+    h+='</div>';
+
+    // Sub-scores bar chart
+    var subs=d.sub_scores;
+    var subLabels={gini:'Gini',conc_top1:'Top 1',conc_top5:'Top 5',conc_top10:'Top 10',gap_1_2:'Gap 1°-2°',factor_bal:'Factor Bal.',spread:'Spread',diversity:'Diversity'};
+    var subWeights={gini:25,conc_top1:15,conc_top5:10,conc_top10:5,gap_1_2:20,factor_bal:15,spread:5,diversity:5};
+    h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">';
+    Object.keys(subLabels).forEach(function(k){
+      var val=subs[k];
+      var barColor=val>=70?'#49b583':val>=50?'var(--gold)':val>=30?'#f59e0b':'#ef4444';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-800)">';
+      h+='<div style="font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;color:var(--gray-500)">'+subLabels[k]+' <span style="color:var(--gray-600)">('+subWeights[k]+'%)</span></div>';
+      h+='<div style="font-family:var(--font-m);font-size:18px;font-weight:600;color:'+barColor+'">'+val+'</div>';
+      h+='<div style="height:3px;background:var(--gray-800);margin-top:6px"><div style="height:100%;width:'+val+'%;background:'+barColor+';transition:width .5s"></div></div>';
+      h+='</div>';
+    });
+    h+='</div>';
+
+    // Detail cards
+    h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+
+    // Concentration
+    var c=d.concentration;
+    h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)">';
+    h+='<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">CONCENTRAZIONE BLOCCHI</div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Top 1: <strong>'+(c.top1_share*100).toFixed(1)+'%</strong> ('+c.top1_blocks+' blocchi)</div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Top 5: <strong>'+(c.top5_share*100).toFixed(1)+'%</strong> ('+c.top5_blocks+' blocchi)</div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Top 10: <strong>'+(c.top10_share*100).toFixed(1)+'%</strong> ('+c.top10_blocks+' blocchi)</div>';
+    h+='</div>';
+
+    // Factor balance
+    var fb=d.factor_balance;
+    h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)">';
+    h+='<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">BILANCIAMENTO FATTORI (VINCITORE)</div>';
+    h+='<div style="font-size:12px;color:#4A9EFF">F1 Blocchi: <strong>'+fb.f1_pct+'%</strong> (raw: '+fb.winner_f1+')</div>';
+    h+='<div style="font-size:12px;color:var(--gold)">F2 Fedeltà: <strong>'+fb.f2_pct+'%</strong> (raw: '+fb.winner_f2+')</div>';
+    h+='<div style="font-size:12px;color:#f59e0b">F3 Seniority: <strong>'+fb.f3_pct+'%</strong> (raw: '+fb.winner_f3+')</div>';
+    h+='<div style="font-size:11px;color:var(--gray-400);margin-top:6px">Dominante: <strong style="color:var(--white)">'+fb.dominant+'</strong> · Sbilanciamento: '+(fb.imbalance*100).toFixed(1)+'%</div>';
+    h+='</div>';
+
+    // Score spread
+    var ss=d.score_spread;
+    h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)">';
+    h+='<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">DISTRIBUZIONE SCORE</div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Media: <strong>'+ss.mean+'</strong> · Std dev: <strong>'+ss.std_dev+'</strong></div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Min: '+ss.min+' · Max: '+ss.max+'</div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Gap 1°-2°: <strong style="color:'+(ss.gap_1st_2nd>0.1?'#f59e0b':'#49b583')+'">'+ss.gap_1st_2nd+'</strong></div>';
+    h+='</div>';
+
+    // Diversity
+    var dv=d.diversity;
+    h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)">';
+    h+='<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">DIVERSITÀ PARTECIPAZIONE</div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Acquirenti unici: <strong>'+dv.unique_buyers+'</strong></div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Media blocchi/utente: <strong>'+dv.avg_blocks_per_buyer+'</strong></div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Rapporto diversità: <strong>'+(dv.ratio*100).toFixed(1)+'%</strong></div>';
+    h+='</div>';
+
+    h+='</div>';
+
+    resultEl.innerHTML=h;
+  }catch(e){
+    console.error('fairness:',e);
+    resultEl.innerHTML='<p style="color:#ef4444">'+escHtml(e.message)+'</p>';
   }
 }
 
@@ -6346,6 +6520,41 @@ async function loadReferralHistory(){
         <tr><td colspan="7" style="color:var(--gray-400)">Clicca RICARICA per caricare</td></tr>
       </tbody>
     </table>
+  </div>
+
+  <!-- ═══ TEST USERS & FAIRNESS ═══ -->
+  <div class="admin-section">
+    <h2>Test Users &amp; Fairness Index</h2>
+    <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Elenco utenti test, partecipazioni, e indice di fairness per airdrop. Usa le simulazioni per vedere come cambiano i numeri.</p>
+
+    <!-- Fairness per Airdrop -->
+    <div style="margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+        <label style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400)">AIRDROP</label>
+        <select id="fairness-airdrop-select" style="background:var(--gray-900);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-m);font-size:12px;padding:6px 10px;min-width:200px">
+          <option value="">— Seleziona —</option>
+        </select>
+        <button onclick="loadFairnessAnalysis()" style="background:var(--gold);color:#000;border:none;padding:6px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">ANALIZZA</button>
+      </div>
+      <div id="fairness-result"></div>
+    </div>
+
+    <!-- Test Users Table -->
+    <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">UTENTI TEST</div>
+    <div style="margin-bottom:12px">
+      <button onclick="loadTestUsersTable()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'">CARICA</button>
+      <span id="test-users-count" style="font-family:var(--font-m);font-size:11px;color:var(--gray-500);margin-left:12px"></span>
+    </div>
+    <div style="max-height:400px;overflow-y:auto;border:1px solid var(--gray-800)">
+      <table class="admin-table" style="margin:0">
+        <thead style="position:sticky;top:0;background:var(--gray-900);z-index:1">
+          <tr><th>#</th><th>Email</th><th>ARIA</th><th>Registrato</th><th>Airdrop</th><th>Blocchi tot.</th><th>ARIA spesi</th></tr>
+        </thead>
+        <tbody id="test-users-body">
+          <tr><td colspan="7" style="color:var(--gray-400)">Clicca CARICA</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <!-- ═══ ENGINE CONFIG ═══ -->
