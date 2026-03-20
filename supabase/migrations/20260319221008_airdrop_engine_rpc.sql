@@ -152,10 +152,10 @@ BEGIN
       f1c.user_id,
       f1c.total_blocks,
       f1c.total_aria,
-      ROUND(f1c.f1, 6) AS f1,
-      ROUND(f2c.f2, 6) AS f2,
-      ROUND(f3c.f3, 6) AS f3,
-      ROUND(v_w1 * f1c.f1 + v_w2 * f2c.f2 + v_w3 * f3c.f3, 6) AS score
+      ROUND(f1c.f1::NUMERIC, 6) AS f1,
+      ROUND(f2c.f2::NUMERIC, 6) AS f2,
+      ROUND(f3c.f3::NUMERIC, 6) AS f3,
+      ROUND((v_w1 * f1c.f1 + v_w2 * f2c.f2 + v_w3 * f3c.f3)::NUMERIC, 6) AS score
     FROM f1_calc f1c
     JOIN f2_calc f2c ON f2c.user_id = f1c.user_id
     JOIN f3_calc f3c ON f3c.user_id = f1c.user_id

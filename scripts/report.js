@@ -126,10 +126,10 @@ async function main() {
     confirmedReferrals,
     recentEvents
   ] = await Promise.all([
-    sbGet('profiles?select=id'),
-    sbGet('profiles?select=id,email,created_at&created_at=gte.' + twoHoursAgo + '&order=created_at.desc'),
+    sbGet('profiles?select=id&is_test_user=not.is.true'),
+    sbGet('profiles?select=id,email,created_at&created_at=gte.' + twoHoursAgo + '&is_test_user=not.is.true&order=created_at.desc'),
     sbGet('waitlist?select=id'),
-    sbGet('points_ledger?select=amount'),
+    sbGet('profiles?select=total_points&is_test_user=not.is.true'),
     sbGet('checkins?select=id&checked_at=gte.' + todayStart.split('T')[0]),
     sbGet('video_views?select=id&viewed_at=gte.' + twoHoursAgo),
     sbGet('referral_confirmations?select=id&status=eq.confirmed'),
@@ -142,7 +142,7 @@ async function main() {
   const alphaBraveFull = remaining <= 0;
   const newUsersCount = Array.isArray(newUsers) ? newUsers.length : 0;
   const waitlistCount = Array.isArray(waitlist) ? waitlist.length : 0;
-  const totalAria = Array.isArray(allPoints) ? allPoints.reduce((a, b) => a + (b.amount || 0), 0) : 0;
+  const totalAria = Array.isArray(allPoints) ? allPoints.reduce((a, b) => a + (b.total_points || 0), 0) : 0;
   const checkinsToday = Array.isArray(recentCheckins) ? recentCheckins.length : 0;
   const videosRecent = Array.isArray(recentVideos) ? recentVideos.length : 0;
   const referralsTotal = Array.isArray(confirmedReferrals) ? confirmedReferrals.length : 0;

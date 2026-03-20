@@ -1332,7 +1332,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.18-1.28.0 · 12:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.20-1.29.0 · 16:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -3138,19 +3138,19 @@ async function loadAdminData(){
   const t=s.access_token;
   
   try{
-    // Users
-    const users=await sbGet('profiles?select=*&order=created_at.desc',t);
-    var userCount=users?users.length:0;
+    // Users (exclude test users from stats)
+    const allProfiles=await sbGet('profiles?select=*&order=created_at.desc',t);
+    const users=allProfiles?allProfiles.filter(function(u){return !u.is_test_user}):[];
+    var userCount=users.length;
     document.getElementById('adm-users').textContent=userCount;
 
     // Posti rimasti Alpha Brave
     var remaining=Math.max(0,1000-userCount);
     var remEl=document.getElementById('adm-remaining');
     if(remEl){remEl.textContent=remaining;remEl.style.color=remaining<=0?'#B91C1C':remaining<=100?'#F59E0B':'var(--gold)';}
-    
-    // Total ARIA in circolazione (sum of profiles.total_points)
-    const ptsProfiles=await sbGet('profiles?select=total_points',t);
-    const totalPts=ptsProfiles?ptsProfiles.reduce(function(a,b){return a+(b.total_points||0)},0):0;
+
+    // Total ARIA in circolazione (exclude test users)
+    const totalPts=users.reduce(function(a,b){return a+(b.total_points||0)},0);
     document.getElementById('adm-points').textContent=totalPts.toLocaleString();
     var aicoIn=document.getElementById('adm-aico-input');if(aicoIn)aicoIn.value=totalPts;
     var coinSup=document.getElementById('adm-coin-supply');if(coinSup)coinSup.textContent=totalPts.toLocaleString();
@@ -3429,6 +3429,20 @@ async function adOpenModal(id){
     document.getElementById('ad-rejection').value=a.rejection_reason||'';
     document.getElementById('ad-auto-draw').checked=!!a.auto_draw;
     document.getElementById('ad-modal-title').textContent='Modifica: '+a.title;
+    // Show/hide simulation section
+    var simSection=document.getElementById('ad-sim-section');
+    var canSim=['presale','sale'].indexOf(a.status)!==-1&&!a.draw_executed_at;
+    simSection.style.display=canSim?'block':'none';
+    if(canSim){
+      var remaining=(a.total_blocks||0)-(a.blocks_sold||0);
+      document.getElementById('ad-sim-info').innerHTML='Blocchi: <strong>'+(a.blocks_sold||0)+'/'+(a.total_blocks||0)+'</strong> — Rimanenti: <strong style="color:#f59e0b">'+remaining+'</strong>';
+      document.getElementById('ad-sim-pct').value=50;
+      document.getElementById('ad-sim-pct-label').textContent='50%';
+      document.getElementById('ad-sim-spread').checked=false;
+      document.getElementById('ad-sim-result').innerHTML='';
+      document.getElementById('ad-sim-btn-run').disabled=false;
+      document.getElementById('ad-sim-btn-run').textContent='RUN SIMULATION';
+    }
     document.getElementById('ad-modal-bg').classList.add('active');
   }catch(e){console.error('adOpenModal:',e);showToast('Errore caricamento','error');}
 }
@@ -3605,6 +3619,226 @@ async function adExecuteDraw(airdropId,title){
 }
 
 function drawModalClose(){document.getElementById('draw-modal-bg').classList.remove('active');}
+
+// ── Test Pool & Simulation ──
+async function adCreateTestPool(){
+  var s=getSession();if(!s)return;
+  var btn=document.getElementById('btn-create-test-pool');
+  if(btn){btn.disabled=true;btn.textContent='CREAZIONE...';}
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/create_test_pool',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    var d=await res.json();
+    if(d&&d.ok){
+      showToast('Test pool: '+d.created+' utenti creati (totale: '+d.total+')','success');
+      if(btn){btn.textContent='POOL CREATO ('+d.total+')';}
+    }else{
+      showToast('Errore: '+(d.error||d.message||'sconosciuto'),'error');
+      if(btn){btn.disabled=false;btn.textContent='CREA TEST POOL';}
+    }
+  }catch(e){
+    console.error('createTestPool:',e);
+    showToast('Errore: '+e.message,'error');
+    if(btn){btn.disabled=false;btn.textContent='CREA TEST POOL';}
+  }
+}
+
+async function adSimulateRunInModal(){
+  var s=getSession();if(!s)return;
+  var airdropId=document.getElementById('ad-edit-id').value;
+  var pct=parseInt(document.getElementById('ad-sim-pct').value);
+  var spread=document.getElementById('ad-sim-spread').checked;
+  var btn=document.getElementById('ad-sim-btn-run');
+  var result=document.getElementById('ad-sim-result');
+  btn.disabled=true;btn.textContent='SIMULAZIONE...';
+  result.innerHTML='<p style="color:var(--gray-400)">Acquisto blocchi in corso...</p>';
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/simulate_airdrop_participation',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId,p_fill_pct:pct,p_spread_days:spread})
+    });
+    var d=await res.json();
+    if(d&&d.ok){
+      var h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px">';
+      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-700);text-align:center"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">BLOCCHI</div><div style="color:#f59e0b;font-weight:600;font-size:16px">'+d.blocks_filled+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-700);text-align:center"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">UTENTI</div><div style="color:#4A9EFF;font-weight:600;font-size:16px">'+d.participants+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-700);text-align:center"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">RIMANENTI</div><div style="color:var(--gray-300);font-weight:600;font-size:16px">'+d.blocks_remaining+'/'+d.total_blocks+'</div></div>';
+      h+='</div>';
+      result.innerHTML=h;
+      showToast('Simulazione: '+d.blocks_filled+' blocchi, '+d.participants+' partecipanti','success');
+      // Update info line
+      document.getElementById('ad-sim-info').innerHTML='Blocchi: <strong>'+(d.total_blocks-d.blocks_remaining)+'/'+d.total_blocks+'</strong> — Rimanenti: <strong style="color:#f59e0b">'+d.blocks_remaining+'</strong>';
+      loadAdminAirdrops();
+    }else{
+      result.innerHTML='<p style="color:#ef4444">Errore: '+(d.error||'sconosciuto')+'</p>';
+    }
+  }catch(e){
+    console.error('simulate:',e);
+    result.innerHTML='<p style="color:#ef4444">'+e.message+'</p>';
+  }
+  btn.disabled=false;btn.textContent='RUN SIMULATION';
+}
+
+// ── Airdrop Analysis ──
+async function loadAirdropAnalysis(){
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_all_airdrops',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    var airdrops=await res.json();
+    var tbody=document.getElementById('analysis-body');
+    if(!airdrops||!airdrops.length){
+      tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-400)">Nessun airdrop</td></tr>';
+      return;
+    }
+    var html='';
+    airdrops.forEach(function(a){
+      var statusColor=a.status==='completed'?'#4A9EFF':a.status==='annullato'?'#ef4444':a.status==='sale'?'#49b583':a.status==='presale'?'var(--gold)':'var(--gray-400)';
+      var hasParticipants=(a.blocks_sold||0)>0;
+      var drawDate=a.draw_executed_at?new Date(a.draw_executed_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):'—';
+      var winnerEmail='—';
+      if(a.draw_scores&&a.winner_id){
+        var scores=typeof a.draw_scores==='string'?JSON.parse(a.draw_scores):a.draw_scores;
+        if(scores&&scores[0])winnerEmail=scores[0].user_id?scores[0].user_id.substring(0,8)+'...':'—';
+      }
+      html+='<tr class="analysis-row" onclick="'+(hasParticipants?'toggleAnalysisDetail(this,\''+a.id+'\')':'')+'" style="cursor:'+(hasParticipants?'pointer':'default')+'">';
+      html+='<td style="font-weight:600">'+escHtml(a.title)+(hasParticipants?' <span style="color:var(--gray-500);font-size:10px">&#9660;</span>':'')+'</td>';
+      html+='<td>'+escHtml(a.category||'—')+'</td>';
+      html+='<td style="color:'+statusColor+'">'+escHtml(a.status)+'</td>';
+      html+='<td>'+drawDate+'</td>';
+      html+='<td>'+winnerEmail+'</td>';
+      html+='<td>'+((a.blocks_sold||0)+'/'+(a.total_blocks||'—'))+'</td>';
+      html+='<td>'+(a.winner_score?parseFloat(a.winner_score).toFixed(4):'—')+'</td>';
+      html+='</tr>';
+    });
+    tbody.innerHTML=html;
+  }catch(e){
+    console.error('loadAirdropAnalysis:',e);
+    document.getElementById('analysis-body').innerHTML='<tr><td colspan="7" style="color:#ef4444">Errore: '+escHtml(e.message)+'</td></tr>';
+  }
+}
+
+async function toggleAnalysisDetail(row,airdropId){
+  var next=row.nextElementSibling;
+  if(next&&next.classList.contains('analysis-detail')){
+    next.remove();
+    return;
+  }
+  document.querySelectorAll('.analysis-detail').forEach(function(el){el.remove();});
+
+  var detailRow=document.createElement('tr');
+  detailRow.className='analysis-detail';
+  detailRow.innerHTML='<td colspan="7" style="padding:16px;background:rgba(255,255,255,.02);border:1px solid var(--gray-800)"><p style="color:var(--gray-400);text-align:center">Caricamento analisi...</p></td>';
+  row.parentNode.insertBefore(detailRow,row.nextSibling);
+
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_airdrop_analysis',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId})
+    });
+    var d=await res.json();
+    if(!d||!d.ok){
+      detailRow.querySelector('td').innerHTML='<p style="color:#ef4444">Errore: '+(d.error||'sconosciuto')+'</p>';
+      return;
+    }
+    var h='';
+
+    // ═══ [1] RISULTATO DRAW ═══
+    h+='<div style="font-size:10px;color:#49b583;letter-spacing:1.5px;font-family:var(--font-m);margin-bottom:8px">1. RISULTATO DRAW</div>';
+    if(d.draw_executed&&d.scores&&d.scores.length){
+      var winner=d.scores[0];
+      var winnerDetail=d.participants?d.participants.find(function(p){return p.user_id===winner.user_id}):null;
+      var winnerEmail=winnerDetail?winnerDetail.email:winner.user_id.substring(0,12)+'...';
+      h+='<div style="background:rgba(73,181,131,.08);border:1px solid rgba(73,181,131,.3);padding:12px;margin-bottom:16px">';
+      h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
+      h+='<div><span style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">VINCITORE</span><br><span style="color:#49b583;font-family:var(--font-mono);font-size:13px">'+escHtml(winnerEmail)+'</span></div>';
+      h+='<div style="text-align:right"><span style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">SCORE</span><br><span style="color:#49b583;font-weight:600;font-size:18px">'+parseFloat(winner.score).toFixed(4)+'</span></div>';
+      h+='</div>';
+      h+='<div style="font-size:12px;color:var(--gray-400);margin-bottom:8px">Decomposizione: <span style="color:#4A9EFF">F1='+parseFloat(winner.f1).toFixed(2)+'</span> | <span style="color:var(--gold)">F2='+parseFloat(winner.f2).toFixed(2)+'</span> | <span style="color:#f59e0b">F3='+parseFloat(winner.f3).toFixed(2)+'</span></div>';
+      if(d.winner_explanation){
+        h+='<div style="color:var(--gray-200);font-size:12px;font-style:italic;border-top:1px solid rgba(73,181,131,.2);padding-top:8px">'+escHtml(d.winner_explanation)+'</div>';
+      }
+      h+='</div>';
+    }else{
+      h+='<div style="color:var(--gray-400);font-size:12px;margin-bottom:16px">Draw non ancora eseguito. Dati calcolati in tempo reale dall\'algoritmo.</div>';
+    }
+
+    // ═══ [2] TOP 5 CLASSIFICA SCORE ═══
+    if(d.scores&&d.scores.length){
+      h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;font-family:var(--font-m);margin-bottom:8px">2. CLASSIFICA SCORE'+(d.scores.length>5?' (TOP 5 di '+d.scores.length+')':'')+'</div>';
+      h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px">';
+      h+='<thead><tr style="border-bottom:1px solid var(--gray-700)">';
+      h+='<th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">RANK</th>';
+      h+='<th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">EMAIL</th>';
+      h+='<th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">SCORE</th>';
+      h+='<th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F1</th>';
+      h+='<th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F2</th>';
+      h+='<th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F3</th>';
+      h+='<th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">BLOCCHI</th>';
+      h+='</tr></thead><tbody>';
+      var top5=d.scores.slice(0,5);
+      top5.forEach(function(sc){
+        var isWinner=sc.rank===1&&d.draw_executed;
+        var rowBg=isWinner?'rgba(73,181,131,.1)':'transparent';
+        var pDetail=d.participants?d.participants.find(function(p){return p.user_id===sc.user_id}):null;
+        var isTest=pDetail&&pDetail.is_test_user;
+        var email=pDetail?pDetail.email:sc.user_id.substring(0,8)+'...';
+        var emailTrunc=email.length>25?email.substring(0,25)+'...':email;
+        h+='<tr style="background:'+rowBg+';border-bottom:1px solid var(--gray-800)">';
+        h+='<td style="padding:5px 6px;color:var(--gray-400)">'+(isWinner?'&#x1F451; ':'')+sc.rank+'</td>';
+        h+='<td style="padding:5px 6px;color:var(--gray-300);font-family:var(--font-mono);font-size:10px" title="'+escHtml(email)+'">'+escHtml(emailTrunc)+' <span style="font-size:8px;color:'+(isTest?'#f59e0b':'#4A9EFF')+'">'+(isTest?'TEST':'REAL')+'</span></td>';
+        h+='<td style="padding:5px 6px;color:'+(isWinner?'#49b583':'var(--white)')+';text-align:right;font-weight:600">'+parseFloat(sc.score).toFixed(4)+'</td>';
+        h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f1).toFixed(3)+'</td>';
+        h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f2).toFixed(3)+'</td>';
+        h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f3).toFixed(3)+'</td>';
+        h+='<td style="padding:5px 6px;color:#4A9EFF;text-align:right">'+sc.blocks+'</td>';
+        h+='</tr>';
+      });
+      h+='</tbody></table>';
+    }
+
+    // ═══ [3] DISTRIBUZIONE NFT ═══
+    h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;font-family:var(--font-m);margin-bottom:8px">3. DISTRIBUZIONE NFT</div>';
+    if(d.nft){
+      h+='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px">';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">PERDENTI CON NFT</div><div style="color:var(--gold);font-weight:600;font-size:16px">'+d.nft.nft_recipients+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">NFT TOTALI</div><div style="color:var(--gold);font-weight:600;font-size:16px">'+d.nft.nft_distributed+'</div></div>';
+      var deltaPct=d.nft.treasury_before_eur>0?((d.nft.treasury_delta_eur/d.nft.treasury_before_eur)*100).toFixed(1):'—';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">TREASURY</div><div style="color:#49b583;font-weight:600;font-size:14px">&euro;'+parseFloat(d.nft.treasury_before_eur).toFixed(2)+' &rarr; &euro;'+parseFloat(d.nft.treasury_after_eur).toFixed(2)+'</div><div style="font-size:10px;color:#49b583">(+&euro;'+parseFloat(d.nft.treasury_delta_eur).toFixed(2)+' / +'+deltaPct+'%)</div></div>';
+      h+='</div>';
+    }else{
+      h+='<div style="color:var(--gray-400);font-size:12px;margin-bottom:16px">NFT non ancora distribuiti (draw non eseguito).</div>';
+    }
+
+    // ═══ [4] SPLIT ECONOMICA ═══
+    h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;font-family:var(--font-m);margin-bottom:8px">4. SPLIT ECONOMICA</div>';
+    if(d.split){
+      h+='<div style="display:grid;grid-template-columns:1fr repeat(4,1fr);gap:8px;margin-bottom:8px">';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">ARIA TOTALE</div><div style="color:#4A9EFF;font-weight:600;font-size:16px">'+d.aria_incassato.toLocaleString()+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">VENDITORE (67,99%)</div><div style="color:#49b583;font-weight:600">&euro;'+parseFloat(d.split.venditore_eur).toFixed(2)+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">FONDO (22%)</div><div style="color:var(--gold);font-weight:600">&euro;'+parseFloat(d.split.fondo_eur).toFixed(2)+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">AIROOBI (10%)</div><div style="color:var(--white);font-weight:600">&euro;'+parseFloat(d.split.airoobi_eur).toFixed(2)+'</div></div>';
+      h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-700)"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">CHARITY (0,01%)</div><div style="color:var(--gray-300);font-weight:600">&euro;'+parseFloat(d.split.charity_eur).toFixed(4)+'</div></div>';
+      h+='</div>';
+    }else{
+      h+='<div style="color:var(--gray-400);font-size:12px;margin-bottom:16px">Split non disponibile (draw non eseguito).</div>';
+    }
+
+    detailRow.querySelector('td').innerHTML=h;
+  }catch(e){
+    console.error('analysisDetail:',e);
+    detailRow.querySelector('td').innerHTML='<p style="color:#ef4444">'+e.message+'</p>';
+  }
+}
 
 // ── Engine Config ──
 async function loadEngineConfig(){
@@ -6051,6 +6285,23 @@ async function loadReferralHistory(){
         <label style="margin:0;font-size:12px;color:var(--gray-300)">Auto Draw <span style="color:var(--gray-500);text-transform:none;letter-spacing:0">(draw automatico alla deadline)</span></label>
       </div>
 
+      <!-- Test & Simulazione -->
+      <div id="ad-sim-section" style="margin-top:20px;padding:16px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);display:none">
+        <div style="font-size:11px;color:#f59e0b;font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:12px">TEST &amp; SIMULAZIONE</div>
+        <div id="ad-sim-info" style="color:var(--gray-400);font-size:12px;margin-bottom:12px"></div>
+        <label style="font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:4px;display:block">% BLOCCHI DA RIEMPIRE</label>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+          <input type="range" id="ad-sim-pct" min="1" max="100" value="50" oninput="document.getElementById('ad-sim-pct-label').textContent=this.value+'%'" style="flex:1;accent-color:#f59e0b">
+          <span id="ad-sim-pct-label" style="color:#f59e0b;font-weight:600;font-family:var(--font-m);font-size:16px;min-width:40px;text-align:right">50%</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+          <input type="checkbox" id="ad-sim-spread" style="width:auto;accent-color:#f59e0b">
+          <label style="margin:0;font-size:12px;color:var(--gray-300)">Distribuisci su più giorni <span style="color:var(--gray-500);text-transform:none;letter-spacing:0">(simula acquisti distribuiti nel tempo)</span></label>
+        </div>
+        <div id="ad-sim-result" style="margin-bottom:12px"></div>
+        <button id="ad-sim-btn-run" onclick="adSimulateRunInModal()" style="background:#f59e0b;color:#000;border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RUN SIMULATION</button>
+      </div>
+
       <div class="ct-modal-actions">
         <button class="ct-btn-cancel" onclick="adCloseModal()">ANNULLA</button>
         <button class="ct-btn-save" onclick="adSaveAirdrop()">SALVA</button>
@@ -6069,6 +6320,30 @@ async function loadReferralHistory(){
         <button class="ct-btn-cancel" onclick="drawModalClose()">CHIUDI</button>
       </div>
     </div>
+  </div>
+
+  <!-- ═══ TEST POOL ═══ -->
+  <div class="admin-section">
+    <h2>Test Pool</h2>
+    <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Pool di 1000 utenti test con 1000 ARIA ciascuno. Date di registrazione distribuite negli ultimi 180 giorni. Non conteggiati nelle statistiche.</p>
+    <button id="btn-create-test-pool" onclick="adCreateTestPool()" style="background:#f59e0b;color:#000;border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">CREA TEST POOL</button>
+  </div>
+
+  <!-- ═══ AIRDROP ANALYSIS ═══ -->
+  <div class="admin-section">
+    <h2>Airdrop Analysis</h2>
+    <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Analisi algoritmo per ogni airdrop. Clicca su una riga per espandere i dettagli: score, fattori F1/F2/F3, e motivazione vincitore.</p>
+    <div style="margin-bottom:12px">
+      <button onclick="loadAirdropAnalysis()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RICARICA</button>
+    </div>
+    <table class="admin-table">
+      <thead>
+        <tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Data draw</th><th>Vincitore</th><th>Blocchi</th><th>Score</th></tr>
+      </thead>
+      <tbody id="analysis-body">
+        <tr><td colspan="7" style="color:var(--gray-400)">Clicca RICARICA per caricare</td></tr>
+      </tbody>
+    </table>
   </div>
 
   <!-- ═══ ENGINE CONFIG ═══ -->
