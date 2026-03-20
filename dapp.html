@@ -903,6 +903,10 @@ input{font-family:inherit}
             <div class="wcard-amount" style="color:var(--gold)" id="dapp-wcard-rend-count">1</div>
             <div class="wcard-unit" style="color:rgba(184,150,12,.5)"><span class="it">NFT IN PORTAFOGLIO</span><span class="en">NFT IN WALLET</span></div>
           </div>
+          <div class="wcard-amount-block" style="margin-left:24px">
+            <div class="wcard-amount" style="color:var(--gold);font-size:clamp(22px,2.5vw,32px)" id="dapp-wcard-rend-value">—</div>
+            <div class="wcard-unit" style="color:rgba(184,150,12,.5)"><span class="it">VALORE STIMATO</span><span class="en">ESTIMATED VALUE</span></div>
+          </div>
         </div>
         <div class="wcard-desc">
           <span class="it">Il tuo certificato di resa. Mostra il valore KAS che hai diritto a riscuotere. Puoi convertire parte o tutto l'importo in KAS reale sulla blockchain Kaspa — rimborso garantito al 95%, elaborato in 24–48h.</span>
@@ -2317,30 +2321,68 @@ function showToast(html){
 }
 
 // ── Wallet tab ──
-function loadDappWallet(){
+async function loadDappWallet(){
+  var token=await getValidToken();
+  if(!token)return;
+  var sess=JSON.parse(localStorage.getItem('sb_session')||'null');
+  if(!sess||!sess.user)return;
+  var userId=sess.user.id;
+
+  // ARIA balance
   var el=document.getElementById('dapp-wcard-aria-amount');
   if(el)el.textContent=_balance.toLocaleString();
   var serial=document.getElementById('dapp-wcard-aria-serial');
-  var sess=JSON.parse(localStorage.getItem('sb_session')||'null');
-  if(serial&&sess&&sess.user)serial.textContent=sess.user.id.substring(0,8).toUpperCase();
-  // NFT rendimento: check nft_rewards
-  (async function(){
-    var token=await getValidToken();
-    if(!token)return;
-    var res=await fetch(SB_URL+'/rest/v1/nft_rewards?user_id=eq.'+sess.user.id+'&select=id',{
+  if(serial)serial.textContent=userId.substring(0,8).toUpperCase();
+
+  // NFT rewards
+  var cards=[];
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/nft_rewards?user_id=eq.'+userId+'&select=*',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
     });
-    if(res.ok){
-      var nfts=await res.json();
-      var count=nfts?nfts.length:0;
-      if(count>0){
-        var wc=document.getElementById('dapp-wcard-rendimento');if(wc)wc.style.display='';
-        var wl=document.getElementById('dapp-wcard-rendimento-locked');if(wl)wl.style.display='none';
-        var cn=document.getElementById('dapp-wcard-rend-count');if(cn)cn.textContent=count;
-        var sn=document.getElementById('dapp-wcard-rend-serial');if(sn)sn.textContent=nfts[0].id.substring(0,8).toUpperCase();
+    if(res.ok)cards=await res.json();
+  }catch(e){}
+
+  var rendCards=cards.filter(function(c){return c.nft_type==='NFT_EARN'});
+  var hasRendimento=rendCards.length>0;
+
+  var wc=document.getElementById('dapp-wcard-rendimento');
+  var wl=document.getElementById('dapp-wcard-rendimento-locked');
+  if(wc)wc.style.display=hasRendimento?'flex':'none';
+  if(wl)wl.style.display=hasRendimento?'none':'flex';
+
+  if(hasRendimento){
+    var cn=document.getElementById('dapp-wcard-rend-count');
+    if(cn)cn.textContent=rendCards.length;
+    var sn=document.getElementById('dapp-wcard-rend-serial');
+    if(sn&&rendCards[0]){
+      sn.textContent=rendCards[0].id.split('-')[0].substring(0,5).toUpperCase();
+    }
+  }
+
+  // Treasury → valore per tessera
+  try{
+    var tRes=await fetch(SB_URL+'/rest/v1/treasury_stats?select=*&order=created_at.desc&limit=1',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(tRes.ok){
+      var tRows=await tRes.json();
+      if(tRows&&tRows.length){
+        var treasury=parseFloat(tRows[0].balance_eur)||0;
+        var minted=tRows[0].nft_minted||cards.length||1;
+        var unitVal=minted>0?(treasury/minted):0;
+        var valEl=document.getElementById('dapp-wcard-rend-value');
+        if(valEl){
+          if(hasRendimento){
+            var totalVal=(unitVal*rendCards.length).toFixed(2);
+            valEl.innerHTML='&euro; '+totalVal;
+          }else{
+            valEl.textContent='—';
+          }
+        }
       }
     }
-  })();
+  }catch(e){}
 }
 
 // ── Archive tab ──
