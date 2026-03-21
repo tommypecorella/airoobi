@@ -395,39 +395,83 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <div style="flex:1"><label>Prezzo desiderato (venditore)</label><input type="number" id="ad-desired-price" readonly style="opacity:.6;cursor:not-allowed"></div>
         <div style="flex:1"><label>Prezzo minimo (venditore)</label><input type="number" id="ad-min-price" readonly style="opacity:.6;cursor:not-allowed"></div>
       </div>
-      <label>Quotazione AIROOBI (&euro;) <button type="button" onclick="adSuggestValues()" style="background:var(--gold);color:#000;border:none;padding:3px 10px;font-size:9px;letter-spacing:1px;cursor:pointer;margin-left:8px;font-family:var(--font-m)">SUGGERISCI</button></label>
-      <input type="number" id="ad-object-value" step="0.01" min="0" placeholder="Valore proposto dalla piattaforma" oninput="adAutoCalcBlocks()">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div>
-          <label>Block price (ARIA)</label>
-          <input type="number" id="ad-block-price" min="1" placeholder="50" oninput="adAutoCalcBlocks()">
+      <!-- ── SEZIONE PRICING ── -->
+      <div style="border:1px solid var(--gray-700);padding:16px;margin-bottom:16px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">PRICING &amp; BLOCCHI
+          <button type="button" onclick="adSuggestValues()" style="background:var(--gold);color:#000;border:none;padding:3px 10px;font-size:9px;letter-spacing:1px;cursor:pointer;margin-left:8px;font-family:var(--font-m)">SUGGERISCI</button>
         </div>
-        <div>
-          <label>N&ordm; Blocchi <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(auto)</span></label>
-          <input type="number" id="ad-total-blocks" min="0" placeholder="Auto">
+
+        <label>Quotazione AIROOBI (&euro;)</label>
+        <input type="number" id="ad-object-value" step="0.01" min="0" placeholder="Valore proposto dalla piattaforma" oninput="adAutoCalcBlocks()">
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+          <div>
+            <label>Block price (ARIA)</label>
+            <input type="number" id="ad-block-price" min="1" placeholder="50" oninput="adAutoCalcBlocks()">
+          </div>
+          <div>
+            <label>Presale price (ARIA)</label>
+            <input type="number" id="ad-presale-price" min="0" placeholder="opzionale" oninput="adAutoCalcBlocks()">
+          </div>
+          <div>
+            <label>N&ordm; Blocchi <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(auto)</span></label>
+            <input type="number" id="ad-total-blocks" min="0" placeholder="Auto" oninput="adAutoCalcBlocks()">
+          </div>
+        </div>
+
+        <!-- CALCOLATORE LIVE -->
+        <div id="ad-calc-preview" style="display:none;margin-top:12px">
+          <!-- Revenue summary -->
+          <div style="padding:12px 16px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);font-size:12px;line-height:1.8;margin-bottom:8px">
+            <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:6px">REVENUE (100% SELL-THROUGH)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+              <div>ARIA totali: <strong id="ad-calc-aria" style="color:var(--white)">—</strong></div>
+              <div>EUR incassati: <strong id="ad-calc-eur" style="color:var(--white)">—</strong></div>
+              <div>Copertura quotaz.: <strong id="ad-calc-coverage" style="color:var(--white)">—</strong></div>
+            </div>
+          </div>
+
+          <!-- Split breakdown -->
+          <div style="padding:12px 16px;border:1px solid rgba(73,234,203,.15);background:rgba(73,234,203,.03);font-size:12px;line-height:1.8;margin-bottom:8px">
+            <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--kas);margin-bottom:6px">SPLIT ECONOMICA (100%)</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+              <div>Venditore (67.99%): <strong id="ad-calc-venditore" style="color:var(--kas)">—</strong></div>
+              <div>Fondo Comune (22%): <strong id="ad-calc-fondo" style="color:var(--white)">—</strong></div>
+              <div>Fee AIROOBI (10%): <strong id="ad-calc-fee" style="color:var(--gold)">—</strong></div>
+              <div>Charity (0.01%): <strong id="ad-calc-charity" style="color:var(--gray-400)">—</strong></div>
+            </div>
+          </div>
+
+          <!-- Scenario analysis -->
+          <div style="padding:12px 16px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02);font-size:11px;line-height:1.6">
+            <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin-bottom:6px">SCENARI FILL-RATE</div>
+            <table style="width:100%;border-collapse:collapse;font-size:11px">
+              <thead><tr style="color:var(--gray-500)">
+                <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Fill</th>
+                <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Blocchi</th>
+                <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">EUR</th>
+                <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Venditore</th>
+                <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Fee</th>
+                <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">vs Quot.</th>
+                <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">vs Min</th>
+              </tr></thead>
+              <tbody id="ad-calc-scenarios"></tbody>
+            </table>
+          </div>
         </div>
       </div>
-      <!-- CALCOLATORE BLOCCHI -->
-      <div id="ad-calc-preview" style="display:none;padding:12px 16px;margin:8px 0 12px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);font-size:12px;line-height:1.8">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div>Blocchi totali: <strong id="ad-calc-blocks" style="color:var(--gold)">—</strong></div>
-          <div>Prezzo blocco: <strong id="ad-calc-bp" style="color:var(--gold)">—</strong> ARIA (<span id="ad-calc-bp-eur">—</span>)</div>
-          <div>Revenue totale: <strong id="ad-calc-revenue" style="color:var(--white)">—</strong> ARIA (<span id="ad-calc-rev-eur">—</span>)</div>
-          <div>Rapporto rev/quot: <strong id="ad-calc-ratio" style="color:var(--white)">—</strong></div>
-        </div>
-      </div>
+
+      <!-- ── SEZIONE OPERATIVA ── -->
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div>
-          <label>Presale block price <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(opzionale)</span></label>
-          <input type="number" id="ad-presale-price" min="0" placeholder="">
+          <label>Deadline</label>
+          <input type="datetime-local" id="ad-deadline">
         </div>
         <div>
           <label>Auto-draw</label>
-          <div style="padding-top:8px"><label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0"><input type="checkbox" id="ad-auto-draw" style="accent-color:var(--gold);width:16px;height:16px"> Estrai automaticamente alla deadline</label></div>
+          <div style="padding-top:8px"><label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0"><input type="checkbox" id="ad-auto-draw" style="accent-color:var(--gold);width:16px;height:16px"> Estrai alla deadline</label></div>
         </div>
       </div>
-      <label>Deadline</label>
-      <input type="datetime-local" id="ad-deadline">
       <label>Status</label>
       <select id="ad-status">
         <option value="in_valutazione">In valutazione</option>
@@ -963,26 +1007,87 @@ async function adOpenModal(id){
 
 function adCloseModal(){document.getElementById('ad-modal-bg').classList.remove('active');}
 
+var ARIA_EUR_ENGINE=0.10; // tasso interno engine
+var SPLIT={venditore:0.6799,fondo:0.22,airoobi:0.10,charity:0.0001};
+
 function adAutoCalcBlocks(){
   var val=parseFloat(document.getElementById('ad-object-value').value)||0;
   var bp=parseInt(document.getElementById('ad-block-price').value)||0;
   var preview=document.getElementById('ad-calc-preview');
+  var blocksEl=document.getElementById('ad-total-blocks');
+
+  // Auto-calc blocchi solo se il campo è vuoto o era auto
   if(val>0&&bp>0){
-    var blocks=Math.ceil(val/(bp*0.10));
-    document.getElementById('ad-total-blocks').value=blocks;
-    var totalAria=blocks*bp;
-    var totalEur=totalAria*0.20;
-    var ratio=(totalEur/val*100).toFixed(0);
-    document.getElementById('ad-calc-blocks').textContent=blocks;
-    document.getElementById('ad-calc-bp').textContent=bp;
-    document.getElementById('ad-calc-bp-eur').textContent='€'+(bp*0.20).toFixed(2);
-    document.getElementById('ad-calc-revenue').textContent=totalAria;
-    document.getElementById('ad-calc-rev-eur').textContent='€'+totalEur.toFixed(2);
-    document.getElementById('ad-calc-ratio').textContent=ratio+'%';
-    if(preview)preview.style.display='block';
+    var autoBlocks=Math.ceil(val/(bp*ARIA_EUR_ENGINE));
+    var currentBlocks=parseInt(blocksEl.value)||0;
+    if(currentBlocks===0||!blocksEl.dataset.manual)blocksEl.value=autoBlocks;
+    adUpdateCalcPreview();
   }else{
     if(preview)preview.style.display='none';
   }
+}
+
+function adUpdateCalcPreview(){
+  var val=parseFloat(document.getElementById('ad-object-value').value)||0;
+  var bp=parseInt(document.getElementById('ad-block-price').value)||0;
+  var blocks=parseInt(document.getElementById('ad-total-blocks').value)||0;
+  var presale=parseInt(document.getElementById('ad-presale-price').value)||0;
+  var minP=parseFloat(document.getElementById('ad-min-price').value)||0;
+  var desired=parseFloat(document.getElementById('ad-desired-price').value)||0;
+  var preview=document.getElementById('ad-calc-preview');
+
+  if(val<=0||bp<=0||blocks<=0){if(preview)preview.style.display='none';return;}
+  if(preview)preview.style.display='block';
+
+  // 100% sell-through
+  var totalAria=blocks*bp;
+  var totalEur=totalAria*ARIA_EUR_ENGINE;
+
+  document.getElementById('ad-calc-aria').textContent=totalAria.toLocaleString('it-IT');
+  document.getElementById('ad-calc-eur').textContent='€'+totalEur.toFixed(2);
+  var coverage=(totalEur/val*100).toFixed(0);
+  var covEl=document.getElementById('ad-calc-coverage');
+  covEl.textContent=coverage+'%';
+  covEl.style.color=parseFloat(coverage)>=100?'var(--kas)':'#ef4444';
+
+  // Split 100%
+  var vend=Math.round(totalAria*ARIA_EUR_ENGINE*SPLIT.venditore*100)/100;
+  var fondo=Math.round(totalAria*ARIA_EUR_ENGINE*SPLIT.fondo*100)/100;
+  var fee=Math.round(totalAria*ARIA_EUR_ENGINE*SPLIT.airoobi*100)/100;
+  var charity=Math.round(totalAria*ARIA_EUR_ENGINE*SPLIT.charity*10000)/10000;
+
+  document.getElementById('ad-calc-venditore').textContent='€'+vend.toFixed(2);
+  document.getElementById('ad-calc-fondo').textContent='€'+fondo.toFixed(2);
+  document.getElementById('ad-calc-fee').textContent='€'+fee.toFixed(2);
+  document.getElementById('ad-calc-charity').textContent='€'+charity.toFixed(4);
+
+  // Scenari fill-rate
+  var scenarios=[25,50,75,100];
+  var tbody=document.getElementById('ad-calc-scenarios');
+  var html='';
+  for(var i=0;i<scenarios.length;i++){
+    var pct=scenarios[i];
+    var soldBlocks=Math.round(blocks*pct/100);
+    var ariaInc=soldBlocks*bp;
+    var eurInc=ariaInc*ARIA_EUR_ENGINE;
+    var vendInc=Math.round(eurInc*SPLIT.venditore*100)/100;
+    var feeInc=Math.round(eurInc*SPLIT.airoobi*100)/100;
+    var vsQuot=val>0?(eurInc/val*100).toFixed(0):'—';
+    var vsMin=minP>0?(vendInc/minP*100).toFixed(0):'—';
+    var vendOk=minP>0&&vendInc>=minP;
+    var quotOk=eurInc>=val;
+
+    html+='<tr style="border-bottom:1px solid var(--gray-800)">';
+    html+='<td style="padding:4px 8px;font-weight:600;color:var(--gold)">'+pct+'%</td>';
+    html+='<td style="padding:4px 8px;text-align:right">'+soldBlocks+'</td>';
+    html+='<td style="padding:4px 8px;text-align:right">€'+eurInc.toFixed(2)+'</td>';
+    html+='<td style="padding:4px 8px;text-align:right;color:var(--kas)">€'+vendInc.toFixed(2)+'</td>';
+    html+='<td style="padding:4px 8px;text-align:right;color:var(--gold)">€'+feeInc.toFixed(2)+'</td>';
+    html+='<td style="padding:4px 8px;text-align:right;color:'+(quotOk?'var(--kas)':'#ef4444')+'">'+vsQuot+'%</td>';
+    html+='<td style="padding:4px 8px;text-align:right;color:'+(vendOk?'var(--kas)':'#ef4444')+'">'+(vsMin!=='—'?vsMin+'%'+(vendOk?' ✓':' ✗'):'—')+'</td>';
+    html+='</tr>';
+  }
+  tbody.innerHTML=html;
 }
 
 function adSuggestValues(){
