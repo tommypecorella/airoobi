@@ -2295,7 +2295,7 @@ async function doBoApprove(){
       body:JSON.stringify(args)
     });
     var result=await res.json();
-    if(result&&result.ok){closeBoModals();showToast('Approvato: '+_boTarget.title,'success');loadBoData();}
+    if(result&&result.ok){var t=_boTarget.title;closeBoModals();showToast('Approvato: '+t,'success');loadBoData();}
     else{showToast('Errore: '+(result.error||'sconosciuto'),'error');}
   }catch(e){showToast('Errore: '+e.message,'error');}
   btn.disabled=false;
@@ -2325,7 +2325,7 @@ async function doBoReject(){
       body:JSON.stringify(args)
     });
     var result=await res.json();
-    if(result&&result.ok){closeBoModals();showToast('Rifiutato: '+_boTarget.title,'success');loadBoData();}
+    if(result&&result.ok){var t=_boTarget.title;closeBoModals();showToast('Rifiutato: '+t,'success');loadBoData();}
     else{showToast('Errore: '+(result.error||'sconosciuto'),'error');}
   }catch(e){showToast('Errore: '+e.message,'error');}
   btn.disabled=false;
