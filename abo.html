@@ -1191,17 +1191,32 @@ function adUpdateCalcPreview(){
   tbody.innerHTML=html;
 }
 
+function calcSuggestedValues(desired,minP){
+  // La quotazione deve garantire che il venditore riceva ALMENO il suo minimo
+  // Venditore = revenue × 67.99%, revenue = quotazione (al 100% sell-through)
+  // Quindi: quotazione >= minP / SPLIT.venditore
+  var minQuotation=minP>0?Math.ceil(minP/SPLIT.venditore):0;
+  var avgQuotation=minP>0?Math.round((desired+minP)/2):desired;
+  var quotation=Math.max(500,minQuotation,avgQuotation);
+  // Block price ragionevole: target ~50 ARIA (€5/blocco)
+  var sugPrice=50;
+  var sugBlocks=Math.ceil(quotation/(sugPrice*ARIA_EUR_ENGINE));
+  // Se troppi pochi blocchi, abbassa il prezzo
+  if(sugBlocks<20){sugPrice=Math.max(5,Math.round(quotation/(20*ARIA_EUR_ENGINE)/5)*5);sugBlocks=Math.ceil(quotation/(sugPrice*ARIA_EUR_ENGINE));}
+  // Se troppi blocchi, alza il prezzo
+  if(sugBlocks>500){sugPrice=Math.max(sugPrice,Math.ceil(quotation/(500*ARIA_EUR_ENGINE)/5)*5);sugBlocks=Math.ceil(quotation/(sugPrice*ARIA_EUR_ENGINE));}
+  return {quotation:quotation,price:sugPrice,blocks:sugBlocks};
+}
+
 function adSuggestValues(){
   var desired=parseFloat(document.getElementById('ad-desired-price').value)||0;
   var minP=parseFloat(document.getElementById('ad-min-price').value)||0;
   if(desired<=0&&minP<=0)return;
-  var quotation=minP>0?Math.round((desired+minP)/2):desired;
-  if(quotation<500)quotation=500;
-  var sugBlocks=Math.max(10,Math.round(quotation/4)*2);
-  var sugPrice=Math.max(1,Math.round(quotation*1.43/sugBlocks));
-  document.getElementById('ad-object-value').value=quotation;
-  document.getElementById('ad-block-price').value=sugPrice;
-  adAutoCalcBlocks();
+  var sug=calcSuggestedValues(desired,minP);
+  document.getElementById('ad-object-value').value=sug.quotation;
+  document.getElementById('ad-block-price').value=sug.price;
+  document.getElementById('ad-total-blocks').value=sug.blocks;
+  adUpdateCalcPreview();
   var deadline=new Date();deadline.setDate(deadline.getDate()+30);
   document.getElementById('ad-deadline').value=deadline.toISOString().substring(0,16);
   document.getElementById('ad-auto-draw').checked=true;
@@ -2218,13 +2233,11 @@ function openBoApprove(id){
   document.getElementById('bo-approve-title').textContent=a.title;
   var val=Number(a.seller_desired_price)||0;
   var minP=Number(a.seller_min_price)||0;
-  var quotation=minP>0?Math.round((val+minP)/2):val;
-  if(quotation<500)quotation=500;
-  var sugBlocks=Math.max(10,Math.round(quotation/4)*2);
-  var sugPrice=Math.max(1,Math.round(quotation*1.43/sugBlocks));
-  document.getElementById('bo-approve-info').innerHTML='<strong>'+escHtml(a.title)+'</strong><br>Categoria: '+(a.category||'—')+' · Desiderato: <strong>€'+val.toLocaleString('it-IT')+'</strong> · Minimo: <strong>€'+minP.toLocaleString('it-IT')+'</strong><br>Suggerimento: ~'+sugBlocks+' blocchi × '+sugPrice+' ARIA';
-  document.getElementById('bo-approve-price').value=sugPrice;
-  document.getElementById('bo-approve-blocks').value=sugBlocks;
+  var sug=calcSuggestedValues(val,minP);
+  var vendPayout=Math.round(sug.blocks*sug.price*ARIA_EUR_ENGINE*SPLIT.venditore*100)/100;
+  document.getElementById('bo-approve-info').innerHTML='<strong>'+escHtml(a.title)+'</strong><br>Categoria: '+(a.category||'—')+' · Desiderato: <strong>€'+val.toLocaleString('it-IT')+'</strong> · Minimo: <strong>€'+minP.toLocaleString('it-IT')+'</strong><br>Quotazione suggerita: <strong style="color:var(--gold)">€'+sug.quotation+'</strong> · '+sug.blocks+' blocchi × '+sug.price+' ARIA · Payout venditore: <strong style="color:var(--kas)">€'+vendPayout.toFixed(2)+'</strong>';
+  document.getElementById('bo-approve-price').value=sug.price;
+  document.getElementById('bo-approve-blocks').value=sug.blocks;
   document.getElementById('bo-approve-presale').value='';
   var deadline=new Date();deadline.setDate(deadline.getDate()+30);
   document.getElementById('bo-approve-deadline').value=deadline.toISOString().substring(0,10);
@@ -2269,8 +2282,8 @@ async function doBoApprove(){
   var status=document.getElementById('bo-approve-status').value;
   var deadline=document.getElementById('bo-approve-deadline').value||null;
   if(!price||price<1||!blocks||blocks<1){showToast('Prezzo e blocchi obbligatori','warning');return;}
-  var quotation=_boTarget.seller_min_price?Math.round((Number(_boTarget.seller_desired_price)+Number(_boTarget.seller_min_price))/2):Number(_boTarget.seller_desired_price);
-  if(quotation<500)quotation=500;
+  var sug=calcSuggestedValues(Number(_boTarget.seller_desired_price)||0,Number(_boTarget.seller_min_price)||0);
+  var quotation=sug.quotation;
   var btn=document.getElementById('bo-approve-ok');btn.disabled=true;
   try{
     var args={p_airdrop_id:_boTarget.id,p_status:status,p_block_price_aria:price,p_total_blocks:blocks,p_object_value_eur:quotation,p_auto_draw:true};
