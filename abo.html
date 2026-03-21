@@ -642,7 +642,7 @@ async function sbGet(path,token){
 }
 async function sbPatch(path,data,token){
   var res=await fetch(SB_URL+'/rest/v1/'+path,{method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(token||SB_KEY),'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
-  if(!res.ok)throw new Error('PATCH failed: '+res.status);
+  if(!res.ok){var body='';try{body=JSON.stringify(await res.json());}catch(e){}throw new Error('PATCH failed: '+res.status+' '+body);}
 }
 async function sbDel(path,token){
   var res=await fetch(SB_URL+'/rest/v1/'+path,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(token||SB_KEY),'Prefer':'return=minimal'}});
