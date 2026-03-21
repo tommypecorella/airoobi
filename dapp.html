@@ -553,7 +553,7 @@ input{font-family:inherit}
     </a>
     <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-      <span class="it"><b>Proponi il tuo</b></span><span class="en"><b>Submit yours</b></span>
+      <span class="it"><b>Valuta</b></span><span class="en"><b>Evaluate</b></span>
     </a>
     <a href="/gestione" data-page="manage" id="nav-manage" onclick="navigateTo('manage',event)" style="display:none">
       <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -596,7 +596,7 @@ input{font-family:inherit}
   </a>
   <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
     <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-    <span class="it"><b>Proponi il tuo</b></span><span class="en"><b>Submit yours</b></span>
+    <span class="it"><b>Valuta</b></span><span class="en"><b>Evaluate</b></span>
   </a>
   <a href="/gestione" data-page="manage" id="nav-manage-mobile" onclick="navigateTo('manage',event)" style="display:none">
     <svg viewBox="0 0 24 24"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
@@ -688,7 +688,7 @@ input{font-family:inherit}
         </a>
         <a class="dash-quick-link" onclick="navigateTo('submit')">
           <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          <span class="it">Proponi</span><span class="en">Submit</span>
+          <span class="it">Valuta</span><span class="en">Evaluate</span>
         </a>
       </div>
     </div>
@@ -706,7 +706,7 @@ input{font-family:inherit}
     <!-- VALUATION BANNER -->
     <div class="val-banner" id="val-banner" style="display:none;cursor:pointer" onclick="navigateTo('submit')">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      <span><strong id="val-count">0</strong> <span class="it">oggetti in valutazione — proponi il tuo</span><span class="en">items under evaluation — submit yours</span></span>
+      <span><strong id="val-count">0</strong> <span class="it">oggetti in valutazione — fai valutare il tuo</span><span class="en">items under evaluation — get yours evaluated</span></span>
     </div>
 
     <!-- CATEGORY FILTER -->
@@ -714,7 +714,14 @@ input{font-family:inherit}
       <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
     </div>
 
-    <!-- stats-bar removed -->
+    <!-- CTA VALUTA -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin-bottom:20px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);cursor:pointer" onclick="navigateTo('submit')">
+      <div>
+        <div style="font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white);margin-bottom:2px"><span class="it">Hai un oggetto di valore?</span><span class="en">Have a valuable item?</span></div>
+        <div style="font-size:12px;color:var(--gray-400)"><span class="it">Fallo valutare da AIROOBI e mettilo in airdrop. Valore minimo €500.</span><span class="en">Get it evaluated by AIROOBI and put it on airdrop. Min value €500.</span></div>
+      </div>
+      <button onclick="navigateTo('submit');event.stopPropagation()" style="background:var(--gold);color:var(--black);border:none;padding:10px 24px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">VALUTA</button>
+    </div>
 
     <!-- LIST VIEW -->
     <div class="list-view" id="list-view">
@@ -1438,7 +1445,7 @@ var PATH_TO_PAGE={'/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esp
 var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
-  submit:{it:'<b>Proponi il tuo</b> <em>oggetto</em>',en:'<b>Submit your</b> <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
+  submit:{it:'<b>Valuta</b> il tuo <em>oggetto</em>',en:'<b>Evaluate</b> your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
   referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e guadagna ARIA bonus.',sub_en:'Invite friends and earn bonus ARIA.'},
   wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'Le tue Tessere, i tuoi asset. ARIA, NFT Rendimento e KAS.',sub_en:'Your Cards, your assets. ARIA, Yield NFTs and KAS.'},
   archive:{it:'<em>Archivio</em> Airdrop',en:'Airdrop <em>Archive</em>',sub_it:'Tutti gli airdrop completati. Trasparenza totale.',sub_en:'All completed airdrops. Full transparency.'},
