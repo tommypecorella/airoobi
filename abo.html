@@ -1075,8 +1075,9 @@ async function adOpenModal(id){
       body:'{}'
     });
     var all=await res.json();
+    if(!Array.isArray(all)){showToast('Errore: risposta non valida','error');return;}
     var a=all.find(function(x){return x.id===id});
-    if(!a){showToast('Airdrop non trovato','error');return;}
+    if(!a){showToast('Airdrop non trovato (id: '+id+')','error');return;}
     document.getElementById('ad-edit-id').value=a.id;
     document.getElementById('ad-desired-price').value=a.seller_desired_price||'';
     document.getElementById('ad-min-price').value=a.seller_min_price||'';
@@ -1103,7 +1104,7 @@ async function adOpenModal(id){
       document.getElementById('ad-sim-btn-run').textContent='RUN SIMULATION';
     }
     document.getElementById('ad-modal-bg').classList.add('active');
-  }catch(e){console.error('adOpenModal:',e);showToast('Errore caricamento','error');}
+  }catch(e){console.error('adOpenModal:',e);showToast('Errore: '+e.message,'error');}
 }
 
 function adCloseModal(){document.getElementById('ad-modal-bg').classList.remove('active');}
@@ -2198,8 +2199,8 @@ function renderBoTable(){
 }
 
 function viewBoDetail(id){
-  var a=_boAllAirdrops.find(function(x){return x.id===id});
-  if(!a)return;
+  var a=(_boAllAirdrops||[]).find(function(x){return x.id===id});
+  if(!a){showToast('Airdrop non trovato','error');return;}
   var panel=document.getElementById('bo-detail-panel');
   var date=new Date(a.created_at).toLocaleString('it-IT');
   var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT'):'—';
@@ -2227,8 +2228,8 @@ function viewBoDetail(id){
 function closeBoDetail(){var p=document.getElementById('bo-detail-panel');if(p)p.innerHTML='';}
 
 function openBoApprove(id){
-  var a=_boAllAirdrops.find(function(x){return x.id===id});
-  if(!a)return;
+  var a=(_boAllAirdrops||[]).find(function(x){return x.id===id});
+  if(!a){showToast('Airdrop non trovato','error');return;}
   _boTarget=a;
   document.getElementById('bo-approve-title').textContent=a.title;
   var val=Number(a.seller_desired_price)||0;
@@ -2301,8 +2302,8 @@ async function doBoApprove(){
 }
 
 function openBoReject(id){
-  var a=_boAllAirdrops.find(function(x){return x.id===id});
-  if(!a)return;
+  var a=(_boAllAirdrops||[]).find(function(x){return x.id===id});
+  if(!a){showToast('Airdrop non trovato','error');return;}
   _boTarget=a;
   document.getElementById('bo-reject-title').textContent=a.title;
   document.getElementById('bo-reject-reason').value='rifiutato_generico';
