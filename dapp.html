@@ -388,6 +388,11 @@ input{font-family:inherit}
 .submit-msg{font-size:13px;margin-top:12px;text-align:center;padding:12px}
 .submit-msg.ok{background:rgba(73,234,203,.06);border:1px solid rgba(73,234,203,.2);color:var(--kas)}
 .submit-msg.err{background:rgba(255,107,107,.06);border:1px solid rgba(255,107,107,.2);color:var(--red)}
+.status-pending{background:rgba(184,150,12,.12);color:var(--gold);border:1px solid rgba(184,150,12,.25)}
+.status-live{background:rgba(73,234,203,.1);color:var(--kas);border:1px solid rgba(73,234,203,.2)}
+.status-done{background:rgba(74,158,255,.1);color:var(--aria);border:1px solid rgba(74,158,255,.2)}
+.status-rejected{background:rgba(239,68,68,.08);color:#ef4444;border:1px solid rgba(239,68,68,.2)}
+.status-default{background:rgba(255,255,255,.05);color:var(--gray-400);border:1px solid var(--gray-700)}
 .submit-rules{margin-top:24px;padding:16px;border:1px solid var(--gray-700);font-size:12px;color:var(--gray-400);line-height:1.6}
 .submit-rules strong{color:var(--white)}
 
@@ -748,12 +753,32 @@ input{font-family:inherit}
 
   <!-- ═══ MY AIRDROPS TAB ═══ -->
   <div id="tab-my" style="display:none">
-    <div class="my-list" id="my-list"></div>
-    <div class="empty" id="my-empty" style="display:none">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <div class="empty-title"><span class="it">Nessuna partecipazione</span><span class="en">No participations yet</span></div>
-      <p class="empty-sub"><span class="it">Esplora gli airdrop e acquista i tuoi primi blocchi.</span><span class="en">Explore airdrops and buy your first blocks.</span></p>
+
+    <!-- ── Le mie proposte (oggetti inviati per valutazione) ── -->
+    <div style="margin-bottom:32px">
+      <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:16px;border-bottom:1px solid var(--gray-800);padding-bottom:8px">
+        <span class="it">Le mie proposte</span><span class="en">My submissions</span>
+      </h3>
+      <div id="my-submissions"></div>
+      <div id="my-submissions-empty" style="display:none;text-align:center;padding:32px 16px;border:1px dashed var(--gray-800)">
+        <div style="font-size:14px;color:var(--gray-400);margin-bottom:8px"><span class="it">Non hai ancora proposto oggetti.</span><span class="en">You haven't submitted any items yet.</span></div>
+        <button onclick="navigateTo('submit')" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer">VALUTA</button>
+      </div>
     </div>
+
+    <!-- ── Le mie partecipazioni ── -->
+    <div>
+      <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:16px;border-bottom:1px solid var(--gray-800);padding-bottom:8px">
+        <span class="it">Le mie partecipazioni</span><span class="en">My participations</span>
+      </h3>
+      <div class="my-list" id="my-list"></div>
+      <div class="empty" id="my-empty" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <div class="empty-title"><span class="it">Nessuna partecipazione</span><span class="en">No participations yet</span></div>
+        <p class="empty-sub"><span class="it">Esplora gli airdrop e acquista i tuoi primi blocchi.</span><span class="en">Explore airdrops and buy your first blocks.</span></p>
+      </div>
+    </div>
+
   </div>
 
   <!-- ═══ SUBMIT TAB ═══ -->
@@ -798,7 +823,19 @@ input{font-family:inherit}
       </div>
       <div class="submit-hint" style="margin-bottom:20px"><span class="it">Il prezzo minimo accettabile deve essere almeno &euro;500. AIROOBI valuterà il tuo oggetto e ti proporrà una quotazione entro 24-48 ore.</span><span class="en">The minimum acceptable price must be at least &euro;500. AIROOBI will evaluate your object and propose a quote within 24-48 hours.</span></div>
 
-      <button class="submit-btn" id="sub-btn" onclick="submitObject()"><span class="it">INVIA RICHIESTA</span><span class="en">SUBMIT REQUEST</span></button>
+      <!-- COSTO VALUTAZIONE -->
+      <div id="sub-cost-box" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin-bottom:20px;border:1px solid rgba(74,158,255,.2);background:rgba(74,158,255,.04)">
+        <div>
+          <div style="font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:1px;margin-bottom:4px"><span class="it">Costo valutazione</span><span class="en">Valuation cost</span></div>
+          <div style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--white)"><span id="sub-cost-aria">—</span> ARIA</div>
+          <div style="font-size:12px;color:var(--gray-400)"><span class="it">Il tuo saldo:</span><span class="en">Your balance:</span> <span id="sub-balance" style="color:var(--aria)">—</span> ARIA</div>
+        </div>
+        <button class="submit-btn" id="sub-btn" onclick="submitObject()" style="width:auto;padding:14px 28px"><span class="it">ACQUISTA VALUTAZIONE</span><span class="en">BUY VALUATION</span></button>
+      </div>
+      <div id="sub-insufficient" style="display:none;padding:12px 16px;margin-bottom:16px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.06);color:#ef4444;font-size:13px">
+        <span class="it">Saldo ARIA insufficiente. Guadagna ARIA con check-in, referral e video per sbloccare la valutazione.</span>
+        <span class="en">Insufficient ARIA balance. Earn ARIA through check-ins, referrals and videos to unlock valuation.</span>
+      </div>
       <div id="sub-msg"></div>
       <div class="submit-rules">
         <strong><span class="it">Regole:</span><span class="en">Rules:</span></strong><br>
@@ -1101,6 +1138,8 @@ var _session=null;
 var _balance=0;
 var ARIA_EUR=0.20; // 1 ARIA = €0.20
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
+function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+function updateBalanceUI(){document.getElementById('topbar-bal').textContent=_balance+' ARIA ('+eur(_balance)+')';}
 var _airdrops=[];
 var _myParts=[];
 var _currentFilter='all';
@@ -1484,7 +1523,8 @@ function showPage(page){
     }
   }
   if(page==='home')loadHomeDashboard();
-  if(page==='my')renderMyAirdrops();
+  if(page==='my'){renderMyAirdrops();loadMySubmissions();}
+  if(page==='submit'){loadValuationCost().then(function(){updateSubmitCostUI();});}
   if(page==='referral')loadDappReferral();
   if(page==='wallet')loadDappWallet();
   if(page==='archive')loadDappArchive();
@@ -2108,6 +2148,34 @@ async function checkUserRoles(){
 }
 
 // ── Submit object ──
+var _valuationCost=50;
+
+async function loadValuationCost(){
+  try{
+    var token=await getValidToken();
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_valuation_cost',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'
+    });
+    if(res.ok){var c=await res.json();if(typeof c==='number')_valuationCost=c;}
+  }catch(e){}
+}
+
+function updateSubmitCostUI(){
+  var costEl=document.getElementById('sub-cost-aria');
+  var balEl=document.getElementById('sub-balance');
+  var insEl=document.getElementById('sub-insufficient');
+  var btnEl=document.getElementById('sub-btn');
+  if(costEl)costEl.textContent=_valuationCost;
+  if(balEl)balEl.textContent=_balance;
+  if(_balance<_valuationCost){
+    if(insEl)insEl.style.display='block';
+    if(btnEl)btnEl.disabled=true;
+  }else{
+    if(insEl)insEl.style.display='none';
+    if(btnEl)btnEl.disabled=false;
+  }
+}
+
 async function submitObject(){
   var title=document.getElementById('sub-title').value.trim();
   var desc=document.getElementById('sub-desc').value.trim();
@@ -2133,34 +2201,46 @@ async function submitObject(){
     msgEl.innerHTML='<span class="it">Il prezzo minimo non può superare il desiderato.</span><span class="en">Min price cannot exceed desired price.</span>';
     msgEl.className='submit-msg err';return;
   }
+  if(_balance<_valuationCost){
+    msgEl.innerHTML='<span class="it">Saldo ARIA insufficiente. Servono '+_valuationCost+' ARIA.</span><span class="en">Insufficient ARIA balance. '+_valuationCost+' ARIA required.</span>';
+    msgEl.className='submit-msg err';return;
+  }
   var btn=document.getElementById('sub-btn');
   btn.disabled=true;btn.classList.add('loading');
   try{
     var token=await getValidToken();
-    var res=await fetch(SB_URL+'/rest/v1/airdrops',{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/submit_object_for_valuation',{
       method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
       body:JSON.stringify({
-        title:title,
-        description:desc||null,
-        category:cat,
-        image_url:imgUrl,
-        seller_desired_price:desired,
-        seller_min_price:minP,
-        object_value_eur:0,
-        block_price_aria:0,
-        total_blocks:0,
-        status:'in_valutazione',
-        submitted_by:_session.user.id
+        p_title:title,
+        p_description:desc||null,
+        p_category:cat,
+        p_image_url:imgUrl,
+        p_seller_desired_price:desired,
+        p_seller_min_price:minP
       })
     });
     if(res.ok){
-      msgEl.innerHTML='<span class="it">Oggetto inviato per valutazione! Riceverai un riscontro entro 24-48h.</span><span class="en">Item submitted for evaluation! You\'ll hear back within 24-48h.</span>';
-      msgEl.className='submit-msg ok';
-      document.getElementById('sub-title').value='';document.getElementById('sub-desc').value='';
-      document.getElementById('sub-cat').value='';document.getElementById('sub-desired').value='';
-      document.getElementById('sub-min').value='';document.getElementById('sub-img').value='';
-      showToast('<span class="it">Proposta inviata!</span><span class="en">Submission sent!</span>');
+      var result=await res.json();
+      if(result.success){
+        _balance=result.new_balance;
+        updateBalanceUI();
+        updateSubmitCostUI();
+        msgEl.innerHTML='<span class="it">Valutazione acquistata! '+result.aria_spent+' ARIA dedotti. Riceverai un riscontro entro 24-48h.</span><span class="en">Valuation purchased! '+result.aria_spent+' ARIA deducted. You\'ll hear back within 24-48h.</span>';
+        msgEl.className='submit-msg ok';
+        document.getElementById('sub-title').value='';document.getElementById('sub-desc').value='';
+        document.getElementById('sub-cat').value='';document.getElementById('sub-desired').value='';
+        document.getElementById('sub-min').value='';document.getElementById('sub-img').value='';
+        showToast('Valutazione acquistata!');
+      }else{
+        if(result.error==='INSUFFICIENT_ARIA'){
+          msgEl.innerHTML='<span class="it">Saldo ARIA insufficiente. Servono '+result.required+' ARIA, hai '+result.available+'.</span><span class="en">Insufficient ARIA. Need '+result.required+', have '+result.available+'.</span>';
+        }else{
+          msgEl.innerHTML='<span class="it">Errore: '+result.error+'</span><span class="en">Error: '+result.error+'</span>';
+        }
+        msgEl.className='submit-msg err';
+      }
     } else {
       console.error('Submit error:',await res.text());
       msgEl.innerHTML='<span class="it">Errore nell\'invio. Riprova.</span><span class="en">Submission error. Try again.</span>';
@@ -2171,6 +2251,69 @@ async function submitObject(){
     msgEl.className='submit-msg err';
   }
   btn.disabled=false;btn.classList.remove('loading');
+}
+
+// ── My Submissions (Le mie proposte) ──
+async function loadMySubmissions(){
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_my_submissions',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'
+    });
+    if(res.ok){
+      var subs=await res.json();
+      renderMySubmissions(subs);
+    }
+  }catch(e){console.error('loadMySubmissions error:',e);}
+}
+
+function renderMySubmissions(subs){
+  var container=document.getElementById('my-submissions');
+  var emptyEl=document.getElementById('my-submissions-empty');
+  if(!container)return;
+  if(!subs||subs.length===0){
+    container.innerHTML='';
+    if(emptyEl)emptyEl.style.display='block';
+    return;
+  }
+  if(emptyEl)emptyEl.style.display='none';
+  var statusLabels={
+    'in_valutazione':{it:'In valutazione',en:'Under evaluation',cls:'status-pending'},
+    'presale':{it:'Pre-vendita',en:'Pre-sale',cls:'status-live'},
+    'sale':{it:'In vendita',en:'On sale',cls:'status-live'},
+    'dropped':{it:'Draw eseguito',en:'Draw executed',cls:'status-done'},
+    'completed':{it:'Completato',en:'Completed',cls:'status-done'},
+    'rifiutato_min500':{it:'Rifiutato (min €500)',en:'Rejected (min €500)',cls:'status-rejected'},
+    'rifiutato_generico':{it:'Rifiutato',en:'Rejected',cls:'status-rejected'},
+    'annullato':{it:'Annullato',en:'Cancelled',cls:'status-rejected'}
+  };
+  var html='';
+  for(var i=0;i<subs.length;i++){
+    var s=subs[i];
+    var st=statusLabels[s.status]||{it:s.status,en:s.status,cls:'status-default'};
+    var date=new Date(s.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'});
+    var quotation=s.object_value_eur>0?'€'+parseFloat(s.object_value_eur).toFixed(2):'—';
+    html+='<div style="border:1px solid var(--gray-800);padding:16px 20px;margin-bottom:12px">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">';
+    html+='<div style="font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white)">'+escHtml(s.title)+'</div>';
+    html+='<span class="'+st.cls+'" style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;white-space:nowrap"><span class="it">'+st.it+'</span><span class="en">'+st.en+'</span></span>';
+    html+='</div>';
+    html+='<div style="display:flex;gap:24px;font-size:12px;color:var(--gray-400);margin-bottom:8px">';
+    html+='<span>'+date+'</span>';
+    html+='<span>'+escHtml(s.category)+'</span>';
+    html+='</div>';
+    html+='<div style="display:flex;gap:24px;font-size:13px">';
+    html+='<div><span style="color:var(--gray-500)"><span class="it">Desiderato:</span><span class="en">Desired:</span></span> <span style="color:var(--white)">€'+parseFloat(s.seller_desired_price).toFixed(2)+'</span></div>';
+    html+='<div><span style="color:var(--gray-500)"><span class="it">Minimo:</span><span class="en">Min:</span></span> <span style="color:var(--white)">€'+parseFloat(s.seller_min_price).toFixed(2)+'</span></div>';
+    html+='<div><span style="color:var(--gray-500)"><span class="it">Quotazione:</span><span class="en">Quote:</span></span> <span style="color:var(--gold)">'+quotation+'</span></div>';
+    html+='</div>';
+    if(s.rejection_reason){
+      html+='<div style="margin-top:8px;padding:8px 12px;border-left:3px solid #ef4444;background:rgba(239,68,68,.06);font-size:12px;color:#ef4444">'+escHtml(s.rejection_reason)+'</div>';
+    }
+    html+='</div>';
+  }
+  container.innerHTML=html;
 }
 
 // ══════════════════════════════
