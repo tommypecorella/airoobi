@@ -192,6 +192,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   </div>
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">Sistema</span>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-categories')"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>Categorie</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-engine')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Engine Config</div>
   </div>
 </nav>
@@ -503,6 +504,55 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         </thead>
         <tbody id="test-users-body"><tr><td colspan="7" style="color:var(--gray-400)">Clicca CARICA</td></tr></tbody>
       </table>
+    </div>
+  </div>
+
+  <!-- CATEGORIE -->
+  <div class="admin-section" id="sec-categories">
+    <h2>Categorie</h2>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <p style="color:var(--gray-400);font-size:12px;margin:0">Gestisci le categorie del marketplace airdrop.</p>
+      <button onclick="catOpenModal()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:8px 18px;cursor:pointer;font-weight:700">+ NUOVA</button>
+    </div>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr>
+          <th>Ordine</th><th>Icon</th><th>Slug</th><th>Nome IT</th><th>Nome EN</th><th>Attiva</th><th>Azioni</th>
+        </tr></thead>
+        <tbody id="cat-tbody"><tr><td colspan="7" style="text-align:center;color:var(--gray-500)">Caricamento...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CATEGORY MODAL -->
+  <div id="cat-modal-bg" class="ct-modal-bg">
+    <div class="ct-modal" style="max-width:520px">
+      <h3 id="cat-modal-title">Nuova Categoria</h3>
+      <input type="hidden" id="cat-edit-id">
+      <label>Slug (identificativo univoco)</label>
+      <input type="text" id="cat-slug" placeholder="es. mobile, tech, luxury">
+      <label>Nome IT</label>
+      <input type="text" id="cat-name-it" placeholder="Mobile & Tech Entry">
+      <label>Nome EN</label>
+      <input type="text" id="cat-name-en" placeholder="Mobile & Tech Entry">
+      <label>Descrizione IT</label>
+      <input type="text" id="cat-desc-it" placeholder="Smartphone, tablet...">
+      <label>Descrizione EN</label>
+      <input type="text" id="cat-desc-en" placeholder="Smartphones, tablets...">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label>Icona (emoji)</label><input type="text" id="cat-icon" placeholder="📱"></div>
+        <div><label>Ordine</label><input type="number" id="cat-sort" placeholder="1" min="0"></div>
+      </div>
+      <div style="margin-top:12px">
+        <label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer">
+          <input type="checkbox" id="cat-active" checked style="accent-color:var(--gold);width:16px;height:16px"> Attiva
+        </label>
+      </div>
+      <div class="ct-modal-actions">
+        <button class="ct-btn-save" onclick="catSave()">SALVA</button>
+        <button class="ct-btn-cancel" onclick="catCloseModal()">ANNULLA</button>
+        <button class="ct-btn-del" id="cat-del-btn" onclick="catDelete()" style="display:none">ELIMINA</button>
+      </div>
     </div>
   </div>
 
@@ -1677,6 +1727,131 @@ async function saveAdminTokenomics(){
     });
   }catch(e){console.error('Save treasury error:',e);alert('Errore salvataggio: '+e.message);}
 }
+
+// ══════════════════════════════════════════════════════════
+//  CATEGORIE CRUD
+// ══════════════════════════════════════════════════════════
+
+var _categoriesCache=[];
+
+async function loadCategories(){
+  var s=getSession();if(!s)return;
+  var rows=await sbGet('categories?order=sort_order.asc',s.access_token);
+  _categoriesCache=rows;
+  var tb=document.getElementById('cat-tbody');
+  if(!tb)return;
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--gray-500)">Nessuna categoria</td></tr>';return;}
+  var html='';
+  for(var i=0;i<rows.length;i++){
+    var c=rows[i];
+    html+='<tr>';
+    html+='<td>'+c.sort_order+'</td>';
+    html+='<td style="font-size:20px">'+escHtml(c.icon)+'</td>';
+    html+='<td><span style="font-family:var(--font-m);font-size:12px;color:var(--gold)">'+escHtml(c.slug)+'</span></td>';
+    html+='<td>'+escHtml(c.name_it)+'</td>';
+    html+='<td>'+escHtml(c.name_en)+'</td>';
+    html+='<td>'+(c.is_active?'<span class="admin-badge admin-badge-green">Attiva</span>':'<span class="admin-badge" style="color:var(--gray-500);border:1px solid var(--gray-700)">Off</span>')+'</td>';
+    html+='<td><div class="ct-actions"><button onclick="catEdit(\''+c.id+'\')">Edit</button></div></td>';
+    html+='</tr>';
+  }
+  tb.innerHTML=html;
+}
+
+function catOpenModal(id){
+  document.getElementById('cat-edit-id').value='';
+  document.getElementById('cat-slug').value='';
+  document.getElementById('cat-name-it').value='';
+  document.getElementById('cat-name-en').value='';
+  document.getElementById('cat-desc-it').value='';
+  document.getElementById('cat-desc-en').value='';
+  document.getElementById('cat-icon').value='';
+  document.getElementById('cat-sort').value='0';
+  document.getElementById('cat-active').checked=true;
+  document.getElementById('cat-modal-title').textContent='Nuova Categoria';
+  document.getElementById('cat-del-btn').style.display='none';
+  document.getElementById('cat-slug').disabled=false;
+  document.getElementById('cat-modal-bg').classList.add('active');
+}
+
+function catCloseModal(){
+  document.getElementById('cat-modal-bg').classList.remove('active');
+}
+
+function catEdit(id){
+  var c=_categoriesCache.find(function(x){return x.id===id;});
+  if(!c)return;
+  document.getElementById('cat-edit-id').value=c.id;
+  document.getElementById('cat-slug').value=c.slug;
+  document.getElementById('cat-slug').disabled=true;
+  document.getElementById('cat-name-it').value=c.name_it;
+  document.getElementById('cat-name-en').value=c.name_en;
+  document.getElementById('cat-desc-it').value=c.description_it||'';
+  document.getElementById('cat-desc-en').value=c.description_en||'';
+  document.getElementById('cat-icon').value=c.icon||'';
+  document.getElementById('cat-sort').value=c.sort_order||0;
+  document.getElementById('cat-active').checked=c.is_active;
+  document.getElementById('cat-modal-title').textContent='Modifica: '+c.slug;
+  document.getElementById('cat-del-btn').style.display='';
+  document.getElementById('cat-modal-bg').classList.add('active');
+}
+
+async function catSave(){
+  var s=getSession();if(!s)return;
+  var id=document.getElementById('cat-edit-id').value;
+  var payload={
+    slug:document.getElementById('cat-slug').value.trim().toLowerCase(),
+    name_it:document.getElementById('cat-name-it').value.trim(),
+    name_en:document.getElementById('cat-name-en').value.trim(),
+    description_it:document.getElementById('cat-desc-it').value.trim(),
+    description_en:document.getElementById('cat-desc-en').value.trim(),
+    icon:document.getElementById('cat-icon').value.trim(),
+    sort_order:parseInt(document.getElementById('cat-sort').value)||0,
+    is_active:document.getElementById('cat-active').checked
+  };
+  if(!payload.slug||!payload.name_it||!payload.name_en){
+    showToast('Slug, nome IT e nome EN sono obbligatori','warning');return;
+  }
+  try{
+    if(id){
+      delete payload.slug;
+      await sbPatch('categories?id=eq.'+id,payload,s.access_token);
+      showToast('Categoria aggiornata','success');
+    }else{
+      await fetch(SB_URL+'/rest/v1/categories',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify(payload)
+      });
+      showToast('Categoria creata','success');
+    }
+    catCloseModal();
+    loadCategories();
+  }catch(e){
+    showToast('Errore: '+e.message,'error');
+  }
+}
+
+async function catDelete(){
+  var id=document.getElementById('cat-edit-id').value;
+  if(!id)return;
+  if(!confirm('Eliminare questa categoria? Gli airdrop esistenti manterranno il vecchio slug.'))return;
+  var s=getSession();if(!s)return;
+  try{
+    await sbDel('categories?id=eq.'+id,s.access_token);
+    showToast('Categoria eliminata','success');
+    catCloseModal();
+    loadCategories();
+  }catch(e){
+    showToast('Errore: '+e.message,'error');
+  }
+}
+
+// Hook: carica categorie quando si naviga alla sezione
+var _origAdminNav=adminNav;
+adminNav=function(sectionId){
+  _origAdminNav(sectionId);
+  if(sectionId==='sec-categories')loadCategories();
+};
 </script>
 </body>
 </html>
