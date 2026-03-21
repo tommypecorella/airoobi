@@ -19,6 +19,7 @@
     { "source": "/referral", "destination": "/index.html" },
     { "source": "/classifica", "destination": "/index.html" },
     { "source": "/vendi", "destination": "/index.html" },
-    { "source": "/admin", "destination": "/index.html" }
+    { "source": "/admin", "destination": "/index.html" },
+    { "source": "/abo", "destination": "/abo.html" }
   ]
 }
