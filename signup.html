@@ -273,7 +273,8 @@ async function doSignup(){
       if(ref)localStorage.setItem('airoobi_pending_ref',ref);
       track('signup_complete',{method:'auto_confirm',has_ref:!!ref,lang:lang});
       if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user.id});
-      window.location.href='/';
+      var returnTo=new URLSearchParams(window.location.search).get('returnTo');
+      window.location.href=(returnTo&&returnTo.startsWith('/'))?returnTo:'/';
     }else{
       // No session returned — try auto-login immediately
       track('signup_email_sent',{has_ref:!!ref,lang:lang});

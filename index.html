@@ -1362,7 +1362,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.21-1.42.0 · 01:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.24-1.43.0 · 01:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -1981,9 +1981,14 @@ async function sbDel(path,token){
 function openAuth(mode){
   track('cta_click', {mode, source: location.hash || 'landing'});
   var ref=new URLSearchParams(window.location.search).get('ref')||window._airoobi_ref||'';
-  var refParam=ref?'?ref='+encodeURIComponent(ref):'';
-  if(mode==='login'){window.location.href='/login.html'+refParam}
-  else{window.location.href='/signup.html'+refParam}
+  var params=new URLSearchParams();
+  if(ref)params.set('ref',ref);
+  var returnTo=location.pathname;
+  if(returnTo&&returnTo!=='/'&&returnTo!=='/login.html'&&returnTo!=='/signup.html')params.set('returnTo',returnTo);
+  var qs=params.toString();
+  var suffix=qs?'?'+qs:'';
+  if(mode==='login'){window.location.href='/login.html'+suffix}
+  else{window.location.href='/signup.html'+suffix}
 }
 function closeAuth(){document.getElementById('auth-overlay').classList.remove('active');document.body.style.overflow='';clearErrors();if(location.hash==='#login'||location.hash==='#signup')history.replaceState(null,null,' ')}
 function showLogin(){document.getElementById('auth-signup').style.display='none';document.getElementById('auth-login').style.display='block';clearErrors()}
