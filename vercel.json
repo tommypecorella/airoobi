@@ -2,6 +2,22 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/airdrops", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/airdrops/:id", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/esplora", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/miei-airdrop", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/proponi", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/referral", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/portafoglio", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/archivio", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/gestione", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/referral-dapp", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/portafoglio-dapp", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/login", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/login.html" },
+    { "source": "/signup", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/signup.html" },
+    { "source": "/abo", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/abo.html" },
+
     { "source": "/dapp", "destination": "/dapp.html" },
     { "source": "/airdrops", "destination": "/dapp.html" },
     { "source": "/airdrops/:id", "destination": "/dapp.html" },
@@ -20,6 +36,8 @@
     { "source": "/classifica", "destination": "/index.html" },
     { "source": "/vendi", "destination": "/index.html" },
     { "source": "/admin", "destination": "/index.html" },
-    { "source": "/abo", "destination": "/abo.html" }
+    { "source": "/abo", "destination": "/abo.html" },
+    { "source": "/login", "destination": "/login.html" },
+    { "source": "/signup", "destination": "/signup.html" }
   ]
 }

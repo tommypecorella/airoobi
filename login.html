@@ -214,7 +214,7 @@ async function doForgot(){
     var res=await fetch(SB_URL+'/auth/v1/recover',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
-      body:JSON.stringify({email:email,redirectTo:'https://airoobi.com/reset-password.html'})
+      body:JSON.stringify({email:email,redirectTo:location.origin+'/reset-password.html'})
     });
     if(res.ok||res.status===200){
       track('password_reset_requested',{email:email});

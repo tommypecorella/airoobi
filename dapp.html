@@ -850,7 +850,7 @@ input{font-family:inherit}
     <div class="ref-card">
       <h3><span class="it">Il tuo link per invitare amici</span><span class="en">Your invite link</span></h3>
       <div class="ref-link-wrap">
-        <div class="ref-link" id="dapp-ref-link">airoobi.com?ref=...</div>
+        <div class="ref-link" id="dapp-ref-link">airoobi.app/signup?ref=...</div>
         <button class="ref-copy" onclick="dappCopyRef()"><span class="it">COPIA</span><span class="en">COPY</span></button>
       </div>
       <div class="ref-share">
@@ -1120,12 +1120,12 @@ input{font-family:inherit}
 <!-- FOOTER -->
 <div class="dapp-footer">
   <div class="dapp-footer-brand">AIROOBI <em>dApp</em></div>
-  <a href="https://airoobi.com" class="dapp-footer-link">airoobi.com</a>
+  <a href="https://airoobi.com" class="dapp-footer-link">airoobi.com</a> · <a href="https://airoobi.app" class="dapp-footer-link">airoobi.app</a>
   <div class="dapp-footer-copy">
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.03.20-1.33.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.03.25-1.44.0</div>
 </div>
 
 <script>
@@ -1181,7 +1181,7 @@ function getSession(){
 function requireAuth(){
   _session=getSession();
   if(!_session){
-    window.location.href='/login.html';
+    window.location.href='/login';
     return false;
   }
   return true;
@@ -1189,7 +1189,7 @@ function requireAuth(){
 
 function doLogout(){
   localStorage.removeItem('airoobi_session');
-  window.location.href='https://airoobi.com';
+  window.location.href=_isApp?'/':'https://airoobi.com';
 }
 
 // ── Language ──
@@ -1234,7 +1234,7 @@ async function getValidToken(){
     if(payload.exp*1000<Date.now()+60000){
       // Token expires in less than 60s, refresh it
       var ok=await refreshToken();
-      if(!ok){window.location.href='/login.html';return null;}
+      if(!ok){window.location.href='/login';return null;}
     }
   }catch(e){}
   return _session.access_token;
@@ -1279,6 +1279,13 @@ function setupUI(){
   document.getElementById('avatar-letter').textContent=letter;
   // Load avatar image from profile
   loadDappAvatar();
+  // Update nav hrefs to clean paths on airoobi.app
+  if(_isApp){
+    document.querySelectorAll('[data-page]').forEach(function(a){
+      var page=a.getAttribute('data-page');
+      if(PAGE_PATHS[page])a.setAttribute('href',PAGE_PATHS[page]);
+    });
+  }
   // Close menu on outside click
   document.addEventListener('click',function(e){
     var menu=document.getElementById('user-menu');
@@ -1378,7 +1385,7 @@ async function loadDappReferral(){
   var prof=await sbGet('profiles?id=eq.'+uid+'&select=referral_code,referral_count',token);
   if(prof&&prof[0]){
     var code=prof[0].referral_code||'';
-    var link='https://airoobi.com/signup.html?ref='+code;
+    var link=(_isApp?'https://airoobi.app/signup':'https://airoobi.com/signup.html')+'?ref='+code;
     var el=document.getElementById('dapp-ref-link');
     if(el){el.textContent=link;el.dataset.link=link;el.dataset.code=code;}
     document.getElementById('dapp-ref-count').textContent=prof[0].referral_count||0;
@@ -1479,8 +1486,11 @@ async function loadMyParticipations(){
 }
 
 // ── Page routing ──
-var PAGE_PATHS={home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral-dapp',wallet:'/portafoglio-dapp',archive:'/archivio',manage:'/gestione'};
-var PATH_TO_PAGE={'/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/gestione':'manage'};
+var _isApp=location.hostname==='airoobi.app'||location.hostname==='www.airoobi.app';
+var PAGE_PATHS=_isApp
+  ?{home:'/',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral',wallet:'/portafoglio',archive:'/archivio',manage:'/gestione'}
+  :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral-dapp',wallet:'/portafoglio-dapp',archive:'/archivio',manage:'/gestione'};
+var PATH_TO_PAGE={'/':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/gestione':'manage'};
 var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},

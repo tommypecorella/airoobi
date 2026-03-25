@@ -1100,7 +1100,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
     <span class="it">Il marketplace dove realizzi i tuoi desideri.</span><span class="en">The marketplace where you make your desires real.</span>
   </p>
   <div id="video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border:1px solid rgba(184,150,12,.2);background:#111">
-    <iframe id="video-iframe" src="https://airoobi.com/video-intro.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen loading="lazy"></iframe>
+    <iframe id="video-iframe" src="/video-intro.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen loading="lazy"></iframe>
     <button onclick="goFullscreen('video-wrap')" style="position:absolute;bottom:12px;right:12px;width:36px;height:36px;background:rgba(0,0,0,.6);border:1px solid rgba(184,150,12,.4);color:var(--gold);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:background .2s;z-index:2" title="Fullscreen">&#x26F6;</button>
   </div>
 </div>
@@ -1185,7 +1185,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
   <div style="max-width:800px;margin:48px auto 0;text-align:center">
     <p style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:16px"><span class="it">Guarda un esempio</span><span class="en">Watch an example</span></p>
     <div id="airdrop-video-wrap" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border:1px solid rgba(184,150,12,.2);background:#111">
-      <iframe src="https://airoobi.com/video-airdrop.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen loading="lazy"></iframe>
+      <iframe src="/video-airdrop.html" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen loading="lazy"></iframe>
       <button onclick="goFullscreen('airdrop-video-wrap')" style="position:absolute;bottom:12px;right:12px;width:36px;height:36px;background:rgba(0,0,0,.6);border:1px solid rgba(184,150,12,.4);color:var(--gold);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:4px;transition:background .2s;z-index:2" title="Fullscreen">&#x26F6;</button>
     </div>
   </div>
@@ -1907,7 +1907,7 @@ function showVideoAd(onComplete){
   skipBtn.classList.remove('ready');
   overlay.classList.add('active');
   document.body.style.overflow='hidden';
-  container.innerHTML='<iframe src="https://airoobi.com/video-intro.html?autoplay=1" style="width:100%;height:100%;border:none;" allow="autoplay"></iframe>';
+  container.innerHTML='<iframe src="/video-intro.html?autoplay=1" style="width:100%;height:100%;border:none;" allow="autoplay"></iframe>';
   updateVideoCountdown(lang);
   videoTimer=setInterval(function(){
     videoSeconds++;
@@ -2288,7 +2288,7 @@ async function showDashboard(session){
 
   if(profiles&&profiles.length>0){
     const p=profiles[0];
-    const refLink='https://airoobi.com/signup.html?ref='+p.referral_code;
+    const refLink='https://airoobi.app/signup?ref='+p.referral_code;
     document.getElementById('ref-link').textContent=refLink;
     document.getElementById('ref-link').dataset.link=refLink;
     document.getElementById('ref-count').textContent=p.referral_count||0;
@@ -2941,7 +2941,7 @@ function startEarnVideo(){
   bar.style.width='0%';
   earnVideoSec=0;
   
-  container.innerHTML='<iframe src="https://airoobi.com/video-intro.html?autoplay=1" style="width:100%;height:100%;border:none;" allow="autoplay"></iframe>';
+  container.innerHTML='<iframe src="/video-intro.html?autoplay=1" style="width:100%;height:100%;border:none;" allow="autoplay"></iframe>';
   
   earnVideoTimer=setInterval(function(){
     earnVideoSec++;
@@ -3140,7 +3140,7 @@ function closeAdmin(){
   document.getElementById('admin-overlay').classList.remove('active');
   document.body.style.overflow='';
   if(_adminRefreshInterval){clearInterval(_adminRefreshInterval);_adminRefreshInterval=null;}
-  window.location.href='/dapp';
+  window.location.href='https://airoobi.app';
 }
 
 function adminNav(sectionId){
@@ -5956,7 +5956,7 @@ async function loadReferralHistory(){
     <div class="ref-card">
       <h3><span class="it">Il tuo link per invitare amici</span><span class="en">Your invite link</span></h3>
       <div class="ref-link-wrap">
-        <div class="ref-link" id="ref-link">airoobi.com?ref=...</div>
+        <div class="ref-link" id="ref-link">airoobi.app/signup?ref=...</div>
         <button class="ref-copy" onclick="copyRef()"><span class="it">COPIA</span><span class="en">COPY</span></button>
       </div>
       <div class="ref-share">
