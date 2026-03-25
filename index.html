@@ -1362,7 +1362,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.24-1.43.0 · 01:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.03.25-1.44.0 · 01:00 CET · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 
@@ -2186,6 +2186,39 @@ async function doLogin(){
 function saveSession(s){localStorage.setItem('airoobi_session',JSON.stringify(s))}
 function getSession(){try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch{return null}}
 function clearSession(){localStorage.removeItem('airoobi_session')}
+
+// ── Token refresh (mirrors dapp.html) ──
+async function refreshToken(){
+  var s=getSession();
+  if(!s||!s.refresh_token)return false;
+  try{
+    var res=await fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({refresh_token:s.refresh_token})
+    });
+    if(!res.ok)return false;
+    var data=await res.json();
+    s.access_token=data.access_token;
+    s.refresh_token=data.refresh_token;
+    s.user=data.user||s.user;
+    saveSession(s);
+    return true;
+  }catch(e){return false}
+}
+async function ensureFreshToken(){
+  var s=getSession();
+  if(!s)return null;
+  try{
+    var payload=JSON.parse(atob(s.access_token.split('.')[1]));
+    if(payload.exp*1000<Date.now()+60000){
+      var ok=await refreshToken();
+      if(!ok){clearSession();return null;}
+      return getSession();
+    }
+  }catch(e){}
+  return s;
+}
 
 // ── Logout ──
 function doLogout(){
@@ -3089,8 +3122,8 @@ function renderInvestorCharts(){
 const ADMIN_EMAILS=['tommaso.pecorella+ceo@outlook.com','ceo@airoobi.com'];
 
 var _adminRefreshInterval=null;
-function openAdmin(){
-  const s=getSession();
+async function openAdmin(){
+  var s=await ensureFreshToken();
   if(!s){openAuth('login');return;}
   if(ADMIN_EMAILS.indexOf(s.user?.email)===-1)return;
   document.getElementById('admin-overlay').classList.add('active');
@@ -3189,7 +3222,7 @@ async function toggleUserDetail(row,uid){
 }
 
 async function loadAdminData(){
-  const s=getSession();
+  const s=await ensureFreshToken();
   if(!s)return;
   const t=s.access_token;
   
