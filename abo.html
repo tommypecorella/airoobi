@@ -791,6 +791,39 @@ function saveSession(s){localStorage.setItem('airoobi_session',JSON.stringify(s)
 function getSession(){try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch{return null}}
 function clearSession(){localStorage.removeItem('airoobi_session')}
 
+// ── Token refresh ──
+async function refreshToken(){
+  var s=getSession();
+  if(!s||!s.refresh_token)return false;
+  try{
+    var res=await fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({refresh_token:s.refresh_token})
+    });
+    if(!res.ok)return false;
+    var data=await res.json();
+    s.access_token=data.access_token;
+    s.refresh_token=data.refresh_token;
+    s.user=data.user||s.user;
+    saveSession(s);
+    return true;
+  }catch(e){return false}
+}
+async function ensureFreshToken(){
+  var s=getSession();
+  if(!s)return null;
+  try{
+    var payload=JSON.parse(atob(s.access_token.split('.')[1]));
+    if(payload.exp*1000<Date.now()+60000){
+      var ok=await refreshToken();
+      if(!ok){clearSession();return null;}
+      return getSession();
+    }
+  }catch(e){}
+  return s;
+}
+
 // ── Supabase helpers ──
 async function sbAuth(endpoint,body){
   const res=await fetch(SB_URL+'/auth/v1/'+endpoint,{
@@ -888,8 +921,8 @@ function aboLogout(){
 
 // ── Auto-login if session exists ──
 var _adminRefreshInterval=null;
-(function(){
-  var s=getSession();
+(async function(){
+  var s=await ensureFreshToken();
   if(s&&s.access_token&&ADMIN_EMAILS.indexOf(s.user?.email)!==-1){
     window._currentSession=s;
     document.getElementById('abo-login').classList.add('hidden');
@@ -968,7 +1001,7 @@ async function toggleUserDetail(row,uid){
 }
 
 async function loadAdminData(){
-  const s=getSession();if(!s)return;
+  const s=await ensureFreshToken();if(!s)return;
   const t=s.access_token;
   try{
     const allProfiles=await sbGet('profiles?select=*&order=created_at.desc',t);

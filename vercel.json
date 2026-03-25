@@ -17,6 +17,7 @@
     { "source": "/login", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/login.html" },
     { "source": "/signup", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/signup.html" },
     { "source": "/abo", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/abo.html" },
+    { "source": "/admin", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/abo.html" },
 
     { "source": "/", "destination": "/home.html" },
     { "source": "/dapp", "destination": "/dapp.html" },
