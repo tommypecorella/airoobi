@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendi su AIROOBI — Airdroppa il tuo oggetto di valore</title>
+  <meta name="description" content="Hai un oggetto di valore? Non metterlo su eBay. Airdroppalo su AIROOBI: valutazione professionale, community attiva, pagamento garantito in KAS. Valore minimo €500.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Vendi su AIROOBI — Airdroppa il tuo oggetto di valore">
+  <meta property="og:description" content="Un nuovo modo di cedere oggetti di valore. Community attiva, pagamento garantito in KAS, zero rischio invenduto.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.airoobi.com/vendi.html">
+  <meta property="og:image" content="https://www.airoobi.com/og-image.png">
+  <link rel="canonical" href="https://www.airoobi.com/vendi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gold-light: #d4ad30;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --kas: #49EACB;
+      --font-h: 'Cormorant Garamond', serif;
+      --font-b: 'Instrument Sans', sans-serif;
+      --font-m: 'DM Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-b);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-family: var(--font-b);
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      padding: 7rem 1.5rem 6rem;
+      text-align: center;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(184,150,12,0.10) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero-label {
+      display: inline-block;
+      font-family: var(--font-m);
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(184,150,12,0.35);
+      padding: 0.3rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 2rem;
+    }
+    .hero h1 {
+      font-family: var(--font-h);
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+      color: var(--white);
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-sub {
+      max-width: 580px;
+      margin: 0 auto 3rem;
+      font-size: 1.125rem;
+      color: var(--gray-300);
+      line-height: 1.7;
+    }
+    .hero-cta {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: var(--font-b);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.9rem 2.4rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .hero-cta:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .hero-note {
+      margin-top: 1.2rem;
+      font-size: 0.78rem;
+      color: var(--gray-400);
+      font-family: var(--font-m);
+    }
+
+    /* ── SECTION BASE ── */
+    section {
+      padding: 5rem 1.5rem;
+    }
+    .section-inner {
+      max-width: 820px;
+      margin: 0 auto;
+    }
+    .section-inner.wide {
+      max-width: 1080px;
+    }
+    .section-tag {
+      font-family: var(--font-m);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--font-h);
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 300;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .section-title em { font-style: italic; color: var(--gold); }
+    .section-lead {
+      font-size: 1.05rem;
+      color: var(--gray-300);
+      line-height: 1.75;
+      max-width: 640px;
+    }
+
+    /* ── IL PROBLEMA ── */
+    .problema {
+      background: var(--gray-900);
+      border-top: 1px solid var(--gray-800);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .problema-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .problema-card {
+      background: var(--gray-800);
+      border: 1px solid var(--gray-700);
+      border-radius: 10px;
+      padding: 1.75rem 1.5rem;
+    }
+    .problema-card .icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+      display: block;
+      line-height: 1;
+    }
+    .problema-card h3 {
+      font-family: var(--font-b);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .problema-card p {
+      font-size: 0.85rem;
+      color: var(--gray-400);
+      line-height: 1.6;
+    }
+
+    /* ── COME FUNZIONA ── */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 3.5rem;
+      position: relative;
+    }
+    .steps::before {
+      content: '';
+      position: absolute;
+      left: 28px;
+      top: 40px;
+      bottom: 40px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--gold), rgba(184,150,12,0.1));
+    }
+    .step {
+      display: flex;
+      gap: 2rem;
+      align-items: flex-start;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .step:last-child { border-bottom: none; }
+    .step-num {
+      flex-shrink: 0;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--gray-800);
+      border: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-m);
+      font-size: 1.1rem;
+      color: var(--gold);
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+    .step-body h3 {
+      font-family: var(--font-h);
+      font-size: 1.5rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+      line-height: 1.2;
+    }
+    .step-body p {
+      font-size: 0.92rem;
+      color: var(--gray-300);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+    .step-badge {
+      display: inline-block;
+      margin-top: 0.75rem;
+      font-family: var(--font-m);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--kas);
+      background: rgba(73,234,203,0.08);
+      border: 1px solid rgba(73,234,203,0.2);
+      padding: 0.2rem 0.65rem;
+      border-radius: 100px;
+    }
+
+    /* ── VANTAGGI ── */
+    .vantaggi {
+      background: var(--gray-900);
+      border-top: 1px solid var(--gray-800);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .vantaggi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .vantaggio {
+      border: 1px solid var(--gray-700);
+      border-radius: 12px;
+      padding: 2rem 1.75rem;
+      background: var(--black);
+      transition: border-color 0.2s;
+    }
+    .vantaggio:hover { border-color: rgba(184,150,12,0.5); }
+    .vantaggio-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: rgba(184,150,12,0.1);
+      border: 1px solid rgba(184,150,12,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.2rem;
+    }
+    .vantaggio h3 {
+      font-family: var(--font-b);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .vantaggio p {
+      font-size: 0.87rem;
+      color: var(--gray-400);
+      line-height: 1.65;
+    }
+
+    /* ── SPLIT ── */
+    .split-box {
+      margin-top: 3rem;
+      background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-900) 100%);
+      border: 1px solid var(--gray-700);
+      border-radius: 14px;
+      padding: 2.5rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+    .split-bar-wrap {
+      flex: 1;
+      min-width: 220px;
+    }
+    .split-bar {
+      height: 10px;
+      border-radius: 100px;
+      background: var(--gray-700);
+      overflow: hidden;
+      position: relative;
+    }
+    .split-bar-fill {
+      height: 100%;
+      width: 75%;
+      border-radius: 100px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    }
+    .split-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.6rem;
+    }
+    .split-labels span {
+      font-family: var(--font-m);
+      font-size: 0.72rem;
+      color: var(--gray-400);
+    }
+    .split-text {
+      flex: 1;
+      min-width: 200px;
+    }
+    .split-text h3 {
+      font-family: var(--font-h);
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+    .split-text p {
+      font-size: 0.87rem;
+      color: var(--gray-400);
+      line-height: 1.6;
+    }
+
+    /* ── CATEGORIE ── */
+    .categorie-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+    }
+    .cat-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--gray-800);
+      border: 1px solid var(--gray-700);
+      border-radius: 100px;
+      padding: 0.55rem 1.2rem;
+      font-size: 0.88rem;
+      color: var(--gray-300);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .cat-pill:hover { border-color: var(--gold); color: var(--white); }
+    .cat-pill .cat-icon { font-size: 1rem; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      background: linear-gradient(135deg, rgba(184,150,12,0.12) 0%, transparent 60%);
+      border: 1px solid rgba(184,150,12,0.25);
+      border-radius: 16px;
+      padding: 4rem 2rem;
+      text-align: center;
+      margin: 0 auto;
+      max-width: 680px;
+    }
+    .cta-banner h2 {
+      font-family: var(--font-h);
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 300;
+      margin-bottom: 1rem;
+      line-height: 1.15;
+    }
+    .cta-banner h2 em { font-style: italic; color: var(--gold); }
+    .cta-banner p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 2rem;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .btn-primary {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: var(--font-b);
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.9rem 2.4rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      letter-spacing: 0.02em;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+    /* ── FAQ ── */
+    .faq-list {
+      margin-top: 3rem;
+      border-top: 1px solid var(--gray-800);
+    }
+    .faq-item {
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      padding: 1.5rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      color: var(--white);
+      font-family: var(--font-b);
+      font-size: 0.97rem;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .faq-q:hover { color: var(--gold); }
+    .faq-chevron {
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      transition: transform 0.25s;
+      font-size: 0.75rem;
+    }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); }
+    .faq-a {
+      display: none;
+      padding: 0 0 1.5rem;
+      font-size: 0.9rem;
+      color: var(--gray-300);
+      line-height: 1.75;
+      max-width: 680px;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── CONTATTO ── */
+    .contatto-section {
+      text-align: center;
+      background: var(--gray-900);
+      border-top: 1px solid var(--gray-800);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .contatto-section h2 {
+      font-family: var(--font-h);
+      font-size: 2.2rem;
+      font-weight: 300;
+      margin-bottom: 0.75rem;
+    }
+    .contatto-section p {
+      color: var(--gray-400);
+      font-size: 0.95rem;
+      margin-bottom: 1.75rem;
+    }
+    .btn-outline {
+      display: inline-block;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-family: var(--font-b);
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-outline:hover { background: rgba(184,150,12,0.1); }
+
+    /* ── ADS ── */
+    .ads-wrap {
+      text-align: center;
+      padding: 2rem 1rem;
+      border-top: 1px solid var(--gray-800);
+    }
+
+    /* ── FOOTER ── */
+    .site-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.82rem;
+    }
+    .site-footer a { color: var(--gray-400); text-decoration: none; }
+    .site-footer a:hover { color: var(--gold); }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .footer-version {
+      font-family: var(--font-m);
+      font-size: 0.7rem;
+      color: var(--gray-700);
+      margin-top: 0.5rem;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .topbar { padding: 0 1rem; }
+      section { padding: 3.5rem 1rem; }
+      .hero { padding: 5rem 1rem 4rem; }
+      .steps::before { display: none; }
+      .step { gap: 1.25rem; }
+      .split-box { flex-direction: column; }
+      .cta-banner { padding: 3rem 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">&larr; Torna ad AIROOBI</a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label">Per venditori &amp; aziende</div>
+    <h1>Non venderlo.<br><em>Airdroppalo.</em></h1>
+    <p class="hero-sub">
+      Hai un oggetto di valore che merita di più di un'asta online?
+      Su AIROOBI lo proponi alla community giusta, ricevi una valutazione professionale
+      e incassi a prezzo di mercato — garantito.
+    </p>
+    <a href="https://airoobi.app/proponi" class="hero-cta">Proponi il tuo oggetto</a>
+    <p class="hero-note">Valore minimo €500 · Risposta entro 24–48h</p>
+  </section>
+
+  <!-- IL PROBLEMA -->
+  <section class="problema">
+    <div class="section-inner wide">
+      <p class="section-tag">Il problema</p>
+      <h2 class="section-title">I marketplace tradizionali<br><em>non bastano più.</em></h2>
+      <p class="section-lead">
+        Per oggetti di valore reale — tecnologia premium, luxury, moto, design —
+        i canali classici creano più problemi di quanti ne risolvano.
+      </p>
+      <div class="problema-grid">
+        <article class="problema-card">
+          <span class="icon">💸</span>
+          <h3>Commissioni alte</h3>
+          <p>eBay, Catawiki e simili trattengono dal 10% al 25% del prezzo finale. Il tuo margine si riduce prima ancora di spedire.</p>
+        </article>
+        <article class="problema-card">
+          <span class="icon">⏳</span>
+          <h3>Nessuna vendita garantita</h3>
+          <p>Puoi aspettare settimane — o mesi — senza nessun acquirente. E ripartire da zero. Ogni volta.</p>
+        </article>
+        <article class="problema-card">
+          <span class="icon">⚠️</span>
+          <h3>Rischio frode</h3>
+          <p>Acquirenti fantasma, pagamenti annullati, resi abusivi. Per oggetti ad alto valore il rischio è concreto e costoso.</p>
+        </article>
+        <article class="problema-card">
+          <span class="icon">📉</span>
+          <h3>Guerra dei prezzi</h3>
+          <p>La concorrenza spinge verso il basso. Il prezzo che ottieni raramente riflette il reale valore dell'oggetto.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- COME FUNZIONA -->
+  <section>
+    <div class="section-inner">
+      <p class="section-tag">Come funziona</p>
+      <h2 class="section-title">Tre passi.<br><em>Zero complicazioni.</em></h2>
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h3>Proponi il tuo oggetto</h3>
+            <p>
+              Compila il form su AIROOBI con le informazioni sull'oggetto: categoria, condizione,
+              foto e il prezzo che vuoi ottenere. Nessun impegno iniziale, nessun costo di pubblicazione.
+              Valore minimo accettato: €500.
+            </p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h3>AIROOBI lo valuta</h3>
+            <p>
+              Il nostro team esamina la tua proposta e ti contatta entro 24–48 ore.
+              Verifichiamo l'oggetto, concordiamo il prezzo di mercato e impostiamo
+              insieme i parametri dell'airdrop.
+            </p>
+            <span class="step-badge">Valutazione professionale inclusa</span>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h3>La community partecipa, tu incassi</h3>
+            <p>
+              L'airdrop va live: la community AIROOBI partecipa con i propri ARIA.
+              Alla chiusura, l'oggetto raggiunge chi lo ha ottenuto e tu ricevi il pagamento
+              concordato in KAS — direttamente, trasparente, tracciabile su blockchain.
+            </p>
+            <span class="step-badge">Pagamento in KAS · Blockchain Kaspa</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- VANTAGGI -->
+  <section class="vantaggi">
+    <div class="section-inner wide">
+      <p class="section-tag">Vantaggi concreti</p>
+      <h2 class="section-title">Perché scegliere<br><em>AIROOBI.</em></h2>
+      <div class="vantaggi-grid">
+
+        <article class="vantaggio">
+          <div class="vantaggio-icon">🔒</div>
+          <h3>Prezzo minimo garantito</h3>
+          <p>Concordiamo un prezzo di mercato prima dell'airdrop. Se non viene raggiunto, l'oggetto ti viene restituito e i partecipanti rimborsati. Nessuna sorpresa.</p>
+        </article>
+
+        <article class="vantaggio">
+          <div class="vantaggio-icon">👥</div>
+          <h3>Community di acquirenti attivi</h3>
+          <p>Oltre 1.000 utenti Alpha già registrati e motivati a partecipare. Non stai pubblicando un annuncio — stai accedendo a una community che vuole quello che hai.</p>
+        </article>
+
+        <article class="vantaggio">
+          <div class="vantaggio-icon">🚫</div>
+          <h3>Zero rischio invenduto</h3>
+          <p>O l'airdrop si chiude con successo e tu incassi, oppure l'oggetto torna a te senza costi. Non esiste scenario in cui rimani a mani vuote.</p>
+        </article>
+
+        <article class="vantaggio">
+          <div class="vantaggio-icon">⚡</div>
+          <h3>Pagamento rapido in KAS</h3>
+          <p>Kaspa è una blockchain veloce e trasparente. Il pagamento avviene entro 24–48 ore dalla chiusura dell'airdrop. Nessuna intermediazione bancaria.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- SPLIT ECONOMICA -->
+  <section>
+    <div class="section-inner">
+      <p class="section-tag">La tua parte</p>
+      <h2 class="section-title">Ricevi la <em>maggior parte</em><br>del valore.</h2>
+      <p class="section-lead">
+        Il meccanismo AIROOBI è costruito per premiare chi porta valore reale sulla piattaforma.
+        I venditori ricevono la quota maggiore del ricavo totale dell'airdrop,
+        con una piccola parte destinata alla piattaforma e alle Tessere Rendimento dei partecipanti.
+      </p>
+      <div class="split-box">
+        <div class="split-bar-wrap">
+          <div class="split-bar">
+            <div class="split-bar-fill"></div>
+          </div>
+          <div class="split-labels">
+            <span>Venditore</span>
+            <span>AIROOBI + Tessere</span>
+          </div>
+        </div>
+        <div class="split-text">
+          <h3>Tu al primo posto.</h3>
+          <p>La quota esatta dipende dalla categoria e dal valore dell'oggetto. Te la comunichiamo chiaramente in fase di valutazione, prima che tu dia il via libera.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIE -->
+  <section style="padding-top: 0;">
+    <div class="section-inner">
+      <p class="section-tag">Cosa accettiamo</p>
+      <h2 class="section-title"><em>Categorie</em> accettate.</h2>
+      <p class="section-lead">
+        Accettiamo oggetti reali, verificabili e con un valore di mercato documentabile,
+        a partire da €500.
+      </p>
+      <div class="categorie-list">
+        <div class="cat-pill"><span class="cat-icon">📱</span> Mobile &amp; Smartphone</div>
+        <div class="cat-pill"><span class="cat-icon">💻</span> Tech &amp; Elettronica</div>
+        <div class="cat-pill"><span class="cat-icon">👜</span> Luxury &amp; Borse</div>
+        <div class="cat-pill"><span class="cat-icon">⌚</span> Orologi &amp; Gioielli</div>
+        <div class="cat-pill"><span class="cat-icon">🏍️</span> Moto &amp; Scooter</div>
+        <div class="cat-pill"><span class="cat-icon">🛋️</span> Casa &amp; Design</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA PRINCIPALE -->
+  <section>
+    <div class="cta-banner">
+      <h2>Pronto a<br><em>airdropparlo?</em></h2>
+      <p>
+        Compila il form, raccontaci il tuo oggetto e ricevi una risposta entro 48 ore.
+        È gratuito e senza impegno.
+      </p>
+      <a href="https://airoobi.app/proponi" class="btn-primary">Proponi il tuo oggetto &rarr;</a>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="section-inner">
+      <p class="section-tag">Domande frequenti</p>
+      <h2 class="section-title">FAQ <em>Venditori</em></h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Qual è il valore minimo dell'oggetto?
+            <span class="faq-chevron">&#9660;</span>
+          </button>
+          <div class="faq-a">
+            Il valore minimo accettato è <strong>€500</strong> di valore di mercato documentabile.
+            Questo garantisce che l'airdrop sia sostenibile per la community e che il pagamento
+            che ricevi sia significativo. Oggetti al di sotto di questa soglia non vengono accettati.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Come e quando vengo pagato?
+            <span class="faq-chevron">&#9660;</span>
+          </button>
+          <div class="faq-a">
+            Il pagamento avviene in <strong>KAS (Kaspa)</strong>, la criptovaluta nativa della blockchain Kaspa.
+            Entro 24–48 ore dalla chiusura dell'airdrop, ricevi il controvalore concordato direttamente
+            al tuo wallet. La transazione è pubblica, tracciabile e irreversibile.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Quanto tempo ci vuole dall'invio alla chiusura?
+            <span class="faq-chevron">&#9660;</span>
+          </button>
+          <div class="faq-a">
+            La <strong>valutazione</strong> richiede 24–48 ore. Una volta approvato, l'airdrop va live
+            e resta aperto in base alla domanda della community — normalmente da pochi giorni a qualche settimana.
+            Ti teniamo aggiornato durante tutto il processo.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Cosa succede se l'airdrop non raggiunge il prezzo minimo?
+            <span class="faq-chevron">&#9660;</span>
+          </button>
+          <div class="faq-a">
+            Se l'airdrop si chiude senza aver raggiunto il prezzo minimo concordato,
+            <strong>i partecipanti ricevono un rimborso in ARIA</strong> e l'oggetto ti viene restituito
+            senza alcun costo. Non rischi nulla — né il tuo oggetto, né il tuo tempo.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Posso proporre più oggetti contemporaneamente?
+            <span class="faq-chevron">&#9660;</span>
+          </button>
+          <div class="faq-a">
+            Sì, non ci sono limiti al numero di oggetti che puoi proporre. Puoi inviare più
+            proposte contemporaneamente o in momenti diversi. Ogni oggetto viene valutato
+            individualmente.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" aria-expanded="false">
+            Che tipo di oggetti accettate esattamente?
+            <span class="faq-chevron">&#9660;</span>
+          </button>
+          <div class="faq-a">
+            Accettiamo oggetti <strong>reali, fisicamente verificabili</strong>, in buone condizioni
+            e con un valore di mercato documentabile di almeno €500. Le categorie principali sono:
+            smartphone e tech, luxury e accessori, orologi e gioielli, moto e scooter, arredo e design.
+            In caso di dubbio, scrivici a <a href="mailto:info@airoobi.com" style="color: var(--gold);">info@airoobi.com</a>
+            prima di compilare il form.
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATTO -->
+  <section class="contatto-section">
+    <div class="section-inner" style="text-align: center;">
+      <h2>Hai domande?</h2>
+      <p>Scrivici direttamente. Rispondiamo entro 24 ore.</p>
+      <a href="mailto:info@airoobi.com" class="btn-outline">info@airoobi.com</a>
+    </div>
+  </section>
+
+  <!-- ADS -->
+  <div class="ads-wrap">
+    <script async src="//www.a-ads.com/2429619/aads.js"></script>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <nav class="footer-links">
+      <a href="https://airoobi.com">Home</a>
+      <a href="https://airoobi.app">dApp</a>
+      <a href="https://airoobi.com/privacy.html">Privacy</a>
+      <a href="https://airoobi.com/termini.html">Termini</a>
+      <a href="https://airoobi.com/contatti.html">Contatti</a>
+    </nav>
+    <p>AIROOBI &copy; 2026 &middot; <a href="https://airoobi.com">airoobi.com</a></p>
+    <p class="footer-version">alfa-2026.03.26-1.45.0</p>
+  </footer>
+
+  <script>
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const isOpen = item.classList.contains('open');
+        // Close all
+        document.querySelectorAll('.faq-item').forEach(i => {
+          i.classList.remove('open');
+          i.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+        });
+        // Toggle current
+        if (!isOpen) {
+          item.classList.add('open');
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

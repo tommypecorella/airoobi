@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Come funziona un airdrop su AIROOBI: guida completa — AIROOBI Blog</title>
+  <meta name="description" content="Guida completa agli airdrop su AIROOBI: blocchi, punteggio, algoritmo di selezione, split economica e fasi di partecipazione. Tutto quello che devi sapere.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Come funziona un airdrop su AIROOBI: guida completa">
+  <meta property="og:description" content="Guida completa agli airdrop su AIROOBI: blocchi, punteggio, algoritmo di selezione, split economica e fasi di partecipazione. Tutto quello che devi sapere.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/come-funziona-airdrop-airoobi-guida-completa.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/come-funziona-airdrop-airoobi-guida-completa.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Guida Airdrop</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">16 Marzo 2026</div>
+
+    <article>
+      <h1>Come funziona un airdrop su AIROOBI: guida completa</h1>
+
+      <p>AIROOBI è un marketplace di airdrop decentralizzato costruito sulla blockchain Kaspa. La premessa è semplice: ogni giorno gli utenti accumulano ARIA — la valuta della piattaforma — e la usano per partecipare ad airdrop di oggetti fisici e digitali di valore reale. Ma come funziona esattamente il meccanismo? In questa guida completa trovi tutto quello che devi sapere prima di partecipare al tuo primo airdrop.</p>
+
+      <h2>Il concetto di blocco</h2>
+      <p>La partecipazione a un airdrop avviene attraverso l'acquisto di blocchi. Un blocco è l'unità base di partecipazione: paghi un certo numero di ARIA e ottieni uno o più blocchi associati al tuo profilo per quell'airdrop specifico. Più blocchi possiedi, più alta sarà la tua presenza nel pool di selezione, ma il sistema non si limita alla semplice quantità: conta anche il tuo profilo complessivo come utente.</p>
+
+      <p>Ogni airdrop ha una configurazione propria: un numero massimo di blocchi acquistabili, un prezzo per blocco in ARIA e una finestra temporale entro cui è possibile partecipare. Quando la fase di partecipazione si chiude, viene eseguito l'algoritmo deterministico di selezione.</p>
+
+      <h2>L'algoritmo di selezione: i tre fattori</h2>
+      <p>Il cuore di AIROOBI è l'algoritmo di draw, progettato per essere equo, trasparente e verificabile. Il punteggio finale di ogni partecipante è calcolato combinando tre componenti principali, indicate come F1, F2 e F3.</p>
+
+      <h3>F1 — I blocchi acquistati</h3>
+      <p>Il primo fattore è semplicemente il numero di blocchi che hai acquistato per quell'airdrop. Più blocchi = maggiore peso nel sorteggio. Questo componente premia chi dedica più ARIA a un singolo airdrop e rappresenta la componente di impegno diretto.</p>
+
+      <h3>F2 — La fedeltà alla categoria</h3>
+      <p>Il secondo fattore misura quante volte hai partecipato ad airdrop nella stessa categoria in passato. Se hai già partecipato a più airdrop di elettronica, il tuo punteggio categoria sarà alto e ti darà un vantaggio sugli utenti che partecipano per la prima volta in quella categoria. Questo meccanismo premia la continuità e crea una comunità di appassionati per ogni settore merceologico.</p>
+
+      <h3>F3 — La seniority sulla piattaforma</h3>
+      <p>Il terzo fattore tiene conto di quanto tempo sei presente su AIROOBI e della tua attività complessiva. Chi è iscritto da più tempo, ha completato check-in regolari e ha una storia sulla piattaforma, accumula un bonus di seniority che si somma agli altri fattori. Questo componente garantisce che i partecipanti fedeli abbiano sempre un vantaggio rispetto ai nuovi arrivati.</p>
+
+      <h2>Selezione deterministica: niente casualità opaca</h2>
+      <p>Il sorteggio finale non è una roulette opaca. L'algoritmo di AIROOBI è deterministico: dati gli stessi input (blocchi, punteggi, seed del round), produce sempre lo stesso output. Il seed viene generato a partire da dati pubblici e non manipolabili, garantendo che nessuno — nemmeno il team di AIROOBI — possa alterare il risultato dopo la chiusura della fase di partecipazione.</p>
+
+      <p>Il partecipante estratto riceve l'oggetto a un prezzo che rappresenta una frazione del suo valore di mercato reale. Non si tratta di casualità pura: è il risultato di un impegno misurabile e verificabile su blockchain.</p>
+
+      <h2>La split economica: chi riceve cosa</h2>
+      <p>Quando i partecipanti acquistano blocchi, i loro ARIA confluiscono in un pool che viene distribuito secondo una logica precisa. Il venditore dell'oggetto riceve la quota maggioritaria del valore, garantendo un incasso a prezzo di mercato. Una percentuale va alla piattaforma AIROOBI per coprire i costi operativi. Una quota va al Fondo Comune — il treasury che supporta il valore delle Tessere Rendimento. Infine, una piccola parte va al Fondo Charity, una componente sociale del progetto.</p>
+
+      <p>Questa distribuzione assicura che l'ecosistema sia sostenibile nel tempo: il venditore non perde nulla, la piattaforma si autofinanzia, e il treasury cresce rendendo le Tessere Rendimento sempre più preziose.</p>
+
+      <h2>Come si guadagnano gli ARIA</h2>
+      <p>ARIA è la valuta nativa di AIROOBI con un valore di riferimento di €0,10 ciascuno. Non devi acquistarla: la guadagni semplicemente usando la piattaforma. Al momento della registrazione ricevi 10 ARIA di benvenuto. Ogni giorno in cui effettui il login ne guadagni 1. Completando il check-in giornaliero ne guadagni un altro. Guardare contenuti video sulla piattaforma ti frutta fino a 5 ARIA al giorno. Mantenere una streak settimanale continua ti regala un bonus aggiuntivo. Ogni utente che inviti su AIROOBI ti porta 10 ARIA, mentre l'invitato ne riceve 15 come bonus benvenuto.</p>
+
+      <p>Con la sola attività quotidiana, in pochi mesi puoi accumulare abbastanza ARIA per partecipare a più airdrop contemporaneamente.</p>
+
+      <h2>Le fasi di AIROOBI</h2>
+      <p>AIROOBI è attualmente in fase Alpha 0, una fase sperimentale aperta con database reimpostato l'11 marzo 2026. In questa fase i meccanismi vengono testati e raffinati. Chi partecipa ora ottiene il badge Alpha Brave — un riconoscimento permanente riservato ai fondatori della community. La successiva fase, Stage 1, prevede l'apertura dei primi airdrop reali con oggetti fisici di valore, l'attivazione delle Tessere Rendimento e l'integrazione on-chain completa con Kaspa.</p>
+
+      <p>Essere presenti fin dall'inizio non è solo un vantaggio in termini di ARIA accumulati: è la costruzione di un punteggio di seniority che gli utenti futuri non potranno mai raggiungere retroattivamente.</p>
+
+      <h2>La One Category Rule</h2>
+      <p>Una delle regole fondamentali di AIROOBI è la One Category Rule: se hai ottenuto un oggetto in una determinata categoria, non potrai riceverlo nuovamente nella stessa categoria per un periodo determinato. Questo meccanismo garantisce la massima equità, evitando che gli stessi utenti monopolizzino una categoria e permettendo a sempre più persone di realizzare il proprio desiderio.</p>
+
+      <div class="cta-box">
+        <h2>Scopri AIROOBI</h2>
+        <p>Registrati ora, inizia ad accumulare ARIA e preparati a partecipare ai primi airdrop reali. I posti Alpha Brave sono limitati.</p>
+        <a href="https://airoobi.com/signup.html" class="cta-btn">Inizia ora — è gratis</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>
