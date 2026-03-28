@@ -17,7 +17,7 @@
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <a href="https://airoobi.com"><img src="/public/images/AIROOBI_Logo_White.png" class="topbar-logo" alt="AIROOBI"></a>
+  <a href="https://airoobi.com" target="_blank" rel="noopener" class="topbar-logo" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;color:var(--gold);font-family:var(--font-h);font-size:18px;font-weight:700;letter-spacing:-2px;opacity:.6;transition:opacity .3s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'" title="airoobi.com">Oo</a>
   <nav class="topbar-nav" id="topbar-nav">
     <a href="/dapp" data-page="home" onclick="navigateTo('home',event)">
       <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
@@ -428,7 +428,7 @@
   <!-- ═══ WALLET TAB ═══ -->
   <div id="tab-wallet" style="display:none">
 
-    <div class="wallet-section-label"><span class="it">Le tue Tessere</span><span class="en">Your Cards</span> <span>· guadagna ARIA · riscuoti in KAS</span></div>
+    <div class="wallet-section-label"><span class="it">I tuoi Asset</span><span class="en">Your Assets</span> <span>· ARIA · ROBI · KAS</span></div>
     <div class="wallet-cards">
 
       <!-- TESSERA COIN — ARIA -->
@@ -436,7 +436,7 @@
         <div class="wcard-ring" style="width:350px;height:350px;right:-100px;bottom:-100px;border-color:rgba(74,158,255,.04)"></div>
         <div class="wcard-header">
           <div class="wcard-title-group">
-            <div class="wcard-label" style="color:var(--aria)"><span class="it">Tessera Coin</span><span class="en">Coin Card</span></div>
+            <div class="wcard-label" style="color:var(--aria)">ARIA</div>
             <div class="wcard-sublabel" style="color:var(--aria)"><span class="it">Il tuo ARIA</span><span class="en">Your ARIA</span></div>
           </div>
           <div class="wcard-icons">
@@ -488,7 +488,7 @@
         <div class="wcard-body">
           <div class="wcard-amount-block">
             <div class="wcard-amount" style="color:var(--gold)" id="dapp-wcard-rend-count">1</div>
-            <div class="wcard-unit" style="color:rgba(184,150,12,.5)"><span class="it">NFT IN PORTAFOGLIO</span><span class="en">NFT IN WALLET</span></div>
+            <div class="wcard-unit" style="color:rgba(184,150,12,.5)"><span class="it">ROBI IN PORTAFOGLIO</span><span class="en">ROBI IN WALLET</span></div>
           </div>
           <div class="wcard-amount-block" style="margin-left:24px">
             <div class="wcard-amount" style="color:var(--gold);font-size:clamp(22px,2.5vw,32px)" id="dapp-wcard-rend-value">—</div>
@@ -523,7 +523,7 @@
         </div>
         <div class="wcard-desc">
           <span class="it">Non hai ancora un ROBI. Partecipa agli airdrop per ottenerne uno — sarà il tuo portafoglio per riscuotere KAS reale in qualsiasi momento.</span>
-          <span class="en">You don't have a Yield Card yet. Join airdrops to earn one — it will be your wallet to redeem real KAS at any time.</span>
+          <span class="en">You don't have a ROBI yet. Join airdrops to earn one — it will be your key to redeem real KAS at any time.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-holder" style="color:rgba(184,150,12,.2)"><span class="it">Partecipa agli airdrop per ottenerla</span><span class="en">Join airdrops to earn one</span></div>
@@ -535,7 +535,7 @@
         <div class="wcard-ring" style="width:320px;height:320px;right:-90px;bottom:-90px;border-color:rgba(73,234,203,.04)"></div>
         <div class="wcard-header">
           <div class="wcard-title-group">
-            <div class="wcard-label" style="color:var(--kas)"><span class="it">Tessera Kaspa</span><span class="en">Kaspa Card</span></div>
+            <div class="wcard-label" style="color:var(--kas)">KAS</div>
             <div class="wcard-sublabel" style="color:var(--kas)"><span class="it">Il tuo KAS</span><span class="en">Your KAS</span></div>
           </div>
           <div class="wcard-icons">
@@ -550,7 +550,7 @@
         </div>
         <div class="wcard-desc">
           <span class="it">Il tuo portafoglio KAS su AIROOBI. Mostra il totale dei KAS ricevuti: ogni conversione dal ROBI accredita qui l'importo — on-chain, tuo per sempre.</span>
-          <span class="en">Your KAS wallet on AIROOBI. Shows total KAS received: each Yield Card conversion credits the amount here — on-chain, yours forever.</span>
+          <span class="en">Your KAS wallet on AIROOBI. Shows total KAS received: each ROBI conversion credits the amount here — on-chain, yours forever.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-serial" style="color:rgba(73,234,203,.2)">KASPA NETWORK</div>
@@ -572,7 +572,7 @@
       <div class="wflow-node">
         <div class="wflow-icon" style="color:var(--gray-600)">▸ <span class="it">ROBI</span><span class="en">ROBI</span></div>
         <div class="wflow-label" style="color:var(--gold)"><span class="it">Riscuoti</span><span class="en">You redeem</span></div>
-        <div class="wflow-desc" style="color:var(--gray-600)"><span class="it">NFT · chiave di conversione</span><span class="en">NFT · conversion key</span></div>
+        <div class="wflow-desc" style="color:var(--gray-600)"><span class="it">ROBI · chiave di riscossione</span><span class="en">ROBI · redemption key</span></div>
       </div>
       <div class="wflow-arrow">→</div>
       <div class="wflow-node">
@@ -658,7 +658,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.03.28-1.51.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.03.29-1.53.0</div>
 </div>
 
 <script src="/src/dapp.js"></script>

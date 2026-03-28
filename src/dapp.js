@@ -367,7 +367,7 @@ var PAGE_HEADERS={
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
   submit:{it:'<b>Valuta</b> il tuo <em>oggetto</em>',en:'<b>Evaluate</b> your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
   referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e guadagna ARIA bonus.',sub_en:'Invite friends and earn bonus ARIA.'},
-  wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'Le tue Tessere, i tuoi asset. ARIA, NFT Rendimento e KAS.',sub_en:'Your Cards, your assets. ARIA, Yield NFTs and KAS.'},
+  wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'I tuoi asset: ARIA, ROBI e KAS.',sub_en:'Your assets: ARIA, ROBI and KAS.'},
   archive:{it:'<em>Archivio</em> Airdrop',en:'Airdrop <em>Archive</em>',sub_it:'Tutti gli airdrop completati. Trasparenza totale.',sub_en:'All completed airdrops. Full transparency.'},
   manage:{it:'<em>Gestione</em> Airdrop',en:'Airdrop <em>Management</em>',sub_it:'Backoffice valutazione e gestione airdrop.',sub_en:'Evaluation and airdrop management backoffice.'}
 };
@@ -610,7 +610,7 @@ async function openDetail(id){
     +(isPresale?' &middot; <span style="color:var(--aria)">PRESALE</span>':'')
     +'</div>'
     +'</div>'
-    +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>⛏ 2x MINING BOOST</strong> — <span class="it">Compra in presale e mina il doppio delle quote NFT</span><span class="en">Buy in presale and mine 2x NFT shares</span></div>':'')
+    +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>⛏ 2x MINING BOOST</strong> — <span class="it">Compra in presale e guadagna il doppio dei ROBI</span><span class="en">Buy in presale and earn 2x ROBI</span></div>':'')
     +(condition?'<div class="product-condition">'+condition+'</div>':'')
     +'<div class="detail-cat">'+a.category+'</div>'
     +'</div>'
@@ -644,7 +644,7 @@ async function openDetail(id){
     // DIVIDER → PARTECIPA
     +'<div class="product-divider">'
     +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
-    +'<p class="product-participate-sub"><span class="it">Ogni blocco mina quote del ROBI — il loro valore cresce nel tempo</span><span class="en">Each block mines shares of the ROBI — their value grows over time</span></p>'
+    +'<p class="product-participate-sub"><span class="it">Ogni blocco ti fa guadagnare ROBI — il loro valore cresce nel tempo</span><span class="en">Each block earns you ROBI — their value grows over time</span></p>'
     +'</div>'
 
     // MY BLOCKS (above donut)
@@ -680,8 +680,8 @@ async function openDetail(id){
     // BUY BOX
     +'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e mina quote del ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and mines ROBI shares — their value grows over time.</span></p>'
-    +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>⛏ PRESALE 2x</strong> — <span class="it">In presale ogni blocco mina il doppio delle quote!</span><span class="en">In presale each block mines double shares!</span></div>':'')
+    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
+    +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>⛏ PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
 
 
     // DISPLAY
@@ -865,7 +865,7 @@ function updateBuyDisplay(){
   var countEl=document.getElementById('buy-display-count');
   var costEl=document.getElementById('buy-display-cost');
   if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'blocco':'blocchi')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
-  if(costEl)costEl.innerHTML='= '+cost+' ARIA ('+eur(cost)+') &middot; <span style="color:var(--gold)">'+sharesStr+' <span class="it">quote</span><span class="en">shares</span></span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
+  if(costEl)costEl.innerHTML='= '+cost+' ARIA ('+eur(cost)+') &middot; <span style="color:var(--gold)">'+sharesStr+' ROBI</span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
 }
 
 function goToAirdrop(id){
