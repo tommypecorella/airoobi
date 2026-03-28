@@ -1271,7 +1271,7 @@ async function uploadSubPhotos(token){
     var p=_subPhotos[i];
     if(p.type==='url'){urls.push(p.url);continue}
     var ext=p.file.name.split('.').pop()||'jpg';
-    var path=_currentUser.id+'/'+Date.now()+'_'+i+'.'+ext;
+    var path=_session.user.id+'/'+Date.now()+'_'+i+'.'+ext;
     var upRes=await fetch(SB_URL+'/storage/v1/object/submissions/'+path,{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':p.file.type,'x-upsert':'true'},
@@ -1359,6 +1359,7 @@ async function submitObject(){
       msgEl.className='submit-msg err';
     }
   }catch(e){
+    console.error('submitObject catch:',e);
     msgEl.innerHTML='<span class="it">Errore di rete.</span><span class="en">Network error.</span>';
     msgEl.className='submit-msg err';
   }
