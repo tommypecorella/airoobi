@@ -403,7 +403,151 @@ node scripts/stress_test_engine.js --verbose  # classifica per partecipante
 
 ---
 
-## 12. Note Evolutive
+## 12. Evoluzione dell'Algoritmo — Decision Log
+
+Questa sezione documenta il **percorso decisionale** che ha portato all'algoritmo attuale.
+Ogni decisione è tracciata con: contesto, alternative considerate, scelta finale e motivazione.
+
+### 12.1 v1.0 — Design iniziale (19 Marzo 2026)
+
+**Contesto:** Il motore viene progettato da zero. L'obiettivo è un sistema deterministico
+(no lotteria) che premi l'engagement senza trasformarlo in un'asta pura.
+
+**Decisione chiave: tre fattori di scoring**
+- F1 (blocchi acquistati) — chi partecipa di più nell'airdrop corrente
+- F2 (fedeltà categoria) — chi ha uno storico nella stessa categoria
+- F3 (seniority) — chi è arrivato prima sulla piattaforma e ha comprato prima
+
+**Alternative scartate:**
+- Random draw (lotteria pura) → scartato perché non incentiva l'engagement e potrebbe
+  configurare gioco d'azzardo
+- Asta al rialzo → scartato perché il vincitore pagherebbe quasi il prezzo di mercato,
+  eliminando il valore aggiunto di AIROOBI
+- Primo arrivato → scartato perché favorisce solo la velocità, non la fedeltà
+
+**Pesi scelti: w1=0.50, w2=0.30, w3=0.20**
+Ragionamento: equilibrio 50/50 tra partecipazione diretta (F1) e "storia" dell'utente (F2+F3).
+L'idea era che i veterani fedeli meritassero un vantaggio significativo.
+
+**Split economica: 67.99% venditore**
+La percentuale è stata calcolata per bilanciare: incasso venditore vs sostenibilità Fondo Comune
+e revenue piattaforma. Il 22% al Fondo è alto di proposito per accelerare la crescita del
+valore delle Tessere Rendimento nei primi mesi.
+
+**Success check:** `(aria_incassato * 0.10) >= seller_min_price`
+Confronto totale incassato vs minimo venditore — sembrava corretto ma nascondeva un bug.
+
+### 12.2 Stress Test — Scoperte (28 Marzo 2026)
+
+**Metodo:** Simulazione di 10 scenari con `scripts/stress_test_engine.js`.
+Ogni scenario viene eseguito con pesi v1 e v2 per confronto diretto.
+
+**Scoperta 1 — Veterano dominante (Scenario 3):**
+Un veterano con storico e seniority massimi batte un nuovo utente che compra
+il DOPPIO dei blocchi. Il veterano spende €125, il nuovo €250, ma il veterano vince
+perché F2+F3 (totale 0.50) bilanciano esattamente F1 (max 0.50).
+
+Dati:
+```
+v1 — Nuovo (500 blocchi): score = 0.50×1.0 + 0.30×0 + 0.20×0.6 = 0.620
+v1 — Veterano (250 blocchi): score = 0.50×0.5 + 0.30×1.0 + 0.20×0.47 = 0.643 ← VINCE
+```
+
+Soglia: il veterano doveva comprare solo il **49%** dei blocchi del nuovo. Di fatto
+il sistema premiava la "storia" più dell'azione concreta.
+
+**Scoperta 2 — Bug success check (Scenario Bug Analysis):**
+Il check `totale >= seller_min_price` passava anche quando il venditore avrebbe ricevuto
+molto meno del minimo. Esempio concreto:
+- seller_min_price = €800
+- Totale incassato = €1.000 → check PASS
+- Ma venditore riceve solo €1.000 × 67.99% = €679.90 → sotto il minimo!
+
+Il venditore si sarebbe trovato con meno del pattuito senza nessun warning.
+
+**Scoperta 3 — Quotazione non copre il venditore:**
+Se `object_value_eur = valore_mercato`, il venditore riceve solo il 67.99%.
+Un oggetto da €1.000 con quotazione €1.000 → venditore incassa €679.90.
+Per garantire €1.000, la quotazione deve essere €1.000/0.6799 = **€1.470,80**.
+
+**Scoperta 4 — Perdite early adopters:**
+Al primo airdrop (treasury a €0), i perdenti subiscono una perdita media del **77%**
+sul valore degli ARIA spesi vs NFT ricevuti. Ma al 5° airdrop (treasury matura a €5.000),
+i perdenti **guadagnano** (+125%) grazie al valore accumulato nelle Tessere.
+Il modello è sostenibile a regime, ma richiede pazienza nei primi mesi.
+
+**Scoperta 5 — Tempo di accumulo proibitivo:**
+Un utente che guadagna max 7 ARIA/giorno impiega **356 giorni** (~1 anno) per accumulare
+abbastanza ARIA per una partecipazione competitiva su un oggetto da €1.000.
+I referral aiutano marginalmente (50 referral → -71 giorni, ancora 285 giorni).
+
+### 12.3 v2.0 — Correzioni (28 Marzo 2026)
+
+**Decisione 1: Nuovi pesi w1=0.65, w2=0.20, w3=0.15**
+
+Alternative considerate:
+| Pesi | Soglia veterano | Rischio |
+|---|---|---|
+| 0.50/0.30/0.20 (v1) | 49% | Veterano domina, nuovo utente frustrato |
+| 0.60/0.25/0.15 | 60% | Meglio ma veterano ha ancora troppo vantaggio |
+| **0.65/0.20/0.15 (v2)** | **74%** | **Buon equilibrio: vantaggio veterano reale ma non schiacciante** |
+| 0.75/0.15/0.10 | 85% | Troppo aggressivo: F2/F3 quasi irrilevanti, diventa quasi un'asta |
+| 0.80/0.10/0.10 | 91% | Praticamente un'asta — perde il senso di loyalty |
+
+Scelta: **0.65/0.20/0.15** perché:
+- Il veterano mantiene un vantaggio significativo (risparmia il 26% di blocchi)
+- Ma deve partecipare attivamente (almeno 74% dei blocchi del top buyer)
+- F2 rimane rilevante (20%) — non è un tiebreaker, è un bonus reale
+- F3 è ridotto a un "nice to have" (15%) — giusto, la seniority non dovrebbe dominare
+
+Dati post-fix:
+```
+v2 — Nuovo (500 blocchi): score = 0.65×1.0 + 0.20×0 + 0.15×0.6 = 0.740 ← VINCE
+v2 — Veterano (250 blocchi): score = 0.65×0.5 + 0.20×1.0 + 0.15×0.47 = 0.595
+```
+
+Il nuovo utente ora vince perché ha investito di più. Il veterano deve salire
+ad almeno 370 blocchi (74%) per ribaltare con il suo bonus di fedeltà.
+
+**Decisione 2: Fix success check**
+Cambiamento: `v_venditore_eur >= seller_min_price` (confronta la quota, non il totale).
+Nessuna alternativa considerata — era un bug puro, la v1 non implementava
+correttamente la propria specifica ("viable se il venditore riceve almeno il suo minimo").
+
+**Decisione 3: Formula quotazione**
+`object_value_eur = seller_target / 0.6799`
+Implementata come suggerimento automatico nel backoffice (`calcSuggestedValues`).
+L'admin può sempre sovrascrivere manualmente, ma il bottone "SUGGERISCI" calcola
+la quotazione corretta a partire da seller_desired_price e seller_min_price.
+
+**Decisioni rimandate (non implementate in v2):**
+- Tempo di accumulo ARIA troppo lungo → richiede decisione business su acquisto ARIA
+- Perdite early adopters → accettate come costo dell'alpha, compensate da badge esclusivi
+- Divisore NFT (5 blocchi/NFT) → adeguato per alpha, le fasi successive lo ridurranno
+
+### 12.4 Lezioni apprese
+
+1. **Testare i pesi con scenari estremi prima di andare live.** Il caso "veterano con 1 blocco
+   vs nuovo con 2000" ha rivelato immediatamente lo sbilanciamento.
+
+2. **La normalizzazione nasconde problemi.** F1=1.0 sembra il massimo, ma se F2+F3 pesano
+   quanto F1, il "massimo" non basta. Sempre verificare che la somma dei pesi secondari
+   non possa superare il fattore primario.
+
+3. **Ogni percentuale di split va tracciata end-to-end.** Il 67.99% era documentato nella split
+   ma non era stato propagato nel success check. La pipeline era: split → check → preview → draw,
+   e il bug era nel secondo anello.
+
+4. **Il primo airdrop è sempre il peggiore per i perdenti.** Il Fondo parte da zero, quindi
+   le Tessere valgono poco. Ma questo è intenzionale: gli early adopter accettano il rischio
+   in cambio di badge esclusivi e del vantaggio F2/F3 sui futuri airdrop.
+
+5. **Uno stress test script è un investimento permanente.** Qualsiasi modifica futura ai pesi
+   può essere validata in 2 secondi con `node scripts/stress_test_engine.js`.
+
+---
+
+## 13. Note Evolutive
 
 **Alpha Brave (ora):**
 - I pesi v2 sono configurabili ma validati dal stress test
@@ -420,7 +564,7 @@ node scripts/stress_test_engine.js --verbose  # classifica per partecipante
 
 ---
 
-## Appendice A — File di Riferimento
+## Appendice — File di Riferimento
 
 | File | Ruolo |
 |---|---|
