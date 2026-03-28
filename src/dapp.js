@@ -1223,11 +1223,71 @@ function updateSubmitCostUI(){
   }
 }
 
+// ── Photo management for submission form ──
+var _subPhotos=[]; // {type:'url'|'file', url:string, file?:File}
+var SUB_MAX_PHOTOS=5;
+
+function renderSubPhotos(){
+  var grid=document.getElementById('sub-photos-grid');
+  grid.innerHTML='';
+  _subPhotos.forEach(function(p,i){
+    var div=document.createElement('div');
+    div.style.cssText='position:relative;width:80px;height:80px;border-radius:6px;overflow:hidden;border:1px solid var(--gray-700)';
+    var img=document.createElement('img');
+    img.src=p.url;
+    img.style.cssText='width:100%;height:100%;object-fit:cover';
+    img.onerror=function(){this.style.display='none';div.style.background='var(--gray-800)';div.innerHTML+='<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gray-500)">ERR</span>'};
+    var del=document.createElement('button');
+    del.innerHTML='&times;';
+    del.style.cssText='position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center';
+    del.onclick=function(){_subPhotos.splice(i,1);renderSubPhotos()};
+    div.appendChild(img);div.appendChild(del);grid.appendChild(div);
+  });
+}
+
+function handlePhotoFiles(files){
+  for(var i=0;i<files.length;i++){
+    if(_subPhotos.length>=SUB_MAX_PHOTOS)break;
+    var f=files[i];
+    if(!f.type.startsWith('image/'))continue;
+    _subPhotos.push({type:'file',url:URL.createObjectURL(f),file:f});
+  }
+  renderSubPhotos();
+  document.getElementById('sub-file-input').value='';
+}
+
+function promptPhotoUrl(){
+  if(_subPhotos.length>=SUB_MAX_PHOTOS){showToast('Max '+SUB_MAX_PHOTOS+' foto');return}
+  var url=prompt('URL immagine:');
+  if(!url||!url.trim())return;
+  url=url.trim();
+  _subPhotos.push({type:'url',url:url});
+  renderSubPhotos();
+}
+
+async function uploadSubPhotos(token){
+  var urls=[];
+  for(var i=0;i<_subPhotos.length;i++){
+    var p=_subPhotos[i];
+    if(p.type==='url'){urls.push(p.url);continue}
+    var ext=p.file.name.split('.').pop()||'jpg';
+    var path=_currentUser.id+'/'+Date.now()+'_'+i+'.'+ext;
+    var upRes=await fetch(SB_URL+'/storage/v1/object/submissions/'+path,{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':p.file.type,'x-upsert':'true'},
+      body:p.file
+    });
+    if(upRes.ok){
+      urls.push(SB_URL+'/storage/v1/object/public/submissions/'+path);
+    }
+  }
+  return urls;
+}
+
 async function submitObject(){
   var title=document.getElementById('sub-title').value.trim();
   var desc=document.getElementById('sub-desc').value.trim();
   var cat=document.getElementById('sub-cat').value;
-  var imgUrl=document.getElementById('sub-img').value.trim()||null;
   var desired=parseFloat(document.getElementById('sub-desired').value);
   var minP=parseFloat(document.getElementById('sub-min').value);
   var msgEl=document.getElementById('sub-msg');
@@ -1256,6 +1316,9 @@ async function submitObject(){
   btn.disabled=true;btn.classList.add('loading');
   try{
     var token=await getValidToken();
+    // Upload file photos to storage, collect all URLs
+    var photoUrls=await uploadSubPhotos(token);
+    var mainImg=photoUrls.length>0?photoUrls[0]:null;
     var res=await fetch(SB_URL+'/rest/v1/rpc/submit_object_for_valuation',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
@@ -1263,9 +1326,10 @@ async function submitObject(){
         p_title:title,
         p_description:desc||null,
         p_category:cat,
-        p_image_url:imgUrl,
+        p_image_url:mainImg,
         p_seller_desired_price:desired,
-        p_seller_min_price:minP
+        p_seller_min_price:minP,
+        p_image_urls:photoUrls
       })
     });
     if(res.ok){
@@ -1278,7 +1342,8 @@ async function submitObject(){
         msgEl.className='submit-msg ok';
         document.getElementById('sub-title').value='';document.getElementById('sub-desc').value='';
         document.getElementById('sub-cat').value='';document.getElementById('sub-desired').value='';
-        document.getElementById('sub-min').value='';document.getElementById('sub-img').value='';
+        document.getElementById('sub-min').value='';
+        _subPhotos=[];renderSubPhotos();
         showToast('Valutazione acquistata!');
       }else{
         if(result.error==='INSUFFICIENT_ARIA'){
