@@ -1424,6 +1424,8 @@ function renderMySubmissions(subs){
     if(s.rejection_reason){
       html+='<div style="margin-top:8px;padding:8px 12px;border-left:3px solid #ef4444;background:rgba(239,68,68,.06);font-size:12px;color:#ef4444">'+escHtml(s.rejection_reason)+'</div>';
     }
+    html+='<div style="margin-top:12px"><button onclick="this.style.display=\'none\';loadAirdropChat(\''+s.id+'\',\'sub-chat-'+s.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'"><span class="it">MESSAGGI</span><span class="en">MESSAGES</span></button></div>';
+    html+='<div id="sub-chat-'+s.id+'" style="margin-top:8px"></div>';
     html+='</div>';
   }
   container.innerHTML=html;
@@ -1512,12 +1514,75 @@ function viewBoDetail(id){
     +'</div>';
   if(a.rejection_reason)html+='<div style="color:var(--red);font-size:12px;margin-top:8px">Motivo: '+a.rejection_reason+'</div>';
   if(a.status==='in_valutazione')html+='<div class="bo-actions" style="margin-top:12px"><button class="bo-btn approve" onclick="openApprove(\''+a.id+'\')"><span class="it">Approva</span><span class="en">Approve</span></button><button class="bo-btn reject" onclick="openReject(\''+a.id+'\')"><span class="it">Rifiuta</span><span class="en">Reject</span></button></div>';
+  // Chat section
+  html+='<div style="margin-top:20px;border-top:1px solid var(--gray-800);padding-top:16px">';
+  html+='<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase;margin-bottom:12px"><span class="it">Messaggi con il proponente</span><span class="en">Messages with submitter</span></div>';
+  html+='<div id="bo-chat-'+a.id+'"></div>';
+  html+='</div>';
   html+='</div>';
   panel.innerHTML=html;
+  loadAirdropChat(a.id,'bo-chat-'+a.id);
   panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
 function closeBoDetail(){var p=document.getElementById('bo-detail-panel');if(p)p.innerHTML='';}
+
+// ── Airdrop Chat ──
+async function loadAirdropChat(airdropId,containerId){
+  var el=document.getElementById(containerId);
+  if(!el)return;
+  try{
+    var token=await getValidToken();
+    var msgs=await sbRpc('get_airdrop_messages',{p_airdrop_id:airdropId},token)||[];
+    var html='<div style="max-height:300px;overflow-y:auto;padding:8px 0" id="'+containerId+'-scroll">';
+    if(msgs.length===0){
+      html+='<div style="text-align:center;padding:20px;color:var(--gray-500);font-size:12px"><span class="it">Nessun messaggio</span><span class="en">No messages yet</span></div>';
+    }else{
+      for(var i=0;i<msgs.length;i++){
+        var m=msgs[i];
+        var align=m.is_admin?'flex-end':'flex-start';
+        var bg=m.is_admin?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
+        var border=m.is_admin?'var(--gold)':'var(--aria)';
+        var label=m.is_admin?'AIROOBI':escHtml(m.sender_name||'Utente');
+        var time=new Date(m.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+        html+='<div style="display:flex;justify-content:'+align+';margin-bottom:8px">';
+        html+='<div style="max-width:80%;padding:10px 14px;background:'+bg+';border-left:3px solid '+border+';font-size:13px">';
+        html+='<div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:4px"><span style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:'+border+'">'+label+'</span><span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">'+time+'</span></div>';
+        html+='<div style="color:var(--white);line-height:1.5">'+escHtml(m.body)+'</div>';
+        html+='</div></div>';
+      }
+    }
+    html+='</div>';
+    html+='<div style="display:flex;gap:8px;margin-top:8px">';
+    html+='<input id="'+containerId+'-input" type="text" placeholder="Scrivi un messaggio..." style="flex:1;padding:10px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)" onkeydown="if(event.key===\'Enter\')sendChatMsg(\''+airdropId+'\',\''+containerId+'\')">';
+    html+='<button onclick="sendChatMsg(\''+airdropId+'\',\''+containerId+'\')" style="padding:10px 18px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);white-space:nowrap"><span class="it">INVIA</span><span class="en">SEND</span></button>';
+    html+='</div>';
+    el.innerHTML=html;
+    var scroll=document.getElementById(containerId+'-scroll');
+    if(scroll)scroll.scrollTop=scroll.scrollHeight;
+  }catch(e){console.error('loadAirdropChat:',e);}
+}
+
+async function sendChatMsg(airdropId,containerId){
+  var input=document.getElementById(containerId+'-input');
+  if(!input)return;
+  var body=input.value.trim();
+  if(!body)return;
+  input.disabled=true;
+  try{
+    var token=await getValidToken();
+    var res=await sbRpc('send_airdrop_message',{p_airdrop_id:airdropId,p_body:body},token);
+    if(res&&res.success){
+      input.value='';
+      await loadAirdropChat(airdropId,containerId);
+    }else{
+      showToast('Errore: '+(res?.error||'unknown'));
+    }
+  }catch(e){console.error('sendChatMsg:',e)}
+  input.disabled=false;
+  var newInput=document.getElementById(containerId+'-input');
+  if(newInput)newInput.focus();
+}
 
 // ── Approve ──
 function openApprove(id){
