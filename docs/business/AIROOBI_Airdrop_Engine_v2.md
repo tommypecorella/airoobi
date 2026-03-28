@@ -329,14 +329,88 @@ Possibili mitigazioni future:
 
 ---
 
-## 9. SQL — Funzioni RPC
+## 9. Mining Model (v2.1 — 28 Marzo 2026)
 
-### 9.1 `execute_draw(p_airdrop_id UUID, p_service_call BOOLEAN DEFAULT false)`
+### 9.1 Principi fondamentali
+
+- **ARIA = stablecoin** — vale sempre €0,10. Si guadagna (daily) o si compra (min €1 = 10 ARIA)
+- **NFT REWARD = quota del Fondo Comune** — come un ETF: `valore_quota = treasury / quote_circolanti`
+- **Partecipare = minare quote** — tutti i perdenti ricevono quote NFT frazionarie
+- **Il treasury cresce SEMPRE** — da airdrop (22%), video ads (50%), sponsor, altre attività
+- **Le quote crescono SEMPRE di valore** — il mining è tanto più conveniente quanto prima lo fai
+
+### 9.2 Mining difficulty (basata sul prezzo oggetto)
+
+La difficoltà NON dipende dalla fase della piattaforma. Dipende dal valore dell'oggetto:
+
+```
+divisore = ceil(object_value_eur / mining_k)
+mining_k = 100 (configurabile in airdrop_config)
+```
+
+| Valore oggetto | Divisore | 10 blocchi → | 100 blocchi → |
+|---|---|---|---|
+| €500 | 5 | 2.0 quote | 20.0 quote |
+| €1.000 | 10 | 1.0 quota | 10.0 quote |
+| €3.000 | 30 | 0.33 quote | 3.33 quote |
+| €5.000 | 50 | 0.20 quote | 2.00 quote |
+| €10.000 | 100 | 0.10 quote | 1.00 quota |
+
+Oggetti economici = mining facile (più quote per blocco).
+Oggetti costosi = mining hard (quote più rare, ma più valore per quota).
+
+### 9.3 NFT frazionari
+
+Ogni perdente riceve:
+```
+quote = blocchi_acquistati / divisore
+```
+
+Nessun `floor()` — le frazioni sono sempre distribuite. Anche 1 blocco su un
+oggetto da €10.000 produce 0.01 quote.
+
+Ogni perdente = 1 riga in `nft_rewards` con campo `shares NUMERIC(12,4)`.
+
+### 9.4 Minimo partecipazione
+
+```
+min_aria = ceil(object_value × min_participation_pct / ARIA_EUR)
+min_participation_pct = 0.01 (1%, configurabile)
+```
+
+| Valore oggetto | Min ARIA | Min EUR |
+|---|---|---|
+| €500 | 50 ARIA | €5 |
+| €1.000 | 100 ARIA | €10 |
+| €3.000 | 300 ARIA | €30 |
+| €5.000 | 500 ARIA | €50 |
+
+### 9.5 Anti-inflazione (invariato)
+
+Il cap anti-inflazione resta: `max_nuove_quote = contributo_fondo / prezzo_quota_attuale`.
+Se le quote calcolate superano il cap, vengono scalate proporzionalmente.
+
+### 9.6 Perché non più fasi (halving)
+
+Le fasi (alpha_brave, alpha_wise, beta, mainnet) definivano il divisore NFT.
+Con il mining basato sul prezzo, le fasi non servono più per la distribuzione NFT.
+
+Il concetto di "mining facile all'inizio" resta naturale: i primi airdrop hanno
+treasury basso → il cap anti-inflazione è generoso → si minano più quote.
+Man mano che il treasury cresce, il cap si stringe automaticamente.
+
+---
+
+## 10. SQL — Funzioni RPC
+
+### 10.1 `execute_draw(p_airdrop_id UUID, p_service_call BOOLEAN DEFAULT false)`
 La funzione principale del draw. Transazione atomica.
-- **v2 fix:** success check usa `v_venditore_eur >= seller_min_price`
-- **v2 fix:** legge `split_venditore` da `airdrop_config` (non hardcoded)
-- **v2 add:** ritorna `seller_cut_eur` nel JSON output
-- Migration: `20260327233958_engine_v2_fairness_fixes.sql`
+- **v2:** success check usa `v_venditore_eur >= seller_min_price`
+- **v2:** legge `split_venditore` da `airdrop_config`
+- **v2.1:** mining difficulty da `object_value_eur / mining_k`
+- **v2.1:** tutti i perdenti ricevono quote frazionarie (1 riga per utente)
+- **v2.1:** ritorna `mining_divisor` e `nft_shares_minted`
+- Migration: `20260328005459_engine_v2_mining_model.sql`
 
 ### 9.2 `calculate_winner_score(p_airdrop_id UUID)`
 Calcola lo score deterministico per ogni partecipante.
@@ -545,6 +619,50 @@ la quotazione corretta a partire da seller_desired_price e seller_min_price.
 5. **Uno stress test script è un investimento permanente.** Qualsiasi modifica futura ai pesi
    può essere validata in 2 secondi con `node scripts/stress_test_engine.js`.
 
+### 12.5 v2.1 — Mining Model (28 Marzo 2026)
+
+**Contesto:** Lo stress test D-Day (`dday_simulator.js`) rivela che il modello funziona
+ma il recupero perdenti è basso (20% media) con solo 20 utenti. Serve chiarire il modello
+economico per comunicarlo correttamente e validare la scalabilità.
+
+**Chiarimento fondamentale del founder:**
+- ARIA = stablecoin a €0.10 fisso. Non specula, non oscilla. Si compra (min €1) o si guadagna.
+- NFT REWARD = quota del Fondo Comune. Come un ETF: rappresenta una fetta del treasury.
+- Partecipare a un airdrop = minare quote. TUTTI i perdenti ricevono quote, proporzionali alla spesa.
+- Il treasury cresce sempre (22% airdrop + 50% ads + sponsor). Le quote valgono sempre di più.
+
+**Decisione: mining difficulty basata sul prezzo oggetto**
+L'insight del founder: la difficoltà di mining deve dipendere dal VALORE dell'oggetto, non dalla
+fase della piattaforma. Oggetti costosi = mining più difficile = quote più rare.
+
+Formula: `divisore = ceil(object_value / 100)`
+
+Alternative scartate:
+- Fasi (alpha/beta/mainnet) → troppo rigido, non si adatta al mix di categorie
+- Difficoltà fissa → non riflette il valore in gioco
+- Logaritmica → meno intuitiva, harder to communicate
+
+**Decisione: NFT frazionari**
+Con `floor(blocks/divisor)`, chi compra pochi blocchi riceve 0 NFT. Con frazioni,
+TUTTI ricevono qualcosa. 1 blocco su un €10K airdrop = 0.01 quote. Piccolo ma reale.
+
+**Decisione: eliminazione fasi per distribuzione NFT**
+Le fasi (alpha_brave → mainnet) definivano il divisore e chi riceveva NFT.
+Con il mining basato sul prezzo, le fasi diventano ridondanti:
+- La difficoltà è organica (prezzo oggetto)
+- L'anti-inflazione è automatica (cap basato su treasury)
+- Tutti ricevono sempre (nessun "solo top 3")
+
+**Risultati D-Day simulator (20 utenti, 6 mesi, 18 airdrop):**
+- Treasury: €1.408 | Prezzo quota: €2.62
+- Vincitori (4): ROI 9-30x (spesa €295-720 → oggetti €3.500-9.750)
+- Perdenti alpha: 26-47% recupero (ma ARIA era gratis)
+- Perdenti mainnet: 1-10% recupero (treasury giovane)
+- Proiezione 10K utenti: prezzo quota €3.87 (+48%)
+- Proiezione 50K utenti: prezzo quota €5.49 (+110%)
+
+Il modello è progettato per scalare: chi mina presto mina facile.
+
 ---
 
 ## 13. Note Evolutive
@@ -573,7 +691,9 @@ la quotazione corretta a partire da seller_desired_price e seller_min_price.
 | `docs/business/AIROOBI_Tokenomics_v3.md` | Prezzi blocchi, earning rate, fasi |
 | `scripts/stress_test_engine.js` | Stress test e simulatore fairness |
 | `supabase/migrations/20260319221008_airdrop_engine_rpc.sql` | RPC v1 (base) |
-| `supabase/migrations/20260327233958_engine_v2_fairness_fixes.sql` | Fix v2 |
+| `supabase/migrations/20260327233958_engine_v2_fairness_fixes.sql` | Fix v2: pesi + success check |
+| `supabase/migrations/20260328005459_engine_v2_mining_model.sql` | v2.1: mining model + NFT frazionari |
+| `scripts/dday_simulator.js` | D-Day simulator (mainnet launch model) |
 | `abo.html` | Admin panel — draw preview/execute UI |
 | `scripts/auto_draw.js` | Cron script auto-draw |
 
