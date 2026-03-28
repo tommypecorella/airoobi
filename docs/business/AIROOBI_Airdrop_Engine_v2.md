@@ -11,6 +11,12 @@
 > - ADD: Formula quotazione corretta per garantire prezzo di mercato al venditore
 > - ADD: Analisi fairness completa con stress test (scripts/stress_test_engine.js)
 > - ADD: Analisi tempo accumulo ARIA e compenso perdenti
+>
+> **Changelog 28 Mar 2026:**
+> - RESET: Dati airdrop azzerati (TRUNCATE airdrops, airdrop_blocks, airdrop_participations) per testing
+> - ADD: `airdrop_messages` — chat tra proponente e valutatore (RPC: send_airdrop_message, get_airdrop_messages)
+> - ADD: Multi-foto upload nel form valutazione (Supabase Storage bucket `submissions`, RPC aggiornata con p_image_urls)
+> - ADD: Branding "dApp" → "APP" in tutto il codebase
 
 ---
 
@@ -693,6 +699,9 @@ Il modello è progettato per scalare: chi mina presto mina facile.
 | `supabase/migrations/20260319221008_airdrop_engine_rpc.sql` | RPC v1 (base) |
 | `supabase/migrations/20260327233958_engine_v2_fairness_fixes.sql` | Fix v2: pesi + success check |
 | `supabase/migrations/20260328005459_engine_v2_mining_model.sql` | v2.1: mining model + NFT frazionari |
+| `supabase/migrations/20260328185020_reset_airdrops_for_testing.sql` | Reset dati airdrop per testing |
+| `supabase/migrations/20260328194636_multi_photo_submissions.sql` | Multi-foto + Storage bucket submissions |
+| `supabase/migrations/20260328203500_airdrop_chat_messages.sql` | Chat valutazione (airdrop_messages) |
 | `scripts/dday_simulator.js` | D-Day simulator (mainnet launch model) |
 | `abo.html` | Admin panel — draw preview/execute UI |
 | `scripts/auto_draw.js` | Cron script auto-draw |

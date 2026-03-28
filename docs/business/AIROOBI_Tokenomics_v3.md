@@ -1,7 +1,8 @@
 # AIROOBI — Tokenomics & Economic Model
-**TECH-001 · Version 3.2 · Final · 11 Marzo 2026**
+**TECH-001 · Version 3.3 · Final · 28 Marzo 2026**
 
-> Alpha 0 APERTO (DB resettato 11 Mar 2026). Questo documento riflette il sistema in produzione su airoobi.com.
+> v3.3: DB reset 28 Mar 2026. Multi-foto upload nel form valutazione (Supabase Storage bucket `submissions`). Riferimenti engine aggiornati a v2.
+> Alpha 0 APERTO. Questo documento riflette il sistema in produzione su airoobi.com e airoobi.app.
 
 ---
 
@@ -103,7 +104,7 @@ Il prezzo desiderato del venditore serve come riferimento per la valutazione AIR
 
 ## 6. Distribuzione Revenue per Airdrop
 
-> Split definitiva — vedi `docs/AIROOBI_Airdrop_Engine_v1.md` per dettagli implementativi.
+> Split definitiva — vedi `docs/business/AIROOBI_Airdrop_Engine_v2.md` per dettagli implementativi.
 
 | Destinatario | Percentuale | Su €1.000 (10.000 ARIA) | Note |
 |---|---|---|---|

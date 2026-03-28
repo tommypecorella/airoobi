@@ -1,6 +1,6 @@
 -- ══════════════════════════════════════════════════
 -- AIROOBI — Full Database Schema Backup
--- Source: Supabase live schema dump — 11 Mar 2026
+-- Source: Supabase live schema dump — 28 Mar 2026
 -- Project: vuvlmlpuhovipfwtquux
 --
 -- WARNING: This is a reference backup.
@@ -172,7 +172,159 @@ CREATE TABLE public.treasury_stats (
   CONSTRAINT treasury_stats_pkey PRIMARY KEY (id)
 );
 
+-- ──────────────────────────────────────────────────
+-- 12. USER_ROLES
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.user_roles (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id),
+  role TEXT NOT NULL CHECK (role IN ('admin','evaluator')),
+  category TEXT,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  UNIQUE(user_id, role)
+);
+
+-- ──────────────────────────────────────────────────
+-- 13. CATEGORIES
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.categories (
+  id TEXT PRIMARY KEY,
+  label_it TEXT NOT NULL,
+  label_en TEXT NOT NULL,
+  sort_order INTEGER DEFAULT 0
+);
+
+-- ──────────────────────────────────────────────────
+-- 14. NOTIFICATIONS
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.notifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id),
+  title TEXT NOT NULL,
+  body TEXT,
+  read BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- ──────────────────────────────────────────────────
+-- 15. ASSET_REGISTRY
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.asset_registry (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  type TEXT NOT NULL,
+  description TEXT,
+  metadata JSONB DEFAULT '{}'
+);
+
+-- ──────────────────────────────────────────────────
+-- 16. AIRDROP_CONFIG (key-value engine parameters)
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.airdrop_config (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  description TEXT
+);
+
+-- ──────────────────────────────────────────────────
+-- 17. AIRDROPS
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.airdrops (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  title TEXT NOT NULL,
+  description TEXT,
+  category TEXT,
+  image_url TEXT,
+  object_value_eur NUMERIC(10,2) DEFAULT 0,
+  block_price_aria INTEGER DEFAULT 0,
+  presale_block_price INTEGER,
+  total_blocks INTEGER DEFAULT 0,
+  blocks_sold INTEGER DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'in_valutazione',
+  deadline TIMESTAMPTZ,
+  auto_draw BOOLEAN DEFAULT false,
+  winner_id UUID REFERENCES profiles(id),
+  winner_score NUMERIC(10,6),
+  draw_executed_at TIMESTAMPTZ,
+  draw_scores JSONB,
+  venditore_payout_eur NUMERIC(10,2),
+  airoobi_fee_eur NUMERIC(10,2),
+  charity_contrib_eur NUMERIC(10,4),
+  fondo_contributo_eur NUMERIC(10,2),
+  aria_incassato INTEGER,
+  seller_desired_price NUMERIC(10,2),
+  seller_min_price NUMERIC(10,2),
+  product_info JSONB,
+  submitted_by UUID REFERENCES auth.users(id),
+  rejection_reason TEXT,
+  created_by UUID REFERENCES auth.users(id),
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- ──────────────────────────────────────────────────
+-- 18. AIRDROP_PARTICIPATIONS
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.airdrop_participations (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id),
+  airdrop_id UUID NOT NULL REFERENCES airdrops(id),
+  blocks_count INTEGER NOT NULL,
+  aria_spent INTEGER NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- ──────────────────────────────────────────────────
+-- 19. AIRDROP_BLOCKS
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.airdrop_blocks (
+  airdrop_id UUID NOT NULL REFERENCES airdrops(id),
+  block_number INTEGER NOT NULL,
+  owner_id UUID REFERENCES auth.users(id),
+  purchased_at TIMESTAMPTZ DEFAULT now(),
+  is_winner_block BOOLEAN DEFAULT false,
+  purchased_phase TEXT DEFAULT 'sale',
+  PRIMARY KEY (airdrop_id, block_number)
+);
+
+-- ──────────────────────────────────────────────────
+-- 20. TREASURY_TRANSACTIONS
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.treasury_transactions (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  airdrop_id UUID REFERENCES airdrops(id),
+  type TEXT NOT NULL,
+  amount_eur NUMERIC(12,4) NOT NULL,
+  description TEXT,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- ──────────────────────────────────────────────────
+-- 21. AIRDROP_MESSAGES (chat proponente ↔ evaluator)
+-- ──────────────────────────────────────────────────
+CREATE TABLE public.airdrop_messages (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  airdrop_id UUID NOT NULL REFERENCES airdrops(id) ON DELETE CASCADE,
+  sender_id UUID NOT NULL REFERENCES auth.users(id),
+  body TEXT NOT NULL,
+  is_admin BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- ──────────────────────────────────────────────────
+-- STORAGE BUCKETS
+-- ──────────────────────────────────────────────────
+-- submissions (public) — foto oggetti per valutazione
+
 -- ══════════════════════════════════════════════════
--- RLS POLICIES — vedi schema_rls.sql separato
--- RPC FUNCTIONS — vedi Supabase Dashboard > Database > Functions
+-- RLS POLICIES — vedi schema_rls.sql separato (abilitato su tutte le tabelle)
+-- RPC FUNCTIONS — principali:
+--   confirm_referral, link_referral, do_checkin, get_user_position,
+--   buy_blocks, get_airdrop_grid, get_airdrop_participants,
+--   calculate_winner_score, execute_draw, get_draw_preview, refund_airdrop,
+--   check_auto_draw, get_all_airdrops, manager_update_airdrop,
+--   submit_object_for_valuation (con p_image_urls JSONB),
+--   get_my_submissions, get_valuation_cost, get_valuation_count,
+--   get_completed_airdrops, get_my_roles,
+--   send_airdrop_message, get_airdrop_messages
 -- ══════════════════════════════════════════════════

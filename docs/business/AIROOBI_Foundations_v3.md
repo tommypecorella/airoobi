@@ -1,6 +1,7 @@
 # AIROOBI — Business Foundations
-**BUS-001 · Version 3.1 · Final · 11 Marzo 2026**
+**BUS-001 · Version 3.2 · Final · 28 Marzo 2026**
 
+> v3.2: DB reset 28 Mar 2026 (airdrops clean slate per testing). Airdrop engine v2 live. Chat valutazione. Multi-foto. "dApp" → "APP". Dominio split: airoobi.com + airoobi.app.
 > v3.1: Importi ARIA corretti. Stage Alpha 0 APERTO (DB reset 11 Mar 2026). Terminologia "vincere" rimossa.
 
 ---
@@ -68,7 +69,7 @@ AIROOBI nasce da una constatazione semplice: l'accesso alle opportunità non è 
 
 | Stage | Stato | Data | Milestone |
 |---|---|---|---|
-| Alpha 0 — Alpha Setup | ✅ APERTO | 11 Mar 2026 | Piattaforma live su airoobi.com, auth Supabase, UI completa, DB reset |
+| Alpha 0 — Alpha Setup | ✅ APERTO | 11 Mar 2026 | Piattaforma live su airoobi.com + airoobi.app, auth Supabase, UI completa, airdrop engine v2, chat valutazione, multi-foto. DB reset 28 Mar 2026 |
 | Stage 1 — Alpha Launch | ⏳ Prossimo | 2026 Q2 | Primo airdrop reale, 1.000 utenti Alpha Brave |
 | Stage 2 — Beta | ⏳ Futuro | 2026 Q3-Q4 | Smart contract on-chain, KAS integration |
 | Stage 3 — Mainnet | ⏳ Futuro | 2027 | Launch pubblico, 15.000+ utenti |
