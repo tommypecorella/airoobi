@@ -31,7 +31,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
 @keyframes cardIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 .card:hover{transform:translateY(-5px) scale(1.01);}
 
-/* TESSERA COIN — blu ARIA (first — earning currency) */
+/* ARIA — blu (first — earning currency) */
 .card-aria{background:linear-gradient(135deg,#020810,#040c1a 50%,#020608);box-shadow:0 20px 60px rgba(74,158,255,.1),0 0 0 1px rgba(74,158,255,.22);}
 .card-aria:hover{box-shadow:0 32px 80px rgba(74,158,255,.2),0 0 0 1px rgba(74,158,255,.5);}
 
@@ -41,7 +41,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
 .shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(184,150,12,.05) 50%,transparent 60%);animation:shimmer 4s ease-in-out infinite;}
 @keyframes shimmer{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
 
-/* TESSERA KASPA — verde */
+/* KAS — verde */
 .card-kaspa{background:linear-gradient(135deg,#010d0b,#021510 50%,#010a07);box-shadow:0 20px 60px rgba(73,234,203,.08),0 0 0 1px rgba(73,234,203,.2);}
 .card-kaspa:hover{box-shadow:0 32px 80px rgba(73,234,203,.16),0 0 0 1px rgba(73,234,203,.4);}
 
@@ -124,18 +124,18 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
 
 <div class="section-wrap">
 
-  <!-- ══ LE TUE TESSERE ══ -->
-  <div class="section-label">Le tue Tessere <span>· guadagna ARIA · riscuoti in KAS</span></div>
+  <!-- ══ IL TUO WALLET ══ -->
+  <div class="section-label">Il tuo Wallet <span>· guadagna ARIA · riscuoti in KAS</span></div>
   <div class="wallet">
 
-    <!-- TESSERA COIN — ARIA (prima, è la moneta di guadagno) -->
+    <!-- ARIA (prima, è la moneta di guadagno) -->
     <div class="card card-aria">
       <div class="ring" style="width:210px;height:210px;right:-65px;bottom:-65px;border-color:rgba(74,158,255,.06)"></div>
       <div class="card-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)">Guadagno</div>
       <div class="card-top">
         <div>
-          <div class="card-label" style="color:var(--aria)">Tessera Coin</div>
-          <div class="card-sublabel" style="color:rgba(74,158,255,.35)">Il tuo ARIA</div>
+          <div class="card-label" style="color:var(--aria)">ARIA</div>
+          <div class="card-sublabel" style="color:rgba(74,158,255,.35)">Il tuo saldo</div>
         </div>
         <div class="chip" style="border-color:rgba(74,158,255,.18)">
           <div class="chip-dot" style="color:var(--aria)"></div><div class="chip-dot" style="color:var(--aria)"></div>
@@ -184,15 +184,15 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
       </div>
     </div>
 
-    <!-- TESSERA KASPA — verde (output finale) -->
+    <!-- KAS — verde (output finale) -->
     <div class="card card-kaspa">
       <div class="ring" style="width:200px;height:200px;left:-50px;top:-50px;border-color:rgba(73,234,203,.06)"></div>
       <div class="ring" style="width:320px;height:320px;right:-110px;bottom:-110px;border-color:rgba(73,234,203,.03)"></div>
       <div class="card-badge" style="color:var(--kas);border-color:rgba(73,234,203,.4)">On-chain</div>
       <div class="card-top">
         <div>
-          <div class="card-label" style="color:var(--kas)">Tessera Kaspa</div>
-          <div class="card-sublabel" style="color:rgba(73,234,203,.35)">Il tuo KAS</div>
+          <div class="card-label" style="color:var(--kas)">KAS</div>
+          <div class="card-sublabel" style="color:rgba(73,234,203,.35)">Il tuo saldo</div>
         </div>
         <svg class="kaspa-logo" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
           <polygon points="100,10 190,55 190,145 100,190 10,145 10,55" stroke="#49EACB" stroke-width="6" fill="none" opacity=".45"/>
@@ -303,7 +303,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
         <div class="sbox-label">Converti</div>
         <div class="sbox-row">
           <div class="s-dot" style="background:var(--aria)"></div>
-          <div class="s-name" style="color:var(--aria)">Tessera Coin · ARIA</div>
+          <div class="s-name" style="color:var(--aria)">ARIA</div>
         </div>
         <input class="s-input" id="swap-in" value="100" type="number" min="1" oninput="calc()">
         <div class="s-unit">ARIA DISPONIBILI: 840</div>
@@ -334,7 +334,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
         <div class="sbox-label">Ricevi</div>
         <div class="sbox-row">
           <div class="s-dot" style="background:var(--kas)"></div>
-          <div class="s-name" style="color:var(--kas)">Tessera Kaspa · KAS</div>
+          <div class="s-name" style="color:var(--kas)">KAS</div>
         </div>
         <div class="s-input" id="swap-out" style="cursor:default;color:var(--kas)">~92 KAS</div>
         <div class="s-unit">TASSO DEFINITO AL RIMBORSO</div>
@@ -343,7 +343,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
 
     <div class="swap-footer">
       <div>
-        <div class="swap-info">Rimborso garantito: <b>95% del fondo comune</b></div>
+        <div class="swap-info">Rimborso garantito: <b>95% del fondo di garanzia</b></div>
         <div class="swap-info">Elaborazione: <b>24–48h</b></div>
         <div class="swap-info" style="margin-top:8px;color:rgba(192,132,252,.35);font-size:9px">✦ I Badge della collezione non sono convertibili</div>
       </div>

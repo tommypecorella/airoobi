@@ -634,35 +634,7 @@ function closeInvestor(){
 }
 
 function renderInvestorCharts(){
-  // 1. Community growth chart (simulated monthly data — will be replaced with real data)
-  var growthCtx=document.getElementById('inv-chart-growth');
-  if(growthCtx){
-    new Chart(growthCtx,{
-      type:'line',
-      data:{
-        labels:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],
-        datasets:[{
-          label:'Community',
-          data:[0,0,0,0,0,0,12,48,120],
-          borderColor:'#B8960C',
-          backgroundColor:'rgba(184,150,12,.1)',
-          fill:true,
-          tension:.4,
-          pointBackgroundColor:'#B8960C',
-          pointRadius:4
-        }]
-      },
-      options:{
-        responsive:true,
-        plugins:{legend:{display:false}},
-        scales:{
-          x:{ticks:{color:'#888',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,.05)'}},
-          y:{beginAtZero:true,ticks:{color:'#888',font:{family:'DM Mono',size:10}},grid:{color:'rgba(255,255,255,.05)'}}
-        }
-      }
-    });
-  }
-  // 2. Roadmap phases visual (horizontal bar)
+  // Roadmap phases visual (horizontal bar)
   var roadCtx=document.getElementById('inv-chart-roadmap');
   if(roadCtx){
     new Chart(roadCtx,{

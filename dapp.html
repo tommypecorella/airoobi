@@ -39,6 +39,10 @@
       <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
       <span class="it">Archivio</span><span class="en">Archive</span>
     </a>
+    <a href="/impara" data-page="learn" onclick="navigateTo('learn',event)">
+      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      <span class="it">Impara</span><span class="en">Learn</span>
+    </a>
     <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       <span class="it"><b>Valuta</b></span><span class="en"><b>Evaluate</b></span>
@@ -81,6 +85,10 @@
   <a href="/archivio" data-page="archive" onclick="navigateTo('archive',event)">
     <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
     <span class="it">Archivio</span><span class="en">Archive</span>
+  </a>
+  <a href="/impara" data-page="learn" onclick="navigateTo('learn',event)">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="it">Impara</span><span class="en">Learn</span>
   </a>
   <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
     <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -591,6 +599,53 @@
     </div>
   </div>
 
+  <!-- ═══ LEARN TAB ═══ -->
+  <div id="tab-learn" style="display:none">
+    <div style="text-align:center;margin-bottom:40px">
+      <h2 style="font-family:var(--font-h);font-size:clamp(24px,5vw,36px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Impara</span><span class="en">Learn</span></h2>
+      <p style="font-size:13px;color:var(--gray-400);margin:0"><span class="it">Scopri come funzionano ARIA, ROBI e il motore airdrop.</span><span class="en">Learn how ARIA, ROBI and the airdrop engine work.</span></p>
+    </div>
+
+    <!-- Video 1: Come funziona AIROOBI -->
+    <div style="max-width:800px;margin:0 auto 48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 1</span><span class="en">Lesson 1</span></div>
+      <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Come funziona AIROOBI</span><span class="en">How AIROOBI works</span></h3>
+      <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">ARIA, blocchi, categorie, fairness e ROBI — tutto in 2 minuti.</span><span class="en">ARIA, blocks, categories, fairness and ROBI — all in 2 minutes.</span></p>
+      <div style="width:100%;aspect-ratio:16/9;border:1px solid var(--gray-700);overflow:hidden">
+        <iframe src="/video-intro.html" style="width:100%;height:100%;border:none" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- Video 2: Come funziona un Airdrop -->
+    <div style="max-width:800px;margin:0 auto 48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 2</span><span class="en">Lesson 2</span></div>
+      <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Come funziona un Airdrop</span><span class="en">How an Airdrop works</span></h3>
+      <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">La storia di Giulia e Giulio — dal primo ARIA al ROBI. Il percorso completo.</span><span class="en">The story of Giulia and Giulio — from the first ARIA to the ROBI. The complete journey.</span></p>
+      <div style="width:100%;aspect-ratio:16/9;border:1px solid var(--gray-700);overflow:hidden">
+        <iframe src="/video-airdrop.html" style="width:100%;height:100%;border:none" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- Quick reference -->
+    <div style="max-width:800px;margin:0 auto;padding:32px;border:1px solid var(--gray-700)">
+      <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--gold);margin:0 0 20px"><span class="it">Riferimento rapido</span><span class="en">Quick reference</span></h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+        <div>
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--aria);margin-bottom:6px">ARIA</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">La valuta di AIROOBI. La guadagni gratis ogni giorno. La usi per acquistare blocchi negli airdrop.</span><span class="en">AIROOBI's currency. Earn it free every day. Use it to buy blocks in airdrops.</span></p>
+        </div>
+        <div>
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:6px">ROBI</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">Il tuo NFT. Lo guadagni partecipando agli airdrop. Il suo valore cresce nel tempo. Riscuotibile in KAS.</span><span class="en">Your NFT. Earn it by joining airdrops. Its value grows over time. Redeemable in KAS.</span></p>
+        </div>
+        <div>
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--kas);margin-bottom:6px">KAS</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">Kaspa — la crypto su cui è costruito AIROOBI. Quando riscuoti i tuoi ROBI, ricevi KAS reali.</span><span class="en">Kaspa — the crypto AIROOBI is built on. When you redeem your ROBI, you receive real KAS.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ MANAGE TAB (backoffice) ═══ -->
   <div id="tab-manage" style="display:none">
     <div class="bo-tabs" id="bo-tabs">
@@ -658,7 +713,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.03.29-1.53.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.03.29-1.54.0</div>
 </div>
 
 <script src="/src/dapp.js"></script>
