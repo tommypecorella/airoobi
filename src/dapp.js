@@ -714,7 +714,11 @@ async function openDetail(id){
     +'</button>'
     +'<div class="buy-msg" id="buy-msg"></div>'
     +'</div>'
-    +'</div>'; // close product-divider wrapper
+    +'</div>' // close product-divider wrapper
+
+    // ── CONTROL ROOM (solo admin/CEO) ──
+    +(_isAdmin?'<div style="margin-top:24px;text-align:center"><button onclick="openControlRoom(\''+id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;font-family:var(--font-m);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .3s" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'var(--black)\'" onmouseout="this.style.background=\'none\';this.style.color=\'var(--gold)\'">CONTROL ROOM</button></div>':'')
+    +'<div id="control-room-panel" style="display:none"></div>';
 
   document.getElementById('detail-content').innerHTML=html;
 
@@ -1036,6 +1040,158 @@ async function checkUserRoles(){
     if(nm)nm.style.display='';
     if(nmm)nmm.style.display='';
   }
+}
+
+// ── Control Room (CEO/Admin) ──
+async function openControlRoom(airdropId){
+  if(!_isAdmin)return;
+  var panel=document.getElementById('control-room-panel');
+  if(!panel)return;
+  panel.style.display='block';
+  panel.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-400)">Loading...</div>';
+
+  var token=await getValidToken();
+  if(!token)return;
+
+  // Fetch draw preview (scores, split, success check)
+  var preview=await sbRpc('get_draw_preview',{p_airdrop_id:airdropId},token);
+
+  // Fetch participations
+  var parts=[];
+  try{
+    var pRes=await fetch(SB_URL+'/rest/v1/airdrop_participations?airdrop_id=eq.'+airdropId+'&select=user_id,blocks_count,aria_spent',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(pRes.ok)parts=await pRes.json();
+  }catch(e){}
+
+  // Fetch presale vs sale blocks
+  var presaleBlocks=0,saleBlocks=0;
+  try{
+    var bRes=await fetch(SB_URL+'/rest/v1/airdrop_blocks?airdrop_id=eq.'+airdropId+'&select=purchased_phase',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(bRes.ok){
+      var blocks=await bRes.json();
+      blocks.forEach(function(b){
+        if(b.purchased_phase==='presale')presaleBlocks++;
+        else saleBlocks++;
+      });
+    }
+  }catch(e){}
+
+  // Fetch treasury
+  var treasuryBal=0,nftCirc=0;
+  try{
+    var tRes=await fetch(SB_URL+'/rest/v1/treasury_stats?select=balance_eur,nft_circulating&order=created_at.desc&limit=1',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(tRes.ok){var tRows=await tRes.json();if(tRows&&tRows[0]){treasuryBal=parseFloat(tRows[0].balance_eur)||0;nftCirc=parseFloat(tRows[0].nft_circulating)||0;}}
+  }catch(e){}
+
+  var a=_currentDetail;
+  if(!a||!preview||!preview.ok){
+    panel.innerHTML='<div style="padding:20px;color:#ef4444">Errore caricamento dati</div>';
+    return;
+  }
+
+  // KPIs
+  var uniqueUsers=[...new Set(parts.map(function(p){return p.user_id}))].length;
+  var totalAria=parts.reduce(function(s,p){return s+p.aria_spent},0);
+  var totalEur=(totalAria*0.10).toFixed(2);
+  var totalBlks=parts.reduce(function(s,p){return s+p.blocks_count},0);
+  var fillPct=a.total_blocks>0?Math.round(totalBlks/a.total_blocks*100):0;
+  var avgPerUser=uniqueUsers>0?Math.round(totalAria/uniqueUsers):0;
+  var presalePct=(presaleBlocks+saleBlocks)>0?Math.round(presaleBlocks*100/(presaleBlocks+saleBlocks)):0;
+  var objectVal=a.object_value_eur||0;
+  var divisor=Math.max(1,Math.ceil(objectVal/100));
+  var nftPrice=nftCirc>0?(treasuryBal/nftCirc).toFixed(2):'N/A';
+  var estShares=(presaleBlocks*2+saleBlocks)/divisor;
+
+  // Success prediction
+  var venditoreEur=preview.split?preview.split.venditore_eur:0;
+  var sellerMin=preview.seller_min_price||0;
+  var successLabel=preview.success
+    ?'<span style="color:var(--kas)">✓ SUCCESS</span>'
+    :'<span style="color:#ef4444">✗ BELOW MIN (€'+venditoreEur+' vs €'+sellerMin+')</span>';
+
+  // Top participants (anonymized)
+  var userAgg={};
+  parts.forEach(function(p){
+    if(!userAgg[p.user_id])userAgg[p.user_id]={blocks:0,aria:0};
+    userAgg[p.user_id].blocks+=p.blocks_count;
+    userAgg[p.user_id].aria+=p.aria_spent;
+  });
+  var topParts=Object.keys(userAgg).map(function(uid){return{uid:uid.substring(0,6),blocks:userAgg[uid].blocks,aria:userAgg[uid].aria}}).sort(function(a,b){return b.aria-a.aria}).slice(0,5);
+
+  // Scores preview
+  var scoresHtml='';
+  if(preview.scores&&preview.scores.length){
+    scoresHtml='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:8px">'
+      +'<tr style="color:var(--gray-500);border-bottom:1px solid var(--gray-800)"><th style="text-align:left;padding:4px">Rank</th><th>F1</th><th>F2</th><th>F3</th><th>Score</th><th>Blocks</th><th>ARIA</th></tr>';
+    preview.scores.slice(0,8).forEach(function(s){
+      var isWinner=s.rank===1;
+      var rowColor=isWinner?'color:var(--kas)':'';
+      scoresHtml+='<tr style="border-bottom:1px solid var(--gray-800);'+rowColor+'">'
+        +'<td style="padding:4px">#'+s.rank+(isWinner?' ★':'')+'</td>'
+        +'<td style="text-align:center">'+s.f1+'</td>'
+        +'<td style="text-align:center">'+s.f2+'</td>'
+        +'<td style="text-align:center">'+s.f3+'</td>'
+        +'<td style="text-align:center;font-weight:600">'+s.score+'</td>'
+        +'<td style="text-align:center">'+s.blocks+'</td>'
+        +'<td style="text-align:center">'+s.aria_spent+'</td></tr>';
+    });
+    scoresHtml+='</table>';
+  }
+
+  // Build panel
+  var h='<div style="border:1px solid var(--gold);padding:20px;margin-top:12px;background:rgba(184,150,12,.03)">'
+    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center"><span>CONTROL ROOM</span><button onclick="document.getElementById(\'control-room-panel\').style.display=\'none\'" style="background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:16px">&times;</button></div>'
+
+    // KPI grid
+    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
+    +crKpi('Partecipanti',uniqueUsers,'utenti unici')
+    +crKpi('Fill Rate',fillPct+'%',totalBlks+'/'+a.total_blocks)
+    +crKpi('Revenue','€'+totalEur,totalAria+' ARIA')
+    +crKpi('Media/Utente',avgPerUser+' AR','€'+(avgPerUser*0.10).toFixed(0)+' eq.')
+    +'</div>'
+
+    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
+    +crKpi('Presale',presaleBlocks+' bl.',presalePct+'% interesse','var(--aria)')
+    +crKpi('Sale',saleBlocks+' bl.',(100-presalePct)+'%')
+    +crKpi('Mining','div '+divisor,'~'+estShares.toFixed(1)+' quote est.','var(--gold)')
+    +crKpi('NFT Price','€'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
+    +'</div>'
+
+    // Status
+    +'<div style="padding:10px 14px;border:1px solid var(--gray-800);margin-bottom:16px;font-size:12px">'
+    +'<strong>Status:</strong> '+successLabel
+    +'<br><strong>Venditore:</strong> €'+venditoreEur+' / min €'+sellerMin
+    +'<br><strong>Split:</strong> Fondo €'+(preview.split?preview.split.fondo_eur:0)+' | Fee €'+(preview.split?preview.split.airoobi_eur:0)
+    +'<br><strong>Treasury:</strong> €'+treasuryBal.toFixed(2)+' | Quota: €'+nftPrice
+    +'</div>'
+
+    // Top participants
+    +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin-bottom:6px">TOP PARTECIPANTI</div>'
+    +'<div style="font-size:11px">'
+    +topParts.map(function(p,i){return '<div style="padding:3px 0;border-bottom:1px solid var(--gray-800)">#'+(i+1)+' <span style="font-family:var(--font-mono,monospace)">'+p.uid+'…</span> — '+p.blocks+' bl. — '+p.aria+' AR (€'+(p.aria*0.10).toFixed(0)+')</div>'}).join('')
+    +'</div>'
+
+    // Scores leaderboard
+    +(scoresHtml?'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin:12px 0 6px">SCORE LEADERBOARD</div>'+scoresHtml:'')
+
+    +'</div>';
+
+  panel.innerHTML=h;
+}
+
+function crKpi(label,val,sub,color){
+  var c=color||'var(--white)';
+  return '<div style="text-align:center">'
+    +'<div style="font-size:18px;font-weight:600;color:'+c+'">'+val+'</div>'
+    +'<div style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-400);margin-top:2px">'+label+'</div>'
+    +(sub?'<div style="font-size:10px;color:var(--gray-500);margin-top:1px">'+sub+'</div>':'')
+    +'</div>';
 }
 
 // ── Submit object ──
