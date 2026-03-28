@@ -1703,7 +1703,7 @@ async function loadDappWallet(){
   }catch(e){}
 
   // NFT_REWARD con supporto shares frazionari
-  var rendCards=cards.filter(function(c){return c.nft_type==='NFT_REWARD'||c.nft_type==='NFT_EARN'});
+  var rendCards=cards.filter(function(c){return c.nft_type==='ROBI'||c.nft_type==='NFT_REWARD'||c.nft_type==='NFT_EARN'});
   var totalShares=0;
   for(var i=0;i<rendCards.length;i++){
     totalShares+=parseFloat(rendCards[i].shares)||1;
