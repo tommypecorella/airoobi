@@ -1725,7 +1725,7 @@ async function loadDappWallet(){
     }
   }
 
-  // Treasury → valore per quota
+  // Treasury → valore per quota + controvalore KAS
   try{
     var tRes=await fetch(SB_URL+'/rest/v1/treasury_stats?select=*&order=created_at.desc&limit=1',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
@@ -1741,6 +1741,13 @@ async function loadDappWallet(){
           if(hasRendimento){
             var totalVal=(unitVal*totalShares).toFixed(2);
             valEl.innerHTML='&euro; '+totalVal;
+            // Fetch KAS price and show equivalent
+            fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur').then(function(r){return r.json()}).then(function(d){
+              if(d&&d.kaspa&&d.kaspa.eur>0){
+                var kasEquiv=(parseFloat(totalVal)/d.kaspa.eur).toFixed(2);
+                valEl.innerHTML='&euro; '+totalVal+'<div style="font-family:var(--font-m);font-size:11px;color:var(--kas);margin-top:4px;letter-spacing:1px">&asymp; '+kasEquiv+' KAS</div>';
+              }
+            }).catch(function(){});
           }else{
             valEl.textContent='—';
           }
