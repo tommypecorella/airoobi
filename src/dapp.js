@@ -215,10 +215,12 @@ async function loadHomeDashboard(){
   if(elEn)elEn.textContent=name;
   // ARIA balance
   document.getElementById('home-aria').innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
-  // NFT count
+  // NFT shares count
   try{
-    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&select=id',token);
-    document.getElementById('home-nft').textContent=(nfts&&nfts.length)||0;
+    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&select=id,shares',token);
+    var nftShares=0;
+    if(nfts)for(var ni=0;ni<nfts.length;ni++)nftShares+=parseFloat(nfts[ni].shares)||1;
+    document.getElementById('home-nft').textContent=nftShares%1===0?nftShares:nftShares.toFixed(2);
   }catch(e){document.getElementById('home-nft').textContent='0'}
   // KAS testnet (placeholder — no on-chain yet)
   document.getElementById('home-kas').textContent='0.00';
@@ -460,7 +462,7 @@ function renderGrid(){
     // Badge: presale vs sale, then fill status
     var badge='';
     var isPresale=a.status==='presale';
-    if(isPresale)badge='<div class="card-badge presale">Presale</div>';
+    if(isPresale)badge='<div class="card-badge presale">Presale · 2x Mining</div>';
     else if(pct>=80)badge='<div class="card-badge ending"><span class="it">Ultimi</span><span class="en">Ending</span></div>';
     else if(pct>=50)badge='<div class="card-badge hot">Hot</div>';
     else badge='<div class="card-badge sale">Live</div>';
@@ -608,6 +610,7 @@ async function openDetail(id){
     +(isPresale?' &middot; <span style="color:var(--aria)">PRESALE</span>':'')
     +'</div>'
     +'</div>'
+    +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>⛏ 2x MINING BOOST</strong> — <span class="it">Compra in presale e mina il doppio delle quote NFT</span><span class="en">Buy in presale and mine 2x NFT shares</span></div>':'')
     +(condition?'<div class="product-condition">'+condition+'</div>':'')
     +'<div class="detail-cat">'+a.category+'</div>'
     +'</div>'
@@ -634,13 +637,14 @@ async function openDetail(id){
       +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Costo totale airdrop:</span><span class="en">Total airdrop cost:</span> <strong style="color:var(--aria)">'+totalAriaCost.toLocaleString('it-IT')+' ARIA</strong></li>'
+      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 quota ogni '+Math.max(1,Math.ceil((a.object_value_eur||500)/100))+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil((a.object_value_eur||500)/200))+' blocchi)</span>':'')+'</li>'
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
 
     // DIVIDER → PARTECIPA
     +'<div class="product-divider">'
     +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
-    +'<p class="product-participate-sub"><span class="it">Ogni blocco genera una Tessera Rendimento con valore garantito</span><span class="en">Each block generates a Tessera with guaranteed value</span></p>'
+    +'<p class="product-participate-sub"><span class="it">Ogni blocco mina quote della Tessera Rendimento — il loro valore cresce nel tempo</span><span class="en">Each block mines shares of the Tessera Rendimento — their value grows over time</span></p>'
     +'</div>'
 
     // MY BLOCKS (above donut)
@@ -676,7 +680,9 @@ async function openDetail(id){
     // BUY BOX
     +'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e genera una Tessera Rendimento con valore garantito.</span><span class="en">Each block brings you closer to the item and generates a Tessera with guaranteed value.</span></p>'
+    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e mina quote della Tessera Rendimento — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and mines Tessera shares — their value grows over time.</span></p>'
+    +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>⛏ PRESALE 2x</strong> — <span class="it">In presale ogni blocco mina il doppio delle quote!</span><span class="en">In presale each block mines double shares!</span></div>':'')
+
 
     // DISPLAY
     +'<div class="buy-display">'
@@ -845,11 +851,17 @@ function setSlider(n){
 function updateBuyDisplay(){
   var a=_currentDetail;
   if(!a)return;
-  var cost=_buyQty*a.block_price_aria;
+  var isPresale=a.status==='presale';
+  var price=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
+  var cost=_buyQty*price;
+  var divisor=Math.max(1,Math.ceil((a.object_value_eur||500)/100));
+  var mult=isPresale?2:1;
+  var shares=(_buyQty*mult)/divisor;
+  var sharesStr=shares%1===0?shares:shares.toFixed(2);
   var countEl=document.getElementById('buy-display-count');
   var costEl=document.getElementById('buy-display-cost');
   if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'blocco':'blocchi')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
-  if(costEl)costEl.textContent='= '+cost+' ARIA ('+eur(cost)+')';
+  if(costEl)costEl.innerHTML='= '+cost+' ARIA ('+eur(cost)+') &middot; <span style="color:var(--gold)">'+sharesStr+' <span class="it">quote</span><span class="en">shares</span></span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
 }
 
 function goToAirdrop(id){
@@ -1402,8 +1414,13 @@ async function loadDappWallet(){
     if(res.ok)cards=await res.json();
   }catch(e){}
 
-  var rendCards=cards.filter(function(c){return c.nft_type==='NFT_EARN'});
-  var hasRendimento=rendCards.length>0;
+  // NFT_REWARD con supporto shares frazionari
+  var rendCards=cards.filter(function(c){return c.nft_type==='NFT_REWARD'||c.nft_type==='NFT_EARN'});
+  var totalShares=0;
+  for(var i=0;i<rendCards.length;i++){
+    totalShares+=parseFloat(rendCards[i].shares)||1;
+  }
+  var hasRendimento=totalShares>0;
 
   var wc=document.getElementById('dapp-wcard-rendimento');
   var wl=document.getElementById('dapp-wcard-rendimento-locked');
@@ -1412,14 +1429,15 @@ async function loadDappWallet(){
 
   if(hasRendimento){
     var cn=document.getElementById('dapp-wcard-rend-count');
-    if(cn)cn.textContent=rendCards.length;
+    // Mostra quote frazionarie (es. "12.50 quote" o "3 quote")
+    if(cn)cn.textContent=totalShares%1===0?totalShares:totalShares.toFixed(2);
     var sn=document.getElementById('dapp-wcard-rend-serial');
     if(sn&&rendCards[0]){
       sn.textContent=rendCards[0].id.split('-')[0].substring(0,5).toUpperCase();
     }
   }
 
-  // Treasury → valore per tessera
+  // Treasury → valore per quota
   try{
     var tRes=await fetch(SB_URL+'/rest/v1/treasury_stats?select=*&order=created_at.desc&limit=1',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
@@ -1428,12 +1446,12 @@ async function loadDappWallet(){
       var tRows=await tRes.json();
       if(tRows&&tRows.length){
         var treasury=parseFloat(tRows[0].balance_eur)||0;
-        var minted=tRows[0].nft_minted||cards.length||1;
-        var unitVal=minted>0?(treasury/minted):0;
+        var nftCirc=parseFloat(tRows[0].nft_circulating)||totalShares||1;
+        var unitVal=nftCirc>0?(treasury/nftCirc):0;
         var valEl=document.getElementById('dapp-wcard-rend-value');
         if(valEl){
           if(hasRendimento){
-            var totalVal=(unitVal*rendCards.length).toFixed(2);
+            var totalVal=(unitVal*totalShares).toFixed(2);
             valEl.innerHTML='&euro; '+totalVal;
           }else{
             valEl.textContent='—';
