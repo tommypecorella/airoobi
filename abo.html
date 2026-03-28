@@ -509,7 +509,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
           <div>
             <label>Block price (ARIA)</label>
-            <input type="number" id="ad-block-price" min="1" placeholder="50" oninput="adAutoCalcBlocks()">
+            <input type="number" id="ad-block-price" min="1" placeholder="5" oninput="adAutoCalcBlocks()">
           </div>
           <div>
             <label>Presale price (ARIA)</label>
@@ -542,6 +542,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
               <div>Fee AIROOBI (10%): <strong id="ad-calc-fee" style="color:var(--gold)">—</strong></div>
               <div>Charity (0.01%): <strong id="ad-calc-charity" style="color:var(--gray-400)">—</strong></div>
             </div>
+            <div id="ad-calc-seller-check" style="margin-top:8px;padding:6px 10px;font-size:11px;display:none"></div>
           </div>
 
           <!-- Scenario analysis -->
@@ -1197,6 +1198,19 @@ function adUpdateCalcPreview(){
   document.getElementById('ad-calc-fee').textContent='€'+fee.toFixed(2);
   document.getElementById('ad-calc-charity').textContent='€'+charity.toFixed(4);
 
+  // Seller check: confronta quota venditore vs seller_min_price
+  var sellerCheck=document.getElementById('ad-calc-seller-check');
+  if(minP>0&&sellerCheck){
+    var ok=vend>=minP;
+    sellerCheck.style.display='block';
+    sellerCheck.style.background=ok?'rgba(73,234,203,.08)':'rgba(239,68,68,.08)';
+    sellerCheck.style.border='1px solid '+(ok?'rgba(73,234,203,.3)':'rgba(239,68,68,.3)');
+    sellerCheck.style.color=ok?'var(--kas)':'#ef4444';
+    sellerCheck.innerHTML=ok
+      ?'✓ Venditore riceve <strong>€'+vend.toFixed(2)+'</strong> ≥ minimo <strong>€'+minP.toFixed(2)+'</strong>'
+      :'✗ Venditore riceve <strong>€'+vend.toFixed(2)+'</strong> &lt; minimo <strong>€'+minP.toFixed(2)+'</strong> — aumenta la quotazione o usa SUGGERISCI';
+  }else if(sellerCheck){sellerCheck.style.display='none';}
+
   // Scenari fill-rate
   var scenarios=[25,50,75,100];
   var tbody=document.getElementById('ad-calc-scenarios');
@@ -1233,13 +1247,14 @@ function calcSuggestedValues(desired,minP){
   var minQuotation=minP>0?Math.ceil(minP/SPLIT.venditore):0;
   var avgQuotation=minP>0?Math.round((desired+minP)/2):desired;
   var quotation=Math.max(500,minQuotation,avgQuotation);
-  // Block price ragionevole: target ~50 ARIA (€5/blocco)
-  var sugPrice=50;
+  // Block price per categoria (da Tokenomics v3 sez. 5)
+  // €500-1500 → 5 AR, €1500-3000 → 10 AR, €3000-15000 → 15 AR, €15000+ → 25 AR
+  var target=Math.max(desired,minP);
+  var sugPrice=target<=1500?5:target<=3000?10:target<=15000?15:25;
   var sugBlocks=Math.ceil(quotation/(sugPrice*ARIA_EUR_ENGINE));
-  // Se troppi pochi blocchi, abbassa il prezzo
-  if(sugBlocks<20){sugPrice=Math.max(5,Math.round(quotation/(20*ARIA_EUR_ENGINE)/5)*5);sugBlocks=Math.ceil(quotation/(sugPrice*ARIA_EUR_ENGINE));}
-  // Se troppi blocchi, alza il prezzo
-  if(sugBlocks>500){sugPrice=Math.max(sugPrice,Math.ceil(quotation/(500*ARIA_EUR_ENGINE)/5)*5);sugBlocks=Math.ceil(quotation/(sugPrice*ARIA_EUR_ENGINE));}
+  // Range sano: 500–10.000 blocchi
+  if(sugBlocks<500){sugPrice=Math.max(5,Math.round(quotation/(500*ARIA_EUR_ENGINE)/5)*5);sugBlocks=Math.ceil(quotation/(sugPrice*ARIA_EUR_ENGINE));}
+  if(sugBlocks>10000){sugPrice=Math.max(sugPrice,Math.ceil(quotation/(10000*ARIA_EUR_ENGINE)/5)*5);sugBlocks=Math.ceil(quotation/(sugPrice*ARIA_EUR_ENGINE));}
   return {quotation:quotation,price:sugPrice,blocks:sugBlocks};
 }
 
