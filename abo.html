@@ -253,7 +253,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <div class="admin-card"><div class="admin-card-val" id="adm-videos">—</div><div class="admin-card-label">Video visti oggi</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-referrals">—</div><div class="admin-card-label">Referral confermati</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-avatars">—</div><div class="admin-card-label">Foto profilo impostata</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating-ov">—</div><div class="admin-card-label">NFT Rewards in circolazione</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating-ov">—</div><div class="admin-card-label">ROBI in circolazione</div></div>
     </div>
     <div class="admin-grid" style="margin-top:8px">
       <div class="admin-card"><div class="admin-card-val" id="adm-avg-points">—</div><div class="admin-card-label">ARIA media/utente</div></div>
@@ -988,7 +988,7 @@ async function toggleUserDetail(row,uid){
       });
       html+='</tbody></table>';
     }else{html+='<p style="font-size:12px;color:var(--gray-500)">Nessun movimento</p>';}
-    html+='<h4>NFT Rewards</h4>';
+    html+='<h4>ROBI</h4>';
     if(nfts&&nfts.length>0){
       nfts.forEach(function(n){
         var d=new Date(n.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'});

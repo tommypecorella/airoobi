@@ -5,7 +5,7 @@
  * Modello economico corretto:
  *
  *   ARIA = stablecoin €0.10 fisso. Si guadagna o si compra (min €1).
- *   NFT REWARD = quota del Fondo Comune (come ETF).
+ *   ROBI = quota del Fondo Comune (come ETF).
  *     valore_quota = treasury / nft_circolanti
  *   Partecipare = minare quote:
  *     - Vincitore → ottiene l'oggetto
@@ -526,7 +526,7 @@ function main() {
   │    ├→ VINCITORE: ottiene oggetto (ROI 5-25x)                    │
   │    └→ TUTTI GLI ALTRI: minano quote NFT                         │
   │         ↓                                                       │
-  │       NFT REWARD = quota Fondo Comune (come ETF)                │
+  │       ROBI = quota Fondo Comune (come ETF)                      │
   │         valore = treasury / quote_circolanti                    │
   │         ↓                                                       │
   │       TREASURY cresce SEMPRE:                                   │

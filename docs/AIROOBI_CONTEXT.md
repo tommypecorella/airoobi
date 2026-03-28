@@ -51,7 +51,7 @@ AIROOBI è un marketplace di airdrop decentralizzato su blockchain Kaspa. Gli ut
 |---|---|---|
 | ARIA | Valuta piattaforma | Guadagnata con check-in/video/referral, usata per comprare blocchi |
 | Tessera Coin | Proxy wallet blu | Mostra saldo ARIA accumulato |
-| Tessera Rendimento | NFT oro | Certificato di resa — converti parte o tutto in KAS |
+| ROBI | NFT oro | Certificato di resa — converti parte o tutto in KAS |
 | Tessera Kaspa | Proxy wallet verde | Mostra saldo KAS ricevuto dopo conversione |
 
 **REGOLE TASSATIVE:**

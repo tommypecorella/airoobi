@@ -1,5 +1,5 @@
 -- Asset Registry: censimento asset ufficiali AIROOBI
--- Tipi: currency (ARIA), nft (NFT_REWARD, NFT_ALPHA_TIER0), badge (BADGE_FONDATORE)
+-- Tipi: currency (ARIA), nft (NFT_REWARD = ROBI, NFT_ALPHA_TIER0), badge (BADGE_FONDATORE)
 
 CREATE TABLE IF NOT EXISTS asset_registry (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -25,8 +25,8 @@ VALUES
   ('ARIA', 'ARIA Token', 'currency',
    'Valuta di piattaforma. Simbolica fino ad attivazione Treasury.',
    false),
-  ('NFT_REWARD', 'NFT Reward', 'nft',
-   'Tessera Rendimento. Certificato di resa convertibile in KAS.',
+  ('NFT_REWARD', 'ROBI', 'nft',
+   'ROBI. Certificato di resa convertibile in KAS. Quota del Fondo Comune.',
    true),
   ('NFT_ALPHA_TIER0', 'NFT Alpha Tier 0', 'nft',
    'NFT esclusivo Alpha Brave. Prima generazione fondatori.',

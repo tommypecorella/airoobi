@@ -47,7 +47,7 @@ AIROOBI nasce da una constatazione semplice: l'accesso alle opportunità non è 
 
 **Passo 2 — Acquisto Blocchi:** ogni airdrop ha un prezzo blocco variabile in ARIA (5, 10, 25 ARIA a seconda del valore dell'oggetto).
 
-**Passo 3 — Tessera Rendimento:** ogni blocco acquistato aggiorna la Tessera Rendimento. Rimborso garantito 95%, elaborazione 24-48h.
+**Passo 3 — ROBI:** ogni blocco acquistato genera ROBI. Rimborso garantito 95%, elaborazione 24-48h.
 
 > 🟡 **Non è gioco d'azzardo.** L'utente acquista accesso a un Fondo Comune reale. La chance di vincere l'oggetto fisico è un bonus, non l'unica posta in gioco.
 

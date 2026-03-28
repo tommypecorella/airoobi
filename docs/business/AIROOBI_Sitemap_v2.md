@@ -36,7 +36,7 @@
 | Page | Hash | Tab switchTab() | Descrizione |
 |---|---|---|---|
 | Dashboard / Profilo | #dashboard / #profilo | overview | Stats personali, profilo, posizione, admin link |
-| Portafoglio | #portafoglio | tessere | Le 3 Tessere (Coin, Rendimento, Kaspa), saldi |
+| Portafoglio | #portafoglio | tessere | Le 3 Tessere (Coin, ROBI, Kaspa), saldi |
 | Guadagni | #guadagni | earnings | Check-in, video, streak, storico punti |
 | Referral | #referral | referral | Link personale, statistiche, reward |
 | Admin Panel | #admin (solo admin) | — | Visibile solo a tommaso.pecorella+ceo@outlook.com, ceo@airoobi.com |
@@ -82,11 +82,11 @@
 1. User naviga Marketplace → seleziona oggetto → visualizza dettaglio
 2. Seleziona N blocchi → sistema mostra riepilogo (N × prezzo ARIA = totale)
 3. Preme "Acquista" → VIDEO INTERSTITIAL 15s
-4. Dopo video: blocchi assegnati → Tessera Rendimento aggiornata
+4. Dopo video: blocchi assegnati → ROBI aggiornati
 5. Notifica: "Hai acquistato X blocchi!"
 
-### 3.3 Flusso Swap Tessera Rendimento → KAS
-1. User va su tab Portafoglio → Tessera Rendimento
+### 3.3 Flusso Swap ROBI → KAS
+1. User va su tab Portafoglio → ROBI
 2. Preme "Converti" → inserisce importo (parte o tutto il saldo)
 3. VIDEO INTERSTITIAL 15s obbligatorio
 4. Dopo video: richiesta elaborazione 24-48h, rimborso garantito 95%
@@ -123,7 +123,7 @@
 | treasury_stats | GET/PATCH | Bilancio fondo EUR, NFT mintati, aico_circulating (legacy = ARIA) |
 | investor_leads | POST/GET | Form contatto investitori |
 | cost_tracker | GET/POST/DELETE | Tracking costi operativi (admin only) |
-| asset_registry | GET | Censimento asset ufficiali: ARIA, NFT_REWARD, NFT_ALPHA_TIER0, BADGE_FONDATORE |
+| asset_registry | GET | Censimento asset ufficiali: ARIA, NFT_REWARD (ROBI), NFT_ALPHA_TIER0, BADGE_FONDATORE |
 | rpc/confirm_referral | POST | Conferma referral (+10 ARIA referrer, +15 ARIA invitato) |
 | rpc/link_referral | POST | Collega referral a profilo |
 | rpc/do_checkin | POST | Esegue check-in (blocca duplicati server-side) |

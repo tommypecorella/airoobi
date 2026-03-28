@@ -146,7 +146,7 @@ In caso di score identico (raro ma possibile):
 ## 5. Distribuzione NFT ai Perdenti (Non-Vincitori)
 
 ### 5.1 Principio anti-inflazione
-La distribuzione NFT non deve erodere il prezzo unitario della Tessera Rendimento.
+La distribuzione NFT non deve erodere il prezzo unitario del ROBI.
 
 **Vincolo matematico:**
 ```
@@ -155,7 +155,7 @@ max_nft_distribuibili = floor(contributo_fondo / prezzo_nft_attuale)
 ```
 Se il numero di NFT calcolati supera `max_nft_distribuibili` → scala proporzionalmente.
 
-Questo garantisce che dopo ogni airdrop il prezzo NFT rimanga stabile o cresca leggermente.
+Questo garantisce che dopo ogni airdrop il prezzo del ROBI rimanga stabile o cresca leggermente.
 
 ### 5.2 Regola a fasi (mining con halvings)
 
@@ -229,7 +229,7 @@ STEP 6 — Aggiorna airdrop
 
 STEP 7 — Notifiche
   - Vincitore: notifica "Hai vinto! [oggetto]"
-  - Perdenti: notifica "Hai ricevuto [N] Tessere Rendimento"
+  - Perdenti: notifica "Hai ricevuto [N] ROBI"
   - Venditore: notifica "Il tuo airdrop è concluso. Riceverai €X in KAS"
   - Admin: email report draw completato
 

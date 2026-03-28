@@ -12,7 +12,7 @@ Il modello economico di AIROOBI si basa su tre asset distinti:
 - **Tessere** — proxy wallet che tracciano i saldi
 - **Fondo Comune** — pool trasparente che garantisce il valore
 
-**Principio:** ARIA si guadagna (check-in, video, referral) · ARIA si usa per comprare blocchi · 1 Blocco acquistato = 1 Tessera Rendimento (NFT)
+**Principio:** ARIA si guadagna (check-in, video, referral) · ARIA si usa per comprare blocchi · 1 Blocco acquistato = 1 ROBI (NFT)
 
 ---
 
@@ -52,7 +52,7 @@ Le Tessere sono carte ricaricabili (proxy wallet) che mostrano il totale delle t
 | Tessera | Colore | Tipo | Cosa mostra | Azione |
 |---|---|---|---|---|
 | Tessera Coin | #4A9EFF (blu) | Proxy wallet ARIA | Saldo ARIA accumulato | Usa per comprare blocchi |
-| Tessera Rendimento | #B8960C (oro) | NFT certificato di resa | Valore KAS riscuotibile | Converti in KAS reale (95%, 24-48h) |
+| ROBI | #B8960C (oro) | NFT certificato di resa | Valore KAS riscuotibile | Converti in KAS reale (95%, 24-48h) |
 | Tessera Kaspa | #49EACB (verde) | Proxy wallet KAS | KAS ricevuti da conversioni | Sposta on-chain (disponibile al mainnet) |
 
 **CSS vars:** `--aria: #4A9EFF` · `--gold: #B8960C` · `--kas: #49EACB`
@@ -65,7 +65,7 @@ Tutti gli asset ufficiali sono censiti nella tabella `asset_registry` su Supabas
 
 | Tipo NFT | DB Key (`nft_type`) | `asset_type` | Cosa rappresenta | Come si ottiene |
 |---|---|---|---|---|
-| Tessera Rendimento | `NFT_REWARD` | nft | Certificato di resa — valore KAS garantito al 95% | Automatico ad ogni blocco acquistato |
+| ROBI | `NFT_REWARD` | nft | Certificato di resa — valore KAS garantito al 95% | Automatico ad ogni blocco acquistato |
 | NFT Alpha Tier 0 | `NFT_ALPHA_TIER0` | nft | NFT esclusivo prima generazione fondatori | Primi utenti Alpha Brave |
 | Badge Fondatore | `BADGE_FONDATORE` | badge | Badge Early Adopter (non trasferibile) | Primi 1.000 utenti Alpha Brave |
 
@@ -108,7 +108,7 @@ Il prezzo desiderato del venditore serve come riferimento per la valutazione AIR
 | Destinatario | Percentuale | Su €1.000 (10.000 ARIA) | Note |
 |---|---|---|---|
 | Venditore P2P | 67,99% | €679,90 | Pagato in KAS, 24-48h dopo draw |
-| Fondo Comune | 22,00% | €220,00 | Sostiene il valore delle Tessere Rendimento |
+| Fondo Comune | 22,00% | €220,00 | Sostiene il valore dei ROBI |
 | Fee Piattaforma | 10,00% | €100,00 | AIROOBI operational revenue |
 | Charity Pool | 0,01% | €0,10 | Accumulo DAO, causa selezionata dalla community |
 
@@ -116,12 +116,12 @@ Il prezzo desiderato del venditore serve come riferimento per la valutazione AIR
 
 ## 7. Fondo Comune — Meccanismo di Garanzia
 
-- **Rimborso garantito:** ogni Tessera Rendimento vale almeno il 95% del suo importo in KAS
+- **Rimborso garantito:** ogni ROBI vale almeno il 95% del suo importo in KAS
 - **Buyback on-demand:** l'utente converte parte o tutto l'importo (elaborazione 24-48h)
-- **Apprezzamento naturale:** man mano che il Fondo cresce, il valore delle Tessere può aumentare
+- **Apprezzamento naturale:** man mano che il Fondo cresce, il valore dei ROBI può aumentare
 - **Trasparenza on-chain:** il Fondo è pubblico e verificabile in tempo reale
 
-> La sezione Fondo Comune nell'UI mostra solo statistiche grezze (Fondo attuale, Tessere emesse). La formula "Ogni Tessera vale: Fondo ÷ Tessere emesse" NON è esposta nell'UI.
+> La sezione Fondo Comune nell'UI mostra solo statistiche grezze (Fondo attuale, ROBI emessi). La formula "Ogni ROBI vale: Fondo ÷ ROBI emessi" NON è esposta nell'UI.
 
 ---
 

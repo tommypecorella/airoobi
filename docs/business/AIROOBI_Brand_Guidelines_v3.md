@@ -39,7 +39,7 @@ File: `Logo_long_airoobi_transparent.png` · `Logo_short_airoobi_transparent.png
 |---|---|---|---|
 | Background Black | `#000000` | `--black` | **ESATTO.** Mai #080808, #0A0A0A, o simili |
 | Background White | `#FFFFFF` | `--white` | **ESATTO.** Mai #FAFAFA, #F0EEE9, o simili |
-| Gold | `#B8960C` | `--gold` | Colore accent principale, CTA, highlights, Tessera Rendimento |
+| Gold | `#B8960C` | `--gold` | Colore accent principale, CTA, highlights, ROBI |
 
 ### 3.2 Palette UI — Asset Digitali
 

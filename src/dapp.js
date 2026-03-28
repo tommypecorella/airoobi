@@ -644,7 +644,7 @@ async function openDetail(id){
     // DIVIDER → PARTECIPA
     +'<div class="product-divider">'
     +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
-    +'<p class="product-participate-sub"><span class="it">Ogni blocco mina quote della Tessera Rendimento — il loro valore cresce nel tempo</span><span class="en">Each block mines shares of the Tessera Rendimento — their value grows over time</span></p>'
+    +'<p class="product-participate-sub"><span class="it">Ogni blocco mina quote del ROBI — il loro valore cresce nel tempo</span><span class="en">Each block mines shares of the ROBI — their value grows over time</span></p>'
     +'</div>'
 
     // MY BLOCKS (above donut)
@@ -680,7 +680,7 @@ async function openDetail(id){
     // BUY BOX
     +'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e mina quote della Tessera Rendimento — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and mines Tessera shares — their value grows over time.</span></p>'
+    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e mina quote del ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and mines ROBI shares — their value grows over time.</span></p>'
     +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>⛏ PRESALE 2x</strong> — <span class="it">In presale ogni blocco mina il doppio delle quote!</span><span class="en">In presale each block mines double shares!</span></div>':'')
 
 

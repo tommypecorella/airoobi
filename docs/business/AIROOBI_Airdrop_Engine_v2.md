@@ -209,7 +209,7 @@ Con pesi v1 gli sarebbero bastati il 50%.
 ## 6. Distribuzione NFT ai Perdenti (Non-Vincitori)
 
 ### 6.1 Principio anti-inflazione
-La distribuzione NFT non deve erodere il prezzo unitario della Tessera Rendimento.
+La distribuzione NFT non deve erodere il prezzo unitario del ROBI.
 
 **Vincolo matematico:**
 ```
@@ -236,7 +236,7 @@ Se il numero di NFT calcolati supera `max_nft_distribuibili` → scala proporzio
 | €1.000 (5° airdrop) | ~1.500 | €0,67 | 20 NFT × €0,67 = €13,40 | -73% |
 | €5.000 (maturo) | ~500 | €10,00 | 20 NFT × €10 = €200 | **+300%** ✓ |
 
-> A regime (treasury matura), i perdenti **guadagnano** tramite le Tessere Rendimento.
+> A regime (treasury matura), i perdenti **guadagnano** tramite i ROBI.
 > I primi partecipanti (Alpha Brave) subiscono perdite più alte — questo è compensato dal
 > badge BADGE_FONDATORE e dai NFT Alpha Tier 0 che guadagneranno valore nel tempo.
 
@@ -334,7 +334,7 @@ Possibili mitigazioni future:
 ### 9.1 Principi fondamentali
 
 - **ARIA = stablecoin** — vale sempre €0,10. Si guadagna (daily) o si compra (min €1 = 10 ARIA)
-- **NFT REWARD = quota del Fondo Comune** — come un ETF: `valore_quota = treasury / quote_circolanti`
+- **ROBI = quota del Fondo Comune** — come un ETF: `valore_quota = treasury / quote_circolanti`
 - **Partecipare = minare quote** — tutti i perdenti ricevono quote NFT frazionarie
 - **Il treasury cresce SEMPRE** — da airdrop (22%), video ads (50%), sponsor, altre attività
 - **Le quote crescono SEMPRE di valore** — il mining è tanto più conveniente quanto prima lo fai
@@ -506,7 +506,7 @@ L'idea era che i veterani fedeli meritassero un vantaggio significativo.
 **Split economica: 67.99% venditore**
 La percentuale è stata calcolata per bilanciare: incasso venditore vs sostenibilità Fondo Comune
 e revenue piattaforma. Il 22% al Fondo è alto di proposito per accelerare la crescita del
-valore delle Tessere Rendimento nei primi mesi.
+valore dei ROBI nei primi mesi.
 
 **Success check:** `(aria_incassato * 0.10) >= seller_min_price`
 Confronto totale incassato vs minimo venditore — sembrava corretto ma nascondeva un bug.
@@ -627,7 +627,7 @@ economico per comunicarlo correttamente e validare la scalabilità.
 
 **Chiarimento fondamentale del founder:**
 - ARIA = stablecoin a €0.10 fisso. Non specula, non oscilla. Si compra (min €1) o si guadagna.
-- NFT REWARD = quota del Fondo Comune. Come un ETF: rappresenta una fetta del treasury.
+- ROBI = quota del Fondo Comune. Come un ETF: rappresenta una fetta del treasury.
 - Partecipare a un airdrop = minare quote. TUTTI i perdenti ricevono quote, proporzionali alla spesa.
 - Il treasury cresce sempre (22% airdrop + 50% ads + sponsor). Le quote valgono sempre di più.
 
