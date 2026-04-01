@@ -717,15 +717,29 @@ async function openSettings(){
   document.getElementById('settings-overlay').classList.add('active');
   document.body.style.overflow='hidden';
   // Fill fields
-  document.getElementById('settings-email').value=s.user.email||'';
+  var email=s.user.email||'';
+  document.getElementById('settings-email').value=email;
+  document.getElementById('settings-email-show').textContent=email;
   // Load profile from Supabase
+  var firstName='',lastName='';
   try{
     var res=await sbGet('profiles?id=eq.'+s.user.id+'&select=first_name,last_name',s.access_token);
     if(res&&res.length>0){
-      document.getElementById('settings-first-name').value=res[0].first_name||'';
-      document.getElementById('settings-last-name').value=res[0].last_name||'';
+      firstName=res[0].first_name||'';
+      lastName=res[0].last_name||'';
+      document.getElementById('settings-first-name').value=firstName;
+      document.getElementById('settings-last-name').value=lastName;
     }
   }catch(e){}
+  // Avatar initials
+  var initials=((firstName.charAt(0)||'')+(lastName.charAt(0)||'')).toUpperCase()||email.charAt(0).toUpperCase()||'?';
+  document.getElementById('settings-avatar').textContent=initials;
+  // Display name
+  var displayName=firstName||(email.split('@')[0]);
+  var dnIt=document.getElementById('settings-display-name');
+  var dnEn=document.getElementById('settings-display-name-en');
+  if(dnIt)dnIt.textContent=displayName;
+  if(dnEn)dnEn.textContent=displayName;
   // Clear password fields
   document.getElementById('settings-new-pw').value='';
   document.getElementById('settings-confirm-pw').value='';

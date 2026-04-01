@@ -387,61 +387,91 @@
 <!-- ═══ USER SETTINGS ═══ -->
 <div class="settings-overlay" id="settings-overlay">
 <div class="settings-nav">
-  <span>AIROOBI · SETTINGS</span>
-  <button class="settings-close" onclick="closeSettings()">✕</button>
+  <span>AIROOBI</span>
+  <button class="settings-close" onclick="closeSettings()">&#10005;</button>
 </div>
 <div class="settings-content">
   <div class="settings-card">
-    <h2><span class="it">Impostazioni</span><span class="en">Settings</span></h2>
 
-    <div class="settings-field">
-      <label><span class="it">Nome</span><span class="en">First Name</span></label>
-      <input type="text" id="settings-first-name" placeholder="">
-    </div>
-    <div class="settings-field">
-      <label><span class="it">Cognome</span><span class="en">Last Name</span></label>
-      <input type="text" id="settings-last-name" placeholder="">
-    </div>
-    <div class="settings-field">
-      <label>Email</label>
-      <input type="email" id="settings-email" disabled>
-    </div>
+    <!-- Avatar + Welcome -->
+    <div class="settings-avatar" id="settings-avatar">?</div>
+    <h2 class="settings-hello"><span class="it">Ciao, <em id="settings-display-name">—</em></span><span class="en">Hi, <em id="settings-display-name-en">—</em></span></h2>
+    <p class="settings-email-display" id="settings-email-show"></p>
 
-    <div class="settings-divider"></div>
+    <!-- CTA App -->
+    <a href="https://airoobi.app" target="_blank" rel="noopener" class="settings-app-btn">
+      <span class="settings-app-btn-icon"><span style="font-family:var(--font-h);font-size:18px;font-weight:700;letter-spacing:-2px">Oo</span></span>
+      <span><span class="it">Vai all'App</span><span class="en">Go to App</span></span>
+      <span class="settings-app-btn-arrow">&rarr;</span>
+    </a>
 
-    <div class="settings-field">
-      <label><span class="it">Nuova password</span><span class="en">New password</span></label>
-      <input type="password" id="settings-new-pw" placeholder="••••••••">
-    </div>
-    <div class="settings-field">
-      <label><span class="it">Conferma password</span><span class="en">Confirm password</span></label>
-      <input type="password" id="settings-confirm-pw" placeholder="••••••••">
-    </div>
-    <button class="settings-btn" id="settings-save-btn" onclick="saveSettings()"><span class="it">Salva modifiche</span><span class="en">Save changes</span></button>
-    <div class="settings-msg" id="settings-msg"></div>
-
-    <div class="settings-divider"></div>
-
-    <div class="settings-field">
-      <label><span class="it">Lingua</span><span class="en">Language</span></label>
-      <div class="settings-lang-row">
-        <button class="settings-lang-btn" id="settings-lang-it" onclick="setSettingsLang('it')">Italiano</button>
-        <button class="settings-lang-btn" id="settings-lang-en" onclick="setSettingsLang('en')">English</button>
+    <!-- Sezione: Profilo -->
+    <div class="settings-section">
+      <div class="settings-section-title"><span class="it">Profilo</span><span class="en">Profile</span></div>
+      <div class="settings-glass">
+        <div class="settings-field">
+          <label><span class="it">Nome</span><span class="en">First Name</span></label>
+          <input type="text" id="settings-first-name" placeholder="">
+        </div>
+        <div class="settings-field">
+          <label><span class="it">Cognome</span><span class="en">Last Name</span></label>
+          <input type="text" id="settings-last-name" placeholder="">
+        </div>
+        <div class="settings-field" style="margin-bottom:0">
+          <label>Email</label>
+          <input type="email" id="settings-email" disabled>
+        </div>
       </div>
     </div>
 
-    <div class="settings-divider"></div>
-
-    <a href="https://airoobi.app" class="settings-dapp-btn"><span class="it">Vai all'App →</span><span class="en">Go to App →</span></a>
-
-    <div class="settings-divider"></div>
-
-    <button class="settings-logout-btn" onclick="doLogout()"><span class="it">Esci</span><span class="en">Log out</span></button>
-
-    <div class="settings-danger">
-      <button class="settings-delete-btn" id="settings-delete-btn" onclick="confirmDeleteAccount()"><span class="it">Elimina account</span><span class="en">Delete account</span></button>
-      <p class="settings-delete-warn"><span class="it">Questa azione è irreversibile.</span><span class="en">This action is irreversible.</span></p>
+    <!-- Sezione: Sicurezza -->
+    <div class="settings-section">
+      <div class="settings-section-title"><span class="it">Sicurezza</span><span class="en">Security</span></div>
+      <div class="settings-glass">
+        <div class="settings-field">
+          <label><span class="it">Nuova password</span><span class="en">New password</span></label>
+          <input type="password" id="settings-new-pw" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
+        </div>
+        <div class="settings-field" style="margin-bottom:0">
+          <label><span class="it">Conferma password</span><span class="en">Confirm password</span></label>
+          <input type="password" id="settings-confirm-pw" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
+        </div>
+      </div>
     </div>
+
+    <button class="settings-btn" id="settings-save-btn" onclick="saveSettings()"><span class="it">Salva modifiche</span><span class="en">Save changes</span></button>
+    <div class="settings-msg" id="settings-msg"></div>
+
+    <!-- Sezione: Preferenze -->
+    <div class="settings-section">
+      <div class="settings-section-title"><span class="it">Preferenze</span><span class="en">Preferences</span></div>
+      <div class="settings-glass">
+        <div class="settings-field" style="margin-bottom:0">
+          <label><span class="it">Lingua</span><span class="en">Language</span></label>
+          <div class="settings-lang-row">
+            <button class="settings-lang-btn" id="settings-lang-it" onclick="setSettingsLang('it')">
+              <span style="font-size:16px">&#127470;&#127481;</span> Italiano
+            </button>
+            <button class="settings-lang-btn" id="settings-lang-en" onclick="setSettingsLang('en')">
+              <span style="font-size:16px">&#127468;&#127463;</span> English
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Azioni account -->
+    <div class="settings-actions">
+      <button class="settings-logout-btn" onclick="doLogout()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+        <span class="it">Esci</span><span class="en">Log out</span>
+      </button>
+      <div class="settings-danger">
+        <button class="settings-delete-btn" id="settings-delete-btn" onclick="confirmDeleteAccount()"><span class="it">Elimina account</span><span class="en">Delete account</span></button>
+        <p class="settings-delete-warn"><span class="it">Questa azione è irreversibile.</span><span class="en">This action is irreversible.</span></p>
+      </div>
+    </div>
+
   </div>
 </div>
 </div>
