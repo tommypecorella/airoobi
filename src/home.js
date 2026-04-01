@@ -60,6 +60,8 @@ window.addEventListener('DOMContentLoaded', ()=>{
     // Dashboard routes → redirect to dApp
     if(DAPP_ROUTES.indexOf(pp)!==-1){location.href='https://airoobi.app'+pp;return;}
     if(DAPP_HASHES.indexOf(hh)!==-1){location.href='https://airoobi.app/'+hh.substring(1);return;}
+    // Settings
+    if(pp==='/settings'||hh==='#settings'){openSettings();return;}
     // Admin
     if(pp==='/admin'){openAdmin();return;}
     // Auth → separate pages
@@ -587,6 +589,27 @@ function doLogout(){
     if(lb)lb.style.display='none';
     if(sb)sb.style.display='none';
     document.querySelectorAll('.mm-auth-btn').forEach(function(el){el.style.display='none';});
+    // Add settings button to nav
+    var nav=document.querySelector('.nav-menu');
+    if(nav&&lb){
+      var settingsBtn=document.createElement('a');
+      settingsBtn.href='#settings';
+      settingsBtn.className='nav-link-btn';
+      settingsBtn.style.textDecoration='none';
+      settingsBtn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>';
+      nav.insertBefore(settingsBtn,lb);
+    }
+    // Add settings link to mobile menu
+    var mmActions=document.getElementById('mm-actions');
+    if(mmActions){
+      var settingsLink=document.createElement('a');
+      settingsLink.href='#settings';
+      settingsLink.className='nav-cta';
+      settingsLink.onclick=function(){closeBurger();};
+      settingsLink.style.cssText='text-decoration:none;text-align:center;background:none;border:1px solid var(--gold);color:var(--gold)';
+      settingsLink.innerHTML='<span class="it">Impostazioni</span><span class="en">Settings</span>';
+      mmActions.insertBefore(settingsLink,mmActions.firstChild);
+    }
   }
 })();
 
@@ -686,6 +709,123 @@ function closeAdmin(){
   document.body.style.overflow='';
   if(_adminRefreshInterval){clearInterval(_adminRefreshInterval);_adminRefreshInterval=null;}
   window.location.href='https://airoobi.app';
+}
+
+// ══ USER SETTINGS ══
+async function openSettings(){
+  var s=await ensureFreshToken();
+  if(!s){openAuth('login');return;}
+  track('settings_opened');
+  document.getElementById('settings-overlay').classList.add('active');
+  document.body.style.overflow='hidden';
+  // Fill fields
+  document.getElementById('settings-email').value=s.user.email||'';
+  // Load profile from Supabase
+  try{
+    var res=await sbGet('profiles?id=eq.'+s.user.id+'&select=first_name,last_name',s.access_token);
+    if(res&&res.length>0){
+      document.getElementById('settings-first-name').value=res[0].first_name||'';
+      document.getElementById('settings-last-name').value=res[0].last_name||'';
+    }
+  }catch(e){}
+  // Clear password fields
+  document.getElementById('settings-new-pw').value='';
+  document.getElementById('settings-confirm-pw').value='';
+  document.getElementById('settings-msg').textContent='';
+  // Update lang buttons
+  updateSettingsLangButtons();
+}
+function closeSettings(){
+  document.getElementById('settings-overlay').classList.remove('active');
+  document.body.style.overflow='';
+  history.replaceState(null,null,'/');
+}
+function updateSettingsLangButtons(){
+  var cur=document.documentElement.getAttribute('data-lang')||'it';
+  var it=document.getElementById('settings-lang-it');
+  var en=document.getElementById('settings-lang-en');
+  if(it){it.classList.toggle('active',cur==='it');}
+  if(en){en.classList.toggle('active',cur==='en');}
+}
+function setSettingsLang(lang){
+  document.documentElement.setAttribute('data-lang',lang);
+  localStorage.setItem('airoobi_lang',lang);
+  updateSettingsLangButtons();
+}
+async function saveSettings(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var msgEl=document.getElementById('settings-msg');
+  msgEl.textContent='';
+  msgEl.style.color='';
+  var s=await ensureFreshToken();
+  if(!s){openAuth('login');return;}
+  var btn=document.getElementById('settings-save-btn');
+  btn.disabled=true;
+  var firstName=document.getElementById('settings-first-name').value.trim();
+  var lastName=document.getElementById('settings-last-name').value.trim();
+  var newPw=document.getElementById('settings-new-pw').value;
+  var confirmPw=document.getElementById('settings-confirm-pw').value;
+  try{
+    // Update profile name
+    await sbPatch('profiles?id=eq.'+s.user.id,{first_name:firstName,last_name:lastName},s.access_token);
+    // Change password if provided
+    if(newPw){
+      if(newPw.length<6){
+        msgEl.textContent=lang==='it'?'La password deve avere almeno 6 caratteri.':'Password must be at least 6 characters.';
+        msgEl.style.color='#f87171';
+        btn.disabled=false;
+        return;
+      }
+      if(newPw!==confirmPw){
+        msgEl.textContent=lang==='it'?'Le password non coincidono.':'Passwords do not match.';
+        msgEl.style.color='#f87171';
+        btn.disabled=false;
+        return;
+      }
+      var pwRes=await fetch(SB_URL+'/auth/v1/user',{
+        method:'PUT',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+        body:JSON.stringify({password:newPw})
+      });
+      if(!pwRes.ok){
+        msgEl.textContent=lang==='it'?'Errore nel cambio password.':'Error changing password.';
+        msgEl.style.color='#f87171';
+        btn.disabled=false;
+        return;
+      }
+      document.getElementById('settings-new-pw').value='';
+      document.getElementById('settings-confirm-pw').value='';
+    }
+    track('settings_saved',{changed_password:!!newPw});
+    msgEl.textContent=lang==='it'?'Salvato \u2713':'Saved \u2713';
+    msgEl.style.color='#34d399';
+  }catch(e){
+    msgEl.textContent=lang==='it'?'Errore. Riprova.':'Error. Try again.';
+    msgEl.style.color='#f87171';
+  }
+  btn.disabled=false;
+}
+async function confirmDeleteAccount(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var msg=lang==='it'
+    ?'Sei sicuro di voler eliminare il tuo account? Tutti i dati verranno persi. Scrivi ELIMINA per confermare.'
+    :'Are you sure you want to delete your account? All data will be lost. Type DELETE to confirm.';
+  var confirmation=prompt(msg);
+  if(!confirmation)return;
+  if(lang==='it'&&confirmation.toUpperCase()!=='ELIMINA')return;
+  if(lang==='en'&&confirmation.toUpperCase()!=='DELETE')return;
+  var s=await ensureFreshToken();
+  if(!s)return;
+  try{
+    // Delete profile (cascade should handle the rest via DB)
+    await sbDel('profiles?id=eq.'+s.user.id,s.access_token);
+    track('account_deleted');
+    clearSession();
+    alert(lang==='it'?'Account eliminato.':'Account deleted.');
+    window.location.href='/';
+  }catch(e){
+    alert(lang==='it'?'Errore. Contatta support@airoobi.com':'Error. Contact support@airoobi.com');
+  }
 }
 
 function adminNav(sectionId){

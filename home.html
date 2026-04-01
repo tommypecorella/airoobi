@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#000000">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>AIROOBI — Realizza il tuo desiderio.</title>
-<meta name="description" content="AIROOBI è il marketplace dove realizzi i tuoi desideri. Oggetti reali di valore, a un prezzo che non crederesti. Guadagni ARIA ogni giorno — gratis.">
-<meta name="keywords" content="airdrop, marketplace, aria, tessera, kaspa, gratis, guadagna">
+<meta name="description" content="AIROOBI è il marketplace dove realizzi i tuoi desideri. Oggetti reali di valore, a un prezzo che non crederesti. Scopri come funziona.">
+<meta name="keywords" content="airdrop, marketplace, aria, tessera, kaspa, oggetti di valore">
 <meta name="robots" content="index, follow">
 <meta name="author" content="AIROOBI">
 
@@ -15,7 +15,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://airoobi.com">
 <meta property="og:title" content="AIROOBI — Realizza il tuo desiderio.">
-<meta property="og:description" content="AIROOBI è il marketplace dove ottieni oggetti reali di valore a un prezzo ridicolo. Guadagni ARIA ogni giorno — gratis.">
+<meta property="og:description" content="AIROOBI è il marketplace dove ottieni oggetti reali di valore a un prezzo ridicolo. Scopri come funziona.">
 <meta property="og:image" content="https://airoobi.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -27,7 +27,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@airoobi_com">
 <meta name="twitter:title" content="AIROOBI — Realizza il tuo desiderio.">
-<meta name="twitter:description" content="AIROOBI è il marketplace dove ottieni oggetti reali di valore a un prezzo ridicolo. Guadagni ARIA ogni giorno — gratis.">
+<meta name="twitter:description" content="AIROOBI è il marketplace dove ottieni oggetti reali di valore a un prezzo ridicolo. Scopri come funziona.">
 <meta name="twitter:image" content="https://airoobi.com/og-image.png">
 <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
@@ -387,6 +387,68 @@
   </div>
 </div>
 
+<!-- ═══ USER SETTINGS ═══ -->
+<div class="settings-overlay" id="settings-overlay">
+<div class="settings-nav">
+  <span>AIROOBI · SETTINGS</span>
+  <button class="settings-close" onclick="closeSettings()">✕</button>
+</div>
+<div class="settings-content">
+  <div class="settings-card">
+    <h2><span class="it">Impostazioni</span><span class="en">Settings</span></h2>
+
+    <div class="settings-field">
+      <label><span class="it">Nome</span><span class="en">First Name</span></label>
+      <input type="text" id="settings-first-name" placeholder="">
+    </div>
+    <div class="settings-field">
+      <label><span class="it">Cognome</span><span class="en">Last Name</span></label>
+      <input type="text" id="settings-last-name" placeholder="">
+    </div>
+    <div class="settings-field">
+      <label>Email</label>
+      <input type="email" id="settings-email" disabled>
+    </div>
+
+    <div class="settings-divider"></div>
+
+    <div class="settings-field">
+      <label><span class="it">Nuova password</span><span class="en">New password</span></label>
+      <input type="password" id="settings-new-pw" placeholder="••••••••">
+    </div>
+    <div class="settings-field">
+      <label><span class="it">Conferma password</span><span class="en">Confirm password</span></label>
+      <input type="password" id="settings-confirm-pw" placeholder="••••••••">
+    </div>
+    <button class="settings-btn" id="settings-save-btn" onclick="saveSettings()"><span class="it">Salva modifiche</span><span class="en">Save changes</span></button>
+    <div class="settings-msg" id="settings-msg"></div>
+
+    <div class="settings-divider"></div>
+
+    <div class="settings-field">
+      <label><span class="it">Lingua</span><span class="en">Language</span></label>
+      <div class="settings-lang-row">
+        <button class="settings-lang-btn" id="settings-lang-it" onclick="setSettingsLang('it')">Italiano</button>
+        <button class="settings-lang-btn" id="settings-lang-en" onclick="setSettingsLang('en')">English</button>
+      </div>
+    </div>
+
+    <div class="settings-divider"></div>
+
+    <a href="https://airoobi.app" class="settings-dapp-btn"><span class="it">Vai alla dApp →</span><span class="en">Go to dApp →</span></a>
+
+    <div class="settings-divider"></div>
+
+    <button class="settings-logout-btn" onclick="doLogout()"><span class="it">Esci</span><span class="en">Log out</span></button>
+
+    <div class="settings-danger">
+      <button class="settings-delete-btn" id="settings-delete-btn" onclick="confirmDeleteAccount()"><span class="it">Elimina account</span><span class="en">Delete account</span></button>
+      <p class="settings-delete-warn"><span class="it">Questa azione è irreversibile.</span><span class="en">This action is irreversible.</span></p>
+    </div>
+  </div>
+</div>
+</div>
+
 <!-- ═══ FOOTER ═══ -->
 <footer>
 <div class="container">
@@ -400,7 +462,7 @@
       <a href="/termini.html"><span class="it">Termini</span><span class="en">Terms</span></a>
     </div>
   </div>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.04.01-1.56.0 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.04.01-1.57.0 · <span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></span></p>
 </div>
 </footer>
 

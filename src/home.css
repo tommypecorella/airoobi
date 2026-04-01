@@ -905,3 +905,36 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .blog-cta-btn:hover{background:var(--white)}
 .blog-ad{text-align:center;margin-top:40px;padding-top:24px;border-top:1px solid var(--gray-700)}
 
+/* ═══ USER SETTINGS ═══ */
+.settings-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:240;background:var(--black);flex-direction:column;overflow:hidden}
+.settings-overlay.active{display:flex}
+.settings-nav{display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:48px;border-bottom:1px solid var(--gray-800);flex-shrink:0}
+.settings-nav span{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:2px}
+.settings-close{background:none;border:none;color:var(--gray-400);font-size:20px;cursor:pointer;transition:color .2s;padding:4px 8px}
+.settings-close:hover{color:var(--gold)}
+.settings-content{flex:1;overflow-y:auto;display:flex;justify-content:center;padding:40px 24px 80px}
+.settings-card{max-width:400px;width:100%}
+.settings-card h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:32px;text-align:center}
+.settings-field{margin-bottom:20px}
+.settings-field label{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px}
+.settings-field input{width:100%;padding:14px 16px;background:var(--black);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;transition:border-color .3s;box-sizing:border-box}
+.settings-field input:focus{border-color:var(--gold)}
+.settings-field input:disabled{opacity:.5;cursor:not-allowed}
+.settings-divider{height:1px;background:var(--gray-800);margin:28px 0}
+.settings-btn{width:100%;padding:14px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.settings-btn:hover{background:var(--white)}
+.settings-btn:disabled{opacity:.5;cursor:not-allowed}
+.settings-msg{font-size:13px;margin-top:12px;text-align:center;min-height:20px}
+.settings-lang-row{display:flex;gap:8px}
+.settings-lang-btn{flex:1;padding:12px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-b);font-size:13px;cursor:pointer;transition:all .3s}
+.settings-lang-btn:hover{border-color:var(--gold);color:var(--gold)}
+.settings-lang-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(184,150,12,.08)}
+.settings-dapp-btn{display:block;text-align:center;padding:14px;background:none;border:1px solid var(--gold);color:var(--gold);font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:all .3s}
+.settings-dapp-btn:hover{background:var(--gold);color:var(--black)}
+.settings-logout-btn{width:100%;padding:14px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.settings-logout-btn:hover{border-color:var(--white);color:var(--white)}
+.settings-danger{margin-top:48px;text-align:center}
+.settings-delete-btn{background:none;border:1px solid rgba(185,28,28,.4);color:#f87171;padding:12px 24px;font-family:var(--font-b);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s}
+.settings-delete-btn:hover{background:rgba(185,28,28,.15);border-color:#f87171}
+.settings-delete-warn{font-size:11px;color:var(--gray-600);margin-top:8px}
+
