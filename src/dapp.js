@@ -1501,7 +1501,7 @@ function viewBoDetail(id){
   var panel=document.getElementById('bo-detail-panel');
   var date=new Date(a.created_at).toLocaleString('it-IT');
   var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT'):'—';
-  var html='<div class="bo-detail"><div class="bo-detail-header"><div class="bo-detail-title">'+a.title+' <span class="bo-status '+a.status+'">'+a.status.replace(/_/g,' ')+'</span></div><button class="bo-detail-close" onclick="closeBoDetail()">&times;</button></div>';
+  var html='<div class="bo-detail"><div class="bo-detail-header"><div class="bo-detail-title">'+a.title+' <span class="bo-status '+a.status+'">'+a.status.replace(/_/g,' ')+'</span> <button class="bo-btn" onclick="openEditAirdrop(\''+a.id+'\')" style="border-color:var(--aria);color:var(--aria);margin-left:8px">&#9998; <span class="it">Modifica</span><span class="en">Edit</span></button></div><button class="bo-detail-close" onclick="closeBoDetail()">&times;</button></div>';
   if(a.image_url)html+='<img class="bo-detail-img" src="'+a.image_url+'" alt="">';
   if(a.description)html+='<div class="bo-detail-desc">'+a.description+'</div>';
   html+='<div class="bo-detail-grid">'
@@ -1659,7 +1659,73 @@ async function doReject(){
 function closeBoModals(){
   document.getElementById('approve-modal').classList.remove('active');
   document.getElementById('reject-modal').classList.remove('active');
+  document.getElementById('edit-modal').classList.remove('active');
   _boTarget=null;
+}
+
+// ── Edit Airdrop ──
+function openEditAirdrop(id){
+  var a=_allAirdrops.find(function(x){return x.id===id});
+  if(!a)return;
+  _boTarget=a;
+  document.getElementById('edit-airdrop-id').value=a.id;
+  document.getElementById('edit-title').value=a.title||'';
+  document.getElementById('edit-description').value=a.description||'';
+  document.getElementById('edit-category').value=a.category||'altro';
+  document.getElementById('edit-object-value').value=a.object_value_eur||'';
+  document.getElementById('edit-block-price').value=a.block_price_aria||'';
+  document.getElementById('edit-total-blocks').value=a.total_blocks||'';
+  document.getElementById('edit-presale-price').value=a.presale_block_price||'';
+  document.getElementById('edit-status').value=a.status||'draft';
+  if(a.deadline){
+    var d=new Date(a.deadline);
+    var local=d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2)+'T'+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);
+    document.getElementById('edit-deadline').value=local;
+  }else{
+    document.getElementById('edit-deadline').value='';
+  }
+  document.getElementById('edit-modal').classList.add('active');
+}
+
+async function doEditAirdrop(){
+  if(!_boTarget)return;
+  var id=document.getElementById('edit-airdrop-id').value;
+  if(!id)return;
+  var title=document.getElementById('edit-title').value.trim();
+  var description=document.getElementById('edit-description').value.trim();
+  var category=document.getElementById('edit-category').value;
+  var objectValue=parseFloat(document.getElementById('edit-object-value').value)||0;
+  var blockPrice=parseInt(document.getElementById('edit-block-price').value)||null;
+  var totalBlocks=parseInt(document.getElementById('edit-total-blocks').value)||null;
+  var presalePrice=document.getElementById('edit-presale-price').value?parseInt(document.getElementById('edit-presale-price').value):null;
+  var status=document.getElementById('edit-status').value;
+  var deadlineVal=document.getElementById('edit-deadline').value;
+  if(!title){alert('Titolo obbligatorio');return;}
+  var btn=document.getElementById('edit-ok');
+  btn.disabled=true;
+  var token=await getValidToken();
+  var args={
+    p_airdrop_id:id,
+    p_status:status,
+    p_title:title,
+    p_description:description,
+    p_category:category,
+    p_object_value_eur:objectValue
+  };
+  if(blockPrice)args.p_block_price_aria=blockPrice;
+  if(totalBlocks)args.p_total_blocks=totalBlocks;
+  if(presalePrice)args.p_presale_block_price=presalePrice;
+  if(deadlineVal)args.p_deadline=deadlineVal+':00Z';
+  var res=await sbRpc('manager_update_airdrop',args,token);
+  btn.disabled=false;
+  if(res&&res.ok){
+    closeBoModals();
+    showToast('<span class="it">Airdrop aggiornato</span><span class="en">Airdrop updated</span>');
+    await loadBoData();
+    await loadAirdrops();renderGrid();renderStats();renderCategoryFilter();
+  }else{
+    alert('Errore: '+JSON.stringify(res));
+  }
 }
 
 // ── Messages & Toast ──
