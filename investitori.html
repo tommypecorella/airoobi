@@ -264,7 +264,7 @@
     <div class="investor-grid">
       <div class="investor-metric">
         <div class="investor-metric-val">Alpha 0</div>
-        <div class="investor-metric-label"><span class="it">Fase corrente — dApp live</span><span class="en">Current phase — dApp live</span></div>
+        <div class="investor-metric-label"><span class="it">Fase corrente — App live</span><span class="en">Current phase — App live</span></div>
       </div>
       <div class="investor-metric">
         <div class="investor-metric-val" id="inv-users">&mdash;</div>
@@ -338,7 +338,7 @@
     }
 
     // Load live metrics
-    fetch(SUPABASE_URL+'/rest/v1/profiles?select=id,total_points',{
+    fetch(SUPABASE_URL+'/rest/v1/profiles?select=id,total_points&is_test_user=not.is.true',{
       headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
     }).then(function(r){return r.ok?r.json():[]}).then(function(d){
       var ue=document.getElementById('inv-users');
