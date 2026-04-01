@@ -243,6 +243,70 @@ async function loadHomeDashboard(){
     var prof=await sbGet('profiles?id=eq.'+_session.user.id+'&select=streak_count',token);
     if(prof&&prof[0])document.getElementById('home-streak').innerHTML=prof[0].streak_count+' <span class="it">giorni</span><span class="en">days</span>';
   }catch(e){}
+  // Check faucet status
+  checkFaucetStatus();
+}
+
+// ── Faucet ──
+async function claimFaucet(){
+  var btn=document.getElementById('faucet-btn');
+  var status=document.getElementById('faucet-status');
+  btn.disabled=true;btn.style.opacity='.5';btn.style.cursor='not-allowed';
+  btn.textContent='...';
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await sbRpc('claim_faucet',{},token);
+    if(res&&res.ok){
+      _balance+=res.amount;
+      updateBalanceUI();
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      btn.style.background='var(--kas)';btn.style.color='var(--black)';
+      btn.textContent=lang==='it'?'+100 ARIA ricevuti!':'+100 ARIA received!';
+      showToast('<span style="color:var(--kas)">+100 ARIA</span> faucet');
+      // Refresh dashboard stats
+      var homeAria=document.getElementById('home-aria');
+      if(homeAria)homeAria.innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
+      showFaucetCooldown();
+    }else if(res&&res.error==='already_claimed'){
+      showFaucetCooldown();
+    }else{
+      btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
+      btn.textContent='CLAIM 100 ARIA';
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      status.style.display='block';status.style.color='#f87171';
+      status.textContent=lang==='it'?'Errore — riprova':'Error — try again';
+    }
+  }catch(e){
+    btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
+    btn.textContent='CLAIM 100 ARIA';
+  }
+}
+
+function showFaucetCooldown(){
+  var btn=document.getElementById('faucet-btn');
+  var status=document.getElementById('faucet-status');
+  btn.disabled=true;btn.style.opacity='.5';btn.style.cursor='not-allowed';
+  btn.style.background='var(--gray-700)';btn.style.color='var(--gray-400)';
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  btn.textContent=lang==='it'?'Gia\u0300 ricevuti oggi':'Already claimed today';
+  // Calculate time to midnight UTC
+  var now=new Date();
+  var midnight=new Date(now);midnight.setUTCHours(24,0,0,0);
+  var diff=midnight-now;
+  var h=Math.floor(diff/3600000);var m=Math.floor((diff%3600000)/60000);
+  status.style.display='block';status.style.color='var(--gray-400)';
+  status.innerHTML=(lang==='it'?'Prossimo claim tra ':'Next claim in ')+h+'h '+m+'m';
+}
+
+async function checkFaucetStatus(){
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var today=new Date().toISOString().slice(0,10);
+    var rows=await sbGet('points_ledger?user_id=eq.'+_session.user.id+'&reason=eq.faucet&created_at=gte.'+today+'T00:00:00&select=id&limit=1',token);
+    if(rows&&rows.length>0)showFaucetCooldown();
+  }catch(e){}
 }
 
 // ── Referral ──

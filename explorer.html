@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>ARIA Explorer — AIROOBI</title>
+<meta name="description" content="Esplora l'attivita' ARIA in tempo reale. Holder, transazioni, supply.">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#000;--white:#FFF;--gold:#B8960C;--gold-dim:rgba(184,150,12,.3);--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-700:#374151;--gray-800:#1F2937;--gray-600:#4B5563;--aria:#4A9EFF;--kas:#49EACB;--font-h:'Cormorant Garamond',Georgia,serif;--font-b:'Instrument Sans','Helvetica Neue',sans-serif;--font-m:'DM Mono','Courier New',monospace}
+html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)}
+
+/* Header */
+.exp-header{padding:32px 24px 24px;text-align:center;border-bottom:1px solid var(--gray-700)}
+.exp-header-inner{max-width:960px;margin:0 auto}
+.exp-logo{height:28px;margin-bottom:16px;opacity:.7}
+.exp-title{font-family:var(--font-h);font-size:clamp(28px,5vw,40px);font-weight:300;color:var(--aria);margin-bottom:4px}
+.exp-sub{font-size:13px;color:var(--gray-400);margin-bottom:12px}
+.exp-badge{display:inline-block;font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);border:1px solid var(--gold-dim);padding:4px 12px;text-transform:uppercase}
+.exp-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:16px}
+.exp-nav a{font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-400);text-decoration:none;transition:color .3s}
+.exp-nav a:hover{color:var(--gold)}
+.exp-lang{background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:10px;letter-spacing:1px;padding:4px 10px;cursor:pointer;transition:all .3s}
+.exp-lang:hover{border-color:var(--gold);color:var(--gold)}
+
+/* Container */
+.exp-container{max-width:960px;margin:0 auto;padding:32px 24px;flex:1}
+
+/* Stats row */
+.exp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
+@media(max-width:600px){.exp-stats{grid-template-columns:1fr}}
+.exp-stat{background:var(--gray-800);border:1px solid var(--gray-700);padding:24px 20px;text-align:center;transition:border-color .3s}
+.exp-stat:hover{border-color:var(--aria)}
+.exp-stat-val{font-family:var(--font-h);font-size:clamp(28px,5vw,36px);font-weight:300;color:var(--aria);line-height:1}
+.exp-stat-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);margin-top:8px;text-transform:uppercase;letter-spacing:1.5px}
+
+/* Section titles */
+.exp-section-title{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gray-700)}
+
+/* Tables */
+.exp-table{width:100%;border-collapse:collapse;margin-bottom:40px}
+.exp-table th{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;text-align:left;padding:10px 12px;border-bottom:1px solid var(--gray-700);white-space:nowrap}
+.exp-table td{font-size:13px;padding:12px;border-bottom:1px solid rgba(55,65,81,.4);color:var(--gray-300)}
+.exp-table tr:hover td{background:rgba(74,158,255,.03)}
+.exp-table .mono{font-family:var(--font-m);font-size:11px;letter-spacing:.5px}
+.exp-table .rank{color:var(--gold);font-family:var(--font-h);font-size:18px;font-weight:400;width:40px}
+.exp-table .amount-pos{color:var(--kas);font-family:var(--font-m);font-size:12px}
+.exp-table .amount-neg{color:#f87171;font-family:var(--font-m);font-size:12px}
+.exp-table .reason{font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);text-transform:uppercase;background:var(--gray-800);padding:3px 8px;display:inline-block}
+.exp-table .pct{font-family:var(--font-m);font-size:11px;color:var(--gray-400)}
+.exp-table .time{font-family:var(--font-m);font-size:11px;color:var(--gray-400);white-space:nowrap}
+
+/* Refresh indicator */
+.exp-refresh{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1px;text-align:center;margin-bottom:24px}
+.exp-refresh .dot{display:inline-block;width:6px;height:6px;background:var(--kas);border-radius:50%;margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Loading skeleton */
+.exp-skel{background:linear-gradient(90deg,var(--gray-800) 25%,rgba(55,65,81,.6) 50%,var(--gray-800) 75%);background-size:200%;animation:shimmer 1.5s infinite;height:20px;margin-bottom:8px}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+
+/* Footer */
+.exp-footer{padding:32px 24px;text-align:center;border-top:1px solid var(--gray-700);margin-top:auto}
+.exp-footer-brand{font-family:var(--font-h);font-size:16px;color:var(--gray-400);margin-bottom:8px}
+.exp-footer-brand em{color:var(--aria);font-style:normal}
+.exp-footer-copy{font-size:11px;color:var(--gray-400)}
+
+/* Lang */
+.it{display:none}.en{display:none}
+html[data-lang="it"] .it{display:inline}
+html[data-lang="en"] .en{display:inline}
+html:not([data-lang]) .it{display:inline}
+
+/* Responsive table scroll */
+.exp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+</style>
+</head>
+<body>
+
+<div class="exp-header">
+  <div class="exp-header-inner">
+    <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" class="exp-logo">
+    <h1 class="exp-title">ARIA Explorer</h1>
+    <p class="exp-sub">
+      <span class="it">Attivita ARIA in tempo reale — aggiornamento ogni 30 secondi</span>
+      <span class="en">Real-time ARIA activity — refreshes every 30 seconds</span>
+    </p>
+    <div class="exp-badge">TESTNET ALPHA</div>
+    <div class="exp-nav">
+      <a href="https://airoobi.app"><span class="it">dApp</span><span class="en">dApp</span></a>
+      <a href="https://airoobi.com"><span class="it">Sito</span><span class="en">Site</span></a>
+      <button class="exp-lang" id="lang-btn" onclick="toggleLang()">EN</button>
+    </div>
+  </div>
+</div>
+
+<div class="exp-container">
+
+  <!-- Refresh indicator -->
+  <div class="exp-refresh" id="refresh-indicator">
+    <span class="dot"></span> <span class="it">Live — ultimo aggiornamento</span><span class="en">Live — last update</span> <span id="last-update">—</span>
+  </div>
+
+  <!-- Stats -->
+  <div class="exp-stats">
+    <div class="exp-stat">
+      <div class="exp-stat-val" id="stat-supply">—</div>
+      <div class="exp-stat-label"><span class="it">ARIA Circolanti</span><span class="en">ARIA in Circulation</span></div>
+    </div>
+    <div class="exp-stat">
+      <div class="exp-stat-val" id="stat-holders">—</div>
+      <div class="exp-stat-label"><span class="it">Holder</span><span class="en">Holders</span></div>
+    </div>
+    <div class="exp-stat">
+      <div class="exp-stat-val" id="stat-tx-today">—</div>
+      <div class="exp-stat-label"><span class="it">Transazioni oggi</span><span class="en">Transactions today</span></div>
+    </div>
+  </div>
+
+  <!-- Top Holders -->
+  <div class="exp-section-title"><span class="it">Top Holder</span><span class="en">Top Holders</span> <span style="color:var(--gray-600)">(top 20)</span></div>
+  <div class="exp-table-wrap">
+    <table class="exp-table" id="holders-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Public ID</th>
+          <th>ARIA</th>
+          <th>%</th>
+        </tr>
+      </thead>
+      <tbody id="holders-body">
+        <tr><td colspan="4"><div class="exp-skel" style="width:100%"></div><div class="exp-skel" style="width:80%"></div><div class="exp-skel" style="width:90%"></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Recent Transactions -->
+  <div class="exp-section-title"><span class="it">Transazioni recenti</span><span class="en">Recent Transactions</span> <span style="color:var(--gray-600)">(50)</span></div>
+  <div class="exp-table-wrap">
+    <table class="exp-table" id="tx-table">
+      <thead>
+        <tr>
+          <th><span class="it">Ora</span><span class="en">Time</span></th>
+          <th>Public ID</th>
+          <th><span class="it">Importo</span><span class="en">Amount</span></th>
+          <th><span class="it">Tipo</span><span class="en">Type</span></th>
+        </tr>
+      </thead>
+      <tbody id="tx-body">
+        <tr><td colspan="4"><div class="exp-skel" style="width:100%"></div><div class="exp-skel" style="width:80%"></div><div class="exp-skel" style="width:90%"></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer class="exp-footer">
+  <div class="exp-footer-brand">AIROOBI <em>EXPLORER</em></div>
+  <div class="exp-footer-copy">
+    &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
+  </div>
+  <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.02-1.58.0</div>
+</footer>
+
+<script>
+var SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+// Language
+function toggleLang(){
+  var root=document.documentElement;
+  var current=root.getAttribute('data-lang');
+  var next=current==='it'?'en':'it';
+  root.setAttribute('data-lang',next);
+  root.setAttribute('lang',next);
+  document.getElementById('lang-btn').textContent=next==='it'?'EN':'IT';
+  localStorage.setItem('airoobi_lang',next);
+}
+(function(){
+  var saved=localStorage.getItem('airoobi_lang');
+  if(saved&&saved!=='it'){toggleLang();}
+})();
+
+// RPC call (anon)
+async function rpc(fn,body){
+  var res=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(body||{})
+  });
+  if(!res.ok)return null;
+  return res.json();
+}
+
+function formatNum(n){
+  if(n===null||n===undefined)return '—';
+  return Number(n).toLocaleString();
+}
+
+function timeAgo(dateStr){
+  var d=new Date(dateStr);
+  var now=new Date();
+  var diff=Math.floor((now-d)/1000);
+  if(diff<60)return diff+'s';
+  if(diff<3600)return Math.floor(diff/60)+'m';
+  if(diff<86400)return Math.floor(diff/3600)+'h';
+  return Math.floor(diff/86400)+'d';
+}
+
+function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+
+function truncId(id){
+  if(!id)return '???';
+  return id.length>12?id.substring(0,6)+'...'+id.substring(id.length-4):id;
+}
+
+async function loadExplorer(){
+  var data=await rpc('get_aria_explorer');
+  if(!data)return;
+
+  // Stats
+  document.getElementById('stat-supply').textContent=formatNum(data.total_aria);
+  document.getElementById('stat-holders').textContent=formatNum(data.holders);
+  document.getElementById('stat-tx-today').textContent=formatNum(data.tx_today);
+
+  // Last update
+  var now=new Date();
+  document.getElementById('last-update').textContent=now.toLocaleTimeString();
+
+  // Top holders
+  var hBody=document.getElementById('holders-body');
+  if(data.top_holders&&data.top_holders.length>0){
+    hBody.innerHTML=data.top_holders.map(function(h,i){
+      return '<tr>'
+        +'<td class="rank">'+(i+1)+'</td>'
+        +'<td class="mono">'+escHtml(truncId(h.public_id))+'</td>'
+        +'<td class="mono" style="color:var(--aria)">'+formatNum(h.total_points)+'</td>'
+        +'<td class="pct">'+((h.pct!==null&&h.pct!==undefined)?h.pct+'%':'—')+'</td>'
+        +'</tr>';
+    }).join('');
+  }else{
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    hBody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--gray-400);padding:24px">'+(lang==='it'?'Nessun holder ancora':'No holders yet')+'</td></tr>';
+  }
+
+  // Recent transactions
+  var tBody=document.getElementById('tx-body');
+  if(data.recent_tx&&data.recent_tx.length>0){
+    tBody.innerHTML=data.recent_tx.map(function(tx){
+      var isPos=tx.amount>=0;
+      var amtClass=isPos?'amount-pos':'amount-neg';
+      var amtSign=isPos?'+':'';
+      return '<tr>'
+        +'<td class="time">'+timeAgo(tx.created_at)+'</td>'
+        +'<td class="mono">'+escHtml(truncId(tx.public_id))+'</td>'
+        +'<td class="'+amtClass+'">'+amtSign+formatNum(tx.amount)+' ARIA</td>'
+        +'<td><span class="reason">'+escHtml(tx.reason||'—')+'</span></td>'
+        +'</tr>';
+    }).join('');
+  }else{
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    tBody.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--gray-400);padding:24px">'+(lang==='it'?'Nessuna transazione ancora':'No transactions yet')+'</td></tr>';
+  }
+}
+
+// Init
+document.addEventListener('DOMContentLoaded',function(){
+  loadExplorer();
+  // Auto-refresh every 30 seconds
+  setInterval(loadExplorer,30000);
+});
+</script>
+</body>
+</html>
