@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -18,6 +18,17 @@
   --font-m:'DM Mono',monospace;
 }
 html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden;font-family:var(--font-b)}
+
+/* ── LANG ── */
+.it{display:none}.en{display:none}
+html[data-lang="it"] .it{display:inline}
+html[data-lang="en"] .en{display:inline}
+html:not([data-lang]) .it{display:inline}
+/* Block-level bilingual */
+.it-block{display:none}.en-block{display:none}
+html[data-lang="it"] .it-block{display:block}
+html[data-lang="en"] .en-block{display:block}
+html:not([data-lang]) .it-block{display:block}
 
 /* ── SCENE SYSTEM ── */
 .scene{
@@ -181,41 +192,41 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
 
 <!-- SCENE 0: INTRO -->
 <div class="scene active" id="s0">
-  <div class="fade-up label">Benvenuto in</div>
+  <div class="fade-up label"><span class="it">Benvenuto in</span><span class="en">Welcome to</span></div>
   <div class="fade-up logo-text">AIR<span class="oo">OO</span>BI</div>
   <div class="fade-up rule"></div>
-  <p class="fade-up">Il marketplace dove realizzi<br>i tuoi desideri.</p>
+  <p class="fade-up"><span class="it">Il marketplace dove realizzi<br>i tuoi desideri.</span><span class="en">The marketplace where you<br>make your desires real.</span></p>
 </div>
 
 <!-- SCENE 1: IL DESIDERIO -->
 <div class="scene" id="s1">
-  <div class="fade-up label">Il tuo desiderio</div>
-  <h1 class="fade-up">C'è qualcosa che <em>desideri</em> davvero?</h1>
-  <p class="fade-up">Uno smartphone top di gamma. Una moto. Un orologio di lusso.<br>Di solito costa migliaia di euro. Su AIROOBI, costa molto meno.</p>
+  <div class="fade-up label"><span class="it">Il tuo desiderio</span><span class="en">Your desire</span></div>
+  <h1 class="fade-up"><span class="it">C'è qualcosa che <em>desideri</em> davvero?</span><span class="en">Is there something you <em>truly</em> desire?</span></h1>
+  <p class="fade-up"><span class="it">Uno smartphone top di gamma. Una moto. Un orologio di lusso.<br>Di solito costa migliaia di euro. Su AIROOBI, costa molto meno.</span><span class="en">A top-tier smartphone. A motorbike. A luxury watch.<br>Usually costs thousands. On AIROOBI, it costs much less.</span></p>
 </div>
 
 <!-- SCENE 2: COS'È AIROOBI -->
 <div class="scene" id="s2">
-  <div class="fade-up label">Cos'è AIROOBI</div>
-  <h1 class="fade-up">Un <em>marketplace</em> di oggetti reali</h1>
-  <p class="fade-up">Persone vere mettono in vendita oggetti di valore.<br>Tu partecipi per ottenerli a un prezzo ridicolo.</p>
+  <div class="fade-up label"><span class="it">Cos'è AIROOBI</span><span class="en">What is AIROOBI</span></div>
+  <h1 class="fade-up"><span class="it">Un <em>marketplace</em> di oggetti reali</span><span class="en">A <em>marketplace</em> for real objects</span></h1>
+  <p class="fade-up"><span class="it">Persone vere mettono in vendita oggetti di valore.<br>Tu partecipi per ottenerli a un prezzo che non crederesti.</span><span class="en">Real people list valuable objects.<br>You participate to get them at a price you won't believe.</span></p>
 </div>
 
 <!-- SCENE 3: COME FUNZIONA - GUADAGNI -->
 <div class="scene" id="s3">
-  <div class="fade-up label">Come funziona</div>
-  <h2 class="fade-up">Guadagni <span class="gold">ARIA</span> ogni giorno</h2>
-  <p class="fade-up">ARIA è la valuta di AIROOBI. La guadagni gratis, con azioni semplici.</p>
+  <div class="fade-up label"><span class="it">Come funziona</span><span class="en">How it works</span></div>
+  <h2 class="fade-up"><span class="it">Accumula <span class="gold">ARIA</span> ogni giorno</span><span class="en">Earn <span class="gold">ARIA</span> every day</span></h2>
+  <p class="fade-up"><span class="it">ARIA è la valuta di AIROOBI. La ottieni gratis, con azioni semplici.</span><span class="en">ARIA is the AIROOBI currency. You get it for free, with simple actions.</span></p>
   <div class="icon-row fade-up">
     <div class="icon-block">
       <div class="icon-circle">&#10004;</div>
       <div class="icon-label">Check-in</div>
-      <div class="icon-value">+1/gg</div>
+      <div class="icon-value">+1/<span class="it">gg</span><span class="en">day</span></div>
     </div>
     <div class="icon-block">
       <div class="icon-circle">&#9654;</div>
       <div class="icon-label">Video</div>
-      <div class="icon-value">+1 (5/gg)</div>
+      <div class="icon-value">+1 (5/<span class="it">gg</span><span class="en">day</span>)</div>
     </div>
     <div class="icon-block">
       <div class="icon-circle">&#128279;</div>
@@ -224,7 +235,7 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
     </div>
     <div class="icon-block">
       <div class="icon-circle">&#128293;</div>
-      <div class="icon-label">Streak 7gg</div>
+      <div class="icon-label">Streak 7<span class="it">gg</span><span class="en">d</span></div>
       <div class="icon-value">+1</div>
     </div>
   </div>
@@ -232,90 +243,101 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
 
 <!-- SCENE 4: COME FUNZIONA - BLOCCHI -->
 <div class="scene" id="s4">
-  <div class="fade-up label">Partecipa</div>
-  <h2 class="fade-up">Usa ARIA per prendere <span class="gold">blocchi</span></h2>
-  <p class="fade-up">Ogni oggetto ha un numero limitato di blocchi.<br>Con i tuoi ARIA ne prendi quanti vuoi.</p>
+  <div class="fade-up label"><span class="it">Partecipa</span><span class="en">Participate</span></div>
+  <h2 class="fade-up"><span class="it">Usa ARIA per prendere <span class="gold">blocchi</span></span><span class="en">Use ARIA to get <span class="gold">blocks</span></span></h2>
+  <p class="fade-up"><span class="it">Ogni oggetto ha un numero limitato di blocchi.<br>Con i tuoi ARIA ne prendi quanti vuoi.</span><span class="en">Each object has a limited number of blocks.<br>Use your ARIA to get as many as you want.</span></p>
   <div class="steps fade-up">
     <div class="step">
       <div class="step-num">1</div>
-      <div class="step-title">Scegli</div>
-      <div class="step-desc">Trova l'oggetto che desideri nel marketplace</div>
+      <div class="step-title"><span class="it">Scegli</span><span class="en">Choose</span></div>
+      <div class="step-desc"><span class="it">Trova l'oggetto che desideri nel marketplace</span><span class="en">Find the object you desire in the marketplace</span></div>
     </div>
     <div class="step">
       <div class="step-num">2</div>
-      <div class="step-title">Partecipa</div>
-      <div class="step-desc">Usa i tuoi ARIA per prendere blocchi</div>
+      <div class="step-title"><span class="it">Partecipa</span><span class="en">Participate</span></div>
+      <div class="step-desc"><span class="it">Usa i tuoi ARIA per prendere blocchi</span><span class="en">Use your ARIA to get blocks</span></div>
     </div>
     <div class="step">
       <div class="step-num">3</div>
-      <div class="step-title">Ottieni</div>
-      <div class="step-desc">Quando i blocchi finiscono, qualcuno ottiene l'oggetto</div>
+      <div class="step-title"><span class="it">Ottieni</span><span class="en">Obtain</span></div>
+      <div class="step-desc"><span class="it">Quando i blocchi finiscono, qualcuno ottiene l'oggetto</span><span class="en">When blocks run out, someone gets the object</span></div>
     </div>
   </div>
 </div>
 
 <!-- SCENE 5: CATEGORIE -->
 <div class="scene" id="s5">
-  <div class="fade-up label">Cosa puoi ottenere</div>
-  <h2 class="fade-up">Oggetti <em>reali</em> di ogni tipo</h2>
+  <div class="fade-up label"><span class="it">Cosa puoi ottenere</span><span class="en">What you can get</span></div>
+  <h2 class="fade-up"><span class="it">Oggetti <em>reali</em> di ogni tipo</span><span class="en"><em>Real</em> objects of every kind</span></h2>
   <div class="cat-grid fade-up">
     <div class="cat-tag">Smartphone</div>
-    <div class="cat-tag">Orologi</div>
-    <div class="cat-tag">Moto</div>
+    <div class="cat-tag"><span class="it">Orologi</span><span class="en">Watches</span></div>
+    <div class="cat-tag"><span class="it">Moto</span><span class="en">Motorbikes</span></div>
     <div class="cat-tag">Tech</div>
     <div class="cat-tag">Luxury</div>
     <div class="cat-tag">Sneakers</div>
     <div class="cat-tag">Gaming</div>
     <div class="cat-tag">Audio</div>
   </div>
-  <p class="fade-up">Ogni oggetto è verificato e valutato da AIROOBI.</p>
+  <p class="fade-up"><span class="it">Ogni oggetto è verificato e valutato da AIROOBI.</span><span class="en">Every object is verified and valued by AIROOBI.</span></p>
 </div>
 
 <!-- SCENE 6: FAIRNESS RULE -->
 <div class="scene" id="s6">
-  <div class="fade-up label">Fairness assoluta</div>
-  <h2 class="fade-up">Hai ottenuto l'oggetto? <span class="gold">Lascia spazio.</span></h2>
+  <div class="fade-up label"><span class="it">Fairness assoluta</span><span class="en">Absolute fairness</span></div>
+  <h2 class="fade-up"><span class="it">Hai ottenuto l'oggetto? <span class="gold">Lascia spazio.</span></span><span class="en">Got the object? <span class="gold">Make room.</span></span></h2>
   <div class="fade-up fair-box">
-    <p style="color:var(--white);margin-top:0;font-size:clamp(15px,2vw,18px);line-height:1.7">
-      Se ottieni un oggetto in una categoria,<br>
-      <strong style="color:var(--gold)">quella categoria si chiude per te.</strong><br><br>
-      Così tutti hanno davvero la stessa possibilità.<br>
-      Nessuno accumula. Nessuno domina.
-    </p>
+    <div class="it-block">
+      <p style="color:var(--white);margin-top:0;font-size:clamp(15px,2vw,18px);line-height:1.7">
+        Se ottieni un oggetto in una categoria,<br>
+        <strong style="color:var(--gold)">quella categoria si chiude per te.</strong><br><br>
+        Cos&igrave; tutti hanno davvero la stessa possibilit&agrave;.<br>
+        Nessuno accumula. Nessuno domina.
+      </p>
+    </div>
+    <div class="en-block">
+      <p style="color:var(--white);margin-top:0;font-size:clamp(15px,2vw,18px);line-height:1.7">
+        If you get an object in a category,<br>
+        <strong style="color:var(--gold)">that category closes for you.</strong><br><br>
+        So everyone truly has the same chance.<br>
+        No hoarding. No dominating.
+      </p>
+    </div>
   </div>
 </div>
 
 <!-- SCENE 7: IL TUO REWARD -->
 <div class="scene" id="s7">
-  <div class="fade-up label">Il tuo reward</div>
-  <h2 class="fade-up">Ogni partecipazione<br>ha un <span class="gold">valore reale</span></h2>
-  <p class="fade-up">Ogni volta che partecipi, guadagni <strong style="color:var(--gold)">ROBI</strong>.<br>Il ROBI è il tuo NFT: il suo valore cresce nel tempo, riscuotibile in KAS.</p>
+  <div class="fade-up label"><span class="it">Il tuo reward</span><span class="en">Your reward</span></div>
+  <h2 class="fade-up"><span class="it">Ogni partecipazione<br>ha un <span class="gold">valore reale</span></span><span class="en">Every participation<br>has <span class="gold">real value</span></span></h2>
+  <p class="fade-up"><span class="it">Ogni volta che partecipi, ottieni <strong style="color:var(--gold)">ROBI</strong>.<br>Il ROBI è la tua Tessera Rendimento: il suo valore cresce nel tempo, riscuotibile in KAS.</span><span class="en">Every time you participate, you get <strong style="color:var(--gold)">ROBI</strong>.<br>ROBI is your Yield Token: its value grows over time, redeemable in KAS.</span></p>
   <div class="fade-up rule"></div>
   <p class="fade-up" style="font-family:var(--font-m);font-size:13px;color:var(--gold)">
-    Partecipi &nbsp;→&nbsp; guadagni ROBI<br>
-    I ROBI &nbsp;→&nbsp; crescono di valore &nbsp;→&nbsp; riscuoti in KAS
+    <span class="it">Partecipi &nbsp;&rarr;&nbsp; ottieni ROBI<br>
+    I ROBI &nbsp;&rarr;&nbsp; crescono di valore &nbsp;&rarr;&nbsp; riscuoti in KAS</span><span class="en">Participate &nbsp;&rarr;&nbsp; get ROBI<br>
+    ROBI &nbsp;&rarr;&nbsp; grows in value &nbsp;&rarr;&nbsp; redeem in KAS</span>
   </p>
 </div>
 
 <!-- SCENE 8: VENDI -->
 <div class="scene" id="s8">
-  <div class="fade-up label">Per chi vende</div>
-  <h2 class="fade-up">Hai un oggetto di valore?<br><span class="gold">Vendilo su AIROOBI</span></h2>
-  <p class="fade-up">Inserisci il tuo oggetto (valore minimo €500).<br>La community partecipa. Tu incassi il prezzo di mercato.</p>
+  <div class="fade-up label"><span class="it">Per chi vende</span><span class="en">For sellers</span></div>
+  <h2 class="fade-up"><span class="it">Hai un oggetto di valore?<br><span class="gold">Vendilo su AIROOBI</span></span><span class="en">Have a valuable object?<br><span class="gold">Sell it on AIROOBI</span></span></h2>
+  <p class="fade-up"><span class="it">Inserisci il tuo oggetto (valore minimo &euro;500).<br>La community partecipa. Tu incassi il prezzo di mercato.</span><span class="en">List your object (minimum value &euro;500).<br>The community participates. You get the market price.</span></p>
   <div class="fade-up rule"></div>
   <p class="fade-up" style="font-size:14px;color:var(--gray-400)">
-    Venditori privati · Valore minimo €500 · Incasso garantito
+    <span class="it">Venditori privati &middot; Valore minimo &euro;500 &middot; Incasso garantito</span><span class="en">Private sellers &middot; Minimum value &euro;500 &middot; Guaranteed payout</span>
   </p>
 </div>
 
 <!-- SCENE 9: PERCHÉ TORNARE -->
 <div class="scene" id="s9">
-  <div class="fade-up label">Perché restare</div>
-  <h2 class="fade-up">AIROOBI ti <em>ricompensa</em><br>ogni giorno</h2>
-  <p class="fade-up">Guadagni ARIA gratis. I tuoi ROBI crescono di valore.<br>Nuovi oggetti ogni settimana. Nuove categorie da esplorare.</p>
+  <div class="fade-up label"><span class="it">Perch&eacute; restare</span><span class="en">Why stay</span></div>
+  <h2 class="fade-up"><span class="it">AIROOBI ti <em>ricompensa</em><br>ogni giorno</span><span class="en">AIROOBI <em>rewards</em> you<br>every day</span></h2>
+  <p class="fade-up"><span class="it">Accumuli ARIA gratis. I tuoi ROBI crescono di valore.<br>Nuovi oggetti ogni settimana. Nuove categorie da esplorare.</span><span class="en">Earn ARIA for free. Your ROBI grow in value.<br>New objects every week. New categories to explore.</span></p>
   <div class="fade-up winner-visual">
     <div class="winner-obj">&#10024;</div>
-    <div class="winner-badge">IL TUO PROSSIMO DESIDERIO</div>
+    <div class="winner-badge"><span class="it">IL TUO PROSSIMO DESIDERIO</span><span class="en">YOUR NEXT DESIRE</span></div>
   </div>
 </div>
 
@@ -323,8 +345,8 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
 <div class="scene" id="s10">
   <div class="fade-up logo-text" style="font-size:clamp(36px,8vw,64px)">AIR<span class="oo">OO</span>BI</div>
   <div class="fade-up rule"></div>
-  <h2 class="fade-up">Realizza il tuo <em>desiderio.</em><br>A un prezzo che non crederesti.</h2>
-  <p class="fade-up">Registrati gratis. Inizia a guadagnare ARIA oggi.</p>
+  <h2 class="fade-up"><span class="it">Realizza il tuo <em>desiderio.</em><br>A un prezzo che non crederesti.</span><span class="en">Make your <em>desire</em> real.<br>At a price you won't believe.</span></h2>
+  <p class="fade-up"><span class="it">Entra su AIROOBI. Inizia ad accumulare ARIA oggi.</span><span class="en">Join AIROOBI. Start earning ARIA today.</span></p>
 </div>
 
 <!-- PROGRESS -->
@@ -342,6 +364,15 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
 
 <script>
 (function(){
+  // Inherit lang from parent
+  try{
+    var parentLang=window.parent.document.documentElement.getAttribute('data-lang');
+    if(parentLang)document.documentElement.setAttribute('data-lang',parentLang);
+  }catch(e){
+    var saved=localStorage.getItem('airoobi_lang');
+    if(saved)document.documentElement.setAttribute('data-lang',saved);
+  }
+
   const scenes = document.querySelectorAll('.scene');
   const total = scenes.length;
   const progress = document.getElementById('progress');
@@ -353,7 +384,7 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
   let current = 0;
   let playing = true;
   let timer = null;
-  const DURATION = 5000; // 5s per scene
+  const DURATION = 5000;
 
   function goTo(idx){
     if(idx < 0) idx = 0;
@@ -384,7 +415,6 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
     btnPlay.classList.toggle('active', playing);
   }
 
-  // Auto start
   startAutoplay();
   updatePlayBtn();
 
