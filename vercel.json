@@ -2,6 +2,9 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
+    { "source": "/ads.txt", "destination": "/ads-com.txt" },
+
     { "source": "/", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/airdrops", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/airdrops/:id", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
