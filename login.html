@@ -169,9 +169,9 @@ async function doLogin(){
     if(returnTo&&returnTo.startsWith('/')){
       window.location.href=returnTo;
     }else{
-      // If on airoobi.com, go to settings; if on airoobi.app, go to dashboard
+      // If on airoobi.com, go to home; if on airoobi.app, go to dashboard
       var isDapp=window.location.hostname.indexOf('airoobi.app')!==-1;
-      window.location.href=isDapp?'/':'/home.html#settings';
+      window.location.href=isDapp?'/':'/home.html';
     }
   }else{
     var msg=data.error_description||data.msg||data.message||'';

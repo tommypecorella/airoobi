@@ -937,4 +937,12 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .settings-delete-btn{background:none;border:1px solid rgba(185,28,28,.4);color:#f87171;padding:12px 24px;font-family:var(--font-b);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s}
 .settings-delete-btn:hover{background:rgba(185,28,28,.15);border-color:#f87171}
 .settings-delete-warn{font-size:11px;color:var(--gray-600);margin-top:8px}
+/* ═══ PROMO BANNER ═══ */
+.promo-banner{background:var(--black);border-top:1px solid rgba(184,150,12,.3);border-bottom:1px solid rgba(184,150,12,.3);padding:48px 24px;text-align:center}
+.promo-banner-inner{max-width:600px;margin:0 auto}
+.promo-tag{font-family:var(--font-m);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:16px}
+.promo-headline{font-family:var(--font-h);font-size:clamp(32px,5vw,48px);font-weight:300;color:var(--gold);margin-bottom:16px}
+.promo-sub{font-family:var(--font-b);font-size:15px;color:var(--gray-400);line-height:1.6;margin-bottom:32px}
+.promo-cta{display:inline-block;padding:16px 32px;background:var(--gold);color:var(--black);font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;text-decoration:none;transition:all .3s}
+.promo-cta:hover{background:var(--white)}
 

@@ -585,9 +585,7 @@ function doLogout(){
   var s=getSession();
   if(s&&s.access_token){
     var lb=document.getElementById('nav-login-btn');
-    var sb=document.getElementById('nav-signup-btn');
     if(lb)lb.style.display='none';
-    if(sb)sb.style.display='none';
     document.querySelectorAll('.mm-auth-btn').forEach(function(el){el.style.display='none';});
     // Add settings button to nav
     var nav=document.querySelector('.nav-menu');
