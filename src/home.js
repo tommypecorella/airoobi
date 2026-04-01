@@ -419,8 +419,6 @@ function openBlogArticle(hashSlug){
   html+='</article>';
   // CTA
   html+='<div class="blog-cta"><div class="blog-cta-title"><span class="it">Scopri <em>AIROOBI</em></span><span class="en">Discover <em>AIROOBI</em></span></div><p class="blog-cta-sub"><span class="it">Registrati gratis e inizia a guadagnare ARIA per partecipare agli airdrop.</span><span class="en">Sign up for free and start earning ARIA to join airdrops.</span></p><a href="#signup" class="blog-cta-btn"><span class="it">Registrati</span><span class="en">Sign Up</span></a></div>';
-  // A-ADS banner
-  html+='<div class="blog-ad"><iframe data-aa="2429619" src="//acceptable.a-ads.com/2429619/?size=728x90&background_color=000000&title_color=ffffff&title_hover_color=b49900&link_hover_color=b49900" style="border:0;padding:0;width:100%;height:90px;overflow:hidden"></iframe></div>';
   c.innerHTML=html;
   document.getElementById('blog-overlay').classList.add('active');
   document.title='AIROOBI — '+a.title;
@@ -2206,10 +2204,6 @@ async function openRoadmapDetail(phaseKey){
   feats.forEach(function(f){html+='<li>'+f+'</li>';});
   html+='</ul></div>';
 
-  // Ads banner
-  html+='<div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid var(--gray-700)">';
-  html+='<iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>';
-  html+='</div>';
 
   document.getElementById('rd-content').innerHTML=html;
   document.getElementById('rd-overlay').classList.add('active');
