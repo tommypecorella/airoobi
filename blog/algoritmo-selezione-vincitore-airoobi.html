@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Come viene scelto il vincitore di un airdrop su AIROOBI — AIROOBI Blog</title>
+  <meta name="description" content="L'algoritmo deterministico di AIROOBI: tre fattori (blocchi 50%, storico 30%, anzianità 20%) per una selezione trasparente e meritocratica.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Come viene scelto il vincitore di un airdrop su AIROOBI">
+  <meta property="og:description" content="L'algoritmo deterministico di AIROOBI: tre fattori (blocchi 50%, storico 30%, anzianità 20%) per una selezione trasparente e meritocratica.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/algoritmo-selezione-vincitore-airoobi.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/algoritmo-selezione-vincitore-airoobi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .formula-block {
+      background: var(--gray-900);
+      border: 1px solid var(--gray-700);
+      border-radius: 8px;
+      padding: 1.5rem 2rem;
+      margin: 1.5rem 0;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--white);
+      line-height: 2;
+    }
+    .formula-block .label {
+      color: var(--gold);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .factor-row {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin: 0.5rem 0;
+    }
+    .factor-weight {
+      color: var(--kas);
+      font-size: 1.1rem;
+      font-weight: 500;
+      min-width: 3.5rem;
+    }
+    .factor-desc {
+      color: var(--gray-300);
+      font-size: 0.9rem;
+      font-family: 'Instrument Sans', sans-serif;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Algoritmo</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">1 Aprile 2026</div>
+
+    <article>
+      <h1>Come viene scelto il vincitore di un airdrop su AIROOBI</h1>
+
+      <p>Una delle domande più frequenti che riceviamo su AIROOBI è: "Come viene deciso chi ottiene l'oggetto?" È una domanda legittima, e la risposta merita una spiegazione dettagliata — perché l'algoritmo di selezione è uno degli elementi più importanti dell'intera piattaforma. Non è una scatola nera. È una formula pubblica, deterministica, non modificabile, che chiunque può comprendere e verificare.</p>
+
+      <h2>Un sistema meritocratico, non casuale</h2>
+
+      <p>La prima cosa da capire è il principio di base: su AIROOBI, l'esito di un airdrop non è determinato dalla fortuna pura. Non si estrae un numero casuale da un'urna. Il partecipante che ottiene l'oggetto è quello con il punteggio composito più alto al momento della chiusura dell'airdrop.</p>
+
+      <p>Questo punteggio composito si calcola combinando tre fattori distinti, ciascuno con un peso specifico. I tre fattori misurano aspetti diversi della tua partecipazione: quanto hai contribuito a questo airdrop specifico, quanto sei stato attivo in questa categoria nel passato, e da quanto tempo fai parte della comunità AIROOBI.</p>
+
+      <div class="formula-block">
+        <span class="label">FORMULA PUNTEGGIO COMPOSITO</span>
+        Punteggio = (F1 × 0.50) + (F2 × 0.30) + (F3 × 0.20)
+      </div>
+
+      <p>Vediamo ciascun fattore nel dettaglio.</p>
+
+      <h2>F1 — Blocchi attuali: peso 50%</h2>
+
+      <p>Il primo fattore, e il più pesante, è il numero di blocchi che hai acquistato per quell'airdrop specifico. F1 rappresenta il 50% del punteggio totale — la metà esatta. È il fattore che risponde alla domanda immediata: quanto hai partecipato a questo airdrop?</p>
+
+      <p>Più blocchi acquisti, più alto è il tuo F1. La relazione è diretta e lineare: non ci sono soglie, non ci sono rendimenti decrescenti artificiali. Ogni blocco aggiuntivo aumenta proporzionalmente il tuo peso nell'airdrop.</p>
+
+      <p>I blocchi si acquistano con ARIA, la valuta interna di AIROOBI. E ARIA si guadagna attraverso la partecipazione attiva alla piattaforma: check-in giornalieri, visualizzazione di contenuti, streak settimanali, referral. Non si compra con denaro reale. Questo garantisce che il fattore F1 sia comunque collegato alla tua attività complessiva su AIROOBI, non semplicemente alla tua capacità di spesa.</p>
+
+      <h2>F2 — Storico categoria: peso 30%</h2>
+
+      <p>Il secondo fattore misura la tua storia di partecipazione nella stessa categoria dell'airdrop in corso. F2 vale il 30% del punteggio totale — quasi un terzo.</p>
+
+      <p>Se stai partecipando a un airdrop nella categoria "Smartphone", F2 terrà conto di tutte le tue partecipazioni precedenti in quella stessa categoria: quante volte hai partecipato, qual è il tuo storico di attività. Chi ha costruito una storia coerente in una categoria specifica viene premiato con un peso maggiore.</p>
+
+      <p>Questo fattore introduce una dimensione strategica nella partecipazione. Ha senso concentrarsi su categorie che ti interessano davvero — non solo perché è più motivante, ma perché costruire uno storico in una categoria aumenta strutturalmente il tuo peso nelle selezioni future di quella stessa categoria.</p>
+
+      <p>È anche il motivo per cui la One Category Rule esiste: una volta che hai ottenuto l'oggetto in una categoria, non puoi più partecipare per ottenere lo stesso tipo di oggetto in quella categoria. Questo garantisce che lo storico accumulato non possa essere usato ripetutamente per la stessa categoria, mantenendo la fairness del sistema per tutti i partecipanti.</p>
+
+      <h2>F3 — Anzianità: peso 20%</h2>
+
+      <p>Il terzo fattore è l'anzianità: da quanto tempo sei un utente attivo di AIROOBI. F3 contribuisce al 20% del punteggio totale.</p>
+
+      <p>L'anzianità premia chi ha creduto nel progetto fin dalle prime fasi. Un utente che è su AIROOBI da un anno ha costruito un track record di partecipazione che vale qualcosa di concreto nell'algoritmo. Non è un vantaggio enorme — il 20% è significativo ma non dominante — ma è un riconoscimento tangibile del fatto che la fedeltà alla piattaforma ha un valore.</p>
+
+      <p>Questo fattore crea anche un incentivo naturale a registrarsi presto e a restare attivi. Non perché qualcuno te lo imponga, ma perché il sistema premia la continuità nel tempo. Ogni giorno che passi su AIROOBI, ogni check-in, ogni airdrop a cui partecipi contribuisce a costruire un profilo più solido e un peso maggiore nelle selezioni future.</p>
+
+      <h2>Deterministico, pubblico, non modificabile</h2>
+
+      <p>Ci sono tre aggettivi che descrivono l'algoritmo di AIROOBI, e ognuno conta.</p>
+
+      <p><strong>Deterministico</strong> significa che, dati gli stessi input, l'output è sempre lo stesso. Non c'è variabilità casuale nell'algoritmo stesso. Se conosci i valori di F1, F2 e F3 di tutti i partecipanti, puoi calcolare con esattezza il punteggio composito di ciascuno e determinare chi ha il punteggio più alto.</p>
+
+      <p><strong>Pubblico</strong> significa che la formula è accessibile a chiunque. Non è nascosta dietro un'interfaccia opaca. Puoi leggere la documentazione, capire la formula, e verificare che il calcolo sia corretto. La trasparenza è un diritto dei partecipanti, non una concessione opzionale.</p>
+
+      <p><strong>Non modificabile</strong> significa che AIROOBI non può cambiare l'algoritmo a metà di un airdrop in corso. I parametri sono fissati al momento dell'apertura dell'airdrop e non cambiano fino alla chiusura. Nessun aggiustamento post-hoc, nessuna discrezionalità nell'applicazione. L'algoritmo è uguale per tutti, sempre.</p>
+
+      <h2>Chi partecipa di più ha più chances: una piattaforma meritocratica</h2>
+
+      <p>Il risultato pratico di questa struttura è che AIROOBI è genuinamente meritocratica. Non nel senso che chi ha più denaro vince sempre — perché ARIA si guadagna, non si compra — ma nel senso che chi è più attivo, più costante, più strategico nella sua partecipazione ha strutturalmente più peso.</p>
+
+      <p>Un utente che partecipa a ogni airdrop nella categoria che gli interessa, che mantiene un check-in giornaliero, che ha costruito uno storico solido nel tempo, ha un profilo composito significativamente più forte di un utente occasionale. Questo non è un accidente del sistema: è esattamente la scelta progettuale di AIROOBI.</p>
+
+      <p>La piattaforma vuole premiare la partecipazione genuina. Non la spesa, non la fortuna — la partecipazione. Ogni azione che compi su AIROOBI — ogni check-in, ogni airdrop, ogni giorno trascorso sulla piattaforma — contribuisce a costruire un profilo più forte e un peso maggiore nelle selezioni future.</p>
+
+      <h2>Come usare questa conoscenza a tuo vantaggio</h2>
+
+      <p>Capire l'algoritmo ti permette di partecipare in modo più consapevole. Alcune considerazioni pratiche:</p>
+
+      <p>Concentrati sulle categorie che ti interessano davvero. Il fattore F2 premia la specializzazione: costruire uno storico profondo in poche categorie è più efficace che distribuirsi superficialmente su molte.</p>
+
+      <p>Sii costante nel tempo. L'anzianità (F3) cresce lentamente ma costantemente. Un utente che è su AIROOBI da sei mesi ha già un vantaggio strutturale rispetto a chi si registra oggi — ma chi si registra oggi inizia subito a costruire il proprio storico per il futuro.</p>
+
+      <p>Usa i tuoi ARIA in modo strategico. I blocchi (F1) sono il fattore più pesante. Accumulare ARIA attraverso l'attività quotidiana ti permette di avere più risorse da allocare agli airdrop che ti interessano di più.</p>
+
+      <p>Il sistema è trasparente, le regole sono pubbliche, e le tue scelte hanno conseguenze reali. Su AIROOBI, il modo in cui partecipi determina concretamente la tua posizione — oggi e in tutti gli airdrop futuri.</p>
+
+      <div class="cta-box">
+        <h2>Costruisci il tuo profilo, aumenta il tuo peso</h2>
+        <p>Inizia oggi: ogni check-in, ogni partecipazione, ogni giorno di attività contribuisce al tuo punteggio composito.</p>
+        <a href="https://airoobi.app/signup.html" class="cta-btn">Registrati e inizia a partecipare</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

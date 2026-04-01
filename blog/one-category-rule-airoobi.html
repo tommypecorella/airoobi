@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>La One Category Rule: perché chi ha già ottenuto lascia spazio agli altri — AIROOBI Blog</title>
+  <meta name="description" content="La One Category Rule di AIROOBI: se ottieni l'oggetto in una categoria, lasci spazio agli altri. Fair play come principio fondante.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="La One Category Rule: perché chi ha già ottenuto lascia spazio agli altri">
+  <meta property="og:description" content="La One Category Rule di AIROOBI: se ottieni l'oggetto in una categoria, lasci spazio agli altri. Fair play come principio fondante.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/one-category-rule-airoobi.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/one-category-rule-airoobi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">One Category Rule</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">1 Aprile 2026</div>
+
+    <article>
+      <h1>La One Category Rule: perché chi ha già ottenuto lascia spazio agli altri</h1>
+
+      <p>Immagina di partecipare a un evento in cui le stesse cinque persone si accaparrano sempre tutto, tornando ogni giorno a prendere ciò che desiderano mentre gli altri aspettano. Non è un sistema equo, e AIROOBI lo sa. Per questo esiste la One Category Rule: una delle regole più importanti — e più semplici — dell'intera piattaforma.</p>
+
+      <h2>La regola in una frase</h2>
+
+      <p>Se ottieni l'oggetto di un airdrop in una determinata categoria, non puoi più ottenere un altro oggetto nella stessa categoria. Punto. La regola è automatica, permanente per quella categoria, e non ha eccezioni.</p>
+
+      <p>Hai realizzato il tuo desiderio di avere una borsa di lusso? Ottimo, complimenti. Adesso quella categoria non è più accessibile per te come destinatario finale. Puoi continuare a partecipare, ad accumulare ARIA, a sostenere la piattaforma — ma l'oggetto andrà a qualcun altro che non ha ancora avuto quella soddisfazione.</p>
+
+      <h2>Perché questa regola esiste</h2>
+
+      <p>AIROOBI è costruita attorno a un principio molto preciso: la partecipazione deve essere significativa per tutti, non solo per chi ha più tempo o più risorse. Senza la One Category Rule, gli utenti con più ARIA accumulata potrebbero dominare le stesse categorie ripetutamente, creando un sistema in cui i nuovi arrivati non hanno mai una chance concreta.</p>
+
+      <p>La One Category Rule rompe questo schema. Ogni volta che qualcuno realizza il proprio desiderio, si libera spazio per un altro partecipante. La rotazione non è casuale — è strutturale. È scritta nell'architettura della piattaforma, non dipende dalla buona volontà di nessuno.</p>
+
+      <h2>Come funziona nella pratica</h2>
+
+      <p>Le categorie su AIROOBI sono definite chiaramente: elettronica, lusso, auto e moto, casa, tech e accessori, e così via. Quando un airdrop si conclude e l'algoritmo F3 assegna l'oggetto, il sistema registra automaticamente quale categoria è stata "realizzata" per quel profilo utente.</p>
+
+      <p>Da quel momento, se quell'utente prova a partecipare a un airdrop nella stessa categoria, il sistema glielo impedisce — o, nelle versioni future dell'interfaccia, lo segnalerà chiaramente prima ancora che decida di spendere ARIA in blocchi. La trasparenza è parte della regola stessa.</p>
+
+      <h2>Una scelta che cambia la prospettiva</h2>
+
+      <p>Molti utenti, quando sentono parlare della One Category Rule per la prima volta, hanno una reazione comprensibile: "Ma allora devo scegliere con cura in quale categoria partecipare." Esatto. Ed è proprio questo il punto.</p>
+
+      <p>AIROOBI non è una piattaforma dove si entra ogni giorno cercando di prendere tutto ciò che è disponibile. È un luogo dove si ragiona su cosa si vuole davvero. Quale oggetto cambierebbe la tua vita quotidiana? Quale categoria rappresenta il tuo desiderio più autentico? Quella è la direzione in cui concentrare la propria partecipazione.</p>
+
+      <p>Questo approccio cambia profondamente il modo in cui gli utenti interagiscono con la piattaforma. Invece di una corsa frenetica a partecipare ovunque, si crea una partecipazione più consapevole, più mirata. E paradossalmente più soddisfacente, anche per chi non ha ancora realizzato il proprio desiderio — perché sa che il sistema sta lavorando per garantirgli una possibilità concreta.</p>
+
+      <h2>La One Category Rule e la comunità</h2>
+
+      <p>C'è un effetto collaterale positivo di questa regola che va oltre il singolo utente: costruisce fiducia nella comunità. Quando le persone sanno che le regole sono uguali per tutti e che chi ha già ottenuto fa un passo indietro, il livello generale di fiducia nella piattaforma aumenta.</p>
+
+      <p>Non serve che AIROOBI si guadagni la reputazione di essere "fair" attraverso dichiarazioni di principio. La One Category Rule è la dimostrazione pratica, concreta, verificabile di quel principio. Ogni utente che ottiene un oggetto e lascia spazio agli altri è la prova vivente che il sistema funziona come promesso.</p>
+
+      <h2>Partecipare ancora dopo aver realizzato il proprio desiderio</h2>
+
+      <p>La One Category Rule non significa che chi ha già ottenuto qualcosa debba smettere di usare AIROOBI. Tutt'altro. Le categorie sono molte, i desideri sono molti, e le Tessere Rendimento — i ROBI — continuano ad accumularsi per ogni partecipazione. Chi ha già realizzato un desiderio in una categoria può esplorare le altre, accumulare ARIA, costruire la propria posizione nella classifica e prepararsi per i prossimi airdrop.</p>
+
+      <p>La piattaforma è progettata per essere un luogo dove si torna con piacere, non perché si è obbligati, ma perché c'è sempre qualcosa di nuovo da esplorare, un nuovo desiderio da coltivare, un nuovo airdrop a cui contribuire.</p>
+
+      <div class="cta-box">
+        <h2>Partecipa a AIROOBI</h2>
+        <p>Scegli la tua categoria, accumula ARIA e realizza il tuo desiderio. Il sistema è fatto per darti una chance concreta.</p>
+        <a href="https://airoobi.app/signup.html" class="cta-btn">Registrati — è gratuito</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

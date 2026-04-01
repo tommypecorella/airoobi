@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Il Fondo Comune di AIROOBI: come funziona la garanzia per tutti — AIROOBI Blog</title>
+  <meta name="description" content="Il 22% di ogni airdrop va al Fondo Comune (treasury). Come funziona, perché cresce, e come protegge il valore dei ROBI.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Il Fondo Comune di AIROOBI: come funziona la garanzia per tutti">
+  <meta property="og:description" content="Il 22% di ogni airdrop va al Fondo Comune (treasury). Come funziona, perché cresce, e come protegge il valore dei ROBI.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/come-funziona-fondo-comune-airoobi.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/come-funziona-fondo-comune-airoobi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Fondo Comune</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">1 Aprile 2026</div>
+
+    <article>
+      <h1>Il Fondo Comune di AIROOBI: come funziona la garanzia per tutti</h1>
+
+      <p>Ogni piattaforma che promette valore ai propri utenti deve rispondere a una domanda fondamentale: da dove viene quel valore? Su AIROOBI la risposta è concreta, misurabile e trasparente. Si chiama Fondo Comune, ed è il meccanismo che trasforma ogni airdrop in un sistema economico sostenibile per tutti i partecipanti — non solo per chi ottiene l'oggetto in palio.</p>
+
+      <h2>Il 22%: non un'opzione, una regola</h2>
+
+      <p>Ogni volta che si conclude un airdrop su AIROOBI, il totale dei blocchi acquistati dai partecipanti genera un ammontare in ARIA. Di questa cifra, il 22% confluisce automaticamente nel Fondo Comune — il treasury della piattaforma.</p>
+
+      <p>Non si tratta di una quota volontaria o discrezionale. È parte integrante della struttura economica del sistema: il contratto, per così dire, che AIROOBI stipula con ogni partecipante nel momento stesso in cui acquista il primo blocco. Quella percentuale è già allocata, già destinata, prima ancora che l'airdrop si concluda.</p>
+
+      <p>Perché il 22%? La cifra è il risultato di un equilibrio preciso. Deve essere abbastanza alta da costruire un treasury robusto nel tempo, ma abbastanza bassa da garantire che la quota restante sia sufficiente a coprire il valore dell'oggetto in palio e la marginalità operativa di AIROOBI. È una scelta progettuale, non arbitraria.</p>
+
+      <h2>Come funziona il treasury</h2>
+
+      <p>Il Fondo Comune è un treasury denominato in KAS — la criptovaluta nativa della blockchain Kaspa. Ogni contributo del 22% viene convertito e accumulato nel treasury. Il saldo è pubblicamente verificabile: nulla è nascosto, nulla è opaco.</p>
+
+      <p>Il treasury ha una sola funzione: coprire il valore riscattabile dei ROBI in circolazione. Un ROBI è la Tessera Rendimento che ogni partecipante riceve al termine di un airdrop. Il valore di riscatto di ciascun ROBI è determinato da una formula semplice: saldo del treasury diviso numero totale di ROBI in circolazione.</p>
+
+      <p>Questo rapporto è il cuore del sistema. Finché il treasury cresce più velocemente del numero di ROBI emessi — o cresce alla stessa velocità — il valore unitario del ROBI rimane stabile o aumenta. È un sistema anti-inflazionario per costruzione.</p>
+
+      <h2>Perché il Fondo Comune cresce nel tempo</h2>
+
+      <p>Il meccanismo di crescita del Fondo Comune è direttamente legato all'attività della piattaforma. Più airdrop si concludono, più il treasury si espande. Non è una profezia ottimistica: è matematica.</p>
+
+      <p>Consideriamo uno scenario semplice. Se ogni mese si concludono 10 airdrop, e ogni airdrop genera in media 1.000 ARIA in blocchi acquistati, il Fondo Comune riceve mensilmente 220 ARIA equivalenti in KAS. Al dodicesimo mese, il treasury ha accumulato 2.640 ARIA — e questo è solo il contributo di un anno con volumi moderati.</p>
+
+      <p>Con la crescita della base utenti, con l'aumento del numero di airdrop simultanei, con oggetti di valore più elevato, queste cifre crescono in proporzione. Il Fondo Comune beneficia direttamente dell'espansione della piattaforma. Non è un meccanismo separato dall'attività principale: è integrato in ogni singola transazione.</p>
+
+      <h2>Anti-inflazione: il vincolo che protegge i ROBI</h2>
+
+      <p>Uno dei rischi classici di qualsiasi sistema tokenomico è l'inflazione: emettere troppi token rispetto alla liquidità disponibile, erodendo il valore unitario di ciascuno. AIROOBI è progettata per evitare questo problema strutturalmente.</p>
+
+      <p>Il vincolo è semplice: il rapporto treasury/ROBI deve restare stabile o crescere. AIROOBI monitora costantemente questo indicatore. Se il rapporto dovesse scendere al di sotto di una soglia critica — per esempio a causa di un'accelerazione eccessiva nell'emissione di ROBI rispetto alla crescita del treasury — il sistema può intervenire regolando i parametri degli airdrop.</p>
+
+      <p>In pratica, questo significa che la piattaforma non può semplicemente emettere ROBI senza limite. Ogni ROBI emesso deve essere coperto da una quota corrispondente del treasury. È una disciplina economica che protegge tutti i detentori di ROBI esistenti, garantendo che il loro valore di riscatto non venga diluito dall'espansione incontrollata del sistema.</p>
+
+      <h2>Trasparenza totale: puoi verificare tutto</h2>
+
+      <p>La fiducia in un sistema economico dipende dalla sua trasparenza. AIROOBI è costruita su questo principio. Il saldo del Fondo Comune, il numero di ROBI in circolazione, il rapporto treasury/ROBI — tutti questi dati sono accessibili pubblicamente, in tempo reale, direttamente dalla piattaforma.</p>
+
+      <p>Non devi fidarti di una promessa generica. Puoi guardare i numeri tu stesso, in qualsiasi momento, e verificare che il sistema funzioni esattamente come dichiarato. La blockchain di Kaspa aggiunge un ulteriore livello di trasparenza: ogni transazione che coinvolge il treasury è immutabilmente registrata su una catena pubblica e verificabile da chiunque.</p>
+
+      <p>Questa trasparenza non è un dettaglio secondario: è la garanzia che il Fondo Comune sia reale, che i ROBI abbiano un valore effettivo, e che AIROOBI rispetti i propri impegni verso ogni partecipante.</p>
+
+      <h2>Il Fondo Comune come incentivo strutturale alla partecipazione</h2>
+
+      <p>C'è un effetto interessante che emerge da questo sistema: più la piattaforma cresce, più il Fondo Comune diventa robusto, più il valore dei ROBI tende a salire. Il che significa che i partecipanti storici — quelli che hanno creduto in AIROOBI fin dalle prime fasi — si trovano con ROBI accumulati nel tempo che riflettono la crescita dell'intera piattaforma.</p>
+
+      <p>È un incentivo strutturale alla partecipazione continuativa. Non perché qualcuno ti stia promettendo rendimenti futuri, ma perché il meccanismo matematico è costruito in modo tale che la crescita della piattaforma si traduce concretamente in un incremento del valore riscattabile delle Tessere Rendimento di chi ha partecipato.</p>
+
+      <p>Ogni airdrop a cui partecipi contribuisce al Fondo Comune. Ogni ROBI che accumuli è la tua quota di quel fondo. È un sistema dove la partecipazione attiva non è mai a fondo perduto — è sempre un contributo al proprio futuro e a quello dell'intera comunità.</p>
+
+      <div class="cta-box">
+        <h2>Accumula la tua quota del Fondo Comune</h2>
+        <p>Partecipa agli airdrop, guadagna ROBI, riscatta in KAS quando vuoi. Il treasury lavora per te ogni giorno.</p>
+        <a href="https://airoobi.app/signup.html" class="cta-btn">Entra in AIROOBI</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

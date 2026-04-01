@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cos'è ROBI: la tua Tessera Rendimento su AIROOBI — AIROOBI Blog</title>
+  <meta name="description" content="ROBI è l'NFT Tessera Rendimento di AIROOBI: si guadagna partecipando, cresce col Fondo Comune, si riscatta in KAS. Mai acquistabile.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Cos'è ROBI: la tua Tessera Rendimento su AIROOBI">
+  <meta property="og:description" content="ROBI è l'NFT Tessera Rendimento di AIROOBI: si guadagna partecipando, cresce col Fondo Comune, si riscatta in KAS. Mai acquistabile.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/cose-robi-tessera-rendimento-airoobi.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/cose-robi-tessera-rendimento-airoobi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">ROBI</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">1 Aprile 2026</div>
+
+    <article>
+      <h1>Cos'è ROBI: la tua Tessera Rendimento su AIROOBI</h1>
+
+      <p>Quando partecipi a un airdrop su AIROOBI, non stai semplicemente provando a ottenere un oggetto di valore. Stai accumulando qualcosa di concreto che ti appartiene, indipendentemente da come va quell'airdrop specifico. Questo qualcosa si chiama ROBI — la Tessera Rendimento di AIROOBI — ed è al centro di tutta la logica economica della piattaforma.</p>
+
+      <h2>Cos'è esattamente un ROBI</h2>
+
+      <p>ROBI è un NFT: un token non fungibile registrato sulla blockchain di Kaspa. Ma a differenza della maggior parte degli NFT che esistono sul mercato — spesso puri oggetti speculativi senza utilità reale — il ROBI ha una funzione precisa e ben definita: rappresenta la tua quota del Fondo Comune di AIROOBI.</p>
+
+      <p>Ogni ROBI è una Tessera Rendimento. Il nome non è casuale: funziona in modo simile a un buono fruttifero postale. Col tempo, man mano che il Fondo Comune cresce, il valore riscattabile di ciascun ROBI aumenta. Non si tratta di speculazione o di speranza — si tratta di un meccanismo matematico trasparente e pubblico.</p>
+
+      <p>Ogni ROBI è un NFT unico: ha un identificatore, una data di emissione, è associato al tuo profilo su AIROOBI. È la tua garanzia che la piattaforma ha un debito nei tuoi confronti — e quel debito è coperto dal treasury.</p>
+
+      <h2>Come si guadagna un ROBI</h2>
+
+      <p>La regola è semplice e assoluta: i ROBI si guadagnano partecipando. Non si acquistano, non si comprano su exchange, non si ottengono in altro modo. Questa è una scelta fondamentale del progetto, non una limitazione tecnica.</p>
+
+      <p>Ogni volta che partecipi a un airdrop su AIROOBI — acquistando blocchi con i tuoi ARIA — e quell'airdrop si conclude, tutti i partecipanti ricevono almeno un ROBI. Che tu abbia ottenuto l'oggetto in palio o no, il tuo ROBI è garantito. Nessun partecipante va a mani vuote.</p>
+
+      <p>Questo è il nucleo della promessa di AIROOBI: la partecipazione non è mai a fondo perduto. Puoi non ottenere il prodotto specifico di quell'airdrop, ma hai sempre qualcosa da portare a casa. E quel qualcosa cresce nel tempo.</p>
+
+      <h2>Come cresce il valore del ROBI</h2>
+
+      <p>Il valore di ciascun ROBI è direttamente collegato al Fondo Comune — il treasury di AIROOBI. Una quota fissa di ogni airdrop (il 22% del totale raccolto) confluisce automaticamente in questo fondo. Non è una donazione volontaria, non è discrezionale: è parte integrante del meccanismo economico della piattaforma.</p>
+
+      <p>Man mano che gli airdrop si moltiplicano e la base di utenti cresce, il Fondo Comune si espande. Ogni nuovo airdrop aggiunge liquidità al treasury. E poiché il numero di ROBI in circolazione cresce in modo controllato (solo uno per partecipante per airdrop completato), il rapporto treasury/ROBI tende a stabilizzarsi o a crescere nel tempo.</p>
+
+      <p>Il risultato è che i tuoi ROBI acquistati oggi — anzi, guadagnati oggi — potrebbero valere di più domani, non per magia, ma perché il sistema è progettato per sostenere questa crescita.</p>
+
+      <h2>Come si riscatta un ROBI</h2>
+
+      <p>Quando decidi di riscattare i tuoi ROBI, ricevi KAS — la criptovaluta nativa della blockchain Kaspa. Il processo è trasparente: il sistema calcola la quota del Fondo Comune che spetta al numero di ROBI che stai riscattando, e te la accredita in KAS.</p>
+
+      <p>Attenzione: il riscatto avviene in quantità intere. Non puoi riscattare mezzo ROBI. Questo è un dettaglio tecnico che mantiene la semplicità del sistema e ne garantisce la solidità contabile.</p>
+
+      <p>Una cosa importante: anche dopo il riscatto, il ROBI resta come NFT nel tuo portafoglio. Questo perché gli NFT servono anche da garanzia legale e documentale — è la forma con cui AIROOBI registra la storia delle tue partecipazioni e dei tuoi riscatti. Non scompare, resta come traccia permanente della tua attività sulla piattaforma.</p>
+
+      <h2>Perché il ROBI è diverso da qualsiasi altra cosa sul mercato</h2>
+
+      <p>La maggior parte dei token e degli NFT esistenti sono o strumenti speculativi puri — il cui valore dipende interamente da quanto qualcun altro è disposto a pagare — oppure semplici badge digitali senza alcuna utilità concreta.</p>
+
+      <p>ROBI è diverso per due motivi fondamentali. Primo: non si compra. Non puoi semplicemente andare su un exchange e acquistarlo. Devi guadagnartelo, partecipando attivamente alla piattaforma. Questo crea una correlazione diretta tra il valore che hai generato per il sistema e il reward che ricevi.</p>
+
+      <p>Secondo: il suo valore è ancorato a qualcosa di reale. Non a un'idea, non a una promessa generica, ma al Fondo Comune — un treasury concreto, misurabile, pubblicamente verificabile. Quando riscatti il tuo ROBI, non stai sperando che qualcuno lo compri da te: stai esercitando un diritto già garantito dal momento in cui quel ROBI è stato emesso.</p>
+
+      <h2>ROBI e la One Category Rule</h2>
+
+      <p>C'è un altro aspetto del sistema ROBI che vale la pena capire: la One Category Rule. Se ottieni l'oggetto in palio in una determinata categoria (per esempio, smartphone), non potrai più ottenere lo stesso tipo di oggetto in quella stessa categoria. Puoi continuare a partecipare ad altri airdrop, continuare ad accumulare ROBI, ma l'oggetto specifico di quella categoria non è più raggiungibile per te.</p>
+
+      <p>Questa regola garantisce la fairness assoluta del sistema. Ogni utente ha la sua opportunità, e una volta ottenuto ciò che desiderava, lascia spazio ad altri. Nel frattempo, i ROBI accumulati continuano a crescere di valore — c'è sempre un motivo per tornare su AIROOBI, anche dopo aver realizzato il tuo primo desiderio.</p>
+
+      <div class="cta-box">
+        <h2>Inizia a guadagnare i tuoi ROBI</h2>
+        <p>Partecipa agli airdrop, accumula Tessere Rendimento, riscatta in KAS. La tua partecipazione non va mai a vuoto.</p>
+        <a href="https://airoobi.app/signup.html" class="cta-btn">Crea il tuo account gratuito</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>
