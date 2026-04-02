@@ -112,6 +112,8 @@ async function getValidToken(){
 // ── Init ──
 document.addEventListener('DOMContentLoaded',async function(){
   if(!requireAuth())return;
+  // Show splash tour on first visit
+  if(!localStorage.getItem('airoobi_splash_done'))showSplash();
   // Refresh token if needed before anything
   var token=await getValidToken();
   if(!token)return;
@@ -2198,3 +2200,131 @@ async function loadDappArchive(){
     grid.innerHTML='<div class="past-empty">Errore caricamento</div>';
   }
 }
+
+// ══════════════════════════════════════════════════════════
+//  SPLASH TOUR
+// ══════════════════════════════════════════════════════════
+var _splashStep=0;
+var _splashTotal=5;
+
+function showSplash(){
+  var el=document.getElementById('splash-tour');
+  if(!el)return;
+  el.style.display='block';
+  _splashStep=0;
+  renderSplashStep();
+}
+
+function splashNav(dir){
+  _splashStep+=dir;
+  if(_splashStep>=_splashTotal){
+    closeSplash();
+    return;
+  }
+  if(_splashStep<0)_splashStep=0;
+  renderSplashStep();
+}
+
+function renderSplashStep(){
+  var slides=document.querySelectorAll('.splash-slide');
+  slides.forEach(function(s){s.style.display='none'});
+  var cur=document.querySelector('.splash-slide[data-step="'+_splashStep+'"]');
+  if(cur)cur.style.display='block';
+  // Dots
+  var dots=document.getElementById('splash-dots');
+  if(dots){
+    var html='';
+    for(var i=0;i<_splashTotal;i++){
+      html+='<div style="width:8px;height:8px;border-radius:50%;background:'+(i===_splashStep?'var(--gold)':'var(--gray-700)')+'"></div>';
+    }
+    dots.innerHTML=html;
+  }
+  // Buttons
+  var prev=document.getElementById('splash-prev');
+  var next=document.getElementById('splash-next');
+  if(prev)prev.style.display=_splashStep>0?'inline-block':'none';
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(next){
+    if(_splashStep===_splashTotal-1){
+      next.innerHTML=lang==='it'?'INIZIA →':'START →';
+    }else{
+      next.innerHTML=lang==='it'?'AVANTI →':'NEXT →';
+    }
+  }
+  // Show dismiss only on last step
+  var dw=document.getElementById('splash-dismiss-wrap');
+  if(dw)dw.style.display=_splashStep===_splashTotal-1?'flex':'none';
+}
+
+function closeSplash(){
+  var el=document.getElementById('splash-tour');
+  if(el)el.style.display='none';
+  var check=document.getElementById('splash-dismiss-check');
+  if(check&&check.checked){
+    localStorage.setItem('airoobi_splash_done','1');
+  }
+}
+
+// Reopen splash from Learn
+function reopenSplash(){
+  localStorage.removeItem('airoobi_splash_done');
+  showSplash();
+}
+
+// ══════════════════════════════════════════════════════════
+//  INFO TOOLTIPS
+// ══════════════════════════════════════════════════════════
+var INFO_TIPS={
+  'aria-balance':{
+    it:'Il tuo saldo ARIA. Varranno €0,10 ciascuno al lancio. Ora siamo in fase testnet: li ricevi gratis dal faucet (100/gg) e dal check-in (50/gg). Li usi per acquistare blocchi negli airdrop.',
+    en:'Your ARIA balance. Worth €0.10 each at launch. We\'re in testnet: get them free from the faucet (100/day) and check-in (50/day). Use them to buy blocks in airdrops.'
+  },
+  'robi-balance':{
+    it:'I tuoi ROBI — il vero guadagno di AIROOBI. Li ottieni partecipando agli airdrop. Hanno valore reale, crescono nel tempo e saranno riscuotibili in KAS.',
+    en:'Your ROBI — AIROOBI\'s real reward. Earned by participating in airdrops. They have real value, grow over time, and will be redeemable for KAS.'
+  },
+  'kas-potential':{
+    it:'Il potenziale in KAS (Kaspa) dei tuoi ROBI al prezzo attuale. Questo è quanto riceveresti se riscuotessi ora. Il valore reale potrebbe essere diverso al momento della riscossione.',
+    en:'The potential KAS (Kaspa) value of your ROBI at the current price. This is what you\'d receive if you redeemed now. Actual value may differ at redemption time.'
+  },
+  'portfolio':{
+    it:'L\'andamento del tuo portafoglio negli ultimi 30 giorni. Blu = ARIA accumulati. Gold = valore ROBI in EUR. Verde = equivalente in KAS. Il valore in alto è il potenziale totale: ARIA×€0,10 + valore ROBI.',
+    en:'Your portfolio trend over the last 30 days. Blue = ARIA accumulated. Gold = ROBI value in EUR. Green = KAS equivalent. The top value is the total potential: ARIA×€0.10 + ROBI value.'
+  },
+  'faucet':{
+    it:'Il faucet ti dà 100 ARIA gratis ogni giorno. Si resetta a mezzanotte UTC. In futuro la quantità diminuirà progressivamente — approfittane ora.',
+    en:'The faucet gives you 100 free ARIA every day. Resets at midnight UTC. The amount will decrease over time — take advantage now.'
+  }
+};
+
+function showInfoTip(el,key){
+  var tip=document.getElementById('info-tooltip');
+  var text=document.getElementById('info-tooltip-text');
+  if(!tip||!text)return;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var info=INFO_TIPS[key];
+  if(!info)return;
+  text.textContent=info[lang]||info.it;
+  tip.style.display='block';
+  // Position near the clicked element
+  var rect=el.getBoundingClientRect();
+  var tipW=280;
+  var left=Math.min(rect.left,window.innerWidth-tipW-16);
+  left=Math.max(8,left);
+  var top=rect.bottom+8;
+  if(top+200>window.innerHeight)top=rect.top-200;
+  tip.style.left=left+'px';
+  tip.style.top=top+'px';
+}
+
+function closeInfoTip(){
+  var tip=document.getElementById('info-tooltip');
+  if(tip)tip.style.display='none';
+}
+
+// Close tooltip on outside click
+document.addEventListener('click',function(e){
+  if(!e.target.classList.contains('info-i')&&!e.target.closest('#info-tooltip')){
+    closeInfoTip();
+  }
+});

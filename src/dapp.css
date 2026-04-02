@@ -537,3 +537,6 @@ input{font-family:inherit}
 .past-empty{text-align:center;color:var(--gray-400);font-size:14px;padding:48px 0}
 @media(max-width:768px){.past-grid{grid-template-columns:1fr 1fr;gap:12px}.past-card-img{height:140px}.past-card-body{padding:12px 14px 16px}.past-card-title{font-size:15px}}
 @media(max-width:480px){.past-grid{grid-template-columns:1fr}.past-card-img{height:180px}}
+/* Info tooltips */
+.info-i{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--gray-600);font-family:var(--font-m);font-size:9px;color:var(--gray-500);cursor:pointer;vertical-align:middle;margin-left:4px;transition:all .2s;line-height:1;user-select:none}
+.info-i:hover{border-color:var(--gold);color:var(--gold)}

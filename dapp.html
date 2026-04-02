@@ -143,16 +143,16 @@
     <div class="dash-stats">
       <div class="dash-stat">
         <div class="dash-stat-val blue" id="home-aria">0</div>
-        <div class="dash-stat-label"><span class="it">Saldo ARIA</span><span class="en">ARIA Balance</span></div>
+        <div class="dash-stat-label"><span class="it">Saldo ARIA</span><span class="en">ARIA Balance</span> <span class="info-i" onclick="showInfoTip(this,'aria-balance')">i</span></div>
         <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(74,158,255,.4);margin-top:2px">TESTNET</div>
       </div>
       <div class="dash-stat">
         <div class="dash-stat-val" id="home-robi" style="color:var(--gold)">0</div>
-        <div class="dash-stat-label"><span class="it">Saldo ROBI</span><span class="en">ROBI Balance</span></div>
+        <div class="dash-stat-label"><span class="it">Saldo ROBI</span><span class="en">ROBI Balance</span> <span class="info-i" onclick="showInfoTip(this,'robi-balance')">i</span></div>
       </div>
       <div class="dash-stat">
         <div class="dash-stat-val" id="home-kas" style="color:var(--kas)">—</div>
-        <div class="dash-stat-label"><span class="it">KAS potenziale</span><span class="en">Potential KAS</span></div>
+        <div class="dash-stat-label"><span class="it">KAS potenziale</span><span class="en">Potential KAS</span> <span class="info-i" onclick="showInfoTip(this,'kas-potential')">i</span></div>
       </div>
     </div>
 
@@ -160,7 +160,7 @@
     <div class="dash-section" id="faucet-section">
       <div class="dash-faucet-card">
         <div class="dash-faucet-info">
-          <div class="dash-faucet-title"><span class="it">Faucet ARIA</span><span class="en">ARIA Faucet</span></div>
+          <div class="dash-faucet-title"><span class="it">Faucet ARIA</span><span class="en">ARIA Faucet</span> <span class="info-i" onclick="showInfoTip(this,'faucet')">i</span></div>
           <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> ogni giorno (fase testnet)</span><span class="en">Get <strong>100 ARIA</strong> every day (testnet phase)</span></div>
         </div>
         <button id="faucet-btn" onclick="claimFaucet()" class="dash-faucet-btn"><span class="it">RICEVI</span><span class="en">GET</span></button>
@@ -171,7 +171,7 @@
     <!-- PORTAFOGLIO CHART -->
     <div class="dash-section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="dash-section-title" style="margin:0"><span class="it">Portafoglio</span><span class="en">Portfolio</span></div>
+        <div class="dash-section-title" style="margin:0"><span class="it">Portafoglio</span><span class="en">Portfolio</span> <span class="info-i" onclick="showInfoTip(this,'portfolio')">i</span></div>
         <div id="portfolio-eur-val" style="font-family:var(--font-h);font-size:clamp(18px,3vw,24px);font-weight:300;color:var(--white)">—</div>
       </div>
       <div style="position:relative;width:100%;height:160px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);overflow:hidden;background:rgba(255,255,255,.01)">
@@ -692,6 +692,16 @@
       <p style="font-size:13px;color:var(--gray-400);margin:0"><span class="it">Scopri come funzionano ARIA, ROBI e il motore airdrop.</span><span class="en">Learn how ARIA, ROBI and the airdrop engine work.</span></p>
     </div>
 
+    <!-- Tour App -->
+    <div style="max-width:800px;margin:0 auto 48px;text-align:center">
+      <div style="padding:32px;border:1px solid var(--gold);border-radius:var(--radius-sm);background:rgba(184,150,12,.03)">
+        <div style="font-size:36px;margin-bottom:12px">&#9654;</div>
+        <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--gold);margin:0 0 8px"><span class="it">Tour dell'app</span><span class="en">App tour</span></h3>
+        <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">Rivedi come funziona AIROOBI in 30 secondi. ARIA, blocchi, ROBI e KAS spiegati semplice.</span><span class="en">Review how AIROOBI works in 30 seconds. ARIA, blocks, ROBI and KAS explained simply.</span></p>
+        <button onclick="reopenSplash()" style="padding:12px 32px;background:var(--gold);border:none;color:var(--black);font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700"><span class="it">RIVEDI IL TOUR</span><span class="en">REPLAY TOUR</span></button>
+      </div>
+    </div>
+
     <!-- Lezione 1: Cosa sono ARIA, ROBI e KAS -->
     <div style="max-width:800px;margin:0 auto 48px">
       <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 1</span><span class="en">Lesson 1</span></div>
@@ -901,6 +911,75 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
   <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.02-1.62.0</div>
+</div>
+
+<!-- ═══ SPLASH TOUR ═══ -->
+<div id="splash-tour" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.95);overflow-y:auto;-webkit-overflow-scrolling:touch">
+  <div style="max-width:480px;margin:0 auto;padding:40px 24px 60px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
+    <!-- Step indicators -->
+    <div id="splash-dots" style="display:flex;justify-content:center;gap:8px;margin-bottom:32px"></div>
+
+    <!-- Slides container -->
+    <div id="splash-slides" style="position:relative;overflow:hidden">
+      <!-- Slide 1: Welcome -->
+      <div class="splash-slide" data-step="0" style="text-align:center">
+        <div style="font-family:var(--font-h);font-size:42px;font-weight:300;letter-spacing:6px;color:var(--white);margin-bottom:8px">AIR<span style="color:var(--gold)">OO</span>BI</div>
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:32px">AIRDROP MARKETPLACE</div>
+        <h2 style="font-family:var(--font-h);font-size:clamp(22px,5vw,32px);font-weight:300;color:var(--white);line-height:1.3;margin-bottom:16px"><span class="it">Oggetti di valore.<br><em style="color:var(--gold)">A un prezzo incredibile.</em></span><span class="en">Valuable items.<br><em style="color:var(--gold)">At an incredible price.</em></span></h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.7"><span class="it">Benvenuto su AIROOBI. Ti spieghiamo tutto in 30 secondi.</span><span class="en">Welcome to AIROOBI. We'll explain everything in 30 seconds.</span></p>
+      </div>
+
+      <!-- Slide 2: ARIA -->
+      <div class="splash-slide" data-step="1" style="display:none;text-align:center">
+        <div style="width:64px;height:64px;border-radius:50%;border:2px solid var(--aria);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:24px;color:var(--aria);margin:0 auto 20px">A</div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--aria);margin-bottom:12px">ARIA</h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.8;margin-bottom:16px"><span class="it">Ogni giorno ricevi <strong style="color:var(--white)">ARIA gratis</strong> dal faucet e dal check-in. Sono la valuta di AIROOBI — varranno <strong style="color:var(--aria)">€0,10</strong> ciascuno.</span><span class="en">Every day you get <strong style="color:var(--white)">free ARIA</strong> from the faucet and check-in. They're AIROOBI's currency — worth <strong style="color:var(--aria)">€0.10</strong> each.</span></p>
+        <div style="font-family:var(--font-m);font-size:12px;color:var(--gray-500);letter-spacing:1px"><span class="it">Faucet: +100/gg · Check-in: +50/gg</span><span class="en">Faucet: +100/day · Check-in: +50/day</span></div>
+      </div>
+
+      <!-- Slide 3: Blocchi -->
+      <div class="splash-slide" data-step="2" style="display:none;text-align:center">
+        <div style="font-size:48px;margin-bottom:20px">&#9638;</div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--white);margin-bottom:12px"><span class="it">Blocchi di opportunità</span><span class="en">Opportunity blocks</span></h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.8"><span class="it">Usi i tuoi ARIA per acquistare <strong style="color:var(--white)">blocchi</strong>. Ogni blocco ti avvicina all'oggetto. Più blocchi hai, più sei in cima.</span><span class="en">Use your ARIA to buy <strong style="color:var(--white)">blocks</strong>. Each block brings you closer to the item. More blocks = higher position.</span></p>
+      </div>
+
+      <!-- Slide 4: ROBI -->
+      <div class="splash-slide" data-step="3" style="display:none;text-align:center">
+        <div style="width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:24px;color:var(--gold);margin:0 auto 20px">R</div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--gold);margin-bottom:12px">ROBI</h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.8"><span class="it"><strong style="color:var(--gold)">Il tuo vero guadagno.</strong> Partecipando agli airdrop accumuli ROBI — hanno valore reale e crescono nel tempo. Non si comprano, si guadagnano.</span><span class="en"><strong style="color:var(--gold)">Your real reward.</strong> By joining airdrops you accumulate ROBI — they have real value and grow over time. You can't buy them, you earn them.</span></p>
+      </div>
+
+      <!-- Slide 5: Il flusso -->
+      <div class="splash-slide" data-step="4" style="display:none;text-align:center">
+        <div style="font-family:var(--font-m);font-size:16px;letter-spacing:2px;color:var(--gray-400);margin-bottom:24px">
+          <span style="color:var(--aria)">ARIA</span> → <span style="color:var(--white)">BLOCCHI</span> → <span style="color:var(--gold)">ROBI</span> → <span style="color:var(--kas)">KAS</span>
+        </div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--white);margin-bottom:12px"><span class="it">Semplice.</span><span class="en">Simple.</span></h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.8"><span class="it">Ricevi ARIA gratis → li usi per comprare blocchi → partecipi agli airdrop → guadagni ROBI → li riscuoti in KAS (crypto reale).</span><span class="en">Get free ARIA → buy blocks → join airdrops → earn ROBI → redeem for KAS (real crypto).</span></p>
+        <div style="margin-top:20px;font-family:var(--font-m);font-size:11px;color:var(--kas);letter-spacing:1px"><span class="it">Più partecipi, più guadagni. Sempre.</span><span class="en">The more you participate, the more you earn. Always.</span></div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div style="margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:16px">
+      <div style="display:flex;gap:12px">
+        <button id="splash-prev" onclick="splashNav(-1)" style="display:none;padding:10px 24px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer">← <span class="it">INDIETRO</span><span class="en">BACK</span></button>
+        <button id="splash-next" onclick="splashNav(1)" style="padding:10px 32px;background:var(--gold);border:none;color:var(--black);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">AVANTI →</span><span class="en">NEXT →</span></button>
+      </div>
+      <label id="splash-dismiss-wrap" style="display:none;cursor:pointer;font-family:var(--font-m);font-size:11px;color:var(--gray-500);letter-spacing:.5px;display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="splash-dismiss-check" style="accent-color:var(--gold)">
+        <span class="it">Ho capito, non ricordarmelo più</span><span class="en">Got it, don't remind me again</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INFO TOOLTIP ═══ -->
+<div id="info-tooltip" style="display:none;position:fixed;z-index:9998;max-width:280px;padding:14px 18px;background:var(--black);border:1px solid var(--gold);border-radius:var(--radius-sm);font-size:12px;color:var(--gray-300);line-height:1.6;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+  <div id="info-tooltip-text"></div>
+  <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
 <script src="/src/dapp.js"></script>
