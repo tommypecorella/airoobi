@@ -607,18 +607,18 @@ function dappShareRef(platform){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var msgs={
     it:{
-      whatsapp:'Ho trovato *AIROOBI*.\n\nOggetti di valore — iPhone, orologi, borse — e blocchi di opportunità per portarseli a casa a un prezzo che non crederesti.\n\nEntri gratis, ogni giorno accumuli punti, e con quelli partecipi. Semplice.\n\nProva col mio codice *'+refCode+'*\n',
-      telegram:'Ho trovato AIROOBI.\n\nOggetti di valore — iPhone, orologi, borse — e blocchi di opportunità per portarseli a casa a un prezzo che non crederesti.\n\nEntri gratis, ogni giorno accumuli punti, e con quelli partecipi. Semplice.\n\nProva col mio codice '+refCode+'\n',
-      x:'Oggetti di valore. Blocchi di opportunità. Prezzi che non crederesti.\n\nEntri gratis, accumuli punti ogni giorno e partecipi. Semplice.\n\n@airoobi_com · codice: '+refCode+' ',
+      whatsapp:'Ho trovato *AIROOBI*.\n\nOggetti di valore — iPhone, orologi, borse — e blocchi di opportunità per portarseli a casa a un prezzo che non crederesti.\n\nEntri gratis, ogni giorno ricevi ARIA e con quelli acquisti i blocchi. Semplice.\n\nProva col mio codice *'+refCode+'*\n',
+      telegram:'Ho trovato AIROOBI.\n\nOggetti di valore — iPhone, orologi, borse — e blocchi di opportunità per portarseli a casa a un prezzo che non crederesti.\n\nEntri gratis, ogni giorno ricevi ARIA e con quelli acquisti i blocchi. Semplice.\n\nProva col mio codice '+refCode+'\n',
+      x:'Oggetti di valore. Blocchi di opportunità. Prezzi che non crederesti.\n\nEntri gratis, ricevi ARIA ogni giorno e partecipi. Semplice.\n\n@airoobi_com · codice: '+refCode+' ',
       email_subject:'Devi vedere AIROOBI',
-      email_body:'Ciao,\n\nti giro una cosa che ho trovato: AIROOBI.\n\nFunziona così: ci sono oggetti di valore (iPhone, orologi, borse). Tu entri gratis, ogni giorno accumuli punti, e con quelli acquisti blocchi di opportunità per portarti a casa l\'oggetto che vuoi.\n\nPiù blocchi prendi, più sei vicino. E chi non porta a casa l\'oggetto guadagna comunque qualcosa di reale.\n\nProva col mio codice '+refCode+'\n\n'+link
+      email_body:'Ciao,\n\nti giro una cosa che ho trovato: AIROOBI.\n\nFunziona così: ci sono oggetti di valore (iPhone, orologi, borse). Tu entri gratis, ogni giorno ricevi ARIA, e con quelli acquisti blocchi di opportunità per portarti a casa l\'oggetto che vuoi.\n\nPiù blocchi prendi, più sei vicino. E chi non porta a casa l\'oggetto guadagna comunque qualcosa di reale.\n\nProva col mio codice '+refCode+'\n\n'+link
     },
     en:{
-      whatsapp:'I found *AIROOBI*.\n\nValuable items — iPhones, watches, bags — and opportunity blocks to take them home at a price you wouldn\'t believe.\n\nJoin for free, earn points daily, use them to participate. Simple.\n\nTry it with my code *'+refCode+'*\n',
-      telegram:'I found AIROOBI.\n\nValuable items — iPhones, watches, bags — and opportunity blocks to take them home at a price you wouldn\'t believe.\n\nJoin for free, earn points daily, use them to participate. Simple.\n\nTry it with my code '+refCode+'\n',
-      x:'Valuable items. Opportunity blocks. Prices you won\'t believe.\n\nJoin free, earn points daily, participate. Simple.\n\n@airoobi_com · code: '+refCode+' ',
+      whatsapp:'I found *AIROOBI*.\n\nValuable items — iPhones, watches, bags — and opportunity blocks to take them home at a price you wouldn\'t believe.\n\nJoin for free, get ARIA every day and use them to buy blocks. Simple.\n\nTry it with my code *'+refCode+'*\n',
+      telegram:'I found AIROOBI.\n\nValuable items — iPhones, watches, bags — and opportunity blocks to take them home at a price you wouldn\'t believe.\n\nJoin for free, get ARIA every day and use them to buy blocks. Simple.\n\nTry it with my code '+refCode+'\n',
+      x:'Valuable items. Opportunity blocks. Prices you won\'t believe.\n\nJoin free, get ARIA daily and participate. Simple.\n\n@airoobi_com · code: '+refCode+' ',
       email_subject:'You need to see AIROOBI',
-      email_body:'Hey,\n\nsharing something I found: AIROOBI.\n\nHere\'s how it works: there are valuable items (iPhones, watches, bags). You join for free, earn points every day, and use them to buy opportunity blocks to take home the item you want.\n\nMore blocks you get, the closer you are. And those who don\'t take home the item still earn something real.\n\nTry it with my code '+refCode+'\n\n'+link
+      email_body:'Hey,\n\nsharing something I found: AIROOBI.\n\nHere\'s how it works: there are valuable items (iPhones, watches, bags). You join for free, get ARIA every day, and use them to buy opportunity blocks to take home the item you want.\n\nMore blocks you get, the closer you are. And those who don\'t take home the item still earn something real.\n\nTry it with my code '+refCode+'\n\n'+link
     }
   };
   var m=msgs[lang]||msgs.it;
