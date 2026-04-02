@@ -607,18 +607,18 @@ function dappShareRef(platform){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var msgs={
     it:{
-      whatsapp:'*AIROOBI* — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Accumula ARIA ogni giorno (testnet, varrà €0,10) e partecipa agli airdrop. Più partecipi, più ROBI guadagni.\n\nRegistrati col mio link e inserisci il codice amico *'+refCode+'*.\n\nAlpha Brave: solo 1.000 posti.\n',
-      telegram:'AIROOBI — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Accumula ARIA ogni giorno (testnet, varrà €0,10) e partecipa agli airdrop. Più partecipi, più ROBI guadagni.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+'.\n\nAlpha Brave: solo 1.000 posti.\n',
-      x:'Realizza il tuo desiderio su @airoobi_com\n\nOggetti reali di valore, a un prezzo ridicolo. ARIA gratis ogni giorno (testnet, varrà €0,10).\n\nCodice amico: '+refCode+'. Alpha Brave: 1.000 posti. ',
-      email_subject:'AIROOBI — Realizza il tuo desiderio.',
-      email_body:'Ciao,\n\nsono entrato in AIROOBI e volevo portarti dentro. Oggetti reali di valore, a un prezzo ridicolo. Accumula ARIA ogni giorno (testnet, varrà €0,10) e partecipa agli airdrop. Più partecipi, più ROBI guadagni.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+'.\n\nAlpha Brave: solo 1.000 posti.\n\n'+link
+      whatsapp:'Sai cos\'è *AIROOBI*?\n\nUn iPhone da €1.200... qualcuno lo porterà a casa a meno di €50. Gratis da provare.\n\nIscriviti col mio codice *'+refCode+'* e ricevi subito ARIA gratis.\n',
+      telegram:'Sai cos\'è AIROOBI?\n\nUn iPhone da €1.200... qualcuno lo porterà a casa a meno di €50. Gratis da provare.\n\nIscriviti col mio codice '+refCode+' e ricevi subito ARIA gratis.\n',
+      x:'Un iPhone da €1.200... qualcuno lo porterà a casa a meno di €50.\n\nNon è una lotteria. Non è un\'asta. È @airoobi_com\n\nCodice: '+refCode+' ',
+      email_subject:'Hai visto AIROOBI?',
+      email_body:'Ciao,\n\nho scoperto una cosa interessante: su AIROOBI puoi portarti a casa oggetti di valore (tipo iPhone, orologi, borse) a prezzi assurdi.\n\nNon è una lotteria e non devi comprare niente — entri gratis, accumuli punti ogni giorno e partecipi.\n\nIscriviti col mio codice '+refCode+' e ricevi subito ARIA gratis per iniziare.\n\n'+link
     },
     en:{
-      whatsapp:'*AIROOBI* — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Accumulate ARIA every day (testnet, worth €0.10 at mainnet) and join airdrops. The more you join, the more ROBI you earn.\n\nSign up with my link and enter friend code *'+refCode+'*.\n\nAlpha Brave: only 1,000 spots.\n',
-      telegram:'AIROOBI — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Accumulate ARIA every day (testnet, worth €0.10 at mainnet) and join airdrops. The more you join, the more ROBI you earn.\n\nSign up with my link and enter friend code '+refCode+'.\n\nAlpha Brave: only 1,000 spots.\n',
-      x:'Make your desire real on @airoobi_com\n\nReal valuable objects, unbelievable prices. Free ARIA daily (testnet, €0.10 at mainnet).\n\nFriend code: '+refCode+'. Alpha Brave: 1,000 spots. ',
-      email_subject:'AIROOBI — Make your desire real.',
-      email_body:'Hey,\n\nI joined AIROOBI and wanted to bring you in. Real valuable objects, at an unbelievable price. Accumulate ARIA every day (testnet, worth €0.10 at mainnet) and join airdrops. The more you join, the more ROBI you earn.\n\nSign up with my link and enter friend code '+refCode+'.\n\nAlpha Brave: only 1,000 spots.\n\n'+link
+      whatsapp:'Ever heard of *AIROOBI*?\n\nA €1,200 iPhone... someone will take it home for under €50. Free to try.\n\nSign up with my code *'+refCode+'* and get free ARIA instantly.\n',
+      telegram:'Ever heard of AIROOBI?\n\nA €1,200 iPhone... someone will take it home for under €50. Free to try.\n\nSign up with my code '+refCode+' and get free ARIA instantly.\n',
+      x:'A €1,200 iPhone... someone will take it home for under €50.\n\nNot a lottery. Not an auction. It\'s @airoobi_com\n\nCode: '+refCode+' ',
+      email_subject:'Have you seen AIROOBI?',
+      email_body:'Hey,\n\nI found something interesting: on AIROOBI you can get valuable items (iPhones, watches, bags) at crazy low prices.\n\nIt\'s not a lottery and you don\'t have to buy anything — join for free, earn points daily and participate.\n\nSign up with my code '+refCode+' and get free ARIA to start.\n\n'+link
     }
   };
   var m=msgs[lang]||msgs.it;
