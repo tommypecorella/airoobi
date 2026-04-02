@@ -1062,7 +1062,7 @@ async function loadAdminData(){
     // Load ROBI via SECURITY DEFINER RPC (bypassa RLS)
     var robiData=[];
     try{
-      var robiRes=await fetch(SB_URL+'/rest/v1/rpc/debug_robi_check',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+t,'Content-Type':'application/json'}});
+      var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+t,'Content-Type':'application/json'}});
       if(robiRes.ok)robiData=await robiRes.json();
     }catch(e){}
     var robiMap={};
