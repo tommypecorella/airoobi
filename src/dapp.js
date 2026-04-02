@@ -213,6 +213,17 @@ async function loadHomeDashboard(){
   var elEn=document.getElementById('home-user-name-en');
   if(elIt)elIt.textContent=name;
   if(elEn)elEn.textContent=name;
+  // Registration date
+  try{
+    var prof=await sbGet('profiles?id=eq.'+_session.user.id+'&select=created_at',token);
+    if(prof&&prof[0]&&prof[0].created_at){
+      var rd=new Date(prof[0].created_at);
+      var rdIt=document.getElementById('home-reg-date');
+      var rdEn=document.getElementById('home-reg-date-en');
+      if(rdIt)rdIt.textContent=rd.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+      if(rdEn)rdEn.textContent=rd.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+    }
+  }catch(e){}
   // ARIA balance
   document.getElementById('home-aria').innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
   // ROBI count (nft_type = ROBI or NFT_REWARD)
