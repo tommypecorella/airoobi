@@ -204,7 +204,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">Dashboard</span>
     <div class="admin-sidebar-item active" onclick="adminNav('sec-overview')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-treasury')"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Treasury</div>
   </div>
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">Utenti</span>
@@ -217,11 +216,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-analysis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Analysis</div>
   </div>
   <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label">NFT &amp; Tokenomics</span>
+    <span class="admin-sidebar-label">Tokenomics</span>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-treasury')"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Treasury</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-coin')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg>ARIA Metrics</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-nft-tracker')"><svg viewBox="0 0 24 24"><path d="M9 5H2v7l6.29 6.29a1 1 0 001.42 0l5.58-5.58a1 1 0 000-1.42L9 5z"/><circle cx="6" cy="9" r="1"/></svg>NFT Tracker</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-nft-econ')"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>NFT Economics</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-nft-valuation')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Valuation</div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-nft-valuation')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>ROBI Valuation</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-nft-types')"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 12h16M12 4v16"/></svg>NFT per tipo</div>
   </div>
   <div class="admin-sidebar-group">
@@ -339,56 +337,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <div class="admin-card"><div class="admin-card-val blue" id="adm-coin-faucet-today">—</div><div class="admin-card-label">Faucet claims oggi</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-coin-nft-ratio">—</div><div class="admin-card-label">ARIA per ROBI (ratio)</div></div>
     </div>
-  </div>
-
-  <!-- NFT TRACKER -->
-  <div class="admin-section" id="sec-nft-tracker">
-    <h2>NFT Tracker</h2>
-    <div class="admin-grid">
-      <div class="admin-card" style="border-color:rgba(184,150,12,.3)"><div class="admin-card-val" style="color:var(--gold)" id="adm-nft-robi-count">—</div><div class="admin-card-label">ROBI (emessi)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-brave-count">—</div><div class="admin-card-label">Badge Alpha Brave</div></div>
-    </div>
-    <p class="admin-note">ROBI = valore reale (riscuotibile in KAS). Badge = raccolta, nessun valore monetario. Collegamento a Kaspa al mainnet.</p>
-  </div>
-
-  <!-- ROBI ECONOMICS -->
-  <div class="admin-section" id="sec-nft-econ">
-    <h2>ROBI Economics</h2>
-    <div class="admin-grid">
-      <div class="admin-card"><div class="admin-card-val" id="adm-treasury-val">—</div><div class="admin-card-label">Treasury (€)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-minted">—</div><div class="admin-card-label">ROBI emessi</div></div>
-      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" style="color:var(--gold)" id="adm-nft-value">—</div><div class="admin-card-label" style="color:var(--gold)">Valore ROBI stimato</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-marketcap">—</div><div class="admin-card-label">Market Cap (circolante)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating">—</div><div class="admin-card-label">ROBI circolanti</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-fully-diluted">—</div><div class="admin-card-label">Fully Diluted (1.000 ROBI)</div></div>
-    </div>
-    <div style="margin-top:24px;padding:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
-      <h3 style="font-family:var(--font-h);font-size:16px;color:var(--gold);margin-bottom:16px;letter-spacing:1px">Aggiorna Parametri</h3>
-      <div class="admin-param-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
-        <div>
-          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">TREASURY (€)</label>
-          <input type="number" id="adm-input-treasury" placeholder="0.00" step="0.01" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
-        </div>
-        <div>
-          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">ROBI EMESSI</label>
-          <input type="number" id="adm-input-minted" placeholder="0" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
-        </div>
-        <div>
-          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">ROBI CIRCOLANTI <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
-          <div style="display:flex;align-items:center;gap:6px">
-            <input type="number" id="adm-input-circulating" placeholder="0" readonly style="flex:1;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);font-family:var(--font-m);font-size:13px;padding:10px 12px;cursor:not-allowed">
-            <button onclick="refreshNftCircolante()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 10px;cursor:pointer;font-size:14px;transition:all .3s;flex-shrink:0" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'" title="Refresh">&#8635;</button>
-          </div>
-          <div id="adm-nft-updated" style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px"></div>
-        </div>
-        <div>
-          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">MAX SUPPLY</label>
-          <input type="number" id="adm-input-maxsupply" value="1000" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
-        </div>
-      </div>
-      <button onclick="updateNftMetrics();saveAdminTokenomics()" style="background:var(--gold);color:#000;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:10px 24px;border:none;cursor:pointer">CALCOLA &amp; SALVA</button>
-    </div>
-    <p class="admin-note" style="margin-top:12px">Logica: <strong>Valore ROBI = Treasury ÷ ROBI emessi</strong> · <strong>Market Cap = Valore ROBI × Circolanti</strong> · <strong>Fully Diluted = Valore ROBI × Max Supply</strong></p>
   </div>
 
   <!-- ROBI VALUATION & TOKENOMICS -->
