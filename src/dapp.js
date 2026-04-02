@@ -215,12 +215,12 @@ async function loadHomeDashboard(){
   if(elEn)elEn.textContent=name;
   // ARIA balance
   document.getElementById('home-aria').innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
-  // ROBI count (nft_rewards with nft_type REWARD)
+  // ROBI count (nft_type = ROBI or NFT_REWARD)
   try{
-    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&select=id,shares,nft_type',token);
+    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&nft_type=in.(ROBI,NFT_REWARD)&select=id,shares',token);
     var robiCount=0;
     if(nfts)for(var ni=0;ni<nfts.length;ni++){
-      if(nfts[ni].nft_type==='REWARD')robiCount+=parseFloat(nfts[ni].shares)||1;
+      robiCount+=parseFloat(nfts[ni].shares)||1;
     }
     document.getElementById('home-robi').textContent=robiCount%1===0?robiCount:robiCount.toFixed(2);
   }catch(e){document.getElementById('home-robi').textContent='0'}

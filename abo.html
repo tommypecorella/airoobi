@@ -1060,9 +1060,14 @@ async function loadAdminData(){
     var withAvatar=users?users.filter(function(u){return !!u.avatar_url}).length:0;
     document.getElementById('adm-avatars').textContent=withAvatar+'/'+userCount;
     try{
-      var nfts=await sbGet('nft_rewards?select=id,nft_type',t);
-      var earnCount=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}).length:0;
-      document.getElementById('adm-nft-circulating-ov').textContent=earnCount;
+      // ROBI = nft_type ROBI or NFT_REWARD, escludi utenti test pool
+      var testUserIds=allProfiles?allProfiles.filter(function(u){return u.is_test_user}).map(function(u){return u.id}):[];
+      var nfts=await sbGet('nft_rewards?select=id,nft_type,shares,user_id&nft_type=in.(ROBI,NFT_REWARD)',t);
+      var robiCount=0;
+      if(nfts)nfts.forEach(function(n){
+        if(testUserIds.indexOf(n.user_id)===-1) robiCount+=parseFloat(n.shares)||1;
+      });
+      document.getElementById('adm-nft-circulating-ov').textContent=robiCount%1===0?robiCount:robiCount.toFixed(2);
     }catch(e){document.getElementById('adm-nft-circulating-ov').textContent='—';}
     if(users&&users.length>0){
       var tbody=document.getElementById('adm-users-body');
