@@ -1059,20 +1059,23 @@ async function loadAdminData(){
     document.getElementById('adm-referrals').textContent=refs?refs.length:0;
     var withAvatar=users?users.filter(function(u){return !!u.avatar_url}).length:0;
     document.getElementById('adm-avatars').textContent=withAvatar+'/'+userCount;
+    // Load ROBI via SECURITY DEFINER RPC (bypassa RLS)
+    var robiData=[];
     try{
-      // ROBI = nft_type ROBI or NFT_REWARD, escludi utenti test pool
-      var testUserIds=allProfiles?allProfiles.filter(function(u){return u.is_test_user}).map(function(u){return u.id}):[];
-      var nfts=await sbGet('nft_rewards?select=id,nft_type,shares,user_id&nft_type=in.(ROBI,NFT_REWARD)',t);
-      var robiCount=0;
-      if(nfts)nfts.forEach(function(n){
-        if(testUserIds.indexOf(n.user_id)===-1) robiCount+=parseFloat(n.shares)||1;
-      });
-      document.getElementById('adm-nft-circulating-ov').textContent=robiCount%1===0?robiCount:robiCount.toFixed(2);
-    }catch(e){document.getElementById('adm-nft-circulating-ov').textContent='—';}
+      var robiRes=await fetch(SB_URL+'/rest/v1/rpc/debug_robi_check',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+t,'Content-Type':'application/json'}});
+      if(robiRes.ok)robiData=await robiRes.json();
+    }catch(e){}
+    var robiMap={};
+    var robiTotal=0;
+    robiData.forEach(function(r){
+      if(r.shares){
+        var s=parseFloat(r.shares)||0;
+        robiMap[r.user_id]=(robiMap[r.user_id]||0)+s;
+        robiTotal+=s;
+      }
+    });
+    document.getElementById('adm-nft-circulating-ov').textContent=robiTotal%1===0?robiTotal:robiTotal.toFixed(2);
     if(users&&users.length>0){
-      // Build ROBI map per user
-      var robiMap={};
-      if(nfts)nfts.forEach(function(n){robiMap[n.user_id]=(robiMap[n.user_id]||0)+(parseFloat(n.shares)||1);});
       var tbody=document.getElementById('adm-users-body');
       tbody.innerHTML=users.slice(0,50).map(function(u){
         var d=new Date(u.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
