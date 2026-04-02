@@ -124,20 +124,17 @@
 
   <!-- ═══ HOME DASHBOARD ═══ -->
   <div id="tab-home" class="dash-home" style="display:none">
-    <div class="dash-welcome"><span class="it">Ciao, <em id="home-user-name">—</em></span><span class="en">Hi, <em id="home-user-name-en">—</em></span><span class="dash-testnet-badge">testnet</span></div>
+    <div class="dash-welcome"><span class="it">Ciao, <em id="home-user-name">—</em></span><span class="en">Hi, <em id="home-user-name-en">—</em></span><span class="dash-alpha-badge">alpha</span></div>
 
+    <!-- SALDO + STATS compatti -->
     <div class="dash-stats">
       <div class="dash-stat">
         <div class="dash-stat-val blue" id="home-aria">0</div>
-        <div class="dash-stat-label">ARIA</div>
+        <div class="dash-stat-label"><span class="it">Saldo ARIA</span><span class="en">ARIA Balance</span></div>
       </div>
       <div class="dash-stat">
         <div class="dash-stat-val" id="home-nft">0</div>
-        <div class="dash-stat-label">NFT</div>
-      </div>
-      <div class="dash-stat">
-        <div class="dash-stat-val green" id="home-kas">0</div>
-        <div class="dash-stat-label">KAS (testnet)</div>
+        <div class="dash-stat-label"><span class="it">Tessere</span><span class="en">Cards</span></div>
       </div>
       <div class="dash-stat">
         <div class="dash-stat-val" id="home-airdrops">0</div>
@@ -145,64 +142,61 @@
       </div>
     </div>
 
-    <div class="dash-section">
-      <div class="dash-section-title"><span class="it">Guadagni Testnet</span><span class="en">Testnet Earnings</span></div>
-      <div class="dash-activity" id="home-earnings">
-        <div class="dash-activity-row"><span><span class="it">Login giornaliero</span><span class="en">Daily login</span></span><span>+1 ARIA/<span class="it">giorno</span><span class="en">day</span></span></div>
-        <div class="dash-activity-row"><span>Check-in</span><span>+1 ARIA/<span class="it">giorno</span><span class="en">day</span></span></div>
-        <div class="dash-activity-row"><span>Video</span><span>+1 ARIA (max 5/<span class="it">giorno</span><span class="en">day</span>)</span></div>
-        <div class="dash-activity-row"><span>Streak 7 <span class="it">giorni</span><span class="en">days</span></span><span>+1 ARIA</span></div>
-        <div class="dash-activity-row"><span>Referral (<span class="it">tu</span><span class="en">you</span>)</span><span>+10 ARIA</span></div>
-        <div class="dash-activity-row"><span>Referral (<span class="it">invitato</span><span class="en">invited</span>)</span><span>+15 ARIA</span></div>
+    <!-- ARIA GRATIS (ex Faucet) — posizionato in alto come CTA principale -->
+    <div class="dash-section" id="faucet-section">
+      <div class="dash-faucet-card">
+        <div class="dash-faucet-info">
+          <div class="dash-faucet-title"><span class="it">ARIA gratis</span><span class="en">Free ARIA</span></div>
+          <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> ogni giorno</span><span class="en">Get <strong>100 ARIA</strong> every day</span></div>
+        </div>
+        <button id="faucet-btn" onclick="claimFaucet()" class="dash-faucet-btn"><span class="it">RICEVI</span><span class="en">GET</span></button>
+        <div id="faucet-status" style="margin-top:8px;font-size:12px;color:var(--gray-400);text-align:center;display:none;grid-column:1/-1"></div>
       </div>
     </div>
 
+    <!-- LA TUA GIORNATA -->
     <div class="dash-section">
-      <div class="dash-section-title"><span class="it">Riepilogo attività</span><span class="en">Activity Summary</span></div>
+      <div class="dash-section-title"><span class="it">La tua giornata</span><span class="en">Your day</span></div>
       <div class="dash-activity" id="home-activity">
-        <div class="dash-activity-row"><span><span class="it">Punti guadagnati oggi</span><span class="en">Points earned today</span></span><span id="home-today">0 ARIA</span></div>
-        <div class="dash-activity-row"><span><span class="it">Streak attuale</span><span class="en">Current streak</span></span><span id="home-streak">0 <span class="it">giorni</span><span class="en">days</span></span></div>
-        <div class="dash-activity-row"><span><span class="it">Blocchi acquistati</span><span class="en">Blocks purchased</span></span><span id="home-blocks">0</span></div>
-        <div class="dash-activity-row"><span><span class="it">ARIA spesi in airdrop</span><span class="en">ARIA spent on airdrops</span></span><span id="home-spent">0</span></div>
+        <div class="dash-activity-row"><span><span class="it">Guadagnati oggi</span><span class="en">Earned today</span></span><span id="home-today">0 ARIA</span></div>
+        <div class="dash-activity-row"><span><span class="it">Giorni consecutivi</span><span class="en">Day streak</span></span><span id="home-streak">0</span></div>
+        <div class="dash-activity-row"><span><span class="it">Quote acquistate</span><span class="en">Shares purchased</span></span><span id="home-blocks">0</span></div>
+        <div class="dash-activity-row"><span><span class="it">ARIA utilizzati</span><span class="en">ARIA used</span></span><span id="home-spent">0</span></div>
       </div>
     </div>
 
+    <!-- COME GUADAGNARE -->
     <div class="dash-section">
-      <div class="dash-section-title"><span class="it">Azioni rapide</span><span class="en">Quick Actions</span></div>
+      <div class="dash-section-title"><span class="it">Come guadagni ARIA</span><span class="en">How to earn ARIA</span></div>
+      <div class="dash-earn-grid" id="home-earnings">
+        <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">Login giornaliero</span><span class="en">Daily login</span></div>
+        <div class="dash-earn-item"><span class="dash-earn-icon">+1</span>Check-in</div>
+        <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">Video (max 5/gg)</span><span class="en">Video (max 5/day)</span></div>
+        <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">7 giorni di fila</span><span class="en">7-day streak</span></div>
+        <div class="dash-earn-item"><span class="dash-earn-icon">+10</span><span class="it">Invita un amico</span><span class="en">Invite a friend</span></div>
+        <div class="dash-earn-item"><span class="dash-earn-icon">+15</span><span class="it">Sei stato invitato</span><span class="en">You were invited</span></div>
+      </div>
+    </div>
+
+    <!-- AZIONI RAPIDE -->
+    <div class="dash-section">
       <div class="dash-quick-links">
         <a class="dash-quick-link" onclick="navigateTo('explore')">
           <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-          Airdrops
-        </a>
-        <a class="dash-quick-link" href="/portafoglio">
-          <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
-          <span class="it">Portafoglio</span><span class="en">Wallet</span>
+          <span class="it">Esplora</span><span class="en">Explore</span>
         </a>
         <a class="dash-quick-link" onclick="navigateTo('referral')">
           <svg viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
-          Referral
+          <span class="it">Invita amici</span><span class="en">Invite friends</span>
+        </a>
+        <a class="dash-quick-link" onclick="navigateTo('wallet')">
+          <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+          <span class="it">Portafoglio</span><span class="en">Wallet</span>
         </a>
         <a class="dash-quick-link" onclick="navigateTo('submit')">
           <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          <span class="it">Valuta</span><span class="en">Evaluate</span>
+          <span class="it">Vendi</span><span class="en">Sell</span>
         </a>
-      </div>
-    </div>
-
-    <!-- FAUCET -->
-    <div class="dash-section" id="faucet-section">
-      <div class="dash-section-title"><span class="it">Faucet Testnet</span><span class="en">Testnet Faucet</span></div>
-      <div style="border:1px solid var(--gold-dim);background:rgba(184,150,12,.04);padding:24px 20px;border-radius:var(--radius)">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M12 2v6m0 0l3-3m-3 3L9 5"/><path d="M5 12h14"/><path d="M12 16v6m0 0l3-3m-3 3l-3-3"/></svg>
-          <span style="font-family:var(--font-h);font-size:20px;font-weight:400;color:var(--gold)">ARIA Faucet</span>
-        </div>
-        <p style="font-size:13px;color:var(--gray-400);margin-bottom:16px;line-height:1.5">
-          <span class="it">Ricevi <strong style="color:var(--aria)">100 ARIA</strong> gratis ogni giorno. Testnet faucet — solo per test Alpha.</span>
-          <span class="en">Get <strong style="color:var(--aria)">100 ARIA</strong> free every day. Testnet faucet — Alpha testing only.</span>
-        </p>
-        <button id="faucet-btn" onclick="claimFaucet()" style="background:var(--gold);color:var(--black);border:none;padding:14px 32px;font-family:var(--font-m);font-size:13px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .3s;width:100%">CLAIM 100 ARIA</button>
-        <div id="faucet-status" style="margin-top:12px;font-size:12px;color:var(--gray-400);text-align:center;display:none"></div>
       </div>
     </div>
 
@@ -758,7 +752,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.02-1.58.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.02-1.59.0</div>
 </div>
 
 <script src="/src/dapp.js"></script>

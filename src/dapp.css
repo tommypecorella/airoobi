@@ -71,28 +71,40 @@ input{font-family:inherit}
 
 /* ── DASHBOARD HOME ── */
 .dash-home{padding-top:8px}
-.dash-welcome{font-family:var(--font-h);font-size:clamp(22px,5vw,28px);font-weight:300;margin-bottom:24px}
+.dash-welcome{font-family:var(--font-h);font-size:clamp(20px,4.5vw,26px);font-weight:300;margin-bottom:16px}
 .dash-welcome em{color:var(--accent);font-style:normal}
-.dash-stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px}
-@media(min-width:640px){.dash-stats{grid-template-columns:repeat(4,1fr)}}
-.dash-stat{background:var(--glass-bg);border:1px solid var(--glass-border);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);padding:20px 16px;text-align:center;transition:border-color .3s;border-radius:var(--radius)}
+.dash-alpha-badge{display:inline-block;padding:2px 8px;background:rgba(74,158,255,.1);border:1px solid rgba(74,158,255,.2);color:var(--aria);font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-left:8px;border-radius:var(--radius-sm);vertical-align:middle}
+.dash-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.dash-stat{background:var(--glass-bg);border:1px solid var(--glass-border);padding:14px 10px;text-align:center;transition:border-color .3s;border-radius:var(--radius)}
 .dash-stat:hover{border-color:var(--accent)}
-.dash-stat-val{font-family:var(--font-h);font-size:clamp(24px,5vw,32px);font-weight:300;color:var(--accent);line-height:1}
+.dash-stat-val{font-family:var(--font-h);font-size:clamp(22px,4.5vw,28px);font-weight:300;color:var(--accent);line-height:1}
 .dash-stat-val.blue{color:var(--aria)}
 .dash-stat-val.green{color:var(--kas)}
-.dash-stat-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);margin-top:8px;text-transform:uppercase;letter-spacing:1px}
-.dash-section{margin-bottom:28px}
-.dash-section-title{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gray-700)}
-.dash-activity{display:flex;flex-direction:column;gap:8px}
-.dash-activity-row{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:var(--glass-bg);border:1px solid var(--glass-border);font-size:13px;border-radius:var(--radius-sm)}
+.dash-stat-label{font-family:var(--font-m);font-size:9px;color:var(--gray-400);margin-top:6px;text-transform:uppercase;letter-spacing:.5px}
+/* Faucet CTA card */
+.dash-faucet-card{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:16px 20px;border:1px solid var(--gold-dim);background:rgba(184,150,12,.04);border-radius:var(--radius)}
+.dash-faucet-info{flex:1;min-width:0}
+.dash-faucet-title{font-family:var(--font-h);font-size:17px;font-weight:400;color:var(--gold)}
+.dash-faucet-sub{font-size:13px;color:var(--gray-400);margin-top:2px}
+.dash-faucet-sub strong{color:var(--aria)}
+.dash-faucet-btn{background:var(--gold);color:var(--black);border:none;padding:12px 28px;font-family:var(--font-m);font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .3s;flex-shrink:0;border-radius:var(--radius-sm)}
+.dash-faucet-btn:active{transform:scale(.97)}
+.dash-section{margin-bottom:20px}
+.dash-section-title{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--gray-700)}
+.dash-activity{display:flex;flex-direction:column;gap:6px}
+.dash-activity-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--glass-bg);border:1px solid var(--glass-border);font-size:13px;border-radius:var(--radius-sm)}
 .dash-activity-row span:first-child{color:var(--gray-300)}
 .dash-activity-row span:last-child{font-family:var(--font-m);color:var(--accent);font-size:12px}
-.dash-testnet-badge{display:inline-block;padding:2px 8px;background:rgba(73,234,203,.1);border:1px solid rgba(73,234,203,.2);color:var(--kas);font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-left:8px;border-radius:var(--radius-sm)}
-.dash-quick-links{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-@media(min-width:640px){.dash-quick-links{grid-template-columns:repeat(4,1fr)}}
-.dash-quick-link{display:flex;flex-direction:column;align-items:center;gap:8px;padding:20px 12px;background:var(--glass-bg);border:1px solid var(--glass-border);cursor:pointer;transition:all .3s;text-decoration:none;color:var(--gray-300);font-size:11px;font-family:var(--font-m);letter-spacing:1px;text-transform:uppercase;border-radius:var(--radius)}
+/* Earn grid — compact 2-col or 3-col */
+.dash-earn-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+@media(min-width:640px){.dash-earn-grid{grid-template-columns:repeat(3,1fr)}}
+.dash-earn-item{display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--glass-bg);border:1px solid var(--glass-border);font-size:12px;color:var(--gray-300);border-radius:var(--radius-sm)}
+.dash-earn-icon{font-family:var(--font-m);font-size:12px;color:var(--accent);font-weight:700;min-width:24px}
+/* Quick links */
+.dash-quick-links{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.dash-quick-link{display:flex;flex-direction:column;align-items:center;gap:6px;padding:14px 8px;background:var(--glass-bg);border:1px solid var(--glass-border);cursor:pointer;transition:all .3s;text-decoration:none;color:var(--gray-300);font-size:10px;font-family:var(--font-m);letter-spacing:.5px;text-transform:uppercase;border-radius:var(--radius)}
 .dash-quick-link:hover{border-color:var(--accent);color:var(--accent)}
-.dash-quick-link svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
+.dash-quick-link svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5}
 
 /* ── MAIN CONTENT ── */
 .main{max-width:960px;margin:0 auto;padding:24px 16px 100px}

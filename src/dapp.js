@@ -222,8 +222,6 @@ async function loadHomeDashboard(){
     if(nfts)for(var ni=0;ni<nfts.length;ni++)nftShares+=parseFloat(nfts[ni].shares)||1;
     document.getElementById('home-nft').textContent=nftShares%1===0?nftShares:nftShares.toFixed(2);
   }catch(e){document.getElementById('home-nft').textContent='0'}
-  // KAS testnet (placeholder — no on-chain yet)
-  document.getElementById('home-kas').textContent='0.00';
   // Participations count + blocks + spent
   var totalBlocks=0,totalSpent=0;
   _myParts.forEach(function(p){totalBlocks+=p.blocks_count||0;totalSpent+=p.aria_spent||0});
@@ -272,14 +270,14 @@ async function claimFaucet(){
       showFaucetCooldown();
     }else{
       btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
-      btn.textContent='CLAIM 100 ARIA';
+      var _l=document.documentElement.getAttribute('data-lang')||'it';btn.textContent=_l==='it'?'RICEVI':'GET';
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       status.style.display='block';status.style.color='#f87171';
       status.textContent=lang==='it'?'Errore — riprova':'Error — try again';
     }
   }catch(e){
     btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
-    btn.textContent='CLAIM 100 ARIA';
+    var _l=document.documentElement.getAttribute('data-lang')||'it';btn.textContent=_l==='it'?'RICEVI':'GET';
   }
 }
 
@@ -289,14 +287,14 @@ function showFaucetCooldown(){
   btn.disabled=true;btn.style.opacity='.5';btn.style.cursor='not-allowed';
   btn.style.background='var(--gray-700)';btn.style.color='var(--gray-400)';
   var lang=document.documentElement.getAttribute('data-lang')||'it';
-  btn.textContent=lang==='it'?'Gia\u0300 ricevuti oggi':'Already claimed today';
+  btn.textContent=lang==='it'?'Gi\u00e0 ricevuti oggi':'Already received today';
   // Calculate time to midnight UTC
   var now=new Date();
   var midnight=new Date(now);midnight.setUTCHours(24,0,0,0);
   var diff=midnight-now;
   var h=Math.floor(diff/3600000);var m=Math.floor((diff%3600000)/60000);
   status.style.display='block';status.style.color='var(--gray-400)';
-  status.innerHTML=(lang==='it'?'Prossimo claim tra ':'Next claim in ')+h+'h '+m+'m';
+  status.innerHTML=(lang==='it'?'Prossimi ARIA tra ':'Next ARIA in ')+h+'h '+m+'m';
 }
 
 async function checkFaucetStatus(){
