@@ -220,8 +220,12 @@ async function loadHomeDashboard(){
       var rd=new Date(prof[0].created_at);
       var rdIt=document.getElementById('home-reg-date');
       var rdEn=document.getElementById('home-reg-date-en');
-      if(rdIt)rdIt.textContent=rd.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
-      if(rdEn)rdEn.textContent=rd.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      var rdStr=rd.toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+      var rdStrEn=rd.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+      if(rdIt)rdIt.textContent=rdStr;
+      if(rdEn)rdEn.textContent=rdStrEn;
+      var rd2=document.getElementById('home-reg-date2');if(rd2)rd2.textContent=rdStr;
+      var rd2e=document.getElementById('home-reg-date2-en');if(rd2e)rd2e.textContent=rdStrEn;
     }
   }catch(e){}
   // ARIA balance
