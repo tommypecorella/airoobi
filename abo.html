@@ -233,6 +233,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   </div>
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">Sistema</span>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-collaborators')"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>Collaboratori</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-categories')"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>Categorie</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-engine')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Engine Config</div>
   </div>
@@ -660,6 +661,31 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <tr><th>#</th><th>Email</th><th>ARIA</th><th>Registrato</th><th>Airdrop</th><th>Blocchi tot.</th><th>ARIA spesi</th></tr>
         </thead>
         <tbody id="test-users-body"><tr><td colspan="7" style="color:var(--gray-400)">Clicca CARICA</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- COLLABORATORI (Validatori) -->
+  <div class="admin-section" id="sec-collaborators">
+    <h2>Collaboratori</h2>
+    <p style="color:var(--gray-400);font-size:12px;margin-bottom:20px">Gestisci i validatori che possono accedere a <strong>/gestione</strong>. Ogni validatore vede solo gli airdrop delle categorie assegnate.</p>
+
+    <!-- Cerca utente -->
+    <div style="margin-bottom:24px">
+      <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Cerca utente per email</label>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="collab-search" placeholder="nome@email.com" style="flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 14px;border-radius:var(--radius-sm)" onkeydown="if(event.key==='Enter')searchCollaborator()">
+        <button onclick="searchCollaborator()" style="padding:10px 20px;background:var(--gold);border:none;color:var(--black);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)">CERCA</button>
+      </div>
+      <div id="collab-search-result" style="margin-top:12px"></div>
+    </div>
+
+    <!-- Lista collaboratori attuali -->
+    <div>
+      <h3 style="font-family:var(--font-h);font-size:16px;color:var(--gold);margin-bottom:12px;letter-spacing:1px">Validatori attivi</h3>
+      <table class="admin-table">
+        <thead><tr><th>Email</th><th>Categorie</th><th>Assegnato il</th><th></th></tr></thead>
+        <tbody id="collab-list"><tr><td colspan="4" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
       </table>
     </div>
   </div>
@@ -2502,7 +2528,141 @@ adminNav=function(sectionId){
   _origAdminNav(sectionId);
   if(sectionId==='sec-categories')loadCategories();
   if(sectionId==='sec-valutazioni')loadBoData();
+  if(sectionId==='sec-collaborators')loadCollaborators();
 };
+
+// ══════════════════════════════════════════════════════════
+//  COLLABORATORI (Validatori)
+// ══════════════════════════════════════════════════════════
+async function loadCollaborators(){
+  var s=getSession();if(!s)return;
+  var tbody=document.getElementById('collab-list');
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/admin_list_evaluators',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'}
+    });
+    var rows=await res.json();
+    if(!rows||!rows.length){
+      tbody.innerHTML='<tr><td colspan="4" style="color:var(--gray-400)">Nessun validatore assegnato</td></tr>';
+      return;
+    }
+    // Group by user
+    var byUser={};
+    rows.forEach(function(r){
+      if(!byUser[r.user_id])byUser[r.user_id]={email:r.email,cats:[],ids:[],created:r.created_at};
+      byUser[r.user_id].cats.push(r.category||'TUTTE');
+      byUser[r.user_id].ids.push(r.role_id);
+    });
+    tbody.innerHTML=Object.keys(byUser).map(function(uid){
+      var u=byUser[uid];
+      var date=new Date(u.created).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+      var catBadges=u.cats.map(function(c){
+        return '<span style="display:inline-block;padding:2px 8px;background:rgba(184,150,12,.1);border:1px solid rgba(184,150,12,.2);color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:.5px;border-radius:10px;margin:2px">'+c+'</span>';
+      }).join('');
+      return '<tr><td>'+u.email+'</td><td>'+catBadges+'</td><td style="font-family:var(--font-m);font-size:12px">'+date+'</td><td><button onclick="removeCollaborator(\''+uid+'\')" style="background:transparent;border:1px solid #c0392b;color:#e74c3c;font-family:var(--font-m);font-size:10px;padding:4px 10px;cursor:pointer;letter-spacing:1px">RIMUOVI</button></td></tr>';
+    }).join('');
+  }catch(e){tbody.innerHTML='<tr><td colspan="4" style="color:#ef4444">Errore caricamento</td></tr>';}
+}
+
+async function searchCollaborator(){
+  var q=document.getElementById('collab-search').value.trim();
+  var res_el=document.getElementById('collab-search-result');
+  if(!q||q.length<3){res_el.innerHTML='<p style="font-size:12px;color:var(--gray-500)">Inserisci almeno 3 caratteri</p>';return;}
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/admin_search_user',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_email:q})
+    });
+    var users=await res.json();
+    if(!users||!users.length){
+      res_el.innerHTML='<p style="font-size:12px;color:var(--gray-500)">Nessun utente trovato</p>';
+      return;
+    }
+    res_el.innerHTML=users.map(function(u){
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);margin-bottom:6px">'+
+        '<div><div style="font-size:13px;color:var(--white)">'+u.email+'</div><div style="font-size:10px;color:var(--gray-500)">'+new Date(u.created_at).toLocaleDateString('it-IT')+'</div></div>'+
+        '<button onclick="showAddCollabForm(\''+u.user_id+'\',\''+u.email+'\')" style="padding:6px 14px;background:var(--gold);border:none;color:var(--black);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)">AGGIUNGI</button>'+
+        '</div>';
+    }).join('');
+  }catch(e){res_el.innerHTML='<p style="font-size:12px;color:#ef4444">Errore ricerca</p>';}
+}
+
+function showAddCollabForm(userId,email){
+  var res_el=document.getElementById('collab-search-result');
+  // Load categories for checkboxes
+  var cats=_categoriesCache||[];
+  var checkboxes=cats.map(function(c){
+    return '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 0"><input type="checkbox" value="'+c.slug+'" class="collab-cat-check" style="accent-color:var(--gold)"><span style="font-size:12px;color:var(--gray-300)">'+c.name+'</span></label>';
+  }).join('');
+
+  res_el.innerHTML='<div style="padding:16px;border:1px solid var(--gold);border-radius:var(--radius-sm);background:rgba(184,150,12,.03)">'+
+    '<div style="font-family:var(--font-m);font-size:12px;color:var(--white);margin-bottom:12px">Aggiungi <strong style="color:var(--gold)">'+email+'</strong> come validatore</div>'+
+    '<div style="margin-bottom:12px">'+
+      '<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;margin-bottom:8px">CATEGORIE ABILITATE</div>'+
+      '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 0;margin-bottom:4px"><input type="checkbox" id="collab-all-cats" checked style="accent-color:var(--gold)" onchange="toggleCollabAllCats(this)"><span style="font-size:12px;color:var(--gold);font-weight:600">Tutte le categorie</span></label>'+
+      '<div id="collab-cats-list" style="display:none;padding-left:20px">'+checkboxes+'</div>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px">'+
+      '<button onclick="addCollaborator(\''+userId+'\')" style="padding:8px 20px;background:var(--gold);border:none;color:var(--black);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">CONFERMA</button>'+
+      '<button onclick="document.getElementById(\'collab-search-result\').innerHTML=\'\'" style="padding:8px 16px;background:transparent;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:11px;cursor:pointer">ANNULLA</button>'+
+    '</div>'+
+  '</div>';
+}
+
+function toggleCollabAllCats(el){
+  var list=document.getElementById('collab-cats-list');
+  if(list)list.style.display=el.checked?'none':'block';
+}
+
+async function addCollaborator(userId){
+  var s=getSession();if(!s)return;
+  var allCats=document.getElementById('collab-all-cats');
+  if(allCats&&allCats.checked){
+    // Add with NULL category (all)
+    await fetch(SB_URL+'/rest/v1/rpc/admin_add_evaluator',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_user_id:userId,p_category:null})
+    });
+  }else{
+    // Add for each checked category
+    var checks=document.querySelectorAll('.collab-cat-check:checked');
+    for(var i=0;i<checks.length;i++){
+      await fetch(SB_URL+'/rest/v1/rpc/admin_add_evaluator',{
+        method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+        body:JSON.stringify({p_user_id:userId,p_category:checks[i].value})
+      });
+    }
+    if(!checks.length){
+      alert('Seleziona almeno una categoria');return;
+    }
+  }
+  document.getElementById('collab-search-result').innerHTML='';
+  document.getElementById('collab-search').value='';
+  showToast('Validatore aggiunto','success');
+  loadCollaborators();
+}
+
+async function removeCollaborator(userId){
+  if(!confirm('Rimuovere questo validatore e tutti i suoi permessi?'))return;
+  var s=getSession();if(!s)return;
+  // Get all role_ids for this user
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/admin_list_evaluators',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'}
+    });
+    var rows=await res.json();
+    var toRemove=rows.filter(function(r){return r.user_id===userId});
+    for(var i=0;i<toRemove.length;i++){
+      await fetch(SB_URL+'/rest/v1/rpc/admin_remove_evaluator',{
+        method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+        body:JSON.stringify({p_role_id:toRemove[i].role_id})
+      });
+    }
+    showToast('Validatore rimosso','success');
+    loadCollaborators();
+  }catch(e){alert('Errore rimozione');}
+}
 </script>
 </body>
 </html>

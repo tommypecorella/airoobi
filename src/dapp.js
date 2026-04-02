@@ -1730,8 +1730,14 @@ function renderMySubmissions(subs){
 async function loadBoData(){
   var token=await getValidToken();
   if(!token)return;
-  _allAirdrops=await sbRpc('get_all_airdrops',{},token)||[];
-  if(!Array.isArray(_allAirdrops))_allAirdrops=[];
+  var all=await sbRpc('get_all_airdrops',{},token)||[];
+  if(!Array.isArray(all))all=[];
+  // Filter by evaluator categories (null in _managerCats = all categories)
+  if(_isAdmin||_managerCats.indexOf(null)>=0){
+    _allAirdrops=all;
+  }else{
+    _allAirdrops=all.filter(function(a){return _managerCats.indexOf(a.category)>=0});
+  }
   renderBoCounts();
   renderBoTable();
 }
