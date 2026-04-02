@@ -238,6 +238,25 @@ async function loadHomeDashboard(){
       robiCount+=parseFloat(nfts[ni].shares)||1;
     }
     document.getElementById('home-robi').textContent=robiCount%1===0?robiCount:robiCount.toFixed(2);
+    // Potential KAS from ROBI value
+    try{
+      var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
+      var tBal=0;
+      if(tfRes.ok){var tf=await tfRes.json();tf.forEach(function(r){tBal+=(parseFloat(r.amount_eur)||0)*((r.treasury_pct!=null?parseInt(r.treasury_pct):100)/100);});}
+      var rrRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}});
+      var tRobi=0;
+      if(rrRes.ok){var rrd=await rrRes.json();rrd.forEach(function(r){tRobi+=parseFloat(r.shares)||0;});}
+      var uVal=tRobi>0?(tBal/tRobi):0;
+      if(uVal>0&&robiCount>0){
+        var myValEur=(uVal*robiCount).toFixed(2);
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur').then(function(r){return r.json()}).then(function(d){
+          var kasEl=document.getElementById('home-kas');
+          if(d&&d.kaspa&&d.kaspa.eur>0&&kasEl){
+            kasEl.textContent=(parseFloat(myValEur)/d.kaspa.eur).toFixed(2);
+          }
+        }).catch(function(){});
+      }
+    }catch(e){}
   }catch(e){document.getElementById('home-robi').textContent='0'}
   // Participations count + blocks + spent
   var totalBlocks=0,totalSpent=0;
