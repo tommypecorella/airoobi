@@ -1956,8 +1956,8 @@ async function loadAdminTreasury(){
       }
     }catch(e){console.error('NFT auto-calc error:',e);}
     try{
-      var ariaProfiles=await sbGet('profiles?select=total_points',tk);
-      var totalAria=ariaProfiles?ariaProfiles.reduce(function(a,b){return a+(b.total_points||0)},0):0;
+      var ariaProfiles=await sbGet('profiles?select=total_points,is_test_user',tk);
+      var totalAria=ariaProfiles?ariaProfiles.filter(function(u){return !u.is_test_user}).reduce(function(a,b){return a+(b.total_points||0)},0):0;
       var i6=document.getElementById('adm-aico-input');if(i6)i6.value=totalAria;
       var au=document.getElementById('adm-aria-updated');if(au)au.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     }catch(e){console.error('ARIA auto-calc error:',e);}
@@ -1969,8 +1969,8 @@ async function loadAdminTreasury(){
 async function refreshAriaCircolante(){
   var s=getSession();if(!s)return;
   try{
-    var p=await sbGet('profiles?select=total_points',s.access_token);
-    var total=p?p.reduce(function(a,b){return a+(b.total_points||0)},0):0;
+    var p=await sbGet('profiles?select=total_points,is_test_user',s.access_token);
+    var total=p?p.filter(function(u){return !u.is_test_user}).reduce(function(a,b){return a+(b.total_points||0)},0):0;
     var i=document.getElementById('adm-aico-input');if(i)i.value=total;
     var u=document.getElementById('adm-aria-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     recalcNFTValue();
