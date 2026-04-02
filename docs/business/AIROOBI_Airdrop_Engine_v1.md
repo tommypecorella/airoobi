@@ -183,7 +183,7 @@ Per ogni perdente (ordinati per ARIA spesi DESC):
   2. Applica minimo della fase
   3. Applica cap anti-inflazione proporzionale
   4. Inserisci in nft_rewards: nft_teorici record con
-     nft_type = 'NFT_REWARD'
+     nft_type = 'NFT_REWARD'  -- DB key per ROBI (NFT Reward = ROBI; non-Reward = Badge)
      source = 'airdrop_draw'
      airdrop_id = [id airdrop]
      metadata = {airdrop_title, draw_date, blocks_owned, score}

@@ -160,7 +160,7 @@ Fallback senza host match:
 - **ZERO gergo gambling:** mai "vinci", "perdi", "lotteria", "gioco d'azzardo", "investimento", "scommetti"
 - **Framing utente:** "Realizza il tuo desiderio" — partecipi per ottenere l'oggetto a un prezzo ridicolo
 - **Framing venditore:** "Vendi il tuo oggetto di valore (min EUR 500)" — incasso garantito a prezzo di mercato
-- **NFT = buono fruttifero:** le Tessere Rendimento crescono di valore nel tempo
+- **ROBI = buono fruttifero:** i ROBI crescono di valore nel tempo. NFT Reward = ROBI, NFT non-Reward = Badge
 - **One Category Rule:** se ottieni l'oggetto in una categoria, non puoi piu ottenerlo nella stessa
 
 ---

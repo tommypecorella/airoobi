@@ -131,14 +131,15 @@
       <div class="dash-stat">
         <div class="dash-stat-val blue" id="home-aria">0</div>
         <div class="dash-stat-label"><span class="it">Saldo ARIA</span><span class="en">ARIA Balance</span></div>
+        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(74,158,255,.4);margin-top:2px">TEST</div>
       </div>
       <div class="dash-stat">
-        <div class="dash-stat-val" id="home-nft">0</div>
-        <div class="dash-stat-label"><span class="it">Tessere</span><span class="en">Cards</span></div>
+        <div class="dash-stat-val" id="home-robi" style="color:var(--gold)">0</div>
+        <div class="dash-stat-label"><span class="it">Saldo ROBI</span><span class="en">ROBI Balance</span></div>
       </div>
       <div class="dash-stat">
-        <div class="dash-stat-val" id="home-airdrops">0</div>
-        <div class="dash-stat-label"><span class="it">Partecipazioni</span><span class="en">Participations</span></div>
+        <div class="dash-stat-val" id="home-kas" style="color:var(--kas)">—</div>
+        <div class="dash-stat-label"><span class="it">Saldo KAS</span><span class="en">KAS Balance</span></div>
       </div>
     </div>
 
@@ -146,8 +147,8 @@
     <div class="dash-section" id="faucet-section">
       <div class="dash-faucet-card">
         <div class="dash-faucet-info">
-          <div class="dash-faucet-title"><span class="it">ARIA gratis</span><span class="en">Free ARIA</span></div>
-          <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> ogni giorno</span><span class="en">Get <strong>100 ARIA</strong> every day</span></div>
+          <div class="dash-faucet-title"><span class="it">Faucet ARIA</span><span class="en">ARIA Faucet</span></div>
+          <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA di test</strong> ogni giorno</span><span class="en">Get <strong>100 test ARIA</strong> every day</span></div>
         </div>
         <button id="faucet-btn" onclick="claimFaucet()" class="dash-faucet-btn"><span class="it">RICEVI</span><span class="en">GET</span></button>
         <div id="faucet-status" style="margin-top:8px;font-size:12px;color:var(--gray-400);text-align:center;display:none;grid-column:1/-1"></div>
@@ -158,23 +159,28 @@
     <div class="dash-section">
       <div class="dash-section-title"><span class="it">La tua giornata</span><span class="en">Your day</span></div>
       <div class="dash-activity" id="home-activity">
-        <div class="dash-activity-row"><span><span class="it">Guadagnati oggi</span><span class="en">Earned today</span></span><span id="home-today">0 ARIA</span></div>
+        <div class="dash-activity-row"><span><span class="it">Ricevuti oggi</span><span class="en">Received today</span></span><span id="home-today">0 ARIA</span></div>
         <div class="dash-activity-row"><span><span class="it">Giorni consecutivi</span><span class="en">Day streak</span></span><span id="home-streak">0</span></div>
         <div class="dash-activity-row"><span><span class="it">Quote acquistate</span><span class="en">Shares purchased</span></span><span id="home-blocks">0</span></div>
         <div class="dash-activity-row"><span><span class="it">ARIA utilizzati</span><span class="en">ARIA used</span></span><span id="home-spent">0</span></div>
       </div>
     </div>
 
-    <!-- COME GUADAGNARE -->
+    <!-- COME OTTENERE ARIA -->
     <div class="dash-section">
-      <div class="dash-section-title"><span class="it">Come guadagni ARIA</span><span class="en">How to earn ARIA</span></div>
+      <div class="dash-section-title"><span class="it">Come muovere ARIA</span><span class="en">How to move ARIA</span></div>
       <div class="dash-earn-grid" id="home-earnings">
+        <div class="dash-earn-item"><span class="dash-earn-icon">+100</span><span class="it">Faucet giornaliero</span><span class="en">Daily faucet</span></div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">Login giornaliero</span><span class="en">Daily login</span></div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+1</span>Check-in</div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">Video (max 5/gg)</span><span class="en">Video (max 5/day)</span></div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">7 giorni di fila</span><span class="en">7-day streak</span></div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+10</span><span class="it">Invita un amico</span><span class="en">Invite a friend</span></div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+15</span><span class="it">Sei stato invitato</span><span class="en">You were invited</span></div>
+      </div>
+      <div style="margin-top:10px;padding:10px 14px;background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.12);border-radius:var(--radius-sm);font-size:11px;color:var(--gray-400);line-height:1.5">
+        <span class="it">ARIA sono monete di test. Più ne muovi, più partecipi. Tutti gli ARIA accumulati in Alpha conteranno per l'airdrop finale al lancio della mainnet. Quello che si guadagna davvero sono i <strong style="color:var(--gold)">ROBI</strong>.</span>
+        <span class="en">ARIA are test coins. The more you move, the more you participate. All ARIA accumulated during Alpha will count towards the final airdrop at mainnet launch. What you actually earn are <strong style="color:var(--gold)">ROBI</strong>.</span>
       </div>
     </div>
 
@@ -375,8 +381,8 @@
         <button class="submit-btn" id="sub-btn" onclick="submitObject()" style="width:auto;padding:14px 28px"><span class="it">ACQUISTA VALUTAZIONE</span><span class="en">BUY VALUATION</span></button>
       </div>
       <div id="sub-insufficient" style="display:none;padding:12px 16px;margin-bottom:16px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.06);color:#ef4444;font-size:13px">
-        <span class="it">Saldo ARIA insufficiente. Guadagna ARIA con check-in, referral e video per sbloccare la valutazione.</span>
-        <span class="en">Insufficient ARIA balance. Earn ARIA through check-ins, referrals and videos to unlock valuation.</span>
+        <span class="it">Saldo ARIA insufficiente. Ricevi ARIA di test dal faucet, check-in, referral e video per sbloccare la valutazione.</span>
+        <span class="en">Insufficient ARIA balance. Get test ARIA from the faucet, check-ins, referrals and videos to unlock valuation.</span>
       </div>
       <div id="sub-msg"></div>
       <div class="submit-rules">
@@ -427,7 +433,7 @@
 
     <div class="ref-card" style="border-color:rgba(184,150,12,.3)">
       <h3><span class="it">Come funziona il referral</span><span class="en">How referrals work</span></h3>
-      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login il referral si conferma automaticamente<br>4. Tu ricevi +10 ARIA, il tuo amico +15 ARIA!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. Referral auto-confirms at their first login<br>4. You get +10 ARIA, your friend gets +15 ARIA!</span></p>
+      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login il referral si conferma automaticamente<br>4. Tu ricevi +10 ARIA di test, il tuo amico +15 ARIA di test!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. Referral auto-confirms at their first login<br>4. You get +10 test ARIA, your friend gets +15 test ARIA!</span></p>
     </div>
 
     <div class="ref-history-section">
@@ -463,7 +469,7 @@
             <div class="wcard-sublabel" style="color:var(--aria)"><span class="it">Il tuo ARIA</span><span class="en">Your ARIA</span></div>
           </div>
           <div class="wcard-icons">
-            <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)"><span class="it">Guadagno</span><span class="en">Earning</span></div>
+            <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)"><span class="it">Test coin</span><span class="en">Test coin</span></div>
             <div class="wcard-chip" style="border-color:rgba(74,158,255,.18)">
               <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
               <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
@@ -473,20 +479,20 @@
         <div class="wcard-body">
           <div class="wcard-amount-block">
             <div class="wcard-amount" style="color:var(--aria)" id="dapp-wcard-aria-amount">—</div>
-            <div class="wcard-unit" style="color:rgba(74,158,255,.5)"><span class="it">ARIA ACCUMULATI</span><span class="en">ARIA ACCUMULATED</span></div>
+            <div class="wcard-unit" style="color:rgba(74,158,255,.5)"><span class="it">ARIA DI TEST</span><span class="en">TEST ARIA</span></div>
           </div>
           <div style="font-size:11px;color:var(--gray-400);margin-top:8px;font-style:italic;line-height:1.4">
-            <span class="it">Gli ARIA sono attualmente simbolici — il Treasury si attiverà al lancio della piattaforma.</span>
-            <span class="en">ARIA are currently symbolic — the Treasury will activate at platform launch.</span>
+            <span class="it">ARIA sono monete di test. Piu ne muovi, piu partecipi. Conteranno per l'airdrop finale al lancio della mainnet.</span>
+            <span class="en">ARIA are test coins. The more you move, the more you participate. They will count towards the final airdrop at mainnet launch.</span>
           </div>
         </div>
         <div class="wcard-desc">
-          <span class="it">Il tuo portafoglio ARIA. Ricaricato ogni volta che guadagni — check-in, referral, bonus. Mostra l'importo totale disponibile: puoi usarne parte o tutto per comprare blocchi di partecipazione agli airdrop.</span>
-          <span class="en">Your ARIA wallet. Recharged every time you earn — check-ins, referrals, bonuses. Shows your total available balance: use part or all of it to buy airdrop participation blocks.</span>
+          <span class="it">Il tuo portafoglio ARIA di test. Muovi ARIA per partecipare agli airdrop — più ne muovi, più conti per l'airdrop finale al lancio della mainnet.</span>
+          <span class="en">Your test ARIA wallet. Move ARIA to participate in airdrops — the more you move, the more you count for the final airdrop at mainnet launch.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-serial" style="color:rgba(74,158,255,.3)">ALPHA · #<span id="dapp-wcard-aria-serial">—</span></div>
-          <div class="wcard-holder" style="color:rgba(74,158,255,.3)"><span class="it">Check-in · Referral · Bonus</span><span class="en">Check-in · Referral · Bonus</span></div>
+          <div class="wcard-holder" style="color:rgba(74,158,255,.3)"><span class="it">Faucet · Check-in · Referral</span><span class="en">Faucet · Check-in · Referral</span></div>
           <div style="font-family:var(--font-m);font-size:11px;color:rgba(74,158,255,.2);letter-spacing:3px">ARIA</div>
         </div>
       </div>
@@ -546,10 +552,10 @@
         </div>
         <div class="wcard-desc">
           <span class="it">Non hai ancora un ROBI. Partecipa agli airdrop per ottenerne uno — sarà il tuo portafoglio per riscuotere KAS reale in qualsiasi momento.</span>
-          <span class="en">You don't have a ROBI yet. Join airdrops to earn one — it will be your key to redeem real KAS at any time.</span>
+          <span class="en">You don't have a ROBI yet. Join airdrops to get one — it will be your key to redeem real KAS at any time.</span>
         </div>
         <div class="wcard-footer">
-          <div class="wcard-holder" style="color:rgba(184,150,12,.2)"><span class="it">Partecipa agli airdrop per ottenerla</span><span class="en">Join airdrops to earn one</span></div>
+          <div class="wcard-holder" style="color:rgba(184,150,12,.2)"><span class="it">Partecipa agli airdrop per ottenerla</span><span class="en">Join airdrops to get one</span></div>
         </div>
       </div>
 
@@ -588,8 +594,8 @@
     <div class="wallet-flow">
       <div class="wflow-node">
         <div class="wflow-icon" style="color:var(--aria)">▸ ARIA</div>
-        <div class="wflow-label" style="color:var(--aria)"><span class="it">Guadagni</span><span class="en">You earn</span></div>
-        <div class="wflow-desc" style="color:var(--gray-600)"><span class="it">check-in · referral · bonus</span><span class="en">check-in · referral · bonus</span></div>
+        <div class="wflow-label" style="color:var(--aria)"><span class="it">Ricevi</span><span class="en">You get</span></div>
+        <div class="wflow-desc" style="color:var(--gray-600)"><span class="it">faucet · check-in · referral</span><span class="en">faucet · check-in · referral</span></div>
       </div>
       <div class="wflow-arrow">→</div>
       <div class="wflow-node">
@@ -602,6 +608,16 @@
         <div class="wflow-icon" style="color:var(--kas)">▸ KAS</div>
         <div class="wflow-label" style="color:var(--kas)"><span class="it">Ricevi</span><span class="en">You receive</span></div>
         <div class="wflow-desc" style="color:var(--gray-600)"><span class="it">kaspa · on-chain · tuo per sempre</span><span class="en">kaspa · on-chain · yours forever</span></div>
+      </div>
+    </div>
+
+    <!-- BADGE COLLECTION (NFT non-REWARD) -->
+    <div style="margin-top:48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gray-400);text-transform:uppercase;margin-bottom:16px"><span class="it">La tua collezione Badge</span><span class="en">Your Badge collection</span></div>
+      <div id="dapp-badge-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px">
+        <div style="padding:20px;border:1px dashed var(--gray-700);border-radius:var(--radius-sm);text-align:center;color:var(--gray-600);font-size:12px">
+          <span class="it">Nessun badge ancora.<br>Partecipa per ottenerne.</span><span class="en">No badges yet.<br>Participate to earn them.</span>
+        </div>
       </div>
     </div>
 
@@ -621,9 +637,86 @@
       <p style="font-size:13px;color:var(--gray-400);margin:0"><span class="it">Scopri come funzionano ARIA, ROBI e il motore airdrop.</span><span class="en">Learn how ARIA, ROBI and the airdrop engine work.</span></p>
     </div>
 
-    <!-- Video 1: Come funziona AIROOBI -->
+    <!-- Lezione 1: Cosa sono ARIA, ROBI e KAS -->
     <div style="max-width:800px;margin:0 auto 48px">
       <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 1</span><span class="en">Lesson 1</span></div>
+      <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Cosa sono ARIA, ROBI e KAS</span><span class="en">What are ARIA, ROBI and KAS</span></h3>
+      <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">Le tre monete di AIROOBI: a cosa servono e come si relazionano tra loro.</span><span class="en">The three currencies of AIROOBI: what they do and how they relate to each other.</span></p>
+      <div style="padding:32px;border:1px solid var(--gray-700);border-radius:var(--radius-sm)">
+        <div style="display:grid;gap:28px">
+          <!-- ARIA -->
+          <div style="display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start">
+            <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(74,158,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:14px;color:var(--aria);letter-spacing:1px">A</div>
+            <div>
+              <div style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--aria);margin-bottom:4px">ARIA <span style="font-size:10px;color:rgba(74,158,255,.4);letter-spacing:2px;margin-left:6px">TEST COIN</span></div>
+              <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">ARIA è la <strong style="color:var(--white)">moneta di test</strong> di AIROOBI. La ricevi gratis ogni giorno dal faucet (100/giorno), check-in, video e referral. <strong style="color:var(--white)">Non ha valore monetario</strong> — è uno strumento di partecipazione. Più ARIA muovi, più sei attivo sulla piattaforma. Tutti gli ARIA accumulati in Alpha conteranno per l'airdrop finale al lancio della mainnet.</span><span class="en">ARIA is AIROOBI's <strong style="color:var(--white)">test coin</strong>. Get it free every day from the faucet (100/day), check-ins, videos and referrals. <strong style="color:var(--white)">It has no monetary value</strong> — it's a participation tool. The more ARIA you move, the more active you are on the platform. All ARIA accumulated during Alpha will count towards the final airdrop at mainnet launch.</span></p>
+            </div>
+          </div>
+          <!-- ROBI -->
+          <div style="display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start">
+            <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(184,150,12,.4);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:14px;color:var(--gold);letter-spacing:1px">R</div>
+            <div>
+              <div style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gold);margin-bottom:4px">ROBI <span style="font-size:10px;color:rgba(184,150,12,.5);letter-spacing:2px;margin-left:6px">VALORE REALE</span></div>
+              <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">ROBI è il tuo <strong style="color:var(--gold)">vero guadagno</strong>. È un NFT che ottieni partecipando agli airdrop — <strong style="color:var(--white)">non si compra, si guadagna</strong>. Il suo valore cresce nel tempo ed è riscuotibile in KAS. Ogni ROBI è coperto dal fondo di garanzia di AIROOBI. Rimborso garantito al 95%.</span><span class="en">ROBI is your <strong style="color:var(--gold)">real reward</strong>. It's an NFT you get by participating in airdrops — <strong style="color:var(--white)">you can't buy it, you earn it</strong>. Its value grows over time and is redeemable in KAS. Every ROBI is backed by AIROOBI's guarantee fund. 95% guaranteed refund.</span></p>
+            </div>
+          </div>
+          <!-- KAS -->
+          <div style="display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start">
+            <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(73,234,203,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:14px;color:var(--kas);letter-spacing:1px">K</div>
+            <div>
+              <div style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--kas);margin-bottom:4px">KAS <span style="font-size:10px;color:rgba(73,234,203,.4);letter-spacing:2px;margin-left:6px">KASPA BLOCKCHAIN</span></div>
+              <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">KAS è la <strong style="color:var(--white)">criptovaluta reale</strong> della blockchain Kaspa su cui è costruito AIROOBI. Quando riscuoti i tuoi ROBI, ricevi KAS reali nel tuo wallet on-chain — tuoi per sempre, trasferibili ovunque.</span><span class="en">KAS is the <strong style="color:var(--white)">real cryptocurrency</strong> of the Kaspa blockchain on which AIROOBI is built. When you redeem your ROBI, you receive real KAS in your on-chain wallet — yours forever, transferable anywhere.</span></p>
+            </div>
+          </div>
+          <!-- Flow -->
+          <div style="text-align:center;padding:20px 0 0;border-top:1px solid var(--gray-700)">
+            <div style="font-family:var(--font-m);font-size:12px;letter-spacing:1px;color:var(--gray-400)">
+              <span style="color:var(--aria)">ARIA</span> <span style="color:var(--gray-600)">→ muovi →</span> <span style="color:var(--gold)">ROBI</span> <span style="color:var(--gray-600)">→ riscuoti →</span> <span style="color:var(--kas)">KAS</span>
+            </div>
+            <div style="font-size:11px;color:var(--gray-600);margin-top:6px"><span class="it">test coin → valore reale → crypto on-chain</span><span class="en">test coin → real value → on-chain crypto</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lezione 2: Come funzionano adesso -->
+    <div style="max-width:800px;margin:0 auto 48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 2</span><span class="en">Lesson 2</span></div>
+      <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Come funzionano adesso</span><span class="en">How they work right now</span></h3>
+      <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">Siamo in Alpha. Ecco cosa è attivo e cosa arriverà.</span><span class="en">We're in Alpha. Here's what's active and what's coming.</span></p>
+      <div style="padding:32px;border:1px solid var(--gray-700);border-radius:var(--radius-sm)">
+        <div style="display:grid;gap:24px">
+          <!-- ARIA adesso -->
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:1px">ARIA</span>
+              <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--kas);background:rgba(73,234,203,.1);padding:2px 8px;border-radius:10px"><span class="it">ATTIVO</span><span class="en">ACTIVE</span></span>
+            </div>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Gli ARIA sono <strong style="color:var(--white)">monete di test</strong>. Li ricevi gratis dal faucet (100/giorno), check-in (+1), video (+1, max 5/gg), streak (+1/7gg) e referral (+10/+15). <strong style="color:var(--aria)">Fare transazioni con ARIA conta.</strong> Anche solo ricevere dal faucet è un "movimento". Più ARIA muovi durante l'Alpha, più il tuo account peserà per l'airdrop finale al lancio della mainnet. Non aspettare — ogni giorno che passi senza muovere ARIA è un giorno perso.</span><span class="en">ARIA are <strong style="color:var(--white)">test coins</strong>. Get them free from the faucet (100/day), check-in (+1), videos (+1, max 5/day), streak (+1/7days) and referral (+10/+15). <strong style="color:var(--aria)">Transacting with ARIA counts.</strong> Even getting from the faucet is a "movement". The more ARIA you move during Alpha, the more your account will weigh for the final airdrop at mainnet launch. Don't wait — every day you don't move ARIA is a lost day.</span></p>
+          </div>
+          <!-- ROBI adesso -->
+          <div style="border-top:1px solid var(--gray-700);padding-top:24px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="font-family:var(--font-m);font-size:12px;color:var(--gold);letter-spacing:1px">ROBI</span>
+              <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);background:rgba(184,150,12,.1);padding:2px 8px;border-radius:10px"><span class="it">VALORE REALE</span><span class="en">REAL VALUE</span></span>
+            </div>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">I ROBI sono <strong style="color:var(--gold)">il vero guadagno</strong> di AIROOBI. Si ottengono <strong style="color:var(--white)">solo partecipando</strong> agli airdrop — non si comprano. Ogni ROBI ha un valore reale coperto dal fondo di garanzia. In futuro saranno riscuotibili in KAS sulla blockchain Kaspa. I ROBI che accumuli adesso in Alpha sono veri — il loro valore crescerà con la piattaforma.</span><span class="en">ROBI are AIROOBI's <strong style="color:var(--gold)">real reward</strong>. You get them <strong style="color:var(--white)">only by participating</strong> in airdrops — they can't be bought. Each ROBI has real value backed by the guarantee fund. In the future they'll be redeemable in KAS on the Kaspa blockchain. The ROBI you accumulate now during Alpha are real — their value will grow with the platform.</span></p>
+          </div>
+          <!-- KAS adesso -->
+          <div style="border-top:1px solid var(--gray-700);padding-top:24px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="font-family:var(--font-m);font-size:12px;color:var(--kas);letter-spacing:1px">KAS</span>
+              <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:2px 8px;border-radius:10px"><span class="it">CON MAINNET</span><span class="en">AT MAINNET</span></span>
+            </div>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">KAS non è ancora attivo — arriverà con il lancio della mainnet. Quando la piattaforma sarà on-chain, potrai riscuotere i tuoi ROBI in KAS reali. Per ora, concentrati su muovere ARIA e accumulare ROBI — stai costruendo la tua posizione.</span><span class="en">KAS is not active yet — it will come with the mainnet launch. When the platform goes on-chain, you'll be able to redeem your ROBI into real KAS. For now, focus on moving ARIA and accumulating ROBI — you're building your position.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video 1: Come funziona AIROOBI -->
+    <div style="max-width:800px;margin:0 auto 48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 3</span><span class="en">Lesson 3</span></div>
       <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Come funziona AIROOBI</span><span class="en">How AIROOBI works</span></h3>
       <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">ARIA, blocchi, categorie, fairness e ROBI — tutto in 2 minuti.</span><span class="en">ARIA, blocks, categories, fairness and ROBI — all in 2 minutes.</span></p>
       <div style="width:100%;aspect-ratio:16/9;border:1px solid var(--gray-700);overflow:hidden">
@@ -633,7 +726,7 @@
 
     <!-- Video 2: Come funziona un Airdrop -->
     <div style="max-width:800px;margin:0 auto 48px">
-      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 2</span><span class="en">Lesson 2</span></div>
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 4</span><span class="en">Lesson 4</span></div>
       <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Come funziona un Airdrop</span><span class="en">How an Airdrop works</span></h3>
       <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">La storia di Giulia e Giulio — dal primo ARIA al ROBI. Il percorso completo.</span><span class="en">The story of Giulia and Giulio — from the first ARIA to the ROBI. The complete journey.</span></p>
       <div style="width:100%;aspect-ratio:16/9;border:1px solid var(--gray-700);overflow:hidden">
@@ -647,11 +740,11 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
         <div>
           <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--aria);margin-bottom:6px">ARIA</div>
-          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">La valuta di AIROOBI. La guadagni gratis ogni giorno. La usi per acquistare blocchi negli airdrop.</span><span class="en">AIROOBI's currency. Earn it free every day. Use it to buy blocks in airdrops.</span></p>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">La moneta di test di AIROOBI. La ricevi gratis ogni giorno. La usi per partecipare agli airdrop. Piu ARIA muovi, piu conti per l'airdrop finale.</span><span class="en">AIROOBI's test coin. Get it free every day. Use it to participate in airdrops. The more ARIA you move, the more you count for the final airdrop.</span></p>
         </div>
         <div>
           <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:6px">ROBI</div>
-          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">Il tuo NFT. Lo guadagni partecipando agli airdrop. Il suo valore cresce nel tempo. Riscuotibile in KAS.</span><span class="en">Your NFT. Earn it by joining airdrops. Its value grows over time. Redeemable in KAS.</span></p>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">Il tuo NFT. Lo ottieni partecipando agli airdrop. Il suo valore cresce nel tempo. Riscuotibile in KAS — questo e il tuo vero guadagno.</span><span class="en">Your NFT. Get it by joining airdrops. Its value grows over time. Redeemable in KAS — this is your real reward.</span></p>
         </div>
         <div>
           <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--kas);margin-bottom:6px">KAS</div>
@@ -752,7 +845,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.02-1.59.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.02-1.61.0</div>
 </div>
 
 <script src="/src/dapp.js"></script>

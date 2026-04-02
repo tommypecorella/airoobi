@@ -215,13 +215,15 @@ async function loadHomeDashboard(){
   if(elEn)elEn.textContent=name;
   // ARIA balance
   document.getElementById('home-aria').innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
-  // NFT shares count
+  // ROBI count (nft_rewards with nft_type REWARD)
   try{
-    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&select=id,shares',token);
-    var nftShares=0;
-    if(nfts)for(var ni=0;ni<nfts.length;ni++)nftShares+=parseFloat(nfts[ni].shares)||1;
-    document.getElementById('home-nft').textContent=nftShares%1===0?nftShares:nftShares.toFixed(2);
-  }catch(e){document.getElementById('home-nft').textContent='0'}
+    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&select=id,shares,nft_type',token);
+    var robiCount=0;
+    if(nfts)for(var ni=0;ni<nfts.length;ni++){
+      if(nfts[ni].nft_type==='REWARD')robiCount+=parseFloat(nfts[ni].shares)||1;
+    }
+    document.getElementById('home-robi').textContent=robiCount%1===0?robiCount:robiCount.toFixed(2);
+  }catch(e){document.getElementById('home-robi').textContent='0'}
   // Participations count + blocks + spent
   var totalBlocks=0,totalSpent=0;
   _myParts.forEach(function(p){totalBlocks+=p.blocks_count||0;totalSpent+=p.aria_spent||0});
@@ -260,7 +262,7 @@ async function claimFaucet(){
       updateBalanceUI();
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       btn.style.background='var(--kas)';btn.style.color='var(--black)';
-      btn.textContent=lang==='it'?'+100 ARIA ricevuti!':'+100 ARIA received!';
+      btn.textContent=lang==='it'?'+100 ARIA di test ricevuti!':'+100 test ARIA received!';
       showToast('<span style="color:var(--kas)">+100 ARIA</span> faucet');
       // Refresh dashboard stats
       var homeAria=document.getElementById('home-aria');
@@ -379,18 +381,18 @@ function dappShareRef(platform){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var msgs={
     it:{
-      whatsapp:'*AIROOBI* — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Guadagni ARIA gratis ogni giorno.\n\nRegistrati col mio link e inserisci il codice amico *'+refCode+'* per ricevere subito *15 ARIA* bonus.\n\nAlpha Brave: solo 1.000 posti.\n',
-      telegram:'AIROOBI — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Guadagni ARIA gratis ogni giorno.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+' per ricevere subito 15 ARIA bonus.\n\nAlpha Brave: solo 1.000 posti.\n',
-      x:'Realizza il tuo desiderio su @airoobi_com\n\nOggetti reali di valore, a un prezzo ridicolo. Guadagni ARIA gratis.\n\nCodice amico: '+refCode+' (+15 ARIA). Alpha Brave: 1.000 posti. ',
+      whatsapp:'*AIROOBI* — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Ricevi ARIA di test gratis ogni giorno e usali per partecipare. Più ARIA muovi, più conti per l\'airdrop finale.\n\nRegistrati col mio link e inserisci il codice amico *'+refCode+'*.\n\nAlpha Brave: solo 1.000 posti.\n',
+      telegram:'AIROOBI — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Ricevi ARIA di test gratis ogni giorno e usali per partecipare. Più ARIA muovi, più conti per l\'airdrop finale.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+'.\n\nAlpha Brave: solo 1.000 posti.\n',
+      x:'Realizza il tuo desiderio su @airoobi_com\n\nOggetti reali di valore, a un prezzo ridicolo. ARIA di test gratis.\n\nCodice amico: '+refCode+'. Alpha Brave: 1.000 posti. ',
       email_subject:'AIROOBI — Realizza il tuo desiderio.',
-      email_body:'Ciao,\n\nsono entrato in AIROOBI e volevo portarti dentro. Oggetti reali di valore, a un prezzo ridicolo. Guadagni ARIA gratis ogni giorno.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+' per ricevere subito 15 ARIA bonus.\n\nAlpha Brave: solo 1.000 posti.\n\n'+link
+      email_body:'Ciao,\n\nsono entrato in AIROOBI e volevo portarti dentro. Oggetti reali di valore, a un prezzo ridicolo. Ricevi ARIA di test gratis ogni giorno e usali per partecipare. Più ARIA muovi, più conti per l\'airdrop finale.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+'.\n\nAlpha Brave: solo 1.000 posti.\n\n'+link
     },
     en:{
-      whatsapp:'*AIROOBI* — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Earn ARIA free every day.\n\nSign up with my link and enter friend code *'+refCode+'* to get *15 ARIA* bonus instantly.\n\nAlpha Brave: only 1,000 spots.\n',
-      telegram:'AIROOBI — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Earn ARIA free every day.\n\nSign up with my link and enter friend code '+refCode+' to get 15 ARIA bonus instantly.\n\nAlpha Brave: only 1,000 spots.\n',
-      x:'Make your desire real on @airoobi_com\n\nReal valuable objects, unbelievable prices. Free ARIA daily.\n\nFriend code: '+refCode+' (+15 ARIA). Alpha Brave: 1,000 spots. ',
+      whatsapp:'*AIROOBI* — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Get free test ARIA every day and use them to participate. The more you move, the more you count for the final airdrop.\n\nSign up with my link and enter friend code *'+refCode+'*.\n\nAlpha Brave: only 1,000 spots.\n',
+      telegram:'AIROOBI — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Get free test ARIA every day and use them to participate. The more you move, the more you count for the final airdrop.\n\nSign up with my link and enter friend code '+refCode+'.\n\nAlpha Brave: only 1,000 spots.\n',
+      x:'Make your desire real on @airoobi_com\n\nReal valuable objects, unbelievable prices. Free test ARIA daily.\n\nFriend code: '+refCode+'. Alpha Brave: 1,000 spots. ',
       email_subject:'AIROOBI — Make your desire real.',
-      email_body:'Hey,\n\nI joined AIROOBI and wanted to bring you in. Real valuable objects, at an unbelievable price. Earn ARIA free every day.\n\nSign up with my link and enter friend code '+refCode+' to get 15 ARIA bonus instantly.\n\nAlpha Brave: only 1,000 spots.\n\n'+link
+      email_body:'Hey,\n\nI joined AIROOBI and wanted to bring you in. Real valuable objects, at an unbelievable price. Get free test ARIA every day and use them to participate. The more you move, the more you count for the final airdrop.\n\nSign up with my link and enter friend code '+refCode+'.\n\nAlpha Brave: only 1,000 spots.\n\n'+link
     }
   };
   var m=msgs[lang]||msgs.it;
@@ -428,7 +430,7 @@ var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
   submit:{it:'<b>Valuta</b> il tuo <em>oggetto</em>',en:'<b>Evaluate</b> your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
-  referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e guadagna ARIA bonus.',sub_en:'Invite friends and earn bonus ARIA.'},
+  referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e ricevi ARIA di test bonus.',sub_en:'Invite friends and get bonus test ARIA.'},
   wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'I tuoi asset: ARIA, ROBI e KAS.',sub_en:'Your assets: ARIA, ROBI and KAS.'},
   archive:{it:'<em>Archivio</em> Airdrop',en:'Airdrop <em>Archive</em>',sub_it:'Tutti gli airdrop completati. Trasparenza totale.',sub_en:'All completed airdrops. Full transparency.'},
   learn:{it:'<em>Impara</em>',en:'<em>Learn</em>',sub_it:'Scopri come funzionano ARIA, ROBI e il motore airdrop.',sub_en:'Learn how ARIA, ROBI and the airdrop engine work.'},
@@ -1881,6 +1883,23 @@ async function loadDappWallet(){
           }
         }
       }
+    }
+  }catch(e){}
+
+  // Badge collection (NFT non-REWARD)
+  try{
+    var badgeCards=cards.filter(function(c){return c.nft_type!=='ROBI'&&c.nft_type!=='NFT_REWARD'&&c.nft_type!=='NFT_EARN'});
+    var badgeGrid=document.getElementById('dapp-badge-grid');
+    if(badgeGrid&&badgeCards.length>0){
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      badgeGrid.innerHTML=badgeCards.map(function(b){
+        var label=b.nft_type?b.nft_type.replace(/_/g,' '):'Badge';
+        return '<div style="padding:16px;border:1px solid var(--gray-700);border-radius:var(--radius-sm);text-align:center">'+
+          '<div style="font-family:var(--font-m);font-size:20px;color:var(--gold);margin-bottom:8px">&#9733;</div>'+
+          '<div style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--white);margin-bottom:4px">'+label+'</div>'+
+          '<div style="font-size:10px;color:var(--gray-400)">'+new Date(b.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})+'</div>'+
+          '</div>';
+      }).join('');
     }
   }catch(e){}
 }
