@@ -1921,10 +1921,15 @@ async function loadDappWallet(){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       badgeGrid.innerHTML=badgeCards.map(function(b){
         var label=b.nft_type?b.nft_type.replace(/_/g,' '):'Badge';
-        return '<div style="padding:16px;border:1px solid var(--gray-700);border-radius:var(--radius-sm);text-align:center">'+
-          '<div style="font-family:var(--font-m);font-size:20px;color:var(--gold);margin-bottom:8px">&#9733;</div>'+
-          '<div style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--white);margin-bottom:4px">'+label+'</div>'+
-          '<div style="font-size:10px;color:var(--gray-400)">'+new Date(b.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})+'</div>'+
+        var isAlpha=b.nft_type==='ALPHA_BRAVE';
+        var borderColor=isAlpha?'var(--gold)':'var(--gray-700)';
+        var glowBg=isAlpha?'radial-gradient(ellipse at center,rgba(184,150,12,.08) 0%,transparent 70%)':'none';
+        return '<div style="padding:24px 16px;border:1px solid '+borderColor+';border-radius:var(--radius-sm);text-align:center;background:'+glowBg+';position:relative;overflow:hidden">'+
+          (isAlpha?'<div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:100px;height:100px;background:radial-gradient(circle,rgba(184,150,12,.12) 0%,transparent 70%);pointer-events:none"></div>':'')+
+          '<div style="font-size:36px;margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(184,150,12,.3))'+(isAlpha?'':'')+'">'+(isAlpha?'&#9813;':'&#9734;')+'</div>'+
+          '<div style="font-family:var(--font-h);font-size:14px;letter-spacing:2px;color:'+(isAlpha?'var(--gold)':'var(--white)')+';margin-bottom:4px;text-transform:uppercase">'+label+'</div>'+
+          (isAlpha?'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:rgba(184,150,12,.5);margin-bottom:6px">FOUNDER · TOP 1000</div>':'')+
+          '<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-500)">'+new Date(b.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})+'</div>'+
           '</div>';
       }).join('');
     }
