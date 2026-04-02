@@ -264,18 +264,137 @@ async function loadHomeDashboard(){
   document.getElementById('home-airdrops').textContent=_myParts.length;
   document.getElementById('home-blocks').textContent=totalBlocks;
   document.getElementById('home-spent').textContent=totalSpent+' ARIA ('+eur(totalSpent)+')';
-  // Today's points
-  try{
-    var today=new Date().toISOString().slice(0,10);
-    var pts=await sbGet('points_ledger?user_id=eq.'+_session.user.id+'&created_at=gte.'+today+'T00:00:00&select=points',token);
-    var todayPts=0;
-    if(pts)pts.forEach(function(p){todayPts+=p.points||0});
-    document.getElementById('home-today').textContent=todayPts+' ARIA ('+eur(todayPts)+')';
-  }catch(e){}
   // Check-in status
   checkCheckinStatus();
   // Check faucet status
   checkFaucetStatus();
+  // Portfolio chart
+  loadPortfolioChart(token,robiCount);
+}
+
+// ── Portfolio Chart ──
+async function loadPortfolioChart(token,userRobi){
+  var canvas=document.getElementById('portfolio-chart');
+  if(!canvas)return;
+  var ctx=canvas.getContext('2d');
+  // HiDPI
+  var rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width*2;canvas.height=rect.height*2;
+  ctx.scale(2,2);
+  var W=rect.width,H=rect.height;
+
+  // Fetch last 30 days of points_ledger
+  var days=30;
+  var since=new Date();since.setDate(since.getDate()-days);
+  var sinceStr=since.toISOString().slice(0,10);
+  var ledger=[];
+  try{
+    ledger=await sbGet('points_ledger?user_id=eq.'+_session.user.id+'&created_at=gte.'+sinceStr+'T00:00:00&select=amount,created_at&order=created_at.asc',token)||[];
+  }catch(e){}
+
+  // Build daily ARIA cumulative from current balance backwards
+  var dailyMap={};
+  ledger.forEach(function(e){
+    var d=e.created_at.slice(0,10);
+    dailyMap[d]=(dailyMap[d]||0)+(e.amount||0);
+  });
+  // Generate date labels
+  var labels=[];
+  for(var i=days;i>=0;i--){
+    var d=new Date();d.setDate(d.getDate()-i);
+    labels.push(d.toISOString().slice(0,10));
+  }
+  // Build ARIA running balance (work backwards from current)
+  var ariaData=[];
+  var runningBack=_balance;
+  for(var i=labels.length-1;i>=0;i--){
+    ariaData[i]=runningBack;
+    if(i>0)runningBack-=(dailyMap[labels[i]]||0);
+  }
+  // Clamp negatives
+  ariaData=ariaData.map(function(v){return Math.max(0,v)});
+
+  // Get ROBI value + KAS price
+  var robiValEur=0,kasPrice=0;
+  try{
+    var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
+    var tBal=0;
+    if(tfRes.ok){var tf=await tfRes.json();tf.forEach(function(r){tBal+=(parseFloat(r.amount_eur)||0)*((r.treasury_pct!=null?parseInt(r.treasury_pct):100)/100);});}
+    var rrRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}});
+    var tRobi=0;
+    if(rrRes.ok){var rrd=await rrRes.json();rrd.forEach(function(r){tRobi+=parseFloat(r.shares)||0;});}
+    if(tRobi>0)robiValEur=(tBal/tRobi)*userRobi;
+  }catch(e){}
+  try{
+    var kRes=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur');
+    var kd=await kRes.json();
+    if(kd&&kd.kaspa&&kd.kaspa.eur>0)kasPrice=kd.kaspa.eur;
+  }catch(e){}
+
+  // ROBI line (flat — same value across all days for now)
+  var robiData=labels.map(function(){return robiValEur});
+  // KAS potential line
+  var kasData=kasPrice>0?labels.map(function(){return robiValEur/kasPrice}):[];
+
+  // EUR total (ARIA×0.10 + ROBI value)
+  var eurTotal=(_balance*0.10)+robiValEur;
+  var eurEl=document.getElementById('portfolio-eur-val');
+  if(eurEl)eurEl.innerHTML='&euro; '+eurTotal.toFixed(2)+'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-left:8px;letter-spacing:1px">pot.</span>';
+
+  // Draw
+  var pad={top:10,right:10,bottom:20,left:10};
+  var cW=W-pad.left-pad.right;
+  var cH=H-pad.top-pad.bottom;
+
+  // Find max values for each axis
+  var maxAria=Math.max.apply(null,ariaData)||1;
+  var maxRobi=Math.max.apply(null,robiData)||1;
+  var maxKas=kasData.length?Math.max.apply(null,kasData)||1:1;
+
+  function drawLine(data,maxVal,color,alpha){
+    if(!data.length)return;
+    ctx.beginPath();
+    ctx.strokeStyle=color;
+    ctx.lineWidth=1.5;
+    ctx.globalAlpha=1;
+    var step=cW/(data.length-1||1);
+    for(var i=0;i<data.length;i++){
+      var x=pad.left+i*step;
+      var y=pad.top+cH-(data[i]/maxVal)*cH;
+      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    // Fill
+    ctx.lineTo(pad.left+(data.length-1)*step,pad.top+cH);
+    ctx.lineTo(pad.left,pad.top+cH);
+    ctx.closePath();
+    ctx.globalAlpha=alpha;
+    ctx.fillStyle=color;
+    ctx.fill();
+    ctx.globalAlpha=1;
+  }
+
+  // Clear
+  ctx.clearRect(0,0,W,H);
+
+  // Grid lines
+  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=0.5;
+  for(var g=0;g<4;g++){
+    var gy=pad.top+(cH/3)*g;
+    ctx.beginPath();ctx.moveTo(pad.left,gy);ctx.lineTo(W-pad.right,gy);ctx.stroke();
+  }
+
+  // Draw lines
+  drawLine(ariaData,maxAria,'#4A9EFF',0.06);
+  drawLine(robiData,maxRobi,'#B8960C',0.08);
+  if(kasData.length)drawLine(kasData,maxKas,'#49EACB',0.05);
+
+  // Date labels (first, mid, last)
+  ctx.font='9px monospace';ctx.fillStyle='rgba(255,255,255,.2)';ctx.textBaseline='top';
+  var ly=H-pad.bottom+4;
+  ctx.textAlign='left';ctx.fillText(labels[0].slice(5),pad.left,ly);
+  ctx.textAlign='center';ctx.fillText(labels[Math.floor(labels.length/2)].slice(5),W/2,ly);
+  ctx.textAlign='right';ctx.fillText(labels[labels.length-1].slice(5),W-pad.right,ly);
 }
 
 // ── Check-in ──

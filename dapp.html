@@ -155,11 +155,26 @@
       </div>
     </div>
 
-    <!-- LA TUA GIORNATA -->
+    <!-- PORTAFOGLIO CHART -->
     <div class="dash-section">
-      <div class="dash-section-title"><span class="it">La tua giornata</span><span class="en">Your day</span></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="dash-section-title" style="margin:0"><span class="it">Portafoglio</span><span class="en">Portfolio</span></div>
+        <div id="portfolio-eur-val" style="font-family:var(--font-h);font-size:clamp(18px,3vw,24px);font-weight:300;color:var(--white)">—</div>
+      </div>
+      <div style="position:relative;width:100%;height:160px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);overflow:hidden;background:rgba(255,255,255,.01)">
+        <canvas id="portfolio-chart" style="width:100%;height:100%"></canvas>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:8px;font-family:var(--font-m);font-size:10px;letter-spacing:1px">
+        <span style="color:var(--aria)">● ARIA</span>
+        <span style="color:var(--gold)">● ROBI</span>
+        <span style="color:var(--kas)">● KAS pot.</span>
+      </div>
+    </div>
+
+    <!-- AZIONI GIORNALIERE -->
+    <div class="dash-section">
+      <div class="dash-section-title"><span class="it">Azioni giornaliere</span><span class="en">Daily actions</span></div>
       <div class="dash-activity" id="home-activity">
-        <div class="dash-activity-row"><span><span class="it">Ricevuti oggi</span><span class="en">Received today</span></span><span id="home-today">0 ARIA</span></div>
         <div class="dash-activity-row" style="align-items:center">
           <span><span class="it">Check-in giornaliero</span><span class="en">Daily check-in</span></span>
           <button id="checkin-btn" onclick="claimCheckin()" style="background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:6px 16px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">+50 ARIA</span><span class="en">+50 ARIA</span></button>
