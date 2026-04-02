@@ -216,7 +216,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   </div>
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">NFT &amp; Tokenomics</span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-coin')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg>Coin Metrics</div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-coin')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg>ARIA Metrics</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-nft-tracker')"><svg viewBox="0 0 24 24"><path d="M9 5H2v7l6.29 6.29a1 1 0 001.42 0l5.58-5.58a1 1 0 000-1.42L9 5z"/><circle cx="6" cy="9" r="1"/></svg>NFT Tracker</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-nft-econ')"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>NFT Economics</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-nft-valuation')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>Valuation</div>
@@ -319,16 +319,13 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- COIN METRICS ARIA -->
   <div class="admin-section" id="sec-coin">
-    <h2>Coin Metrics (ARIA)</h2>
+    <h2>ARIA Metrics <span style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:rgba(74,158,255,.5);margin-left:8px">TEST COIN</span></h2>
+    <p class="admin-note" style="margin-bottom:16px">ARIA è una moneta di test — nessun valore monetario. Più ARIA un utente muove, più peso ha per l'airdrop finale al lancio mainnet.</p>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
-      <div class="admin-card"><div class="admin-card-val" id="adm-coin-price">€0.10</div><div class="admin-card-label">Prezzo ARIA (pegged)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-coin-supply">—</div><div class="admin-card-label">Circolante (ARIA)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-coin-marketcap">—</div><div class="admin-card-label">Market Cap</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-coin-fdv">—</div><div class="admin-card-label">Fully Diluted Val. (FDV)</div></div>
-      <div class="admin-card"><div class="admin-card-val">10,000,000</div><div class="admin-card-label">Max Supply (ARIA)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-coin-treasury-ratio">—%</div><div class="admin-card-label">Treasury / Market Cap</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-coin-nft-ratio">—</div><div class="admin-card-label">ARIA per NFT (circolante)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-coin-backing">—%</div><div class="admin-card-label">Backing ratio (95% rule)</div></div>
+      <div class="admin-card"><div class="admin-card-val blue" id="adm-coin-supply">—</div><div class="admin-card-label">ARIA in circolazione</div></div>
+      <div class="admin-card"><div class="admin-card-val blue" id="adm-coin-avg">—</div><div class="admin-card-label">Media ARIA / utente</div></div>
+      <div class="admin-card"><div class="admin-card-val blue" id="adm-coin-faucet-today">—</div><div class="admin-card-label">Faucet claims oggi</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-coin-nft-ratio">—</div><div class="admin-card-label">ARIA per ROBI (ratio)</div></div>
     </div>
   </div>
 
@@ -336,22 +333,22 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-section" id="sec-nft-tracker">
     <h2>NFT Tracker</h2>
     <div class="admin-grid">
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-brave-count">—</div><div class="admin-card-label">NFT Alpha Brave (emessi)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-earn-count">—</div><div class="admin-card-label">NFT EARN (emessi)</div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.3)"><div class="admin-card-val" style="color:var(--gold)" id="adm-nft-robi-count">—</div><div class="admin-card-label">ROBI (emessi)</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-nft-brave-count">—</div><div class="admin-card-label">Badge Alpha Brave</div></div>
     </div>
-    <p class="admin-note">NFT tracking sarà collegato a Kaspa al mainnet. Per ora monitoriamo i candidati per tier.</p>
+    <p class="admin-note">ROBI = valore reale (riscuotibile in KAS). Badge = raccolta, nessun valore monetario. Collegamento a Kaspa al mainnet.</p>
   </div>
 
-  <!-- NFT ECONOMICS -->
+  <!-- ROBI ECONOMICS -->
   <div class="admin-section" id="sec-nft-econ">
-    <h2>NFT Economics</h2>
+    <h2>ROBI Economics</h2>
     <div class="admin-grid">
       <div class="admin-card"><div class="admin-card-val" id="adm-treasury-val">—</div><div class="admin-card-label">Treasury (€)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-minted">—</div><div class="admin-card-label">NFT Minati</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-value">—</div><div class="admin-card-label">Valore NFT stimato</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-nft-minted">—</div><div class="admin-card-label">ROBI emessi</div></div>
+      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" style="color:var(--gold)" id="adm-nft-value">—</div><div class="admin-card-label" style="color:var(--gold)">Valore ROBI stimato</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-nft-marketcap">—</div><div class="admin-card-label">Market Cap (circolante)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating">—</div><div class="admin-card-label">Circolante</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-fully-diluted">—</div><div class="admin-card-label">Fully Diluted (1.000 NFT)</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating">—</div><div class="admin-card-label">ROBI circolanti</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-nft-fully-diluted">—</div><div class="admin-card-label">Fully Diluted (1.000 ROBI)</div></div>
     </div>
     <div style="margin-top:24px;padding:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
       <h3 style="font-family:var(--font-h);font-size:16px;color:var(--gold);margin-bottom:16px;letter-spacing:1px">Aggiorna Parametri</h3>
@@ -361,11 +358,11 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <input type="number" id="adm-input-treasury" placeholder="0.00" step="0.01" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
         </div>
         <div>
-          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">NFT MINATI</label>
+          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">ROBI EMESSI</label>
           <input type="number" id="adm-input-minted" placeholder="0" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 12px">
         </div>
         <div>
-          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">CIRCOLANTE (NFT) <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+          <label style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:1.5px;display:block;margin-bottom:6px">ROBI CIRCOLANTI <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="adm-input-circulating" placeholder="0" readonly style="flex:1;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);font-family:var(--font-m);font-size:13px;padding:10px 12px;cursor:not-allowed">
             <button onclick="refreshNftCircolante()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 10px;cursor:pointer;font-size:14px;transition:all .3s;flex-shrink:0" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'" title="Refresh">&#8635;</button>
@@ -379,13 +376,13 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </div>
       <button onclick="updateNftMetrics();saveAdminTokenomics()" style="background:var(--gold);color:#000;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:10px 24px;border:none;cursor:pointer">CALCOLA &amp; SALVA</button>
     </div>
-    <p class="admin-note" style="margin-top:12px">Logica: <strong>Valore NFT = Treasury ÷ NFT Minati</strong> · <strong>Market Cap = Valore NFT × Circolante</strong> · <strong>Fully Diluted = Valore NFT × Max Supply</strong></p>
+    <p class="admin-note" style="margin-top:12px">Logica: <strong>Valore ROBI = Treasury ÷ ROBI emessi</strong> · <strong>Market Cap = Valore ROBI × Circolanti</strong> · <strong>Fully Diluted = Valore ROBI × Max Supply</strong></p>
   </div>
 
-  <!-- NFT VALUATION & TOKENOMICS -->
+  <!-- ROBI VALUATION & TOKENOMICS -->
   <div class="admin-section" id="sec-nft-valuation">
-    <h2>NFT Valuation &amp; Tokenomics</h2>
-    <p class="admin-note" style="margin-bottom:20px">Dati calcolati in tempo reale. Valore NFT = Treasury × 95% / NFT emessi. Aggiorna treasury manualmente.</p>
+    <h2>ROBI Valuation &amp; Tokenomics</h2>
+    <p class="admin-note" style="margin-bottom:20px">Dati calcolati in tempo reale. Valore ROBI = Treasury × 95% / ROBI emessi. Aggiorna treasury manualmente.</p>
     <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap">
       <div>
         <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€)</label>
@@ -409,8 +406,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </div>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">Treasury totale</div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-minted-2" style="color:var(--gold)">—</div><div class="admin-card-label">NFT emessi (minati)</div></div>
-      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-nft-value-2" style="color:var(--gold);font-size:28px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore probabile NFT</div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-minted-2" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI emessi</div></div>
+      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-nft-value-2" style="color:var(--gold);font-size:28px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore ROBI stimato</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-nft-buyback">—</div><div class="admin-card-label">Buyback garantito (95%)</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-nft-upside">—</div><div class="admin-card-label">Upside potenziale (5%)</div></div>
     </div>
@@ -1092,6 +1089,13 @@ async function loadAdminData(){
       var wl=await sbGet('waitlist?select=id',t);
       var convEl=document.getElementById('adm-conversion');if(convEl)convEl.textContent=users.length+'/'+(wl?wl.length:0);
     }
+    // ARIA metrics
+    var avgEl=document.getElementById('adm-coin-avg');
+    if(avgEl)avgEl.textContent=userCount>0?Math.round(totalPts/userCount).toLocaleString():'—';
+    try{
+      var faucetToday=await sbGet('points_ledger?reason=eq.faucet&created_at=gte.'+today+'T00:00:00&select=id',t);
+      var ftEl=document.getElementById('adm-coin-faucet-today');if(ftEl)ftEl.textContent=faucetToday?faucetToday.length:0;
+    }catch(e){var ftEl2=document.getElementById('adm-coin-faucet-today');if(ftEl2)ftEl2.textContent='—';}
     try{
       const leads=await sbGet('investor_leads?select=id',t);
       var leadsEl=document.getElementById('adm-inv-leads');if(leadsEl)leadsEl.textContent=leads?leads.length:0;
@@ -1977,7 +1981,7 @@ async function loadAdminTreasury(){
           }).join('');
         }else{bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';}
         var braveEl=document.getElementById('adm-nft-brave-count');if(braveEl)braveEl.textContent=breakdown['NFT_ALPHA_BRAVE']||0;
-        var earnEl=document.getElementById('adm-nft-earn-count');if(earnEl)earnEl.textContent=breakdown['NFT_EARN']||0;
+        var robiEl=document.getElementById('adm-nft-robi-count');if(robiEl)robiEl.textContent=(breakdown['ROBI']||0)+(breakdown['NFT_REWARD']||0);
       }
     }catch(e){console.error('NFT auto-calc error:',e);}
     try{
@@ -2028,7 +2032,7 @@ async function refreshNftCircolante(){
         }).join('');
       }else{bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';}
       var braveEl=document.getElementById('adm-nft-brave-count');if(braveEl)braveEl.textContent=breakdown['NFT_ALPHA_BRAVE']||0;
-      var earnEl=document.getElementById('adm-nft-earn-count');if(earnEl)earnEl.textContent=breakdown['NFT_EARN']||0;
+      var robiEl=document.getElementById('adm-nft-robi-count');if(robiEl)robiEl.textContent=(breakdown['ROBI']||0)+(breakdown['NFT_REWARD']||0);
     }
     updateNftMetrics();
   }catch(e){console.error('Refresh NFT error:',e);}
@@ -2094,15 +2098,9 @@ async function deleteTreasuryFund(id){
 function recalcNFTValue(){
   var treasury=parseFloat(document.getElementById('adm-treasury-input')?.value)||0;
   var aria=parseInt(document.getElementById('adm-aico-input')?.value)||0;
-  var price=0.10;
   var cs=document.getElementById('adm-coin-supply');if(cs)cs.textContent=aria.toLocaleString();
-  var mc=document.getElementById('adm-coin-marketcap');if(mc)mc.textContent='€'+(aria*price).toFixed(2);
-  var fdv=document.getElementById('adm-coin-fdv');if(fdv)fdv.textContent='€'+(10000000*price).toFixed(2);
-  var tr=document.getElementById('adm-coin-treasury-ratio');
-  if(tr)tr.textContent=aria>0?((treasury/(aria*price))*100).toFixed(1)+'%':'—%';
   var minted=parseInt(document.getElementById('adm-input-minted')?.value)||0;
   var nr=document.getElementById('adm-coin-nft-ratio');if(nr)nr.textContent=minted>0?Math.round(aria/minted):'—';
-  var br=document.getElementById('adm-coin-backing');if(br)br.textContent=aria>0?((treasury*0.95/(aria*price))*100).toFixed(1)+'%':'—%';
   var nt=document.getElementById('adm-nft-treasury');if(nt)nt.textContent='€'+treasury.toFixed(2);
 }
 
