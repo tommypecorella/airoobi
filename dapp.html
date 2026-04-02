@@ -160,7 +160,10 @@
       <div class="dash-section-title"><span class="it">La tua giornata</span><span class="en">Your day</span></div>
       <div class="dash-activity" id="home-activity">
         <div class="dash-activity-row"><span><span class="it">Ricevuti oggi</span><span class="en">Received today</span></span><span id="home-today">0 ARIA</span></div>
-        <div class="dash-activity-row"><span><span class="it">Giorni consecutivi</span><span class="en">Day streak</span></span><span id="home-streak">0</span></div>
+        <div class="dash-activity-row" style="align-items:center">
+          <span><span class="it">Check-in giornaliero</span><span class="en">Daily check-in</span></span>
+          <button id="checkin-btn" onclick="claimCheckin()" style="background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:6px 16px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">+50 ARIA</span><span class="en">+50 ARIA</span></button>
+        </div>
         <div class="dash-activity-row"><span><span class="it">Blocchi acquistati (dal <span id="home-reg-date">—</span>)</span><span class="en">Blocks purchased (since <span id="home-reg-date-en">—</span>)</span></span><span id="home-blocks">0</span></div>
         <div class="dash-activity-row"><span><span class="it">ARIA spesi (dal <span id="home-reg-date2">—</span>)</span><span class="en">ARIA spent (since <span id="home-reg-date2-en">—</span>)</span></span><span id="home-spent">0</span></div>
       </div>
@@ -171,10 +174,7 @@
       <div class="dash-section-title"><span class="it">Come accumulare ARIA</span><span class="en">How to accumulate ARIA</span></div>
       <div class="dash-earn-grid" id="home-earnings">
         <div class="dash-earn-item"><span class="dash-earn-icon">+100</span><span class="it">Faucet giornaliero</span><span class="en">Daily faucet</span></div>
-        <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">Login giornaliero</span><span class="en">Daily login</span></div>
-        <div class="dash-earn-item"><span class="dash-earn-icon">+1</span>Check-in</div>
-        <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">Video (max 5/gg)</span><span class="en">Video (max 5/day)</span></div>
-        <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">7 giorni di fila</span><span class="en">7-day streak</span></div>
+        <div class="dash-earn-item"><span class="dash-earn-icon">+50</span><span class="it">Check-in giornaliero</span><span class="en">Daily check-in</span></div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+10</span><span class="it">Invita un amico</span><span class="en">Invite a friend</span></div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+15</span><span class="it">Sei stato invitato</span><span class="en">You were invited</span></div>
       </div>

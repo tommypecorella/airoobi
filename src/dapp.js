@@ -272,13 +272,60 @@ async function loadHomeDashboard(){
     if(pts)pts.forEach(function(p){todayPts+=p.points||0});
     document.getElementById('home-today').textContent=todayPts+' ARIA ('+eur(todayPts)+')';
   }catch(e){}
-  // Streak
-  try{
-    var prof=await sbGet('profiles?id=eq.'+_session.user.id+'&select=streak_count',token);
-    if(prof&&prof[0])document.getElementById('home-streak').innerHTML=prof[0].streak_count+' <span class="it">giorni</span><span class="en">days</span>';
-  }catch(e){}
+  // Check-in status
+  checkCheckinStatus();
   // Check faucet status
   checkFaucetStatus();
+}
+
+// ── Check-in ──
+async function claimCheckin(){
+  var btn=document.getElementById('checkin-btn');
+  btn.disabled=true;btn.style.opacity='.5';btn.style.cursor='not-allowed';
+  btn.textContent='...';
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await sbRpc('claim_checkin',{},token);
+    if(res&&res.ok){
+      _balance+=res.amount;
+      updateBalanceUI();
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      btn.style.background='var(--kas)';btn.style.color='var(--black)';
+      btn.textContent=lang==='it'?'+50 ARIA fatto!':'+50 ARIA done!';
+      showToast('<span style="color:var(--kas)">+50 ARIA</span> check-in');
+      var homeAria=document.getElementById('home-aria');
+      if(homeAria)homeAria.innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
+    }else if(res&&res.error==='already_checked'){
+      showCheckinDone();
+    }else{
+      btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
+      var _l=document.documentElement.getAttribute('data-lang')||'it';
+      btn.innerHTML=_l==='it'?'<span class="it">+50 ARIA</span>':'<span class="en">+50 ARIA</span>';
+    }
+  }catch(e){
+    btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
+    btn.textContent='+50 ARIA';
+  }
+}
+
+function showCheckinDone(){
+  var btn=document.getElementById('checkin-btn');
+  if(!btn)return;
+  btn.disabled=true;btn.style.opacity='.5';btn.style.cursor='not-allowed';
+  btn.style.background='var(--gray-700)';btn.style.color='var(--gray-400)';
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  btn.textContent=lang==='it'?'Fatto oggi ✓':'Done today ✓';
+}
+
+async function checkCheckinStatus(){
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var today=new Date().toISOString().slice(0,10);
+    var rows=await sbGet('checkins?user_id=eq.'+_session.user.id+'&checked_at=eq.'+today+'&select=id&limit=1',token);
+    if(rows&&rows.length>0)showCheckinDone();
+  }catch(e){}
 }
 
 // ── Faucet ──
