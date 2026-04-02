@@ -2102,7 +2102,7 @@ async function loadTreasuryFunds(){
         '<td style="font-family:var(--font-m);font-size:12px">'+date+'</td>'+
         '<td style="font-family:var(--font-m)">€'+amt.toFixed(2)+'</td>'+
         '<td style="font-family:var(--font-m);color:var(--gold)">€'+toTreasury.toFixed(2)+' <span style="font-size:10px;color:var(--gray-500)">('+pct+'%)</span></td>'+
-        '<td style="font-family:var(--font-m);color:var(--white)">€'+toService.toFixed(2)+'</td>'+
+        '<td style="font-family:var(--font-m);color:var(--white)">€'+toService.toFixed(2)+' <span style="font-size:10px;color:var(--gray-500)">('+(100-pct)+'%)</span></td>'+
         '<td>'+(r.description||'')+'</td>'+
         '<td><button class="ct-btn-del" onclick="deleteTreasuryFund(\''+r.id+'\')" style="background:transparent;border:1px solid #c0392b;color:#e74c3c;font-family:var(--font-m);font-size:10px;padding:4px 10px;cursor:pointer;letter-spacing:1px">DEL</button></td>'+
       '</tr>';
@@ -2116,9 +2116,10 @@ function tfPreviewSplit(){
   var el=document.getElementById('tf-split-preview');
   if(!el)return;
   if(amt<=0){el.textContent='';return;}
+  var svcPct=100-pct;
   var toTreasury=(amt*pct/100).toFixed(2);
-  var toService=(amt*(100-pct)/100).toFixed(2);
-  el.innerHTML='<span style="color:var(--gold)">Treasury: €'+toTreasury+'</span> · <span style="color:var(--white)">Service: €'+toService+'</span>';
+  var toService=(amt*svcPct/100).toFixed(2);
+  el.innerHTML='<span style="color:var(--gold)">▸ Treasury: <strong>€'+toTreasury+'</strong> ('+pct+'%)</span> &nbsp;·&nbsp; <span style="color:var(--white)">▸ Service: <strong>€'+toService+'</strong> ('+svcPct+'%)</span>';
 }
 
 async function addTreasuryFund(){
