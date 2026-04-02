@@ -1898,6 +1898,13 @@ async function loadDappWallet(){
           if(d&&d.kaspa&&d.kaspa.eur>0){
             var kasEquiv=(parseFloat(totalVal)/d.kaspa.eur).toFixed(2);
             valEl.innerHTML='&euro; '+totalVal+'<div style="font-family:var(--font-m);font-size:11px;color:var(--kas);margin-top:4px;letter-spacing:1px">&asymp; '+kasEquiv+' KAS</div>';
+            // Show potential KAS on KAS card
+            var kasPot=document.getElementById('dapp-wcard-kas-potential');
+            var kasPotVal=document.getElementById('dapp-wcard-kas-potential-val');
+            if(kasPot&&kasPotVal){
+              kasPot.style.display='block';
+              kasPotVal.innerHTML='&asymp; '+kasEquiv+' KAS <span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">(€ '+totalVal+')</span>';
+            }
           }
         }).catch(function(){});
       }else{
