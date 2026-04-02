@@ -435,6 +435,7 @@ function showCheckinDone(){
   btn.style.background='var(--gray-700)';btn.style.color='var(--gray-400)';
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   btn.textContent=lang==='it'?'Fatto oggi ✓':'Done today ✓';
+  markDailyTask('checkin',true);
 }
 
 async function checkCheckinStatus(){
@@ -445,6 +446,31 @@ async function checkCheckinStatus(){
     var rows=await sbGet('checkins?user_id=eq.'+_session.user.id+'&checked_at=eq.'+today+'&select=id&limit=1',token);
     if(rows&&rows.length>0)showCheckinDone();
   }catch(e){}
+}
+
+function markDailyTask(task,done){
+  var icon=document.getElementById('dt-'+task+'-icon');
+  var row=document.getElementById('dt-'+task);
+  if(icon){
+    if(done){
+      icon.style.borderColor='var(--kas)';icon.style.background='var(--kas)';icon.style.color='var(--black)';
+      icon.innerHTML='✓';
+    }else{
+      icon.style.borderColor='var(--gray-600)';icon.style.background='none';icon.style.color='';
+      icon.innerHTML='';
+    }
+  }
+  if(row&&done){row.style.borderColor='rgba(73,234,203,.15)';row.style.opacity='.6';}
+  updateDailyTasksScore();
+}
+
+function updateDailyTasksScore(){
+  var done=0,total=2;
+  if(document.getElementById('dt-faucet-icon')&&document.getElementById('dt-faucet-icon').innerHTML==='✓')done++;
+  if(document.getElementById('dt-checkin-icon')&&document.getElementById('dt-checkin-icon').innerHTML==='✓')done++;
+  var el=document.getElementById('daily-tasks-score');
+  if(el)el.textContent=done+'/'+total;
+  if(el)el.style.color=done===total?'var(--kas)':'var(--gray-500)';
 }
 
 // ── Faucet ──
@@ -490,13 +516,13 @@ function showFaucetCooldown(){
   btn.style.background='var(--gray-700)';btn.style.color='var(--gray-400)';
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   btn.textContent=lang==='it'?'Gi\u00e0 ricevuti oggi':'Already received today';
-  // Calculate time to midnight UTC
   var now=new Date();
   var midnight=new Date(now);midnight.setUTCHours(24,0,0,0);
   var diff=midnight-now;
   var h=Math.floor(diff/3600000);var m=Math.floor((diff%3600000)/60000);
   status.style.display='block';status.style.color='var(--gray-400)';
   status.innerHTML=(lang==='it'?'Prossimi ARIA tra ':'Next ARIA in ')+h+'h '+m+'m';
+  markDailyTask('faucet',true);
 }
 
 async function checkFaucetStatus(){
