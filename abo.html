@@ -2061,7 +2061,7 @@ async function addTreasuryFund(){
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
       body:JSON.stringify({amount_eur:amount,description:desc,created_by:s.user.id})
     });
-    if(!res.ok)throw new Error('POST failed: '+res.status);
+    if(!res.ok){var errBody=await res.text();console.error('Treasury POST error:',res.status,errBody);throw new Error('POST failed: '+res.status+' — '+errBody);}
     document.getElementById('tf-amount').value='';
     document.getElementById('tf-description').value='';
     document.getElementById('tf-add-form').style.display='none';
