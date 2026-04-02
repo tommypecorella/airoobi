@@ -254,6 +254,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <div class="admin-card"><div class="admin-card-val" id="adm-referrals">—</div><div class="admin-card-label">Referral confermati</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-avatars">—</div><div class="admin-card-label">Foto profilo impostata</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating-ov">—</div><div class="admin-card-label">ROBI in circolazione</div></div>
+      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal-ov" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI</div></div>
     </div>
     <div class="admin-grid" style="margin-top:8px">
       <div class="admin-card"><div class="admin-card-val" id="adm-avg-points">—</div><div class="admin-card-label">ARIA media/utente</div></div>
@@ -2051,9 +2052,12 @@ async function loadTreasuryFunds(){
     if(tb)tb.textContent='€'+total.toFixed(2);
     // Valore nominale ROBI = treasury / totale ROBI
     var nomEl=document.getElementById('adm-robi-nominal');
+    var nomOv=document.getElementById('adm-robi-nominal-ov');
     if(nomEl&&window._robiTotal>0){
-      nomEl.textContent='€'+(total/window._robiTotal).toFixed(4);
-    }else if(nomEl){nomEl.textContent=total>0?'…':'—';}
+      var nomVal='€'+(total/window._robiTotal).toFixed(4);
+      nomEl.textContent=nomVal;
+      if(nomOv)nomOv.textContent=nomVal;
+    }else{if(nomEl)nomEl.textContent=total>0?'…':'—';if(nomOv)nomOv.textContent=total>0?'…':'—';}
     var tbody=document.getElementById('tf-body');
     if(!tbody)return;
     if(rows.length===0){
