@@ -268,6 +268,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <h2>Treasury</h2>
     <div class="admin-grid" style="margin-bottom:20px">
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-treasury-balance" style="color:var(--gold)">€0.00</div><div class="admin-card-label">Treasury Balance</div></div>
+      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-revenue-ads">—</div><div class="admin-card-label">Revenue Ads (A-Ads)</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-revenue-adsense">—</div><div class="admin-card-label">Revenue AdSense</div></div>
       <div class="admin-card"><div class="admin-card-val">80 / 20</div><div class="admin-card-label">Split: Costi / Treasury (Alpha)</div></div>
@@ -1063,15 +1064,15 @@ async function loadAdminData(){
       if(robiRes.ok)robiData=await robiRes.json();
     }catch(e){}
     var robiMap={};
-    var robiTotal=0;
+    window._robiTotal=0;
     robiData.forEach(function(r){
       if(r.shares){
         var s=parseFloat(r.shares)||0;
         robiMap[r.user_id]=(robiMap[r.user_id]||0)+s;
-        robiTotal+=s;
+        window._robiTotal+=s;
       }
     });
-    document.getElementById('adm-nft-circulating-ov').textContent=robiTotal%1===0?robiTotal:robiTotal.toFixed(2);
+    document.getElementById('adm-nft-circulating-ov').textContent=window._robiTotal%1===0?window._robiTotal:window._robiTotal.toFixed(2);
     if(users&&users.length>0){
       var tbody=document.getElementById('adm-users-body');
       tbody.innerHTML=users.slice(0,50).map(function(u){
@@ -2048,6 +2049,11 @@ async function loadTreasuryFunds(){
     for(var i=0;i<rows.length;i++){total+=parseFloat(rows[i].amount_eur)||0;}
     var tb=document.getElementById('adm-treasury-balance');
     if(tb)tb.textContent='€'+total.toFixed(2);
+    // Valore nominale ROBI = treasury / totale ROBI
+    var nomEl=document.getElementById('adm-robi-nominal');
+    if(nomEl&&window._robiTotal>0){
+      nomEl.textContent='€'+(total/window._robiTotal).toFixed(4);
+    }else if(nomEl){nomEl.textContent=total>0?'…':'—';}
     var tbody=document.getElementById('tf-body');
     if(!tbody)return;
     if(rows.length===0){
