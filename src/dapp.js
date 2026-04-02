@@ -1870,33 +1870,38 @@ async function loadDappWallet(){
     }
   }
 
-  // Treasury → valore per quota + controvalore KAS
+  // Treasury → valore nominale ROBI (da treasury_funds con split %)
   try{
-    var tRes=await fetch(SB_URL+'/rest/v1/treasury_stats?select=*&order=created_at.desc&limit=1',{
+    var tRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
     });
+    var treasuryBal=0;
     if(tRes.ok){
       var tRows=await tRes.json();
-      if(tRows&&tRows.length){
-        var treasury=parseFloat(tRows[0].balance_eur)||0;
-        var nftCirc=parseFloat(tRows[0].nft_circulating)||totalShares||1;
-        var unitVal=nftCirc>0?(treasury/nftCirc):0;
-        var valEl=document.getElementById('dapp-wcard-rend-value');
-        if(valEl){
-          if(hasRendimento){
-            var totalVal=(unitVal*totalShares).toFixed(2);
-            valEl.innerHTML='&euro; '+totalVal;
-            // Fetch KAS price and show equivalent
-            fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur').then(function(r){return r.json()}).then(function(d){
-              if(d&&d.kaspa&&d.kaspa.eur>0){
-                var kasEquiv=(parseFloat(totalVal)/d.kaspa.eur).toFixed(2);
-                valEl.innerHTML='&euro; '+totalVal+'<div style="font-family:var(--font-m);font-size:11px;color:var(--kas);margin-top:4px;letter-spacing:1px">&asymp; '+kasEquiv+' KAS</div>';
-              }
-            }).catch(function(){});
-          }else{
-            valEl.textContent='—';
+      if(tRows)tRows.forEach(function(r){
+        var amt=parseFloat(r.amount_eur)||0;
+        var pct=r.treasury_pct!=null?parseInt(r.treasury_pct):100;
+        treasuryBal+=amt*(pct/100);
+      });
+    }
+    // Get total ROBI via RPC (bypasses RLS)
+    var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}});
+    var totalRobi=0;
+    if(robiRes.ok){var rd=await robiRes.json();rd.forEach(function(r){totalRobi+=parseFloat(r.shares)||0;});}
+    var unitVal=totalRobi>0?(treasuryBal/totalRobi):0;
+    var valEl=document.getElementById('dapp-wcard-rend-value');
+    if(valEl){
+      if(hasRendimento&&unitVal>0){
+        var totalVal=(unitVal*totalShares).toFixed(2);
+        valEl.innerHTML='&euro; '+totalVal;
+        fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur').then(function(r){return r.json()}).then(function(d){
+          if(d&&d.kaspa&&d.kaspa.eur>0){
+            var kasEquiv=(parseFloat(totalVal)/d.kaspa.eur).toFixed(2);
+            valEl.innerHTML='&euro; '+totalVal+'<div style="font-family:var(--font-m);font-size:11px;color:var(--kas);margin-top:4px;letter-spacing:1px">&asymp; '+kasEquiv+' KAS</div>';
           }
-        }
+        }).catch(function(){});
+      }else{
+        valEl.textContent=hasRendimento?'€ 0.00':'—';
       }
     }
   }catch(e){}
