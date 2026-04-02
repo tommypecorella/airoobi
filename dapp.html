@@ -131,7 +131,7 @@
       <div class="dash-stat">
         <div class="dash-stat-val blue" id="home-aria">0</div>
         <div class="dash-stat-label"><span class="it">Saldo ARIA</span><span class="en">ARIA Balance</span></div>
-        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(74,158,255,.4);margin-top:2px">TEST</div>
+        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(74,158,255,.4);margin-top:2px">TESTNET</div>
       </div>
       <div class="dash-stat">
         <div class="dash-stat-val" id="home-robi" style="color:var(--gold)">0</div>
@@ -148,7 +148,7 @@
       <div class="dash-faucet-card">
         <div class="dash-faucet-info">
           <div class="dash-faucet-title"><span class="it">Faucet ARIA</span><span class="en">ARIA Faucet</span></div>
-          <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA di test</strong> ogni giorno</span><span class="en">Get <strong>100 test ARIA</strong> every day</span></div>
+          <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> ogni giorno (fase testnet)</span><span class="en">Get <strong>100 ARIA</strong> every day (testnet phase)</span></div>
         </div>
         <button id="faucet-btn" onclick="claimFaucet()" class="dash-faucet-btn"><span class="it">RICEVI</span><span class="en">GET</span></button>
         <div id="faucet-status" style="margin-top:8px;font-size:12px;color:var(--gray-400);text-align:center;display:none;grid-column:1/-1"></div>
@@ -168,7 +168,7 @@
 
     <!-- COME OTTENERE ARIA -->
     <div class="dash-section">
-      <div class="dash-section-title"><span class="it">Come muovere ARIA</span><span class="en">How to move ARIA</span></div>
+      <div class="dash-section-title"><span class="it">Come accumulare ARIA</span><span class="en">How to accumulate ARIA</span></div>
       <div class="dash-earn-grid" id="home-earnings">
         <div class="dash-earn-item"><span class="dash-earn-icon">+100</span><span class="it">Faucet giornaliero</span><span class="en">Daily faucet</span></div>
         <div class="dash-earn-item"><span class="dash-earn-icon">+1</span><span class="it">Login giornaliero</span><span class="en">Daily login</span></div>
@@ -179,8 +179,8 @@
         <div class="dash-earn-item"><span class="dash-earn-icon">+15</span><span class="it">Sei stato invitato</span><span class="en">You were invited</span></div>
       </div>
       <div style="margin-top:10px;padding:10px 14px;background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.12);border-radius:var(--radius-sm);font-size:11px;color:var(--gray-400);line-height:1.5">
-        <span class="it">ARIA sono monete di test. Più ne muovi, più partecipi. Tutti gli ARIA accumulati in Alpha conteranno per l'airdrop finale al lancio della mainnet. Quello che si guadagna davvero sono i <strong style="color:var(--gold)">ROBI</strong>.</span>
-        <span class="en">ARIA are test coins. The more you move, the more you participate. All ARIA accumulated during Alpha will count towards the final airdrop at mainnet launch. What you actually earn are <strong style="color:var(--gold)">ROBI</strong>.</span>
+        <span class="it">ARIA varranno <strong style="color:var(--aria)">€0,10</strong> ciascuno. Ora siamo in fase testnet: il faucet distribuisce 100 ARIA/giorno (diminuirà progressivamente). Accumula ARIA e partecipa agli airdrop — più partecipi, più <strong style="color:var(--gold)">ROBI</strong> guadagni. I ROBI sono il vero reward di AIROOBI.</span>
+        <span class="en">ARIA will be worth <strong style="color:var(--aria)">€0.10</strong> each. We're currently in testnet: the faucet gives 100 ARIA/day (it will decrease over time). Accumulate ARIA and join airdrops — the more you participate, the more <strong style="color:var(--gold)">ROBI</strong> you earn. ROBI are AIROOBI's real reward.</span>
       </div>
     </div>
 
@@ -381,8 +381,8 @@
         <button class="submit-btn" id="sub-btn" onclick="submitObject()" style="width:auto;padding:14px 28px"><span class="it">ACQUISTA VALUTAZIONE</span><span class="en">BUY VALUATION</span></button>
       </div>
       <div id="sub-insufficient" style="display:none;padding:12px 16px;margin-bottom:16px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.06);color:#ef4444;font-size:13px">
-        <span class="it">Saldo ARIA insufficiente. Ricevi ARIA di test dal faucet, check-in, referral e video per sbloccare la valutazione.</span>
-        <span class="en">Insufficient ARIA balance. Get test ARIA from the faucet, check-ins, referrals and videos to unlock valuation.</span>
+        <span class="it">Saldo ARIA insufficiente. Accumula ARIA dal faucet, check-in, referral e video per sbloccare la valutazione.</span>
+        <span class="en">Insufficient ARIA balance. Accumulate ARIA from the faucet, check-ins, referrals and videos to unlock valuation.</span>
       </div>
       <div id="sub-msg"></div>
       <div class="submit-rules">
@@ -433,7 +433,7 @@
 
     <div class="ref-card" style="border-color:rgba(184,150,12,.3)">
       <h3><span class="it">Come funziona il referral</span><span class="en">How referrals work</span></h3>
-      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login il referral si conferma automaticamente<br>4. Tu ricevi +10 ARIA di test, il tuo amico +15 ARIA di test!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. Referral auto-confirms at their first login<br>4. You get +10 test ARIA, your friend gets +15 test ARIA!</span></p>
+      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login il referral si conferma automaticamente<br>4. Tu ricevi +10 ARIA, il tuo amico +15 ARIA — più accumuli, più ROBI guadagni!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. Referral auto-confirms at their first login<br>4. You get +10 ARIA, your friend gets +15 ARIA — the more you accumulate, the more ROBI you earn!</span></p>
     </div>
 
     <div class="ref-history-section">
@@ -469,7 +469,7 @@
             <div class="wcard-sublabel" style="color:var(--aria)"><span class="it">Il tuo ARIA</span><span class="en">Your ARIA</span></div>
           </div>
           <div class="wcard-icons">
-            <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)"><span class="it">Test coin</span><span class="en">Test coin</span></div>
+            <div class="wcard-badge" style="color:var(--aria);border-color:rgba(74,158,255,.4)">Testnet</div>
             <div class="wcard-chip" style="border-color:rgba(74,158,255,.18)">
               <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
               <div class="wcard-chip-dot" style="color:var(--aria)"></div><div class="wcard-chip-dot" style="color:var(--aria)"></div>
@@ -479,16 +479,16 @@
         <div class="wcard-body">
           <div class="wcard-amount-block">
             <div class="wcard-amount" style="color:var(--aria)" id="dapp-wcard-aria-amount">—</div>
-            <div class="wcard-unit" style="color:rgba(74,158,255,.5)"><span class="it">ARIA DI TEST</span><span class="en">TEST ARIA</span></div>
+            <div class="wcard-unit" style="color:rgba(74,158,255,.5)"><span class="it">ARIA · TESTNET</span><span class="en">ARIA · TESTNET</span></div>
           </div>
           <div style="font-size:11px;color:var(--gray-400);margin-top:8px;font-style:italic;line-height:1.4">
-            <span class="it">ARIA sono monete di test. Piu ne muovi, piu partecipi. Conteranno per l'airdrop finale al lancio della mainnet.</span>
-            <span class="en">ARIA are test coins. The more you move, the more you participate. They will count towards the final airdrop at mainnet launch.</span>
+            <span class="it">ARIA varranno €0,10 ciascuno. Ora siamo in fase testnet. Accumula ARIA e partecipa agli airdrop per aumentare i tuoi ROBI.</span>
+            <span class="en">ARIA will be worth €0.10 each. We're in testnet phase. Accumulate ARIA and join airdrops to increase your ROBI.</span>
           </div>
         </div>
         <div class="wcard-desc">
-          <span class="it">Il tuo portafoglio ARIA di test. Muovi ARIA per partecipare agli airdrop — più ne muovi, più conti per l'airdrop finale al lancio della mainnet.</span>
-          <span class="en">Your test ARIA wallet. Move ARIA to participate in airdrops — the more you move, the more you count for the final airdrop at mainnet launch.</span>
+          <span class="it">Il tuo portafoglio ARIA. Fase testnet: accumula ARIA e partecipa agli airdrop. Più ARIA spendi, più ROBI guadagni.</span>
+          <span class="en">Your ARIA wallet. Testnet phase: accumulate ARIA and join airdrops. The more ARIA you spend, the more ROBI you earn.</span>
         </div>
         <div class="wcard-footer">
           <div class="wcard-serial" style="color:rgba(74,158,255,.3)">ALPHA · #<span id="dapp-wcard-aria-serial">—</span></div>
@@ -648,8 +648,8 @@
           <div style="display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start">
             <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(74,158,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:14px;color:var(--aria);letter-spacing:1px">A</div>
             <div>
-              <div style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--aria);margin-bottom:4px">ARIA <span style="font-size:10px;color:rgba(74,158,255,.4);letter-spacing:2px;margin-left:6px">TEST COIN</span></div>
-              <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">ARIA è la <strong style="color:var(--white)">moneta di test</strong> di AIROOBI. La ricevi gratis ogni giorno dal faucet (100/giorno), check-in, video e referral. <strong style="color:var(--white)">Non ha valore monetario</strong> — è uno strumento di partecipazione. Più ARIA muovi, più sei attivo sulla piattaforma. Tutti gli ARIA accumulati in Alpha conteranno per l'airdrop finale al lancio della mainnet.</span><span class="en">ARIA is AIROOBI's <strong style="color:var(--white)">test coin</strong>. Get it free every day from the faucet (100/day), check-ins, videos and referrals. <strong style="color:var(--white)">It has no monetary value</strong> — it's a participation tool. The more ARIA you move, the more active you are on the platform. All ARIA accumulated during Alpha will count towards the final airdrop at mainnet launch.</span></p>
+              <div style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--aria);margin-bottom:4px">ARIA <span style="font-size:10px;color:rgba(74,158,255,.4);letter-spacing:2px;margin-left:6px">€0,10 · TESTNET</span></div>
+              <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">ARIA è la <strong style="color:var(--white)">valuta di AIROOBI</strong>. Varrà <strong style="color:var(--aria)">€0,10</strong> ciascuno. Ora siamo in fase testnet: la ricevi gratis ogni giorno dal faucet (100/giorno), check-in, video e referral. Il faucet diminuirà progressivamente. Accumula ARIA e usali per partecipare agli airdrop — più partecipi, più ROBI guadagni.</span><span class="en">ARIA is <strong style="color:var(--white)">AIROOBI's currency</strong>. It will be worth <strong style="color:var(--aria)">€0.10</strong> each. We're in testnet phase: get it free every day from the faucet (100/day), check-ins, videos and referrals. The faucet will decrease over time. Accumulate ARIA and use them to join airdrops — the more you participate, the more ROBI you earn.</span></p>
             </div>
           </div>
           <!-- ROBI -->
@@ -671,9 +671,9 @@
           <!-- Flow -->
           <div style="text-align:center;padding:20px 0 0;border-top:1px solid var(--gray-700)">
             <div style="font-family:var(--font-m);font-size:12px;letter-spacing:1px;color:var(--gray-400)">
-              <span style="color:var(--aria)">ARIA</span> <span style="color:var(--gray-600)">→ muovi →</span> <span style="color:var(--gold)">ROBI</span> <span style="color:var(--gray-600)">→ riscuoti →</span> <span style="color:var(--kas)">KAS</span>
+              <span style="color:var(--aria)">ARIA</span> <span style="color:var(--gray-600)">→ accumula + partecipa →</span> <span style="color:var(--gold)">ROBI</span> <span style="color:var(--gray-600)">→ riscuoti →</span> <span style="color:var(--kas)">KAS</span>
             </div>
-            <div style="font-size:11px;color:var(--gray-600);margin-top:6px"><span class="it">test coin → valore reale → crypto on-chain</span><span class="en">test coin → real value → on-chain crypto</span></div>
+            <div style="font-size:11px;color:var(--gray-600);margin-top:6px"><span class="it">€0,10 (testnet) → vero reward → crypto on-chain</span><span class="en">€0.10 (testnet) → real reward → on-chain crypto</span></div>
           </div>
         </div>
       </div>
@@ -692,7 +692,7 @@
               <span style="font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:1px">ARIA</span>
               <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--kas);background:rgba(73,234,203,.1);padding:2px 8px;border-radius:10px"><span class="it">ATTIVO</span><span class="en">ACTIVE</span></span>
             </div>
-            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Gli ARIA sono <strong style="color:var(--white)">monete di test</strong>. Li ricevi gratis dal faucet (100/giorno), check-in (+1), video (+1, max 5/gg), streak (+1/7gg) e referral (+10/+15). <strong style="color:var(--aria)">Fare transazioni con ARIA conta.</strong> Anche solo ricevere dal faucet è un "movimento". Più ARIA muovi durante l'Alpha, più il tuo account peserà per l'airdrop finale al lancio della mainnet. Non aspettare — ogni giorno che passi senza muovere ARIA è un giorno perso.</span><span class="en">ARIA are <strong style="color:var(--white)">test coins</strong>. Get them free from the faucet (100/day), check-in (+1), videos (+1, max 5/day), streak (+1/7days) and referral (+10/+15). <strong style="color:var(--aria)">Transacting with ARIA counts.</strong> Even getting from the faucet is a "movement". The more ARIA you move during Alpha, the more your account will weigh for the final airdrop at mainnet launch. Don't wait — every day you don't move ARIA is a lost day.</span></p>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">ARIA varranno <strong style="color:var(--aria)">€0,10</strong> ciascuno. Ora siamo in <strong style="color:var(--white)">fase testnet</strong>: li ricevi gratis dal faucet (100/giorno — diminuirà), check-in (+1), video (+1, max 5/gg), streak (+1/7gg) e referral (+10/+15). <strong style="color:var(--aria)">Accumula ARIA e partecipa agli airdrop di test:</strong> più partecipi, più ROBI guadagni. I ROBI sono il vero reward di AIROOBI. Non aspettare — il faucet diminuirà progressivamente.</span><span class="en">ARIA will be worth <strong style="color:var(--aria)">€0.10</strong> each. We're in <strong style="color:var(--white)">testnet phase</strong>: get them free from the faucet (100/day — will decrease), check-in (+1), videos (+1, max 5/day), streak (+1/7days) and referral (+10/+15). <strong style="color:var(--aria)">Accumulate ARIA and join test airdrops:</strong> the more you participate, the more ROBI you earn. ROBI are AIROOBI's real reward. Don't wait — the faucet will decrease over time.</span></p>
           </div>
           <!-- ROBI adesso -->
           <div style="border-top:1px solid var(--gray-700);padding-top:24px">
@@ -708,7 +708,7 @@
               <span style="font-family:var(--font-m);font-size:12px;color:var(--kas);letter-spacing:1px">KAS</span>
               <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:2px 8px;border-radius:10px"><span class="it">CON MAINNET</span><span class="en">AT MAINNET</span></span>
             </div>
-            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">KAS non è ancora attivo — arriverà con il lancio della mainnet. Quando la piattaforma sarà on-chain, potrai riscuotere i tuoi ROBI in KAS reali. Per ora, concentrati su muovere ARIA e accumulare ROBI — stai costruendo la tua posizione.</span><span class="en">KAS is not active yet — it will come with the mainnet launch. When the platform goes on-chain, you'll be able to redeem your ROBI into real KAS. For now, focus on moving ARIA and accumulating ROBI — you're building your position.</span></p>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">KAS non è ancora attivo — arriverà con il lancio della mainnet. Quando la piattaforma sarà on-chain, potrai riscuotere i tuoi ROBI in KAS reali. Per ora, concentrati su accumulare ARIA e partecipare agli airdrop per aumentare i ROBI — stai costruendo la tua posizione.</span><span class="en">KAS is not active yet — it will come with the mainnet launch. When the platform goes on-chain, you'll be able to redeem your ROBI into real KAS. For now, focus on accumulating ARIA and joining airdrops to grow your ROBI — you're building your position.</span></p>
           </div>
         </div>
       </div>
@@ -740,7 +740,7 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
         <div>
           <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--aria);margin-bottom:6px">ARIA</div>
-          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">La moneta di test di AIROOBI. La ricevi gratis ogni giorno. La usi per partecipare agli airdrop. Piu ARIA muovi, piu conti per l'airdrop finale.</span><span class="en">AIROOBI's test coin. Get it free every day. Use it to participate in airdrops. The more ARIA you move, the more you count for the final airdrop.</span></p>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">La valuta di AIROOBI, in fase testnet. La accumuli gratis ogni giorno. La usi per partecipare agli airdrop. Al lancio della mainnet varrà €0,10 ciascuno. Piu accumuli, piu ROBI guadagni.</span><span class="en">AIROOBI's currency, currently in testnet phase. Accumulate it free every day. Use it to join airdrops. At mainnet launch it will be worth €0.10 each. The more you accumulate, the more ROBI you earn.</span></p>
         </div>
         <div>
           <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:6px">ROBI</div>
@@ -845,7 +845,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.02-1.61.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.02-1.62.0</div>
 </div>
 
 <script src="/src/dapp.js"></script>

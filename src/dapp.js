@@ -277,7 +277,7 @@ async function claimFaucet(){
       updateBalanceUI();
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       btn.style.background='var(--kas)';btn.style.color='var(--black)';
-      btn.textContent=lang==='it'?'+100 ARIA di test ricevuti!':'+100 test ARIA received!';
+      btn.textContent=lang==='it'?'+100 ARIA ricevuti!':'+100 ARIA received!';
       showToast('<span style="color:var(--kas)">+100 ARIA</span> faucet');
       // Refresh dashboard stats
       var homeAria=document.getElementById('home-aria');
@@ -396,18 +396,18 @@ function dappShareRef(platform){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var msgs={
     it:{
-      whatsapp:'*AIROOBI* — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Ricevi ARIA di test gratis ogni giorno e usali per partecipare. Più ARIA muovi, più conti per l\'airdrop finale.\n\nRegistrati col mio link e inserisci il codice amico *'+refCode+'*.\n\nAlpha Brave: solo 1.000 posti.\n',
-      telegram:'AIROOBI — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Ricevi ARIA di test gratis ogni giorno e usali per partecipare. Più ARIA muovi, più conti per l\'airdrop finale.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+'.\n\nAlpha Brave: solo 1.000 posti.\n',
-      x:'Realizza il tuo desiderio su @airoobi_com\n\nOggetti reali di valore, a un prezzo ridicolo. ARIA di test gratis.\n\nCodice amico: '+refCode+'. Alpha Brave: 1.000 posti. ',
+      whatsapp:'*AIROOBI* — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Accumula ARIA ogni giorno (testnet, varrà €0,10) e partecipa agli airdrop. Più partecipi, più ROBI guadagni.\n\nRegistrati col mio link e inserisci il codice amico *'+refCode+'*.\n\nAlpha Brave: solo 1.000 posti.\n',
+      telegram:'AIROOBI — Realizza il tuo desiderio.\n\nOggetti reali di valore, a un prezzo ridicolo. Accumula ARIA ogni giorno (testnet, varrà €0,10) e partecipa agli airdrop. Più partecipi, più ROBI guadagni.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+'.\n\nAlpha Brave: solo 1.000 posti.\n',
+      x:'Realizza il tuo desiderio su @airoobi_com\n\nOggetti reali di valore, a un prezzo ridicolo. ARIA gratis ogni giorno (testnet, varrà €0,10).\n\nCodice amico: '+refCode+'. Alpha Brave: 1.000 posti. ',
       email_subject:'AIROOBI — Realizza il tuo desiderio.',
-      email_body:'Ciao,\n\nsono entrato in AIROOBI e volevo portarti dentro. Oggetti reali di valore, a un prezzo ridicolo. Ricevi ARIA di test gratis ogni giorno e usali per partecipare. Più ARIA muovi, più conti per l\'airdrop finale.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+'.\n\nAlpha Brave: solo 1.000 posti.\n\n'+link
+      email_body:'Ciao,\n\nsono entrato in AIROOBI e volevo portarti dentro. Oggetti reali di valore, a un prezzo ridicolo. Accumula ARIA ogni giorno (testnet, varrà €0,10) e partecipa agli airdrop. Più partecipi, più ROBI guadagni.\n\nRegistrati col mio link e inserisci il codice amico '+refCode+'.\n\nAlpha Brave: solo 1.000 posti.\n\n'+link
     },
     en:{
-      whatsapp:'*AIROOBI* — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Get free test ARIA every day and use them to participate. The more you move, the more you count for the final airdrop.\n\nSign up with my link and enter friend code *'+refCode+'*.\n\nAlpha Brave: only 1,000 spots.\n',
-      telegram:'AIROOBI — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Get free test ARIA every day and use them to participate. The more you move, the more you count for the final airdrop.\n\nSign up with my link and enter friend code '+refCode+'.\n\nAlpha Brave: only 1,000 spots.\n',
-      x:'Make your desire real on @airoobi_com\n\nReal valuable objects, unbelievable prices. Free test ARIA daily.\n\nFriend code: '+refCode+'. Alpha Brave: 1,000 spots. ',
+      whatsapp:'*AIROOBI* — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Accumulate ARIA every day (testnet, worth €0.10 at mainnet) and join airdrops. The more you join, the more ROBI you earn.\n\nSign up with my link and enter friend code *'+refCode+'*.\n\nAlpha Brave: only 1,000 spots.\n',
+      telegram:'AIROOBI — Make your desire real.\n\nReal valuable objects, at an unbelievable price. Accumulate ARIA every day (testnet, worth €0.10 at mainnet) and join airdrops. The more you join, the more ROBI you earn.\n\nSign up with my link and enter friend code '+refCode+'.\n\nAlpha Brave: only 1,000 spots.\n',
+      x:'Make your desire real on @airoobi_com\n\nReal valuable objects, unbelievable prices. Free ARIA daily (testnet, €0.10 at mainnet).\n\nFriend code: '+refCode+'. Alpha Brave: 1,000 spots. ',
       email_subject:'AIROOBI — Make your desire real.',
-      email_body:'Hey,\n\nI joined AIROOBI and wanted to bring you in. Real valuable objects, at an unbelievable price. Get free test ARIA every day and use them to participate. The more you move, the more you count for the final airdrop.\n\nSign up with my link and enter friend code '+refCode+'.\n\nAlpha Brave: only 1,000 spots.\n\n'+link
+      email_body:'Hey,\n\nI joined AIROOBI and wanted to bring you in. Real valuable objects, at an unbelievable price. Accumulate ARIA every day (testnet, worth €0.10 at mainnet) and join airdrops. The more you join, the more ROBI you earn.\n\nSign up with my link and enter friend code '+refCode+'.\n\nAlpha Brave: only 1,000 spots.\n\n'+link
     }
   };
   var m=msgs[lang]||msgs.it;
@@ -445,7 +445,7 @@ var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
   submit:{it:'<b>Valuta</b> il tuo <em>oggetto</em>',en:'<b>Evaluate</b> your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
-  referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e ricevi ARIA di test bonus.',sub_en:'Invite friends and get bonus test ARIA.'},
+  referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e ricevi ARIA bonus. Più accumuli, più ROBI guadagni.',sub_en:'Invite friends and earn bonus ARIA. The more you accumulate, the more ROBI you earn.'},
   wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'I tuoi asset: ARIA, ROBI e KAS.',sub_en:'Your assets: ARIA, ROBI and KAS.'},
   archive:{it:'<em>Archivio</em> Airdrop',en:'Airdrop <em>Archive</em>',sub_it:'Tutti gli airdrop completati. Trasparenza totale.',sub_en:'All completed airdrops. Full transparency.'},
   learn:{it:'<em>Impara</em>',en:'<em>Learn</em>',sub_it:'Scopri come funzionano ARIA, ROBI e il motore airdrop.',sub_en:'Learn how ARIA, ROBI and the airdrop engine work.'},
