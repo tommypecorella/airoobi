@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -165,6 +165,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .bo-detail-item-val{font-size:13px}
 .bo-detail-desc{font-size:13px;color:var(--gray-300);line-height:1.6;margin-bottom:12px}
 .bo-detail-img{max-width:160px;max-height:160px;object-fit:contain;border:1px solid var(--gray-700);margin-bottom:12px}
+[data-lang="it"] .en{display:none!important}
+[data-lang="en"] .it{display:none!important}
 </style>
 </head>
 <body>
@@ -236,6 +238,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-categories')"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg>Categorie</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-engine')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Engine Config</div>
   </div>
+  <div style="padding:12px 16px;border-top:1px solid var(--gray-800)">
+    <button onclick="aboToggleLang()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;padding:6px 12px;cursor:pointer;width:100%;text-align:center" id="abo-lang-btn">EN</button>
+  </div>
 </nav>
 
 <!-- MAIN CONTENT -->
@@ -270,9 +275,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-grid" style="margin-bottom:20px">
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-treasury-balance" style="color:var(--gold)">€0.00</div><div class="admin-card-label">Treasury Balance</div></div>
       <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-service-balance" style="color:var(--white)">€0.00</div><div class="admin-card-label"><span class="it">Service Balance (AIROOBI)</span><span class="en">Service Balance (AIROOBI)</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-revenue-ads">—</div><div class="admin-card-label">Revenue Ads (A-Ads)</div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-revenue-adsense">—</div><div class="admin-card-label">Revenue AdSense</div></div>
-      <div class="admin-card"><div class="admin-card-val">80 / 20</div><div class="admin-card-label">Split: Costi / Treasury (Alpha)</div></div>
     </div>
 
     <!-- Treasury Fondi -->
@@ -281,20 +286,25 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
       <!-- Add fund inline form -->
       <div id="tf-add-form" style="display:none;margin-bottom:16px;padding:16px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
-        <div style="display:grid;grid-template-columns:150px 1fr auto;gap:12px;align-items:flex-end">
+        <div style="display:grid;grid-template-columns:130px 1fr 100px auto;gap:12px;align-items:flex-end">
           <div>
             <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Importo (&euro;)</span><span class="en">Amount (&euro;)</span></label>
-            <input type="number" id="tf-amount" step="0.01" min="0" placeholder="0.00" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:8px 10px">
+            <input type="number" id="tf-amount" step="0.01" min="0" placeholder="0.00" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:8px 10px" oninput="tfPreviewSplit()">
           </div>
           <div>
             <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Descrizione</span><span class="en">Description</span></label>
-            <input type="text" id="tf-description" placeholder="Es. Finanziamento iniziale, Revenue Q1..." style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-b);font-size:13px;padding:8px 10px">
+            <input type="text" id="tf-description" placeholder="Es. Revenue Q1, Ads marzo..." style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-b);font-size:13px;padding:8px 10px">
+          </div>
+          <div>
+            <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">% Treasury</span><span class="en">% Treasury</span></label>
+            <input type="number" id="tf-treasury-pct" value="20" min="0" max="100" step="1" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--gold);font-family:var(--font-m);font-size:13px;padding:8px 10px" oninput="tfPreviewSplit()">
           </div>
           <div style="display:flex;gap:8px">
             <button onclick="addTreasuryFund()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:8px 16px;cursor:pointer;font-weight:700"><span class="it">SALVA</span><span class="en">SAVE</span></button>
             <button onclick="document.getElementById('tf-add-form').style.display='none'" style="background:transparent;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:8px 12px;cursor:pointer"><span class="it">ANNULLA</span><span class="en">CANCEL</span></button>
           </div>
         </div>
+        <div id="tf-split-preview" style="margin-top:10px;font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.5px"></div>
       </div>
 
       <div style="margin-bottom:12px">
@@ -302,12 +312,12 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </div>
 
       <table class="admin-table" id="tf-table">
-        <thead><tr><th><span class="it">Data</span><span class="en">Date</span></th><th><span class="it">Importo (&euro;)</span><span class="en">Amount (&euro;)</span></th><th><span class="it">Descrizione</span><span class="en">Description</span></th><th><span class="it">Azioni</span><span class="en">Actions</span></th></tr></thead>
-        <tbody id="tf-body"><tr><td colspan="4" style="color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></td></tr></tbody>
+        <thead><tr><th><span class="it">Data</span><span class="en">Date</span></th><th><span class="it">Totale</span><span class="en">Total</span></th><th><span class="it">Treasury</span><span class="en">Treasury</span></th><th><span class="it">Service</span><span class="en">Service</span></th><th><span class="it">Descrizione</span><span class="en">Description</span></th><th></th></tr></thead>
+        <tbody id="tf-body"><tr><td colspan="6" style="color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></td></tr></tbody>
       </table>
     </div>
 
-    <p class="admin-note" style="margin-top:12px"><span class="it">Treasury balance = somma dei fondi inseriti manualmente. La tabella <code>treasury_stats</code> resta per compatibilit&agrave;.</span><span class="en">Treasury balance = sum of manually added funds. The <code>treasury_stats</code> table remains for compatibility.</span></p>
+    <p class="admin-note" style="margin-top:12px"><span class="it">Ogni fondo inserito viene diviso: la % Treasury va al Treasury Balance (copre i ROBI), il resto va al Service Balance (costi operativi AIROOBI).</span><span class="en">Each fund is split: the Treasury % goes to Treasury Balance (backs ROBI), the rest goes to Service Balance (AIROOBI operating costs).</span></p>
   </div>
 
   <!-- USERS TABLE -->
@@ -812,6 +822,17 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 <div id="notif-toast-container" class="notif-toast-container"></div>
 
 <script>
+// ── Language toggle ──
+function aboToggleLang(){
+  var h=document.documentElement;
+  var cur=h.getAttribute('data-lang')||'it';
+  var next=cur==='it'?'en':'it';
+  h.setAttribute('data-lang',next);
+  h.setAttribute('lang',next);
+  var btn=document.getElementById('abo-lang-btn');
+  if(btn)btn.textContent=next==='it'?'EN':'IT';
+}
+
 // ── Supabase ──
 const SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
@@ -2046,29 +2067,42 @@ async function loadTreasuryFunds(){
   try{
     var rows=await sbGet('treasury_funds?select=*&order=created_at.desc',s.access_token);
     if(!rows)rows=[];
-    var total=0;
-    for(var i=0;i<rows.length;i++){total+=parseFloat(rows[i].amount_eur)||0;}
+    var treasuryTotal=0,serviceTotal=0;
+    for(var i=0;i<rows.length;i++){
+      var amt=parseFloat(rows[i].amount_eur)||0;
+      var pct=rows[i].treasury_pct!=null?parseInt(rows[i].treasury_pct):100;
+      treasuryTotal+=amt*(pct/100);
+      serviceTotal+=amt*((100-pct)/100);
+    }
     var tb=document.getElementById('adm-treasury-balance');
-    if(tb)tb.textContent='€'+total.toFixed(2);
+    if(tb)tb.textContent='€'+treasuryTotal.toFixed(2);
+    var sb=document.getElementById('adm-service-balance');
+    if(sb)sb.textContent='€'+serviceTotal.toFixed(2);
     // Valore nominale ROBI = treasury / totale ROBI
     var nomEl=document.getElementById('adm-robi-nominal');
     var nomOv=document.getElementById('adm-robi-nominal-ov');
     if(nomEl&&window._robiTotal>0){
-      var nomVal='€'+(total/window._robiTotal).toFixed(4);
+      var nomVal='€'+(treasuryTotal/window._robiTotal).toFixed(4);
       nomEl.textContent=nomVal;
       if(nomOv)nomOv.textContent=nomVal;
-    }else{if(nomEl)nomEl.textContent=total>0?'…':'—';if(nomOv)nomOv.textContent=total>0?'…':'—';}
+    }else{if(nomEl)nomEl.textContent=treasuryTotal>0?'…':'—';if(nomOv)nomOv.textContent=treasuryTotal>0?'…':'—';}
     var tbody=document.getElementById('tf-body');
     if(!tbody)return;
     if(rows.length===0){
-      tbody.innerHTML='<tr><td colspan="4" style="color:var(--gray-400)"><span class="it">Nessun fondo inserito</span><span class="en">No funds added yet</span></td></tr>';
+      tbody.innerHTML='<tr><td colspan="6" style="color:var(--gray-400)"><span class="it">Nessun fondo inserito</span><span class="en">No funds added yet</span></td></tr>';
       return;
     }
     tbody.innerHTML=rows.map(function(r){
       var date=new Date(r.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+      var amt=parseFloat(r.amount_eur)||0;
+      var pct=r.treasury_pct!=null?parseInt(r.treasury_pct):100;
+      var toTreasury=amt*(pct/100);
+      var toService=amt*((100-pct)/100);
       return '<tr>'+
         '<td style="font-family:var(--font-m);font-size:12px">'+date+'</td>'+
-        '<td style="font-family:var(--font-m);color:var(--gold)">€'+(parseFloat(r.amount_eur)||0).toFixed(2)+'</td>'+
+        '<td style="font-family:var(--font-m)">€'+amt.toFixed(2)+'</td>'+
+        '<td style="font-family:var(--font-m);color:var(--gold)">€'+toTreasury.toFixed(2)+' <span style="font-size:10px;color:var(--gray-500)">('+pct+'%)</span></td>'+
+        '<td style="font-family:var(--font-m);color:var(--white)">€'+toService.toFixed(2)+'</td>'+
         '<td>'+(r.description||'')+'</td>'+
         '<td><button class="ct-btn-del" onclick="deleteTreasuryFund(\''+r.id+'\')" style="background:transparent;border:1px solid #c0392b;color:#e74c3c;font-family:var(--font-m);font-size:10px;padding:4px 10px;cursor:pointer;letter-spacing:1px">DEL</button></td>'+
       '</tr>';
@@ -2076,21 +2110,36 @@ async function loadTreasuryFunds(){
   }catch(e){console.error('Treasury funds load error:',e);}
 }
 
+function tfPreviewSplit(){
+  var amt=parseFloat(document.getElementById('tf-amount').value)||0;
+  var pct=parseInt(document.getElementById('tf-treasury-pct').value)||0;
+  var el=document.getElementById('tf-split-preview');
+  if(!el)return;
+  if(amt<=0){el.textContent='';return;}
+  var toTreasury=(amt*pct/100).toFixed(2);
+  var toService=(amt*(100-pct)/100).toFixed(2);
+  el.innerHTML='<span style="color:var(--gold)">Treasury: €'+toTreasury+'</span> · <span style="color:var(--white)">Service: €'+toService+'</span>';
+}
+
 async function addTreasuryFund(){
   var s=getSession();if(!s)return;
   var amount=parseFloat(document.getElementById('tf-amount').value);
   var desc=document.getElementById('tf-description').value.trim();
+  var pct=parseInt(document.getElementById('tf-treasury-pct').value);
   if(!amount||amount===0){alert('Inserisci un importo valido');return;}
   if(!desc){alert('Inserisci una descrizione');return;}
+  if(isNaN(pct)||pct<0||pct>100){alert('% Treasury deve essere tra 0 e 100');return;}
   try{
     var res=await fetch(SB_URL+'/rest/v1/treasury_funds',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({amount_eur:amount,description:desc,created_by:s.user.id})
+      body:JSON.stringify({amount_eur:amount,description:desc,created_by:s.user.id,treasury_pct:pct})
     });
     if(!res.ok){var errBody=await res.text();console.error('Treasury POST error:',res.status,errBody);throw new Error('POST failed: '+res.status+' — '+errBody);}
     document.getElementById('tf-amount').value='';
     document.getElementById('tf-description').value='';
+    document.getElementById('tf-treasury-pct').value='20';
+    document.getElementById('tf-split-preview').textContent='';
     document.getElementById('tf-add-form').style.display='none';
     loadTreasuryFunds();
   }catch(e){console.error('Treasury fund add error:',e);alert('Errore: '+e.message);}
