@@ -312,8 +312,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-section" id="sec-users">
     <h2>Ultimi utenti</h2>
     <table class="admin-table" id="adm-users-table">
-      <thead><tr><th>Email</th><th>Punti</th><th>Streak</th><th>Referral</th><th>Registrato</th></tr></thead>
-      <tbody id="adm-users-body"><tr><td colspan="5" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
+      <thead><tr><th>Email</th><th>ARIA</th><th>ROBI</th><th>Streak</th><th>Referral</th><th>Registrato</th></tr></thead>
+      <tbody id="adm-users-body"><tr><td colspan="6" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
     </table>
   </div>
 
@@ -995,7 +995,7 @@ async function toggleUserDetail(row,uid){
   row.classList.add('expanded');
   var detailRow=document.createElement('tr');
   detailRow.className='adm-detail-row';
-  detailRow.innerHTML='<td colspan="5"><div class="adm-detail-inner" style="color:var(--gray-400)">Caricamento...</div></td>';
+  detailRow.innerHTML='<td colspan="6"><div class="adm-detail-inner" style="color:var(--gray-400)">Caricamento...</div></td>';
   row.after(detailRow);
   var s=getSession();if(!s)return;
   var t=s.access_token;
@@ -1029,9 +1029,9 @@ async function toggleUserDetail(row,uid){
       });
     }else{html+='<p style="font-size:12px;color:var(--gray-500)">Nessun NFT</p>';}
     html+='</div>';
-    detailRow.innerHTML='<td colspan="5">'+html+'</td>';
+    detailRow.innerHTML='<td colspan="6">'+html+'</td>';
   }catch(e){
-    detailRow.innerHTML='<td colspan="5"><div class="adm-detail-inner" style="color:#ef4444">Errore caricamento dati</div></td>';
+    detailRow.innerHTML='<td colspan="6"><div class="adm-detail-inner" style="color:#ef4444">Errore caricamento dati</div></td>';
   }
 }
 
@@ -1070,10 +1070,15 @@ async function loadAdminData(){
       document.getElementById('adm-nft-circulating-ov').textContent=robiCount%1===0?robiCount:robiCount.toFixed(2);
     }catch(e){document.getElementById('adm-nft-circulating-ov').textContent='—';}
     if(users&&users.length>0){
+      // Build ROBI map per user
+      var robiMap={};
+      if(nfts)nfts.forEach(function(n){robiMap[n.user_id]=(robiMap[n.user_id]||0)+(parseFloat(n.shares)||1);});
       var tbody=document.getElementById('adm-users-body');
       tbody.innerHTML=users.slice(0,50).map(function(u){
         var d=new Date(u.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-        return '<tr class="adm-user-row" onclick="toggleUserDetail(this,\''+u.id+'\')" data-uid="'+u.id+'"><td>'+u.email+'</td><td>'+(u.total_points||0)+'</td><td>'+(u.current_streak||0)+'</td><td>'+(u.referral_count||0)+'</td><td>'+d+'</td></tr>';
+        var uRobi=robiMap[u.id]||0;
+        var robiStr=uRobi%1===0?uRobi:uRobi.toFixed(2);
+        return '<tr class="adm-user-row" onclick="toggleUserDetail(this,\''+u.id+'\')" data-uid="'+u.id+'"><td>'+u.email+'</td><td>'+(u.total_points||0)+'</td><td style="color:var(--gold)">'+robiStr+'</td><td>'+(u.current_streak||0)+'</td><td>'+(u.referral_count||0)+'</td><td>'+d+'</td></tr>';
       }).join('');
     }
     if(users&&users.length>0){
