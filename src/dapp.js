@@ -607,18 +607,18 @@ function dappShareRef(platform){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var msgs={
     it:{
-      whatsapp:'Sai cos\'è *AIROOBI*?\n\nUn iPhone da €1.200... qualcuno lo porterà a casa a meno di €50. Gratis da provare.\n\nIscriviti col mio codice *'+refCode+'* e ricevi subito ARIA gratis.\n',
-      telegram:'Sai cos\'è AIROOBI?\n\nUn iPhone da €1.200... qualcuno lo porterà a casa a meno di €50. Gratis da provare.\n\nIscriviti col mio codice '+refCode+' e ricevi subito ARIA gratis.\n',
-      x:'Un iPhone da €1.200... qualcuno lo porterà a casa a meno di €50.\n\nNon è una lotteria. Non è un\'asta. È @airoobi_com\n\nCodice: '+refCode+' ',
-      email_subject:'Hai visto AIROOBI?',
-      email_body:'Ciao,\n\nho scoperto una cosa interessante: su AIROOBI puoi portarti a casa oggetti di valore (tipo iPhone, orologi, borse) a prezzi assurdi.\n\nNon è una lotteria e non devi comprare niente — entri gratis, accumuli punti ogni giorno e partecipi.\n\nIscriviti col mio codice '+refCode+' e ricevi subito ARIA gratis per iniziare.\n\n'+link
+      whatsapp:'Ho trovato *AIROOBI*.\n\nOggetti di valore — iPhone, orologi, borse — e blocchi di opportunità per portarseli a casa a un prezzo che non crederesti.\n\nEntri gratis, ogni giorno accumuli punti, e con quelli partecipi. Semplice.\n\nProva col mio codice *'+refCode+'*\n',
+      telegram:'Ho trovato AIROOBI.\n\nOggetti di valore — iPhone, orologi, borse — e blocchi di opportunità per portarseli a casa a un prezzo che non crederesti.\n\nEntri gratis, ogni giorno accumuli punti, e con quelli partecipi. Semplice.\n\nProva col mio codice '+refCode+'\n',
+      x:'Oggetti di valore. Blocchi di opportunità. Prezzi che non crederesti.\n\nEntri gratis, accumuli punti ogni giorno e partecipi. Semplice.\n\n@airoobi_com · codice: '+refCode+' ',
+      email_subject:'Devi vedere AIROOBI',
+      email_body:'Ciao,\n\nti giro una cosa che ho trovato: AIROOBI.\n\nFunziona così: ci sono oggetti di valore (iPhone, orologi, borse). Tu entri gratis, ogni giorno accumuli punti, e con quelli acquisti blocchi di opportunità per portarti a casa l\'oggetto che vuoi.\n\nPiù blocchi prendi, più sei vicino. E chi non porta a casa l\'oggetto guadagna comunque qualcosa di reale.\n\nProva col mio codice '+refCode+'\n\n'+link
     },
     en:{
-      whatsapp:'Ever heard of *AIROOBI*?\n\nA €1,200 iPhone... someone will take it home for under €50. Free to try.\n\nSign up with my code *'+refCode+'* and get free ARIA instantly.\n',
-      telegram:'Ever heard of AIROOBI?\n\nA €1,200 iPhone... someone will take it home for under €50. Free to try.\n\nSign up with my code '+refCode+' and get free ARIA instantly.\n',
-      x:'A €1,200 iPhone... someone will take it home for under €50.\n\nNot a lottery. Not an auction. It\'s @airoobi_com\n\nCode: '+refCode+' ',
-      email_subject:'Have you seen AIROOBI?',
-      email_body:'Hey,\n\nI found something interesting: on AIROOBI you can get valuable items (iPhones, watches, bags) at crazy low prices.\n\nIt\'s not a lottery and you don\'t have to buy anything — join for free, earn points daily and participate.\n\nSign up with my code '+refCode+' and get free ARIA to start.\n\n'+link
+      whatsapp:'I found *AIROOBI*.\n\nValuable items — iPhones, watches, bags — and opportunity blocks to take them home at a price you wouldn\'t believe.\n\nJoin for free, earn points daily, use them to participate. Simple.\n\nTry it with my code *'+refCode+'*\n',
+      telegram:'I found AIROOBI.\n\nValuable items — iPhones, watches, bags — and opportunity blocks to take them home at a price you wouldn\'t believe.\n\nJoin for free, earn points daily, use them to participate. Simple.\n\nTry it with my code '+refCode+'\n',
+      x:'Valuable items. Opportunity blocks. Prices you won\'t believe.\n\nJoin free, earn points daily, participate. Simple.\n\n@airoobi_com · code: '+refCode+' ',
+      email_subject:'You need to see AIROOBI',
+      email_body:'Hey,\n\nsharing something I found: AIROOBI.\n\nHere\'s how it works: there are valuable items (iPhones, watches, bags). You join for free, earn points every day, and use them to buy opportunity blocks to take home the item you want.\n\nMore blocks you get, the closer you are. And those who don\'t take home the item still earn something real.\n\nTry it with my code '+refCode+'\n\n'+link
     }
   };
   var m=msgs[lang]||msgs.it;
