@@ -808,9 +808,8 @@ async function loadNotifications(){
     if(unread>0){badge.style.display='flex';badge.textContent=unread>99?'99+':unread;}
     else{badge.style.display='none';}
   }
-  // Bell color
   var bell=document.getElementById('notif-bell');
-  if(bell)bell.style.color=unread>0?'var(--gold)':'';
+  if(bell)bell.classList.toggle('has-unread',unread>0);
   // Render list
   var list=document.getElementById('notif-list');
   if(!list)return;
