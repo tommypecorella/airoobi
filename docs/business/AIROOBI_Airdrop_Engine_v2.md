@@ -1,5 +1,5 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 2.0 · 28 Marzo 2026 · DOCUMENTO FONDATIVO**
+**Version 2.1 · 7 Aprile 2026 · DOCUMENTO FONDATIVO**
 
 > Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
 > del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
@@ -17,6 +17,19 @@
 > - ADD: `airdrop_messages` — chat tra proponente e valutatore (RPC: send_airdrop_message, get_airdrop_messages)
 > - ADD: Multi-foto upload nel form valutazione (Supabase Storage bucket `submissions`, RPC aggiornata con p_image_urls)
 > - ADD: Branding "dApp" → "APP" in tutto il codebase
+>
+> **Changelog 7 Apr 2026 (v2.1) — Stage 1 Engagement Engine:**
+> - ADD: Durata airdrop configurabile (`duration_type`: flash 6h, standard 24h, extended 72h)
+> - ADD: Auto-transizione presale→sale basata su % blocchi venduti (soglie per tipo durata)
+> - ADD: Auto-close + draw al 100% blocchi venduti (configurabile)
+> - ADD: Countdown live su card e dettaglio airdrop (pulse gold a <2h)
+> - ADD: Posizione live "Sei X° su Y" con polling 30s + shake quando superato
+> - ADD: Watchlist/preferiti (tabella `airdrop_watchlist`, RPC `toggle_watchlist`)
+> - ADD: Alert categorie (tabella `user_preferences`, RPC `save_category_alerts`)
+> - ADD: Push notifications Web Push (tabella `push_subscriptions`, Edge Function `send-push`)
+> - ADD: Cron deadline_2h (Edge Function `check-deadlines`, pg_cron ogni 15 min)
+> - ADD: Trigger DB per push su publish e draw
+> - ADD: Soglie configurabili in ABO (Engine Config → Soglie Auto-Transizione)
 
 ---
 
@@ -117,8 +130,110 @@ Il draw viene attivato dal founder dall'admin panel tramite pulsante
 ### 4.2 Modalità automatica (flag configurabile)
 Colonna `auto_draw BOOLEAN DEFAULT false` in tabella `airdrops`.
 Se `auto_draw = true`:
-- Al raggiungimento del 100% blocchi → draw immediato
-- Alla deadline → draw automatico (cron job sul Pi ogni 15 minuti)
+- Al raggiungimento del 100% blocchi → auto-close + draw (se `auto_close_on_sellout = true`)
+- Alla deadline → draw automatico (cron job `check_auto_draw` ogni 15 minuti)
+
+---
+
+## 4A. Durata Airdrop e Auto-Transizione (v2.1)
+
+### 4A.1 Tipi di durata
+Colonna `duration_type TEXT DEFAULT 'standard'` in tabella `airdrops`.
+
+| Tipo | Durata | Badge UI | Uso tipico |
+|------|--------|----------|------------|
+| `flash` | 6 ore | ⚡ FLASH (rosso) | Oggetti < €1.000, alta urgenza |
+| `standard` | 24 ore | 24H (blu) | Default, oggetti €500-€5.000 |
+| `extended` | 72 ore | 72H (gold) | Oggetti > €5.000, più tempo per raccogliere |
+
+La durata è selezionata dall'admin in fase di approvazione (ABO).
+
+### 4A.2 Auto-transizione presale → sale
+Quando la percentuale di blocchi venduti in fase presale raggiunge la soglia configurata,
+lo status cambia automaticamente da `presale` a `sale`.
+
+**Soglie configurabili in `airdrop_config`:**
+
+| Config key | Default | Descrizione |
+|-----------|---------|-------------|
+| `presale_threshold_flash` | 30% | Flash: presale→sale al 30% venduto |
+| `presale_threshold_standard` | 20% | Standard: presale→sale al 20% venduto |
+| `presale_threshold_extended` | 15% | Extended: presale→sale al 15% venduto |
+| `auto_close_on_sellout` | true | 100% venduto → close + draw automatico |
+
+La logica è implementata nella RPC `buy_blocks` (v3): dopo ogni acquisto si controlla
+`(blocks_sold / total_blocks) >= soglia%` e si aggiorna lo status.
+
+### 4A.3 Auto-close al 100%
+Quando tutti i blocchi sono venduti e `auto_close_on_sellout = true`:
+1. Status cambia a `closed`
+2. Il cron `check_auto_draw` (esistente, ogni 15 min) esegue il draw
+3. Push notification a vincitore e partecipanti
+
+### 4A.4 Ciclo di vita completo
+
+```
+in_valutazione → [admin approva] → presale
+                                      ↓
+                        [soglia % blocchi venduti]
+                                      ↓
+                                    sale
+                                      ↓
+                    [100% venduto] ──→ closed → draw automatico
+                    [deadline]    ──→ closed → draw automatico
+                                      ↓
+                              completed / annullato
+```
+
+### 4A.5 Configurazione da ABO
+Le soglie sono modificabili dalla sezione "Engine Config" → "Soglie Auto-Transizione"
+nel pannello admin (abo.html). Ogni modifica viene salvata in `airdrop_config` e ha
+effetto immediato su tutti i futuri acquisti blocchi.
+
+---
+
+## 4B. Engagement Engine (v2.1)
+
+### 4B.1 Countdown live
+- Ogni card airdrop mostra un countdown in tempo reale verso la deadline
+- Formato: `3h 24m 12s alla chiusura` — aggiornamento ogni secondo
+- Quando mancano < 2 ore: countdown diventa gold e pulsa (CSS animation)
+- Implementato client-side con `setInterval(1000)` su `data-deadline`
+
+### 4B.2 Posizione live
+- Nella pagina dettaglio airdrop: "Sei X° su Y partecipanti"
+- Polling ogni 30 secondi via RPC `get_airdrop_participants`
+- Se la posizione peggiora: animazione shake + toast + push notification `position_lost`
+- Se non sei ancora entrato: "Entra ora — X partecipanti attivi"
+
+### 4B.3 Watchlist / Preferiti
+- Bottone cuore ♡ su ogni card e nella pagina dettaglio
+- Toggle via RPC `toggle_watchlist` → tabella `airdrop_watchlist`
+- Tab "Preferiti" nel filtro categorie della pagina Airdrops
+- Usata dal cron `check-deadlines` per notificare a 2h dalla chiusura
+
+### 4B.4 Alert categorie
+- Nel portafoglio: checkbox per categoria con salvataggio preferenze
+- RPC `save_category_alerts` → tabella `user_preferences`
+- Quando un airdrop viene pubblicato, il trigger DB invia push notification
+  a tutti gli utenti con alert attivo per quella categoria
+
+### 4B.5 Push Notifications
+5 tipi di notifica push implementati via Web Push API:
+
+| Tipo | Trigger | Destinatari |
+|------|---------|-------------|
+| `new_airdrop` | Airdrop pubblicato (presale/sale) | Utenti con alert categoria |
+| `deadline_2h` | 2h prima della chiusura | Watchlist + partecipanti |
+| `position_lost` | Superato in classifica | Utente superato |
+| `draw_winner` | Draw eseguito | Vincitore |
+| `draw_robi` | Draw eseguito | Tutti i partecipanti non vincitori |
+
+**Stack tecnico:**
+- Service Worker: `/sw.js` — riceve push e mostra notifica nativa
+- Subscription: client-side in `dapp.js`, salva in `push_subscriptions`
+- Invio: Edge Function `send-push` (Supabase, VAPID)
+- Trigger: DB trigger su `airdrops` UPDATE + cron `check-deadlines` ogni 15 min
 
 ### 4.3 Pre-draw checks
 Prima di eseguire il draw il sistema verifica:

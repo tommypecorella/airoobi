@@ -762,6 +762,45 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <thead><tr><th>Chiave</th><th>Valore</th><th>Descrizione</th></tr></thead>
       <tbody id="engine-config-body"><tr><td colspan="3" style="color:var(--gray-400)">Clicca RICARICA per caricare la config</td></tr></tbody>
     </table>
+
+    <!-- SOGLIE AUTO-TRANSIZIONE -->
+    <div style="margin-top:32px;border:1px solid rgba(184,150,12,.2);padding:20px;background:rgba(184,150,12,.03)">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:4px">SOGLIE AUTO-TRANSIZIONE</div>
+      <p style="color:var(--gray-500);font-size:11px;margin-bottom:16px;line-height:1.5">Percentuale di blocchi venduti in presale per far scattare automaticamente il passaggio a Sale. Quando un airdrop raggiunge il 100% → auto-close + draw.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+        <div style="text-align:center;padding:16px;border:1px solid rgba(255,107,107,.3);background:rgba(255,107,107,.04)">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ff6b6b;margin-bottom:8px">⚡ FLASH (6h)</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+            <input type="number" id="threshold-flash" min="5" max="100" value="30" style="width:60px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:16px">
+            <span style="color:var(--gray-400);font-size:14px">%</span>
+          </div>
+          <div style="font-size:10px;color:var(--gray-500);margin-top:6px">presale → sale</div>
+        </div>
+        <div style="text-align:center;padding:16px;border:1px solid rgba(74,158,255,.3);background:rgba(74,158,255,.04)">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">24H STANDARD</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+            <input type="number" id="threshold-standard" min="5" max="100" value="20" style="width:60px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:16px">
+            <span style="color:var(--gray-400);font-size:14px">%</span>
+          </div>
+          <div style="font-size:10px;color:var(--gray-500);margin-top:6px">presale → sale</div>
+        </div>
+        <div style="text-align:center;padding:16px;border:1px solid rgba(184,150,12,.3);background:rgba(184,150,12,.04)">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">72H EXTENDED</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+            <input type="number" id="threshold-extended" min="5" max="100" value="15" style="width:60px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:16px">
+            <span style="color:var(--gray-400);font-size:14px">%</span>
+          </div>
+          <div style="font-size:10px;color:var(--gray-500);margin-top:6px">presale → sale</div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;color:var(--gray-300)">
+          <input type="checkbox" id="threshold-auto-close" checked style="accent-color:var(--gold);width:14px;height:14px">
+          Auto-close + draw al 100% blocchi venduti
+        </label>
+      </div>
+      <button onclick="saveThresholds()" style="margin-top:14px;background:var(--gold);color:var(--black);border:none;padding:8px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">SALVA SOGLIE</button>
+    </div>
   </div>
 
   <!-- Cost Tracker Modal -->
@@ -980,6 +1019,7 @@ function adminNav(sectionId){
   if(sec)sec.classList.add('active');
   var btn=document.querySelector('.admin-sidebar-item[onclick*="\''+sectionId+'\'"]');
   if(btn){btn.classList.add('active');btn.blur();}
+  if(sectionId==='sec-engine')loadThresholds();
   var main=document.getElementById('admin-main');
   if(main){main.scrollTop=0;main.focus();}
   var sb=document.getElementById('admin-sidebar');
@@ -1811,6 +1851,40 @@ async function saveEngineConfig(){
     }
     showToast('Engine config salvata','success');
   }catch(e){console.error('saveEngineConfig:',e);showToast('Errore salvataggio config: '+e.message,'error');}
+}
+
+// ── Soglie Auto-Transizione ──
+async function loadThresholds(){
+  var s=getSession();if(!s)return;
+  try{
+    var rows=await sbGet('airdrop_config?key=in.(presale_threshold_flash,presale_threshold_standard,presale_threshold_extended,auto_close_on_sellout)',s.access_token);
+    (rows||[]).forEach(function(r){
+      if(r.key==='presale_threshold_flash'){var el=document.getElementById('threshold-flash');if(el)el.value=r.value;}
+      if(r.key==='presale_threshold_standard'){var el=document.getElementById('threshold-standard');if(el)el.value=r.value;}
+      if(r.key==='presale_threshold_extended'){var el=document.getElementById('threshold-extended');if(el)el.value=r.value;}
+      if(r.key==='auto_close_on_sellout'){var el=document.getElementById('threshold-auto-close');if(el)el.checked=r.value==='true';}
+    });
+  }catch(e){}
+}
+
+async function saveThresholds(){
+  var s=getSession();if(!s)return;
+  var updates=[
+    {key:'presale_threshold_flash',value:document.getElementById('threshold-flash').value},
+    {key:'presale_threshold_standard',value:document.getElementById('threshold-standard').value},
+    {key:'presale_threshold_extended',value:document.getElementById('threshold-extended').value},
+    {key:'auto_close_on_sellout',value:document.getElementById('threshold-auto-close').checked?'true':'false'}
+  ];
+  try{
+    for(var i=0;i<updates.length;i++){
+      await fetch(SB_URL+'/rest/v1/airdrop_config?key=eq.'+encodeURIComponent(updates[i].key),{
+        method:'PATCH',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({value:updates[i].value,updated_at:new Date().toISOString()})
+      });
+    }
+    showToast('Soglie auto-transizione salvate','success');
+  }catch(e){showToast('Errore: '+e.message,'error');}
 }
 
 // ── Cost Tracker ──

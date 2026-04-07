@@ -1442,7 +1442,10 @@ async function confirmBuy(){
     if(data&&data.ok){
       _balance=data.new_balance;
       document.getElementById('topbar-bal').textContent=_balance+' ARIA ('+eur(_balance)+')';
-      showToast(data.blocks_bought+' <span class="it">blocchi acquisiti!</span><span class="en">blocks acquired!</span>');
+      var toastMsg=data.blocks_bought+' <span class="it">blocchi acquisiti!</span><span class="en">blocks acquired!</span>';
+      if(data.status_changed==='sale')toastMsg+=' <span style="color:var(--gold)">→ SALE!</span>';
+      if(data.status_changed==='closed')toastMsg+=' <span style="color:var(--kas)">→ SOLD OUT!</span>';
+      showToast(toastMsg);
 
       // Animate donut: pulse the gold ring
       var mineRing=document.getElementById('donut-mine');
