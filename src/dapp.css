@@ -540,3 +540,32 @@ input{font-family:inherit}
 /* Info tooltips */
 .info-i{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--gray-600);font-family:var(--font-m);font-size:9px;color:var(--gray-500);cursor:pointer;vertical-align:middle;margin-left:4px;transition:all .2s;line-height:1;user-select:none}
 .info-i:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── Duration badges ── */
+.duration-badge{position:absolute;top:8px;left:8px;font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;padding:3px 8px;border-radius:var(--radius-sm);z-index:2;pointer-events:none}
+.duration-badge.flash{background:rgba(255,107,107,.9);color:var(--white)}
+.duration-badge.standard{background:rgba(74,158,255,.2);color:var(--aria)}
+.duration-badge.extended{background:rgba(184,150,12,.2);color:var(--gold)}
+
+/* ── Countdown on card ── */
+.card-countdown{display:block;font-family:var(--font-m);font-size:10px;letter-spacing:.5px;color:var(--gray-400);margin:4px 0}
+.card-countdown.urgent{color:var(--gold);animation:pulse-glow 1.5s ease-in-out infinite}
+.card-countdown.expired{color:var(--red);opacity:.6}
+
+/* ── Detail countdown ── */
+.detail-countdown{display:flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:12px;letter-spacing:1px;color:var(--gray-400);margin:12px 0;padding:10px 16px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)}
+.detail-countdown.urgent{color:var(--gold);border-color:rgba(184,150,12,.3);background:rgba(184,150,12,.04);animation:pulse-glow 1.5s ease-in-out infinite}
+
+/* ── Position live ── */
+.detail-position{font-family:var(--font-m);font-size:12px;letter-spacing:.5px;color:var(--gray-400);padding:10px 16px;border:1px solid var(--gray-700);margin:8px 0;background:rgba(255,255,255,.02)}
+.detail-position.in{color:var(--aria);border-color:rgba(74,158,255,.2)}
+.detail-position.not-in{color:var(--gray-400)}
+.detail-position.shake{animation:shake .5s ease-in-out}
+
+/* ── Heart / Watchlist button ── */
+.heart-btn{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);color:var(--gray-400);font-size:16px;width:32px;height:32px;border-radius:50%;cursor:pointer;z-index:3;display:flex;align-items:center;justify-content:center;transition:all .2s;line-height:1;padding:0}
+.heart-btn:hover,.heart-btn.active{color:#ff6b8a;border-color:#ff6b8a;background:rgba(255,107,138,.1)}
+.heart-btn.detail{position:static;margin-top:8px}
+
+@keyframes pulse-glow{0%,100%{opacity:1}50%{opacity:.5}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-2px)}}

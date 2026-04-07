@@ -432,7 +432,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <div><label>Presale price ARIA (opzionale)</label><input type="number" id="bo-approve-presale" min="1" placeholder="—"></div>
         <div><label>Status iniziale</label><select id="bo-approve-status"><option value="presale">Presale</option><option value="sale">Sale (live)</option></select></div>
       </div>
-      <div><label>Deadline (opzionale)</label><input type="date" id="bo-approve-deadline"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><label>Deadline (opzionale)</label><input type="date" id="bo-approve-deadline"></div>
+        <div><label>Durata</label><select id="bo-approve-duration"><option value="flash">Flash (6h) ⚡</option><option value="standard" selected>Standard (24h)</option><option value="extended">Extended (72h)</option></select></div>
+      </div>
       <!-- Calc preview -->
       <div id="bo-calc-preview" style="display:none;margin-top:12px;padding:12px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);font-size:11px;line-height:1.8">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
@@ -556,10 +559,18 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </div>
 
       <!-- ── SEZIONE OPERATIVA ── -->
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
         <div>
           <label>Deadline</label>
           <input type="datetime-local" id="ad-deadline">
+        </div>
+        <div>
+          <label>Durata</label>
+          <select id="ad-duration-type">
+            <option value="flash">Flash (6h) ⚡</option>
+            <option value="standard" selected>Standard (24h)</option>
+            <option value="extended">Extended (72h)</option>
+          </select>
         </div>
         <div>
           <label>Auto-draw</label>
@@ -1172,6 +1183,7 @@ async function adOpenModal(id){
     document.getElementById('ad-status').value=a.status||'in_valutazione';
     document.getElementById('ad-rejection').value=a.rejection_reason||'';
     document.getElementById('ad-auto-draw').checked=!!a.auto_draw;
+    document.getElementById('ad-duration-type').value=a.duration_type||'standard';
     document.getElementById('ad-modal-title').textContent='Modifica: '+a.title;
     var simSection=document.getElementById('ad-sim-section');
     var canSim=['presale','sale'].indexOf(a.status)!==-1&&!a.draw_executed_at;
@@ -1335,7 +1347,8 @@ async function adSaveAirdrop(){
     p_deadline:document.getElementById('ad-deadline').value?new Date(document.getElementById('ad-deadline').value).toISOString():null,
     p_rejection_reason:document.getElementById('ad-rejection').value.trim()||null,
     p_object_value_eur:parseFloat(document.getElementById('ad-object-value').value)||null,
-    p_auto_draw:document.getElementById('ad-auto-draw').checked
+    p_auto_draw:document.getElementById('ad-auto-draw').checked,
+    p_duration_type:document.getElementById('ad-duration-type').value||'standard'
   };
   try{
     var res=await fetch(SB_URL+'/rest/v1/rpc/manager_update_airdrop',{
@@ -2472,7 +2485,8 @@ async function doBoApprove(){
   var quotation=sug.quotation;
   var btn=document.getElementById('bo-approve-ok');btn.disabled=true;
   try{
-    var args={p_airdrop_id:_boTarget.id,p_status:status,p_block_price_aria:price,p_total_blocks:blocks,p_object_value_eur:quotation,p_auto_draw:true};
+    var durationType=(document.getElementById('bo-approve-duration')||{}).value||'standard';
+    var args={p_airdrop_id:_boTarget.id,p_status:status,p_block_price_aria:price,p_total_blocks:blocks,p_object_value_eur:quotation,p_auto_draw:true,p_duration_type:durationType};
     if(presale)args.p_presale_block_price=presale;
     if(deadline)args.p_deadline=deadline+'T23:59:59Z';
     var res=await fetch(SB_URL+'/rest/v1/rpc/manager_update_airdrop',{

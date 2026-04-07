@@ -20,6 +20,10 @@ var _managerCats=[];
 var _allAirdrops=[];
 var _boFilter='in_valutazione';
 var _boTarget=null;
+var _watchlist=[];
+var _countdownInterval=null;
+var _positionInterval=null;
+var _lastPosition=null;
 
 // ── Supabase helpers ──
 async function sbGet(path,token){
@@ -118,11 +122,15 @@ document.addEventListener('DOMContentLoaded',async function(){
   var token=await getValidToken();
   if(!token)return;
   setupUI();
-  await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles()]);
+  await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist()]);
   renderGrid();
   renderStats();
   renderCategoryFilter();
+  startCountdowns();
   loadValuationCount();
+  // Register SW + push notifications (after first login)
+  registerServiceWorker();
+  setTimeout(requestPushPermission,3000);
   // Route to correct page based on URL path
   var pp=location.pathname;
   var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':'home');
@@ -414,7 +422,7 @@ async function claimCheckin(){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       btn.style.background='var(--kas)';btn.style.color='var(--black)';
       btn.textContent=lang==='it'?'+50 ARIA fatto!':'+50 ARIA done!';
-      showToast('<span style="color:var(--kas)">+50 ARIA</span> check-in');
+      showToast('<span style="color:var(--kas)">+50 ARIA</span> — <span class="it">ogni ARIA è un passo verso il tuo ROBI</span><span class="en">every ARIA is a step toward your ROBI</span>');
       var homeAria=document.getElementById('home-aria');
       if(homeAria)homeAria.innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
     }else if(res&&res.error==='already_checked'){
@@ -491,7 +499,7 @@ async function claimFaucet(){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       btn.style.background='var(--kas)';btn.style.color='var(--black)';
       btn.textContent=lang==='it'?'+100 ARIA ricevuti!':'+100 ARIA received!';
-      showToast('<span style="color:var(--kas)">+100 ARIA</span> faucet');
+      showToast('<span style="color:var(--kas)">+100 ARIA</span> — <span class="it">più blocchi, più ROBI</span><span class="en">more blocks, more ROBI</span>');
       // Refresh dashboard stats
       var homeAria=document.getElementById('home-aria');
       if(homeAria)homeAria.innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
@@ -644,6 +652,28 @@ async function loadAirdrops(){
   _airdrops=await sbGet('airdrops?status=in.(presale,sale)&order=created_at.desc',_session.access_token)||[];
 }
 
+async function loadWatchlist(){
+  if(!_session)return;
+  var rows=await sbGet('airdrop_watchlist?user_id=eq.'+_session.user.id+'&select=airdrop_id',_session.access_token)||[];
+  _watchlist=rows.map(function(r){return r.airdrop_id});
+}
+function isInWatchlist(id){return _watchlist.indexOf(id)!==-1}
+
+async function toggleWatchlist(id,e){
+  if(e)e.stopPropagation();
+  var token=await getValidToken();if(!token)return;
+  var res=await sbRpc('toggle_watchlist',{p_airdrop_id:id},token);
+  if(res&&res.ok){
+    if(res.action==='added'){_watchlist.push(id);showToast('♡ <span class="it">Aggiunto ai preferiti</span><span class="en">Added to favorites</span>');}
+    else{_watchlist=_watchlist.filter(function(w){return w!==id});showToast('<span class="it">Rimosso dai preferiti</span><span class="en">Removed from favorites</span>');}
+    renderGrid();
+    if(_currentDetail&&_currentDetail.id===id){
+      var hb=document.getElementById('detail-heart');
+      if(hb)hb.className=isInWatchlist(id)?'heart-btn active':'heart-btn';
+    }
+  }
+}
+
 async function loadMyParticipations(){
   _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status)&order=created_at.desc',_session.access_token)||[];
 }
@@ -711,6 +741,7 @@ function renderCategoryFilter(){
   _airdrops.forEach(function(a){if(a.category)cats.add(a.category)});
   var wrap=document.getElementById('cat-filter');
   var html='<button class="cat-pill active" onclick="filterCat(\'all\')"><span class="it">Tutti</span><span class="en">All</span></button>';
+  html+='<button class="cat-pill" onclick="filterCat(\'favorites\')">♡ <span class="it">Preferiti</span><span class="en">Favorites</span></button>';
   var catLabels={mobile:'Mobile',tech:'Tech',luxury:'Luxury',ultra_luxury:'Ultra Luxury'};
   cats.forEach(function(c){
     html+='<button class="cat-pill" onclick="filterCat(\''+c+'\')">'+( catLabels[c]||c)+'</button>';
@@ -720,10 +751,13 @@ function renderCategoryFilter(){
 
 function filterCat(cat){
   _currentFilter=cat;
-  // Update pills
   document.querySelectorAll('.cat-pill').forEach(function(p){
-    var isCat=cat==='all'?p.textContent.match(/Tutti|All/):p.textContent.toLowerCase()===cat.toLowerCase();
-    p.classList.toggle('active',!!isCat);
+    var txt=p.textContent.trim();
+    var isCat=false;
+    if(cat==='all')isCat=!!txt.match(/Tutti|All/);
+    else if(cat==='favorites')isCat=txt.indexOf('♡')!==-1;
+    else isCat=txt.toLowerCase()===cat.toLowerCase();
+    p.classList.toggle('active',isCat);
   });
   renderGrid();
 }
@@ -733,11 +767,53 @@ function renderStats(){
   // stats-bar removed from UI — function kept for internal use
 }
 
+// ── Countdown helpers ──
+function fmtCountdown(deadline){
+  if(!deadline)return null;
+  var diff=new Date(deadline)-Date.now();
+  if(diff<=0)return{text:'Chiuso',en:'Closed',urgent:false,expired:true};
+  var h=Math.floor(diff/3600000);var m=Math.floor((diff%3600000)/60000);var s=Math.floor((diff%60000)/1000);
+  var urgent=diff<7200000; // < 2h
+  if(h>=24){var d=Math.floor(h/24);h=h%24;return{text:d+'g '+h+'h '+m+'m',en:d+'d '+h+'h '+m+'m',urgent:urgent,expired:false};}
+  return{text:h+'h '+m+'m '+s+'s',en:h+'h '+m+'m '+s+'s',urgent:urgent,expired:false};
+}
+
+function durationBadge(dtype){
+  if(dtype==='flash')return '<div class="duration-badge flash">FLASH ⚡</div>';
+  if(dtype==='extended')return '<div class="duration-badge extended">72H</div>';
+  return '<div class="duration-badge standard">24H</div>';
+}
+
+function startCountdowns(){
+  if(_countdownInterval)clearInterval(_countdownInterval);
+  _countdownInterval=setInterval(function(){
+    document.querySelectorAll('[data-deadline]').forEach(function(el){
+      var cd=fmtCountdown(el.dataset.deadline);
+      if(!cd)return;
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      el.textContent=lang==='it'?cd.text:cd.en;
+      el.className='card-countdown'+(cd.urgent?' urgent':'')+(cd.expired?' expired':'');
+    });
+    // Detail countdown
+    var dc=document.getElementById('detail-countdown');
+    if(dc&&dc.dataset.deadline){
+      var cd=fmtCountdown(dc.dataset.deadline);
+      if(cd){
+        var lang=document.documentElement.getAttribute('data-lang')||'it';
+        dc.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> '
+          +'<span class="it">'+(cd.expired?'Chiuso':cd.text+' alla chiusura')+'</span>'
+          +'<span class="en">'+(cd.expired?'Closed':cd.en+' to close')+'</span>';
+        dc.className='detail-countdown'+(cd.urgent?' urgent':'');
+      }
+    }
+  },1000);
+}
+
 // ── Grid ──
 function renderGrid(){
   var grid=document.getElementById('grid');
   var empty=document.getElementById('empty');
-  var list=_currentFilter==='all'?_airdrops:_airdrops.filter(function(a){return a.category===_currentFilter});
+  var list=_currentFilter==='all'?_airdrops:_currentFilter==='favorites'?_airdrops.filter(function(a){return isInWatchlist(a.id)}):_airdrops.filter(function(a){return a.category===_currentFilter});
   renderStats();
 
   if(!list||list.length===0){
@@ -769,11 +845,19 @@ function renderGrid(){
     var priceHtml=currentPrice+' ARIA <span class="card-eur">('+eur(currentPrice)+')</span> / <span class="it">blocco</span><span class="en">block</span>';
     if(isPresale&&a.presale_block_price)priceHtml+='<span class="card-presale-price">'+a.block_price_aria+'</span>';
 
+    var cd=fmtCountdown(a.deadline);
+    var cdHtml=cd?'<span class="card-countdown'+(cd.urgent?' urgent':'')+'" data-deadline="'+a.deadline+'">'+(cd.expired?'—':cd.text)+'</span>':'';
+    var heartCls=isInWatchlist(a.id)?'heart-btn active':'heart-btn';
+
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
-      +badge+imgHtml
+      +badge
+      +durationBadge(a.duration_type)
+      +'<button class="'+heartCls+'" onclick="toggleWatchlist(\''+a.id+'\',event)">♡</button>'
+      +imgHtml
       +'<div class="card-body">'
       +'<div class="card-cat">'+(a.category||'')+'</div>'
       +'<div class="card-title">'+a.title+'</div>'
+      +cdHtml
       +'<div class="card-progress"><div class="card-progress-bar" style="width:'+pct+'%"></div></div>'
       +'<div class="card-footer">'
       +'<span class="card-price">'+priceHtml+'</span>'
@@ -906,7 +990,9 @@ async function openDetail(id){
     +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>⛏ 2x MINING BOOST</strong> — <span class="it">Compra in presale e guadagna il doppio dei ROBI</span><span class="en">Buy in presale and earn 2x ROBI</span></div>':'')
     +(condition?'<div class="product-condition">'+condition+'</div>':'')
     +'<div class="detail-cat">'+a.category+'</div>'
+    +durationBadge(a.duration_type)
     +'</div>'
+    +'<button class="'+(isInWatchlist(a.id)?'heart-btn detail active':'heart-btn detail')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')">♡</button>'
     +'</div>'
 
     // ── ACCORDION SECTIONS ──
@@ -968,7 +1054,11 @@ async function openDetail(id){
     +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
     +'</div>'
 
-    +(dl?'<div class="detail-deadline"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span class="it">Scadenza: '+dl+'</span><span class="en">Deadline: '+dl+'</span></div>':'')
+    // Live countdown
+    +(a.deadline?'<div class="detail-countdown" id="detail-countdown" data-deadline="'+a.deadline+'"></div>':'')
+
+    // Position live
+    +'<div class="detail-position" id="detail-position"></div>'
 
     // BUY BOX
     +'<div class="buy-box">'
@@ -1017,6 +1107,118 @@ async function openDetail(id){
 
   // Start physics simulation for bubbles
   if(_bubbles.length>0)startBubblePhysics();
+
+  // Start countdown ticker
+  startCountdowns();
+
+  // Position live — initial + polling
+  updateDetailPosition(a.id,participants,myBlocks);
+  if(_positionInterval)clearInterval(_positionInterval);
+  _positionInterval=setInterval(function(){refreshPosition(a.id)},30000);
+}
+
+// ── Position Live ──
+function updateDetailPosition(airdropId,participants,myBlocks){
+  var el=document.getElementById('detail-position');if(!el)return;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(!_session||myBlocks<=0){
+    el.innerHTML='<span class="it">Entra ora — <strong>'+participants.length+'</strong> partecipanti attivi</span>'
+      +'<span class="en">Join now — <strong>'+participants.length+'</strong> active participants</span>';
+    el.className='detail-position not-in';
+    return;
+  }
+  // Sort participants by score desc to find position
+  var sorted=participants.slice().sort(function(a,b){return(b.score||0)-(a.score||0)});
+  var pos=1;
+  for(var i=0;i<sorted.length;i++){
+    if(sorted[i].user_id===_session.user.id){pos=i+1;break;}
+  }
+  el.innerHTML='<span class="it">Sei <strong>'+pos+'°</strong> su '+participants.length+' partecipanti</span>'
+    +'<span class="en">You are <strong>#'+pos+'</strong> of '+participants.length+' participants</span>';
+  el.className='detail-position in';
+  // Check if position worsened
+  if(_lastPosition!==null&&pos>_lastPosition){
+    el.classList.add('shake');
+    setTimeout(function(){el.classList.remove('shake')},600);
+    showToast('<span class="it">Sei stato superato — acquista altri blocchi per risalire</span><span class="en">You\'ve been overtaken — buy more blocks to climb back</span>');
+  }
+  _lastPosition=pos;
+}
+
+async function refreshPosition(airdropId){
+  try{
+    var token=await getValidToken();if(!token)return;
+    var participants=await sbRpc('get_airdrop_participants',{p_airdrop_id:airdropId},token)||[];
+    if(!Array.isArray(participants))participants=[];
+    var myBlocks=0;
+    if(_gridData)myBlocks=_gridData.filter(function(b){return b.is_mine}).length;
+    updateDetailPosition(airdropId,participants,myBlocks);
+  }catch(e){}
+}
+
+// ── Push Notifications ──
+var VAPID_PUBLIC_KEY=null; // Set via env or config
+
+async function registerServiceWorker(){
+  if(!('serviceWorker' in navigator))return null;
+  try{
+    var reg=await navigator.serviceWorker.register('/sw.js');
+    return reg;
+  }catch(e){return null;}
+}
+
+async function requestPushPermission(){
+  if(!('Notification' in window)||!('PushManager' in window))return;
+  if(Notification.permission==='granted'){await subscribePush();return;}
+  if(Notification.permission==='denied')return;
+  // Show custom prompt
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var msg=lang==='it'
+    ?'Vuoi essere avvisato quando esce un oggetto che ti interessa o quando sei stato superato in un airdrop?'
+    :'Want to be notified when an item you like drops or when someone overtakes you?';
+  var perm=await Notification.requestPermission();
+  if(perm==='granted')await subscribePush();
+}
+
+async function subscribePush(){
+  var reg=await registerServiceWorker();
+  if(!reg||!VAPID_PUBLIC_KEY)return;
+  try{
+    var sub=await reg.pushManager.subscribe({
+      userVisibleOnly:true,
+      applicationServerKey:urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+    });
+    var key=sub.toJSON();
+    var token=await getValidToken();
+    if(token){
+      await sbRpc('save_push_subscription',{
+        p_endpoint:key.endpoint,
+        p_keys_p256dh:key.keys.p256dh,
+        p_keys_auth:key.keys.auth
+      },token);
+    }
+  }catch(e){}
+}
+
+function urlBase64ToUint8Array(base64String){
+  var padding='='.repeat((4-base64String.length%4)%4);
+  var base64=(base64String+padding).replace(/-/g,'+').replace(/_/g,'/');
+  var raw=atob(base64);var arr=new Uint8Array(raw.length);
+  for(var i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);
+  return arr;
+}
+
+// ── Category Alerts ──
+async function loadCategoryAlerts(){
+  if(!_session)return[];
+  var rows=await sbGet('user_preferences?user_id=eq.'+_session.user.id+'&select=category_slug',_session.access_token)||[];
+  return rows.map(function(r){return r.category_slug});
+}
+
+async function saveCategoryAlerts(slugs){
+  var token=await getValidToken();if(!token)return;
+  await sbRpc('save_category_alerts',{p_slugs:slugs},token);
+  showToast('<span class="it">Preferenze salvate</span><span class="en">Preferences saved</span>');
 }
 
 // ── Bubble Physics Engine ──
@@ -1912,7 +2114,8 @@ async function doApprove(){
   var btn=document.getElementById('approve-ok');
   btn.disabled=true;
   var token=await getValidToken();
-  var args={p_airdrop_id:_boTarget.id,p_status:status,p_block_price_aria:price,p_total_blocks:blocks};
+  var duration=document.getElementById('approve-duration')?document.getElementById('approve-duration').value:'standard';
+  var args={p_airdrop_id:_boTarget.id,p_status:status,p_block_price_aria:price,p_total_blocks:blocks,p_duration_type:duration};
   if(presale)args.p_presale_block_price=presale;
   if(deadline)args.p_deadline=deadline+'T23:59:59Z';
   var res=await sbRpc('manager_update_airdrop',args,token);
@@ -2153,6 +2356,32 @@ async function loadDappWallet(){
       }).join('');
     }
   }catch(e){}
+
+  // Category alerts
+  renderCategoryAlertsUI(token);
+}
+
+async function renderCategoryAlertsUI(token){
+  var grid=document.getElementById('category-alerts-grid');
+  if(!grid)return;
+  var cats=await sbGet('categories?is_active=eq.true&order=sort_order',token)||[];
+  var alerts=await loadCategoryAlerts();
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  grid.innerHTML=cats.map(function(c){
+    var checked=alerts.indexOf(c.slug)!==-1;
+    return '<label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid '+(checked?'rgba(184,150,12,.3)':'var(--gray-700)')+';background:'+(checked?'rgba(184,150,12,.04)':'transparent')+';cursor:pointer;font-size:12px;color:var(--white);transition:all .2s">'
+      +'<input type="checkbox" data-slug="'+c.slug+'" '+(checked?'checked':'')+' style="accent-color:var(--gold);width:14px;height:14px">'
+      +(c.icon?'<span>'+c.icon+'</span>':'')
+      +'<span>'+(lang==='it'?c.name_it:c.name_en)+'</span>'
+      +'</label>';
+  }).join('');
+}
+
+async function saveAlertPreferences(){
+  var checks=document.querySelectorAll('#category-alerts-grid input[type=checkbox]');
+  var slugs=[];
+  checks.forEach(function(c){if(c.checked)slugs.push(c.dataset.slug)});
+  await saveCategoryAlerts(slugs);
 }
 
 // ── Archive tab ──
