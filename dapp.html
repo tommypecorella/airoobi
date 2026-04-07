@@ -24,6 +24,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/src/dapp.css">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="AIROOBI">
+<link rel="apple-touch-icon" href="/public/images/AIROOBI_Symbol_White.png">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -254,6 +260,14 @@
           <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
           <span class="it">Vendi</span><span class="en">Sell</span>
         </a>
+      </div>
+    </div>
+
+    <!-- ACTIVITY FEED -->
+    <div class="dash-section">
+      <div class="dash-section-title"><span class="it">Sta succedendo adesso</span><span class="en">Happening now</span></div>
+      <div id="activity-feed" style="display:grid;gap:6px;min-height:60px">
+        <div style="color:var(--gray-500);font-size:12px;text-align:center;padding:16px"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
       </div>
     </div>
 
@@ -610,6 +624,21 @@
         </div>
       </div>
 
+      <!-- ROBI SPARKLINE + HISTORY -->
+      <div style="padding:16px;border:1px solid rgba(184,150,12,.15);background:rgba(184,150,12,.02);margin-bottom:16px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold)"><span class="it">ANDAMENTO ROBI</span><span class="en">ROBI TREND</span></div>
+          <div id="robi-sparkline-val" style="font-family:var(--font-h);font-size:16px;color:var(--gold)">—</div>
+        </div>
+        <canvas id="robi-sparkline" style="width:100%;height:48px"></canvas>
+        <div style="margin-top:12px">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);margin-bottom:8px"><span class="it">STORICO ROBI</span><span class="en">ROBI HISTORY</span></div>
+          <div id="robi-history-list" style="max-height:200px;overflow-y:auto">
+            <div style="color:var(--gray-500);font-size:11px;text-align:center;padding:12px"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
+          </div>
+        </div>
+      </div>
+
       <!-- TESSERA KASPA — VERDE -->
       <div class="wcard wcard-kaspa">
         <div class="wcard-ring" style="width:320px;height:320px;right:-90px;bottom:-90px;border-color:rgba(73,234,203,.04)"></div>
@@ -683,6 +712,24 @@
       <div id="category-alerts-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">
       </div>
       <button onclick="saveAlertPreferences()" style="margin-top:12px;background:var(--gold);color:var(--black);border:none;padding:8px 20px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">SALVA PREFERENZE</span><span class="en">SAVE PREFERENCES</span></button>
+    </div>
+
+    <!-- WISHLIST AVANZATA -->
+    <div style="margin-top:24px;padding:20px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--aria);text-transform:uppercase;margin-bottom:12px"><span class="it">Wishlist avanzata</span><span class="en">Advanced wishlist</span></div>
+      <p style="font-size:12px;color:var(--gray-400);margin-bottom:12px;line-height:1.5"><span class="it">Ricevi una notifica quando esce un airdrop che matcha i tuoi interessi.</span><span class="en">Get notified when an airdrop matches your interests.</span></p>
+      <div style="display:grid;gap:10px">
+        <div>
+          <label style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);display:block;margin-bottom:4px"><span class="it">PAROLE CHIAVE (titolo oggetto)</span><span class="en">KEYWORDS (item title)</span></label>
+          <input type="text" id="wishlist-keywords" placeholder="es. iPhone, Rolex, PS5..." style="width:100%;padding:10px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:13px;border-radius:var(--radius-sm)">
+        </div>
+        <div>
+          <label style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);display:block;margin-bottom:4px"><span class="it">PREZZO MAX BLOCCO (ARIA)</span><span class="en">MAX BLOCK PRICE (ARIA)</span></label>
+          <input type="number" id="wishlist-max-price" min="1" placeholder="es. 50" style="width:100%;padding:10px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:13px;border-radius:var(--radius-sm)">
+        </div>
+      </div>
+      <button onclick="saveWishlistAlert()" style="margin-top:12px;background:var(--aria);color:var(--white);border:none;padding:8px 20px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">AGGIUNGI ALERT</span><span class="en">ADD ALERT</span></button>
+      <div id="wishlist-alerts-list" style="margin-top:12px"></div>
     </div>
 
   </div>
@@ -922,7 +969,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.07-1.64.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.07-1.65.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->

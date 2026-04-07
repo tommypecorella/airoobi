@@ -569,3 +569,6 @@ input{font-family:inherit}
 
 @keyframes pulse-glow{0%,100%{opacity:1}50%{opacity:.5}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}50%{transform:translateX(4px)}75%{transform:translateX(-2px)}}
+
+/* ── Auto-buy box ── */
+.auto-buy-box{margin-top:16px;padding:16px;border:1px solid rgba(74,158,255,.2);background:rgba(74,158,255,.03);border-radius:var(--radius-sm)}

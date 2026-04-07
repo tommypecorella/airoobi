@@ -247,7 +247,7 @@ async function loadHomeDashboard(){
     if(nfts)for(var ni=0;ni<nfts.length;ni++){
       robiCount+=parseFloat(nfts[ni].shares)||1;
     }
-    document.getElementById('home-robi').textContent=robiCount%1===0?robiCount:robiCount.toFixed(2);
+    document.getElementById('home-robi').textContent=robiCount%1===0?robiCount:robiCount.toFixed(4);
     // Potential KAS from ROBI value
     try{
       var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
@@ -726,7 +726,7 @@ function showPage(page){
       h.querySelector('.dapp-hero-sub').innerHTML='<span class="it">'+hdr.sub_it+'</span><span class="en">'+hdr.sub_en+'</span>';
     }
   }
-  if(page==='home')loadHomeDashboard();
+  if(page==='home'){loadHomeDashboard();startFeedPolling();}
   if(page==='my'){renderMyAirdrops();loadMySubmissions();}
   if(page==='submit'){loadValuationCost().then(function(){updateSubmitCostUI();});}
   if(page==='referral')loadDappReferral();
@@ -1097,6 +1097,25 @@ async function openDetail(id){
     +'</button>'
     +'<div class="buy-msg" id="buy-msg"></div>'
     +'</div>'
+
+    // ── AUTO-BUY (solo se già partecipante) ──
+    +(myBlocks>0?
+    '<div class="auto-buy-box" id="auto-buy-box">'
+    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px"><span class="it">⚡ AUTO-BUY</span><span class="en">⚡ AUTO-BUY</span></div>'
+    +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Compra automaticamente blocchi a intervalli regolari.</span><span class="en">Automatically buy blocks at regular intervals.</span></p>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">'
+    +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">BLOCCHI</span><span class="en">BLOCKS</span></label>'
+    +'<select id="ab-qty" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option>1</option><option>2</option><option>3</option><option>5</option><option>10</option></select></div>'
+    +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">OGNI</span><span class="en">EVERY</span></label>'
+    +'<select id="ab-interval" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option value="1">1h</option><option value="2">2h</option><option value="4" selected>4h</option><option value="6">6h</option><option value="12">12h</option></select></div>'
+    +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px">MAX</label>'
+    +'<input type="number" id="ab-max" value="50" min="1" max="500" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"></div>'
+    +'</div>'
+    +'<button id="ab-toggle" onclick="toggleAutoBuy(\''+a.id+'\')" style="width:100%;padding:8px;background:var(--aria);color:var(--white);border:none;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">ATTIVA AUTO-BUY</span><span class="en">ACTIVATE AUTO-BUY</span></button>'
+    +'<div id="ab-status" style="margin-top:6px;font-size:10px;color:var(--gray-500);text-align:center"></div>'
+    +'</div>'
+    :'')
+
     +'</div>' // close product-divider wrapper
 
     // ── CONTROL ROOM (solo admin/CEO) ──
@@ -1115,6 +1134,26 @@ async function openDetail(id){
   updateDetailPosition(a.id,participants,myBlocks);
   if(_positionInterval)clearInterval(_positionInterval);
   _positionInterval=setInterval(function(){refreshPosition(a.id)},30000);
+
+  // Auto-buy status
+  if(myBlocks>0)loadAutoBuyStatus(a.id);
+}
+
+async function loadAutoBuyStatus(airdropId){
+  var rule=await loadAutoBuyRule(airdropId);
+  var btn=document.getElementById('ab-toggle');
+  var status=document.getElementById('ab-status');
+  if(!rule||!rule.active){
+    if(btn)btn.innerHTML='<span class="it">ATTIVA AUTO-BUY</span><span class="en">ACTIVATE AUTO-BUY</span>';
+    if(status)status.textContent='';
+    return;
+  }
+  if(btn){btn.innerHTML='<span class="it">DISATTIVA AUTO-BUY</span><span class="en">DISABLE AUTO-BUY</span>';btn.style.background='var(--red)';}
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(status)status.textContent=(lang==='it'?'Attivo: ':'Active: ')+rule.blocks_per_interval+' blocchi ogni '+rule.interval_hours+'h ('+rule.total_bought+'/'+rule.max_blocks+')';
+  var qty=document.getElementById('ab-qty');if(qty)qty.value=rule.blocks_per_interval;
+  var interval=document.getElementById('ab-interval');if(interval)interval.value=rule.interval_hours;
+  var max=document.getElementById('ab-max');if(max)max.value=rule.max_blocks;
 }
 
 // ── Position Live ──
@@ -2302,7 +2341,7 @@ async function loadDappWallet(){
   if(hasRendimento){
     var cn=document.getElementById('dapp-wcard-rend-count');
     // Mostra quote frazionarie (es. "12.50 quote" o "3 quote")
-    if(cn)cn.textContent=totalShares%1===0?totalShares:totalShares.toFixed(2);
+    if(cn)cn.textContent=totalShares%1===0?totalShares:totalShares.toFixed(4);
     var sn=document.getElementById('dapp-wcard-rend-serial');
     if(sn&&rendCards[0]){
       sn.textContent=rendCards[0].id.split('-')[0].substring(0,5).toUpperCase();
@@ -2374,8 +2413,10 @@ async function loadDappWallet(){
     }
   }catch(e){}
 
-  // Category alerts
+  // Category alerts + ROBI history + Wishlist
   renderCategoryAlertsUI(token);
+  loadRobiHistory(token);
+  loadWishlistAlerts();
 }
 
 async function renderCategoryAlertsUI(token){
@@ -2399,6 +2440,156 @@ async function saveAlertPreferences(){
   var slugs=[];
   checks.forEach(function(c){if(c.checked)slugs.push(c.dataset.slug)});
   await saveCategoryAlerts(slugs);
+}
+
+// ── ROBI History + Sparkline ──
+async function loadRobiHistory(token){
+  try{
+    var res=await sbRpc('get_robi_history',{},token);
+    if(!res||!res.items)return;
+    var items=res.items;
+    var unitVal=res.unit_value_eur||0;
+
+    // Sparkline
+    var canvas=document.getElementById('robi-sparkline');
+    if(canvas&&items.length>0){
+      var ctx=canvas.getContext('2d');
+      var dpr=window.devicePixelRatio||1;
+      var w=canvas.offsetWidth;var h=48;
+      canvas.width=w*dpr;canvas.height=h*dpr;
+      ctx.scale(dpr,dpr);
+      // Cumulative ROBI over time
+      var sorted=items.slice().reverse();
+      var cum=0;var pts=[];
+      sorted.forEach(function(it){cum+=parseFloat(it.shares)||0;pts.push(cum);});
+      var max=Math.max.apply(null,pts)||1;
+      ctx.strokeStyle='#B8960C';ctx.lineWidth=1.5;ctx.beginPath();
+      pts.forEach(function(v,i){
+        var x=(i/(pts.length-1||1))*w;var y=h-(v/max)*(h-4)-2;
+        i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+      });
+      ctx.stroke();
+      // Fill
+      ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();
+      ctx.fillStyle='rgba(184,150,12,.08)';ctx.fill();
+    }
+    var valEl=document.getElementById('robi-sparkline-val');
+    if(valEl){
+      var totalShares=0;items.forEach(function(it){totalShares+=parseFloat(it.shares)||0;});
+      valEl.textContent=totalShares%1===0?totalShares+' ROBI':totalShares.toFixed(4)+' ROBI';
+    }
+
+    // History list
+    var list=document.getElementById('robi-history-list');
+    if(list){
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      if(items.length===0){
+        list.innerHTML='<div style="color:var(--gray-500);font-size:11px;text-align:center;padding:12px">'+(lang==='it'?'Nessun ROBI ancora':'No ROBI yet')+'</div>';
+      }else{
+        list.innerHTML=items.map(function(it){
+          var d=new Date(it.date).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+          var shares=parseFloat(it.shares)||0;
+          return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-800);font-size:12px">'
+            +'<div><span style="color:var(--gold);font-family:var(--font-m);font-weight:600">'+(shares%1===0?shares:shares.toFixed(4))+'</span> ROBI'
+            +'<div style="font-size:10px;color:var(--gray-500);margin-top:2px">'+(it.airdrop_title||it.source||'—')+' · '+d+'</div></div>'
+            +'<div style="text-align:right;font-family:var(--font-m);font-size:11px;color:var(--gray-400)">€'+parseFloat(it.value_eur||0).toFixed(4)+'</div>'
+            +'</div>';
+        }).join('');
+      }
+    }
+  }catch(e){}
+}
+
+// ── Activity Feed ──
+var _feedInterval=null;
+async function loadActivityFeed(){
+  try{
+    var token=await getValidToken();if(!token)return;
+    var data=await sbRpc('get_activity_feed',{},token);
+    var el=document.getElementById('activity-feed');if(!el)return;
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    if(!data||!Array.isArray(data)||data.length===0){
+      el.innerHTML='<div style="color:var(--gray-500);font-size:12px;text-align:center;padding:16px">'+(lang==='it'?'Nessuna attività recente':'No recent activity')+'</div>';
+      return;
+    }
+    var icons={purchase:'◆',new_airdrop:'⚡',activity:'👥',robi:'🏆'};
+    el.innerHTML=data.slice(0,6).map(function(item){
+      var text=lang==='it'?(item.text_it||item.text_en):(item.text_en||item.text_it);
+      var time=item.time?new Date(item.time).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'';
+      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--gray-800);font-size:12px;color:var(--gray-300);line-height:1.4">'
+        +'<span style="font-size:14px;flex-shrink:0">'+(icons[item.type]||'·')+'</span>'
+        +'<span style="flex:1">'+escHtml(text)+'</span>'
+        +'<span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);flex-shrink:0">'+time+'</span>'
+        +'</div>';
+    }).join('');
+  }catch(e){}
+}
+
+function startFeedPolling(){
+  loadActivityFeed();
+  if(_feedInterval)clearInterval(_feedInterval);
+  _feedInterval=setInterval(loadActivityFeed,60000);
+}
+
+// ── Auto-Buy ──
+async function loadAutoBuyRule(airdropId){
+  if(!_session)return null;
+  var token=await getValidToken();if(!token)return null;
+  var rows=await sbGet('auto_buy_rules?user_id=eq.'+_session.user.id+'&airdrop_id=eq.'+airdropId+'&select=*',token);
+  return(rows&&rows[0])||null;
+}
+
+async function toggleAutoBuy(airdropId){
+  var token=await getValidToken();if(!token)return;
+  var existing=await loadAutoBuyRule(airdropId);
+  if(existing&&existing.active){
+    await sbRpc('disable_auto_buy',{p_airdrop_id:airdropId},token);
+    showToast('<span class="it">Auto-buy disattivato</span><span class="en">Auto-buy disabled</span>');
+  }else{
+    var qty=parseInt(document.getElementById('ab-qty')?document.getElementById('ab-qty').value:1)||1;
+    var interval=parseInt(document.getElementById('ab-interval')?document.getElementById('ab-interval').value:4)||4;
+    var max=parseInt(document.getElementById('ab-max')?document.getElementById('ab-max').value:50)||50;
+    await sbRpc('upsert_auto_buy',{p_airdrop_id:airdropId,p_blocks_per_interval:qty,p_interval_hours:interval,p_max_blocks:max,p_active:true},token);
+    showToast('<span class="it">Auto-buy attivato!</span><span class="en">Auto-buy activated!</span>');
+  }
+  if(_currentDetail)openDetail(_currentDetail.id);
+}
+
+// ── Wishlist Avanzata ──
+async function saveWishlistAlert(){
+  var kw=document.getElementById('wishlist-keywords');
+  var mp=document.getElementById('wishlist-max-price');
+  var keywords=(kw&&kw.value.trim())||null;
+  var maxPrice=(mp&&parseInt(mp.value))||null;
+  if(!keywords&&!maxPrice){showToast('<span class="it">Inserisci almeno un criterio</span><span class="en">Enter at least one criterion</span>');return;}
+  var token=await getValidToken();if(!token)return;
+  await sbRpc('upsert_wishlist_alert',{p_keywords:keywords,p_max_block_price:maxPrice},token);
+  if(kw)kw.value='';if(mp)mp.value='';
+  showToast('<span class="it">Alert aggiunto!</span><span class="en">Alert added!</span>');
+  loadWishlistAlerts();
+}
+
+async function loadWishlistAlerts(){
+  if(!_session)return;
+  var token=await getValidToken();if(!token)return;
+  var rows=await sbGet('wishlist_alerts?user_id=eq.'+_session.user.id+'&active=eq.true&order=created_at.desc',token);
+  var el=document.getElementById('wishlist-alerts-list');if(!el)return;
+  if(!rows||rows.length===0){el.innerHTML='';return;}
+  el.innerHTML=rows.map(function(r){
+    var desc=[];
+    if(r.keywords)desc.push('🔍 '+r.keywords);
+    if(r.max_block_price)desc.push('≤ '+r.max_block_price+' ARIA');
+    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border:1px solid var(--gray-800);margin-bottom:4px;font-size:12px">'
+      +'<span style="color:var(--gray-300)">'+desc.join(' · ')+'</span>'
+      +'<button onclick="deleteWishlistAlert(\''+r.id+'\')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px">✕</button>'
+      +'</div>';
+  }).join('');
+}
+
+async function deleteWishlistAlert(id){
+  var token=await getValidToken();if(!token)return;
+  await sbRpc('delete_wishlist_alert',{p_id:id},token);
+  loadWishlistAlerts();
 }
 
 // ── Archive tab ──
@@ -2532,8 +2723,8 @@ var INFO_TIPS={
     en:'Your ARIA balance. Worth €0.10 each at launch. We\'re in testnet: get them free from the faucet (100/day) and check-in (50/day). Use them to buy blocks in airdrops.'
   },
   'robi-balance':{
-    it:'I tuoi ROBI — il vero guadagno di AIROOBI. Li ottieni partecipando agli airdrop. Hanno valore reale, crescono nel tempo e saranno riscuotibili in KAS.',
-    en:'Your ROBI — AIROOBI\'s real reward. Earned by participating in airdrops. They have real value, grow over time, and will be redeemable for KAS.'
+    it:'I tuoi ROBI — il vero guadagno di AIROOBI. Le frazioni si accumulano (es. 2.3750 ROBI). Riscuoti quando vuoi in KAS. Ogni airdrop a cui partecipi ti fa guadagnare frazioni di ROBI reali.',
+    en:'Your ROBI — AIROOBI\'s real reward. Fractions accumulate (e.g. 2.3750 ROBI). Redeem anytime for KAS. Every airdrop you join earns you real ROBI fractions.'
   },
   'kas-potential':{
     it:'Il potenziale in KAS (Kaspa) dei tuoi ROBI al prezzo attuale. Questo è quanto riceveresti se riscuotessi ora. Il valore reale potrebbe essere diverso al momento della riscossione.',

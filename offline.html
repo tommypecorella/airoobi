@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AIROOBI — Offline</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#fff;font-family:'Instrument Sans',system-ui,sans-serif;display:flex;align-items:center;justify-content:center;min-height:100vh;min-height:100dvh;text-align:center;padding:24px}
+.wrap{max-width:320px}
+.logo{width:80px;height:80px;margin:0 auto 24px;opacity:.6}
+.logo img{width:100%;height:100%}
+h1{font-size:20px;font-weight:300;letter-spacing:2px;color:#B8960C;margin-bottom:12px}
+p{font-size:14px;color:#888;line-height:1.6}
+.btn{display:inline-block;margin-top:24px;padding:12px 32px;border:1px solid #B8960C;color:#B8960C;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:2px;text-decoration:none;transition:all .3s;cursor:pointer;background:none}
+.btn:hover{background:#B8960C;color:#000}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo"><img src="/public/images/AIROOBI_Symbol_White.png" alt="AIROOBI" onerror="this.parentElement.innerHTML='◆'"></div>
+  <h1>AIROOBI</h1>
+  <p>Connettiti per accedere ad AIROOBI.<br>La connessione internet non è disponibile.</p>
+  <a class="btn" onclick="location.reload()">RIPROVA</a>
+</div>
+</body>
+</html>
