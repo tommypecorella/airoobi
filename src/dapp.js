@@ -1141,6 +1141,8 @@ function updateDetailPosition(airdropId,participants,myBlocks){
     el.classList.add('shake');
     setTimeout(function(){el.classList.remove('shake')},600);
     showToast('<span class="it">Sei stato superato — acquista altri blocchi per risalire</span><span class="en">You\'ve been overtaken — buy more blocks to climb back</span>');
+    // Push notification position_lost
+    notifyPositionLost(airdropId);
   }
   _lastPosition=pos;
 }
@@ -1197,6 +1199,18 @@ async function subscribePush(){
         p_keys_auth:key.keys.auth
       },token);
     }
+  }catch(e){}
+}
+
+async function notifyPositionLost(airdropId){
+  try{
+    var token=await getValidToken();if(!token)return;
+    var a=_airdrops.find(function(x){return x.id===airdropId});
+    await fetch(SB_URL+'/functions/v1/send-push',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      body:JSON.stringify({type:'position_lost',airdrop_id:airdropId,user_id:_session.user.id,title:a?a.title:''})
+    });
   }catch(e){}
 }
 
