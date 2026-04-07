@@ -2,6 +2,7 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "rewrites": [
+    { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/sitemap-app.xml" },
     { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
     { "source": "/ads.txt", "destination": "/ads-com.txt" },
 
