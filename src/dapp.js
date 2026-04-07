@@ -709,9 +709,9 @@ async function loadMyParticipations(){
 // ── Page routing ──
 var _isApp=location.hostname==='airoobi.app'||location.hostname==='www.airoobi.app';
 var PAGE_PATHS=_isApp
-  ?{home:'/',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral',wallet:'/portafoglio',archive:'/archivio',learn:'/impara',manage:'/gestione'}
-  :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral-dapp',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/impara',manage:'/gestione'};
-var PATH_TO_PAGE={'/':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/impara':'learn','/gestione':'manage'};
+  ?{home:'/',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral',wallet:'/portafoglio',archive:'/archivio',learn:'/impara'}
+  :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/referral-dapp',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/impara'};
+var PATH_TO_PAGE={'/':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/impara':'learn'};
 var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
@@ -720,7 +720,6 @@ var PAGE_HEADERS={
   wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'I tuoi asset: ARIA, ROBI e KAS.',sub_en:'Your assets: ARIA, ROBI and KAS.'},
   archive:{it:'<em>Archivio</em> Airdrop',en:'Airdrop <em>Archive</em>',sub_it:'Tutti gli airdrop completati. Trasparenza totale.',sub_en:'All completed airdrops. Full transparency.'},
   learn:{it:'<em>Impara</em>',en:'<em>Learn</em>',sub_it:'Scopri come funzionano ARIA, ROBI e il motore airdrop.',sub_en:'Learn how ARIA, ROBI and the airdrop engine work.'},
-  manage:{it:'<em>Gestione</em> Airdrop',en:'Airdrop <em>Management</em>',sub_it:'Backoffice valutazione e gestione airdrop.',sub_en:'Evaluation and airdrop management backoffice.'}
 };
 
 function navigateTo(page,event){
@@ -734,7 +733,7 @@ function navigateTo(page,event){
 }
 
 function showPage(page){
-  ['home','explore','my','submit','referral','wallet','archive','learn','manage'].forEach(function(t){
+  ['home','explore','my','submit','referral','wallet','archive','learn'].forEach(function(t){
     var panel=document.getElementById('tab-'+t);
     if(panel)panel.style.display=page===t?'block':'none';
   });
@@ -760,7 +759,6 @@ function showPage(page){
   if(page==='referral')loadDappReferral();
   if(page==='wallet')loadDappWallet();
   if(page==='archive')loadDappArchive();
-  if(page==='manage'&&_isManager)loadBoData();
 }
 
 // ── Category filter ──
@@ -1689,12 +1687,6 @@ async function checkUserRoles(){
       _managerCats.push(r.category); // null = all
     }
   });
-  if(_isManager){
-    var nm=document.getElementById('nav-manage');
-    var nmm=document.getElementById('nav-manage-mobile');
-    if(nm)nm.style.display='';
-    if(nmm)nmm.style.display='';
-  }
 }
 
 // ── Control Room (CEO/Admin) ──
