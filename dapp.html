@@ -76,10 +76,25 @@
   </button>
   <div class="topbar-right">
     <span class="topbar-bal" id="topbar-bal">— ARIA</span>
+    <button class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notifiche">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+    </button>
     <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
     <div class="topbar-avatar" id="topbar-avatar" onclick="toggleUserMenu()">
       <span id="avatar-letter">?</span>
     </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notif-panel" style="display:none">
+  <div class="notif-panel-header">
+    <span><span class="it">Notifiche</span><span class="en">Notifications</span></span>
+    <button onclick="markAllNotifRead()" style="background:none;border:none;color:var(--aria);font-family:var(--font-m);font-size:9px;letter-spacing:1px;cursor:pointer"><span class="it">SEGNA TUTTE LETTE</span><span class="en">MARK ALL READ</span></button>
+  </div>
+  <div class="notif-panel-list" id="notif-list">
+    <div style="color:var(--gray-500);font-size:12px;text-align:center;padding:24px"><span class="it">Nessuna notifica</span><span class="en">No notifications</span></div>
   </div>
 </div>
 

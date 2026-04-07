@@ -131,6 +131,8 @@ document.addEventListener('DOMContentLoaded',async function(){
   // Register SW + push notifications (after first login)
   registerServiceWorker();
   setTimeout(requestPushPermission,3000);
+  // Load notification badge count
+  loadNotifications();
   // Route to correct page based on URL path
   var pp=location.pathname;
   var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':'home');
@@ -792,6 +794,83 @@ function filterCat(cat){
 function renderStats(){
   // stats-bar removed from UI — function kept for internal use
 }
+
+// ── Notifications (in-app) ──
+var _notifOpen=false;
+
+async function loadNotifications(){
+  if(!_session)return;
+  var token=await getValidToken();if(!token)return;
+  var rows=await sbGet('notifications?user_id=eq.'+_session.user.id+'&order=created_at.desc&limit=30',token)||[];
+  var unread=rows.filter(function(r){return !r.read}).length;
+  var badge=document.getElementById('notif-badge');
+  if(badge){
+    if(unread>0){badge.style.display='flex';badge.textContent=unread>99?'99+':unread;}
+    else{badge.style.display='none';}
+  }
+  // Bell color
+  var bell=document.getElementById('notif-bell');
+  if(bell)bell.style.color=unread>0?'var(--gold)':'';
+  // Render list
+  var list=document.getElementById('notif-list');
+  if(!list)return;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(!rows.length){
+    list.innerHTML='<div style="color:var(--gray-500);font-size:12px;text-align:center;padding:24px">'+(lang==='it'?'Nessuna notifica':'No notifications')+'</div>';
+    return;
+  }
+  list.innerHTML=rows.map(function(n){
+    var time=new Date(n.created_at).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    return '<div class="notif-item'+(n.read?'':' unread')+'" data-id="'+n.id+'" onclick="markNotifRead(\''+n.id+'\')">'
+      +'<div class="notif-title">'+escHtml(n.title||'AIROOBI')+'</div>'
+      +'<div>'+escHtml(n.body||'')+'</div>'
+      +'<div class="notif-time">'+time+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function toggleNotifPanel(){
+  var panel=document.getElementById('notif-panel');
+  if(!panel)return;
+  _notifOpen=!_notifOpen;
+  panel.style.display=_notifOpen?'block':'none';
+  if(_notifOpen)loadNotifications();
+}
+
+async function markNotifRead(id){
+  var token=await getValidToken();if(!token)return;
+  await fetch(SB_URL+'/rest/v1/notifications?id=eq.'+id,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({read:true})
+  });
+  var item=document.querySelector('.notif-item[data-id="'+id+'"]');
+  if(item)item.classList.remove('unread');
+  // Update badge count
+  var badge=document.getElementById('notif-badge');
+  if(badge){
+    var count=parseInt(badge.textContent)||0;
+    if(count>1){badge.textContent=count-1;}else{badge.style.display='none';}
+  }
+}
+
+async function markAllNotifRead(){
+  var token=await getValidToken();if(!token)return;
+  await fetch(SB_URL+'/rest/v1/notifications?user_id=eq.'+_session.user.id+'&read=eq.false',{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({read:true})
+  });
+  loadNotifications();
+}
+
+// Close notif panel on outside click
+document.addEventListener('click',function(e){
+  if(_notifOpen&&!e.target.closest('#notif-panel')&&!e.target.closest('#notif-bell')){
+    document.getElementById('notif-panel').style.display='none';
+    _notifOpen=false;
+  }
+});
 
 // ── Countdown helpers ──
 function fmtCountdown(deadline){
