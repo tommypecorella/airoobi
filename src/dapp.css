@@ -573,7 +573,9 @@ input{font-family:inherit}
 /* ── Notification bell ── */
 .notif-bell{position:relative;background:none;border:none;color:var(--gray-400);cursor:pointer;padding:6px;transition:all .2s;border-radius:50%}
 .notif-bell:hover{color:var(--gold);background:rgba(184,150,12,.08)}
+.notif-bell:hover .bell-icon{stroke:var(--gold)}
 .notif-bell.has-unread{color:var(--gold)}
+.notif-bell.has-unread .bell-icon{stroke:var(--gold)}
 .notif-badge{position:absolute;top:0;right:0;background:var(--red);color:var(--white);font-family:var(--font-m);font-size:7px;font-weight:700;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;border:2px solid var(--black)}
 .notif-panel{position:fixed;top:56px;right:12px;width:360px;max-width:calc(100vw - 24px);max-height:70vh;background:var(--black);border:1px solid var(--gray-700);border-radius:var(--radius-lg);z-index:1000;overflow:hidden;box-shadow:0 12px 48px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.04) inset;backdrop-filter:blur(20px)}
 .notif-panel-header{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--gray-800);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--white)}
