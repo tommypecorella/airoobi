@@ -1157,7 +1157,7 @@ async function refreshPosition(airdropId){
 }
 
 // ── Push Notifications ──
-var VAPID_PUBLIC_KEY=null; // Set via env or config
+var VAPID_PUBLIC_KEY='BOsfShhrYnISvRhpbCIlDvG1HuHMNDfggNKgyEFV_LATdT2-ocHOkmYPMexED0-yCv_z9uuPqlDCGYxVXOzQxko';
 
 async function registerServiceWorker(){
   if(!('serviceWorker' in navigator))return null;
