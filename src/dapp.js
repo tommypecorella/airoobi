@@ -351,6 +351,32 @@ async function loadPortfolioChart(token,userRobi){
   var eurEl=document.getElementById('portfolio-eur-val');
   if(eurEl)eurEl.innerHTML='&euro; '+eurTotal.toFixed(2)+'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-left:8px;letter-spacing:1px">pot.</span>';
 
+  // Check if there's any data to show
+  var hasData=ariaData.some(function(v){return v>0})||robiValEur>0;
+  if(!hasData){
+    // No data — show empty state message instead of blank chart
+    canvas.parentElement.style.display='flex';
+    canvas.parentElement.style.alignItems='center';
+    canvas.parentElement.style.justifyContent='center';
+    canvas.style.display='none';
+    var emptyMsg=document.createElement('div');
+    emptyMsg.style.cssText='text-align:center;padding:16px;font-size:12px;color:var(--gray-500);line-height:1.5';
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    emptyMsg.innerHTML=lang==='it'
+      ?'Nessun dato ancora.<br>Usa il <strong style="color:var(--aria)">faucet</strong> e il <strong style="color:var(--gold)">check-in</strong> per accumulare ARIA,<br>poi partecipa agli airdrop per guadagnare ROBI.'
+      :'No data yet.<br>Use the <strong style="color:var(--aria)">faucet</strong> and <strong style="color:var(--gold)">check-in</strong> to accumulate ARIA,<br>then join airdrops to earn ROBI.';
+    if(!canvas.parentElement.querySelector('.portfolio-empty')){
+      emptyMsg.className='portfolio-empty';
+      canvas.parentElement.appendChild(emptyMsg);
+    }
+    if(eurEl)eurEl.textContent='€ 0,00';
+    return;
+  }
+  // Ensure canvas is visible if we have data
+  canvas.style.display='';
+  var existingEmpty=canvas.parentElement.querySelector('.portfolio-empty');
+  if(existingEmpty)existingEmpty.remove();
+
   // Draw
   var pad={top:10,right:10,bottom:20,left:10};
   var cW=W-pad.left-pad.right;
@@ -2452,7 +2478,11 @@ async function loadRobiHistory(token){
 
     // Sparkline
     var canvas=document.getElementById('robi-sparkline');
+    if(canvas&&items.length===0){
+      canvas.style.display='none';
+    }
     if(canvas&&items.length>0){
+      canvas.style.display='';
       var ctx=canvas.getContext('2d');
       var dpr=window.devicePixelRatio||1;
       var w=canvas.offsetWidth;var h=48;
