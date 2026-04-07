@@ -5,6 +5,7 @@
     { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/sitemap-app.xml" },
     { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
     { "source": "/ads.txt", "destination": "/ads-com.txt" },
+    { "source": "/sitemap.xml", "destination": "/sitemap-com.xml" },
 
     { "source": "/", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/airdrops", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
