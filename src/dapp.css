@@ -21,11 +21,13 @@
   --safe-top:env(safe-area-inset-top,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px);
 }
-html{background:var(--black);-webkit-tap-highlight-color:transparent}
+html{background:var(--black);-webkit-tap-highlight-color:transparent;color-scheme:dark}
 body{font-family:var(--font-b);color:var(--white);background:var(--black);overflow-x:hidden;-webkit-font-smoothing:antialiased;min-height:100vh;min-height:100dvh;padding-top:var(--safe-top);padding-bottom:var(--safe-bottom)}
 a{color:inherit;text-decoration:none}
-button{font-family:inherit}
-input{font-family:inherit}
+button{font-family:inherit;color:inherit}
+input{font-family:inherit;color:inherit;background:var(--gray-800)}
+select{font-family:inherit;color:var(--white);background:var(--gray-800);border:1px solid var(--gray-700);border-radius:var(--radius-sm);appearance:none;-webkit-appearance:none}
+select option{background:var(--gray-800);color:var(--white)}
 /* Language toggle */
 [data-lang="en"] .it{display:none!important}
 [data-lang="it"] .en{display:none!important}
@@ -87,7 +89,7 @@ input{font-family:inherit}
 .dash-faucet-title{font-family:var(--font-h);font-size:17px;font-weight:400;color:var(--gold)}
 .dash-faucet-sub{font-size:13px;color:var(--gray-400);margin-top:2px}
 .dash-faucet-sub strong{color:var(--aria)}
-.dash-faucet-btn{background:var(--gold);color:var(--black);border:none;padding:12px 28px;font-family:var(--font-m);font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .3s;flex-shrink:0;border-radius:var(--radius-sm)}
+.dash-faucet-btn{background:var(--gold);color:#000;border:none;padding:12px 28px;font-family:var(--font-m);font-size:12px;font-weight:700;letter-spacing:2px;cursor:pointer;transition:all .3s;flex-shrink:0;border-radius:var(--radius-sm)}
 .dash-faucet-btn:active{transform:scale(.97)}
 .dash-section{margin-bottom:20px}
 .dash-section-title{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--gray-700)}
