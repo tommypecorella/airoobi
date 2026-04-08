@@ -277,7 +277,7 @@ function eur(a){return '\u20AC'+(a*ARIA_EUR).toFixed(2).replace('.',',')}
         var links=topRight.querySelectorAll('a');
         // Replace login/signup with dashboard link
         links.forEach(function(l){
-          if(l.getAttribute('href')==='/login')l.outerHTML='<a href="/airdrops">Dashboard</a>';
+          if(l.getAttribute('href')==='/login')l.remove();
           if(l.getAttribute('href')==='/signup')l.outerHTML='<a href="/airdrops" class="cta-signup">Dashboard &rarr;</a>';
         });
       }
