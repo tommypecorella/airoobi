@@ -5,6 +5,7 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 // ── State ──
 var _session=null;
 var _balance=0;
+var _publicMode=false; // true when viewing public pages without auth
 var ARIA_EUR=0.20; // 1 ARIA = €0.20
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
@@ -101,6 +102,7 @@ async function refreshToken(){
 }
 
 async function getValidToken(){
+  if(!_session||!_session.access_token)return null;
   // Check if token is expired by decoding JWT
   try{
     var payload=JSON.parse(atob(_session.access_token.split('.')[1]));
@@ -113,36 +115,56 @@ async function getValidToken(){
   return _session.access_token;
 }
 
+// ── Public pages (no auth required) ──
+var PUBLIC_PAGES=['explore','learn'];
+function isPublicRoute(){
+  var pp=location.pathname;
+  var page=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':null);
+  return page&&PUBLIC_PAGES.indexOf(page)!==-1;
+}
+
 // ── Init ──
 document.addEventListener('DOMContentLoaded',async function(){
-  if(!requireAuth())return;
-  // Show splash tour on first visit
-  if(!localStorage.getItem('airoobi_splash_done'))showSplash();
-  // Refresh token if needed before anything
-  var token=await getValidToken();
-  if(!token)return;
-  setupUI();
-  await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist()]);
-  renderGrid();
-  renderStats();
-  renderCategoryFilter();
-  startCountdowns();
-  loadValuationCount();
-  // Register SW + push notifications (after first login)
-  registerServiceWorker();
-  setTimeout(requestPushPermission,3000);
-  // Load notification badge count
-  loadNotifications();
-  // Route to correct page based on URL path
   var pp=location.pathname;
   var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':'home');
-  // Check for /airdrops/UUID deep link
   var airdropMatch=pp.match(/^\/airdrops\/([0-9a-f-]{36})$/);
-  // Also support legacy ?id= param
   var urlId=airdropMatch?airdropMatch[1]:new URLSearchParams(location.search).get('id');
-  if(urlId){
-    initialPage='explore';
+  if(urlId)initialPage='explore';
+
+  // Try to get session (without redirecting)
+  _session=getSession();
+
+  if(_session){
+    // Logged in — full experience
+    var token=await getValidToken();
+    if(!token)return;
+    // Show splash tour on first visit
+    if(!localStorage.getItem('airoobi_splash_done'))showSplash();
+    setupUI();
+    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist()]);
+    renderGrid();
+    renderStats();
+    renderCategoryFilter();
+    startCountdowns();
+    loadValuationCount();
+    registerServiceWorker();
+    setTimeout(requestPushPermission,3000);
+    loadNotifications();
+  } else if(isPublicRoute()||(urlId)){
+    // Public mode — show airdrops/learn without auth
+    _publicMode=true;
+    setupPublicUI();
+    await loadAirdropsPublic();
+    renderGrid();
+    renderStats();
+    renderCategoryFilter();
+    startCountdowns();
+  } else {
+    // Protected page without session — redirect to login
+    window.location.href='/login?returnTo='+encodeURIComponent(location.pathname);
+    return;
   }
+
   showPage(initialPage);
   if(!urlId){
     history.replaceState({page:initialPage},null,PAGE_PATHS[initialPage]||'/dapp');
@@ -152,6 +174,27 @@ document.addEventListener('DOMContentLoaded',async function(){
     history.replaceState({page:'explore',detail:urlId},null,'/airdrops/'+urlId);
   }
 });
+
+function setupPublicUI(){
+  // Show public topbar: hide user-specific elements, show login/signup
+  document.getElementById('topbar-bal').style.display='none';
+  document.getElementById('notif-bell').style.display='none';
+  document.getElementById('topbar-avatar').style.display='none';
+  // Add login/signup buttons to topbar-right
+  var topRight=document.querySelector('.topbar-right');
+  if(topRight){
+    var authLinks=document.createElement('div');
+    authLinks.className='topbar-auth-links';
+    authLinks.innerHTML='<a href="/login" class="topbar-auth-link"><span class="it">Accedi</span><span class="en">Log in</span></a>'
+      +'<a href="/signup" class="topbar-auth-cta"><span class="it">Registrati</span><span class="en">Sign up</span></a>';
+    topRight.appendChild(authLinks);
+  }
+}
+
+async function loadAirdropsPublic(){
+  // Load airdrops with anon key only (no user token)
+  _airdrops=await sbGet('airdrops?status=in.(presale,sale)&order=created_at.desc',SB_KEY)||[];
+}
 
 function setupUI(){
   var email=_session.user?.email||'';
@@ -689,6 +732,7 @@ function isInWatchlist(id){return _watchlist.indexOf(id)!==-1}
 
 async function toggleWatchlist(id,e){
   if(e)e.stopPropagation();
+  if(_publicMode){window.location.href='/login?returnTo='+encodeURIComponent(location.pathname);return;}
   var token=await getValidToken();if(!token)return;
   var res=await sbRpc('toggle_watchlist',{p_airdrop_id:id},token);
   if(res&&res.ok){
@@ -724,6 +768,12 @@ var PAGE_HEADERS={
 
 function navigateTo(page,event){
   if(event)event.preventDefault();
+  // In public mode, only allow public pages — redirect to login for everything else
+  if(_publicMode&&PUBLIC_PAGES.indexOf(page)===-1){
+    var path=PAGE_PATHS[page]||'/';
+    window.location.href='/login?returnTo='+encodeURIComponent(path);
+    return;
+  }
   showPage(page);
   var path=PAGE_PATHS[page]||'/esplora';
   if(location.pathname!==path)history.pushState({page:page},null,path);
@@ -985,13 +1035,15 @@ async function openDetail(id){
   _currentDetail=a;
   _buyQty=1;
   document.getElementById('list-view').classList.add('hidden');
-  document.getElementById('val-banner').style.display='none';
+  var valBanner=document.getElementById('val-banner');
+  if(valBanner)valBanner.style.display='none';
   document.getElementById('cat-filter').style.display='none';
   document.getElementById('detail').classList.add('active');
   window.scrollTo({top:0,behavior:'smooth'});
 
   // Load grid data + participants
-  var token=await getValidToken();
+  var token=_publicMode?SB_KEY:await getValidToken();
+  if(!token)return;
   var gridPromise=sbRpc('get_airdrop_grid',{p_airdrop_id:id},token);
   var partPromise=sbRpc('get_airdrop_participants',{p_airdrop_id:id},token);
   _gridData=await gridPromise||[];
@@ -1002,7 +1054,7 @@ async function openDetail(id){
   var remaining=a.total_blocks-a.blocks_sold;
   var pct=a.total_blocks>0?(a.blocks_sold/a.total_blocks*100):0;
   var isPresale=a.status==='presale';
-  var myBlocks=_gridData.filter(function(b){return b.is_mine}).length;
+  var myBlocks=_publicMode?0:_gridData.filter(function(b){return b.is_mine}).length;
   var myPct=a.total_blocks>0?(myBlocks/a.total_blocks*100):0;
   var othersPct=pct-myPct;
   var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'';
@@ -1162,43 +1214,50 @@ async function openDetail(id){
     // Position live
     +'<div class="detail-position" id="detail-position"></div>'
 
-    // BUY BOX
-    +'<div class="buy-box">'
-    +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
-    +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>⛏ PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
+    // BUY BOX — show login CTA in public mode
+    +(_publicMode
+      ?'<div class="buy-box">'
+      +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
+      +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi in questo airdrop.</span><span class="en">Sign up free to earn ARIA every day and buy blocks in this airdrop.</span></p>'
+      +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>'
+      +'<a href="/login?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" style="display:block;text-align:center;margin-top:10px;color:var(--gray-400);font-size:13px;text-decoration:none"><span class="it">Hai gi&agrave; un account? Accedi</span><span class="en">Already have an account? Log in</span></a>'
+      +'</div>'
+      :'<div class="buy-box">'
+      +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
+      +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
+      +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>⛏ PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
 
+      // DISPLAY
+      +'<div class="buy-display">'
+      +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
+      +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' ARIA ('+eur(a.block_price_aria)+')</div>'
+      +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA ('+eur(_balance)+')</div>'
+      +'</div>'
 
-    // DISPLAY
-    +'<div class="buy-display">'
-    +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-    +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' ARIA ('+eur(a.block_price_aria)+')</div>'
-    +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA ('+eur(_balance)+')</div>'
-    +'</div>'
+      // SLIDER
+      +'<div class="buy-slider-wrap">'
+      +'<input type="range" class="buy-slider" id="buy-slider" min="1" max="'+(maxBuy||1)+'" value="1" '+(maxBuy<1?'disabled':'')+' oninput="onSlider()">'
+      +'<div class="buy-slider-labels"><span>1</span><span>'+(maxBuy||0)+'</span></div>'
+      +'</div>'
 
-    // SLIDER
-    +'<div class="buy-slider-wrap">'
-    +'<input type="range" class="buy-slider" id="buy-slider" min="1" max="'+(maxBuy||1)+'" value="1" '+(maxBuy<1?'disabled':'')+' oninput="onSlider()">'
-    +'<div class="buy-slider-labels"><span>1</span><span>'+(maxBuy||0)+'</span></div>'
-    +'</div>'
+      // PRESETS
+      +'<div class="buy-presets">'
+      +(maxBuy>=5?'<button class="buy-preset" onclick="setSlider(5)">5</button>':'')
+      +(maxBuy>=10?'<button class="buy-preset" onclick="setSlider(10)">10</button>':'')
+      +(maxBuy>=25?'<button class="buy-preset" onclick="setSlider(25)">25</button>':'')
+      +(maxBuy>=50?'<button class="buy-preset" onclick="setSlider(50)">50</button>':'')
+      +(maxBuy>0?'<button class="buy-preset" onclick="setSlider('+maxBuy+')">Max</button>':'')
+      +'</div>'
 
-    // PRESETS
-    +'<div class="buy-presets">'
-    +(maxBuy>=5?'<button class="buy-preset" onclick="setSlider(5)">5</button>':'')
-    +(maxBuy>=10?'<button class="buy-preset" onclick="setSlider(10)">10</button>':'')
-    +(maxBuy>=25?'<button class="buy-preset" onclick="setSlider(25)">25</button>':'')
-    +(maxBuy>=50?'<button class="buy-preset" onclick="setSlider(50)">50</button>':'')
-    +(maxBuy>0?'<button class="buy-preset" onclick="setSlider('+maxBuy+')">Max</button>':'')
-    +'</div>'
-
-    // BUY BUTTON
-    +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
-    +(remaining>0&&maxBuy>=1
-      ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
-      :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
-    +'</button>'
-    +'<div class="buy-msg" id="buy-msg"></div>'
-    +'</div>'
+      // BUY BUTTON
+      +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
+      +(remaining>0&&maxBuy>=1
+        ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
+        :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
+      +'</button>'
+      +'<div class="buy-msg" id="buy-msg"></div>'
+      +'</div>'
+    )
 
     // ── AUTO-BUY (solo se già partecipante) ──
     +(myBlocks>0?

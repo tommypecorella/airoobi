@@ -7,7 +7,8 @@
     { "source": "/ads.txt", "destination": "/ads-com.txt" },
     { "source": "/sitemap.xml", "destination": "/sitemap-com.xml" },
 
-    { "source": "/", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/landing.html" },
+    { "source": "/blog", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/blog.html" },
     { "source": "/airdrops", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/airdrops/:id", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/esplora", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
