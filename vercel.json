@@ -2,10 +2,9 @@
   "buildCommand": "",
   "outputDirectory": ".",
   "rewrites": [
-    { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/sitemap-app.xml" },
     { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
     { "source": "/ads.txt", "destination": "/ads-com.txt" },
-    { "source": "/sitemap.xml", "destination": "/sitemap-com.xml" },
+    { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/sitemap-com.xml" },
 
     { "source": "/", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/landing.html" },
     { "source": "/blog", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/blog.html" },
