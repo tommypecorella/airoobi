@@ -75,23 +75,27 @@
     .topbar-nav a {
       color: var(--gray-400);
       text-decoration: none;
-      font-family: 'Instrument Sans', sans-serif;
-      font-size: 13px;
-      font-weight: 500;
-      transition: color 0.2s;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      font-weight: 400;
+      transition: all 0.2s;
       display: flex;
       align-items: center;
       gap: 6px;
+      height: 56px;
+      border-bottom: 2px solid transparent;
     }
     .topbar-nav a svg {
-      width: 16px;
-      height: 16px;
+      width: 14px;
+      height: 14px;
       fill: none;
       stroke: currentColor;
-      stroke-width: 2;
+      stroke-width: 1.5;
     }
     .topbar-nav a:hover { color: var(--white); }
-    .topbar-nav a.active { color: #4A9EFF; }
+    .topbar-nav a.active { color: #4A9EFF; border-bottom-color: #4A9EFF; }
     .topbar-right {
       display: flex;
       align-items: center;
