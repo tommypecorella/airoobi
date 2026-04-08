@@ -176,16 +176,25 @@ document.addEventListener('DOMContentLoaded',async function(){
 });
 
 function setupPublicUI(){
-  // Show public topbar: hide user-specific elements, show login/signup
+  // Hide user-specific topbar elements
   document.getElementById('topbar-bal').style.display='none';
   document.getElementById('notif-bell').style.display='none';
   document.getElementById('topbar-avatar').style.display='none';
+  // Hide non-public nav items (keep only explore + learn)
+  document.querySelectorAll('.topbar-nav a, .topbar-mobile-menu a').forEach(function(a){
+    var page=a.getAttribute('data-page');
+    if(page&&PUBLIC_PAGES.indexOf(page)===-1)a.style.display='none';
+  });
+  // Hide burger — replace with simpler nav for mobile
+  var burger=document.getElementById('topbar-burger');
+  if(burger)burger.style.display='none';
   // Add login/signup buttons to topbar-right
   var topRight=document.querySelector('.topbar-right');
   if(topRight){
     var authLinks=document.createElement('div');
     authLinks.className='topbar-auth-links';
-    authLinks.innerHTML='<a href="/login" class="topbar-auth-link"><span class="it">Accedi</span><span class="en">Log in</span></a>'
+    authLinks.innerHTML='<a href="/blog" class="topbar-auth-link">Blog</a>'
+      +'<a href="/login" class="topbar-auth-link"><span class="it">Accedi</span><span class="en">Log in</span></a>'
       +'<a href="/signup" class="topbar-auth-cta"><span class="it">Registrati</span><span class="en">Sign up</span></a>';
     topRight.appendChild(authLinks);
   }
