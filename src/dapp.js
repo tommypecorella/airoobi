@@ -185,6 +185,16 @@ function setupPublicUI(){
     var page=a.getAttribute('data-page');
     if(page&&PUBLIC_PAGES.indexOf(page)===-1)a.style.display='none';
   });
+  // Add Blog link next to Impara in both navs
+  document.querySelectorAll('.topbar-nav, .topbar-mobile-menu').forEach(function(nav){
+    var learnLink=nav.querySelector('[data-page="learn"]');
+    if(learnLink){
+      var blogLink=document.createElement('a');
+      blogLink.href='/blog';
+      blogLink.innerHTML='<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> Blog';
+      learnLink.insertAdjacentElement('afterend',blogLink);
+    }
+  });
   // Hide burger — replace with simpler nav for mobile
   var burger=document.getElementById('topbar-burger');
   if(burger)burger.style.display='none';
@@ -193,8 +203,7 @@ function setupPublicUI(){
   if(topRight){
     var authLinks=document.createElement('div');
     authLinks.className='topbar-auth-links';
-    authLinks.innerHTML='<a href="/blog" class="topbar-auth-link">Blog</a>'
-      +'<a href="/login" class="topbar-auth-link"><span class="it">Accedi</span><span class="en">Log in</span></a>'
+    authLinks.innerHTML='<a href="/login" class="topbar-auth-link"><span class="it">Accedi</span><span class="en">Log in</span></a>'
       +'<a href="/signup" class="topbar-auth-cta"><span class="it">Registrati</span><span class="en">Sign up</span></a>';
     topRight.appendChild(authLinks);
   }
