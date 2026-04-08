@@ -79,6 +79,16 @@
       font-size: 13px;
       font-weight: 500;
       transition: color 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .topbar-nav a svg {
+      width: 16px;
+      height: 16px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
     }
     .topbar-nav a:hover, .topbar-nav a.active { color: var(--white); }
     .topbar-right {
@@ -222,9 +232,9 @@
   <header class="topbar">
     <a href="/" class="topbar-brand" title="AIROOBI">Oo</a>
     <nav class="topbar-nav">
-      <a href="/airdrops">Airdrops</a>
-      <a href="/impara">Impara</a>
-      <a href="/blog" class="active">Blog</a>
+      <a href="/airdrops"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg> Airdrops</a>
+      <a href="/impara"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> Impara</a>
+      <a href="/blog" class="active"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> Blog</a>
     </nav>
     <div class="topbar-right">
       <a href="/login">Accedi</a>
