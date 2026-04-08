@@ -765,7 +765,7 @@ async function toggleWatchlist(id,e){
 }
 
 async function loadMyParticipations(){
-  _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status)&order=created_at.desc',_session.access_token)||[];
+  _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&cancelled_at=is.null&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status)&order=created_at.desc',_session.access_token)||[];
 }
 
 // ── Page routing ──
@@ -1723,14 +1723,62 @@ function renderMyAirdrops(){
     var imgHtml=a.image_url
       ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy">'
       :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
-    return '<div class="my-card" onclick="goToAirdrop(\''+a.id+'\')">'
+    var canCancel=a.status==='presale'||a.status==='sale';
+    return '<div class="my-card">'
+      +'<div style="display:flex;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
       +imgHtml
       +'<div class="my-card-info">'
       +'<div class="my-card-title">'+a.title+'</div>'
       +'<div class="my-card-meta">'+a.category+' &middot; '+(a.status==='presale'?'<span style="color:var(--aria)">Presale</span>':a.status==='sale'?'<span style="color:var(--kas)">Live</span>':'<span>'+a.status+'</span>')+'</div>'
       +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
-      +'</div></div>';
+      +'</div></div>'
+      +(canCancel?'<div style="padding:8px 16px 12px;border-top:1px solid var(--gray-800)"><button class="cancel-part-btn" onclick="confirmCancelParticipation(\''+a.id+'\',\''+escHtml(a.title)+'\','+item.blocks+','+item.spent+')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> <span class="it">Ritira partecipazione</span><span class="en">Withdraw participation</span></button></div>':'')
+      +'</div>';
   }).join('');
+}
+
+// ── Cancel participation ──
+function confirmCancelParticipation(airdropId,title,blocks,ariaSpent){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var msg=lang==='it'
+    ?'Vuoi davvero ritirare la tua partecipazione da "'+title+'"?\n\n'
+    +'• '+blocks+' blocchi verranno rilasciati\n'
+    +'• '+ariaSpent+' ARIA spesi NON verranno rimborsati\n'
+    +'  (restano ad AIROOBI come costo piattaforma)\n\n'
+    +'Questa azione non è reversibile.'
+    :'Do you really want to withdraw your participation from "'+title+'"?\n\n'
+    +'• '+blocks+' blocks will be released\n'
+    +'• '+ariaSpent+' ARIA spent will NOT be refunded\n'
+    +'  (kept by AIROOBI as platform fee)\n\n'
+    +'This action cannot be undone.';
+  if(confirm(msg)){
+    executeCancelParticipation(airdropId);
+  }
+}
+
+async function executeCancelParticipation(airdropId){
+  var token=await getValidToken();
+  if(!token)return;
+  var data=await sbRpc('cancel_my_participation',{p_airdrop_id:airdropId},token);
+  if(data&&data.ok){
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    showToast(lang==='it'
+      ?'Partecipazione ritirata. '+data.blocks_released+' blocchi rilasciati. '+data.aria_lost+' ARIA non rimborsati.'
+      :'Participation withdrawn. '+data.blocks_released+' blocks released. '+data.aria_lost+' ARIA not refunded.');
+    // Refresh data
+    await Promise.all([loadAirdrops(),loadMyParticipations()]);
+    renderGrid();
+    renderMyAirdrops();
+  } else {
+    var err=data&&data.error?data.error:'UNKNOWN';
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    var msgs={
+      'AIRDROP_NOT_ACTIVE':{it:'L\'airdrop non è più attivo.',en:'The airdrop is no longer active.'},
+      'NO_PARTICIPATION':{it:'Nessuna partecipazione attiva.',en:'No active participation.'}
+    };
+    var m=msgs[err]||{it:'Errore: '+err,en:'Error: '+err};
+    showToast('<span style="color:var(--red)">'+(lang==='it'?m.it:m.en)+'</span>');
+  }
 }
 
 // ── Valuation banner ──

@@ -321,8 +321,11 @@ select option{background:var(--gray-800);color:var(--white)}
 
 /* ── MY AIRDROPS TAB ── */
 .my-list{display:flex;flex-direction:column;gap:12px}
-.my-card{display:flex;gap:16px;border:1px solid var(--glass-border);background:var(--glass-bg);padding:16px;cursor:pointer;transition:all .2s;border-radius:var(--radius)}
+.my-card{border:1px solid var(--glass-border);background:var(--glass-bg);transition:all .2s;border-radius:var(--radius);overflow:hidden}
 .my-card:hover{border-color:var(--accent)}
+.my-card>div:first-child{display:flex;gap:16px;padding:16px}
+.cancel-part-btn{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+.cancel-part-btn:hover{border-color:var(--red);color:var(--red)}
 .my-card-img{width:72px;height:72px;object-fit:cover;flex-shrink:0;background:var(--gray-800)}
 .my-card-img-placeholder{width:72px;height:72px;background:var(--gray-800);display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .my-card-img-placeholder svg{width:28px;height:28px;stroke:var(--gray-600);stroke-width:1}
