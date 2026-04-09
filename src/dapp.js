@@ -2615,9 +2615,9 @@ async function loadDappWallet(){
     }
   }catch(e){}
 
-  // Badge collection (NFT non-REWARD)
+  // Badge collection (NFT non-REWARD, non-VALUATION)
   try{
-    var badgeCards=cards.filter(function(c){return c.nft_type!=='ROBI'&&c.nft_type!=='NFT_REWARD'&&c.nft_type!=='NFT_EARN'});
+    var badgeCards=cards.filter(function(c){return c.nft_type!=='ROBI'&&c.nft_type!=='NFT_REWARD'&&c.nft_type!=='NFT_EARN'&&c.nft_type!=='VALUATION'});
     var badgeGrid=document.getElementById('dapp-badge-grid');
     if(badgeGrid&&badgeCards.length>0){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
@@ -2634,6 +2634,46 @@ async function loadDappWallet(){
           '<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-500)">'+new Date(b.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})+'</div>'+
           '</div>';
       }).join('');
+    }
+  }catch(e){}
+
+  // Valuation badges
+  try{
+    var valCards=cards.filter(function(c){return c.nft_type==='VALUATION'});
+    var valGrid=document.getElementById('dapp-valuation-grid');
+    if(valGrid&&valCards.length>0){
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      var statusLabels={
+        'in_valutazione':{it:'In valutazione',en:'Under review',color:'#f0a030'},
+        'presale':{it:'Presale',en:'Presale',color:'var(--aria)'},
+        'sale':{it:'In vendita',en:'On sale',color:'var(--kas)'},
+        'dropped':{it:'Assegnato',en:'Assigned',color:'var(--kas)'},
+        'completed':{it:'Completato',en:'Completed',color:'var(--kas)'},
+        'rifiutato_min500':{it:'Rifiutato',en:'Rejected',color:'#ef4444'},
+        'rifiutato_generico':{it:'Rifiutato',en:'Rejected',color:'#ef4444'},
+        'closed':{it:'Chiuso',en:'Closed',color:'var(--gray-400)'}
+      };
+      valGrid.innerHTML=valCards.map(function(v,i){
+        var m=v.metadata||{};
+        var st=m.status||'in_valutazione';
+        var sl=statusLabels[st]||{it:st,en:st,color:'var(--gray-400)'};
+        var title=m.title||v.name||'—';
+        var cat=m.category||'';
+        var imgUrl=m.image_url||'';
+        var date=new Date(v.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
+        var imgHtml=imgUrl
+          ?'<img src="'+imgUrl+'" style="width:100%;height:80px;object-fit:cover;border-bottom:1px solid var(--gray-700)" loading="lazy">'
+          :'<div style="height:80px;display:flex;align-items:center;justify-content:center;background:var(--gray-900);border-bottom:1px solid var(--gray-700)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-600)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>';
+        return '<div style="border:1px solid var(--gray-700);border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;transition:border-color .2s" onclick="showValuationDetail('+i+')" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\'">'
+          +imgHtml
+          +'<div style="padding:12px">'
+          +'<div style="font-family:var(--font-h);font-size:14px;color:var(--white);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+escHtml(title)+'</div>'
+          +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-500);margin-bottom:8px;text-transform:uppercase">'+cat+' · '+date+'</div>'
+          +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;padding:3px 8px;display:inline-block;background:'+sl.color+'22;color:'+sl.color+';border:1px solid '+sl.color+'44">'+(lang==='it'?sl.it:sl.en)+'</div>'
+          +'</div></div>';
+      }).join('');
+      // Store for detail modal
+      window._valCards=valCards;
     }
   }catch(e){}
 
@@ -2657,6 +2697,81 @@ async function renderCategoryAlertsUI(token){
       +'<span>'+(lang==='it'?c.name_it:c.name_en)+'</span>'
       +'</label>';
   }).join('');
+}
+
+// ── Valuation detail modal ──
+function showValuationDetail(idx){
+  var v=(window._valCards||[])[idx];
+  if(!v)return;
+  var m=v.metadata||{};
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var statusLabels={
+    'in_valutazione':{it:'In valutazione',en:'Under review',color:'#f0a030'},
+    'presale':{it:'Presale',en:'Presale',color:'var(--aria)'},
+    'sale':{it:'In vendita',en:'On sale',color:'var(--kas)'},
+    'dropped':{it:'Assegnato',en:'Assigned',color:'var(--kas)'},
+    'completed':{it:'Completato',en:'Completed',color:'var(--kas)'},
+    'rifiutato_min500':{it:'Rifiutato (min €500)',en:'Rejected (min €500)',color:'#ef4444'},
+    'rifiutato_generico':{it:'Rifiutato',en:'Rejected',color:'#ef4444'},
+    'closed':{it:'Chiuso',en:'Closed',color:'var(--gray-400)'}
+  };
+  var st=m.status||'in_valutazione';
+  var sl=statusLabels[st]||{it:st,en:st,color:'var(--gray-400)'};
+  var date=new Date(v.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'});
+  var imgUrl=m.image_url||'';
+  var imgs=m.image_urls||[];
+  var objVal=parseFloat(m.object_value_eur)||0;
+  var desired=parseFloat(m.seller_desired_price)||0;
+  var minPrice=parseFloat(m.seller_min_price)||0;
+
+  var h='';
+  // Image
+  if(imgUrl)h+='<img src="'+imgUrl+'" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--gray-700);margin-bottom:16px" loading="lazy">';
+  // Title
+  h+='<h3 style="font-family:var(--font-h);font-size:22px;font-weight:300;color:var(--white);margin-bottom:8px">'+escHtml(m.title||v.name||'')+'</h3>';
+  // Status badge
+  h+='<div style="margin-bottom:16px"><span style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;padding:3px 10px;background:'+sl.color+'22;color:'+sl.color+';border:1px solid '+sl.color+'44">'+(lang==='it'?sl.it:sl.en)+'</span></div>';
+  // Details grid
+  h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">';
+  h+='<div style="padding:10px;border:1px solid var(--gray-700)"><div style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">'+(lang==='it'?'Categoria':'Category')+'</div><div style="font-size:13px;color:var(--white)">'+(m.category||'—')+'</div></div>';
+  h+='<div style="padding:10px;border:1px solid var(--gray-700)"><div style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">'+(lang==='it'?'Data':'Date')+'</div><div style="font-size:13px;color:var(--white)">'+date+'</div></div>';
+  h+='<div style="padding:10px;border:1px solid var(--gray-700)"><div style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">'+(lang==='it'?'Prezzo desiderato':'Desired price')+'</div><div style="font-size:13px;color:var(--white)">€'+desired.toFixed(2)+'</div></div>';
+  h+='<div style="padding:10px;border:1px solid var(--gray-700)"><div style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);letter-spacing:1px;text-transform:uppercase;margin-bottom:2px">'+(lang==='it'?'Prezzo minimo':'Min price')+'</div><div style="font-size:13px;color:var(--white)">€'+minPrice.toFixed(2)+'</div></div>';
+  h+='</div>';
+  // Quotation (if evaluated)
+  if(objVal>0){
+    h+='<div style="padding:12px;border:1px solid var(--gold);background:rgba(184,150,12,.04);margin-bottom:16px;text-align:center">';
+    h+='<div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:4px">'+(lang==='it'?'QUOTAZIONE AIROOBI':'AIROOBI QUOTATION')+'</div>';
+    h+='<div style="font-family:var(--font-h);font-size:28px;color:var(--gold)">€'+objVal.toFixed(2)+'</div>';
+    h+='</div>';
+  }
+  // Description
+  if(m.description){
+    h+='<div style="font-size:13px;color:var(--gray-400);line-height:1.6;margin-bottom:16px">'+escHtml(m.description)+'</div>';
+  }
+  // Rejection reason
+  if(m.rejection_reason){
+    h+='<div style="padding:10px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.06);font-size:12px;color:#f87171;margin-bottom:16px">';
+    h+='<strong>'+(lang==='it'?'Motivo rifiuto:':'Rejection reason:')+'</strong> '+escHtml(m.rejection_reason);
+    h+='</div>';
+  }
+  // Extra photos
+  if(imgs.length>1){
+    h+='<div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:16px">';
+    imgs.forEach(function(url){
+      h+='<img src="'+url+'" style="width:80px;height:80px;object-fit:cover;border:1px solid var(--gray-700);flex-shrink:0" loading="lazy">';
+    });
+    h+='</div>';
+  }
+  // Badge info
+  h+='<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-600);text-align:center;letter-spacing:1px;margin-top:8px">BADGE #'+(idx+1)+' · VALUATION · '+(v.airdrop_id?v.airdrop_id.substring(0,8):'—')+'</div>';
+
+  document.getElementById('valuation-modal-content').innerHTML=h;
+  document.getElementById('valuation-modal-bg').classList.add('active');
+}
+function closeValuationModal(e){
+  if(e&&e.target!==e.currentTarget)return;
+  document.getElementById('valuation-modal-bg').classList.remove('active');
 }
 
 async function saveAlertPreferences(){

@@ -712,6 +712,28 @@
       </div>
     </div>
 
+    <!-- VALUATION BADGES -->
+    <div style="margin-top:32px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gray-400);text-transform:uppercase;margin-bottom:16px"><span class="it">Le tue Valutazioni</span><span class="en">Your Valuations</span></div>
+      <div id="dapp-valuation-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+        <div style="padding:20px;border:1px dashed var(--gray-700);border-radius:var(--radius-sm);text-align:center;color:var(--gray-600);font-size:12px">
+          <span class="it">Nessuna valutazione.<br><a href="/proponi" onclick="navigateTo('submit',event)" style="color:var(--gold)">Proponi un oggetto</a></span>
+          <span class="en">No valuations yet.<br><a href="/proponi" onclick="navigateTo('submit',event)" style="color:var(--gold)">Submit an object</a></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALUATION DETAIL MODAL -->
+    <div class="modal-bg" id="valuation-modal-bg" onclick="closeValuationModal(event)">
+      <div class="modal" id="valuation-modal" style="max-width:500px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold)">VALUTAZIONE</div>
+          <button onclick="closeValuationModal()" style="background:none;border:none;color:var(--gray-400);font-size:20px;cursor:pointer">&times;</button>
+        </div>
+        <div id="valuation-modal-content"></div>
+      </div>
+    </div>
+
     <!-- CATEGORY ALERTS -->
     <div style="margin-top:32px;padding:20px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
       <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Alert categorie</span><span class="en">Category alerts</span></div>
