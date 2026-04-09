@@ -36,18 +36,18 @@
 ## 1. Split Economica per Airdrop
 
 ```
-100% ARIA incassato (convertito a €0,10/ARIA) =
+100% ARIA incassato =
   67,99% → Venditore P2P       (pagato in KAS, 24-48h dopo draw)
   22,00% → Fondo Comune        (aggiunto a treasury_stats automaticamente al draw)
   10,00% → Fee Piattaforma     (AIROOBI operational revenue)
    0,01% → Charity Pool        (accumulo DAO, causa selezionata dalla community)
 ```
 
-**Esempio su airdrop da 10.000 ARIA (€1.000 raccolti):**
-- Venditore: €679,90
-- Fondo Comune: €220,00
-- AIROOBI: €100,00
-- Charity: €0,10
+**Esempio su airdrop da 10.000 ARIA:**
+- Venditore: 6.799 ARIA → KAS
+- Fondo Comune: 2.200 ARIA → treasury
+- AIROOBI: 1.000 ARIA
+- Charity: 1 ARIA
 
 ---
 
@@ -454,7 +454,7 @@ Possibili mitigazioni future:
 
 ### 9.1 Principi fondamentali
 
-- **ARIA = stablecoin** — vale sempre €0,10. Si guadagna (daily) o si compra (min €1 = 10 ARIA)
+- **ARIA = valuta AIROOBI** — si guadagna (daily) o si compra
 - **ROBI = quota del Fondo Comune** — come un ETF: `valore_quota = treasury / quote_circolanti`
 - **Partecipare = minare quote** — tutti i perdenti ricevono quote NFT frazionarie
 - **Il treasury cresce SEMPRE** — da airdrop (22%), video ads (50%), sponsor, altre attività
@@ -747,7 +747,7 @@ ma il recupero perdenti è basso (20% media) con solo 20 utenti. Serve chiarire 
 economico per comunicarlo correttamente e validare la scalabilità.
 
 **Chiarimento fondamentale del founder:**
-- ARIA = stablecoin a €0.10 fisso. Non specula, non oscilla. Si compra (min €1) o si guadagna.
+- ARIA = valuta AIROOBI. Si compra o si guadagna.
 - ROBI = quota del Fondo Comune. Come un ETF: rappresenta una fetta del treasury.
 - Partecipare a un airdrop = minare quote. TUTTI i perdenti ricevono quote, proporzionali alla spesa.
 - Il treasury cresce sempre (22% airdrop + 50% ads + sponsor). Le quote valgono sempre di più.

@@ -2944,8 +2944,8 @@ function reopenSplash(){
 // ══════════════════════════════════════════════════════════
 var INFO_TIPS={
   'aria-balance':{
-    it:'Il tuo saldo ARIA. Varranno €0,10 ciascuno al lancio. Ora siamo in fase testnet: li ricevi gratis dal faucet (100/gg) e dal check-in (50/gg). Li usi per acquistare blocchi negli airdrop.',
-    en:'Your ARIA balance. Worth €0.10 each at launch. We\'re in testnet: get them free from the faucet (100/day) and check-in (50/day). Use them to buy blocks in airdrops.'
+    it:'Il tuo saldo ARIA. Ora siamo in fase testnet: li ricevi gratis dal faucet (100/gg) e dal check-in (50/gg). Li usi per acquistare blocchi negli airdrop.',
+    en:'Your ARIA balance. We\'re in testnet: get them free from the faucet (100/day) and check-in (50/day). Use them to buy blocks in airdrops.'
   },
   'robi-balance':{
     it:'I tuoi ROBI — il vero guadagno di AIROOBI. Le frazioni si accumulano (es. 2.3750 ROBI). Riscuoti quando vuoi in KAS. Ogni airdrop a cui partecipi ti fa guadagnare frazioni di ROBI reali.',
@@ -2956,8 +2956,8 @@ var INFO_TIPS={
     en:'The potential KAS (Kaspa) value of your ROBI at the current price. This is what you\'d receive if you redeemed now. Actual value may differ at redemption time.'
   },
   'portfolio':{
-    it:'L\'andamento del tuo portafoglio negli ultimi 30 giorni. Blu = ARIA accumulati. Gold = valore ROBI in EUR. Verde = equivalente in KAS. Il valore in alto è il potenziale totale: ARIA×€0,10 + valore ROBI.',
-    en:'Your portfolio trend over the last 30 days. Blue = ARIA accumulated. Gold = ROBI value in EUR. Green = KAS equivalent. The top value is the total potential: ARIA×€0.10 + ROBI value.'
+    it:'L\'andamento del tuo portafoglio negli ultimi 30 giorni. Blu = ARIA accumulati. Gold = valore ROBI. Verde = equivalente in KAS.',
+    en:'Your portfolio trend over the last 30 days. Blue = ARIA accumulated. Gold = ROBI value. Green = KAS equivalent.'
   },
   'faucet':{
     it:'Il faucet ti dà 100 ARIA gratis ogni giorno. Si resetta a mezzanotte UTC. In futuro la quantità diminuirà progressivamente — approfittane ora.',

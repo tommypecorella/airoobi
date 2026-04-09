@@ -22,7 +22,7 @@ Il modello economico di AIROOBI si basa su tre asset distinti:
 | Attributo | Valore | Note |
 |---|---|---|
 | Ticker | ARIA | Valuta interna AIROOBI |
-| Valore unitario | €0,10 (admin only) | Visibile SOLO nel pannello admin. Mai mostrato nell'area utente |
+| Valore unitario | TBD | Meccanismo di conversione ARIA → KAS da definire |
 | Blockchain | Kaspa (KRC-20) | Standard token nativo Kaspa |
 | Scadenza | Nessuna | ARIA non scade mai |
 | Come si ottiene | Daily check-in, video view, referral, streak | NON si compra direttamente in area utente |
@@ -42,7 +42,7 @@ Il modello economico di AIROOBI si basa su tre asset distinti:
 
 > **Max giornaliero ricorrente:** 7 ARIA (login + check-in + 5 video). Streak settimanale e referral sono bonus aggiuntivi.
 
-> ⚠️ **REGOLA TASSATIVA:** Il valore €0,10 per ARIA NON viene mai mostrato nell'area utente. Appare solo nel pannello admin. Il meccanismo di conversione ARIA → KAS è TBD e non va mai affermato nell'UI.
+> ⚠️ **REGOLA TASSATIVA:** Il controvalore EUR di ARIA NON viene mai mostrato — né nell'area utente né nell'admin. Il meccanismo di conversione ARIA → KAS è TBD e non va mai affermato nell'UI.
 
 ---
 
@@ -111,7 +111,7 @@ Il prezzo desiderato del venditore serve come riferimento per la valutazione AIR
 | Venditore P2P | 67,99% | €679,90 | Pagato in KAS, 24-48h dopo draw |
 | Fondo Comune | 22,00% | €220,00 | Sostiene il valore dei ROBI |
 | Fee Piattaforma | 10,00% | €100,00 | AIROOBI operational revenue |
-| Charity Pool | 0,01% | €0,10 | Accumulo DAO, causa selezionata dalla community |
+| Charity Pool | 0,01% | — | Accumulo DAO, causa selezionata dalla community |
 
 ---
 

@@ -4,7 +4,7 @@
  * ============================================================
  * Modello economico corretto:
  *
- *   ARIA = stablecoin €0.10 fisso. Si guadagna o si compra (min €1).
+ *   ARIA = valuta AIROOBI. Si guadagna o si compra.
  *   ROBI = quota del Fondo Comune (come ETF).
  *     valore_quota = treasury / nft_circolanti
  *   Partecipare = minare quote:
@@ -88,7 +88,7 @@ function generateUsers() {
     });
   }
 
-  // 10 Mainnet — comprano ARIA a €0.10
+  // 10 Mainnet — comprano ARIA
   for (let i = 0; i < 10; i++) {
     const budget = randInt(10, 200); // €10-€200
     const ariaBought = Math.floor(budget / ARIA_EUR);
@@ -520,7 +520,7 @@ function main() {
 
   ┌─────────────────────────────────────────────────────────────────┐
   │                                                                 │
-  │  ARIA (stablecoin €0.10)                                        │
+  │  ARIA (valuta AIROOBI)                                        │
   │    ↓ compra o guadagna                                          │
   │  BLOCCHI (partecipa airdrop)                                    │
   │    ├→ VINCITORE: ottiene oggetto (ROI 5-25x)                    │

@@ -129,7 +129,7 @@ Fallback senza host match:
 
 ### Regole tassative
 - **AICO non esiste piu** — termine deprecato. Solo ARIA e ROBI
-- Zero menzione di EUR 0.10 nell'area utente
+- Zero menzione di controvalore EUR ovunque (rimosso apr 2026)
 - DB column `aico_circulating` in `treasury_stats` = ARIA circolante (nome legacy)
 - Le Tessere sono proxy wallet ricaricabili, non si convertono direttamente
 

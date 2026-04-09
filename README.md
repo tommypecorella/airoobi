@@ -25,6 +25,4 @@ scripts/       → Utility and automation scripts
 - Font titoli: Cormorant Garamond
 - Font body: Instrument Sans
 - Dark mode default
-- 1 ARIA = €0.10 (valuta stabile di AIROOBI)
-
-NEssun riferimento a eur o valori
+- ARIA = valuta di AIROOBI (fase testnet)

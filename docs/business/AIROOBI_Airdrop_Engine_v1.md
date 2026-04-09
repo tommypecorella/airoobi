@@ -11,18 +11,18 @@
 ## 1. Split Economica per Airdrop
 
 ```
-100% ARIA incassato (convertito a €0,10/ARIA) =
+100% ARIA incassato =
   67,99% → Venditore P2P       (pagato in KAS, 24-48h dopo draw)
   22,00% → Fondo Comune        (aggiunto a treasury_stats automaticamente al draw)
   10,00% → Fee Piattaforma     (AIROOBI operational revenue)
    0,01% → Charity Pool        (accumulo DAO, causa selezionata dalla community)
 ```
 
-**Esempio su airdrop da 10.000 ARIA (€1.000):**
+**Esempio su airdrop da 10.000 ARIA:**
 - Venditore: 6.799 ARIA → KAS
-- Fondo Comune: 2.200 ARIA → €220 aggiunti a treasury
-- AIROOBI: 1.000 ARIA → €100
-- Charity: 1 ARIA → €0,10 (arrotondamento floor)
+- Fondo Comune: 2.200 ARIA → treasury
+- AIROOBI: 1.000 ARIA
+- Charity: 1 ARIA (arrotondamento floor)
 
 ---
 
