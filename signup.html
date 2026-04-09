@@ -97,7 +97,7 @@ footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
 </div>
 
 <footer>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.04.09-1.68.0</span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.04.10-1.69.0</span></p>
 </footer>
 
 <script>
@@ -202,8 +202,11 @@ function showSuccess(id,msg){var e=document.getElementById(id);e.textContent=msg
 var ALPHA_BRAVE_MAX=1000;
 async function checkAlphaBraveFull(){
   try{
-    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-    if(res.ok){var d=await res.json();return d.length>=ALPHA_BRAVE_MAX}
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&is_test_user=eq.false',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}});
+    if(res.ok){
+      var range=res.headers.get('content-range');
+      if(range){var total=parseInt(range.split('/')[1],10);return total>=ALPHA_BRAVE_MAX}
+    }
   }catch(e){}
   return false;
 }
