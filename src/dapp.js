@@ -1722,7 +1722,7 @@ function renderMyAirdrops(){
     var imgHtml=a.image_url
       ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy">'
       :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
-    var canCancel=a.status==='presale'||a.status==='sale';
+    var canCancel=true;
     return '<div class="my-card">'
       +'<div style="display:flex;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
       +imgHtml
