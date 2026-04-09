@@ -6,10 +6,8 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 var _session=null;
 var _balance=0;
 var _publicMode=false; // true when viewing public pages without auth
-var ARIA_EUR=0.20; // 1 ARIA = €0.20
-function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
-function updateBalanceUI(){document.getElementById('topbar-bal').textContent=_balance+' ARIA ('+eur(_balance)+')';}
+function updateBalanceUI(){document.getElementById('topbar-bal').textContent=_balance+' ARIA';}
 var _airdrops=[];
 var _myParts=[];
 var _currentFilter='all';
@@ -302,7 +300,7 @@ async function loadHomeDashboard(){
     }
   }catch(e){}
   // ARIA balance
-  document.getElementById('home-aria').innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
+  document.getElementById('home-aria').innerHTML=_balance;
   // ROBI count (nft_type = ROBI or NFT_REWARD)
   try{
     var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&nft_type=in.(ROBI,NFT_REWARD)&select=id,shares',token);
@@ -336,7 +334,7 @@ async function loadHomeDashboard(){
   _myParts.forEach(function(p){totalBlocks+=p.blocks_count||0;totalSpent+=p.aria_spent||0});
   document.getElementById('home-airdrops').textContent=_myParts.length;
   document.getElementById('home-blocks').textContent=totalBlocks;
-  document.getElementById('home-spent').textContent=totalSpent+' ARIA ('+eur(totalSpent)+')';
+  document.getElementById('home-spent').textContent=totalSpent+' ARIA';
   // Check-in status
   checkCheckinStatus();
   // Check faucet status
@@ -409,10 +407,9 @@ async function loadPortfolioChart(token,userRobi){
   // KAS potential line
   var kasData=kasPrice>0?labels.map(function(){return robiValEur/kasPrice}):[];
 
-  // EUR total (ARIA×0.10 + ROBI value)
-  var eurTotal=(_balance*0.10)+robiValEur;
+  // Portfolio summary (no EUR)
   var eurEl=document.getElementById('portfolio-eur-val');
-  if(eurEl)eurEl.innerHTML='&euro; '+eurTotal.toFixed(2)+'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-left:8px;letter-spacing:1px">pot.</span>';
+  if(eurEl)eurEl.innerHTML=_balance+' <span style="font-family:var(--font-m);font-size:11px;color:var(--aria);letter-spacing:1px">ARIA</span>';
 
   // Check if there's any data to show
   var hasData=ariaData.some(function(v){return v>0})||robiValEur>0;
@@ -432,7 +429,7 @@ async function loadPortfolioChart(token,userRobi){
       emptyMsg.className='portfolio-empty';
       canvas.parentElement.appendChild(emptyMsg);
     }
-    if(eurEl)eurEl.textContent='€ 0,00';
+    if(eurEl)eurEl.textContent='0 ARIA';
     return;
   }
   // Ensure canvas is visible if we have data
@@ -513,7 +510,7 @@ async function claimCheckin(){
       btn.textContent=lang==='it'?'+50 ARIA fatto!':'+50 ARIA done!';
       showToast('<span style="color:var(--kas)">+50 ARIA</span> — <span class="it">ogni ARIA è un passo verso il tuo ROBI</span><span class="en">every ARIA is a step toward your ROBI</span>');
       var homeAria=document.getElementById('home-aria');
-      if(homeAria)homeAria.innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
+      if(homeAria)homeAria.innerHTML=_balance;
     }else if(res&&res.error==='already_checked'){
       showCheckinDone();
     }else{
@@ -591,7 +588,7 @@ async function claimFaucet(){
       showToast('<span style="color:var(--kas)">+100 ARIA</span> — <span class="it">più blocchi, più ROBI</span><span class="en">more blocks, more ROBI</span>');
       // Refresh dashboard stats
       var homeAria=document.getElementById('home-aria');
-      if(homeAria)homeAria.innerHTML=_balance+'<small style="display:block;font-size:11px;color:var(--gray-400);font-family:var(--font-m);margin-top:2px">'+eur(_balance)+'</small>';
+      if(homeAria)homeAria.innerHTML=_balance;
       showFaucetCooldown();
     }else if(res&&res.error==='already_claimed'){
       showFaucetCooldown();
@@ -734,7 +731,7 @@ function dappShareRef(platform){
 async function loadBalance(){
   var profs=await sbGet('profiles?id=eq.'+_session.user.id+'&select=total_points',_session.access_token);
   if(profs&&profs.length>0)_balance=profs[0].total_points||0;
-  document.getElementById('topbar-bal').textContent=_balance+' ARIA ('+eur(_balance)+')';
+  document.getElementById('topbar-bal').textContent=_balance+' ARIA';
 }
 
 async function loadAirdrops(){
@@ -1012,7 +1009,7 @@ function renderGrid(){
 
     // Price display: presale shows discounted price + strikethrough sale price
     var currentPrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
-    var priceHtml=currentPrice+' ARIA <span class="card-eur">('+eur(currentPrice)+')</span> / <span class="it">blocco</span><span class="en">block</span>';
+    var priceHtml=currentPrice+' ARIA / <span class="it">blocco</span><span class="en">block</span>';
     if(isPresale&&a.presale_block_price)priceHtml+='<span class="card-presale-price">'+a.block_price_aria+'</span>';
 
     var cd=fmtCountdown(a.deadline);
@@ -1222,7 +1219,7 @@ async function openDetail(id){
     // STATS
     +'<div class="detail-stats">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'<small style="font-size:50%;color:var(--gray-400)"> ('+eur(a.block_price_aria)+')</small></div><div class="detail-stat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'</div><div class="detail-stat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
     +'</div>'
 
@@ -1248,8 +1245,8 @@ async function openDetail(id){
       // DISPLAY
       +'<div class="buy-display">'
       +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-      +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' ARIA ('+eur(a.block_price_aria)+')</div>'
-      +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA ('+eur(_balance)+')</div>'
+      +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' ARIA</div>'
+      +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA</div>'
       +'</div>'
 
       // SLIDER
@@ -1592,7 +1589,7 @@ function updateBuyDisplay(){
   var countEl=document.getElementById('buy-display-count');
   var costEl=document.getElementById('buy-display-cost');
   if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'blocco':'blocchi')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
-  if(costEl)costEl.innerHTML='= '+cost+' ARIA ('+eur(cost)+') &middot; <span style="color:var(--gold)">'+sharesStr+' ROBI</span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
+  if(costEl)costEl.innerHTML='= '+cost+' ARIA &middot; <span style="color:var(--gold)">'+sharesStr+' ROBI</span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
 }
 
 function goToAirdrop(id){
@@ -1632,7 +1629,7 @@ function initBuy(){
 
   _pendingBuy={airdropId:_currentDetail.id,blocks:chosen,cost:cost,qty:_buyQty};
   document.getElementById('modal-desc').innerHTML='<span class="it">Stai per acquisire <strong>'+_buyQty+'</strong> '+(_buyQty===1?'blocco':'blocchi')+'.</span><span class="en">You are about to acquire <strong>'+_buyQty+'</strong> block'+(_buyQty===1?'':'s')+'.</span>';
-  document.getElementById('modal-cost').textContent=cost+' ARIA ('+eur(cost)+')';
+  document.getElementById('modal-cost').textContent=cost+' ARIA';
   document.getElementById('modal-bg').classList.add('active');
 }
 
@@ -1659,7 +1656,7 @@ async function confirmBuy(){
     console.log('buy_blocks response:',data);
     if(data&&data.ok){
       _balance=data.new_balance;
-      document.getElementById('topbar-bal').textContent=_balance+' ARIA ('+eur(_balance)+')';
+      document.getElementById('topbar-bal').textContent=_balance+' ARIA';
       var toastMsg=data.blocks_bought+' <span class="it">blocchi acquisiti!</span><span class="en">blocks acquired!</span>';
       if(data.status_changed==='sale')toastMsg+=' <span style="color:var(--gold)">→ SALE!</span>';
       if(data.status_changed==='closed')toastMsg+=' <span style="color:var(--kas)">→ SOLD OUT!</span>';
@@ -1885,7 +1882,7 @@ async function openControlRoom(airdropId){
   var sellerMin=preview.seller_min_price||0;
   var successLabel=preview.success
     ?'<span style="color:var(--kas)">✓ SUCCESS</span>'
-    :'<span style="color:#ef4444">✗ BELOW MIN (€'+venditoreEur+' vs €'+sellerMin+')</span>';
+    :'<span style="color:#ef4444">✗ BELOW MIN ('+venditoreEur+' vs '+sellerMin+')</span>';
 
   // Top participants (anonymized)
   var userAgg={};
@@ -1924,29 +1921,29 @@ async function openControlRoom(airdropId){
     +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
     +crKpi('Partecipanti',uniqueUsers,'utenti unici')
     +crKpi('Fill Rate',fillPct+'%',totalBlks+'/'+a.total_blocks)
-    +crKpi('Revenue','€'+totalEur,totalAria+' ARIA')
-    +crKpi('Media/Utente',avgPerUser+' AR','€'+(avgPerUser*0.10).toFixed(0)+' eq.')
+    +crKpi('Revenue',totalAria+' ARIA','')
+    +crKpi('Media/Utente',avgPerUser+' AR','')
     +'</div>'
 
     +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
     +crKpi('Presale',presaleBlocks+' bl.',presalePct+'% interesse','var(--aria)')
     +crKpi('Sale',saleBlocks+' bl.',(100-presalePct)+'%')
     +crKpi('Mining','div '+divisor,'~'+estShares.toFixed(1)+' quote est.','var(--gold)')
-    +crKpi('NFT Price','€'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
+    +crKpi('NFT Price',nftPrice+' val.',nftCirc.toFixed(1)+' circ.','var(--gold)')
     +'</div>'
 
     // Status
     +'<div style="padding:10px 14px;border:1px solid var(--gray-800);margin-bottom:16px;font-size:12px">'
     +'<strong>Status:</strong> '+successLabel
-    +'<br><strong>Venditore:</strong> €'+venditoreEur+' / min €'+sellerMin
-    +'<br><strong>Split:</strong> Fondo €'+(preview.split?preview.split.fondo_eur:0)+' | Fee €'+(preview.split?preview.split.airoobi_eur:0)
-    +'<br><strong>Treasury:</strong> €'+treasuryBal.toFixed(2)+' | Quota: €'+nftPrice
+    +'<br><strong>Venditore:</strong> '+venditoreEur+' / min '+sellerMin
+    +'<br><strong>Split:</strong> Fondo '+(preview.split?preview.split.fondo_eur:0)+' | Fee '+(preview.split?preview.split.airoobi_eur:0)
+    +'<br><strong>Treasury:</strong> '+treasuryBal.toFixed(2)+' | Quota: '+nftPrice
     +'</div>'
 
     // Top participants
     +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin-bottom:6px">TOP PARTECIPANTI</div>'
     +'<div style="font-size:11px">'
-    +topParts.map(function(p,i){return '<div style="padding:3px 0;border-bottom:1px solid var(--gray-800)">#'+(i+1)+' <span style="font-family:var(--font-mono,monospace)">'+p.uid+'…</span> — '+p.blocks+' bl. — '+p.aria+' AR (€'+(p.aria*0.10).toFixed(0)+')</div>'}).join('')
+    +topParts.map(function(p,i){return '<div style="padding:3px 0;border-bottom:1px solid var(--gray-800)">#'+(i+1)+' <span style="font-family:var(--font-mono,monospace)">'+p.uid+'…</span> — '+p.blocks+' bl. — '+p.aria+' ARIA</div>'}).join('')
     +'</div>'
 
     // Scores leaderboard
@@ -2602,12 +2599,12 @@ async function loadDappWallet(){
             var kasPotVal=document.getElementById('dapp-wcard-kas-potential-val');
             if(kasPot&&kasPotVal){
               kasPot.style.display='block';
-              kasPotVal.innerHTML='&asymp; '+kasEquiv+' KAS <span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">(€ '+totalVal+')</span>';
+              kasPotVal.innerHTML='&asymp; '+kasEquiv+' KAS';
             }
           }
         }).catch(function(){});
       }else{
-        valEl.textContent=hasRendimento?'€ 0.00':'—';
+        valEl.textContent=hasRendimento?'0 ROBI':'—';
       }
     }
   }catch(e){}
@@ -2717,7 +2714,7 @@ async function loadRobiHistory(token){
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-800);font-size:12px">'
             +'<div><span style="color:var(--gold);font-family:var(--font-m);font-weight:600">'+(shares%1===0?shares:shares.toFixed(4))+'</span> ROBI'
             +'<div style="font-size:10px;color:var(--gray-500);margin-top:2px">'+(it.airdrop_title||it.source||'—')+' · '+d+'</div></div>'
-            +'<div style="text-align:right;font-family:var(--font-m);font-size:11px;color:var(--gray-400)">€'+parseFloat(it.value_eur||0).toFixed(4)+'</div>'
+            +'<div style="text-align:right;font-family:var(--font-m);font-size:11px;color:var(--gold)">'+(shares%1===0?shares:shares.toFixed(4))+' ROBI</div>'
             +'</div>';
         }).join('');
       }
