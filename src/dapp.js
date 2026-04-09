@@ -1737,21 +1737,25 @@ function renderMyAirdrops(){
 }
 
 // ── Cancel participation ──
+var _pendingCancelId=null;
 function confirmCancelParticipation(airdropId,title,blocks,ariaSpent){
-  var lang=document.documentElement.getAttribute('data-lang')||'it';
-  var msg=lang==='it'
-    ?'Vuoi davvero ritirare la tua partecipazione da "'+title+'"?\n\n'
-    +'• '+blocks+' blocchi verranno rilasciati\n'
-    +'• '+ariaSpent+' ARIA spesi NON verranno rimborsati\n'
-    +'  (restano ad AIROOBI come costo piattaforma)\n\n'
-    +'Questa azione non è reversibile.'
-    :'Do you really want to withdraw your participation from "'+title+'"?\n\n'
-    +'• '+blocks+' blocks will be released\n'
-    +'• '+ariaSpent+' ARIA spent will NOT be refunded\n'
-    +'  (kept by AIROOBI as platform fee)\n\n'
-    +'This action cannot be undone.';
-  if(confirm(msg)){
-    executeCancelParticipation(airdropId);
+  _pendingCancelId=airdropId;
+  document.getElementById('cancel-modal-title').textContent='"'+title+'"';
+  document.getElementById('cancel-modal-aria').textContent=ariaSpent;
+  document.getElementById('cancel-modal-aria-en').textContent=ariaSpent;
+  document.getElementById('cancel-modal-blocks').textContent=blocks;
+  document.getElementById('cancel-modal-blocks-en').textContent=blocks;
+  document.getElementById('cancel-modal-bg').classList.add('active');
+}
+function closeCancelModal(e){
+  if(e&&e.target!==e.currentTarget)return;
+  document.getElementById('cancel-modal-bg').classList.remove('active');
+  _pendingCancelId=null;
+}
+function executeCancelFromModal(){
+  if(_pendingCancelId){
+    closeCancelModal();
+    executeCancelParticipation(_pendingCancelId);
   }
 }
 

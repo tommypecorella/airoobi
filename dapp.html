@@ -905,6 +905,45 @@
   </div>
 </div>
 
+<!-- MODAL RITIRA PARTECIPAZIONE -->
+<div class="modal-bg" id="cancel-modal-bg" onclick="closeCancelModal(event)">
+  <div class="modal" id="cancel-modal">
+    <div style="text-align:center;margin-bottom:20px">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5"><path d="M12 9v4M12 17h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </div>
+    <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);text-align:center;margin-bottom:12px">
+      <span class="it">Ritira partecipazione</span><span class="en">Withdraw participation</span>
+    </h3>
+    <p id="cancel-modal-title" style="font-size:14px;color:var(--gold);text-align:center;margin-bottom:20px;font-family:var(--font-h)"></p>
+    <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);padding:16px;margin-bottom:20px">
+      <div style="font-size:13px;color:var(--gray-300);line-height:1.7">
+        <div style="margin-bottom:8px">
+          <span class="it">Stai per ritirare la tua partecipazione.</span>
+          <span class="en">You are about to withdraw your participation.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="color:#ef4444;font-size:16px">&#10005;</span>
+          <span><span class="it">Gli <strong id="cancel-modal-aria" style="color:var(--aria)"></strong> ARIA spesi per il servizio di airdrop <strong style="color:#ef4444">non saranno restituiti</strong>.</span><span class="en">The <strong id="cancel-modal-aria-en" style="color:var(--aria)"></strong> ARIA spent for the airdrop service <strong style="color:#ef4444">will not be refunded</strong>.</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="color:var(--kas);font-size:16px">&#10003;</span>
+          <span><span class="it"><strong id="cancel-modal-blocks" style="color:var(--white)"></strong> blocchi verranno rilasciati.</span><span class="en"><strong id="cancel-modal-blocks-en" style="color:var(--white)"></strong> blocks will be released.</span></span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--gray-500);text-align:center;margin-bottom:20px;font-style:italic">
+      <span class="it">Questa azione non e' reversibile.</span>
+      <span class="en">This action cannot be undone.</span>
+    </p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeCancelModal()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button class="modal-confirm" id="cancel-modal-ok" style="background:#ef4444" onclick="executeCancelFromModal()">
+        <span class="it">Ritira</span><span class="en">Withdraw</span>
+      </button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -916,7 +955,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.10-1.69.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.10-1.70.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
