@@ -6,6 +6,8 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 var _session=null;
 var _balance=0;
 var _publicMode=false; // true when viewing public pages without auth
+var ARIA_EUR=0.10; // 1 ARIA = €0.10 (interno, usato per ROBI e ABO)
+function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
 function updateBalanceUI(){document.getElementById('topbar-bal').textContent=_balance+' ARIA';}
 var _airdrops=[];
@@ -407,9 +409,9 @@ async function loadPortfolioChart(token,userRobi){
   // KAS potential line
   var kasData=kasPrice>0?labels.map(function(){return robiValEur/kasPrice}):[];
 
-  // Portfolio summary (no EUR)
+  // Portfolio summary — mostra solo valore ROBI in EUR (no ARIA EUR)
   var eurEl=document.getElementById('portfolio-eur-val');
-  if(eurEl)eurEl.innerHTML=_balance+' <span style="font-family:var(--font-m);font-size:11px;color:var(--aria);letter-spacing:1px">ARIA</span>';
+  if(eurEl)eurEl.innerHTML='&euro; '+robiValEur.toFixed(2)+'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-left:8px;letter-spacing:1px">ROBI</span>';
 
   // Check if there's any data to show
   var hasData=ariaData.some(function(v){return v>0})||robiValEur>0;
@@ -429,7 +431,7 @@ async function loadPortfolioChart(token,userRobi){
       emptyMsg.className='portfolio-empty';
       canvas.parentElement.appendChild(emptyMsg);
     }
-    if(eurEl)eurEl.textContent='0 ARIA';
+    if(eurEl)eurEl.textContent='€ 0,00';
     return;
   }
   // Ensure canvas is visible if we have data
@@ -1882,7 +1884,7 @@ async function openControlRoom(airdropId){
   var sellerMin=preview.seller_min_price||0;
   var successLabel=preview.success
     ?'<span style="color:var(--kas)">✓ SUCCESS</span>'
-    :'<span style="color:#ef4444">✗ BELOW MIN ('+venditoreEur+' vs '+sellerMin+')</span>';
+    :'<span style="color:#ef4444">✗ BELOW MIN (€'+venditoreEur+' vs €'+sellerMin+')</span>';
 
   // Top participants (anonymized)
   var userAgg={};
@@ -1921,29 +1923,29 @@ async function openControlRoom(airdropId){
     +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
     +crKpi('Partecipanti',uniqueUsers,'utenti unici')
     +crKpi('Fill Rate',fillPct+'%',totalBlks+'/'+a.total_blocks)
-    +crKpi('Revenue',totalAria+' ARIA','')
-    +crKpi('Media/Utente',avgPerUser+' AR','')
+    +crKpi('Revenue','€'+totalEur,totalAria+' ARIA')
+    +crKpi('Media/Utente',avgPerUser+' AR','€'+(avgPerUser*0.10).toFixed(0)+' eq.')
     +'</div>'
 
     +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
     +crKpi('Presale',presaleBlocks+' bl.',presalePct+'% interesse','var(--aria)')
     +crKpi('Sale',saleBlocks+' bl.',(100-presalePct)+'%')
     +crKpi('Mining','div '+divisor,'~'+estShares.toFixed(1)+' quote est.','var(--gold)')
-    +crKpi('NFT Price',nftPrice+' val.',nftCirc.toFixed(1)+' circ.','var(--gold)')
+    +crKpi('NFT Price','€'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
     +'</div>'
 
     // Status
     +'<div style="padding:10px 14px;border:1px solid var(--gray-800);margin-bottom:16px;font-size:12px">'
     +'<strong>Status:</strong> '+successLabel
-    +'<br><strong>Venditore:</strong> '+venditoreEur+' / min '+sellerMin
-    +'<br><strong>Split:</strong> Fondo '+(preview.split?preview.split.fondo_eur:0)+' | Fee '+(preview.split?preview.split.airoobi_eur:0)
-    +'<br><strong>Treasury:</strong> '+treasuryBal.toFixed(2)+' | Quota: '+nftPrice
+    +'<br><strong>Venditore:</strong> €'+venditoreEur+' / min €'+sellerMin
+    +'<br><strong>Split:</strong> Fondo €'+(preview.split?preview.split.fondo_eur:0)+' | Fee €'+(preview.split?preview.split.airoobi_eur:0)
+    +'<br><strong>Treasury:</strong> €'+treasuryBal.toFixed(2)+' | Quota: €'+nftPrice
     +'</div>'
 
     // Top participants
     +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin-bottom:6px">TOP PARTECIPANTI</div>'
     +'<div style="font-size:11px">'
-    +topParts.map(function(p,i){return '<div style="padding:3px 0;border-bottom:1px solid var(--gray-800)">#'+(i+1)+' <span style="font-family:var(--font-mono,monospace)">'+p.uid+'…</span> — '+p.blocks+' bl. — '+p.aria+' ARIA</div>'}).join('')
+    +topParts.map(function(p,i){return '<div style="padding:3px 0;border-bottom:1px solid var(--gray-800)">#'+(i+1)+' <span style="font-family:var(--font-mono,monospace)">'+p.uid+'…</span> — '+p.blocks+' bl. — '+p.aria+' AR (€'+(p.aria*0.10).toFixed(0)+')</div>'}).join('')
     +'</div>'
 
     // Scores leaderboard
@@ -2599,12 +2601,12 @@ async function loadDappWallet(){
             var kasPotVal=document.getElementById('dapp-wcard-kas-potential-val');
             if(kasPot&&kasPotVal){
               kasPot.style.display='block';
-              kasPotVal.innerHTML='&asymp; '+kasEquiv+' KAS';
+              kasPotVal.innerHTML='&asymp; '+kasEquiv+' KAS <span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">(€ '+totalVal+')</span>';
             }
           }
         }).catch(function(){});
       }else{
-        valEl.textContent=hasRendimento?'0 ROBI':'—';
+        valEl.textContent=hasRendimento?'€ 0,00':'—';
       }
     }
   }catch(e){}
@@ -2714,7 +2716,7 @@ async function loadRobiHistory(token){
           return '<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-800);font-size:12px">'
             +'<div><span style="color:var(--gold);font-family:var(--font-m);font-weight:600">'+(shares%1===0?shares:shares.toFixed(4))+'</span> ROBI'
             +'<div style="font-size:10px;color:var(--gray-500);margin-top:2px">'+(it.airdrop_title||it.source||'—')+' · '+d+'</div></div>'
-            +'<div style="text-align:right;font-family:var(--font-m);font-size:11px;color:var(--gold)">'+(shares%1===0?shares:shares.toFixed(4))+' ROBI</div>'
+            +'<div style="text-align:right;font-family:var(--font-m);font-size:11px;color:var(--gray-400)">€'+parseFloat(it.value_eur||0).toFixed(4)+'</div>'
             +'</div>';
         }).join('');
       }
