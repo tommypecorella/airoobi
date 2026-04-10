@@ -50,6 +50,10 @@
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
       <span class="it"><b>Valuta</b></span><span class="en"><b>Evaluate</b></span>
     </a>
+    <a href="/invita" data-page="referral" class="nav-invite" onclick="navigateTo('referral',event)">
+      <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+      <span class="it"><b>+Invita</b></span><span class="en"><b>+Invite</b></span>
+    </a>
     <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
       <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span class="it">I miei</span><span class="en">My drops</span>
@@ -109,6 +113,10 @@
     <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
     <span class="it"><b>Valuta</b></span><span class="en"><b>Evaluate</b></span>
   </a>
+  <a href="/invita" data-page="referral" class="nav-invite" onclick="navigateTo('referral',event)">
+    <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+    <span class="it"><b>+Invita</b></span><span class="en"><b>+Invite</b></span>
+  </a>
   <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
@@ -137,7 +145,7 @@
     <span class="it">Portafoglio</span><span class="en">Wallet</span>
   </button>
   <button class="user-menu-item" onclick="navigateTo('referral');toggleUserMenu()">
-    Referral
+    <span class="it">+Invita amici</span><span class="en">+Invite friends</span>
   </button>
   <button class="user-menu-item" onclick="navigateTo('submit');toggleUserMenu()">
     <span class="it">Vendi (airdroppa)</span><span class="en">Sell (airdrop)</span>
@@ -235,13 +243,13 @@
           </div>
           <button id="checkin-btn" onclick="claimCheckin()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:6px 16px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it" style="color:#000">+50</span><span class="en" style="color:#000">+50</span></button>
         </div>
-        <div class="daily-task" id="dt-referral" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);cursor:pointer" onclick="navigateTo('referral')">
-          <div class="dt-check" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--gray-600)">→</div>
+        <div class="daily-task" id="dt-referral" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid rgba(74,158,255,.2);background:rgba(74,158,255,.03);border-radius:var(--radius-sm);cursor:pointer" onclick="navigateTo('referral')">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;color:var(--black);font-weight:700">+</div>
           <div style="flex:1">
-            <div style="font-family:var(--font-b);font-size:13px;color:var(--white)"><span class="it">Invita un amico</span><span class="en">Invite a friend</span></div>
-            <div style="font-size:11px;color:var(--gray-500)"><span class="it">Tu +10, il tuo amico +15</span><span class="en">You +10, your friend +15</span></div>
+            <div style="font-family:var(--font-b);font-size:13px;color:var(--white);font-weight:600"><span class="it">+Invita amici</span><span class="en">+Invite friends</span></div>
+            <div style="font-size:11px;color:var(--gray-400)"><span class="it">Tu ricevi +10 ARIA, il tuo amico +15</span><span class="en">You get +10 ARIA, your friend gets +15</span></div>
           </div>
-          <div style="font-family:var(--font-m);font-size:13px;color:var(--aria);letter-spacing:1px">+10</div>
+          <div style="font-family:var(--font-m);font-size:13px;color:var(--accent);letter-spacing:1px;font-weight:700">+10</div>
         </div>
       </div>
 
@@ -286,9 +294,9 @@
           <svg viewBox="0 0 24 24" style="stroke:var(--aria)"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
           <span class="it">Airdrop</span><span class="en">Airdrops</span>
         </a>
-        <a class="dash-quick-link" onclick="navigateTo('referral')" style="border-color:rgba(184,150,12,.15)">
-          <svg viewBox="0 0 24 24" style="stroke:var(--gold)"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
-          <span class="it">Amici</span><span class="en">Friends</span>
+        <a class="dash-quick-link" onclick="navigateTo('referral')" style="border-color:rgba(74,158,255,.2);background:rgba(74,158,255,.03)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--accent)"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+          <span class="it" style="color:var(--accent);font-weight:600">+Invita</span><span class="en" style="color:var(--accent);font-weight:600">+Invite</span>
         </a>
         <a class="dash-quick-link" onclick="navigateTo('wallet')" style="border-color:rgba(73,234,203,.15)">
           <svg viewBox="0 0 24 24" style="stroke:var(--kas)"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
@@ -551,8 +559,8 @@
     </div>
 
     <div class="ref-card" style="border-color:rgba(74,158,255,.3)">
-      <h3><span class="it">Come funziona il referral</span><span class="en">How referrals work</span></h3>
-      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login il referral si conferma automaticamente<br>4. Tu ricevi +10 ARIA, il tuo amico +15 ARIA — più accumuli, più ROBI guadagni!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. Referral auto-confirms at their first login<br>4. You get +10 ARIA, your friend gets +15 ARIA — the more you accumulate, the more ROBI you earn!</span></p>
+      <h3><span class="it">Come funziona</span><span class="en">How it works</span></h3>
+      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login l'invito si conferma automaticamente<br>4. Tu ricevi +10 ARIA, il tuo amico +15 ARIA — più accumuli, più ROBI guadagni!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. The invite auto-confirms at their first login<br>4. You get +10 ARIA, your friend gets +15 ARIA — the more you accumulate, the more ROBI you earn!</span></p>
     </div>
 
     <div class="ref-history-section">
