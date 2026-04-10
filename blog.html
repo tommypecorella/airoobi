@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -266,6 +266,12 @@
     }
     .blog-footer a { color: var(--gray-400); text-decoration: none; transition: color .25s; }
     .blog-footer a:hover { color: var(--accent); }
+
+    /* Lang */
+    .lang-toggle { background:none; border:1px solid var(--gray-700); color:var(--gray-400); padding:5px 12px; font-family:var(--font-b); font-size:11px; font-weight:500; letter-spacing:1px; cursor:pointer; transition:all .25s; border-radius:20px; }
+    .lang-toggle:hover { border-color:var(--accent); color:var(--accent); }
+    [data-lang="en"] .it { display:none!important; }
+    [data-lang="it"] .en { display:none!important; }
   </style>
 </head>
 <body>
@@ -280,8 +286,9 @@
       <a href="/blog" class="active"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> Blog</a>
     </nav>
     <div class="topbar-right">
-      <a href="/login">Accedi</a>
-      <a href="/signup" class="cta-signup">Registrati</a>
+      <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
+      <a href="/login"><span class="it">Accedi</span><span class="en">Log in</span></a>
+      <a href="/signup" class="cta-signup"><span class="it">Registrati</span><span class="en">Sign up</span></a>
     </div>
   </header>
 
@@ -571,8 +578,51 @@
 
   <!-- Footer -->
   <footer class="blog-footer">
-    <p>AIROOBI · <a href="/">airoobi.app</a> · <a href="https://airoobi.com">airoobi.com</a> · <a href="/airdrops">Airdrops</a> · <a href="/impara">Impara</a></p>
+    <p>AIROOBI · <a href="/">airoobi.app</a> · <a href="https://airoobi.com">airoobi.com</a> · <a href="/airdrops">Airdrops</a> · <a href="/impara"><span class="it">Impara</span><span class="en">Learn</span></a></p>
   </footer>
 
+<script>
+// ── Language toggle ──
+function toggleLang(){
+  var root=document.documentElement;
+  var c=root.getAttribute('data-lang')||'it';
+  var n=c==='it'?'en':'it';
+  root.setAttribute('data-lang',n);
+  root.setAttribute('lang',n);
+  document.getElementById('lang-btn').textContent=n==='it'?'EN':'IT';
+  localStorage.setItem('airoobi_lang',n);
+}
+(function(){var s=localStorage.getItem('airoobi_lang');if(s&&s!=='it'){document.documentElement.setAttribute('data-lang',s);document.documentElement.setAttribute('lang',s);var b=document.getElementById('lang-btn');if(b)b.textContent='IT';}})();
+
+// ── Show full menu if logged in ──
+(function(){
+  try{
+    var s=localStorage.getItem('airoobi_session');
+    if(!s)return;
+    var session=JSON.parse(s);
+    if(!session||!session.access_token)return;
+    var nav=document.querySelector('.topbar-nav');
+    if(nav){
+      nav.innerHTML=
+        '<a href="/"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg> Home</a>'
+        +'<a href="/airdrops" style="color:var(--accent);font-weight:700;letter-spacing:1.2px"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg> AIRDROPS</a>'
+        +'<a href="/miei-airdrop"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span class="it">I miei</span><span class="en">My drops</span></a>'
+        +'<a href="/portafoglio-dapp"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg> <span class="it">Portafoglio</span><span class="en">Wallet</span></a>'
+        +'<a href="/impara"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> <span class="it">Impara</span><span class="en">Learn</span></a>'
+        +'<a href="/blog" class="active"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> Blog</a>'
+        +'<a href="/proponi" style="font-weight:600"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> <span class="it"><b>Valuta</b></span><span class="en"><b>Evaluate</b></span></a>';
+    }
+    var topRight=document.querySelector('.topbar-right');
+    if(topRight){
+      var email=session.user&&session.user.email?session.user.email:'';
+      var letter=email?email.charAt(0).toUpperCase():'?';
+      topRight.innerHTML=
+        '<span style="font-family:var(--font-m);font-size:12px;color:var(--accent);letter-spacing:.5px;background:rgba(74,158,255,.06);padding:7px 14px;border-radius:24px;border:1px solid rgba(74,158,255,.12)">— ARIA</span>'
+        +'<button class="lang-toggle" id="lang-btn" onclick="toggleLang()">'+((document.documentElement.getAttribute('data-lang')||'it')==='it'?'EN':'IT')+'</button>'
+        +'<a href="/airdrops" style="width:34px;height:34px;border-radius:50%;background:var(--gray-700);border:1px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--gray-400);text-decoration:none">'+letter+'</a>';
+    }
+  }catch(e){}
+})();
+</script>
 </body>
 </html>
