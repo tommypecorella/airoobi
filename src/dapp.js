@@ -109,7 +109,11 @@ async function getValidToken(){
     if(payload.exp*1000<Date.now()+60000){
       // Token expires in less than 60s, refresh it
       var ok=await refreshToken();
-      if(!ok){window.location.href='/login';return null;}
+      if(!ok){
+        // Don't redirect here — let the caller decide (may be a public route)
+        if(!isPublicRoute())window.location.href='/login';
+        return null;
+      }
     }
   }catch(e){}
   return _session.access_token;
@@ -137,7 +141,21 @@ document.addEventListener('DOMContentLoaded',async function(){
   if(_session){
     // Logged in — full experience
     var token=await getValidToken();
-    if(!token)return;
+    if(!token){
+      // Token expired/invalid — if on a public route, fall back to public mode
+      if(isPublicRoute()||urlId){
+        _session=null;
+        _publicMode=true;
+        setupPublicUI();
+        await loadAirdropsPublic();
+        renderGrid();
+        renderStats();
+        renderCategoryFilter();
+        startCountdowns();
+      } else {
+        return;
+      }
+    } else {
     // Show splash tour on first visit
     if(!localStorage.getItem('airoobi_splash_done'))showSplash();
     setupUI();
@@ -150,6 +168,7 @@ document.addEventListener('DOMContentLoaded',async function(){
     registerServiceWorker();
     setTimeout(requestPushPermission,3000);
     loadNotifications();
+    }
   } else if(isPublicRoute()||(urlId)){
     // Public mode — show airdrops/learn without auth
     _publicMode=true;
