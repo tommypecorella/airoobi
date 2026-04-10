@@ -22,35 +22,36 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--black:#000000;--white:#FFFFFF;--gold:#B8960C;--gold-dim:rgba(184,150,12,.3);--gray-300:#D1D5DB;--gray-400:#9CA3AF;--gray-700:#374151;--gray-800:#1F2937;--aria:#4A9EFF;--kas:#49EACB;--font-h:'Cormorant Garamond',Georgia,serif;--font-b:'Instrument Sans','Helvetica Neue',sans-serif;--font-m:'DM Mono','Courier New',monospace}
-html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased}
+:root{--black:#060b18;--white:#f0f2f8;--accent:#4A9EFF;--accent-dim:rgba(74,158,255,.25);--gray-300:#b4bdd4;--gray-400:#8892ae;--gray-700:#1f2942;--gray-800:#151d33;--aria:#4A9EFF;--kas:#49EACB;--font-h:'Cormorant Garamond',Georgia,serif;--font-b:'Instrument Sans','Helvetica Neue',sans-serif;--font-m:'DM Mono','Courier New',monospace;--radius:14px;--radius-sm:10px}
+html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased;color-scheme:dark}
 body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:var(--black)}
 .auth-logo-wrap{margin-bottom:32px;text-align:center}
-.auth-logo-wrap img{height:36px}
-.auth-box{background:var(--gray-800);border:1px solid var(--gray-700);max-width:420px;width:100%;padding:48px 40px;position:relative}
+.auth-logo{font-family:var(--font-b);font-size:36px;font-weight:700;letter-spacing:-3px;color:var(--accent);opacity:.8}
+.auth-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);max-width:420px;width:100%;padding:48px 40px;position:relative;border-radius:var(--radius);box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.15),transparent);border-radius:var(--radius) var(--radius) 0 0}
 .auth-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:8px}
 .auth-box .auth-sub{font-size:13px;color:var(--gray-400);margin-bottom:32px}
 .auth-box label{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px}
-.auth-box input[type="email"],.auth-box input[type="password"],.auth-box input[type="text"]{width:100%;padding:14px 16px;background:var(--black);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;margin-bottom:20px;transition:border-color .3s}
-.auth-box input:focus{border-color:var(--gold)}
-.auth-btn{width:100%;padding:14px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:16px}
-.auth-btn:hover{background:var(--white)}
-.auth-btn:disabled{opacity:.5;cursor:not-allowed}
+.auth-box input[type="email"],.auth-box input[type="password"],.auth-box input[type="text"]{width:100%;padding:14px 16px;background:rgba(0,0,0,.3);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;margin-bottom:20px;transition:border-color .3s;border-radius:var(--radius-sm)}
+.auth-box input:focus{border-color:var(--accent)}
+.auth-btn{width:100%;padding:14px;background:var(--accent);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:16px;border-radius:var(--radius-sm)}
+.auth-btn:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 6px 20px rgba(74,158,255,.25)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
 .auth-toggle{font-size:13px;color:var(--gray-400);text-align:center}
-.auth-toggle a{color:var(--gold);cursor:pointer;text-decoration:none}
+.auth-toggle a{color:var(--accent);cursor:pointer;text-decoration:none}
 .auth-toggle a:hover{text-decoration:underline}
-.auth-error{background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
-.auth-success{background:rgba(184,150,12,.1);border:1px solid var(--gold-dim);color:var(--gold);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
-.pw-strength{height:4px;margin:-12px 0 16px;display:flex;gap:3px}
+.auth-error{background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none;border-radius:var(--radius-sm)}
+.auth-success{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.2);color:var(--accent);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none;border-radius:var(--radius-sm)}
+.pw-strength{height:4px;margin:-12px 0 16px;display:flex;gap:3px;border-radius:2px;overflow:hidden}
 .pw-strength-bar{flex:1;height:100%;background:var(--gray-700);transition:background .3s}
 .pw-strength-bar.weak{background:#B91C1C}
-.pw-strength-bar.medium{background:#B8960C}
+.pw-strength-bar.medium{background:var(--accent)}
 .pw-strength-bar.strong{background:#1a7a3f}
 .pw-strength-label{font-size:11px;margin:-8px 0 16px;letter-spacing:1px}
 .cf-turnstile-wrap{margin-bottom:16px;display:flex;justify-content:center}
 @media(max-width:768px){.auth-box{padding:32px 24px}}
 .back-link{display:inline-flex;align-items:center;gap:6px;color:var(--gray-400);font-size:12px;letter-spacing:1px;text-decoration:none;margin-bottom:24px;transition:color .3s}
-.back-link:hover{color:var(--gold)}
+.back-link:hover{color:var(--accent)}
 .it{display:none}.en{display:none}
 html[data-lang="it"] .it{display:inline}
 html[data-lang="en"] .en{display:inline}
@@ -64,7 +65,7 @@ footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
 <a href="/" class="back-link">&larr; <span class="it">Torna su AIROOBI</span><span class="en">Back to AIROOBI</span></a>
 
 <div class="auth-logo-wrap">
-  <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI">
+  <div class="auth-logo">Oo</div>
 </div>
 
 <div class="auth-box">
@@ -73,7 +74,7 @@ footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
   <div class="auth-error" id="signup-error"></div>
   <div class="auth-success" id="signup-success"></div>
   <div id="resend-email-wrap" style="display:none;text-align:center;margin:8px 0">
-    <a href="javascript:void(0)" onclick="resendConfirmation()" style="color:var(--gold);font-size:13px;text-decoration:underline">
+    <a href="javascript:void(0)" onclick="resendConfirmation()" style="color:var(--accent);font-size:13px;text-decoration:underline">
       <span class="it">Non hai ricevuto l'email? Reinvia</span><span class="en">Didn't receive the email? Resend</span>
     </a>
   </div>
@@ -97,7 +98,7 @@ footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
 </div>
 
 <footer>
-  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);display:inline-block;margin-top:8px">alfa-2026.04.10-1.70.2</span></p>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--accent);display:inline-block;margin-top:8px">alfa-2026.04.10-2.1.0</span></p>
 </footer>
 
 <script>
@@ -303,14 +304,14 @@ function showSignupSuccess(lang){
   document.querySelector('.auth-box').innerHTML=
     '<div style="text-align:center;padding:24px 0">'
     +'<div style="font-size:48px;margin-bottom:16px">&#10003;</div>'
-    +'<h2 style="font-family:var(--font-h);font-size:28px;font-weight:300;color:var(--gold);margin-bottom:16px">'
+    +'<h2 style="font-family:var(--font-h);font-size:28px;font-weight:300;color:var(--accent);margin-bottom:16px">'
     +(lang==='it'?'Congratulazioni!':'Congratulations!')+'</h2>'
     +'<p style="font-size:15px;color:var(--gray-300);line-height:1.7;margin-bottom:24px">'
     +(lang==='it'
       ?'Il tuo account AIROOBI è stato creato. Puoi già entrare nella piattaforma.<br><br>Riceverai successivamente istruzioni per verificare il tuo indirizzo email.'
       :'Your AIROOBI account has been created. You can already enter the platform.<br><br>You will receive instructions to verify your email address shortly.')
     +'</p>'
-    +'<a href="/" style="display:inline-block;padding:14px 40px;background:var(--gold);color:var(--black);text-decoration:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;transition:all .3s">'
+    +'<a href="/" style="display:inline-block;padding:14px 40px;background:var(--accent);color:var(--black);text-decoration:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;transition:all .3s">'
     +(lang==='it'?'Entra in AIROOBI':'Enter AIROOBI')+'</a>'
     +'</div>';
 }
