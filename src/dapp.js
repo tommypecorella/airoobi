@@ -9,7 +9,13 @@ var _publicMode=false; // true when viewing public pages without auth
 var ARIA_EUR=0.10; // 1 ARIA = €0.10 (interno, usato per ROBI e ABO)
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
-function updateBalanceUI(){document.getElementById('topbar-bal').textContent=_balance+' ARIA';}
+var _robi=0;
+function updateBalanceUI(){
+  var ariaEl=document.getElementById('topbar-aria-val');
+  var robiEl=document.getElementById('topbar-robi-val');
+  if(ariaEl)ariaEl.textContent=_balance;
+  if(robiEl)robiEl.textContent=_robi;
+}
 var _airdrops=[];
 var _myParts=[];
 var _currentFilter='all';
@@ -197,6 +203,7 @@ document.addEventListener('DOMContentLoaded',async function(){
 function setupPublicUI(){
   // Hide user-specific topbar elements
   document.getElementById('topbar-bal').style.display='none';
+  var robiBar=document.getElementById('topbar-bal-robi');if(robiBar)robiBar.style.display='none';
   document.getElementById('notif-bell').style.display='none';
   document.getElementById('topbar-avatar').style.display='none';
   // Hide non-public nav items (keep only explore + learn)
@@ -750,9 +757,9 @@ function dappShareRef(platform){
 
 // ── Data loading ──
 async function loadBalance(){
-  var profs=await sbGet('profiles?id=eq.'+_session.user.id+'&select=total_points',_session.access_token);
-  if(profs&&profs.length>0)_balance=profs[0].total_points||0;
-  document.getElementById('topbar-bal').textContent=_balance+' ARIA';
+  var profs=await sbGet('profiles?id=eq.'+_session.user.id+'&select=total_points,robi_balance',_session.access_token);
+  if(profs&&profs.length>0){_balance=profs[0].total_points||0;_robi=profs[0].robi_balance||0;}
+  updateBalanceUI();
 }
 
 async function loadAirdrops(){
@@ -1626,7 +1633,7 @@ async function confirmBuy(){
     console.log('buy_blocks response:',data);
     if(data&&data.ok){
       _balance=data.new_balance;
-      document.getElementById('topbar-bal').textContent=_balance+' ARIA';
+      updateBalanceUI();
       var toastMsg=data.blocks_bought+' <span class="it">blocchi acquisiti!</span><span class="en">blocks acquired!</span>';
       if(data.status_changed==='sale')toastMsg+=' <span style="color:var(--gold)">→ SALE!</span>';
       if(data.status_changed==='closed')toastMsg+=' <span style="color:var(--kas)">→ SOLD OUT!</span>';
@@ -3082,3 +3089,72 @@ document.addEventListener('click',function(e){
     closeInfoTip();
   }
 });
+
+// ── Change password ──
+function showChangePw(){
+  document.getElementById('changepw-modal').classList.add('active');
+  document.getElementById('changepw-error').style.display='none';
+  document.getElementById('changepw-success').style.display='none';
+  document.getElementById('changepw-old').value='';
+  document.getElementById('changepw-new').value='';
+  document.getElementById('changepw-confirm').value='';
+}
+function hideChangePw(){
+  document.getElementById('changepw-modal').classList.remove('active');
+}
+async function doChangePw(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var errEl=document.getElementById('changepw-error');
+  var okEl=document.getElementById('changepw-success');
+  errEl.style.display='none';okEl.style.display='none';
+
+  var oldPw=document.getElementById('changepw-old').value;
+  var newPw=document.getElementById('changepw-new').value;
+  var confirmPw=document.getElementById('changepw-confirm').value;
+
+  if(!oldPw){errEl.textContent=lang==='it'?'Inserisci la password attuale':'Enter current password';errEl.style.display='block';return;}
+  if(!newPw||newPw.length<8){errEl.textContent=lang==='it'?'La nuova password deve avere almeno 8 caratteri':'New password must be at least 8 characters';errEl.style.display='block';return;}
+  if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).{8,}$/.test(newPw)){
+    errEl.textContent=lang==='it'?'Servono maiuscola, minuscola, numero e carattere speciale (!@#$%^&*)':'Need uppercase, lowercase, number and special char (!@#$%^&*)';errEl.style.display='block';return;
+  }
+  if(newPw!==confirmPw){errEl.textContent=lang==='it'?'Le password non coincidono':'Passwords don\'t match';errEl.style.display='block';return;}
+
+  document.getElementById('changepw-btn').disabled=true;
+
+  // Verify old password by trying to login
+  var email=_session&&_session.user?_session.user.email:'';
+  try{
+    var verifyRes=await fetch(SB_URL+'/auth/v1/token?grant_type=password',{
+      method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,password:oldPw})
+    });
+    if(verifyRes.status!==200){
+      errEl.textContent=lang==='it'?'Password attuale errata':'Current password is wrong';errEl.style.display='block';
+      document.getElementById('changepw-btn').disabled=false;return;
+    }
+
+    // Update password
+    var token=await getValidToken();
+    var updateRes=await fetch(SB_URL+'/auth/v1/user',{
+      method:'PUT',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({password:newPw})
+    });
+    if(updateRes.ok){
+      okEl.textContent=lang==='it'?'Password cambiata con successo!':'Password changed successfully!';
+      okEl.style.display='block';
+      document.getElementById('changepw-old').value='';
+      document.getElementById('changepw-new').value='';
+      document.getElementById('changepw-confirm').value='';
+      track('password_changed',{});
+      setTimeout(hideChangePw,2000);
+    }else{
+      var d=await updateRes.json().catch(function(){return{}});
+      errEl.textContent=d.msg||d.message||(lang==='it'?'Errore. Riprova.':'Error. Try again.');
+      errEl.style.display='block';
+    }
+  }catch(e){
+    errEl.textContent=lang==='it'?'Errore di rete. Riprova.':'Network error. Try again.';
+    errEl.style.display='block';
+  }
+  document.getElementById('changepw-btn').disabled=false;
+}
