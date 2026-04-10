@@ -224,6 +224,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   </div>
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">Finanze</span>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-company-assets')"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="14" r="2"/></svg>Conto AIROOBI</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-costs')"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Cost Tracker</div>
   </div>
   <div class="admin-sidebar-group">
@@ -384,6 +385,67 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </tbody>
     </table>
     <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> calcolato da nft_rewards. <strong>ARIA IN CIRCOLAZIONE</strong> calcolato da profiles.total_points.</p>
+  </div>
+
+  <!-- CONTO AIROOBI -->
+  <div class="admin-section" id="sec-company-assets">
+    <h2>Conto AIROOBI</h2>
+
+    <!-- Totale patrimonio -->
+    <div class="admin-grid" style="margin-bottom:24px">
+      <div class="admin-card" style="border-color:rgba(74,158,255,.4)"><div class="admin-card-val" id="ca-total-eur" style="color:var(--aria)">—</div><div class="admin-card-label">Totale patrimonio (EUR)</div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="ca-fiat-total" style="color:var(--gold)">—</div><div class="admin-card-label">Fiat</div></div>
+      <div class="admin-card" style="border-color:rgba(73,234,203,.3)"><div class="admin-card-val" id="ca-crypto-total" style="color:var(--kas)">—</div><div class="admin-card-label">Crypto</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="ca-nft-count">—</div><div class="admin-card-label">NFT posseduti</div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bo-tabs" style="margin-bottom:20px">
+      <button class="bo-tab active" onclick="caFilter('all')">Tutti</button>
+      <button class="bo-tab" onclick="caFilter('fiat')">Fiat</button>
+      <button class="bo-tab" onclick="caFilter('crypto')">Crypto</button>
+      <button class="bo-tab" onclick="caFilter('nft')">NFT</button>
+    </div>
+
+    <!-- Add asset -->
+    <div style="margin-bottom:20px">
+      <button style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:8px 18px;cursor:pointer;font-weight:700" onclick="caOpenModal()">+ AGGIUNGI ASSET</button>
+    </div>
+
+    <!-- Table -->
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Tipo</th><th>Nome</th><th>Simbolo</th><th>Quantità</th><th>Valore EUR</th><th>Wallet</th><th>Note</th><th>Attivo</th><th></th></tr></thead>
+        <tbody id="ca-body"><tr><td colspan="9" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
+      </table>
+    </div>
+    <p class="admin-note" style="margin-top:12px">Gestisci i possedimenti AIROOBI: fiat, crypto e NFT. Ogni modifica è salvata in tempo reale su Supabase.</p>
+  </div>
+
+  <!-- ASSET MODAL -->
+  <div class="ct-modal-bg" id="ca-modal">
+    <div class="ct-modal">
+      <h3 id="ca-modal-title">Aggiungi asset</h3>
+      <label>Categoria</label>
+      <select id="ca-category"><option value="fiat">Fiat</option><option value="crypto">Crypto</option><option value="nft">NFT</option></select>
+      <label>Nome</label>
+      <input id="ca-name" placeholder="es. Conto BancoPosta, Bitcoin, CryptoPunk #123">
+      <label>Simbolo</label>
+      <input id="ca-symbol" placeholder="es. EUR, BTC, KAS">
+      <label>Quantità</label>
+      <input id="ca-amount" type="number" step="0.000001" placeholder="0">
+      <label>Valore EUR</label>
+      <input id="ca-value-eur" type="number" step="0.01" placeholder="0.00">
+      <label>Wallet / IBAN</label>
+      <input id="ca-wallet" placeholder="Indirizzo wallet o IBAN (opzionale)">
+      <label>Note</label>
+      <input id="ca-notes" placeholder="Note libere (opzionale)">
+      <div class="ct-modal-actions">
+        <button class="ct-btn-cancel" onclick="caCloseModal()">ANNULLA</button>
+        <button class="ct-btn-del" id="ca-del-btn" style="display:none" onclick="caDeleteAsset()">ELIMINA</button>
+        <button class="ct-btn-save" onclick="caSaveAsset()">SALVA</button>
+      </div>
+    </div>
   </div>
 
   <!-- COST TRACKER -->
@@ -2644,6 +2706,7 @@ adminNav=function(sectionId){
   if(sectionId==='sec-categories')loadCategories();
   if(sectionId==='sec-valutazioni')loadBoData();
   if(sectionId==='sec-collaborators')loadCollaborators();
+  if(sectionId==='sec-company-assets')loadCompanyAssets();
 };
 
 // ══════════════════════════════════════════════════════════
@@ -2777,6 +2840,153 @@ async function removeCollaborator(userId){
     showToast('Validatore rimosso','success');
     loadCollaborators();
   }catch(e){alert('Errore rimozione');}
+}
+
+// ══════════════════════════════════════════
+// ── COMPANY ASSETS (Conto AIROOBI) ──
+// ══════════════════════════════════════════
+var _companyAssets=[];
+var _caFilter='all';
+var _caEditId=null;
+
+async function loadCompanyAssets(){
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/company_assets?order=category.asc,name.asc',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+    });
+    _companyAssets=res.ok?await res.json():[];
+  }catch(e){_companyAssets=[];}
+  renderCompanyAssets();
+}
+
+function renderCompanyAssets(){
+  // Stats
+  var fiatTotal=0,cryptoTotal=0,nftCount=0,grandTotal=0;
+  _companyAssets.forEach(function(a){
+    var v=parseFloat(a.value_eur)||0;
+    if(a.category==='fiat')fiatTotal+=v;
+    else if(a.category==='crypto')cryptoTotal+=v;
+    else if(a.category==='nft')nftCount++;
+    grandTotal+=v;
+  });
+  document.getElementById('ca-total-eur').textContent='€'+grandTotal.toLocaleString('it-IT',{minimumFractionDigits:2});
+  document.getElementById('ca-fiat-total').textContent='€'+fiatTotal.toLocaleString('it-IT',{minimumFractionDigits:2});
+  document.getElementById('ca-crypto-total').textContent='€'+cryptoTotal.toLocaleString('it-IT',{minimumFractionDigits:2});
+  document.getElementById('ca-nft-count').textContent=nftCount;
+
+  // Filter
+  var filtered=_caFilter==='all'?_companyAssets:_companyAssets.filter(function(a){return a.category===_caFilter});
+
+  // Table
+  var body=document.getElementById('ca-body');
+  if(filtered.length===0){
+    body.innerHTML='<tr><td colspan="9" style="color:var(--gray-400);text-align:center;padding:32px">Nessun asset trovato</td></tr>';
+    return;
+  }
+  body.innerHTML=filtered.map(function(a){
+    var catBadge={'fiat':'background:rgba(184,150,12,.15);color:var(--gold)','crypto':'background:rgba(73,234,203,.15);color:var(--kas)','nft':'background:rgba(74,158,255,.15);color:var(--aria)'};
+    return '<tr>'
+      +'<td><span style="'+catBadge[a.category]+';padding:2px 8px;font-size:10px;letter-spacing:1px;font-family:var(--font-m);text-transform:uppercase">'+a.category+'</span></td>'
+      +'<td>'+escH(a.name)+'</td>'
+      +'<td style="font-family:var(--font-m);font-size:12px">'+(a.symbol||'—')+'</td>'
+      +'<td style="font-family:var(--font-m);font-size:12px">'+(parseFloat(a.amount)||0).toLocaleString('it-IT',{maximumFractionDigits:6})+'</td>'
+      +'<td style="font-family:var(--font-m);color:var(--gold)">€'+(parseFloat(a.value_eur)||0).toLocaleString('it-IT',{minimumFractionDigits:2})+'</td>'
+      +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(a.wallet_address||'—')+'</td>'
+      +'<td style="font-size:12px;color:var(--gray-300)">'+(a.notes||'—')+'</td>'
+      +'<td>'+(a.is_active?'<span style="color:var(--kas)">✓</span>':'<span style="color:var(--gray-600)">✗</span>')+'</td>'
+      +'<td><div class="ct-actions"><button onclick="caEditAsset(\''+a.id+'\')">EDIT</button></div></td>'
+      +'</tr>';
+  }).join('');
+}
+
+function escH(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+
+function caFilter(cat){
+  _caFilter=cat;
+  document.querySelectorAll('#sec-company-assets .bo-tab').forEach(function(t){t.classList.remove('active')});
+  event.target.classList.add('active');
+  renderCompanyAssets();
+}
+
+function caOpenModal(){
+  _caEditId=null;
+  document.getElementById('ca-modal-title').textContent='Aggiungi asset';
+  document.getElementById('ca-category').value='fiat';
+  document.getElementById('ca-name').value='';
+  document.getElementById('ca-symbol').value='';
+  document.getElementById('ca-amount').value='';
+  document.getElementById('ca-value-eur').value='';
+  document.getElementById('ca-wallet').value='';
+  document.getElementById('ca-notes').value='';
+  document.getElementById('ca-del-btn').style.display='none';
+  document.getElementById('ca-modal').classList.add('active');
+}
+
+function caCloseModal(){
+  document.getElementById('ca-modal').classList.remove('active');
+}
+
+function caEditAsset(id){
+  var a=_companyAssets.find(function(x){return x.id===id});
+  if(!a)return;
+  _caEditId=id;
+  document.getElementById('ca-modal-title').textContent='Modifica asset';
+  document.getElementById('ca-category').value=a.category;
+  document.getElementById('ca-name').value=a.name||'';
+  document.getElementById('ca-symbol').value=a.symbol||'';
+  document.getElementById('ca-amount').value=a.amount||'';
+  document.getElementById('ca-value-eur').value=a.value_eur||'';
+  document.getElementById('ca-wallet').value=a.wallet_address||'';
+  document.getElementById('ca-notes').value=a.notes||'';
+  document.getElementById('ca-del-btn').style.display='inline-block';
+  document.getElementById('ca-modal').classList.add('active');
+}
+
+async function caSaveAsset(){
+  var s=getSession();if(!s)return;
+  var data={
+    category:document.getElementById('ca-category').value,
+    name:document.getElementById('ca-name').value.trim(),
+    symbol:document.getElementById('ca-symbol').value.trim()||null,
+    amount:parseFloat(document.getElementById('ca-amount').value)||0,
+    value_eur:parseFloat(document.getElementById('ca-value-eur').value)||0,
+    wallet_address:document.getElementById('ca-wallet').value.trim()||null,
+    notes:document.getElementById('ca-notes').value.trim()||null,
+    updated_at:new Date().toISOString()
+  };
+  if(!data.name){alert('Nome obbligatorio');return;}
+  try{
+    if(_caEditId){
+      await fetch(SB_URL+'/rest/v1/company_assets?id=eq.'+_caEditId,{
+        method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify(data)
+      });
+      showToast('Asset aggiornato','success');
+    }else{
+      await fetch(SB_URL+'/rest/v1/company_assets',{
+        method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify(data)
+      });
+      showToast('Asset aggiunto','success');
+    }
+    caCloseModal();
+    loadCompanyAssets();
+  }catch(e){alert('Errore salvataggio');}
+}
+
+async function caDeleteAsset(){
+  if(!_caEditId)return;
+  if(!confirm('Eliminare questo asset?'))return;
+  var s=getSession();if(!s)return;
+  try{
+    await fetch(SB_URL+'/rest/v1/company_assets?id=eq.'+_caEditId,{
+      method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=minimal'}
+    });
+    showToast('Asset eliminato','success');
+    caCloseModal();
+    loadCompanyAssets();
+  }catch(e){alert('Errore eliminazione');}
 }
 </script>
 </body>
