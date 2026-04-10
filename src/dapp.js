@@ -876,7 +876,22 @@ function filterCat(cat){
 
 // ── Stats ──
 function renderStats(){
-  // stats-bar removed from UI — function kept for internal use
+  var totalSpots=0;
+  var activeCount=_airdrops.length;
+  _airdrops.forEach(function(a){totalSpots+=Math.max(0,a.total_blocks-a.blocks_sold)});
+  var banner=document.getElementById('spots-banner');
+  if(banner){
+    if(activeCount>0){
+      document.getElementById('spots-count').textContent=totalSpots.toLocaleString('it-IT');
+      var itAirdrops=document.getElementById('spots-airdrops');
+      var enAirdrops=document.getElementById('spots-airdrops-en');
+      if(itAirdrops)itAirdrops.textContent=activeCount;
+      if(enAirdrops)enAirdrops.textContent=activeCount;
+      banner.style.display='flex';
+    }else{
+      banner.style.display='none';
+    }
+  }
 }
 
 // ── Notifications (in-app) ──
