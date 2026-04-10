@@ -137,6 +137,16 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 .spots-hero-pulse{animation:spotsPulse 3s ease-in-out infinite}
 @keyframes spotsPulse{0%,100%{text-shadow:0 0 40px rgba(74,158,255,.3),0 0 80px rgba(74,158,255,.1)}50%{text-shadow:0 0 60px rgba(74,158,255,.5),0 0 120px rgba(74,158,255,.2)}}
 
+/* Alpha Brave Banner */
+.alpha-banner{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:36px;padding:16px 32px;border:1px solid rgba(74,158,255,.3);border-radius:var(--radius);background:rgba(74,158,255,.04);overflow:hidden}
+.alpha-banner-pulse{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(74,158,255,.08) 0%,transparent 70%);animation:alphaPulse 3s ease-in-out infinite;pointer-events:none}
+@keyframes alphaPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+.alpha-banner-content{position:relative;text-align:center}
+.alpha-banner-label{font-family:var(--font-m);font-size:10px;letter-spacing:3px;color:var(--accent);margin-bottom:6px}
+.alpha-banner-count{font-family:var(--font-h);font-size:clamp(36px,8vw,52px);font-weight:700;color:var(--white);line-height:1;letter-spacing:-2px}
+.alpha-banner-count .alpha-banner-total{font-size:.45em;color:var(--gray-400);font-weight:400;letter-spacing:0}
+.alpha-banner-sub{font-family:var(--font-b);font-size:12px;color:var(--gray-400);margin-top:6px;letter-spacing:.5px}
+
 /* Skeleton */
 .skel{background:linear-gradient(90deg,var(--gray-800) 25%,var(--gray-700) 50%,var(--gray-800) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius)}
 .skel-card{height:320px}
@@ -168,7 +178,14 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
     <span class="it">Guadagna ARIA ogni giorno. Partecipa agli airdrop.<br>Chi ha il punteggio pi&ugrave; alto vince l'oggetto. Tutti gli altri guadagnano ROBI reali.</span>
     <span class="en">Earn ARIA every day. Join airdrops.<br>The highest scorer wins the object. Everyone else earns real ROBI.</span>
   </p>
-  <div class="hero-badge">ALPHA BRAVE &middot; <span class="it">SOLO 1.000 POSTI</span><span class="en">ONLY 1,000 SPOTS</span></div>
+  <div class="alpha-banner" id="alpha-banner">
+    <div class="alpha-banner-pulse"></div>
+    <div class="alpha-banner-content">
+      <div class="alpha-banner-label">ALPHA BRAVE</div>
+      <div class="alpha-banner-count"><span id="alpha-remaining">—</span><span class="alpha-banner-total">/1000</span></div>
+      <div class="alpha-banner-sub"><span class="it">posti rimanenti — entra ora</span><span class="en">spots remaining — join now</span></div>
+    </div>
+  </div>
   <div class="hero-ctas">
     <a href="/signup" class="btn-primary"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>
     <a href="/login" class="btn-secondary"><span class="it">Accedi &rarr;</span><span class="en">Log in &rarr;</span></a>
@@ -256,6 +273,22 @@ function toggleLang(){
 var SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
 
+// ── Alpha Brave counter ──
+(async function(){
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&is_test_user=eq.false',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}
+    });
+    if(res.ok){
+      var range=res.headers.get('content-range');
+      if(range){
+        var total=parseInt(range.split('/')[1],10)||0;
+        var remaining=Math.max(0,1000-total);
+        document.getElementById('alpha-remaining').textContent=remaining;
+      }
+    }
+  }catch(e){document.getElementById('alpha-remaining').textContent='996'}
+})();
 
 (async function(){
   try{
