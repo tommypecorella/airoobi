@@ -39,8 +39,8 @@
   <a href="https://airoobi.com" target="_blank" rel="noopener" class="topbar-logo" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;color:#B8960C;font-family:var(--font-h);font-size:18px;font-weight:700;letter-spacing:-2px;opacity:.6;transition:opacity .3s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'" title="airoobi.com">Oo</a>
   <nav class="topbar-nav" id="topbar-nav">
     <a href="/dapp" data-page="home" onclick="navigateTo('home',event)">
-      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Dashboard
+      <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
+      Home
     </a>
     <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
       <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
@@ -97,8 +97,8 @@
 <!-- MOBILE NAV -->
 <div class="topbar-mobile-menu" id="topbar-mobile-menu">
   <a href="/dapp" data-page="home" onclick="navigateTo('home',event)">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-    Dashboard
+    <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
+    Home
   </a>
   <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
     <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
@@ -130,7 +130,7 @@
 <div class="user-menu" id="user-menu">
   <div class="user-menu-email" id="user-menu-email">—</div>
   <button class="user-menu-item" onclick="navigateTo('home');toggleUserMenu()">
-    <span class="it">Dashboard</span><span class="en">Dashboard</span>
+    <span class="it">Home</span><span class="en">Home</span>
   </button>
   <button class="user-menu-item" onclick="window.location.href='/portafoglio'">
     <span class="it">Portafoglio</span><span class="en">Wallet</span>
@@ -148,43 +148,101 @@
 <!-- MAIN -->
 <div class="main">
 
-  <!-- ═══ HOME DASHBOARD ═══ -->
+  <!-- ═══ HOME ═══ -->
   <div id="tab-home" class="dash-home" style="display:none">
-    <div class="dash-welcome"><span class="it">Ciao, <em id="home-user-name">—</em></span><span class="en">Hi, <em id="home-user-name-en">—</em></span><span class="dash-alpha-badge">alpha</span></div>
 
-    <!-- SALDO + STATS compatti -->
-    <div class="dash-stats">
-      <div class="dash-stat">
-        <div class="dash-stat-val blue" id="home-aria">0</div>
-        <div class="dash-stat-label"><span class="it">Saldo ARIA</span><span class="en">ARIA Balance</span> <span class="info-i" onclick="showInfoTip(this,'aria-balance')">i</span></div>
-        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(74,158,255,.4);margin-top:2px">TESTNET</div>
+    <!-- WELCOME — friendly, caldo -->
+    <div style="padding:32px 0 8px;text-align:center">
+      <div style="font-family:var(--font-h);font-size:clamp(26px,5vw,36px);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:6px"><span class="it">Bentornato, <em id="home-user-name" style="color:var(--gold)">—</em></span><span class="en">Welcome back, <em id="home-user-name-en" style="color:var(--gold)">—</em></span></div>
+      <div style="font-family:var(--font-b);font-size:13px;color:var(--gray-400);letter-spacing:.3px"><span class="it">Il tuo spazio su AIROOBI. Accumula, partecipa, realizza.</span><span class="en">Your space on AIROOBI. Accumulate, participate, achieve.</span></div>
+      <span class="dash-alpha-badge" style="margin-top:10px;display:inline-block">alpha brave</span>
+    </div>
+
+    <!-- SALDI — card eleganti con glow sottile -->
+    <div class="dash-stats" style="margin-top:16px">
+      <div class="dash-stat" style="background:rgba(74,158,255,.04);border:1px solid rgba(74,158,255,.12);border-radius:var(--radius-sm);padding:20px 16px">
+        <div class="dash-stat-val blue" id="home-aria" style="font-size:clamp(28px,5vw,36px)">0</div>
+        <div class="dash-stat-label">ARIA <span class="info-i" onclick="showInfoTip(this,'aria-balance')">i</span></div>
+        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(74,158,255,.4);margin-top:4px">TESTNET</div>
       </div>
-      <div class="dash-stat">
-        <div class="dash-stat-val" id="home-robi" style="color:var(--gold)">0</div>
-        <div class="dash-stat-label"><span class="it">Saldo ROBI</span><span class="en">ROBI Balance</span> <span class="info-i" onclick="showInfoTip(this,'robi-balance')">i</span></div>
+      <div class="dash-stat" style="background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.12);border-radius:var(--radius-sm);padding:20px 16px">
+        <div class="dash-stat-val" id="home-robi" style="color:var(--gold);font-size:clamp(28px,5vw,36px)">0</div>
+        <div class="dash-stat-label">ROBI <span class="info-i" onclick="showInfoTip(this,'robi-balance')">i</span></div>
       </div>
-      <div class="dash-stat">
-        <div class="dash-stat-val" id="home-kas" style="color:var(--kas)">—</div>
-        <div class="dash-stat-label"><span class="it">KAS potenziale</span><span class="en">Potential KAS</span> <span class="info-i" onclick="showInfoTip(this,'kas-potential')">i</span></div>
+      <div class="dash-stat" style="background:rgba(73,234,203,.04);border:1px solid rgba(73,234,203,.12);border-radius:var(--radius-sm);padding:20px 16px">
+        <div class="dash-stat-val" id="home-kas" style="color:var(--kas);font-size:clamp(28px,5vw,36px)">—</div>
+        <div class="dash-stat-label"><span class="it">KAS pot.</span><span class="en">KAS pot.</span> <span class="info-i" onclick="showInfoTip(this,'kas-potential')">i</span></div>
       </div>
     </div>
 
-    <!-- ARIA GRATIS (ex Faucet) — posizionato in alto come CTA principale -->
-    <div class="dash-section" id="faucet-section">
-      <div class="dash-faucet-card">
-        <div class="dash-faucet-info">
-          <div class="dash-faucet-title"><span class="it">Faucet ARIA</span><span class="en">ARIA Faucet</span> <span class="info-i" onclick="showInfoTip(this,'faucet')">i</span></div>
-          <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> ogni giorno — più blocchi, più <strong style="color:var(--gold)">ROBI</strong></span><span class="en">Get <strong>100 ARIA</strong> every day — more blocks, more <strong style="color:var(--gold)">ROBI</strong></span></div>
+    <!-- OGGI — cosa puoi fare adesso -->
+    <div class="dash-section" style="margin-top:28px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+        <div class="dash-section-title" style="margin:0;font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Oggi per te</span><span class="en">Today for you</span></div>
+        <div id="daily-tasks-score" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500)"></div>
+      </div>
+
+      <!-- FAUCET — CTA principale, generoso -->
+      <div id="faucet-section" style="margin-bottom:12px">
+        <div class="dash-faucet-card" style="background:linear-gradient(135deg,rgba(74,158,255,.08) 0%,rgba(184,150,12,.06) 100%);border:1px solid rgba(74,158,255,.18);border-radius:var(--radius-sm);padding:20px">
+          <div class="dash-faucet-info">
+            <div class="dash-faucet-title" style="font-family:var(--font-h);font-size:18px;font-weight:400"><span class="it">Il tuo ARIA quotidiano</span><span class="en">Your daily ARIA</span> <span class="info-i" onclick="showInfoTip(this,'faucet')">i</span></div>
+            <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> gratis — ogni giorno, senza limiti</span><span class="en">Get <strong>100 ARIA</strong> free — every day, no limits</span></div>
+          </div>
+          <button id="faucet-btn" onclick="claimFaucet()" class="dash-faucet-btn"><span class="it">RICEVI</span><span class="en">GET</span></button>
+          <div id="faucet-status" style="margin-top:8px;font-size:12px;color:var(--gray-400);text-align:center;display:none;grid-column:1/-1"></div>
         </div>
-        <button id="faucet-btn" onclick="claimFaucet()" class="dash-faucet-btn"><span class="it">RICEVI</span><span class="en">GET</span></button>
-        <div id="faucet-status" style="margin-top:8px;font-size:12px;color:var(--gray-400);text-align:center;display:none;grid-column:1/-1"></div>
+      </div>
+
+      <!-- DAILY TASKS — checklist amichevole -->
+      <div style="display:grid;gap:8px" id="daily-tasks-grid">
+        <div class="daily-task" id="dt-faucet" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);transition:all .3s">
+          <div class="dt-check" id="dt-faucet-icon" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .3s"></div>
+          <div style="flex:1">
+            <div style="font-family:var(--font-b);font-size:13px;color:var(--white)"><span class="it">Faucet</span><span class="en">Faucet</span></div>
+            <div style="font-size:11px;color:var(--gray-500)"><span class="it">Richiedi i tuoi ARIA gratuiti</span><span class="en">Claim your free ARIA</span></div>
+          </div>
+          <div style="font-family:var(--font-m);font-size:13px;color:var(--aria);letter-spacing:1px">+100</div>
+        </div>
+        <div class="daily-task" id="dt-checkin" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);transition:all .3s">
+          <div class="dt-check" id="dt-checkin-icon" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .3s"></div>
+          <div style="flex:1">
+            <div style="font-family:var(--font-b);font-size:13px;color:var(--white)">Check-in</div>
+            <div style="font-size:11px;color:var(--gray-500)"><span class="it">Passa a salutare, ricevi ARIA</span><span class="en">Say hello, earn ARIA</span></div>
+          </div>
+          <button id="checkin-btn" onclick="claimCheckin()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:6px 16px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it" style="color:#000">+50</span><span class="en" style="color:#000">+50</span></button>
+        </div>
+        <div class="daily-task" id="dt-referral" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);cursor:pointer" onclick="navigateTo('referral')">
+          <div class="dt-check" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--gray-600)">→</div>
+          <div style="flex:1">
+            <div style="font-family:var(--font-b);font-size:13px;color:var(--white)"><span class="it">Invita un amico</span><span class="en">Invite a friend</span></div>
+            <div style="font-size:11px;color:var(--gray-500)"><span class="it">Tu +10, il tuo amico +15</span><span class="en">You +10, your friend +15</span></div>
+          </div>
+          <div style="font-family:var(--font-m);font-size:13px;color:var(--aria);letter-spacing:1px">+10</div>
+        </div>
+      </div>
+
+      <!-- Motivazione -->
+      <div style="margin-top:12px;padding:14px 18px;background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.1);border-radius:var(--radius-sm);font-family:var(--font-h);font-size:14px;font-weight:400;color:var(--gray-300);line-height:1.6;text-align:center;font-style:italic">
+        <span class="it">Accumula <strong style="color:var(--aria);font-style:normal">ARIA</strong>, partecipa agli airdrop, guadagna <strong style="color:var(--gold);font-style:normal">ROBI</strong> reali.</span>
+        <span class="en">Accumulate <strong style="color:var(--aria);font-style:normal">ARIA</strong>, join airdrops, earn real <strong style="color:var(--gold);font-style:normal">ROBI</strong>.</span>
+      </div>
+    </div>
+
+    <!-- IL TUO PERCORSO — stats in formato amichevole -->
+    <div class="dash-section">
+      <div class="dash-section-title" style="font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Il tuo percorso</span><span class="en">Your journey</span></div>
+      <div class="dash-activity" id="home-activity">
+        <div class="dash-activity-row"><span><span class="it">Blocchi acquistati</span><span class="en">Blocks purchased</span></span><span id="home-blocks">0</span></div>
+        <div class="dash-activity-row"><span><span class="it">ARIA investiti</span><span class="en">ARIA invested</span></span><span id="home-spent">0</span></div>
+        <div class="dash-activity-row"><span><span class="it">Con noi dal</span><span class="en">With us since</span></span><span id="home-reg-date">—</span><span id="home-reg-date-en" style="display:none">—</span><span id="home-reg-date2" style="display:none">—</span><span id="home-reg-date2-en" style="display:none">—</span></div>
       </div>
     </div>
 
     <!-- PORTAFOGLIO CHART -->
     <div class="dash-section">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="dash-section-title" style="margin:0"><span class="it">Portafoglio</span><span class="en">Portfolio</span> <span class="info-i" onclick="showInfoTip(this,'portfolio')">i</span></div>
+        <div class="dash-section-title" style="margin:0;font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Portafoglio</span><span class="en">Portfolio</span> <span class="info-i" onclick="showInfoTip(this,'portfolio')">i</span></div>
         <div id="portfolio-eur-val" style="font-family:var(--font-h);font-size:clamp(18px,3vw,24px);font-weight:300;color:var(--white)">—</div>
       </div>
       <div style="position:relative;width:100%;height:160px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);overflow:hidden;background:rgba(255,255,255,.01)">
@@ -197,74 +255,24 @@
       </div>
     </div>
 
-    <!-- AZIONI GIORNALIERE -->
+    <!-- ESPLORA — accesso rapido -->
     <div class="dash-section">
-      <div class="dash-section-title"><span class="it">Azioni giornaliere</span><span class="en">Daily actions</span></div>
-      <div class="dash-activity" id="home-activity">
-        <div class="dash-activity-row" style="align-items:center">
-          <span><span class="it">Check-in giornaliero</span><span class="en">Daily check-in</span></span>
-          <button id="checkin-btn" onclick="claimCheckin()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:6px 16px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it" style="color:#000">+50 ARIA</span><span class="en" style="color:#000">+50 ARIA</span></button>
-        </div>
-        <div class="dash-activity-row"><span><span class="it">Blocchi acquistati (dal <span id="home-reg-date">—</span>)</span><span class="en">Blocks purchased (since <span id="home-reg-date-en">—</span>)</span></span><span id="home-blocks">0</span></div>
-        <div class="dash-activity-row"><span><span class="it">ARIA spesi (dal <span id="home-reg-date2">—</span>)</span><span class="en">ARIA spent (since <span id="home-reg-date2-en">—</span>)</span></span><span id="home-spent">0</span></div>
-      </div>
-    </div>
-
-    <!-- DAILY TASKS -->
-    <div class="dash-section">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-        <div class="dash-section-title" style="margin:0"><span class="it">Azioni giornaliere</span><span class="en">Daily tasks</span></div>
-        <div id="daily-tasks-score" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500)"></div>
-      </div>
-      <div style="display:grid;gap:8px" id="daily-tasks-grid">
-        <div class="daily-task" id="dt-faucet" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);transition:all .3s">
-          <div class="dt-check" id="dt-faucet-icon" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .3s"></div>
-          <div style="flex:1">
-            <div style="font-family:var(--font-m);font-size:12px;color:var(--white);letter-spacing:.5px"><span class="it">Faucet</span><span class="en">Faucet</span></div>
-            <div style="font-size:11px;color:var(--gray-500)"><span class="it">+100 ARIA — più blocchi, più ROBI</span><span class="en">+100 ARIA — more blocks, more ROBI</span></div>
-          </div>
-          <div style="font-family:var(--font-m);font-size:13px;color:var(--aria);letter-spacing:1px">+100</div>
-        </div>
-        <div class="daily-task" id="dt-checkin" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);transition:all .3s">
-          <div class="dt-check" id="dt-checkin-icon" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .3s"></div>
-          <div style="flex:1">
-            <div style="font-family:var(--font-m);font-size:12px;color:var(--white);letter-spacing:.5px">Check-in</div>
-            <div style="font-size:11px;color:var(--gray-500)"><span class="it">+50 ARIA — ogni ARIA è un passo verso il tuo ROBI</span><span class="en">+50 ARIA — every ARIA is a step toward your ROBI</span></div>
-          </div>
-          <div style="font-family:var(--font-m);font-size:13px;color:var(--aria);letter-spacing:1px">+50</div>
-        </div>
-        <div class="daily-task" id="dt-referral" style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm)">
-          <div class="dt-check" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--gray-600)">→</div>
-          <div style="flex:1">
-            <div style="font-family:var(--font-m);font-size:12px;color:var(--white);letter-spacing:.5px"><span class="it">Invita amici</span><span class="en">Invite friends</span></div>
-            <div style="font-size:11px;color:var(--gray-500)"><span class="it">Tu +10, amico +15</span><span class="en">You +10, friend +15</span></div>
-          </div>
-          <div style="font-family:var(--font-m);font-size:13px;color:var(--aria);letter-spacing:1px">+10</div>
-        </div>
-      </div>
-      <div style="margin-top:10px;padding:10px 14px;background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.12);border-radius:var(--radius-sm);font-size:11px;color:var(--gray-400);line-height:1.5">
-        <span class="it">Guadagni <strong style="color:var(--aria)">ARIA</strong> → compri blocchi → guadagni <strong style="color:var(--gold)">ROBI reali</strong>. Stai guadagnando ROBI reali. Già adesso.</span>
-        <span class="en">Earn <strong style="color:var(--aria)">ARIA</strong> → buy blocks → earn <strong style="color:var(--gold)">real ROBI</strong>. You're earning real ROBI. Right now.</span>
-      </div>
-    </div>
-
-    <!-- AZIONI RAPIDE -->
-    <div class="dash-section">
+      <div class="dash-section-title" style="font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Esplora</span><span class="en">Explore</span></div>
       <div class="dash-quick-links">
-        <a class="dash-quick-link" onclick="navigateTo('explore')">
-          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
-          <span class="it">Esplora</span><span class="en">Explore</span>
+        <a class="dash-quick-link" onclick="navigateTo('explore')" style="border-color:rgba(74,158,255,.15)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--aria)"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          <span class="it">Airdrop</span><span class="en">Airdrops</span>
         </a>
-        <a class="dash-quick-link" onclick="navigateTo('referral')">
-          <svg viewBox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
-          <span class="it">Invita amici</span><span class="en">Invite friends</span>
+        <a class="dash-quick-link" onclick="navigateTo('referral')" style="border-color:rgba(184,150,12,.15)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--gold)"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+          <span class="it">Amici</span><span class="en">Friends</span>
         </a>
-        <a class="dash-quick-link" onclick="navigateTo('wallet')">
-          <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
-          <span class="it">Portafoglio</span><span class="en">Wallet</span>
+        <a class="dash-quick-link" onclick="navigateTo('wallet')" style="border-color:rgba(73,234,203,.15)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--kas)"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+          <span class="it">Wallet</span><span class="en">Wallet</span>
         </a>
-        <a class="dash-quick-link" onclick="navigateTo('submit')">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        <a class="dash-quick-link" onclick="navigateTo('submit')" style="border-color:rgba(184,150,12,.15)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--gold)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
           <span class="it">Vendi</span><span class="en">Sell</span>
         </a>
       </div>
@@ -272,7 +280,7 @@
 
     <!-- ACTIVITY FEED -->
     <div class="dash-section">
-      <div class="dash-section-title"><span class="it">Sta succedendo adesso</span><span class="en">Happening now</span></div>
+      <div class="dash-section-title" style="font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Sta succedendo</span><span class="en">Happening now</span></div>
       <div id="activity-feed" style="display:grid;gap:6px;min-height:60px">
         <div style="color:var(--gray-500);font-size:12px;text-align:center;padding:16px"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
       </div>
@@ -984,7 +992,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.10-1.73.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.10-1.74.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
