@@ -1701,7 +1701,7 @@ function renderMyAirdrops(){
       :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
     var canCancel=true;
     return '<div class="my-card">'
-      +'<div style="display:flex;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
+      +'<div style="display:flex;gap:16px;padding:18px;align-items:center;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
       +imgHtml
       +'<div class="my-card-info">'
       +'<div class="my-card-title">'+a.title+'</div>'
