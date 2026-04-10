@@ -759,8 +759,11 @@ function dappShareRef(platform){
 
 // ── Data loading ──
 async function loadBalance(){
-  var profs=await sbGet('profiles?id=eq.'+_session.user.id+'&select=total_points,robi_balance',_session.access_token);
-  if(profs&&profs.length>0){_balance=profs[0].total_points||0;_robi=profs[0].robi_balance||0;}
+  var profs=await sbGet('profiles?id=eq.'+_session.user.id+'&select=total_points',_session.access_token);
+  if(profs&&profs.length>0){_balance=profs[0].total_points||0;}
+  // Load ROBI count from nft_rewards
+  var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&nft_type=in.(ROBI,NFT_REWARD)&select=shares',_session.access_token);
+  if(nfts&&nfts.length>0){_robi=0;nfts.forEach(function(n){_robi+=parseFloat(n.shares)||0;});_robi=Math.round(_robi*100)/100;}
   updateBalanceUI();
 }
 
