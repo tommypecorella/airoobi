@@ -120,6 +120,15 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 .landing-footer-motto{font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-bottom:6px}
 .landing-footer-ver{font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600)}
 
+/* Spots counter */
+.spots-hero{text-align:center;padding:0 24px 48px;max-width:600px;margin:0 auto}
+.spots-hero-number{font-family:var(--font-h);font-size:clamp(3.5rem,10vw,6rem);font-weight:700;color:var(--gold);line-height:1;letter-spacing:-2px;position:relative;display:inline-block}
+.spots-hero-number::after{content:'';position:absolute;bottom:-4px;left:10%;width:80%;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.spots-hero-label{font-family:var(--font-m);font-size:clamp(11px,2vw,13px);letter-spacing:4px;text-transform:uppercase;color:var(--white);margin-top:12px}
+.spots-hero-sub{font-size:13px;color:var(--gray-400);margin-top:6px}
+.spots-hero-pulse{animation:spotsPulse 2.5s ease-in-out infinite}
+@keyframes spotsPulse{0%,100%{opacity:1}50%{opacity:.7}}
+
 /* Skeleton */
 .skel{background:var(--gray-800);border-radius:var(--radius);animation:pulse 1.5s ease-in-out infinite}
 .skel-card{height:300px}
@@ -155,6 +164,13 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
     <a href="/signup" class="btn-primary"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>
     <a href="/login" class="btn-secondary"><span class="it">Accedi &rarr;</span><span class="en">Log in &rarr;</span></a>
   </div>
+</section>
+
+<!-- SPOTS COUNTER -->
+<section class="spots-hero" id="spots-hero" style="display:none">
+  <div class="spots-hero-number spots-hero-pulse" id="spots-hero-count">0</div>
+  <div class="spots-hero-label"><span class="it">posti disponibili</span><span class="en">spots available</span></div>
+  <div class="spots-hero-sub"><span class="it">su <span id="spots-hero-airdrops">0</span> airdrop attivi — entra prima che finiscano</span><span class="en">across <span id="spots-hero-airdrops-en">0</span> active airdrops — join before they're gone</span></div>
 </section>
 
 <!-- COME FUNZIONA -->
@@ -210,7 +226,7 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
   </div>
   <div class="landing-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>
   <div class="landing-footer-motto"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div class="landing-footer-ver">alfa-2026.04.10-1.70.2</div>
+  <div class="landing-footer-ver">alfa-2026.04.10-1.72.0</div>
 </footer>
 
 <script>
@@ -229,8 +245,7 @@ function toggleLang(){
 // ── Load airdrops from Supabase (anon key, no auth) ──
 var SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
 var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
-var ARIA_EUR=0.20;
-function eur(a){return '\u20AC'+(a*ARIA_EUR).toFixed(2).replace('.',',')}
+
 
 (async function(){
   try{
@@ -245,6 +260,19 @@ function eur(a){return '\u20AC'+(a*ARIA_EUR).toFixed(2).replace('.',',')}
       return;
     }
     var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
+    // Spots counter
+    var totalSpots=0;
+    airdrops.forEach(function(a){totalSpots+=Math.max(0,a.total_blocks-a.blocks_sold)});
+    var spotsHero=document.getElementById('spots-hero');
+    if(spotsHero&&airdrops.length>0){
+      document.getElementById('spots-hero-count').textContent=totalSpots.toLocaleString('it-IT');
+      var itN=document.getElementById('spots-hero-airdrops');
+      var enN=document.getElementById('spots-hero-airdrops-en');
+      if(itN)itN.textContent=airdrops.length;
+      if(enN)enN.textContent=airdrops.length;
+      spotsHero.style.display='block';
+    }
+
     grid.innerHTML=airdrops.map(function(a){
       var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
       var remaining=a.total_blocks-a.blocks_sold;
@@ -260,7 +288,7 @@ function eur(a){return '\u20AC'+(a*ARIA_EUR).toFixed(2).replace('.',',')}
         +'<div class="airdrop-cat">'+(a.category||'')+'</div>'
         +'<div class="airdrop-title">'+(a.title||'')+'</div>'
         +'<div class="airdrop-progress"><div class="airdrop-progress-bar" style="width:'+pct+'%"></div></div>'
-        +'<div class="airdrop-meta"><span class="price">'+price+' ARIA ('+eur(price)+') / <span class="it">blocco</span><span class="en">block</span></span><span>'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span></div>'
+        +'<div class="airdrop-meta"><span class="price">'+price+' ARIA / <span class="it">blocco</span><span class="en">block</span></span><span>'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span></div>'
         +'</div></a>';
     }).join('');
   }catch(e){console.error('Landing airdrops load error',e)}
