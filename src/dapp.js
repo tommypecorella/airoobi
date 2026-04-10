@@ -1084,26 +1084,27 @@ async function openDetail(id){
     ?'<img class="donut-center-img" src="'+a.image_url+'" alt="" style="'+imgStyle+'" id="donut-img">'
     :'';
 
-  // Build floating bubbles HTML — physics-driven
-  var symbolUrl='/public/images/AIROOBI_Symbol_White.png';
+  // Build orbiting particles
   var bubblesHtml='<div class="bubbles-layer" id="bubbles-layer">';
   var maxP=Math.min(participants.length,12);
   _bubbles=[];
   for(var pi=0;pi<maxP;pi++){
     var pp=participants[pi];
-    var sz=Math.max(26,Math.min(46,20+pp.blocks*3));
-    var innerHtml=pp.avatar_url
-      ?'<img src="'+pp.avatar_url+'" alt="">'
-      :'<img class="bubble-symbol" src="'+symbolUrl+'" alt="">';
-    bubblesHtml+='<div class="bubble" id="bubble-'+pi+'" style="width:'+sz+'px;height:'+sz+'px">'+innerHtml+'</div>';
-    // Init physics: random position inside circle, random velocity
-    var angle=Math.random()*Math.PI*2;
-    var dist=Math.random()*0.25; // start near center (normalized 0-0.5 = edge)
+    var hasAvatar=!!pp.avatar_url;
+    var sz=hasAvatar?Math.max(28,Math.min(42,22+pp.blocks*2)):Math.max(8,Math.min(18,6+pp.blocks*2));
+    var cls=hasAvatar?'bubble has-avatar':'bubble no-avatar';
+    var innerHtml=hasAvatar?'<img src="'+pp.avatar_url+'" alt="">':'';
+    bubblesHtml+='<div class="'+cls+'" id="bubble-'+pi+'" style="width:'+sz+'px;height:'+sz+'px;animation-delay:'+(-pi*0.4)+'s">'+innerHtml+'</div>';
+    // Init orbit: distributed evenly, slight eccentricity
+    var angle=(pi/maxP)*Math.PI*2+Math.random()*0.3;
+    var orbitR=0.28+Math.random()*0.12; // orbit radius (normalized)
+    var speed=0.0004+Math.random()*0.0003; // angular speed
+    if(pi%2===1)speed=-speed; // alternate direction
     _bubbles.push({
       idx:pi, r:sz/2,
-      x:0.5+Math.cos(angle)*dist, y:0.5+Math.sin(angle)*dist, // normalized 0..1
-      vx:(Math.random()-0.5)*0.0008,
-      vy:(Math.random()-0.5)*0.0008
+      angle:angle, orbitR:orbitR, speed:speed,
+      x:0.5+Math.cos(angle)*orbitR, y:0.5+Math.sin(angle)*orbitR,
+      vx:0, vy:0
     });
   }
   bubblesHtml+='</div>';
@@ -1460,83 +1461,16 @@ function startBubblePhysics(){
   if(_bubbleRaf)cancelAnimationFrame(_bubbleRaf);
   var layer=document.getElementById('bubbles-layer');
   if(!layer||_bubbles.length===0)return;
-  var containerSize=layer.offsetWidth; // px (it's a circle)
+  var containerSize=layer.offsetWidth;
   if(containerSize===0)containerSize=160;
-  var center=containerSize/2;
-  var boundaryR=center-4; // slightly inside the circle edge
 
   function tick(){
-    var dt=1; // fixed timestep
-    // Move bubbles
     for(var i=0;i<_bubbles.length;i++){
       var b=_bubbles[i];
-      b.x+=b.vx*dt;
-      b.y+=b.vy*dt;
-
-      // Boundary collision (circular)
-      var dx=(b.x-0.5)*containerSize;
-      var dy=(b.y-0.5)*containerSize;
-      var dist=Math.sqrt(dx*dx+dy*dy);
-      var maxDist=boundaryR-b.r;
-      if(dist>maxDist&&dist>0){
-        // Reflect velocity along the normal (center→bubble)
-        var nx=dx/dist, ny=dy/dist;
-        var dot=b.vx*nx+b.vy*ny;
-        if(dot>0){
-          b.vx-=2*dot*nx;
-          b.vy-=2*dot*ny;
-          // Dampen slightly
-          b.vx*=0.9; b.vy*=0.9;
-        }
-        // Push back inside
-        b.x=0.5+(nx*maxDist)/containerSize;
-        b.y=0.5+(ny*maxDist)/containerSize;
-      }
-
-      // Bubble-bubble collisions
-      for(var j=i+1;j<_bubbles.length;j++){
-        var b2=_bubbles[j];
-        var bx=(b.x-b2.x)*containerSize;
-        var by=(b.y-b2.y)*containerSize;
-        var bDist=Math.sqrt(bx*bx+by*by);
-        var minDist=b.r+b2.r+2; // +2 for border
-        if(bDist<minDist&&bDist>0){
-          // Normal
-          var cnx=bx/bDist, cny=by/bDist;
-          // Relative velocity
-          var dvx=b.vx-b2.vx, dvy=b.vy-b2.vy;
-          var dvDot=dvx*cnx+dvy*cny;
-          if(dvDot>0){
-            // Mass proportional to radius
-            var m1=b.r*b.r, m2=b2.r*b2.r;
-            var totalM=m1+m2;
-            var impulse=dvDot/totalM;
-            b.vx-=impulse*m2*cnx;
-            b.vy-=impulse*m2*cny;
-            b2.vx+=impulse*m1*cnx;
-            b2.vy+=impulse*m1*cny;
-          }
-          // Separate
-          var overlap=(minDist-bDist)/2;
-          b.x+=cnx*overlap/containerSize;
-          b.y+=cny*overlap/containerSize;
-          b2.x-=cnx*overlap/containerSize;
-          b2.y-=cny*overlap/containerSize;
-        }
-      }
-
-      // Tiny random force to keep things moving
-      b.vx+=(Math.random()-0.5)*0.00005;
-      b.vy+=(Math.random()-0.5)*0.00005;
-
-      // Speed limit
-      var speed=Math.sqrt(b.vx*b.vx+b.vy*b.vy);
-      var maxSpeed=0.0015;
-      if(speed>maxSpeed){b.vx=(b.vx/speed)*maxSpeed;b.vy=(b.vy/speed)*maxSpeed;}
-
-      // Min speed (keep them moving)
-      var minSpeed=0.0003;
-      if(speed<minSpeed&&speed>0){b.vx=(b.vx/speed)*minSpeed;b.vy=(b.vy/speed)*minSpeed;}
+      // Orbital motion
+      b.angle+=b.speed;
+      b.x=0.5+Math.cos(b.angle)*b.orbitR;
+      b.y=0.5+Math.sin(b.angle)*b.orbitR;
 
       // Update DOM
       var el=document.getElementById('bubble-'+b.idx);

@@ -257,11 +257,14 @@ select option{background:var(--gray-800);color:var(--white)}
 .donut-center-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--gray-800),var(--gray-700));z-index:1}
 .donut-center-placeholder svg{width:40%;height:40%;stroke:var(--gray-600);stroke-width:1}
 
-/* Floating bubbles — positioned by JS physics */
+/* Orbiting particles */
 .bubbles-layer{position:absolute;inset:0;z-index:2;pointer-events:none}
-.bubble{position:absolute;border-radius:50%;overflow:hidden;border:2px solid rgba(184,150,12,.3);background:var(--gray-800);display:flex;align-items:center;justify-content:center;will-change:transform;box-shadow:0 2px 10px rgba(0,0,0,.5);transition:border-color .3s}
-.bubble img{width:100%;height:100%;object-fit:cover}
-.bubble-symbol{width:60%;height:60%;opacity:.4}
+.bubble{position:absolute;border-radius:50%;will-change:transform;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.bubble.has-avatar{border:1.5px solid rgba(184,150,12,.4);box-shadow:0 0 10px rgba(184,150,12,.15),0 0 3px rgba(184,150,12,.3);background:var(--gray-900)}
+.bubble.has-avatar img{width:100%;height:100%;object-fit:cover}
+.bubble.no-avatar{border:none;background:radial-gradient(circle,rgba(184,150,12,.6) 0%,rgba(184,150,12,.1) 50%,transparent 75%);box-shadow:0 0 14px rgba(184,150,12,.25),0 0 6px rgba(74,158,255,.15);animation:particle-pulse 3s ease-in-out infinite alternate}
+.bubble-symbol{display:none}
+@keyframes particle-pulse{0%{opacity:.7;transform:scale(1)}100%{opacity:1;transform:scale(1.15)}}
 .donut-pct{position:absolute;bottom:-4px;left:50%;transform:translateX(-50%);font-family:var(--font-m);font-size:12px;color:var(--gold);background:var(--black);padding:2px 10px;border:1px solid var(--gray-700);border-radius:var(--radius-sm)}
 
 /* Donut legend */
