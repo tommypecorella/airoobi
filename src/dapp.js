@@ -1711,7 +1711,15 @@ function renderMyAirdrops(){
       +'<div class="my-card-meta">'+a.category+' &middot; '+(a.status==='presale'?'<span style="color:var(--aria)">Presale</span>':a.status==='sale'?'<span style="color:var(--kas)">Live</span>':'<span>'+a.status+'</span>')+'</div>'
       +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
       +'</div></div>'
-      +(canCancel?'<div style="padding:8px 16px 12px;border-top:1px solid var(--gray-800)"><button class="cancel-part-btn" onclick="confirmCancelParticipation(\''+a.id+'\',\''+escHtml(a.title)+'\','+item.blocks+','+item.spent+')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> <span class="it">Ritira partecipazione</span><span class="en">Withdraw participation</span></button></div>':'')
+      +'<div style="display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--gray-800);align-items:center">'
+      +'<button style="display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:7px 14px;font-family:var(--font-b);font-size:11px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:all .25s;border-radius:var(--radius-sm)" onclick="toggleMyChat(\''+a.id+'\')" onmouseover="this.style.borderColor=\'var(--accent)\';this.style.color=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">'
+      +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>'
+      +'<span class="it">Messaggi</span><span class="en">Messages</span></button>'
+      +(canCancel?'<button class="cancel-part-btn" onclick="confirmCancelParticipation(\''+a.id+'\',\''+escHtml(a.title)+'\','+item.blocks+','+item.spent+')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> <span class="it">Ritira</span><span class="en">Withdraw</span></button>':'')
+      +'</div>'
+      +'<div id="my-chat-'+a.id+'" style="display:none;padding:0 16px 16px">'
+      +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);margin-bottom:10px;text-align:center"><span class="it">Risposte entro 24/48 ore</span><span class="en">Replies within 24/48 hours</span></div>'
+      +'</div>'
       +'</div>';
   }).join('');
 }
@@ -3094,6 +3102,21 @@ document.addEventListener('click',function(e){
     closeInfoTip();
   }
 });
+
+// ── My Airdrop Chat toggle ──
+function toggleMyChat(airdropId){
+  var el=document.getElementById('my-chat-'+airdropId);
+  if(!el)return;
+  if(el.style.display==='none'){
+    el.style.display='block';
+    if(!el.dataset.loaded){
+      loadAirdropChat(airdropId,'my-chat-'+airdropId);
+      el.dataset.loaded='1';
+    }
+  }else{
+    el.style.display='none';
+  }
+}
 
 // ── Coming Soon (in valutazione) ──
 async function loadComingSoon(){

@@ -214,6 +214,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-valutazioni')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Valutazioni</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-airdrops')"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>Gestione</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-analysis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Analysis</div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messaggi</div>
   </div>
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">Tokenomics</span>
@@ -385,6 +386,19 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </tbody>
     </table>
     <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> calcolato da nft_rewards. <strong>ARIA IN CIRCOLAZIONE</strong> calcolato da profiles.total_points.</p>
+  </div>
+
+  <!-- MESSAGGI AIRDROP -->
+  <div class="admin-section" id="sec-messages">
+    <h2>Messaggi Airdrop</h2>
+    <div class="admin-grid" style="margin-bottom:20px">
+      <div class="admin-card" style="border-color:rgba(74,158,255,.4)"><div class="admin-card-val" id="msg-total" style="color:var(--aria)">—</div><div class="admin-card-label">Totale messaggi</div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="msg-threads" style="color:var(--gold)">—</div><div class="admin-card-label">Conversazioni</div></div>
+      <div class="admin-card" style="border-color:rgba(239,68,68,.3)"><div class="admin-card-val" id="msg-unread" style="color:#ef4444">—</div><div class="admin-card-label">Da rispondere</div></div>
+    </div>
+    <div id="msg-thread-list" style="display:flex;flex-direction:column;gap:12px">
+      <div style="color:var(--gray-400);text-align:center;padding:32px">Caricamento...</div>
+    </div>
   </div>
 
   <!-- CONTO AIROOBI -->
@@ -2707,6 +2721,7 @@ adminNav=function(sectionId){
   if(sectionId==='sec-valutazioni')loadBoData();
   if(sectionId==='sec-collaborators')loadCollaborators();
   if(sectionId==='sec-company-assets')loadCompanyAssets();
+  if(sectionId==='sec-messages')loadAdminMessages();
 };
 
 // ══════════════════════════════════════════════════════════
@@ -2840,6 +2855,145 @@ async function removeCollaborator(userId){
     showToast('Validatore rimosso','success');
     loadCollaborators();
   }catch(e){alert('Errore rimozione');}
+}
+
+// ══════════════════════════════════════════
+// ── ADMIN MESSAGES ──
+// ══════════════════════════════════════════
+async function loadAdminMessages(){
+  var s=getSession();if(!s)return;
+  try{
+    // Load all messages with airdrop info
+    var res=await fetch(SB_URL+'/rest/v1/airdrop_messages?select=id,airdrop_id,sender_id,body,is_admin,created_at&order=created_at.desc&limit=500',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+    });
+    var msgs=res.ok?await res.json():[];
+
+    // Load airdrops for titles
+    var aRes=await fetch(SB_URL+'/rest/v1/airdrops?select=id,title,submitted_by,status&order=created_at.desc',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+    });
+    var airdrops=aRes.ok?await aRes.json():[];
+    var aMap={};airdrops.forEach(function(a){aMap[a.id]=a;});
+
+    // Group by airdrop
+    var threads={};
+    msgs.forEach(function(m){
+      if(!threads[m.airdrop_id])threads[m.airdrop_id]={msgs:[],lastMsg:m,hasUserMsg:false};
+      threads[m.airdrop_id].msgs.push(m);
+      if(!m.is_admin)threads[m.airdrop_id].hasUserMsg=true;
+    });
+
+    // Stats
+    var totalMsgs=msgs.length;
+    var threadCount=Object.keys(threads).length;
+    var unanswered=0;
+    Object.values(threads).forEach(function(t){
+      if(t.msgs.length>0&&!t.msgs[0].is_admin)unanswered++;
+    });
+    document.getElementById('msg-total').textContent=totalMsgs;
+    document.getElementById('msg-threads').textContent=threadCount;
+    document.getElementById('msg-unread').textContent=unanswered;
+
+    // Render threads
+    var container=document.getElementById('msg-thread-list');
+    var threadArr=Object.keys(threads).map(function(aid){return{airdropId:aid,thread:threads[aid],airdrop:aMap[aid]||{title:'Airdrop sconosciuto',status:'?'}};});
+    // Sort: unanswered first, then by last message date
+    threadArr.sort(function(a,b){
+      var aUn=a.thread.msgs[0]&&!a.thread.msgs[0].is_admin?0:1;
+      var bUn=b.thread.msgs[0]&&!b.thread.msgs[0].is_admin?0:1;
+      if(aUn!==bUn)return aUn-bUn;
+      return new Date(b.thread.msgs[0].created_at)-new Date(a.thread.msgs[0].created_at);
+    });
+
+    if(threadArr.length===0){
+      container.innerHTML='<div style="color:var(--gray-400);text-align:center;padding:32px">Nessun messaggio</div>';
+      return;
+    }
+    container.innerHTML=threadArr.map(function(t){
+      var a=t.airdrop;
+      var last=t.thread.msgs[0];
+      var needsReply=last&&!last.is_admin;
+      var time=new Date(last.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+      var statusBadge='<span class="bo-status '+a.status+'">'+a.status+'</span>';
+      return '<div style="border:1px solid '+(needsReply?'rgba(239,68,68,.3)':'var(--gray-700)')+';background:'+(needsReply?'rgba(239,68,68,.03)':'var(--gray-900)')+';padding:16px 20px;cursor:pointer" onclick="toggleMsgThread(\''+t.airdropId+'\')">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">'
+        +'<div style="display:flex;align-items:center;gap:10px"><span style="font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white)">'+escH(a.title)+'</span>'+statusBadge+'</div>'
+        +'<div style="display:flex;align-items:center;gap:8px">'+(needsReply?'<span style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;background:rgba(239,68,68,.15);color:#ef4444;padding:2px 8px">DA RISPONDERE</span>':'')+'<span style="font-family:var(--font-m);font-size:10px;color:var(--gray-500)">'+time+'</span></div>'
+        +'</div>'
+        +'<div style="font-size:13px;color:var(--gray-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(last.is_admin?'<span style="color:var(--gold)">Tu:</span> ':'')+escH(last.body)+'</div>'
+        +'<div id="msg-thread-'+t.airdropId+'" style="display:none;margin-top:16px;border-top:1px solid var(--gray-800);padding-top:12px"></div>'
+        +'</div>';
+    }).join('');
+  }catch(e){console.error('loadAdminMessages:',e);}
+}
+
+function toggleMsgThread(airdropId){
+  var el=document.getElementById('msg-thread-'+airdropId);
+  if(!el)return;
+  if(el.style.display==='none'){
+    el.style.display='block';
+    loadAboChat(airdropId,el.id);
+  }else{
+    el.style.display='none';
+  }
+}
+
+async function loadAboChat(airdropId,containerId){
+  var s=getSession();if(!s)return;
+  var el=document.getElementById(containerId);if(!el)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_airdrop_messages',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId})
+    });
+    var msgs=res.ok?await res.json():[];
+    var html='<div style="max-height:400px;overflow-y:auto;padding:4px 0" id="'+containerId+'-scroll">';
+    for(var i=0;i<msgs.length;i++){
+      var m=msgs[i];
+      var align=m.is_admin?'flex-end':'flex-start';
+      var bg=m.is_admin?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
+      var border=m.is_admin?'var(--gold)':'var(--aria)';
+      var label=m.is_admin?'AIROOBI':escH(m.sender_name||'Utente');
+      var time=new Date(m.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+      html+='<div style="display:flex;justify-content:'+align+';margin-bottom:8px">';
+      html+='<div style="max-width:80%;padding:10px 14px;background:'+bg+';border-left:3px solid '+border+';font-size:13px">';
+      html+='<div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:4px"><span style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:'+border+'">'+label+'</span><span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">'+time+'</span></div>';
+      html+='<div style="color:var(--white);line-height:1.5">'+escH(m.body)+'</div>';
+      html+='</div></div>';
+    }
+    html+='</div>';
+    html+='<div style="display:flex;gap:8px;margin-top:8px">';
+    html+='<input id="'+containerId+'-input" type="text" placeholder="Rispondi..." style="flex:1;padding:10px 14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-b);font-size:13px" onkeydown="if(event.key===\'Enter\')sendAboChat(\''+airdropId+'\',\''+containerId+'\')">';
+    html+='<button onclick="sendAboChat(\''+airdropId+'\',\''+containerId+'\')" style="padding:10px 18px;background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1px;font-weight:700;cursor:pointer;white-space:nowrap">INVIA</button>';
+    html+='</div>';
+    el.innerHTML=html;
+    var scroll=document.getElementById(containerId+'-scroll');
+    if(scroll)scroll.scrollTop=scroll.scrollHeight;
+  }catch(e){console.error('loadAboChat:',e);}
+}
+
+async function sendAboChat(airdropId,containerId){
+  var input=document.getElementById(containerId+'-input');
+  if(!input)return;
+  var body=input.value.trim();
+  if(!body)return;
+  input.disabled=true;
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/send_airdrop_message',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId,p_body:body})
+    });
+    var data=await res.json();
+    if(data&&data.success){
+      showToast('Messaggio inviato','success');
+      await loadAboChat(airdropId,containerId);
+    }else{
+      showToast('Errore: '+(data?.error||'unknown'),'error');
+    }
+  }catch(e){console.error('sendAboChat:',e);}
+  input.disabled=false;
 }
 
 // ══════════════════════════════════════════
