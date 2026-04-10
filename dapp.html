@@ -36,9 +36,9 @@
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <a href="https://airoobi.com" target="_blank" rel="noopener" class="topbar-logo" style="text-decoration:none;display:inline-flex;align-items:center;gap:4px;color:#B8960C;font-family:var(--font-h);font-size:18px;font-weight:700;letter-spacing:-2px;opacity:.6;transition:opacity .3s" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='.6'" title="airoobi.com">Oo</a>
+  <a href="https://airoobi.com" target="_blank" rel="noopener" class="topbar-logo" title="airoobi.com">Oo</a>
   <nav class="topbar-nav" id="topbar-nav">
-    <a href="/dapp" data-page="home" onclick="navigateTo('home',event)">
+    <a href="/" data-page="landing">
       <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
       Home
     </a>
@@ -54,13 +54,13 @@
       <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
       <span class="it">Portafoglio</span><span class="en">Wallet</span>
     </a>
-    <a href="/archivio" data-page="archive" onclick="navigateTo('archive',event)">
-      <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
-      <span class="it">Archivio</span><span class="en">Archive</span>
-    </a>
     <a href="/impara" data-page="learn" onclick="navigateTo('learn',event)">
       <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
       <span class="it">Impara</span><span class="en">Learn</span>
+    </a>
+    <a href="/blog" data-page="blog">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+      Blog
     </a>
     <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
       <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -96,7 +96,7 @@
 
 <!-- MOBILE NAV -->
 <div class="topbar-mobile-menu" id="topbar-mobile-menu">
-  <a href="/dapp" data-page="home" onclick="navigateTo('home',event)">
+  <a href="/" data-page="landing">
     <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
     Home
   </a>
@@ -112,13 +112,13 @@
     <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
     <span class="it">Portafoglio</span><span class="en">Wallet</span>
   </a>
-  <a href="/archivio" data-page="archive" onclick="navigateTo('archive',event)">
-    <svg viewBox="0 0 24 24"><path d="M21 8v13H3V8M1 3h22v5H1zM10 12h4"/></svg>
-    <span class="it">Archivio</span><span class="en">Archive</span>
-  </a>
   <a href="/impara" data-page="learn" onclick="navigateTo('learn',event)">
     <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
     <span class="it">Impara</span><span class="en">Learn</span>
+  </a>
+  <a href="/blog" data-page="blog">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+    Blog
   </a>
   <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
     <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
