@@ -171,6 +171,7 @@ document.addEventListener('DOMContentLoaded',async function(){
     renderCategoryFilter();
     startCountdowns();
     loadValuationCount();
+    loadComingSoon();
     registerServiceWorker();
     setTimeout(requestPushPermission,3000);
     loadNotifications();
@@ -184,6 +185,7 @@ document.addEventListener('DOMContentLoaded',async function(){
     renderStats();
     renderCategoryFilter();
     startCountdowns();
+    loadComingSoon();
   } else {
     // Protected page without session — redirect to login
     window.location.href='/login?returnTo='+encodeURIComponent(location.pathname);
@@ -3089,6 +3091,33 @@ document.addEventListener('click',function(e){
     closeInfoTip();
   }
 });
+
+// ── Coming Soon (in valutazione) ──
+async function loadComingSoon(){
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/airdrops?status=eq.in_valutazione&select=id,title,image_url&order=created_at.desc&limit=12',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    if(!res.ok)return;
+    var items=await res.json();
+    var section=document.getElementById('coming-soon-section');
+    var grid=document.getElementById('coming-grid');
+    if(!section||!grid)return;
+    if(!items||items.length===0){section.style.display='none';return;}
+    section.style.display='block';
+    var phSvg='<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>';
+    grid.innerHTML=items.map(function(a){
+      var img=a.image_url
+        ?'<img class="coming-tile-img" src="'+a.image_url+'" alt="" loading="lazy">'
+        :'<div class="coming-tile-ph">'+phSvg+'</div>';
+      return '<div class="coming-tile">'
+        +'<div class="coming-tile-badge"><span class="it">presto</span><span class="en">soon</span></div>'
+        +img
+        +'<div class="coming-tile-name">'+escHtml(a.title)+'</div>'
+        +'</div>';
+    }).join('');
+  }catch(e){console.error('loadComingSoon error:',e);}
+}
 
 // ── Change password ──
 function showChangePw(){

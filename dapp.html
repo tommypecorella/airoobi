@@ -347,6 +347,15 @@
       <button onclick="navigateTo('submit');event.stopPropagation()" style="background:var(--gold);color:var(--black);border:none;padding:10px 24px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">VALUTA</button>
     </div>
 
+    <!-- IN ARRIVO (oggetti in valutazione) -->
+    <div id="coming-soon-section" style="display:none;margin-bottom:32px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <h3 style="font-family:var(--font-h);font-size:20px;font-weight:400;color:var(--white);margin:0"><span class="it">In arrivo</span><span class="en">Coming soon</span></h3>
+        <span style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:3px 10px;border-radius:12px"><span class="it">IN VALUTAZIONE</span><span class="en">UNDER REVIEW</span></span>
+      </div>
+      <div class="coming-grid" id="coming-grid"></div>
+    </div>
+
     <!-- LIST VIEW -->
     <div class="list-view" id="list-view">
       <div class="grid" id="grid">
