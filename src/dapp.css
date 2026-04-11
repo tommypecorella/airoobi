@@ -654,8 +654,10 @@ select option{background:var(--gray-800);color:var(--white)}
 @media(max-width:480px){.notif-panel{right:8px;width:calc(100vw - 16px);top:56px;max-height:60vh;border-radius:var(--radius)}}
 
 /* ── Coming Soon grid ── */
-.coming-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px}
-@media(min-width:520px){.coming-grid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}}
+.coming-carousel{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:8px}
+.coming-carousel::-webkit-scrollbar{display:none}
+.coming-carousel .coming-tile{flex:0 0 150px;scroll-snap-align:start}
+@media(min-width:520px){.coming-carousel .coming-tile{flex:0 0 170px}}
 .coming-tile{border:1px solid rgba(255,255,255,.07);background:var(--card-bg);border-radius:var(--radius);overflow:hidden;transition:all .3s;position:relative}
 .coming-tile::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent);z-index:1}
 .coming-tile:hover{border-color:rgba(240,160,48,.25);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.3)}

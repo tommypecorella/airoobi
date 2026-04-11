@@ -1699,8 +1699,7 @@ function updateBuyDisplay(){
 }
 
 function goToAirdrop(id){
-  openDetail(id);
-  history.pushState({page:'explore',detail:id},null,'/airdrops/'+id);
+  window.location.href='/airdrops/'+id;
 }
 
 function backToList(){
