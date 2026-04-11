@@ -30,6 +30,67 @@
 > - ADD: Cron deadline_2h (Edge Function `check-deadlines`, pg_cron ogni 15 min)
 > - ADD: Trigger DB per push su publish e draw
 > - ADD: Soglie configurabili in ABO (Engine Config → Soglie Auto-Transizione)
+>
+> **Changelog 11 Apr 2026 (v2.2) — Workflow Operativo Airdrop:**
+> - ADD: Nuovo stato `accettato` — staff accetta valutazione, utente conferma partenza
+> - ADD: Colonna `presale_enabled` — staff decide in ABO se attivare presale
+> - ADD: Colonna `launch_fee_paid` — fee % pagata dall'utente per avvio airdrop
+> - CHANGE: Annullamento solo da parte dell'utente (non più admin), perde ARIA pagati
+> - ADD: Badge valutazione — ogni airdrop valutato genera un badge, winner riceve lo stesso badge
+> - ADD: Workflow completo documentato (Sezione 0)
+
+---
+
+## 0. Workflow Operativo — Ciclo di Vita Airdrop
+
+```
+DRAFT → IN_VALUTAZIONE → ACCETTATO → PRESALE/SALE → CLOSED → COMPLETED
+                       ↘ rifiutato_min500 / rifiutato_generico
+(qualsiasi momento)    → ANNULLATO (solo utente, perde ARIA)
+```
+
+### 0.1 Stati e Transizioni
+
+| Stato | Chi agisce | Cosa succede |
+|---|---|---|
+| `draft` | Utente (dApp) | Crea e salva l'airdrop. Può averne quanti vuole in draft. Solo lui li vede. |
+| `in_valutazione` | Utente (dApp) | Azione esplicita "Manda in valutazione" + pagamento ARIA (a AIROOBI). |
+| `rifiutato_min500` | Staff (ABO) | Rifiutato: valore sotto €500. Motivazione scritta (`rejection_reason`). |
+| `rifiutato_generico` | Staff (ABO) | Rifiutato: altro motivo. Motivazione scritta (`rejection_reason`). |
+| `accettato` | Staff (ABO) | Staff accetta e decide se presale o sale (`presale_enabled` flag in ABO). |
+| → partenza | Utente (dApp) | Vede "ACCETTATO" in I miei airdrop. Clicca "Accetta" + paga fee % ARIA (`launch_fee_paid`). |
+| `presale` | Automatico | Blocchi presale in vendita a prezzo speciale. Tutti venduti → `sale`. |
+| `sale` | Automatico | Blocchi sale in vendita a prezzo pieno. Tutti venduti → `closed`. |
+| `closed` | Automatico | Attesa minima 15 min, poi draw automatico. |
+| `completed` | Automatico | Winner estratto, ROBI distribuiti a tutti i partecipanti. |
+| `annullato` | Utente (dApp) | Può annullare in qualsiasi momento. ARIA pagati NON restituiti. |
+
+### 0.2 Regole di Business
+
+1. **Draft illimitati** — l'utente può creare e salvare quanti draft vuole
+2. **Costo valutazione** — pagamento in ARIA all'invio in valutazione (va a AIROOBI)
+3. **Staff decide presale/sale** — flag `presale_enabled` impostato in ABO
+4. **Conferma partenza utente** — dopo ACCETTATO, l'utente deve accettare e pagare fee %
+5. **Transizione presale→sale** — automatica quando blocchi presale esauriti
+6. **Transizione sale→closed** — automatica quando TUTTI i blocchi venduti
+7. **Draw dopo closed** — automatico dopo almeno 15 minuti
+8. **Annullamento** — solo l'utente, in qualsiasi stato, perde ARIA pagati
+
+### 0.3 Badge
+
+- Ogni airdrop che supera la valutazione genera un **badge** (NFT collezionabile)
+- Il **venditore** riceve il badge come riconoscimento
+- Il **winner** dell'airdrop riceve lo stesso badge del venditore
+- Entrambi lo possiedono permanentemente
+
+### 0.4 Colonne DB Correlate
+
+| Colonna | Tipo | Descrizione |
+|---|---|---|
+| `status` | text | Stato corrente (constraint `valid_status`) |
+| `presale_enabled` | boolean | Staff decide se attivare presale |
+| `rejection_reason` | text | Motivazione rifiuto scritta da staff |
+| `launch_fee_paid` | numeric | Fee % pagata dall'utente per avvio |
 
 ---
 
