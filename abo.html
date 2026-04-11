@@ -109,6 +109,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .ct-modal label{display:block;font-size:11px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px;margin-top:12px}
 .ct-modal input,.ct-modal select{width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:8px 10px}
 .ct-modal select{appearance:none;cursor:pointer}
+.ct-modal select option{background:var(--gray-900);color:var(--white)}
 .ct-modal-actions{display:flex;gap:10px;margin-top:20px}
 .ct-modal-actions button{flex:1;padding:10px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;border:none}
 .ct-btn-save{background:var(--gold);color:#000;font-weight:700}
@@ -589,7 +590,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <label>Quotazione AIROOBI (&euro;)</label>
         <input type="number" id="ad-object-value" step="0.01" min="0" placeholder="Valore proposto dalla piattaforma" oninput="adAutoCalcBlocks()">
 
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:12px">
           <div>
             <label>Block price (ARIA)</label>
             <input type="number" id="ad-block-price" min="1" placeholder="5" oninput="adAutoCalcBlocks()">
@@ -597,6 +598,32 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <div>
             <label>Presale price (ARIA)</label>
             <input type="number" id="ad-presale-price" min="0" placeholder="opzionale" oninput="adAutoCalcBlocks()">
+          </div>
+          <div>
+            <label>% Blocchi presale</label>
+            <select id="ad-presale-pct" onchange="adAutoCalcBlocks()">
+              <option value="">—</option>
+              <option value="5">5%</option>
+              <option value="10">10%</option>
+              <option value="15">15%</option>
+              <option value="20">20%</option>
+              <option value="25">25%</option>
+              <option value="30">30%</option>
+              <option value="35">35%</option>
+              <option value="40">40%</option>
+              <option value="45">45%</option>
+              <option value="50">50%</option>
+              <option value="55">55%</option>
+              <option value="60">60%</option>
+              <option value="65">65%</option>
+              <option value="70">70%</option>
+              <option value="75">75%</option>
+              <option value="80">80%</option>
+              <option value="85">85%</option>
+              <option value="90">90%</option>
+              <option value="95">95%</option>
+              <option value="100">100%</option>
+            </select>
           </div>
           <div>
             <label>Extra % <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(costi)</span></label>
@@ -1373,6 +1400,7 @@ async function adOpenModal(id){
     document.getElementById('ad-block-price').value=a.block_price_aria||'';
     document.getElementById('ad-total-blocks').value=a.total_blocks||'';
     document.getElementById('ad-presale-price').value=a.presale_block_price||'';
+    document.getElementById('ad-presale-pct').value=a.presale_blocks_pct||'';
     document.getElementById('ad-deadline').value=a.deadline?a.deadline.substring(0,16):'';
     document.getElementById('ad-status').value=a.status||'in_valutazione';
     document.getElementById('ad-rejection').value=a.rejection_reason||'';
@@ -1444,7 +1472,12 @@ function adUpdateCalcPreview(){
   var baseBlocks=Math.ceil(revenueNeeded/(bp*ARIA_EUR_ENGINE));
   var extraBlocks=blocks-baseBlocks;
   var breakdownEl=document.getElementById('ad-calc-breakdown');
-  if(breakdownEl)breakdownEl.innerHTML='<strong>'+baseBlocks+'</strong> base (copertura oggetto+fee+fondo) + <strong>'+(extraBlocks>0?extraBlocks:0)+'</strong> extra ('+extraPct+'%) = <strong>'+blocks+'</strong> totali';
+  var presalePct=parseInt(document.getElementById('ad-presale-pct').value)||0;
+  var presaleBlocksCount=presalePct>0?Math.round(blocks*presalePct/100):0;
+  var saleBlocksCount=blocks-presaleBlocksCount;
+  var breakdownHtml='<strong>'+baseBlocks+'</strong> base + <strong>'+(extraBlocks>0?extraBlocks:0)+'</strong> extra ('+extraPct+'%) = <strong>'+blocks+'</strong> totali';
+  if(presalePct>0)breakdownHtml+=' — <span style="color:var(--gold)">Presale: <strong>'+presaleBlocksCount+'</strong> ('+presalePct+'%)</span> · Sale: <strong>'+saleBlocksCount+'</strong>';
+  if(breakdownEl)breakdownEl.innerHTML=breakdownHtml;
 
   // 100% sell-through
   var totalAria=blocks*bp;
@@ -1559,6 +1592,7 @@ async function adSaveAirdrop(){
     p_block_price_aria:parseInt(document.getElementById('ad-block-price').value)||null,
     p_total_blocks:parseInt(document.getElementById('ad-total-blocks').value)||null,
     p_presale_block_price:parseInt(document.getElementById('ad-presale-price').value)||null,
+    p_presale_blocks_pct:parseInt(document.getElementById('ad-presale-pct').value)||null,
     p_deadline:document.getElementById('ad-deadline').value?new Date(document.getElementById('ad-deadline').value).toISOString():null,
     p_rejection_reason:document.getElementById('ad-rejection').value.trim()||null,
     p_object_value_eur:parseFloat(document.getElementById('ad-object-value').value)||null,
