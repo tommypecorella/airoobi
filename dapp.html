@@ -357,22 +357,14 @@
   <!-- ═══ EXPLORE TAB ═══ -->
   <div id="tab-explore">
 
-    <!-- VALUATION BANNER -->
-    <div class="val-banner" id="val-banner" style="display:none;cursor:pointer" onclick="navigateTo('submit')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      <span><strong id="val-count">0</strong> <span class="it">oggetti in valutazione — fai valutare il tuo</span><span class="en">items under evaluation — get yours evaluated</span></span>
-    </div>
-
     <!-- CATEGORY FILTER -->
     <div class="cat-filter" id="cat-filter">
       <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
     </div>
 
-    <!-- SPOTS COUNTER -->
-    <div class="spots-banner" id="spots-banner" style="display:none">
-      <div class="spots-number" id="spots-count">0</div>
-      <div class="spots-label"><span class="it">posti disponibili</span><span class="en">spots available</span></div>
-      <div class="spots-sub"><span class="it">su <span id="spots-airdrops">0</span> airdrop attivi</span><span class="en">across <span id="spots-airdrops-en">0</span> active airdrops</span></div>
+    <!-- MINI DASHBOARD PER CATEGORIA -->
+    <div id="cat-dashboard" style="display:none;margin-bottom:20px">
+      <div style="display:flex;overflow-x:auto;gap:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px" id="cat-dashboard-row"></div>
     </div>
 
     <!-- CTA VALUTA -->

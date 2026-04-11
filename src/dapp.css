@@ -396,15 +396,10 @@ select option{background:var(--gray-800);color:var(--white)}
 .lang-toggle:hover{border-color:var(--accent);color:var(--accent)}
 
 /* ── SPOTS AVAILABLE BANNER ── */
-.spots-banner{display:flex;flex-direction:column;align-items:center;padding:28px 24px;margin-bottom:24px;border:1px solid rgba(74,158,255,.2);background:linear-gradient(135deg,rgba(74,158,255,.06) 0%,rgba(74,158,255,.01) 100%);border-radius:var(--radius);text-align:center;position:relative;overflow:hidden}
-.spots-banner::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at center,rgba(74,158,255,.04) 0%,transparent 60%);pointer-events:none}
-.spots-number{font-family:var(--font-h);font-size:52px;font-weight:700;color:var(--gold);line-height:1;letter-spacing:-1px}
-.spots-label{font-family:var(--font-b);font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-top:8px}
-.spots-sub{font-size:13px;color:var(--gray-400);margin-top:4px}
+/* spots-banner removed — replaced by cat-dashboard */
 
 /* ── VALUATION BANNER ── */
-.val-banner{display:flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;background:rgba(74,158,255,.04);border:1px solid rgba(74,158,255,.15);border-radius:var(--radius);margin-bottom:24px;font-size:13px;color:var(--accent);text-align:center}
-.val-banner strong{font-size:17px;color:var(--white)}
+/* val-banner removed — replaced by cat-dashboard */
 
 /* ── STATUS BADGES on cards ── */
 .card-badge.presale{background:var(--aria);color:var(--black)}
