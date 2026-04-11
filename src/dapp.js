@@ -192,6 +192,10 @@ document.addEventListener('DOMContentLoaded',async function(){
     return;
   }
 
+  // In public mode, never show dashboard — redirect to landing or default to explore
+  if(_publicMode&&initialPage==='home'){
+    initialPage='explore';
+  }
   showPage(initialPage);
   if(!urlId){
     history.replaceState({page:initialPage},null,PAGE_PATHS[initialPage]||'/dapp');
@@ -820,11 +824,14 @@ var PAGE_HEADERS={
 
 function navigateTo(page,event){
   if(event)event.preventDefault();
-  // In public mode, only allow public pages — redirect to login for everything else
-  if(_publicMode&&PUBLIC_PAGES.indexOf(page)===-1){
-    var path=PAGE_PATHS[page]||'/';
-    window.location.href='/login?returnTo='+encodeURIComponent(path);
-    return;
+  // In public mode: home → landing page, auth pages → login redirect
+  if(_publicMode){
+    if(page==='home'){window.location.href='/';return;}
+    if(PUBLIC_PAGES.indexOf(page)===-1){
+      var path=PAGE_PATHS[page]||'/';
+      window.location.href='/login?returnTo='+encodeURIComponent(path);
+      return;
+    }
   }
   showPage(page);
   var path=PAGE_PATHS[page]||'/esplora';
