@@ -25,9 +25,9 @@ var ICONS={
 var PUBLIC_LINKS=[
   {href:'/',        page:'home',    icon:ICONS.home,    it:'Home',    en:'Home'},
   {href:'/airdrops',page:'explore', icon:ICONS.explore, it:'Airdrops',en:'Airdrops', primary:true},
-  {href:'/faq',     page:'faq',     icon:ICONS.faq,     it:'FAQ',     en:'FAQ'},
   {href:'/impara',  page:'learn',   icon:ICONS.learn,   it:'Impara',  en:'Learn'},
-  {href:'/blog',    page:'blog',    icon:ICONS.blog,    it:'Blog',    en:'Blog'}
+  {href:'/blog',    page:'blog',    icon:ICONS.blog,    it:'Blog',    en:'Blog'},
+  {href:'/faq',     page:'faq',     icon:ICONS.faq,     it:'FAQ',     en:'FAQ'}
 ];
 
 var AUTH_LINKS=[
