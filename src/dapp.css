@@ -618,8 +618,8 @@ select option{background:var(--gray-800);color:var(--white)}
 .detail-position.shake{animation:shake .5s ease-in-out}
 
 /* ── Heart / Watchlist button ── */
-.heart-btn{position:absolute;top:10px;right:10px;background:rgba(6,8,15,.6);border:1px solid rgba(255,255,255,.12);color:var(--gray-400);font-size:16px;width:34px;height:34px;border-radius:50%;cursor:pointer;z-index:3;display:flex;align-items:center;justify-content:center;transition:all .25s;line-height:1;padding:0}
-.heart-btn:hover,.heart-btn.active{color:#ff6b8a;border-color:#ff6b8a;background:rgba(255,107,138,.08)}
+.heart-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);color:var(--gray-300);font-size:16px;width:34px;height:34px;border-radius:50%;cursor:pointer;z-index:3;display:flex;align-items:center;justify-content:center;transition:all .25s;line-height:1;padding:0}
+.heart-btn:hover,.heart-btn.active{color:#ff6b8a;border-color:#ff6b8a;background:rgba(255,107,138,.15)}
 .heart-btn.detail{position:static;margin-top:8px}
 
 @keyframes pulse-glow{0%,100%{opacity:1}50%{opacity:.5}}
