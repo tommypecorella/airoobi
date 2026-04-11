@@ -988,6 +988,7 @@ async function loadNotifications(){
   var token=await getValidToken();if(!token)return;
   var rows=await sbGet('notifications?user_id=eq.'+_session.user.id+'&order=created_at.desc&limit=30',token)||[];
   var unread=rows.filter(function(r){return !r.read}).length;
+  _lastNotifCount=unread; // init count to avoid toast on first load
   var badge=document.getElementById('notif-badge');
   if(badge){
     if(unread>0){badge.style.display='flex';badge.textContent=unread>99?'99+':unread;}
@@ -1047,6 +1048,42 @@ async function markAllNotifRead(){
   });
   loadNotifications();
 }
+
+function showNotifToast(title,body){
+  var container=document.getElementById('notif-toast-container');
+  if(!container)return;
+  var toast=document.createElement('div');
+  toast.className='notif-toast';
+  toast.innerHTML='<div class="notif-toast-title">'+escHtml(title||'AIROOBI')+'</div><div class="notif-toast-body">'+escHtml(body||'')+'</div>';
+  toast.onclick=function(){toggleNotifPanel();toast.remove();};
+  container.appendChild(toast);
+  requestAnimationFrame(function(){toast.classList.add('show');});
+  setTimeout(function(){toast.classList.remove('show');setTimeout(function(){toast.remove();},400);},5000);
+}
+
+var _lastNotifCount=0;
+async function pollNotifications(){
+  if(!_session)return;
+  var token=await getValidToken();if(!token)return;
+  var rows=await sbGet('notifications?user_id=eq.'+_session.user.id+'&read=eq.false&order=created_at.desc&limit=5',token)||[];
+  var count=rows.length;
+  if(count>_lastNotifCount&&_lastNotifCount>=0){
+    // New notifications arrived — show toast for each new one
+    var newOnes=rows.slice(0,count-_lastNotifCount);
+    newOnes.forEach(function(n){showNotifToast(n.title,n.body);});
+  }
+  _lastNotifCount=count;
+  // Update badge
+  var badge=document.getElementById('notif-badge');
+  if(badge){
+    if(count>0){badge.style.display='flex';badge.textContent=count>99?'99+':count;}
+    else{badge.style.display='none';}
+  }
+  var bell=document.getElementById('notif-bell');
+  if(bell)bell.classList.toggle('has-unread',count>0);
+}
+// Poll every 30s
+setInterval(pollNotifications,30000);
 
 // Close notif panel on outside click
 document.addEventListener('click',function(e){

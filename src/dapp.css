@@ -631,6 +631,15 @@ select option{background:var(--gray-800);color:var(--white)}
 .notif-bell:hover .bell-icon{stroke:var(--accent)}
 .notif-bell.has-unread{color:var(--accent)}
 .notif-bell.has-unread .bell-icon{stroke:var(--accent)}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid rgba(6,11,24,.92);display:none}
+.notif-bell.has-unread .notif-dot{display:block;animation:notifPulse 2s ease-in-out infinite}
+@keyframes notifPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 4px rgba(239,68,68,0)}}
+/* ── Notification toast (top-right) ── */
+.notif-toast-container{position:fixed;top:72px;right:16px;z-index:1000;display:flex;flex-direction:column;gap:8px;pointer-events:none;max-width:340px;width:100%}
+.notif-toast{background:rgba(10,16,34,.95);backdrop-filter:blur(24px) saturate(1.4);border:1px solid rgba(74,158,255,.2);padding:14px 18px;font-family:var(--font-b);border-radius:var(--radius-sm);box-shadow:0 8px 32px rgba(0,0,0,.4);pointer-events:auto;transform:translateX(120%);transition:transform .35s ease;cursor:pointer}
+.notif-toast.show{transform:translateX(0)}
+.notif-toast-title{font-size:12px;font-weight:600;color:var(--accent);margin-bottom:4px;letter-spacing:.3px}
+.notif-toast-body{font-size:13px;color:var(--gray-300);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .notif-badge{position:absolute;top:2px;right:2px;background:var(--red);color:var(--white);font-family:var(--font-m);font-size:7px;font-weight:700;min-width:14px;height:14px;border-radius:7px;display:flex;align-items:center;justify-content:center;padding:0 3px;line-height:1;border:2px solid var(--black)}
 .notif-panel{position:fixed;top:62px;right:16px;width:380px;max-width:calc(100vw - 32px);max-height:70vh;background:var(--card-bg);border:1px solid var(--gray-800);border-radius:var(--radius-lg);z-index:1000;overflow:hidden;box-shadow:0 16px 56px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.03) inset}
 .notif-panel-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--gray-800);font-family:var(--font-b);font-size:12px;font-weight:600;letter-spacing:1px;color:var(--white)}
