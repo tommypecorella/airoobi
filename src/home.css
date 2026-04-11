@@ -54,7 +54,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:none}
 .avatar-dropdown .ad-divider{height:1px;background:var(--gray-700);margin:0}
 .avatar-upload-label{display:flex;align-items:center;gap:8px;padding:10px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);cursor:pointer;transition:color .2s;border-bottom:1px solid rgba(255,255,255,.04)}
 .avatar-upload-label:hover{color:var(--gold)}
-@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-link-btn span{display:none}.nav-link-btn{padding:8px 10px}.nav-menu a{display:none}.nav-avatar-wrap{display:none!important}.nav-logged-in.active{display:none!important}}
+.nav-right{display:flex;align-items:center;gap:12px;margin-left:auto}
+.nav-app-btn{text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--black);border:1px solid #4A9EFF;color:#4A9EFF;font-family:var(--font-h);font-size:13px;font-weight:700;letter-spacing:1px;transition:all .3s}
+.nav-app-btn:hover{background:#4A9EFF;color:var(--black)!important}
+@media(max-width:768px){#nav-rpts-counter{display:none!important}#nav-nft-counter{display:none!important}.nav-desktop-link{display:none!important}.nav-avatar-wrap{display:none!important}.nav-logged-in.active{display:none!important}.nav-app-btn{padding:5px 10px;font-size:10px}.nav-app-btn svg{width:12px;height:12px}.nav-right .lang-toggle{padding:4px 8px;font-size:10px}}
 .nav-cta{background:var(--gold);color:var(--black);padding:10px 24px;font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:600;border:none;cursor:pointer;transition:all .3s}
 .nav-cta:hover{background:var(--white)}
 
@@ -667,9 +670,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 
 .gold-sep{width:60px;height:1px;background:var(--gold);margin:0 auto}
 
-/* ── Mobile header actions (after logo) ── */
-.nav-mobile-actions{display:none;align-items:center;gap:8px;margin-left:8px;margin-right:auto}
-@media(max-width:768px){.nav-mobile-actions{display:flex}}
+/* nav-mobile-actions removed — now using .nav-right */
 
 /* ── Burger Menu ── */
 .burger-btn{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:none;cursor:pointer;padding:8px}
