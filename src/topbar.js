@@ -88,11 +88,34 @@ window._topbarLang=function(){
 // Alias for pages that call toggleLang() directly
 window.toggleLang=window._topbarLang;
 
+function getValidTokenFromSession(session){
+  if(!session||!session.access_token)return Promise.resolve(null);
+  try{
+    var payload=JSON.parse(atob(session.access_token.split('.')[1]));
+    if(payload.exp*1000>Date.now()+60000) return Promise.resolve(session.access_token);
+  }catch(e){return Promise.resolve(session.access_token);}
+  // Token expired — try refresh
+  if(!session.refresh_token)return Promise.resolve(null);
+  return fetch(SB_URL+'/auth/v1/token?grant_type=refresh_token',{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({refresh_token:session.refresh_token})
+  }).then(function(r){return r.json()}).then(function(d){
+    if(d&&d.access_token){
+      session.access_token=d.access_token;
+      session.refresh_token=d.refresh_token||session.refresh_token;
+      if(d.expires_at)session.expires_at=d.expires_at;
+      localStorage.setItem('airoobi_session',JSON.stringify(session));
+      return d.access_token;
+    }
+    return null;
+  }).catch(function(){return null;});
+}
+
 function upgradeToLoggedIn(session){
   var email=session.user&&session.user.email?session.user.email:'';
   var letter=email?email.charAt(0).toUpperCase():'?';
   var uid=session.user?session.user.id:'';
-  var token=session.access_token;
 
   // Expand nav with auth links (insert before Impara)
   var nav=document.getElementById('topbar-nav');
@@ -131,17 +154,20 @@ function upgradeToLoggedIn(session){
     });
   }
 
-  // Fetch balances
-  if(token&&uid){
-    fetch(SB_URL+'/rest/v1/profiles?id=eq.'+uid+'&select=total_points',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}})
-      .then(function(r){return r.json()}).then(function(d){
-        if(d&&d[0]){var el=document.getElementById('tb-aria-val');if(el)el.textContent=d[0].total_points||0;}
-      }).catch(function(){});
-    fetch(SB_URL+'/rest/v1/nft_rewards?user_id=eq.'+uid+'&nft_type=in.(ROBI,NFT_REWARD)&select=shares',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}})
-      .then(function(r){return r.json()}).then(function(d){
-        var t=0;if(d)d.forEach(function(n){t+=parseFloat(n.shares)||0;});
-        var el=document.getElementById('tb-robi-val');if(el)el.textContent=Math.round(t*100)/100;
-      }).catch(function(){});
+  // Fetch balances with valid token
+  if(uid){
+    getValidTokenFromSession(session).then(function(validToken){
+      if(!validToken)return;
+      fetch(SB_URL+'/rest/v1/profiles?id=eq.'+uid+'&select=total_points',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+validToken}})
+        .then(function(r){return r.json()}).then(function(d){
+          if(d&&d[0]){var el=document.getElementById('tb-aria-val');if(el)el.textContent=d[0].total_points||0;}
+        }).catch(function(){});
+      fetch(SB_URL+'/rest/v1/nft_rewards?user_id=eq.'+uid+'&nft_type=in.(ROBI,NFT_REWARD)&select=shares',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+validToken}})
+        .then(function(r){return r.json()}).then(function(d){
+          var t=0;if(d)d.forEach(function(n){t+=parseFloat(n.shares)||0;});
+          var el=document.getElementById('tb-robi-val');if(el)el.textContent=Math.round(t*100)/100;
+        }).catch(function(){});
+    });
   }
 }
 
