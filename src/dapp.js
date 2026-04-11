@@ -126,7 +126,7 @@ async function getValidToken(){
 }
 
 // ── Public pages (no auth required) ──
-var PUBLIC_PAGES=['explore','learn'];
+var PUBLIC_PAGES=['explore','learn','blog'];
 function isPublicRoute(){
   var pp=location.pathname;
   var page=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':null);
@@ -213,19 +213,6 @@ function setupPublicUI(){
     var page=a.getAttribute('data-page');
     if(page&&PUBLIC_PAGES.indexOf(page)===-1)a.style.display='none';
   });
-  // Add Blog link next to Impara in both navs
-  document.querySelectorAll('.topbar-nav, .topbar-mobile-menu').forEach(function(nav){
-    var learnLink=nav.querySelector('[data-page="learn"]');
-    if(learnLink){
-      var blogLink=document.createElement('a');
-      blogLink.href='/blog';
-      blogLink.innerHTML='<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> Blog';
-      learnLink.insertAdjacentElement('afterend',blogLink);
-    }
-  });
-  // Hide burger — replace with simpler nav for mobile
-  var burger=document.getElementById('topbar-burger');
-  if(burger)burger.style.display='none';
   // Add login/signup buttons to topbar-right
   var topRight=document.querySelector('.topbar-right');
   if(topRight){
