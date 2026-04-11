@@ -1097,7 +1097,7 @@ document.addEventListener('click',function(e){
 function fmtCountdown(deadline){
   if(!deadline)return null;
   var diff=new Date(deadline)-Date.now();
-  if(diff<=0)return{text:'Chiuso',en:'Closed',urgent:false,expired:true};
+  if(diff<=0)return{text:'Scaduto',en:'Expired',urgent:false,expired:true};
   var h=Math.floor(diff/3600000);var m=Math.floor((diff%3600000)/60000);var s=Math.floor((diff%60000)/1000);
   var urgent=diff<7200000; // < 2h
   if(h>=24){var d=Math.floor(h/24);h=h%24;return{text:d+'g '+h+'h '+m+'m',en:d+'d '+h+'h '+m+'m',urgent:urgent,expired:false};}
@@ -1127,8 +1127,8 @@ function startCountdowns(){
       if(cd){
         var lang=document.documentElement.getAttribute('data-lang')||'it';
         dc.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> '
-          +'<span class="it">'+(cd.expired?'Chiuso':cd.text+' alla chiusura')+'</span>'
-          +'<span class="en">'+(cd.expired?'Closed':cd.en+' to close')+'</span>';
+          +'<span class="it">'+(cd.expired?'Deadline scaduta':cd.text+' alla chiusura')+'</span>'
+          +'<span class="en">'+(cd.expired?'Deadline expired':cd.en+' to close')+'</span>';
         dc.className='detail-countdown'+(cd.urgent?' urgent':'');
       }
     }
