@@ -1006,7 +1006,11 @@ async function loadNotifications(){
   }
   list.innerHTML=rows.map(function(n){
     var time=new Date(n.created_at).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-    return '<div class="notif-item'+(n.read?'':' unread')+'" data-id="'+n.id+'" onclick="markNotifRead(\''+n.id+'\')">'
+    var isMsg=n.type==='message';
+    var onclick=isMsg
+      ?'notifGoToChat(\''+n.id+'\')'
+      :'markNotifRead(\''+n.id+'\')';
+    return '<div class="notif-item'+(n.read?'':' unread')+'" data-id="'+n.id+'" onclick="'+onclick+'">'
       +'<div class="notif-title">'+escHtml(n.title||'AIROOBI')+'</div>'
       +'<div>'+escHtml(n.body||'')+'</div>'
       +'<div class="notif-time">'+time+'</div>'
@@ -1039,6 +1043,15 @@ async function markNotifRead(id){
   }
 }
 
+function notifGoToChat(notifId){
+  markNotifRead(notifId);
+  _notifOpen=false;
+  var panel=document.getElementById('notif-panel');
+  if(panel)panel.style.display='none';
+  // Navigate to miei-airdrop and open all chats
+  navigateTo('my');
+}
+
 async function markAllNotifRead(){
   var token=await getValidToken();if(!token)return;
   await fetch(SB_URL+'/rest/v1/notifications?user_id=eq.'+_session.user.id+'&read=eq.false',{
@@ -1055,7 +1068,7 @@ function showNotifToast(title,body){
   var toast=document.createElement('div');
   toast.className='notif-toast';
   toast.innerHTML='<div class="notif-toast-title">'+escHtml(title||'AIROOBI')+'</div><div class="notif-toast-body">'+escHtml(body||'')+'</div>';
-  toast.onclick=function(){toggleNotifPanel();toast.remove();};
+  toast.onclick=function(){toast.remove();navigateTo('my');};
   container.appendChild(toast);
   requestAnimationFrame(function(){toast.classList.add('show');});
   setTimeout(function(){toast.classList.remove('show');setTimeout(function(){toast.remove();},400);},5000);
@@ -1829,7 +1842,10 @@ function renderMyAirdrops(){
       +(canCancel?'<button class="cancel-part-btn" onclick="confirmCancelParticipation(\''+a.id+'\',\''+escHtml(a.title)+'\','+item.blocks+','+item.spent+')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> <span class="it">Ritira</span><span class="en">Withdraw</span></button>':'')
       +'</div>'
       +'<div id="my-chat-'+a.id+'" style="display:none;padding:0 16px 16px">'
-      +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);margin-bottom:10px;text-align:center"><span class="it">Risposte entro 24/48 ore</span><span class="en">Replies within 24/48 hours</span></div>'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+      +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500)"><span class="it">Risposte entro 24/48 ore</span><span class="en">Replies within 24/48 hours</span></div>'
+      +'<button onclick="toggleMyChat(\''+a.id+'\')" style="background:none;border:none;color:var(--gray-500);cursor:pointer;font-family:var(--font-m);font-size:10px;letter-spacing:1px;padding:4px 8px;transition:color .2s" onmouseover="this.style.color=\'var(--white)\'" onmouseout="this.style.color=\'var(--gray-500)\'">✕ <span class="it">CHIUDI</span><span class="en">CLOSE</span></button>'
+      +'</div>'
       +'</div>'
       +'</div>';
   }).join('');
