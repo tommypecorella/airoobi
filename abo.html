@@ -31,7 +31,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 @keyframes spin{to{transform:rotate(360deg)}}
 .admin-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:250;background:var(--black);grid-template-rows:48px 1fr;grid-template-columns:210px 1fr;grid-template-areas:"nav nav" "side main";overflow:hidden}
 .admin-overlay.active{display:grid}
-.admin-nav{grid-area:nav;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--gray-800);background:var(--black);z-index:12}
+.admin-nav{grid-area:nav;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--gray-800);background:var(--black);z-index:12;position:relative}
 .admin-nav span{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:2px}
 .admin-close{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:5px 14px;font-size:11px;cursor:pointer;transition:all .2s;font-family:var(--font-m);letter-spacing:1px}
 .admin-close:hover{border-color:var(--gold);color:var(--gold)}
@@ -134,6 +134,17 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .notif-toast.fade-out{animation:toastOut .3s ease-in forwards}
 @keyframes toastIn{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:translateY(0)}}
 @keyframes toastOut{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-12px)}}
+/* ── NOTIFICATION PANEL ── */
+.abo-notif-panel{display:none;position:absolute;top:50px;right:12px;width:380px;max-height:480px;background:var(--gray-900);border:1px solid var(--gray-700);z-index:9999;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.6)}
+.abo-notif-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--gray-700)}
+.abo-notif-header span{font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold)}
+.abo-notif-list{overflow-y:auto;max-height:420px}
+.abo-notif-item{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .2s}
+.abo-notif-item:hover{background:rgba(255,255,255,.04)}
+.abo-notif-item.unread{background:rgba(184,150,12,.05);border-left:3px solid var(--gold)}
+.abo-notif-item .n-title{font-size:12px;font-weight:600;color:var(--white);margin-bottom:3px}
+.abo-notif-item .n-body{font-size:11px;color:var(--gray-400);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.abo-notif-item .n-time{font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px}
 /* ── BACKOFFICE VALUTAZIONI ── */
 .bo-tabs{display:flex;gap:0;margin-bottom:20px;border-bottom:1px solid var(--gray-700);overflow-x:auto}
 .bo-tab{padding:10px 16px;background:none;border:none;color:var(--gray-400);font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;cursor:pointer}
@@ -203,10 +214,19 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div style="display:flex;align-items:center;gap:12px">
     <a href="https://www.airoobi.app/" class="admin-close" style="text-decoration:none;color:inherit">APP &rarr;</a>
     <button class="admin-close" onclick="aboLogout()">Logout</button>
-    <button class="abo-bell" id="abo-bell" onclick="adminNav('sec-messages')" title="Messaggi">
+    <button class="abo-bell" id="abo-bell" onclick="toggleAboNotifPanel()" title="Notifiche">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
       <span class="abo-bell-dot" id="abo-bell-dot"></span>
     </button>
+    <div class="abo-notif-panel" id="abo-notif-panel">
+      <div class="abo-notif-header">
+        <span>NOTIFICHE</span>
+        <button onclick="aboMarkAllRead()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:9px;letter-spacing:1px;cursor:pointer;opacity:.7;transition:opacity .2s" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=.7">SEGNA TUTTE LETTE</button>
+      </div>
+      <div class="abo-notif-list" id="abo-notif-list">
+        <div style="color:var(--gray-500);font-size:12px;text-align:center;padding:24px">Caricamento...</div>
+      </div>
+    </div>
     <div class="abo-avatar" id="abo-avatar" title="">?</div>
   </div>
 </div>
@@ -3304,6 +3324,134 @@ async function caDeleteAsset(){
     loadCompanyAssets();
   }catch(e){alert('Errore eliminazione');}
 }
+
+// ══════════════════════════════════════════════════
+//  NOTIFICATION PANEL (campanella ABO)
+// ══════════════════════════════════════════════════
+var _aboNotifOpen=false;
+var _aboLastNotifCount=-1;
+
+function toggleAboNotifPanel(){
+  var panel=document.getElementById('abo-notif-panel');
+  _aboNotifOpen=!_aboNotifOpen;
+  panel.style.display=_aboNotifOpen?'block':'none';
+  if(_aboNotifOpen)loadAboNotifications();
+}
+
+async function loadAboNotifications(){
+  var s=getSession();if(!s||!s.user)return;
+  try{
+    var rows=await sbGet('notifications?user_id=eq.'+s.user.id+'&order=created_at.desc&limit=30',s.access_token)||[];
+    var unread=rows.filter(function(r){return !r.read}).length;
+    _aboLastNotifCount=unread;
+    // Update bell dot
+    var bell=document.getElementById('abo-bell');
+    if(bell)bell.classList.toggle('has-unread',unread>0);
+    // Render list
+    var list=document.getElementById('abo-notif-list');
+    if(!list)return;
+    if(!rows.length){
+      list.innerHTML='<div style="color:var(--gray-500);font-size:12px;text-align:center;padding:24px">Nessuna notifica</div>';
+      return;
+    }
+    list.innerHTML=rows.map(function(n){
+      var time=new Date(n.created_at).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      var isMsg=n.type==='message';
+      var onclick=isMsg
+        ?'aboNotifGoToChat(\''+n.id+'\',\''+escH(n.title||'')+'\')'
+        :'aboMarkNotifRead(\''+n.id+'\')';
+      return '<div class="abo-notif-item'+(n.read?'':' unread')+'" data-id="'+n.id+'" onclick="'+onclick+'">'
+        +'<div class="n-title">'+escH(n.title||'AIROOBI')+'</div>'
+        +'<div class="n-body">'+escH(n.body||'')+'</div>'
+        +'<div class="n-time">'+time+'</div>'
+        +'</div>';
+    }).join('');
+  }catch(e){console.error('loadAboNotifications:',e);}
+}
+
+async function aboMarkNotifRead(id){
+  var s=getSession();if(!s)return;
+  await fetch(SB_URL+'/rest/v1/notifications?id=eq.'+id,{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({read:true})
+  });
+  var item=document.querySelector('.abo-notif-item[data-id="'+id+'"]');
+  if(item)item.classList.remove('unread');
+  var bell=document.getElementById('abo-bell');
+  var remaining=document.querySelectorAll('.abo-notif-item.unread').length;
+  if(bell)bell.classList.toggle('has-unread',remaining>0);
+}
+
+async function aboMarkAllRead(){
+  var s=getSession();if(!s||!s.user)return;
+  await fetch(SB_URL+'/rest/v1/notifications?user_id=eq.'+s.user.id+'&read=eq.false',{
+    method:'PATCH',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+    body:JSON.stringify({read:true})
+  });
+  loadAboNotifications();
+}
+
+function aboNotifGoToChat(notifId,title){
+  // Mark as read
+  aboMarkNotifRead(notifId);
+  // Close panel
+  _aboNotifOpen=false;
+  document.getElementById('abo-notif-panel').style.display='none';
+  // Extract airdrop title from notification title "Nuovo messaggio — <title>"
+  var airdropTitle=title.replace(/^Nuovo messaggio\s*—?\s*/,'').trim();
+  // Navigate to messages section
+  adminNav('sec-messages');
+  // After messages load, try to find and expand the matching thread
+  setTimeout(function(){
+    var container=document.getElementById('msg-thread-list');
+    if(!container)return;
+    var rows=container.children;
+    for(var i=0;i<rows.length;i++){
+      var spans=rows[i].querySelectorAll('span');
+      for(var j=0;j<spans.length;j++){
+        if(spans[j].textContent.trim()===airdropTitle){
+          rows[i].click();
+          rows[i].scrollIntoView({behavior:'smooth',block:'center'});
+          return;
+        }
+      }
+    }
+  },800);
+}
+
+// Poll notifications every 30s
+setInterval(function(){
+  var s=getSession();if(!s||!s.user)return;
+  sbGet('notifications?user_id=eq.'+s.user.id+'&read=eq.false&order=created_at.desc&limit=5',s.access_token).then(function(rows){
+    if(!rows)return;
+    var count=rows.length;
+    if(count>_aboLastNotifCount&&_aboLastNotifCount>=0){
+      var newOnes=rows.slice(0,count-_aboLastNotifCount);
+      newOnes.forEach(function(n){showToast(n.title+': '+n.body);});
+    }
+    _aboLastNotifCount=count;
+    var bell=document.getElementById('abo-bell');
+    if(bell)bell.classList.toggle('has-unread',count>0);
+  });
+},30000);
+
+// Close panel on outside click
+document.addEventListener('click',function(e){
+  if(_aboNotifOpen&&!e.target.closest('#abo-notif-panel')&&!e.target.closest('#abo-bell')){
+    document.getElementById('abo-notif-panel').style.display='none';
+    _aboNotifOpen=false;
+  }
+});
+
+// Initial load on page ready
+document.addEventListener('DOMContentLoaded',function(){
+  setTimeout(function(){
+    var s=getSession();
+    if(s&&s.user)loadAboNotifications();
+  },2000);
+});
 </script>
 </body>
 </html>
