@@ -336,7 +336,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- USERS TABLE -->
   <div class="admin-section" id="sec-users">
-    <h2>Ultimi utenti</h2>
+    <h2>Ultimi utenti <span id="adm-users-total" style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gray-400);font-weight:400"></span></h2>
     <table class="admin-table" id="adm-users-table">
       <thead><tr><th>Email</th><th>ARIA</th><th>ROBI</th><th>Streak</th><th>Referral</th><th>Registrato</th></tr></thead>
       <tbody id="adm-users-body"><tr><td colspan="6" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
@@ -1241,6 +1241,7 @@ async function loadAdminData(){
     const users=allProfiles?allProfiles.filter(function(u){return !u.is_test_user}):[];
     var userCount=users.length;
     document.getElementById('adm-users').textContent=userCount;
+    var totalEl=document.getElementById('adm-users-total');if(totalEl)totalEl.textContent='('+userCount+' registrati)';
     var remaining=Math.max(0,1000-userCount);
     var remEl=document.getElementById('adm-remaining');
     if(remEl){remEl.textContent=remaining;remEl.style.color=remaining<=0?'#B91C1C':remaining<=100?'#F59E0B':'var(--gold)';}
