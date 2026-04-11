@@ -1870,13 +1870,15 @@ async function checkUserRoles(){
   roles.forEach(function(r){
     if(r.role==='admin'){
       _isAdmin=true;
-      document.getElementById('dapp-admin-link').style.display='';
     }
     if(r.role==='evaluator'){
       _isManager=true;
       _managerCats.push(r.category); // null = all
     }
   });
+  if(_isAdmin||_isManager){
+    document.getElementById('dapp-admin-link').style.display='';
+  }
 }
 
 // ── Control Room (CEO/Admin) ──

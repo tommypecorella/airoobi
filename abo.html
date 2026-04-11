@@ -12,9 +12,9 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --black:#000000;--white:#FFFFFF;--gold:#B8960C;--gold-dim:rgba(184,150,12,.3);--gold-glow:rgba(184,150,12,.08);
-  --gray-900:#0d0d0d;--gray-800:#1a1a1a;--gray-700:#2a2a2a;--gray-600:#444;--gray-500:#666;--gray-400:#888;--gray-300:#aaa;
-  --aria:#4A9EFF;--kas:#49EACB;
+  --black:#0a0a12;--white:#f0f2f8;--gold:#8B5CF6;--gold-dim:rgba(139,92,246,.3);--gold-glow:rgba(139,92,246,.08);
+  --gray-900:#0f0f1a;--gray-800:#181825;--gray-700:#252538;--gray-600:#3d3d5c;--gray-500:#666;--gray-400:#8892ae;--gray-300:#b4bdd4;
+  --aria:#4A9EFF;--kas:#49EACB;--red:#ef4444;
   --font-h:'Cormorant Garamond',Georgia,serif;--font-b:'Instrument Sans',system-ui,sans-serif;--font-m:'DM Mono',monospace;
 }
 html{background:var(--black)}
@@ -35,6 +35,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .admin-nav span{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:2px}
 .admin-close{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:5px 14px;font-size:11px;cursor:pointer;transition:all .2s;font-family:var(--font-m);letter-spacing:1px}
 .admin-close:hover{border-color:var(--gold);color:var(--gold)}
+.abo-avatar{width:30px;height:30px;border-radius:50%;background:var(--gray-700);border:1px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;font-family:var(--font-m);color:var(--gray-400);overflow:hidden;cursor:default}
+.abo-avatar img{width:100%;height:100%;object-fit:cover}
 .admin-layout{display:contents}
 .admin-sidebar{grid-area:side;background:var(--gray-900);border-right:1px solid var(--gray-800);overflow-y:auto;overflow-x:hidden;padding:16px 0;min-width:0}
 .admin-sidebar-group{margin-bottom:8px}
@@ -191,10 +193,11 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 <div class="admin-overlay" id="admin-overlay">
 <div class="admin-nav">
   <button class="admin-burger-sidebar" onclick="toggleAdminSidebar()"><span></span><span></span><span></span></button>
-  <span>ABO · AIROOBI BACK OFFICE</span>
-  <div style="display:flex;align-items:center;gap:10px">
+  <span style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> ABO</span>
+  <div style="display:flex;align-items:center;gap:12px">
     <a href="https://www.airoobi.app/" class="admin-close" style="text-decoration:none;color:inherit">APP &rarr;</a>
-    <button class="admin-close" onclick="aboLogout()">&larr; Logout</button>
+    <button class="admin-close" onclick="aboLogout()">Logout</button>
+    <div class="abo-avatar" id="abo-avatar" title="">?</div>
   </div>
 </div>
 <div class="admin-layout">
@@ -214,6 +217,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-valutazioni')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>Valutazioni</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-airdrops')"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>Gestione</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-analysis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Analysis</div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-airdrop-stats')"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>Statistiche</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Messaggi</div>
   </div>
   <div class="admin-sidebar-group">
@@ -729,6 +733,40 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </table>
   </div>
 
+  <!-- AIRDROP STATISTICS -->
+  <div class="admin-section" id="sec-airdrop-stats">
+    <h2>Statistiche Airdrop</h2>
+    <div style="margin-bottom:16px">
+      <button onclick="loadAirdropStats()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">AGGIORNA</button>
+    </div>
+    <div class="admin-grid" id="airdrop-stats-grid">
+      <div class="admin-card"><div class="admin-card-val" id="as-total">—</div><div class="admin-card-label">Airdrop totali</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-draft">—</div><div class="admin-card-label">In bozza</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-valutazione">—</div><div class="admin-card-label">In valutazione</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-accettato">—</div><div class="admin-card-label">Accettati</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-presale">—</div><div class="admin-card-label">In presale</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-sale">—</div><div class="admin-card-label">In sale</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-closed">—</div><div class="admin-card-label">Closed</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-completed">—</div><div class="admin-card-label">Completati</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-annullato">—</div><div class="admin-card-label">Annullati</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-rifiutato">—</div><div class="admin-card-label">Rifiutati</div></div>
+    </div>
+    <h3 style="font-family:var(--font-h);font-size:18px;margin:24px 0 12px;color:var(--white)">Partecipazioni</h3>
+    <div class="admin-grid">
+      <div class="admin-card"><div class="admin-card-val" id="as-participations">—</div><div class="admin-card-label">Partecipazioni totali</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-blocks-sold">—</div><div class="admin-card-label">Blocchi venduti</div></div>
+      <div class="admin-card"><div class="admin-card-val" style="color:var(--aria)" id="as-aria-spent">—</div><div class="admin-card-label">ARIA spesi in blocchi</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-unique-buyers">—</div><div class="admin-card-label">Acquirenti unici</div></div>
+    </div>
+    <h3 style="font-family:var(--font-h);font-size:18px;margin:24px 0 12px;color:var(--white)">Dettaglio per airdrop</h3>
+    <div class="admin-table-wrap">
+      <table class="admin-table">
+        <thead><tr><th>Titolo</th><th>Status</th><th>Blocchi</th><th>Venduti</th><th>%</th><th>Partecipanti</th><th>ARIA</th></tr></thead>
+        <tbody id="airdrop-stats-body"><tr><td colspan="7" style="color:var(--gray-400)">Clicca AGGIORNA</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- TEST USERS & FAIRNESS -->
   <div class="admin-section" id="sec-fairness">
     <h2>Test Users &amp; Fairness Index</h2>
@@ -1062,6 +1100,7 @@ async function aboLogin(){
     window._currentSession=r.data;
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
+    setAboAvatar(r.data);
     loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();});
     if(_adminRefreshInterval)clearInterval(_adminRefreshInterval);
     _adminRefreshInterval=setInterval(loadAdminData,60000);
@@ -1080,6 +1119,24 @@ function aboLogout(){
   document.getElementById('abo-password').value='';
 }
 
+function setAboAvatar(session){
+  var el=document.getElementById('abo-avatar');if(!el)return;
+  var email=session.user?.email||'';
+  var letter=email?email.charAt(0).toUpperCase():'?';
+  el.textContent=letter;
+  el.title=email;
+  // Try load avatar from profile
+  var uid=session.user?.id;
+  if(uid&&session.access_token){
+    fetch(SB_URL+'/rest/v1/profiles?id=eq.'+uid+'&select=avatar_url',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+session.access_token}})
+      .then(function(r){return r.json()}).then(function(d){
+        if(d&&d[0]&&d[0].avatar_url){
+          el.innerHTML='<img src="'+d[0].avatar_url+'" alt="">';
+        }
+      }).catch(function(){});
+  }
+}
+
 // ── Auto-login if session exists ──
 var _adminRefreshInterval=null;
 (async function(){
@@ -1088,6 +1145,7 @@ var _adminRefreshInterval=null;
     window._currentSession=s;
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
+    setAboAvatar(s);
     loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();});
     _adminRefreshInterval=setInterval(loadAdminData,60000);
   }
@@ -1102,6 +1160,7 @@ function adminNav(sectionId){
   var btn=document.querySelector('.admin-sidebar-item[onclick*="\''+sectionId+'\'"]');
   if(btn){btn.classList.add('active');btn.blur();}
   if(sectionId==='sec-engine')loadThresholds();
+  if(sectionId==='sec-airdrop-stats')loadAirdropStats();
   var main=document.getElementById('admin-main');
   if(main){main.scrollTop=0;main.focus();}
   var sb=document.getElementById('admin-sidebar');
@@ -1677,6 +1736,58 @@ async function adSimulateRunInModal(){
 }
 
 // ── Airdrop Analysis ──
+async function loadAirdropStats(){
+  var s=getSession();if(!s)return;
+  var token=s.access_token;
+  try{
+    // Fetch all airdrops
+    var res=await fetch(SB_URL+'/rest/v1/airdrops?select=id,title,status,total_blocks,blocks_sold,block_price_aria&order=created_at.desc',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    var airdrops=await res.json();
+    if(!Array.isArray(airdrops))airdrops=[];
+    // Count by status
+    var counts={draft:0,in_valutazione:0,accettato:0,presale:0,sale:0,closed:0,completed:0,annullato:0,rifiutato:0};
+    airdrops.forEach(function(a){
+      if(a.status==='rifiutato_min500'||a.status==='rifiutato_generico')counts.rifiutato++;
+      else if(counts[a.status]!==undefined)counts[a.status]++;
+    });
+    document.getElementById('as-total').textContent=airdrops.length;
+    document.getElementById('as-draft').textContent=counts.draft;
+    document.getElementById('as-valutazione').textContent=counts.in_valutazione;
+    document.getElementById('as-accettato').textContent=counts.accettato;
+    document.getElementById('as-presale').textContent=counts.presale;
+    document.getElementById('as-sale').textContent=counts.sale;
+    document.getElementById('as-closed').textContent=counts.closed;
+    document.getElementById('as-completed').textContent=counts.completed;
+    document.getElementById('as-annullato').textContent=counts.annullato;
+    document.getElementById('as-rifiutato').textContent=counts.rifiutato;
+    // Participations
+    var res2=await fetch(SB_URL+'/rest/v1/airdrop_participations?select=id,user_id,blocks_bought,total_aria_spent&cancelled_at=is.null',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    var parts=await res2.json();
+    if(!Array.isArray(parts))parts=[];
+    var totalBlocks=0,totalAria=0,uniqueBuyers=new Set();
+    parts.forEach(function(p){totalBlocks+=(p.blocks_bought||0);totalAria+=(parseFloat(p.total_aria_spent)||0);uniqueBuyers.add(p.user_id)});
+    document.getElementById('as-participations').textContent=parts.length;
+    document.getElementById('as-blocks-sold').textContent=totalBlocks;
+    document.getElementById('as-aria-spent').textContent=Math.round(totalAria).toLocaleString('it-IT');
+    document.getElementById('as-unique-buyers').textContent=uniqueBuyers.size;
+    // Detail table
+    var html='';
+    airdrops.forEach(function(a){
+      var pct=a.total_blocks>0?Math.round((a.blocks_sold||0)/a.total_blocks*100):0;
+      var partCount=parts.filter(function(p){return false}).length; // we don't have airdrop_id in parts query, show blocks_sold
+      var ariaTotal=(a.blocks_sold||0)*(a.block_price_aria||0);
+      html+='<tr><td>'+((a.title||'—').substring(0,30))+'</td><td><span class="admin-badge admin-badge-'+(a.status==='completed'?'green':'gold')+'">'+a.status+'</span></td>'
+        +'<td>'+a.total_blocks+'</td><td>'+(a.blocks_sold||0)+'</td><td>'+pct+'%</td>'
+        +'<td>—</td><td>'+Math.round(ariaTotal).toLocaleString('it-IT')+'</td></tr>';
+    });
+    document.getElementById('airdrop-stats-body').innerHTML=html||'<tr><td colspan="7" style="color:var(--gray-400)">Nessun airdrop</td></tr>';
+  }catch(e){console.error('loadAirdropStats',e)}
+}
+
 async function loadAirdropAnalysis(){
   var s=getSession();if(!s)return;
   try{
