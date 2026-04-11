@@ -120,15 +120,18 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 .spots-hero-pulse{animation:spotsPulse 3s ease-in-out infinite}
 @keyframes spotsPulse{0%,100%{text-shadow:0 0 40px rgba(74,158,255,.3),0 0 80px rgba(74,158,255,.1)}50%{text-shadow:0 0 60px rgba(74,158,255,.5),0 0 120px rgba(74,158,255,.2)}}
 
-/* Alpha Brave Banner */
-.alpha-banner{position:relative;display:inline-flex;align-items:center;justify-content:center;margin-bottom:36px;padding:16px 32px;border:1px solid rgba(74,158,255,.3);border-radius:var(--radius);background:rgba(74,158,255,.04);overflow:hidden}
-.alpha-banner-pulse{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(74,158,255,.08) 0%,transparent 70%);animation:alphaPulse 3s ease-in-out infinite;pointer-events:none}
-@keyframes alphaPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
-.alpha-banner-content{position:relative;text-align:center}
-.alpha-banner-label{font-family:var(--font-m);font-size:10px;letter-spacing:3px;color:var(--accent);margin-bottom:6px}
-.alpha-banner-count{font-family:var(--font-h);font-size:clamp(36px,8vw,52px);font-weight:700;color:var(--white);line-height:1;letter-spacing:-2px}
-.alpha-banner-count .alpha-banner-total{font-size:.45em;color:var(--gray-400);font-weight:400;letter-spacing:0}
-.alpha-banner-sub{font-family:var(--font-b);font-size:12px;color:var(--gray-400);margin-top:6px;letter-spacing:.5px}
+/* Alpha Brave Banner — prominent */
+.alpha-banner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:36px;padding:28px 40px 24px;border:1px solid rgba(74,158,255,.35);border-radius:var(--radius);background:linear-gradient(135deg,rgba(74,158,255,.06) 0%,rgba(74,158,255,.02) 50%,rgba(73,234,203,.03) 100%);overflow:hidden;max-width:460px;margin-left:auto;margin-right:auto}
+.alpha-banner-pulse{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(74,158,255,.1) 0%,transparent 70%);animation:alphaPulse 3s ease-in-out infinite;pointer-events:none}
+@keyframes alphaPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+.alpha-banner-content{position:relative;text-align:center;width:100%}
+.alpha-banner-label{font-family:var(--font-m);font-size:11px;letter-spacing:4px;color:var(--accent);margin-bottom:8px}
+.alpha-banner-count{font-family:var(--font-h);font-size:clamp(48px,12vw,72px);font-weight:700;color:var(--white);line-height:1;letter-spacing:-3px;text-shadow:0 0 30px rgba(74,158,255,.2)}
+.alpha-banner-count .alpha-banner-total{font-size:.4em;color:var(--gray-400);font-weight:400;letter-spacing:0}
+.alpha-banner-sub{font-family:var(--font-b);font-size:13px;color:var(--gray-300);margin-top:10px;letter-spacing:.3px}
+.alpha-banner-bar{width:100%;height:6px;background:var(--gray-700);border-radius:4px;margin-top:14px;overflow:hidden}
+.alpha-banner-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--kas,#49EACB));border-radius:4px;transition:width 1s ease}
+.alpha-banner-detail{font-family:var(--font-m);font-size:10px;color:var(--gray-400);margin-top:8px;letter-spacing:.5px}
 
 /* Skeleton */
 .skel{background:linear-gradient(90deg,var(--gray-800) 25%,var(--gray-700) 50%,var(--gray-800) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius)}
@@ -153,8 +156,10 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
     <div class="alpha-banner-pulse"></div>
     <div class="alpha-banner-content">
       <div class="alpha-banner-label">ALPHA BRAVE</div>
-      <div class="alpha-banner-count"><span id="alpha-remaining">—</span><span class="alpha-banner-total">/1000</span></div>
-      <div class="alpha-banner-sub"><span class="it">posti rimanenti — entra ora</span><span class="en">spots remaining — join now</span></div>
+      <div class="alpha-banner-count"><span id="alpha-remaining">&mdash;</span><span class="alpha-banner-total">/1000</span></div>
+      <div class="alpha-banner-sub"><span class="it">posti rimasti &mdash; una volta esauriti, le condizioni cambiano</span><span class="en">spots left &mdash; once gone, conditions change</span></div>
+      <div class="alpha-banner-bar"><div class="alpha-banner-bar-fill" id="alpha-bar" style="width:0%"></div></div>
+      <div class="alpha-banner-detail"><span id="alpha-enrolled">0</span> <span class="it">iscritti su 1.000</span><span class="en">enrolled out of 1,000</span></div>
     </div>
   </div>
   <div class="hero-ctas">
@@ -217,6 +222,7 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
   <div class="landing-footer-links">
     <a href="https://airoobi.com">airoobi.com</a>
     <a href="/airdrops">Airdrops</a>
+    <a href="/faq">FAQ</a>
     <a href="/impara"><span class="it">Impara</span><span class="en">Learn</span></a>
     <a href="/blog">Blog</a>
     <a href="/login"><span class="it">Accedi</span><span class="en">Log in</span></a>
@@ -224,7 +230,7 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
   </div>
   <div class="landing-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>
   <div class="landing-footer-motto"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div class="landing-footer-ver">alfa-2026.04.11-2.3.0</div>
+  <div class="landing-footer-ver">alfa-2026.04.11-2.4.0</div>
 </footer>
 
 <script>
@@ -243,7 +249,10 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
       if(range){
         var total=parseInt(range.split('/')[1],10)||0;
         var remaining=Math.max(0,1000-total);
+        var pct=Math.min(100,Math.round(total/1000*100));
         document.getElementById('alpha-remaining').textContent=remaining;
+        document.getElementById('alpha-enrolled').textContent=total;
+        document.getElementById('alpha-bar').style.width=pct+'%';
       }
     }
   }catch(e){document.getElementById('alpha-remaining').textContent='996'}
