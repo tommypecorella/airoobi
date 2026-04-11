@@ -1,5 +1,5 @@
 // ── AIROOBI Service Worker — Push + Cache + Offline ──
-var CACHE_NAME = 'airoobi-v1';
+var CACHE_NAME = 'airoobi-v2';
 var STATIC_ASSETS = [
   '/offline.html',
   '/src/dapp.css',
@@ -33,15 +33,15 @@ self.addEventListener('fetch', function(e) {
   // Skip non-GET and cross-origin
   if (e.request.method !== 'GET' || url.origin !== location.origin) return;
 
-  // Static assets: cache-first
+  // Static assets: network-first (cache-first in production)
   if (url.pathname.startsWith('/src/') || url.pathname.startsWith('/public/') || url.pathname === '/manifest.json') {
     e.respondWith(
-      caches.match(e.request).then(function(cached) {
-        return cached || fetch(e.request).then(function(res) {
-          var clone = res.clone();
-          caches.open(CACHE_NAME).then(function(c) { c.put(e.request, clone); });
-          return res;
-        });
+      fetch(e.request).then(function(res) {
+        var clone = res.clone();
+        caches.open(CACHE_NAME).then(function(c) { c.put(e.request, clone); });
+        return res;
+      }).catch(function() {
+        return caches.match(e.request);
       })
     );
     return;
