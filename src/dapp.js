@@ -940,6 +940,7 @@ function renderCategoryFilter(){
   var wrap=document.getElementById('cat-filter');
   var html='<button class="cat-pill active" onclick="filterCat(\'all\')"><span class="it">Tutti</span><span class="en">All</span></button>';
   html+='<button class="cat-pill" onclick="filterCat(\'favorites\')">♡ <span class="it">Preferiti</span><span class="en">Favorites</span></button>';
+  if(_session&&_session.user)html+='<button class="cat-pill" onclick="filterCat(\'mine\')"><span class="it">Solo miei</span><span class="en">My own</span></button>';
   var catLabels={mobile:'Mobile',tech:'Tech',luxury:'Luxury',ultra_luxury:'Ultra Luxury'};
   cats.forEach(function(c){
     html+='<button class="cat-pill" onclick="filterCat(\''+c+'\')">'+( catLabels[c]||c)+'</button>';
@@ -954,6 +955,7 @@ function filterCat(cat){
     var isCat=false;
     if(cat==='all')isCat=!!txt.match(/Tutti|All/);
     else if(cat==='favorites')isCat=txt.indexOf('♡')!==-1;
+    else if(cat==='mine')isCat=!!txt.match(/Solo miei|My own/);
     else isCat=txt.toLowerCase()===cat.toLowerCase();
     p.classList.toggle('active',isCat);
   });
@@ -1191,7 +1193,16 @@ function startCountdowns(){
 function renderGrid(){
   var grid=document.getElementById('grid');
   var empty=document.getElementById('empty');
-  var list=_currentFilter==='all'?_airdrops:_currentFilter==='favorites'?_airdrops.filter(function(a){return isInWatchlist(a.id)}):_airdrops.filter(function(a){return a.category===_currentFilter});
+  var list;
+  if(_currentFilter==='all')list=_airdrops;
+  else if(_currentFilter==='favorites')list=_airdrops.filter(function(a){return isInWatchlist(a.id)});
+  else if(_currentFilter==='mine'){
+    var myPartIds={};
+    _myParts.forEach(function(p){var aid=p.airdrop_id||p.airdrops?.id;if(aid)myPartIds[aid]=true;});
+    var uid=_session&&_session.user?_session.user.id:null;
+    list=_airdrops.filter(function(a){return myPartIds[a.id]||(uid&&a.submitted_by===uid)});
+  }
+  else list=_airdrops.filter(function(a){return a.category===_currentFilter});
   renderCatDashboard();
 
   if(!list||list.length===0){
