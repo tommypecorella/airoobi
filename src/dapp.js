@@ -213,7 +213,7 @@ function setupPublicUI(){
     var page=a.getAttribute('data-page');
     if(page&&PUBLIC_PAGES.indexOf(page)===-1)a.style.display='none';
   });
-  // Add login/signup buttons to topbar-right
+  // Add login/signup buttons to topbar-right (desktop)
   var topRight=document.querySelector('.topbar-right');
   if(topRight){
     var authLinks=document.createElement('div');
@@ -221,6 +221,23 @@ function setupPublicUI(){
     authLinks.innerHTML='<a href="/login" class="topbar-auth-link"><span class="it">Accedi</span><span class="en">Log in</span></a>'
       +'<a href="/signup" class="topbar-auth-cta"><span class="it">Registrati</span><span class="en">Sign up</span></a>';
     topRight.appendChild(authLinks);
+  }
+  // Add login/signup buttons to mobile menu
+  var mobileMenu=document.getElementById('topbar-mobile-menu');
+  if(mobileMenu){
+    var sep=document.createElement('div');
+    sep.className='mobile-auth-sep';
+    mobileMenu.appendChild(sep);
+    var loginLink=document.createElement('a');
+    loginLink.href='/login';
+    loginLink.className='mobile-auth-link';
+    loginLink.innerHTML='<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg><span class="it">Accedi</span><span class="en">Log in</span>';
+    mobileMenu.appendChild(loginLink);
+    var signupLink=document.createElement('a');
+    signupLink.href='/signup';
+    signupLink.className='mobile-auth-cta';
+    signupLink.innerHTML='<svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg><span class="it">Registrati gratis</span><span class="en">Sign up free</span>';
+    mobileMenu.appendChild(signupLink);
   }
 }
 
