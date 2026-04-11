@@ -3036,7 +3036,7 @@ async function loadAdminMessages(){
         +'<div style="display:flex;align-items:center;gap:8px">'+(needsReply?'<span style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;background:rgba(239,68,68,.15);color:#ef4444;padding:2px 8px">DA RISPONDERE</span>':'')+'<span style="font-family:var(--font-m);font-size:10px;color:var(--gray-500)">'+time+'</span></div>'
         +'</div>'
         +'<div style="font-size:13px;color:var(--gray-400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(last.is_admin?'<span style="color:var(--gold)">Tu:</span> ':'')+escH(last.body)+'</div>'
-        +'<div id="msg-thread-'+t.airdropId+'" style="display:none;margin-top:16px;border-top:1px solid var(--gray-800);padding-top:12px"></div>'
+        +'<div id="msg-thread-'+t.airdropId+'" style="display:none;margin-top:16px;border-top:1px solid var(--gray-800);padding-top:12px" onclick="event.stopPropagation()"></div>'
         +'</div>';
     }).join('');
   }catch(e){console.error('loadAdminMessages:',e);}
