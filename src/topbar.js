@@ -73,7 +73,10 @@ function buildMobile(active,links){
 
 window._topbarToggle=function(){
   var m=document.getElementById('topbar-mobile-menu');
-  if(m)m.classList.toggle('active');
+  if(m){
+    m.classList.toggle('active');
+    document.body.style.overflow=m.classList.contains('active')?'hidden':'';
+  }
 };
 
 window._topbarLang=function(){

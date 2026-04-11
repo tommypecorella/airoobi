@@ -353,7 +353,9 @@ function toggleUserMenu(){
 }
 
 function toggleMobileNav(){
-  document.getElementById('topbar-mobile-menu').classList.toggle('active');
+  var m=document.getElementById('topbar-mobile-menu');
+  m.classList.toggle('active');
+  document.body.style.overflow=m.classList.contains('active')?'hidden':'';
 }
 
 // ── Browser back/forward ──
