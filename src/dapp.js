@@ -187,7 +187,7 @@ async function getValidToken(){
 }
 
 // ── Public pages (no auth required) ──
-var PUBLIC_PAGES=['home','explore','learn','blog'];
+var PUBLIC_PAGES=['home','explore','faq','learn','blog'];
 function isPublicRoute(){
   var pp=location.pathname;
   var page=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':null);
