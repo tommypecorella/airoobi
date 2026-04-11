@@ -3108,13 +3108,15 @@ async function loadAboChat(airdropId,containerId){
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
     });
     var msgs=res.ok?await res.json():[];
+    var myId=s&&s.user?s.user.id:null;
     var html='<div style="max-height:400px;overflow-y:auto;padding:4px 0" id="'+containerId+'-scroll">';
     for(var i=0;i<msgs.length;i++){
       var m=msgs[i];
-      var align=m.is_admin?'flex-end':'flex-start';
-      var bg=m.is_admin?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
-      var border=m.is_admin?'var(--gold)':'var(--aria)';
-      var label=m.is_admin?'AIROOBI':'Utente';
+      var isMine=m.sender_id===myId;
+      var align=isMine?'flex-end':'flex-start';
+      var bg=isMine?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
+      var border=isMine?'var(--gold)':'var(--aria)';
+      var label=isMine?(m.is_admin?'AIROOBI':'Tu'):(m.is_admin?'AIROOBI':'Utente');
       var time=new Date(m.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
       html+='<div style="display:flex;justify-content:'+align+';margin-bottom:8px">';
       html+='<div style="max-width:80%;padding:10px 14px;background:'+bg+';border-left:3px solid '+border+';font-size:13px">';

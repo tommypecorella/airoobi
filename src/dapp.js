@@ -2419,16 +2419,19 @@ async function loadAirdropChat(airdropId,containerId){
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
     });
     var msgs=res.ok?await res.json():[];
+    var s=getSession();
+    var myId=s&&s.user?s.user.id:null;
     var html='<div style="max-height:300px;overflow-y:auto;padding:8px 0" id="'+containerId+'-scroll">';
     if(msgs.length===0){
       html+='<div style="text-align:center;padding:20px;color:var(--gray-500);font-size:12px"><span class="it">Nessun messaggio</span><span class="en">No messages yet</span></div>';
     }else{
       for(var i=0;i<msgs.length;i++){
         var m=msgs[i];
-        var align=m.is_admin?'flex-end':'flex-start';
-        var bg=m.is_admin?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
-        var border=m.is_admin?'var(--gold)':'var(--aria)';
-        var label=m.is_admin?'AIROOBI':'Utente';
+        var isMine=m.sender_id===myId;
+        var align=isMine?'flex-end':'flex-start';
+        var bg=isMine?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
+        var border=isMine?'var(--gold)':'var(--aria)';
+        var label=isMine?(m.is_admin?'AIROOBI':'Tu'):(m.is_admin?'AIROOBI':'Utente');
         var time=new Date(m.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
         html+='<div style="display:flex;justify-content:'+align+';margin-bottom:8px">';
         html+='<div style="max-width:80%;padding:10px 14px;background:'+bg+';border-left:3px solid '+border+';font-size:13px">';
