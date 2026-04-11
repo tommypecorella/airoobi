@@ -24,7 +24,11 @@ body{min-height:100vh;display:flex;flex-direction:column;align-items:center;just
 .auth-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:8px}
 .auth-box .auth-sub{font-size:13px;color:var(--gray-400);margin-bottom:32px}
 .auth-box label{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px}
-.auth-box input[type="email"],.auth-box input[type="password"]{width:100%;padding:14px 16px;background:rgba(0,0,0,.3);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;margin-bottom:20px;transition:border-color .3s;border-radius:var(--radius-sm)}
+.auth-box input[type="email"],.auth-box input[type="password"],.auth-box input[type="text"]{width:100%;padding:14px 16px;background:rgba(0,0,0,.3);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;margin-bottom:20px;transition:border-color .3s;border-radius:var(--radius-sm)}
+.pw-wrap{position:relative}.pw-wrap input{padding-right:48px}
+.pw-toggle{position:absolute;right:14px;top:14px;background:none;border:none;cursor:pointer;color:var(--gray-400);padding:0;transition:color .25s;line-height:0}
+.pw-toggle:hover{color:var(--accent)}
+.pw-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
 .auth-box input:focus{border-color:var(--accent)}
 .auth-btn{width:100%;padding:14px;background:var(--accent);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:16px;border-radius:var(--radius-sm)}
 .auth-btn:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 6px 20px rgba(74,158,255,.25)}
@@ -60,7 +64,12 @@ footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
   <label>Email</label>
   <input type="email" id="login-email" placeholder="email@example.com">
   <label>Password</label>
-  <input type="password" id="login-password" placeholder="Password">
+  <div class="pw-wrap">
+    <input type="password" id="login-password" placeholder="Password">
+    <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)" aria-label="Mostra password">
+      <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+  </div>
   <div class="cf-turnstile-wrap" id="login-turnstile">
     <div class="cf-turnstile" data-sitekey="0x4AAAAAACovg89u9bGYrc0E" data-theme="dark"></div>
   </div>
@@ -86,6 +95,14 @@ footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
 </footer>
 
 <script>
+function togglePw(id,btn){
+  var inp=document.getElementById(id);
+  var show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.innerHTML=show
+    ?'<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+    :'<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
 // ── Lang ──
 (function(){
   var saved=localStorage.getItem('airoobi_lang');
