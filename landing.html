@@ -47,8 +47,6 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 
 /* Topbar */
 .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;padding:0 clamp(16px,4vw,32px);height:60px;background:rgba(6,11,24,.92);backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.06);gap:16px}
-.topbar-brand{text-decoration:none;display:inline-flex;align-items:center;gap:4px;color:#B8960C;font-family:var(--font-b);font-size:18px;font-weight:700;letter-spacing:-2px;opacity:.7;transition:opacity .3s;flex-shrink:0}
-.topbar-brand:hover{opacity:1}
 .topbar-nav{display:flex;align-items:center;gap:4px}
 .topbar-nav a{color:var(--gray-400);text-decoration:none;font-family:var(--font-b);font-size:12px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;transition:all .25s;display:flex;align-items:center;gap:7px;height:60px;padding:0 16px;border-bottom:2px solid transparent}
 .topbar-nav a svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5}
@@ -59,7 +57,18 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 .topbar-right a:hover{color:var(--white)}
 .topbar-right .cta-signup{background:var(--accent);color:var(--black);padding:8px 20px;font-weight:600;border-radius:var(--radius-sm);transition:all .25s;font-size:12px}
 .topbar-right .cta-signup:hover{opacity:.88;color:var(--black);transform:translateY(-1px)}
-@media(max-width:600px){.topbar-nav{display:none}}
+@media(max-width:600px){.topbar-nav{display:none}.topbar-burger{display:flex}}
+.topbar-burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:8px;margin-right:auto}
+.topbar-burger span{display:block;width:20px;height:2px;background:var(--gray-400);border-radius:2px;transition:all .25s}
+.topbar-burger:hover span{background:var(--white)}
+.topbar-mobile-menu{display:none;position:fixed;top:60px;left:0;right:0;bottom:0;background:rgba(6,11,24,.98);z-index:99;padding:24px;flex-direction:column;gap:8px;overflow-y:auto}
+.topbar-mobile-menu.active{display:flex}
+.topbar-mobile-menu a{color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:14px;font-weight:500;letter-spacing:.5px;padding:14px 16px;border-radius:var(--radius-sm);display:flex;align-items:center;gap:10px;transition:all .25s}
+.topbar-mobile-menu a svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;flex-shrink:0}
+.topbar-mobile-menu a:hover,.topbar-mobile-menu a.active{color:var(--accent);background:rgba(74,158,255,.06)}
+.topbar-mobile-menu .mobile-auth{display:flex;gap:12px;margin-top:16px;padding:16px}
+.topbar-mobile-menu .mobile-auth a{padding:12px 24px;text-align:center;flex:1;justify-content:center}
+.topbar-mobile-menu .mobile-auth .cta-signup{background:var(--accent);color:var(--black);font-weight:600;border-radius:var(--radius-sm)}
 .lang-toggle{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:5px 12px;font-family:var(--font-b);font-size:11px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:all .25s;border-radius:20px}
 .lang-toggle:hover{color:var(--accent);border-color:var(--accent)}
 
@@ -157,7 +166,9 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <a href="https://airoobi.com" target="_blank" rel="noopener" class="topbar-brand" title="airoobi.com" style="color:#B8960C">Oo</a>
+  <button class="topbar-burger" onclick="document.getElementById('landing-mobile-menu').classList.toggle('active')">
+    <span></span><span></span><span></span>
+  </button>
   <nav class="topbar-nav">
     <a href="/" class="active"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg> Home</a>
     <a href="/airdrops"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg> Airdrops</a>
@@ -170,6 +181,18 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
     <a href="/signup" class="cta-signup"><span class="it">Registrati</span><span class="en">Sign up</span></a>
   </div>
 </header>
+
+<!-- MOBILE NAV -->
+<div class="topbar-mobile-menu" id="landing-mobile-menu">
+  <a href="/" class="active"><svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg> Home</a>
+  <a href="/airdrops"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg> Airdrops</a>
+  <a href="/impara"><svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> <span class="it">Impara</span><span class="en">Learn</span></a>
+  <a href="/blog"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg> Blog</a>
+  <div class="mobile-auth">
+    <a href="/login"><span class="it">Accedi</span><span class="en">Log in</span></a>
+    <a href="/signup" class="cta-signup"><span class="it">Registrati</span><span class="en">Sign up</span></a>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
