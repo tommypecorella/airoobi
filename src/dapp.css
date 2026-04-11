@@ -66,7 +66,7 @@ select option{background:var(--gray-800);color:var(--white)}
 .topbar-avatar:hover{border-color:var(--accent)}
 .topbar-avatar img{width:100%;height:100%;object-fit:cover}
 /* ── MOBILE BURGER ── */
-.topbar-burger{display:none;background:none;border:none;cursor:pointer;padding:10px;margin-left:auto}
+.topbar-burger{display:none;background:none;border:none;cursor:pointer;padding:10px}
 .topbar-burger span{display:block;width:20px;height:2px;background:var(--gray-400);margin:4px 0;transition:all .3s;border-radius:1px}
 .topbar-mobile-menu{display:none;position:fixed;top:62px;left:0;right:0;background:rgba(6,11,24,.96);backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);border-bottom:1px solid rgba(255,255,255,.05);z-index:99;padding:10px 0;border-radius:0 0 var(--radius-lg) var(--radius-lg)}
 .topbar-mobile-menu.active{display:block}
