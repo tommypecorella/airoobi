@@ -35,6 +35,11 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .admin-nav span{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:2px}
 .admin-close{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:5px 14px;font-size:11px;cursor:pointer;transition:all .2s;font-family:var(--font-m);letter-spacing:1px}
 .admin-close:hover{border-color:var(--gold);color:var(--gold)}
+.abo-bell{position:relative;background:none;border:none;color:var(--gray-400);cursor:pointer;padding:6px;transition:color .25s}
+.abo-bell:hover{color:var(--gold)}
+.abo-bell-dot{position:absolute;top:4px;right:4px;width:7px;height:7px;background:#ef4444;border-radius:50%;display:none}
+.abo-bell.has-unread .abo-bell-dot{display:block;animation:aboBellPulse 2s ease-in-out infinite}
+@keyframes aboBellPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 3px rgba(239,68,68,0)}}
 .abo-avatar{width:30px;height:30px;border-radius:50%;background:var(--gray-700);border:1px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;font-family:var(--font-m);color:var(--gray-400);overflow:hidden;cursor:default}
 .abo-avatar img{width:100%;height:100%;object-fit:cover}
 .admin-layout{display:contents}
@@ -197,6 +202,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div style="display:flex;align-items:center;gap:12px">
     <a href="https://www.airoobi.app/" class="admin-close" style="text-decoration:none;color:inherit">APP &rarr;</a>
     <button class="admin-close" onclick="aboLogout()">Logout</button>
+    <button class="abo-bell" id="abo-bell" onclick="adminNav('sec-messages')" title="Messaggi">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="abo-bell-dot" id="abo-bell-dot"></span>
+    </button>
     <div class="abo-avatar" id="abo-avatar" title="">?</div>
   </div>
 </div>
@@ -1104,7 +1113,7 @@ async function aboLogin(){
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
     setAboAvatar(r.data);
-    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();});
+    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();});
     if(_adminRefreshInterval)clearInterval(_adminRefreshInterval);
     _adminRefreshInterval=setInterval(loadAdminData,60000);
   }else{
@@ -1149,7 +1158,7 @@ var _adminRefreshInterval=null;
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
     setAboAvatar(s);
-    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();});
+    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();});
     _adminRefreshInterval=setInterval(loadAdminData,60000);
   }
 })();
@@ -3008,6 +3017,9 @@ async function loadAdminMessages(){
     document.getElementById('msg-total').textContent=totalMsgs;
     document.getElementById('msg-threads').textContent=threadCount;
     document.getElementById('msg-unread').textContent=unanswered;
+    // Update bell dot
+    var bell=document.getElementById('abo-bell');
+    if(bell)bell.classList.toggle('has-unread',unanswered>0);
 
     // Render threads
     var container=document.getElementById('msg-thread-list');
