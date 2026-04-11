@@ -72,6 +72,67 @@ function doLogout(){
   window.location.href=_isApp?'/':'https://airoobi.com';
 }
 
+// ── Delete account ──
+function showDeleteAccount(){
+  document.getElementById('deleteaccount-modal').classList.add('active');
+  document.getElementById('deleteaccount-confirm').value='';
+  document.getElementById('deleteaccount-error').style.display='none';
+}
+function closeDeleteAccount(){
+  document.getElementById('deleteaccount-modal').classList.remove('active');
+}
+async function doDeleteAccount(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var confirmVal=document.getElementById('deleteaccount-confirm').value.trim().toUpperCase();
+  var expected=lang==='it'?'ELIMINA':'DELETE';
+  if(confirmVal!==expected){
+    var errEl=document.getElementById('deleteaccount-error');
+    errEl.textContent=lang==='it'?'Scrivi ELIMINA per confermare':'Type DELETE to confirm';
+    errEl.style.display='block';
+    return;
+  }
+  var btn=document.getElementById('deleteaccount-btn');
+  btn.disabled=true;
+  btn.textContent=lang==='it'?'Eliminazione...':'Deleting...';
+  var errEl=document.getElementById('deleteaccount-error');
+  errEl.style.display='none';
+  try{
+    var token=await getValidToken();
+    if(!token)throw new Error('no_token');
+    var res=await fetch(SB_URL+'/rest/v1/rpc/delete_my_account',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    var data=await res.json();
+    if(data&&data.ok){
+      localStorage.removeItem('airoobi_session');
+      window.location.href='/';
+    } else {
+      var error=data?data.error:'unknown';
+      if(error==='active_participations'){
+        errEl.innerHTML=lang==='it'
+          ?'Hai <strong>'+data.count+'</strong> partecipazione/i in airdrop attivi. Ritira le partecipazioni prima di eliminare l\'account.'
+          :'You have <strong>'+data.count+'</strong> active airdrop participation(s). Withdraw them before deleting your account.';
+      } else if(error==='active_submissions'){
+        errEl.innerHTML=lang==='it'
+          ?'Hai <strong>'+data.count+'</strong> airdrop in valutazione o in corso. Attendi la conclusione prima di eliminare l\'account.'
+          :'You have <strong>'+data.count+'</strong> airdrop(s) pending or in progress. Wait for them to complete before deleting.';
+      } else {
+        errEl.textContent=lang==='it'?'Errore: '+error:'Error: '+error;
+      }
+      errEl.style.display='block';
+      btn.disabled=false;
+      btn.innerHTML=lang==='it'?'<span class="it">Elimina</span><span class="en">Delete</span>':'<span class="it">Elimina</span><span class="en">Delete</span>';
+    }
+  }catch(e){
+    errEl.textContent=lang==='it'?'Errore di rete. Riprova.':'Network error. Try again.';
+    errEl.style.display='block';
+    btn.disabled=false;
+    btn.innerHTML='<span class="it">Elimina</span><span class="en">Delete</span>';
+  }
+}
+
 // ── Language ──
 function toggleLang(){
   var root=document.documentElement;

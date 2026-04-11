@@ -154,6 +154,27 @@
   </button>
   <button class="user-menu-item" id="dapp-admin-link" onclick="window.location.href='/admin'" style="display:none">Admin</button>
   <button class="user-menu-item um-logout" onclick="doLogout()">Logout</button>
+  <button class="user-menu-item" onclick="showDeleteAccount();toggleUserMenu()" style="color:var(--gray-600);font-size:12px;margin-top:4px;border-top:none">
+    <span class="it">Elimina account</span><span class="en">Delete account</span>
+  </button>
+</div>
+
+<!-- DELETE ACCOUNT MODAL -->
+<div class="modal-bg" id="deleteaccount-modal">
+  <div class="modal" style="text-align:left;max-width:440px">
+    <h3 style="margin-bottom:8px;color:#f87171"><span class="it">Elimina account</span><span class="en">Delete account</span></h3>
+    <p style="font-size:13px;color:var(--gray-300);margin-bottom:16px;line-height:1.6">
+      <span class="it">Questa azione è <strong style="color:#f87171">irreversibile</strong>. Tutti i tuoi dati verranno eliminati: ARIA, ROBI, badge, partecipazioni, referral, notifiche — tutto.</span>
+      <span class="en">This action is <strong style="color:#f87171">irreversible</strong>. All your data will be deleted: ARIA, ROBI, badges, participations, referrals, notifications — everything.</span>
+    </p>
+    <div id="deleteaccount-error" style="background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:14px;display:none;border-radius:var(--radius-sm)"></div>
+    <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px"><span class="it">Scrivi ELIMINA per confermare</span><span class="en">Type DELETE to confirm</span></label>
+    <input type="text" id="deleteaccount-confirm" style="width:100%;padding:12px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:14px;border-radius:var(--radius-sm);margin-bottom:16px;outline:none;font-family:var(--font-m);letter-spacing:2px" placeholder="">
+    <div style="display:flex;gap:12px">
+      <button onclick="closeDeleteAccount()" style="flex:1;padding:12px;background:var(--gray-700);border:none;color:var(--gray-300);font-family:var(--font-b);font-size:13px;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button id="deleteaccount-btn" onclick="doDeleteAccount()" style="flex:1;padding:12px;background:#B91C1C;border:none;color:var(--white);font-family:var(--font-b);font-size:13px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);letter-spacing:1px"><span class="it">Elimina</span><span class="en">Delete</span></button>
+    </div>
+  </div>
 </div>
 
 <!-- CHANGE PASSWORD MODAL -->
@@ -951,7 +972,7 @@
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.11-2.4.1</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.11-2.5.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
