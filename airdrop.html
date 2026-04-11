@@ -157,6 +157,9 @@ var _airdrop=null;
 var _session=getSession();
 var _balance=0;
 var _buyQty=1;
+var _robiPrice=0; // prezzo ROBI corrente (treasury/circolanti × 0.999)
+var ARIA_EUR=0.10;
+var SPLIT_FONDO=0.22;
 
 // Update login button
 if(_session&&_session.user){
@@ -197,14 +200,29 @@ async function loadAirdrop(){
     var ogTitle=document.querySelector('meta[property="og:title"]');
     if(ogTitle)ogTitle.setAttribute('content',_airdrop.title+' — AIROOBI Airdrop');
 
-    // Load balance if logged in
-    if(_session&&_session.user){
-      try{
-        var token=await getValidToken();
-        var pRes=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+_session.user.id+'&select=total_points',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
-        if(pRes.ok){var pr=await pRes.json();if(pr&&pr[0])_balance=pr[0].total_points||0;}
-      }catch(e){}
-    }
+    // Load balance + treasury in parallelo
+    var tokenForLoad=_session&&_session.user?await getValidToken():null;
+    await Promise.all([
+      // Balance
+      (tokenForLoad?(async function(){
+        try{
+          var pRes=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+_session.user.id+'&select=total_points',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+tokenForLoad}});
+          if(pRes.ok){var pr=await pRes.json();if(pr&&pr[0])_balance=pr[0].total_points||0;}
+        }catch(e){}
+      })():Promise.resolve()),
+      // Treasury + ROBI circolanti per calcolo mining
+      (async function(){
+        try{
+          var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+          var treasuryBal=0;
+          if(tfRes.ok){var tf=await tfRes.json();if(tf)tf.forEach(function(r){var a=parseFloat(r.amount_eur)||0;var p=r.treasury_pct!=null?parseInt(r.treasury_pct):100;treasuryBal+=a*(p/100);});}
+          var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'}});
+          var totalRobi=0;
+          if(robiRes.ok){var rd=await robiRes.json();rd.forEach(function(r){totalRobi+=parseFloat(r.shares)||0;});}
+          if(totalRobi>0&&treasuryBal>0)_robiPrice=(treasuryBal*0.999)/totalRobi;
+        }catch(e){}
+      })()
+    ]);
 
     render();
   }catch(e){console.error(e);showError();}
@@ -217,6 +235,20 @@ function showError(){
     +'<p style="margin-bottom:24px"><span class="it">L\'airdrop richiesto non esiste o non è disponibile.</span><span class="en">The requested airdrop does not exist or is not available.</span></p>'
     +'<a href="/airdrops" class="topbar-btn" style="display:inline-block"><span class="it">Torna agli airdrop</span><span class="en">Back to airdrops</span></a>'
     +'</div>';
+}
+
+function calcMiningRate(a){
+  // Treasury-based: quanti blocchi servono per 1 ROBI
+  // treasury_previsto = total_blocks × block_price × ARIA_EUR × SPLIT_FONDO
+  // max_robi = treasury_previsto / prezzo_robi
+  // rate = ceil(total_blocks / max_robi)
+  if(_robiPrice>0&&a.total_blocks>0&&a.block_price_aria>0){
+    var treasuryPrevisto=a.total_blocks*a.block_price_aria*ARIA_EUR*SPLIT_FONDO;
+    var maxRobi=treasuryPrevisto/_robiPrice;
+    if(maxRobi>0)return Math.max(1,Math.ceil(a.total_blocks/maxRobi));
+  }
+  // Fallback: formula legacy
+  return Math.max(1,Math.ceil((a.object_value_eur||500)/100));
 }
 
 function render(){
@@ -305,7 +337,7 @@ function render(){
     +'<div class="details-grid">'
     +'<div class="detail-card"><div class="detail-card-label"><span class="it">Blocchi totali</span><span class="en">Total blocks</span></div><div class="detail-card-val">'+a.total_blocks.toLocaleString('it-IT')+'</div></div>'
     +'<div class="detail-card"><div class="detail-card-label"><span class="it">Prezzo blocco</span><span class="en">Block price</span></div><div class="detail-card-val" style="color:var(--aria)">'+a.block_price_aria+' ARIA</div></div>'
-    +'<div class="detail-card"><div class="detail-card-label">Mining</div><div class="detail-card-val" style="color:var(--gold)">1 ROBI / '+Math.max(1,Math.ceil((a.object_value_eur||500)/100))+' bl.</div></div>'
+    +'<div class="detail-card"><div class="detail-card-label">Mining</div><div class="detail-card-val" style="color:var(--gold)">1 ROBI / '+calcMiningRate(a)+' bl.</div></div>'
     +dlHtml
     +'</div>'
 

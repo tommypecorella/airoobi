@@ -9,6 +9,29 @@ var _publicMode=false; // true when viewing public pages without auth
 var ARIA_EUR=0.10; // 1 ARIA = €0.10 (interno, usato per ROBI e ABO)
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+
+async function loadRobiPrice(){
+  try{
+    var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    var treasuryBal=0;
+    if(tfRes.ok){var tf=await tfRes.json();if(tf)tf.forEach(function(r){var a=parseFloat(r.amount_eur)||0;var p=r.treasury_pct!=null?parseInt(r.treasury_pct):100;treasuryBal+=a*(p/100);});}
+    var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'}});
+    var totalRobi=0;
+    if(robiRes.ok){var rd=await robiRes.json();rd.forEach(function(r){totalRobi+=parseFloat(r.shares)||0;});}
+    if(totalRobi>0&&treasuryBal>0)_robiPrice=(treasuryBal*0.999)/totalRobi;
+  }catch(e){}
+}
+
+function calcMiningRate(a){
+  // Treasury-based: blocchi per 1 ROBI
+  if(_robiPrice>0&&a.total_blocks>0&&a.block_price_aria>0){
+    var treasuryPrevisto=a.total_blocks*a.block_price_aria*ARIA_EUR*0.22;
+    var maxRobi=treasuryPrevisto/_robiPrice;
+    if(maxRobi>0)return Math.max(1,Math.ceil(a.total_blocks/maxRobi));
+  }
+  return Math.max(1,Math.ceil((a.object_value_eur||500)/100));
+}
+
 var _robi=0;
 function updateBalanceUI(){
   var ariaEl=document.getElementById('topbar-aria-val');
@@ -18,6 +41,7 @@ function updateBalanceUI(){
 }
 var _airdrops=[];
 var _myParts=[];
+var _robiPrice=0; // treasury×0.999/robi_circolanti
 var _currentFilter='all';
 var _currentDetail=null;
 var _pendingBuy=null;
@@ -214,7 +238,7 @@ document.addEventListener('DOMContentLoaded',async function(){
         _session=null;
         _publicMode=true;
         setupPublicUI();
-        await loadAirdropsPublic();
+        await Promise.all([loadAirdropsPublic(),loadRobiPrice()]);
         renderGrid();
         renderCatDashboard();
         renderCategoryFilter();
@@ -226,7 +250,7 @@ document.addEventListener('DOMContentLoaded',async function(){
     // Show splash tour on first visit
     if(!localStorage.getItem('airoobi_splash_done'))showSplash();
     setupUI();
-    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist()]);
+    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist(),loadRobiPrice()]);
     renderGrid();
     renderCatDashboard();
     renderCategoryFilter();
@@ -1408,7 +1432,7 @@ async function openDetail(id){
       +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Costo totale airdrop:</span><span class="en">Total airdrop cost:</span> <strong style="color:var(--aria)">'+totalAriaCost.toLocaleString('it-IT')+' ARIA</strong></li>'
-      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 quota ogni '+Math.max(1,Math.ceil((a.object_value_eur||500)/100))+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil((a.object_value_eur||500)/200))+' blocchi)</span>':'')+'</li>'
+      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 ROBI ogni '+calcMiningRate(a)+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' blocchi)</span>':'')+'</li>'
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
 
@@ -1738,7 +1762,7 @@ function updateBuyDisplay(){
   var isPresale=a.status==='presale';
   var price=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
   var cost=_buyQty*price;
-  var divisor=Math.max(1,Math.ceil((a.object_value_eur||500)/100));
+  var divisor=calcMiningRate(a);
   var mult=isPresale?2:1;
   var shares=(_buyQty*mult)/divisor;
   var sharesStr=shares%1===0?shares:shares.toFixed(2);
