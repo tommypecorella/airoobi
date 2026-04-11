@@ -2300,11 +2300,40 @@ function renderMySubmissions(subs){
     if(s.rejection_reason){
       html+='<div style="margin-top:8px;padding:8px 12px;border-left:3px solid #ef4444;background:rgba(239,68,68,.06);font-size:12px;color:#ef4444">'+escHtml(s.rejection_reason)+'</div>';
     }
-    html+='<div style="margin-top:12px"><button onclick="this.style.display=\'none\';loadAirdropChat(\''+s.id+'\',\'sub-chat-'+s.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'"><span class="it">MESSAGGI</span><span class="en">MESSAGES</span></button></div>';
+    var canWithdraw=s.status!=='annullato'&&s.status!=='completed';
+    html+='<div style="display:flex;gap:8px;margin-top:12px">';
+    html+='<button onclick="this.style.display=\'none\';loadAirdropChat(\''+s.id+'\',\'sub-chat-'+s.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'"><span class="it">MESSAGGI</span><span class="en">MESSAGES</span></button>';
+    if(canWithdraw){
+      html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RITIRA</span><span class="en">WITHDRAW</span></button>';
+    }
+    html+='</div>';
     html+='<div id="sub-chat-'+s.id+'" style="margin-top:8px"></div>';
     html+='</div>';
   }
   container.innerHTML=html;
+}
+
+// ── Withdraw submission ──
+async function withdrawSubmission(airdropId,title){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var msg=lang==='it'
+    ?'Vuoi ritirare la proposta "'+title+'"? Questa azione non è reversibile.'
+    :'Withdraw proposal "'+title+'"? This action cannot be undone.';
+  if(!confirm(msg))return;
+  var token=await getValidToken();if(!token)return;
+  var res=await sbRpc('withdraw_my_submission',{p_airdrop_id:airdropId},token);
+  if(res&&res.ok){
+    showToast(lang==='it'?'Proposta ritirata':'Proposal withdrawn');
+    loadMySubmissions();
+  }else{
+    var err=res&&res.error?res.error:'UNKNOWN';
+    var msgs={
+      'ALREADY_FINALIZED':{it:'Proposta già finalizzata.',en:'Proposal already finalized.'},
+      'NOT_AUTHORIZED':{it:'Non sei autorizzato.',en:'Not authorized.'}
+    };
+    var m=msgs[err]||{it:'Errore: '+err,en:'Error: '+err};
+    showToast('<span style="color:var(--red)">'+(lang==='it'?m.it:m.en)+'</span>');
+  }
 }
 
 // ══════════════════════════════
