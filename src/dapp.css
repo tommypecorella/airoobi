@@ -384,7 +384,7 @@ select option{background:var(--gray-800);color:var(--white)}
 .modal-confirm:hover{background:var(--white)}
 
 /* ── FOOTER ── */
-.dapp-footer{text-align:center;padding:56px 20px 36px;border-top:1px solid rgba(255,255,255,.06);margin-top:56px}
+.dapp-footer{text-align:center;padding:24px 20px 20px;border-top:1px solid rgba(255,255,255,.06);margin-top:24px}
 .dapp-footer-brand{font-family:var(--font-h);font-size:22px;font-weight:400;color:var(--white);letter-spacing:1px}
 .dapp-footer-brand em{color:var(--accent);font-style:italic;font-weight:600}
 .dapp-footer-link{font-family:var(--font-b);font-size:12px;letter-spacing:.5px;color:var(--gray-400);text-decoration:none;display:inline-block;margin-top:8px;transition:color .25s}
