@@ -311,64 +311,65 @@ Prima di eseguire il draw il sistema verifica:
 Determinismo puro. Il vincitore è chi ha lo score più alto.
 Nessuna estrazione casuale — il risultato è verificabile e riproducibile.
 
-### 5.2 Formula Score
+### 5.2 Formula Score (v3 — 12 Aprile 2026)
+
+> **DEPRECATA la formula v2** con 3 fattori (F1/F2/F3 con pesi 0.65/0.20/0.15).
+> La v3 semplifica a 2 fattori con pesi 70/30, rimuovendo la seniority (F3).
+> La seniority creava un vantaggio non meritocratico per i primi iscritti.
 
 ```
-score(utente) = (F1 × w1) + (F2 × w2) + (F3 × w3)
+score(utente) = (F1 × 0.70) + (F2 × 0.30)
 ```
 
-**F1 — Peso blocchi acquistati (chi partecipa di più):**
+**F1 — Blocchi nell'airdrop corrente (partecipazione diretta, 70%):**
 ```
 F1 = blocchi_utente_corrente / max_blocchi_singolo_utente_in_airdrop
 ```
 Normalizzato 0→1. Chi ha il massimo dei blocchi ottiene F1=1.
 
-**F2 — Fedeltà alla categoria (chi ha già speso in quella categoria):**
+**F2 — ARIA spesi nella categoria (storico fedeltà, 30%):**
 ```
-F2 = log(1 + aria_spesi_categoria_storico) /
+F2 = log(1 + aria_spesi_categoria) /
      log(1 + max_aria_spesi_categoria_tra_tutti_partecipanti)
 ```
-- `aria_spesi_categoria_storico` = totale ARIA spesi in airdrop della stessa categoria,
-  ESCLUSO l'airdrop corrente, da tutti i tempi
-- Usa logaritmo per evitare che chi ha speso 10.000 ARIA schiacci chi ne ha 100
+- `aria_spesi_categoria` = totale ARIA effettivamente spesi (transati) in airdrop
+  della stessa categoria, ESCLUSO l'airdrop corrente
+- **Solo partecipazioni NON cancellate** (`cancelled_at IS NULL`)
+- Usa logaritmo per smorzare i gap estremi
 - Normalizzato 0→1
 
-**F3 — Seniority (chi è entrato prima e ha comprato prima):**
-```
-F3 = (α × rank_registrazione_norm) + (β × rank_primo_blocco_norm)
-α = 0,4 (peso data registrazione)
-β = 0,6 (peso data primo blocco nell'airdrop — più recente e rilevante)
-
-rank_norm = 1 - ((rank - 1) / (n_partecipanti - 1))
-```
-- `rank_registrazione`: posizione dell'utente per data di registrazione (1 = primo)
-- `rank_primo_blocco`: posizione per data/ora del primo blocco acquistato nell'airdrop (1 = primo)
-- Chi si è registrato prima e ha comprato prima ottiene F3 più alto
-
-### 5.3 Pesi — v2 (fairness rebalance)
+### 5.3 Pesi — v3 (fairness by category)
 
 ```
-w1 = 0,65  (partecipazione diretta — aumentato da 0,50)
-w2 = 0,20  (fedeltà categoria — ridotto da 0,30)
-w3 = 0,15  (seniority — ridotto da 0,20)
+w1 = 0,70  (partecipazione diretta)
+w2 = 0,30  (fedeltà categoria)
 ```
 
-**Motivazione del rebalance:**
-Con i pesi v1 (0.50/0.30/0.20), un utente veterano con massimo F2 e F3 poteva battere
-un nuovo utente spendendo solo il **49%** dei blocchi. Questo rendeva il sistema
-sistematicamente sbilanciato a favore dei veterani.
-
-Con i pesi v2 (0.65/0.20/0.15), il veterano deve spendere almeno il **74%** dei blocchi
-del nuovo utente per batterlo. Questo mantiene il vantaggio della fedeltà come bonus
-significativo ma non dominante.
-
-| Scenario | Soglia veterano (v1) | Soglia veterano (v2) |
-|---|---|---|
-| Nuovo (500 blocchi) vs Veterano (max F2+F3) | 49% (245 blocchi) | 74% (370 blocchi) |
-| Stesso blocchi: differenza score | +0.26 a favore vet | +0.11 a favore vet |
-
-> I pesi sono configurabili in `airdrop_config` (chiavi `score_w1`, `score_w2`, `score_w3`).
+> I pesi sono configurabili in `airdrop_config` (chiavi `score_w1`, `score_w2`).
 > Il fondatore può aggiustarli senza deploy.
+
+**Perché 70/30:**
+- Il 70% assicura che chi compra più blocchi in QUESTO airdrop è favorito
+- Il 30% premia chi ha investito storicamente nella categoria — fairness
+- Nessun vantaggio per la seniority — conta solo quanto hai speso, non quando ti sei iscritto
+
+**Scenari di esempio:**
+
+| Scenario | Utente A (nuovo) | Utente B (veterano) | Vincitore |
+|---|---|---|---|
+| A: 100 bl, 0 ARIA storici / B: 80 bl, 500 ARIA storici | 0.70 | 0.56 + 0.30 = 0.86 | **B** |
+| A: 100 bl, 0 ARIA storici / B: 60 bl, 500 ARIA storici | 0.70 | 0.42 + 0.30 = 0.72 | **B** (di poco) |
+| A: 100 bl, 0 ARIA storici / B: 50 bl, 500 ARIA storici | 0.70 | 0.35 + 0.30 = 0.65 | **A** |
+| A: 100 bl, 200 ARIA / B: 100 bl, 500 ARIA storici | 0.70+0.19 | 0.70+0.30 = 1.00 | **B** |
+
+Il veterano con massimo F2 (0.30) deve avere almeno il **57%** dei blocchi del nuovo
+utente per batterlo (0.57×0.70 + 0.30 = 0.70). Questo è un bonus significativo ma non
+permette di vincere con metà dei blocchi.
+
+**Regola ARIA spesi:**
+Contano SOLO gli ARIA che sono stati effettivamente transati — cioè spesi in
+partecipazioni non cancellate. Se un utente ritira la partecipazione, quegli ARIA
+non contano più nello storico.
 
 ### 5.4 Gestione parità
 In caso di score identico (raro ma possibile):
