@@ -1,5 +1,5 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 2.1 · 7 Aprile 2026 · DOCUMENTO FONDATIVO**
+**Version 2.2 · 12 Aprile 2026 · DOCUMENTO FONDATIVO**
 
 > Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
 > del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
@@ -521,25 +521,102 @@ Possibili mitigazioni future:
 - **Il treasury cresce SEMPRE** — da airdrop (22%), video ads (50%), sponsor, altre attività
 - **Le quote crescono SEMPRE di valore** — il mining è tanto più conveniente quanto prima lo fai
 
-### 9.2 Mining difficulty (basata sul prezzo oggetto)
+### 9.2 Mining difficulty (basata sul treasury — v2.2, 12 Aprile 2026)
 
-La difficoltà NON dipende dalla fase della piattaforma. Dipende dal valore dell'oggetto:
+> **DEPRECATA la formula precedente** `ceil(object_value / mining_k)`.
+> La nuova formula lega il mining direttamente al treasury, evitando inflazione.
+
+La difficoltà di mining dipende da due fattori:
+- **Prezzo ROBI corrente** = `(treasury_gestito × 0.999) / robi_circolanti`
+- **Prezzo del blocco** (in ARIA)
+
+Lo 0.1% di sconto sul treasury è un micro-buffer per gestire assestamenti.
+
+#### Formula
 
 ```
-divisore = ceil(object_value_eur / mining_k)
-mining_k = 100 (configurabile in airdrop_config)
+rate = ceil(prezzo_ROBI / (block_price × ARIA_EUR × SPLIT_FONDO))
+     = ceil(prezzo_ROBI / (block_price × 0.022))
 ```
 
-| Valore oggetto | Divisore | 10 blocchi → | 100 blocchi → |
-|---|---|---|---|
-| €500 | 5 | 2.0 quote | 20.0 quote |
-| €1.000 | 10 | 1.0 quota | 10.0 quote |
-| €3.000 | 30 | 0.33 quote | 3.33 quote |
-| €5.000 | 50 | 0.20 quote | 2.00 quote |
-| €10.000 | 100 | 0.10 quote | 1.00 quota |
+Dove:
+- `ARIA_EUR = 0.10` (tasso interno 1 ARIA = €0.10)
+- `SPLIT_FONDO = 0.22` (22% di ogni blocco va al Fondo Comune)
+- `0.022 = 0.10 × 0.22` = contributo treasury per ARIA
 
-Oggetti economici = mining facile (più quote per blocco).
-Oggetti costosi = mining hard (quote più rare, ma più valore per quota).
+#### Proprietà fondamentale
+
+Il `total_blocks` e il `object_value_eur` si cancellano nella semplificazione.
+Il mining rate dipende **SOLO** dal prezzo ROBI e dal prezzo blocco.
+Questo rende il sistema elegante e auto-regolante.
+
+#### Derivazione
+
+```
+treasury_previsto = total_blocks × block_price × ARIA_EUR × SPLIT_FONDO
+max_robi = treasury_previsto / prezzo_ROBI
+rate = ceil(total_blocks / max_robi)
+     = ceil(total_blocks × prezzo_ROBI / treasury_previsto)
+     = ceil(prezzo_ROBI / (block_price × 0.022))      ← total_blocks si cancella
+```
+
+#### Tabella Mining Rate (blocchi necessari per 1 ROBI)
+
+| Prezzo ROBI | 5 ARIA/bl | 10 ARIA/bl | 20 ARIA/bl | 50 ARIA/bl | 100 ARIA/bl |
+|---|---|---|---|---|---|
+| **€0.50** | 5 | 3 | 2 | 1 | 1 |
+| **€1.00** | 10 | 5 | 3 | 1 | 1 |
+| **€2.09** (apr 2026) | 19 | 10 | 5 | 2 | 1 |
+| **€5.00** | 46 | 23 | 12 | 5 | 3 |
+| **€10.00** | 91 | 46 | 23 | 10 | 5 |
+| **€20.00** | 182 | 91 | 46 | 19 | 10 |
+| **€50.00** | 455 | 228 | 114 | 46 | 23 |
+
+#### ROBI emessi per airdrop completo (100% fill, esempi)
+
+**Oggetto €1.000** (block_price=20 ARIA, ~550 blocchi, treasury previsto ≈ €242):
+
+| Prezzo ROBI | Max ROBI emessi | Blocchi/ROBI |
+|---|---|---|
+| €0.50 | 484 | 2 |
+| €2.09 | 116 | 5 |
+| €5.00 | 48 | 12 |
+| €10.00 | 24 | 23 |
+| €50.00 | 5 | 114 |
+
+**Oggetto €10.000** (block_price=20 ARIA, ~5.500 blocchi, treasury ≈ €2.420):
+
+| Prezzo ROBI | Max ROBI emessi | Blocchi/ROBI |
+|---|---|---|
+| €0.50 | 4.840 | 2 |
+| €2.09 | 1.158 | 5 |
+| €5.00 | 484 | 12 |
+| €10.00 | 242 | 23 |
+| €50.00 | 48 | 114 |
+
+**Oggetto estremo €50.000** (block_price=50 ARIA, ~16.200 blocchi, treasury ≈ €17.820):
+
+| Prezzo ROBI | Max ROBI emessi | Blocchi/ROBI |
+|---|---|---|
+| €0.50 | 35.640 | 1 |
+| €2.09 | 8.526 | 2 |
+| €5.00 | 3.564 | 5 |
+| €10.00 | 1.782 | 10 |
+| €50.00 | 356 | 46 |
+
+#### Comportamento anti-inflazionistico
+
+1. **Auto-regolazione**: man mano che il treasury cresce, il prezzo ROBI sale, servono più blocchi per 1 ROBI → meno emissione → meno inflazione
+2. **Block price alto = mining generoso**: blocchi costosi contribuiscono più treasury per blocco, quindi i ROBI arrivano prima
+3. **Early adopter advantage**: con prezzo ROBI basso (inizio piattaforma), il mining è facile. Chi arriva dopo mina di meno ma ogni ROBI vale di più
+4. **Cap engine**: il cap anti-inflazione nell'engine (`max_nuove_quote = contributo_fondo / prezzo_quota`) resta come secondo livello di protezione al momento del draw
+
+#### Dati sorgente
+
+- **Treasury gestito**: tabella `treasury_funds` (importi con % treasury). Gestita manualmente dal CEO.
+- **ROBI circolanti**: somma `shares` da `nft_rewards` (via RPC `admin_get_all_robi`)
+- **Prezzo ROBI display**: `(treasury × 0.999) / robi_circolanti`
+- **Prezzo ROBI engine** (al draw): `treasury_stats.balance_eur / treasury_stats.nft_circulating`
 
 ### 9.3 NFT frazionari
 
@@ -548,8 +625,11 @@ Ogni perdente riceve:
 quote = blocchi_acquistati / divisore
 ```
 
-Nessun `floor()` — le frazioni sono sempre distribuite. Anche 1 blocco su un
-oggetto da €10.000 produce 0.01 quote.
+Dove il divisore è calcolato dalla formula treasury-based (sezione 9.2).
+Presale: i blocchi presale contano doppio (`presale_blocks × 2 + sale_blocks`).
+
+Nessun `floor()` — le frazioni sono sempre distribuite. Anche 1 blocco
+produce una quota frazionaria.
 
 Ogni perdente = 1 riga in `nft_rewards` con campo `shares NUMERIC(12,4)`.
 
@@ -567,19 +647,23 @@ min_participation_pct = 0.01 (1%, configurabile)
 | €3.000 | 300 ARIA | €30 |
 | €5.000 | 500 ARIA | €50 |
 
-### 9.5 Anti-inflazione (invariato)
+### 9.5 Anti-inflazione (secondo livello)
 
-Il cap anti-inflazione resta: `max_nuove_quote = contributo_fondo / prezzo_quota_attuale`.
+Il cap anti-inflazione nell'engine resta: `max_nuove_quote = contributo_fondo / prezzo_quota_attuale`.
 Se le quote calcolate superano il cap, vengono scalate proporzionalmente.
+
+Questo è un **secondo livello** di protezione. Il primo livello è la formula treasury-based
+stessa (sezione 9.2), che limita strutturalmente il rate di mining.
 
 ### 9.6 Perché non più fasi (halving)
 
 Le fasi (alpha_brave, alpha_wise, beta, mainnet) definivano il divisore NFT.
-Con il mining basato sul prezzo, le fasi non servono più per la distribuzione NFT.
+Con il mining basato sul treasury, le fasi non servono più per la distribuzione NFT.
 
-Il concetto di "mining facile all'inizio" resta naturale: i primi airdrop hanno
-treasury basso → il cap anti-inflazione è generoso → si minano più quote.
-Man mano che il treasury cresce, il cap si stringe automaticamente.
+Il concetto di "mining facile all'inizio" è **naturale e automatico**: il prezzo ROBI
+parte basso → il rate è basso (pochi blocchi per 1 ROBI) → mining generoso.
+Man mano che il treasury cresce, il prezzo sale, il rate cresce, il mining rallenta.
+Nessun halving artificiale necessario.
 
 ---
 
