@@ -1608,12 +1608,18 @@ async function adSaveAirdrop(){
   var s=getSession();if(!s)return;
   var id=document.getElementById('ad-edit-id').value;
   if(!id)return;
+  var blockPrice=parseInt(document.getElementById('ad-block-price').value)||0;
+  var presalePrice=parseInt(document.getElementById('ad-presale-price').value)||0;
+  if(presalePrice>0&&blockPrice>0&&presalePrice>=blockPrice){
+    showToast('Il prezzo presale ('+presalePrice+') deve essere inferiore al prezzo pieno ('+blockPrice+')','error');
+    return;
+  }
   var params={
     p_airdrop_id:id,
     p_status:document.getElementById('ad-status').value,
-    p_block_price_aria:parseInt(document.getElementById('ad-block-price').value)||null,
+    p_block_price_aria:blockPrice||null,
     p_total_blocks:parseInt(document.getElementById('ad-total-blocks').value)||null,
-    p_presale_block_price:parseInt(document.getElementById('ad-presale-price').value)||null,
+    p_presale_block_price:presalePrice||null,
     p_presale_blocks_pct:parseInt(document.getElementById('ad-presale-pct').value)||null,
     p_deadline:document.getElementById('ad-deadline').value?new Date(document.getElementById('ad-deadline').value).toISOString():null,
     p_rejection_reason:document.getElementById('ad-rejection').value.trim()||null,
@@ -2842,6 +2848,7 @@ async function doBoApprove(){
   var status=document.getElementById('bo-approve-status').value;
   var deadline=document.getElementById('bo-approve-deadline').value||null;
   if(!price||price<1||!blocks||blocks<1){showToast('Prezzo e blocchi obbligatori','warning');return;}
+  if(presale&&presale>=price){showToast('Il prezzo presale ('+presale+') deve essere inferiore al prezzo pieno ('+price+')','error');return;}
   var sug=calcSuggestedValues(Number(_boTarget.seller_desired_price)||0,Number(_boTarget.seller_min_price)||0);
   var quotation=sug.quotation;
   var btn=document.getElementById('bo-approve-ok');btn.disabled=true;
