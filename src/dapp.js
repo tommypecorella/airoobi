@@ -1276,6 +1276,7 @@ function renderGrid(){
       +'<span class="card-price">'+priceHtml+'</span>'
       +'<span class="card-remain">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
       +'</div>'
+      +'<div class="card-mining"><span style="color:var(--gold)">⛏</span> '+calcMiningRate(a)+' bl / 1 ROBI</div>'
       +'</div></div>';
   }).join('');
 }

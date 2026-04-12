@@ -200,6 +200,7 @@ select option{background:var(--gray-800);color:var(--white)}
 .card-eur{color:var(--gray-400);font-size:11px}
 .card-price{font-family:var(--font-m);font-size:12px;color:var(--aria)}
 .card-remain{font-size:12px;color:var(--gray-400)}
+.card-mining{font-family:var(--font-m);font-size:10px;letter-spacing:.5px;color:var(--gray-500);margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.04)}
 .card-pct{font-family:var(--font-m);font-size:11px;color:var(--accent)}
 
 /* ── DETAIL VIEW ── */

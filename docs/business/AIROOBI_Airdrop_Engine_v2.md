@@ -618,6 +618,42 @@ rate = ceil(total_blocks / max_robi)
 - **Prezzo ROBI display**: `(treasury × 0.999) / robi_circolanti`
 - **Prezzo ROBI engine** (al draw): `treasury_stats.balance_eur / treasury_stats.nft_circulating`
 
+#### Piano di emissione ROBI per fase (12 Aprile 2026)
+
+> La formula è auto-regolante, ma il **block_price** è la leva manuale che controlla
+> quanti ROBI escono. Block price BASSO = rate ALTO = mining difficile = pochi ROBI.
+> Block price ALTO = rate BASSO = mining facile = più ROBI.
+>
+> **Strategia**: durante test e alpha, tenere block_price bassi per limitare l'emissione.
+> Man mano che il treasury cresce con soldi veri, il prezzo ROBI sale e la formula
+> auto-regola. Il block_price può salire gradualmente.
+
+| Fase | Block Price | ROBI Price previsto | Rate (bl/ROBI) | ROBI per 500 bl | Note |
+|---|---|---|---|---|---|
+| **Alpha 0 Test** (apr 2026) | 5 ARIA | €2 | ~19 | ~26 | Conservativo. Molti test, pochi ROBI emessi |
+| **Alpha Brave** (Q2 2026) | 5-10 ARIA | €3-4 | 14-28 | ~18-36 | Early adopter vantaggiato ma controllato |
+| **Stage 1** (Q3 2026) | 10-20 ARIA | €5-8 | 12-19 | ~26-42 | Treasury reale, crescita organica |
+| **Beta** (Q4 2026) | 15-30 ARIA | €8-15 | 13-31 | ~16-38 | Mining più selettivo, ROBI vale di più |
+| **Mainnet** (2027) | 20-50 ARIA | €15-50+ | 14-114 | ~4-36 | Formula auto-regola completamente |
+
+**Principi chiave:**
+
+1. **Alpha 0**: block_price=5. Con rate ~19, un airdrop da 500 blocchi emette ~26 ROBI.
+   10 airdrop di test = ~260 ROBI. Con treasury che cresce lentamente, l'impatto è gestibile.
+
+2. **Non esagerare in alpha**: anche se vogliamo premiare i primi utenti, ogni ROBI emesso
+   ora diluisce il treasury futuro. Meglio pochi ROBI ma ad un prezzo che tiene.
+
+3. **Halving naturale**: NON serve un halving artificiale. Il prezzo ROBI sale man mano che
+   il treasury cresce → il rate sale automaticamente → meno ROBI emessi per airdrop.
+
+4. **Rischio mainnet con halving basso**: se emettiamo troppi ROBI in alpha/beta, il prezzo
+   ROBI sarà basso al mainnet (treasury/moltiROBI = poco valore per ROBI). Meglio arrivare
+   con pochi ROBI ad alto valore.
+
+5. **Block price come leva**: se in un momento il rate è troppo basso (troppo generoso),
+   basta abbassare il block_price per alzare il rate. Viceversa se è troppo restrittivo.
+
 ### 9.3 NFT frazionari
 
 Ogni perdente riceve:
