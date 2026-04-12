@@ -329,12 +329,16 @@ Normalizzato 0→1. Chi ha il massimo dei blocchi ottiene F1=1.
 
 **F2 — ARIA spesi nella categoria (storico fedeltà, 30%):**
 ```
-F2 = log(1 + aria_spesi_categoria) /
+F2 = log(1 + aria_spesi_categoria_post_vittoria) /
      log(1 + max_aria_spesi_categoria_tra_tutti_partecipanti)
 ```
 - `aria_spesi_categoria` = totale ARIA effettivamente spesi (transati) in airdrop
   della stessa categoria, ESCLUSO l'airdrop corrente
 - **Solo partecipazioni NON cancellate** (`cancelled_at IS NULL`)
+- **Reset su vittoria**: conta SOLO gli ARIA spesi DOPO l'ultima vittoria nella
+  stessa categoria. Se hai vinto un airdrop "Tech", il tuo storico Tech riparte
+  da zero. Questo è la **One Category Rule** applicata allo scoring.
+- Se l'utente non ha mai vinto nella categoria, conta tutto lo storico
 - Usa logaritmo per smorzare i gap estremi
 - Normalizzato 0→1
 
@@ -351,7 +355,7 @@ w2 = 0,30  (fedeltà categoria)
 **Perché 70/30:**
 - Il 70% assicura che chi compra più blocchi in QUESTO airdrop è favorito
 - Il 30% premia chi ha investito storicamente nella categoria — fairness
-- Nessun vantaggio per la seniority — conta solo quanto hai speso, non quando ti sei iscritto
+- La seniority NON entra nello score — conta solo quanto hai speso. Usata solo come tiebreaker finale (§5.4)
 
 **Scenari di esempio:**
 
@@ -371,10 +375,14 @@ Contano SOLO gli ARIA che sono stati effettivamente transati — cioè spesi in
 partecipazioni non cancellate. Se un utente ritira la partecipazione, quegli ARIA
 non contano più nello storico.
 
-### 5.4 Gestione parità
-In caso di score identico (raro ma possibile):
-1. Vince chi ha acquistato il primo blocco prima (timestamp)
-2. Se ancora pari: vince chi si è registrato prima
+### 5.4 Gestione parità (tiebreaker v3.1)
+In caso di score identico (raro ma possibile), l'ordinamento è deterministico:
+1. **Score DESC** — chi ha lo score più alto
+2. **ARIA spesi DESC** — chi ha speso di più in questo airdrop
+3. **Data iscrizione ASC** — chi si è iscritto prima (seniority come spareggio finale)
+
+> La seniority NON è un fattore di scoring (non alza il tuo score), ma serve
+> come spareggio deterministico per evitare ambiguità. Non è possibile un pareggio.
 
 ### 5.5 Esempio pratico (con pesi v2)
 
