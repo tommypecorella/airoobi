@@ -200,6 +200,7 @@ select option{background:var(--gray-800);color:var(--white)}
 .card-eur{color:var(--gray-400);font-size:11px}
 .card-price{font-family:var(--font-m);font-size:12px;color:var(--aria)}
 .card-remain{font-size:12px;color:var(--gray-400)}
+.card-rank{font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--gold);margin:6px 0 2px;padding:4px 0;text-align:center;border:1px solid rgba(184,150,12,.25);border-radius:4px;background:rgba(184,150,12,.06)}
 .card-mining{font-family:var(--font-m);font-size:10px;letter-spacing:.5px;color:var(--gray-500);margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.04)}
 .card-pct{font-family:var(--font-m);font-size:11px;color:var(--accent)}
 
@@ -291,6 +292,50 @@ select option{background:var(--gray-800);color:var(--white)}
 .donut-legend-dot.mine{background:var(--gold)}
 .donut-legend-dot.others{background:var(--gray-700)}
 .donut-legend-dot.avail{background:var(--gray-800);border:1px solid var(--gray-700)}
+
+/* ── MINE TOWER 3D ── */
+.mine-scene{perspective:600px;width:100%;max-width:320px;height:340px;margin:10px auto 8px;position:relative;overflow:visible}
+.mine-tower{width:100%;height:100%;transform-style:preserve-3d;animation:tower-spin 22s linear infinite;position:relative}
+.mine-ring{position:absolute;left:50%;transform-style:preserve-3d;width:0;height:0}
+.mine-block{position:absolute;left:-18px;top:-11px;width:36px;height:22px;border-radius:4px;backface-visibility:hidden;transition:all .4s;font-size:0}
+.mine-block.avail{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06)}
+.mine-block.others{background:var(--gray-700);border:1px solid var(--gray-600)}
+.mine-block.mine{background:var(--accent);border:1px solid var(--aria);box-shadow:0 0 14px var(--accent-dim)}
+.mine-block.robi{border-color:#B8960C !important;box-shadow:0 0 10px rgba(184,150,12,.45);animation:robi-pulse 2.5s ease-in-out infinite}
+.mine-block.robi::after{content:'✦';position:absolute;font-size:9px;color:#B8960C;top:50%;left:50%;transform:translate(-50%,-50%);text-shadow:0 0 6px rgba(184,150,12,.8)}
+.mine-block.mine.robi{background:linear-gradient(135deg,var(--accent),#B8960C);box-shadow:0 0 18px rgba(184,150,12,.6)}
+.mine-label{position:absolute;bottom:-8px;left:0;right:0;text-align:center;font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500)}
+.mine-legend{display:flex;justify-content:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.mine-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-400)}
+.mine-legend-dot{width:10px;height:10px;border-radius:3px}
+.mine-legend-dot.m-mine{background:var(--accent);box-shadow:0 0 6px var(--accent-dim)}
+.mine-legend-dot.m-others{background:var(--gray-700)}
+.mine-legend-dot.m-avail{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.mine-legend-dot.m-robi{background:#B8960C;box-shadow:0 0 6px rgba(184,150,12,.5)}
+@keyframes tower-spin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
+@keyframes robi-pulse{0%,100%{box-shadow:0 0 6px rgba(184,150,12,.3)}50%{box-shadow:0 0 20px rgba(184,150,12,.7)}}
+
+/* Mining animation overlay */
+.mining-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.85);opacity:0;pointer-events:none;transition:opacity .4s}
+.mining-overlay.active{opacity:1;pointer-events:auto}
+.mining-pickaxe{font-size:64px;animation:pickaxe-swing 0.5s ease-in-out 3}
+.mining-blocks-text{font-family:var(--font-h);font-size:clamp(28px,6vw,48px);font-weight:600;color:var(--accent);margin-top:16px;animation:mine-pop .6s ease .3s both}
+.mining-robi-text{font-family:var(--font-h);font-size:clamp(22px,5vw,36px);font-weight:600;color:#B8960C;margin-top:12px;animation:mine-pop .6s ease .8s both;text-shadow:0 0 30px rgba(184,150,12,.5)}
+@keyframes pickaxe-swing{0%{transform:rotate(0deg)}40%{transform:rotate(-30deg)}70%{transform:rotate(15deg)}100%{transform:rotate(0deg)}}
+@keyframes mine-pop{from{opacity:0;transform:scale(.5) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
+/* Confetti particles */
+.confetti-container{position:fixed;inset:0;z-index:10000;pointer-events:none;overflow:hidden}
+.confetti{position:absolute;top:40%;width:8px;height:8px;border-radius:2px;animation:confetti-fall 2s ease-out forwards}
+.confetti:nth-child(odd){background:#B8960C;width:6px;height:10px}
+.confetti:nth-child(even){background:var(--accent);width:10px;height:6px}
+.confetti:nth-child(3n){background:#49EACB;border-radius:50%;width:7px;height:7px}
+@keyframes confetti-fall{0%{transform:translateY(0) translateX(0) rotate(0deg) scale(1);opacity:1}100%{transform:translateY(60vh) translateX(var(--x)) rotate(720deg) scale(0);opacity:0}}
+
+/* Tower speed-up on mine */
+.mine-tower.mining{animation-duration:2s !important}
+.mine-block.just-mined{animation:block-flash .8s ease both}
+@keyframes block-flash{0%{box-shadow:0 0 30px var(--accent);transform:rotateY(var(--ry)) translateZ(65px) scale(1.3)}100%{box-shadow:0 0 14px var(--accent-dim);transform:rotateY(var(--ry)) translateZ(65px) scale(1)}}
 
 /* ── DETAIL STATS ── */
 .detail-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:28px;background:var(--gray-700);border:1px solid var(--gray-700);border-radius:var(--radius);overflow:hidden}

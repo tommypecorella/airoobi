@@ -41,6 +41,7 @@ function updateBalanceUI(){
 }
 var _airdrops=[];
 var _myParts=[];
+var _myRanks={}; // {airdrop_id: {rank, total, score}}
 var _robiPrice=0; // treasury×0.999/robi_circolanti
 var _currentFilter='all';
 var _currentDetail=null;
@@ -250,7 +251,7 @@ document.addEventListener('DOMContentLoaded',async function(){
     // Show splash tour on first visit
     if(!localStorage.getItem('airoobi_splash_done'))showSplash();
     setupUI();
-    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist(),loadRobiPrice()]);
+    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist(),loadRobiPrice(),loadMyRanks()]);
     renderGrid();
     renderCatDashboard();
     renderCategoryFilter();
@@ -893,6 +894,126 @@ async function loadMyParticipations(){
   _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&cancelled_at=is.null&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status)&order=created_at.desc',_session.access_token)||[];
 }
 
+async function loadMyRanks(){
+  _myRanks={};
+  if(!_session)return;
+  var token=await getValidToken();if(!token)return;
+  var data=await sbRpc('get_my_airdrop_ranks',{},token)||[];
+  if(!Array.isArray(data))return;
+  data.forEach(function(r){_myRanks[r.airdrop_id]={rank:r.rank,total:r.total,score:r.score};});
+}
+
+// ── Mine Tower 3D ──
+function hashStr(s){var h=0;for(var i=0;i<s.length;i++)h=((h<<5)-h)+s.charCodeAt(i);return h;}
+
+function buildMineTower(a,myBlocks){
+  var total=a.total_blocks;
+  var sold=a.blocks_sold;
+  var others=sold-myBlocks;
+  var rate=calcMiningRate(a)||50;
+
+  var BPR=8; // blocks per ring
+  var RINGS=Math.min(12,Math.max(4,Math.ceil(total/(BPR*20))));
+  var vis=RINGS*BPR;
+
+  // Proportional visual distribution
+  var vOthers=Math.round(others/total*vis);
+  var vMine=Math.round(myBlocks/total*vis);
+  if(vMine>0&&vMine<1)vMine=1;
+  if(vOthers+vMine>vis)vOthers=vis-vMine;
+
+  // ROBI block positions (deterministic seed from airdrop ID)
+  var seed=Math.abs(hashStr(a.id));
+  var robiVis=Math.max(1,Math.round(vis/rate));
+  if(robiVis>Math.floor(vis/3))robiVis=Math.floor(vis/3);
+  var robiSet={};
+  for(var r=0;r<robiVis;r++){
+    var pos=Math.abs((seed*(r+1)*7919+r*13)%vis);
+    robiSet[pos]=true;
+  }
+
+  var ringH=26;
+  var totalH=RINGS*ringH;
+  var html='<div class="mine-scene" style="height:'+(totalH+40)+'px">'
+    +'<div class="mine-tower" id="mine-tower">';
+
+  var idx=0;
+  for(var ring=0;ring<RINGS;ring++){
+    var y=ring*ringH;
+    html+='<div class="mine-ring" style="bottom:'+y+'px">';
+    for(var col=0;col<BPR;col++){
+      var angle=col*(360/BPR);
+      var cls='mine-block';
+      if(idx<vOthers)cls+=' others';
+      else if(idx<vOthers+vMine)cls+=' mine';
+      else cls+=' avail';
+      if(robiSet[idx])cls+=' robi';
+      html+='<div class="'+cls+'" style="transform:rotateY('+angle+'deg) translateZ(65px)" data-idx="'+idx+'"></div>';
+      idx++;
+    }
+    html+='</div>';
+  }
+
+  html+='</div>'
+    +'<div class="mine-label"><span style="color:#B8960C">⛏</span> <span class="it">La tua miniera</span><span class="en">Your mine</span></div>'
+    +'</div>';
+
+  // Legend
+  html+='<div class="mine-legend">'
+    +(vMine>0?'<div class="mine-legend-item"><div class="mine-legend-dot m-mine"></div><span class="it">Tuoi ('+myBlocks+')</span><span class="en">Yours ('+myBlocks+')</span></div>':'')
+    +(vOthers>0?'<div class="mine-legend-item"><div class="mine-legend-dot m-others"></div><span class="it">Altri ('+(sold-myBlocks)+')</span><span class="en">Others ('+(sold-myBlocks)+')</span></div>':'')
+    +'<div class="mine-legend-item"><div class="mine-legend-dot m-avail"></div><span class="it">Disponibili ('+(total-sold)+')</span><span class="en">Available ('+(total-sold)+')</span></div>'
+    +'<div class="mine-legend-item"><div class="mine-legend-dot m-robi"></div>ROBI</div>'
+    +'</div>';
+
+  return html;
+}
+
+// ── Mining Animation ──
+function playMiningAnimation(blocksBought,oldMyBlocks,miningRate){
+  var oldRobi=Math.floor(oldMyBlocks/miningRate);
+  var newRobi=Math.floor((oldMyBlocks+blocksBought)/miningRate);
+  var foundRobi=newRobi>oldRobi;
+
+  var overlay=document.createElement('div');
+  overlay.className='mining-overlay';
+  overlay.innerHTML='<div class="mining-pickaxe">⛏</div>'
+    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">blocchi minati!</span><span class="en">blocks mined!</span></div>'
+    +(foundRobi?'<div class="mining-robi-text">✦ ROBI <span class="it">TROVATO</span><span class="en">FOUND</span>! ✦</div>':'');
+  document.body.appendChild(overlay);
+
+  // Speed up tower rotation
+  var tower=document.getElementById('mine-tower');
+  if(tower)tower.classList.add('mining');
+
+  requestAnimationFrame(function(){
+    overlay.classList.add('active');
+    if(foundRobi)spawnConfetti();
+    var dur=foundRobi?2800:1600;
+    setTimeout(function(){
+      overlay.classList.remove('active');
+      if(tower)tower.classList.remove('mining');
+      setTimeout(function(){overlay.remove()},500);
+    },dur);
+  });
+}
+
+function spawnConfetti(){
+  var c=document.createElement('div');
+  c.className='confetti-container';
+  document.body.appendChild(c);
+  for(var i=0;i<40;i++){
+    var p=document.createElement('div');
+    p.className='confetti';
+    p.style.left=(30+Math.random()*40)+'%';
+    p.style.animationDelay=(Math.random()*0.4)+'s';
+    p.style.animationDuration=(1.5+Math.random()*1)+'s';
+    p.style.setProperty('--x',(Math.random()*300-150)+'px');
+    c.appendChild(p);
+  }
+  setTimeout(function(){c.remove()},3500);
+}
+
 // ── Page routing ──
 var _isApp=location.hostname==='airoobi.app'||location.hostname==='www.airoobi.app';
 var PAGE_PATHS=_isApp
@@ -1261,6 +1382,10 @@ function renderGrid(){
     var cd=fmtCountdown(a.deadline);
     var cdHtml=cd?'<span class="card-countdown'+(cd.urgent?' urgent':'')+'" data-deadline="'+a.deadline+'">'+(cd.expired?'—':cd.text)+'</span>':'';
     var heartCls=isInWatchlist(a.id)?'heart-btn active':'heart-btn';
+    var rankInfo=_myRanks[a.id];
+    var rankHtml=rankInfo
+      ?'<div class="card-rank"><span class="it">'+rankInfo.rank+'° su '+rankInfo.total+'</span><span class="en">#'+rankInfo.rank+' of '+rankInfo.total+'</span></div>'
+      :'';
 
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
       +badge
@@ -1271,6 +1396,7 @@ function renderGrid(){
       +'<div class="card-cat">'+(a.category||'')+'</div>'
       +'<div class="card-title">'+a.title+'</div>'
       +cdHtml
+      +rankHtml
       +'<div class="card-progress"><div class="card-progress-bar" style="width:'+pct+'%"></div></div>'
       +'<div class="card-footer">'
       +'<span class="card-price">'+priceHtml+'</span>'
@@ -1325,36 +1451,7 @@ async function openDetail(id){
   var blurVal=Math.max(0,20-(pct/100*20));
   var imgStyle='filter:blur('+blurVal.toFixed(1)+'px)';
 
-  var centerImgHtml=a.image_url
-    ?'<img class="donut-center-img" src="'+a.image_url+'" alt="" style="'+imgStyle+'" id="donut-img">'
-    :'';
-
-  // Build orbiting particles
-  var bubblesHtml='<div class="bubbles-layer" id="bubbles-layer">';
-  var maxP=Math.min(participants.length,12);
   _bubbles=[];
-  for(var pi=0;pi<maxP;pi++){
-    var pp=participants[pi];
-    var hasAvatar=!!pp.avatar_url;
-    var sz=hasAvatar?Math.max(28,Math.min(42,22+pp.blocks*2)):Math.max(8,Math.min(18,6+pp.blocks*2));
-    var cls=hasAvatar?'bubble has-avatar':'bubble no-avatar';
-    var innerHtml=hasAvatar?'<img src="'+pp.avatar_url+'" alt="">':'';
-    bubblesHtml+='<div class="'+cls+'" id="bubble-'+pi+'" style="width:'+sz+'px;height:'+sz+'px;animation-delay:'+(-pi*0.4)+'s">'+innerHtml+'</div>';
-    // Init orbit: distributed evenly, slight eccentricity
-    var angle=(pi/maxP)*Math.PI*2+Math.random()*0.3;
-    var orbitR=0.28+Math.random()*0.12; // orbit radius (normalized)
-    var speed=0.0004+Math.random()*0.0003; // angular speed
-    if(pi%2===1)speed=-speed; // alternate direction
-    _bubbles.push({
-      idx:pi, r:sz/2,
-      angle:angle, orbitR:orbitR, speed:speed,
-      x:0.5+Math.cos(angle)*orbitR, y:0.5+Math.sin(angle)*orbitR,
-      vx:0, vy:0
-    });
-  }
-  bubblesHtml+='</div>';
-
-  var centerHtml=centerImgHtml+bubblesHtml;
 
   var maxBuy=Math.min(remaining,Math.floor(_balance/a.block_price_aria));
   if(maxBuy<1)maxBuy=0;
@@ -1443,26 +1540,11 @@ async function openDetail(id){
     +'<p class="product-participate-sub"><span class="it">Ogni blocco ti fa guadagnare ROBI — il loro valore cresce nel tempo</span><span class="en">Each block earns you ROBI — their value grows over time</span></p>'
     +'</div>'
 
-    // MY BLOCKS (above donut)
+    // MY BLOCKS badge
     +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*a.block_price_aria)+' ARIA <span class="it">investiti</span><span class="en">invested</span></div>':'')
 
-    // DONUT
-    +'<div class="donut-wrap">'
-    +'<svg class="donut-svg" viewBox="0 0 240 240">'
-    +'<circle class="donut-bg" cx="120" cy="120" r="'+DONUT_R+'" />'
-    +'<circle class="donut-others" cx="120" cy="120" r="'+DONUT_R+'" stroke-dasharray="'+donutArc(othersPct)+' '+DONUT_C+'" />'
-    +'<circle class="donut-mine" id="donut-mine" cx="120" cy="120" r="'+DONUT_R+'" stroke-dasharray="'+donutArc(myPct)+' '+DONUT_C+'" stroke-dashoffset="-'+donutArc(othersPct)+'" />'
-    +'</svg>'
-    +'<div class="donut-center">'+centerHtml+'</div>'
-    +'<div class="donut-pct">'+Math.round(pct)+'%</div>'
-    +'</div>'
-
-    // LEGEND
-    +'<div class="donut-legend">'
-    +'<div class="donut-legend-item"><div class="donut-legend-dot mine"></div><span class="it">Tuoi ('+myBlocks+')</span><span class="en">Yours ('+myBlocks+')</span></div>'
-    +'<div class="donut-legend-item"><div class="donut-legend-dot others"></div><span class="it">Altri ('+(a.blocks_sold-myBlocks)+')</span><span class="en">Others ('+(a.blocks_sold-myBlocks)+')</span></div>'
-    +'<div class="donut-legend-item"><div class="donut-legend-dot avail"></div><span class="it">Disponibili ('+remaining+')</span><span class="en">Available ('+remaining+')</span></div>'
-    +'</div>'
+    // MINE TOWER 3D
+    +buildMineTower(a,myBlocks)
 
     // STATS
     +'<div class="detail-stats">'
@@ -1554,8 +1636,8 @@ async function openDetail(id){
   // Start countdown ticker
   startCountdowns();
 
-  // Position live — initial + polling
-  updateDetailPosition(a.id,participants,myBlocks);
+  // Position live — initial + polling (uses calculate_winner_score for real rank)
+  refreshPosition(a.id);
   if(_positionInterval)clearInterval(_positionInterval);
   _positionInterval=setInterval(function(){refreshPosition(a.id)},30000);
 
@@ -1581,43 +1663,47 @@ async function loadAutoBuyStatus(airdropId){
 }
 
 // ── Position Live ──
-function updateDetailPosition(airdropId,participants,myBlocks){
+function updateDetailPosition(airdropId,scores){
   var el=document.getElementById('detail-position');if(!el)return;
-  var lang=document.documentElement.getAttribute('data-lang')||'it';
-  if(!_session||myBlocks<=0){
-    el.innerHTML='<span class="it">Entra ora — <strong>'+participants.length+'</strong> partecipanti attivi</span>'
-      +'<span class="en">Join now — <strong>'+participants.length+'</strong> active participants</span>';
+  if(!_session||!scores||scores.length===0){
+    var total=scores?scores.length:0;
+    el.innerHTML='<span class="it">Entra ora — <strong>'+total+'</strong> partecipanti attivi</span>'
+      +'<span class="en">Join now — <strong>'+total+'</strong> active participants</span>';
     el.className='detail-position not-in';
     return;
   }
-  // Sort participants by score desc to find position
-  var sorted=participants.slice().sort(function(a,b){return(b.score||0)-(a.score||0)});
-  var pos=1;
-  for(var i=0;i<sorted.length;i++){
-    if(sorted[i].user_id===_session.user.id){pos=i+1;break;}
+  // Find current user in scored ranking
+  var pos=0,total=scores.length;
+  for(var i=0;i<scores.length;i++){
+    if(scores[i].user_id===_session.user.id){pos=scores[i].rank;break;}
   }
-  el.innerHTML='<span class="it">Sei <strong>'+pos+'°</strong> su '+participants.length+' partecipanti</span>'
-    +'<span class="en">You are <strong>#'+pos+'</strong> of '+participants.length+' participants</span>';
+  if(pos===0){
+    el.innerHTML='<span class="it">Entra ora — <strong>'+total+'</strong> partecipanti attivi</span>'
+      +'<span class="en">Join now — <strong>'+total+'</strong> active participants</span>';
+    el.className='detail-position not-in';
+    return;
+  }
+  el.innerHTML='<span class="it">Sei <strong>'+pos+'°</strong> su '+total+' partecipanti</span>'
+    +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span>';
   el.className='detail-position in';
   // Check if position worsened
   if(_lastPosition!==null&&pos>_lastPosition){
     el.classList.add('shake');
     setTimeout(function(){el.classList.remove('shake')},600);
     showToast('<span class="it">Sei stato superato — acquista altri blocchi per risalire</span><span class="en">You\'ve been overtaken — buy more blocks to climb back</span>');
-    // Push notification position_lost
     notifyPositionLost(airdropId);
   }
   _lastPosition=pos;
+  // Update cached rank for grid cards
+  _myRanks[airdropId]={rank:pos,total:total,score:scores.find(function(s){return s.user_id===_session.user.id})?.score||0};
 }
 
 async function refreshPosition(airdropId){
   try{
     var token=await getValidToken();if(!token)return;
-    var participants=await sbRpc('get_airdrop_participants',{p_airdrop_id:airdropId},token)||[];
-    if(!Array.isArray(participants))participants=[];
-    var myBlocks=0;
-    if(_gridData)myBlocks=_gridData.filter(function(b){return b.is_mine}).length;
-    updateDetailPosition(airdropId,participants,myBlocks);
+    var scores=await sbRpc('calculate_winner_score',{p_airdrop_id:airdropId},token)||[];
+    if(!Array.isArray(scores))scores=[];
+    updateDetailPosition(airdropId,scores);
   }catch(e){}
 }
 
@@ -1835,21 +1921,21 @@ async function confirmBuy(){
     var data=await sbRpc('buy_blocks',{p_airdrop_id:buy.airdropId,p_block_numbers:buy.blocks},token);
     console.log('buy_blocks response:',data);
     if(data&&data.ok){
+      // Mining animation — calculate ROBI discovery
+      var oldMyBlocks=_gridData?_gridData.filter(function(b){return b.is_mine}).length:0;
+      var rate=_currentDetail?calcMiningRate(_currentDetail):50;
+      playMiningAnimation(data.blocks_bought,oldMyBlocks,rate);
+
       _balance=data.new_balance;
       updateBalanceUI();
-      var toastMsg=data.blocks_bought+' <span class="it">blocchi acquisiti!</span><span class="en">blocks acquired!</span>';
-      if(data.status_changed==='sale')toastMsg+=' <span style="color:var(--gold)">→ SALE!</span>';
-      if(data.status_changed==='closed')toastMsg+=' <span style="color:var(--kas)">→ SOLD OUT!</span>';
-      showToast(toastMsg);
 
-      // Animate donut: pulse the gold ring
-      var mineRing=document.getElementById('donut-mine');
-      if(mineRing)mineRing.classList.add('pulse');
-
-      // Refresh and re-render detail
-      await Promise.all([loadAirdrops(),loadMyParticipations(),loadBalance()]);
-      renderGrid();
-      setTimeout(function(){openDetail(buy.airdropId)},400);
+      // Refresh and re-render detail (after animation)
+      var animDur=Math.floor(oldMyBlocks/rate)<Math.floor((oldMyBlocks+data.blocks_bought)/rate)?3200:2000;
+      setTimeout(async function(){
+        await Promise.all([loadAirdrops(),loadMyParticipations(),loadBalance(),loadMyRanks()]);
+        renderGrid();
+        openDetail(buy.airdropId);
+      },animDur);
     } else {
       var errMsg={
         'INSUFFICIENT_ARIA':'<span class="it">ARIA insufficienti (saldo: '+(data.balance||0)+', costo: '+(data.cost||0)+').</span><span class="en">Not enough ARIA (balance: '+(data.balance||0)+', cost: '+(data.cost||0)+').</span>',
@@ -1958,7 +2044,7 @@ async function executeCancelParticipation(airdropId){
       ?'Partecipazione ritirata. '+data.blocks_released+' blocchi rilasciati. '+data.aria_lost+' ARIA non rimborsati.'
       :'Participation withdrawn. '+data.blocks_released+' blocks released. '+data.aria_lost+' ARIA not refunded.');
     // Refresh data
-    await Promise.all([loadAirdrops(),loadMyParticipations()]);
+    await Promise.all([loadAirdrops(),loadMyParticipations(),loadMyRanks()]);
     renderGrid();
     renderMyAirdrops();
   } else {
