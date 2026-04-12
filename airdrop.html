@@ -378,18 +378,43 @@ function updateCost(){
 
 async function doBuy(){
   if(!_airdrop||_buyQty<1)return;
+  var a=_airdrop;
+  var isPresale=a.status==='presale';
+  var price=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
+  var cost=_buyQty*price;
+  if(cost>_balance){alert('ARIA insufficienti');return;}
+
   var btn=document.getElementById('ap-buy-btn');
   if(btn)btn.disabled=true;
   var token=await getValidToken();if(!token)return;
   try{
+    // Load sold blocks to find available ones
+    var soldRes=await fetch(SB_URL+'/rest/v1/airdrop_blocks?airdrop_id=eq.'+a.id+'&select=block_number',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    var soldSet={};
+    if(soldRes.ok){var sold=await soldRes.json();sold.forEach(function(b){soldSet[b.block_number]=true;});}
+
+    // Pick random available blocks
+    var available=[];
+    for(var i=1;i<=a.total_blocks;i++){if(!soldSet[i])available.push(i);}
+    // Shuffle
+    for(var j=available.length-1;j>0;j--){
+      var k=Math.floor(Math.random()*(j+1));
+      var tmp=available[j];available[j]=available[k];available[k]=tmp;
+    }
+    var chosen=available.slice(0,_buyQty);
+    if(chosen.length<_buyQty){alert('Non ci sono abbastanza blocchi disponibili');if(btn)btn.disabled=false;return;}
+
     var res=await fetch(SB_URL+'/rest/v1/rpc/buy_blocks',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
-      body:JSON.stringify({p_airdrop_id:_airdrop.id,p_blocks:_buyQty})
+      body:JSON.stringify({p_airdrop_id:a.id,p_block_numbers:chosen})
     });
     var data=await res.json();
     if(data&&data.ok){
-      alert((document.documentElement.getAttribute('data-lang')==='en'?'Blocks purchased!':'Blocchi acquistati!')+' '+_buyQty+' blocchi');
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      alert((lang==='en'?'Blocks purchased!':'Blocchi acquistati!')+' '+_buyQty+(lang==='en'?' blocks':' blocchi'));
       location.reload();
     }else{
       alert('Errore: '+(data&&data.error?data.error:'sconosciuto'));
