@@ -1196,9 +1196,14 @@ async function loadNotifications(){
     var onclick=isMsg
       ?'notifGoToChat(\''+n.id+'\')'
       :'markNotifRead(\''+n.id+'\')';
+    var airdropLink='';
+    if(n.airdrop_id){
+      airdropLink='<div style="margin-top:6px"><a onclick="event.stopPropagation();markNotifRead(\''+n.id+'\');notifGoToAirdrop(\''+n.airdrop_id+'\')" style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--aria);cursor:pointer;text-decoration:none;border:1px solid rgba(74,158,255,.25);padding:4px 10px;border-radius:var(--radius-sm);transition:all .3s" onmouseover="this.style.background=\'rgba(74,158,255,.1)\'" onmouseout="this.style.background=\'transparent\'">'+(lang==='it'?'VAI ALL\'AIRDROP':'GO TO AIRDROP')+'</a></div>';
+    }
     return '<div class="notif-item'+(n.read?'':' unread')+'" data-id="'+n.id+'" onclick="'+onclick+'">'
       +'<div class="notif-title">'+escHtml(n.title||'AIROOBI')+'</div>'
       +'<div>'+escHtml(n.body||'')+'</div>'
+      +airdropLink
       +'<div class="notif-time">'+time+'</div>'
       +'</div>';
   }).join('');
@@ -1236,6 +1241,13 @@ function notifGoToChat(notifId){
   if(panel)panel.style.display='none';
   // Navigate to miei-airdrop and open all chats
   navigateTo('my');
+}
+
+function notifGoToAirdrop(airdropId){
+  _notifOpen=false;
+  var panel=document.getElementById('notif-panel');
+  if(panel)panel.style.display='none';
+  goToAirdrop(airdropId);
 }
 
 async function markAllNotifRead(){
