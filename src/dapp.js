@@ -2907,22 +2907,22 @@ async function loadDappWallet(){
     if(valEl){
       if(hasRendimento&&unitVal>0){
         var totalVal=(unitVal*totalShares).toFixed(2);
-        valEl.innerHTML='&euro; '+totalVal;
+        valEl.innerHTML='<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.5px">&euro; '+totalVal+'</span>';
         fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur').then(function(r){return r.json()}).then(function(d){
           if(d&&d.kaspa&&d.kaspa.eur>0){
             var kasEquiv=(parseFloat(totalVal)/d.kaspa.eur).toFixed(2);
-            valEl.innerHTML='&euro; '+totalVal+'<div style="font-family:var(--font-m);font-size:11px;color:var(--kas);margin-top:4px;letter-spacing:1px">&asymp; '+kasEquiv+' KAS</div>';
+            valEl.innerHTML='<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.5px">&euro; '+totalVal+' &middot; &asymp; '+kasEquiv+' KAS</span>';
             // Show potential KAS on KAS card
             var kasPot=document.getElementById('dapp-wcard-kas-potential');
             var kasPotVal=document.getElementById('dapp-wcard-kas-potential-val');
             if(kasPot&&kasPotVal){
-              kasPot.style.display='block';
-              kasPotVal.innerHTML='&asymp; '+kasEquiv+' KAS <span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">(€ '+totalVal+')</span>';
+              kasPot.style.display='inline';
+              kasPotVal.innerHTML='&asymp; '+kasEquiv+' KAS';
             }
           }
         }).catch(function(){});
       }else{
-        valEl.textContent=hasRendimento?'€ 0,00':'—';
+        valEl.innerHTML=hasRendimento?'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.5px">&euro; 0,00</span>':'<span class="it">Guadagna partecipando</span><span class="en">Earn by participating</span>';
       }
     }
   }catch(e){}
