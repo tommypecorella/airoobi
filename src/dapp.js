@@ -2871,8 +2871,8 @@ async function loadDappWallet(){
 
   var wc=document.getElementById('dapp-wcard-rendimento');
   var wl=document.getElementById('dapp-wcard-rendimento-locked');
-  if(wc)wc.style.display=hasRendimento?'flex':'none';
-  if(wl)wl.style.display=hasRendimento?'none':'flex';
+  if(wc)wc.style.display=hasRendimento?'block':'none';
+  if(wl)wl.style.display=hasRendimento?'none':'block';
 
   if(hasRendimento){
     var cn=document.getElementById('dapp-wcard-rend-count');
