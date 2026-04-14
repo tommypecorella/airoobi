@@ -658,6 +658,25 @@ select option{background:var(--gray-800);color:var(--white)}
 .detail-position.in{color:var(--aria);border-color:rgba(74,158,255,.15)}
 .detail-position.not-in{color:var(--gray-400)}
 .detail-position.shake{animation:shake .5s ease-in-out}
+.pos-main{margin-bottom:6px}
+.pos-breakdown{display:flex;gap:14px;font-size:10px;color:var(--gray-400);letter-spacing:.3px}
+.pos-label{font-weight:700;color:var(--gray-500);margin-right:3px}
+.pos-breakdown span[title]{cursor:help}
+
+/* ── My Stats panel ── */
+.detail-mystats{border:1px solid var(--gray-700);background:var(--card-bg);border-radius:var(--radius);padding:18px;margin:12px 0 20px}
+.mystats-header{font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase;margin-bottom:14px}
+.mystats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--gray-700);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px}
+.mystats-cell{background:var(--black);padding:14px 8px;text-align:center}
+.mystats-val{font-family:var(--font-h);font-size:20px;font-weight:600;color:var(--white)}
+.mystats-label{font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px;text-transform:uppercase}
+.mystats-history-toggle{display:flex;align-items:center;justify-content:space-between;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--gray-400);cursor:pointer;padding:8px 0;border-top:1px solid var(--gray-800)}
+.mystats-chevron{width:14px;height:14px;transition:transform .2s}
+.mystats-history.open .mystats-chevron{transform:rotate(180deg)}
+.mystats-history-list{display:none;padding-top:8px}
+.mystats-history.open .mystats-history-list{display:block}
+.mystats-history-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;padding:5px 0;border-bottom:1px solid var(--gray-800)}
+.mystats-history-row:last-child{border-bottom:none}
 
 /* ── Heart / Watchlist button ── */
 .heart-btn{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);color:var(--gray-300);font-size:16px;width:34px;height:34px;border-radius:50%;cursor:pointer;z-index:3;display:flex;align-items:center;justify-content:center;transition:all .25s;line-height:1;padding:0}

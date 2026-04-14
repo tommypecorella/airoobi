@@ -1594,6 +1594,15 @@ async function openDetail(id){
     // Position live
     +'<div class="detail-position" id="detail-position"></div>'
 
+    // MY STATS panel (solo se partecipante)
+    +(myBlocks>0&&!_publicMode?
+    '<div class="detail-mystats" id="detail-mystats">'
+    +'<div class="mystats-header"><span class="it">Le tue statistiche</span><span class="en">Your stats</span></div>'
+    +'<div class="mystats-grid" id="mystats-grid"></div>'
+    +'<div class="mystats-history" id="mystats-history"></div>'
+    +'</div>'
+    :'')
+
     // BUY BOX — show login CTA in public mode
     +(_publicMode
       ?'<div class="buy-box">'
@@ -1676,6 +1685,9 @@ async function openDetail(id){
   if(_positionInterval)clearInterval(_positionInterval);
   _positionInterval=setInterval(function(){refreshPosition(a.id)},30000);
 
+  // Detail stats (ROBI projection, %, history)
+  if(myBlocks>0&&!_publicMode)loadDetailStats(a.id);
+
   // Auto-buy status
   if(myBlocks>0)loadAutoBuyStatus(a.id);
 }
@@ -1718,8 +1730,17 @@ function updateDetailPosition(airdropId,scores){
     el.className='detail-position not-in';
     return;
   }
-  el.innerHTML='<span class="it">Sei <strong>'+pos+'°</strong> su '+total+' partecipanti</span>'
-    +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span>';
+  var myScore=scores.find(function(s){return s.user_id===_session.user.id});
+  var f1=myScore?parseFloat(myScore.f1):0;
+  var f2=myScore?parseFloat(myScore.f2):0;
+  var sc=myScore?parseFloat(myScore.score):0;
+  el.innerHTML='<div class="pos-main"><span class="it">Sei <strong>'+pos+'°</strong> su '+total+' partecipanti</span>'
+    +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span></div>'
+    +'<div class="pos-breakdown">'
+    +'<span title="Blocchi / Blocks"><span class="pos-label">F1</span> '+f1.toFixed(2)+'</span>'
+    +'<span title="Fedeltà categoria / Category loyalty"><span class="pos-label">F2</span> '+f2.toFixed(2)+'</span>'
+    +'<span title="Score"><span class="pos-label">S</span> '+sc.toFixed(3)+'</span>'
+    +'</div>';
   el.className='detail-position in';
   // Check if position worsened
   if(_lastPosition!==null&&pos>_lastPosition){
@@ -1740,6 +1761,70 @@ async function refreshPosition(airdropId){
     if(!Array.isArray(scores))scores=[];
     updateDetailPosition(airdropId,scores);
   }catch(e){}
+}
+
+// ── Detail Stats (ROBI projection, %, history) ──
+async function loadDetailStats(airdropId){
+  var panel=document.getElementById('detail-mystats');
+  if(!panel||!_session)return;
+  var token=await getValidToken();if(!token)return;
+  var data=await sbRpc('get_my_airdrop_detail_stats',{p_airdrop_id:airdropId},token);
+  if(!data||typeof data!=='object')return;
+  var a=_currentDetail;if(!a)return;
+
+  var presaleB=data.presale_blocks||0;
+  var saleB=data.sale_blocks||0;
+  var totalMyBlocks=presaleB+saleB;
+  var pctOwned=a.total_blocks>0?(totalMyBlocks/a.total_blocks*100):0;
+
+  // ROBI projection: same formula as execute_draw
+  var divisor=Math.max(1,Math.ceil((a.object_value_eur||500)/100));
+  var projectedRobi=(presaleB*2.0+saleB)/divisor;
+
+  // Earned ROBI so far: from nft_rewards would need another RPC, use projection
+  var miningRate=calcMiningRate(a);
+  var robiNow=miningRate>0?totalMyBlocks/miningRate:0;
+
+  var gridEl=document.getElementById('mystats-grid');
+  if(gridEl){
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    gridEl.innerHTML=''
+      +'<div class="mystats-cell">'
+      +'<div class="mystats-val" style="color:var(--gold)">'+projectedRobi.toFixed(2)+'</div>'
+      +'<div class="mystats-label"><span class="it">ROBI proiettati</span><span class="en">Projected ROBI</span></div>'
+      +'</div>'
+      +'<div class="mystats-cell">'
+      +'<div class="mystats-val" style="color:var(--aria)">'+pctOwned.toFixed(1)+'%</div>'
+      +'<div class="mystats-label"><span class="it">Blocchi tuoi</span><span class="en">Your blocks</span></div>'
+      +'</div>'
+      +'<div class="mystats-cell">'
+      +'<div class="mystats-val">'+presaleB+'<span style="font-size:10px;color:var(--gray-400)"> / '+saleB+'</span></div>'
+      +'<div class="mystats-label"><span class="it">Presale / Sale</span><span class="en">Presale / Sale</span></div>'
+      +'</div>';
+  }
+
+  // Purchase history
+  var histEl=document.getElementById('mystats-history');
+  var history=data.history||[];
+  if(histEl&&history.length>0){
+    var h='<div class="mystats-history-toggle" onclick="this.parentElement.classList.toggle(\'open\')">'
+      +'<span class="it">Storico acquisti ('+history.length+')</span>'
+      +'<span class="en">Purchase history ('+history.length+')</span>'
+      +'<svg class="mystats-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'
+      +'</div>'
+      +'<div class="mystats-history-list">';
+    history.forEach(function(p){
+      var d=new Date(p.date);
+      var dateStr=d.toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+      h+='<div class="mystats-history-row">'
+        +'<span>'+p.blocks+' <span class="it">blocchi</span><span class="en">blocks</span></span>'
+        +'<span style="color:var(--aria)">'+p.aria+' ARIA</span>'
+        +'<span style="color:var(--gray-500)">'+dateStr+'</span>'
+        +'</div>';
+    });
+    h+='</div>';
+    histEl.innerHTML=h;
+  }
 }
 
 // ── Push Notifications ──
