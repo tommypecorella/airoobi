@@ -108,7 +108,30 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 .landing-footer-motto{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--accent);margin-bottom:6px}
 .landing-footer-ver{font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600)}
 
-/* Spots counter */
+/* Carousels */
+.carousel-section{max-width:1100px;margin:0 auto;padding:0 24px 48px}
+.carousel-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.carousel-title{font-family:var(--font-h);font-size:clamp(1.2rem,3vw,1.6rem);font-weight:600;color:var(--white);letter-spacing:-.01em}
+.carousel-arrows{display:flex;gap:8px}
+.carousel-arrow{width:32px;height:32px;border-radius:50%;border:1px solid var(--gray-700);background:var(--glass-bg);color:var(--gray-400);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;font-size:14px}
+.carousel-arrow:hover{border-color:var(--accent);color:var(--accent);background:rgba(74,158,255,.06)}
+.carousel-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:8px}
+.carousel-track::-webkit-scrollbar{display:none}
+.carousel-card{flex:0 0 220px;scroll-snap-align:start;background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:var(--radius-sm);overflow:hidden;text-decoration:none;color:inherit;transition:all .3s;cursor:pointer;display:flex;flex-direction:column}
+.carousel-card:hover{border-color:rgba(74,158,255,.3);transform:translateY(-3px);box-shadow:0 12px 32px rgba(0,0,0,.35)}
+.carousel-card img{width:100%;height:130px;object-fit:cover;display:block}
+.carousel-card .card-placeholder{width:100%;height:130px;background:linear-gradient(135deg,var(--gray-800) 0%,var(--gray-700) 100%);display:flex;align-items:center;justify-content:center}
+.carousel-card .card-placeholder svg{width:32px;height:32px;stroke:var(--gray-600);fill:none;stroke-width:1}
+.carousel-card-body{padding:12px 14px 14px;flex:1;display:flex;flex-direction:column;gap:6px}
+.carousel-card .airdrop-cat{font-size:9px;letter-spacing:1.2px}
+.carousel-card .airdrop-title{font-family:var(--font-h);font-size:.95rem;font-weight:400;color:var(--white);line-height:1.25}
+.carousel-card .airdrop-progress{height:2px}
+.carousel-card .airdrop-meta{font-size:.72rem}
+.carousel-card .airdrop-badge{font-size:9px;padding:3px 9px;top:8px;left:8px}
+.carousel-card .status-badge{font-family:var(--font-b);font-size:9px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;padding:3px 10px;border-radius:16px;display:inline-block;width:fit-content}
+.status-badge.valutazione{background:rgba(255,180,50,.15);color:#ffb432;border:1px solid rgba(255,180,50,.25)}
+.carousel-empty{flex:0 0 100%;text-align:center;padding:32px 16px;color:var(--gray-400);font-size:.85rem}
+.skel-carousel{flex:0 0 220px;height:240px}
 
 /* Alpha Brave Banner — prominent */
 .alpha-banner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:36px;padding:28px 40px 24px;border:1px solid rgba(74,158,255,.35);border-radius:var(--radius);background:linear-gradient(135deg,rgba(74,158,255,.06) 0%,rgba(74,158,255,.02) 50%,rgba(73,234,203,.03) 100%);overflow:hidden;max-width:460px;margin-left:auto;margin-right:auto}
@@ -185,17 +208,40 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
   </div>
 </section>
 
-<!-- AIRDROP ATTIVI -->
-<section class="airdrops-section">
-  <h2 class="section-title"><span class="it">Cosa c'&egrave; adesso su AIROOBI</span><span class="en">What's live on AIROOBI</span></h2>
-  <p class="section-sub"><span class="it">Airdrop attivi &mdash; partecipa ora</span><span class="en">Active airdrops &mdash; join now</span></p>
-  <div class="airdrop-grid" id="airdrop-grid">
-    <div class="skel skel-card"></div>
-    <div class="skel skel-card"></div>
-    <div class="skel skel-card"></div>
+<!-- CAROUSEL 1: AIRDROP ATTIVI (PRESALE / SALE) -->
+<section class="carousel-section">
+  <div class="carousel-header">
+    <h2 class="carousel-title"><span class="it">Airdrop attivi</span><span class="en">Active airdrops</span></h2>
+    <div class="carousel-arrows">
+      <button class="carousel-arrow" onclick="scrollCarousel('active-track',-240)" aria-label="Previous">&larr;</button>
+      <button class="carousel-arrow" onclick="scrollCarousel('active-track',240)" aria-label="Next">&rarr;</button>
+    </div>
   </div>
-  <div class="section-cta">
-    <a href="/airdrops" class="btn-secondary"><span class="it">Vedi tutti gli airdrop &rarr;</span><span class="en">See all airdrops &rarr;</span></a>
+  <div class="carousel-track" id="active-track">
+    <div class="skel skel-carousel"></div>
+    <div class="skel skel-carousel"></div>
+    <div class="skel skel-carousel"></div>
+    <div class="skel skel-carousel"></div>
+  </div>
+  <div class="section-cta" style="margin-top:20px">
+    <a href="/airdrops" class="btn-secondary" style="font-size:11px;padding:10px 28px"><span class="it">Vedi tutti &rarr;</span><span class="en">See all &rarr;</span></a>
+  </div>
+</section>
+
+<!-- CAROUSEL 2: IN ARRIVO (IN_VALUTAZIONE) -->
+<section class="carousel-section">
+  <div class="carousel-header">
+    <h2 class="carousel-title"><span class="it">In arrivo</span><span class="en">Coming soon</span></h2>
+    <div class="carousel-arrows">
+      <button class="carousel-arrow" onclick="scrollCarousel('upcoming-track',-240)" aria-label="Previous">&larr;</button>
+      <button class="carousel-arrow" onclick="scrollCarousel('upcoming-track',240)" aria-label="Next">&rarr;</button>
+    </div>
+  </div>
+  <div class="carousel-track" id="upcoming-track">
+    <div class="skel skel-carousel"></div>
+    <div class="skel skel-carousel"></div>
+    <div class="skel skel-carousel"></div>
+    <div class="skel skel-carousel"></div>
   </div>
 </section>
 
@@ -217,7 +263,7 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
   </div>
   <div class="landing-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>
   <div class="landing-footer-motto"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div class="landing-footer-ver">alfa-2026.04.14-2.8.0</div>
+  <div class="landing-footer-ver">alfa-2026.04.14-2.9.0</div>
 </footer>
 
 <script>
@@ -245,39 +291,75 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
   }catch(e){document.getElementById('alpha-remaining').textContent='996'}
 })();
 
+// ── Carousel scroll helper ──
+function scrollCarousel(id,delta){
+  var el=document.getElementById(id);
+  if(el)el.scrollBy({left:delta,behavior:'smooth'});
+}
+
+var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
+
+function renderCard(a,type){
+  var imgHtml=a.image_url
+    ?'<img src="'+a.image_url+'" alt="" loading="lazy">'
+    :'<div class="card-placeholder">'+placeholderSvg+'</div>';
+
+  if(type==='active'){
+    var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
+    var remaining=a.total_blocks-a.blocks_sold;
+    var isPresale=a.status==='presale';
+    var badge=isPresale?'<div class="airdrop-badge presale">Presale</div>':'<div class="airdrop-badge live">Live</div>';
+    var price=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
+    return '<a class="carousel-card" href="/airdrops/'+a.id+'"><div class="card-wrap">'
+      +badge+imgHtml
+      +'</div><div class="carousel-card-body">'
+      +'<div class="airdrop-cat">'+(a.category||'')+'</div>'
+      +'<div class="airdrop-title">'+(a.title||'')+'</div>'
+      +'<div class="airdrop-progress"><div class="airdrop-progress-bar" style="width:'+pct+'%"></div></div>'
+      +'<div class="airdrop-meta"><span class="price">'+price+' ARIA</span><span>'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span></div>'
+      +'</div></a>';
+  }else{
+    return '<div class="carousel-card"><div class="card-wrap">'+imgHtml
+      +'</div><div class="carousel-card-body">'
+      +'<div class="airdrop-cat">'+(a.category||'')+'</div>'
+      +'<div class="airdrop-title">'+(a.title||'')+'</div>'
+      +'<div class="status-badge valutazione"><span class="it">In valutazione</span><span class="en">Under review</span></div>'
+      +'</div></div>';
+  }
+}
+
+// ── Carousel 1: Airdrop attivi (presale/sale) ──
 (async function(){
   try{
-    var res=await fetch(SB_URL+'/rest/v1/airdrops?status=in.(presale,sale)&order=created_at.desc&limit=6',{
+    var res=await fetch(SB_URL+'/rest/v1/airdrops?status=in.(presale,sale)&order=created_at.desc&limit=10',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
     });
     if(!res.ok)return;
     var airdrops=await res.json();
-    var grid=document.getElementById('airdrop-grid');
+    var track=document.getElementById('active-track');
     if(!airdrops||airdrops.length===0){
-      grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--gray-400)"><span class="it">Nessun airdrop attivo al momento. Torna presto!</span><span class="en">No active airdrops right now. Come back soon!</span></div>';
+      track.innerHTML='<div class="carousel-empty"><span class="it">Nessun airdrop attivo al momento. Torna presto!</span><span class="en">No active airdrops right now. Come back soon!</span></div>';
       return;
     }
-    var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
+    track.innerHTML=airdrops.map(function(a){return renderCard(a,'active')}).join('');
+  }catch(e){console.error('Carousel active error',e)}
+})();
 
-    grid.innerHTML=airdrops.map(function(a){
-      var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
-      var remaining=a.total_blocks-a.blocks_sold;
-      var isPresale=a.status==='presale';
-      var badge=isPresale?'<div class="airdrop-badge presale">Presale</div>':'<div class="airdrop-badge live">Live</div>';
-      var imgHtml=a.image_url
-        ?'<img src="'+a.image_url+'" alt="" loading="lazy">'
-        :'<div class="card-placeholder">'+placeholderSvg+'</div>';
-      var price=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
-      return '<a class="airdrop-card" href="/airdrops/'+a.id+'"><div class="card-wrap">'
-        +badge+imgHtml
-        +'</div><div class="airdrop-card-body">'
-        +'<div class="airdrop-cat">'+(a.category||'')+'</div>'
-        +'<div class="airdrop-title">'+(a.title||'')+'</div>'
-        +'<div class="airdrop-progress"><div class="airdrop-progress-bar" style="width:'+pct+'%"></div></div>'
-        +'<div class="airdrop-meta"><span class="price">'+price+' ARIA / <span class="it">blocco</span><span class="en">block</span></span><span>'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span></div>'
-        +'</div></a>';
-    }).join('');
-  }catch(e){console.error('Landing airdrops load error',e)}
+// ── Carousel 2: In arrivo (in_valutazione) ──
+(async function(){
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/airdrops?status=eq.in_valutazione&order=created_at.desc&limit=10&select=id,title,category,image_url,status',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
+    });
+    if(!res.ok)return;
+    var airdrops=await res.json();
+    var track=document.getElementById('upcoming-track');
+    if(!airdrops||airdrops.length===0){
+      track.innerHTML='<div class="carousel-empty"><span class="it">Nessuna proposta in valutazione. Proponi il tuo oggetto!</span><span class="en">No proposals under review. Submit yours!</span></div>';
+      return;
+    }
+    track.innerHTML=airdrops.map(function(a){return renderCard(a,'upcoming')}).join('');
+  }catch(e){console.error('Carousel upcoming error',e)}
 })();
 
 </script>
