@@ -116,6 +116,10 @@ async function doDeleteAccount(){
     errEl.style.display='block';
     return;
   }
+  var msg2=lang==='it'
+    ?'CONFERMA DEFINITIVA: Sei sicuro di voler eliminare il tuo account?\n\nTutti i tuoi dati, ARIA, ROBI e partecipazioni verranno cancellati permanentemente.\n\nQuesta azione NON è reversibile.'
+    :'FINAL CONFIRMATION: Are you sure you want to delete your account?\n\nAll your data, ARIA, ROBI and participations will be permanently deleted.\n\nThis action CANNOT be undone.';
+  if(!confirm(msg2)){return;}
   var btn=document.getElementById('deleteaccount-btn');
   btn.disabled=true;
   btn.textContent=lang==='it'?'Eliminazione...':'Deleting...';
