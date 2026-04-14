@@ -923,7 +923,7 @@ async function loadMyRanks(){
   var token=await getValidToken();if(!token)return;
   var data=await sbRpc('get_my_airdrop_ranks',{},token)||[];
   if(!Array.isArray(data))return;
-  data.forEach(function(r){_myRanks[r.airdrop_id]={rank:r.rank,total:r.total,score:r.score};});
+  data.forEach(function(r){_myRanks[r.airdrop_id]={rank:r.rank,total:r.total,score:r.score,blocks:r.blocks||0,aria_spent:r.aria_spent||0};});
 }
 
 // ── Mine Tower 3D ──
@@ -1422,22 +1422,35 @@ function renderGrid(){
       ?'<div class="card-rank"><span class="it">'+rankInfo.rank+'° su '+rankInfo.total+'</span><span class="en">#'+rankInfo.rank+' of '+rankInfo.total+'</span></div>'
       :'';
 
+    // ROBI projection for this user
+    var miningRate=calcMiningRate(a);
+    var myBlk=rankInfo?rankInfo.blocks:0;
+    var myRobi=miningRate>0&&myBlk>0?(myBlk/miningRate):0;
+    var robiEur=myRobi*_robiPrice;
+    var robiHtml=myBlk>0
+      ?'<div class="card-robi"><span class="card-robi-val"><span style="color:var(--gold)">&#9830;</span> '+myRobi.toFixed(1)+' ROBI</span>'
+      +'<span class="card-robi-eur">&euro;'+robiEur.toFixed(2).replace('.',',')+'</span></div>'
+      :'';
+
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
       +badge
       +durationBadge(a.duration_type)
-      +'<button class="'+heartCls+'" onclick="toggleWatchlist(\''+a.id+'\',event)">♡</button>'
       +imgHtml
       +'<div class="card-body">'
+      +'<div class="card-cat-row">'
       +'<div class="card-cat">'+(CAT_ICONS[a.category]||'')+' '+(a.category||'')+'</div>'
+      +'<button class="'+heartCls+' card-heart" onclick="toggleWatchlist(\''+a.id+'\',event)">&#9825;</button>'
+      +'</div>'
       +'<div class="card-title">'+a.title+'</div>'
       +cdHtml
       +rankHtml
+      +robiHtml
       +'<div class="card-progress"><div class="card-progress-bar" style="width:'+pct+'%"></div></div>'
       +'<div class="card-footer">'
       +'<span class="card-price">'+priceHtml+'</span>'
       +'<span class="card-remain">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
       +'</div>'
-      +'<div class="card-mining"><span style="color:var(--gold)">⛏</span> '+calcMiningRate(a)+' bl / 1 ROBI</div>'
+      +'<div class="card-mining"><span style="color:var(--gold)">&#9935;</span> '+miningRate+' bl / 1 ROBI</div>'
       +'</div></div>';
   }).join('');
 }
@@ -1844,7 +1857,8 @@ function updateDetailPosition(airdropId,scores){
   }
   _lastPosition=pos;
   // Update cached rank for grid cards
-  _myRanks[airdropId]={rank:pos,total:total,score:scores.find(function(s){return s.user_id===_session.user.id})?.score||0};
+  var _ms=scores.find(function(s){return s.user_id===_session.user.id});
+  _myRanks[airdropId]={rank:pos,total:total,score:_ms?.score||0,blocks:_ms?.blocks||0,aria_spent:_ms?.aria_spent||0};
   // Update strategy guide with live data
   updateStrategyGuide(scores,pos,total,myScore);
 }
