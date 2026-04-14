@@ -663,6 +663,29 @@ select option{background:var(--gray-800);color:var(--white)}
 .pos-label{font-weight:700;color:var(--gray-500);margin-right:3px}
 .pos-breakdown span[title]{cursor:help}
 
+/* ── Strategy Guide ── */
+.strategy-box{border:1px solid var(--gray-700);background:var(--card-bg);border-radius:var(--radius);padding:18px;margin:10px 0}
+.strategy-box.first{border-color:rgba(184,150,12,.25);background:rgba(184,150,12,.04)}
+.strategy-title{font-family:var(--font-m);font-size:13px;letter-spacing:.5px;color:var(--white);margin-bottom:14px;font-weight:600}
+.strategy-formula{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.strategy-factor{background:rgba(255,255,255,.03);border:1px solid var(--gray-700);border-radius:var(--radius-sm);padding:12px}
+.strategy-factor-pct{font-family:var(--font-h);font-size:22px;font-weight:700;color:var(--aria);line-height:1}
+.strategy-factor-name{font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--white);margin-top:6px}
+.strategy-factor-desc{font-size:10px;color:var(--gray-400);margin-top:4px;line-height:1.4}
+.strategy-bars{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.strategy-bar-row{display:flex;align-items:center;gap:8px}
+.strategy-bar-label{font-family:var(--font-m);font-size:10px;letter-spacing:.5px;color:var(--gray-400);width:60px;flex-shrink:0}
+.strategy-bar-weight{font-size:8px;color:var(--gray-500)}
+.strategy-bar-track{flex:1;height:6px;background:var(--gray-800);border-radius:3px;overflow:hidden}
+.strategy-bar-fill{height:100%;border-radius:3px;transition:width .6s ease}
+.strategy-bar-fill.f1{background:var(--aria)}
+.strategy-bar-fill.f2{background:var(--gold)}
+.strategy-bar-val{font-family:var(--font-m);font-size:10px;color:var(--gray-300);width:32px;text-align:right;flex-shrink:0}
+.strategy-tips{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.strategy-tip{font-size:12px;line-height:1.5;color:var(--gray-300);padding:6px 10px;background:rgba(255,255,255,.02);border-radius:var(--radius-sm);border-left:2px solid var(--gray-600)}
+.strategy-box.first .strategy-tip{border-left-color:var(--gold)}
+.strategy-legend{font-size:9px;color:var(--gray-500);letter-spacing:.3px;line-height:1.5;padding-top:8px;border-top:1px solid var(--gray-800)}
+
 /* ── My Stats panel ── */
 .detail-mystats{border:1px solid var(--gray-700);background:var(--card-bg);border-radius:var(--radius);padding:18px;margin:12px 0 20px}
 .mystats-header{font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase;margin-bottom:14px}
