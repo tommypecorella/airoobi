@@ -491,6 +491,14 @@ select option{background:var(--gray-800);color:var(--white)}
 .submit-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
 .submit-select option{background:var(--gray-800);color:var(--white)}
 .submit-hint{font-size:12px;color:var(--gray-400);margin-top:6px}
+/* Duration type cards (submit form) */
+.sub-duration-card{display:flex;flex-direction:column;align-items:center;text-align:center;padding:14px 10px;border:1px solid var(--gray-700);background:var(--card-bg);cursor:pointer;transition:all .25s;border-radius:var(--radius)}
+.sub-duration-card:hover{border-color:var(--gray-500)}
+.sub-duration-card.selected{border-color:var(--aria);background:rgba(74,158,255,.06)}
+.sub-dur-icon{font-size:24px;margin-bottom:6px}
+.sub-dur-name{font-family:var(--font-m);font-size:12px;letter-spacing:1px;color:var(--white);font-weight:600}
+.sub-dur-time{font-family:var(--font-h);font-size:22px;font-weight:300;color:var(--aria);margin:4px 0}
+.sub-dur-desc{font-size:10px;color:var(--gray-400);line-height:1.4}
 .submit-btn{width:100%;padding:18px;background:var(--accent);color:var(--black);border:none;font-family:var(--font-b);font-size:14px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .25s;text-transform:uppercase;margin-top:10px;border-radius:var(--radius)}
 .submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(74,158,255,.25)}
 .submit-btn:disabled{opacity:.35;cursor:not-allowed;transform:none}

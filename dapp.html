@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.12.0">
+<link rel="stylesheet" href="/src/dapp.css?v=3.13.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -519,6 +519,35 @@
       </div>
       <div class="submit-hint" style="margin-bottom:20px"><span class="it">Il prezzo minimo accettabile deve essere almeno &euro;500. AIROOBI valuterà il tuo oggetto e ti proporrà una quotazione entro 24-48 ore.</span><span class="en">The minimum acceptable price must be at least &euro;500. AIROOBI will evaluate your object and propose a quote within 24-48 hours.</span></div>
 
+      <!-- DURATA AIRDROP -->
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Tipo di airdrop</span><span class="en">Airdrop type</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px" id="sub-duration-grid">
+          <label class="sub-duration-card" id="sub-dur-flash">
+            <input type="radio" name="sub-duration" value="flash" style="display:none">
+            <div class="sub-dur-icon">&#9889;</div>
+            <div class="sub-dur-name">Flash</div>
+            <div class="sub-dur-time">6h</div>
+            <div class="sub-dur-desc"><span class="it">Veloce e intenso. Soglia presale bassa, tutto si decide in poche ore.</span><span class="en">Fast and intense. Low presale threshold, everything is decided in a few hours.</span></div>
+          </label>
+          <label class="sub-duration-card selected" id="sub-dur-standard">
+            <input type="radio" name="sub-duration" value="standard" checked style="display:none">
+            <div class="sub-dur-icon">&#9201;</div>
+            <div class="sub-dur-name">Standard</div>
+            <div class="sub-dur-time">24h</div>
+            <div class="sub-dur-desc"><span class="it">Equilibrato. Un giorno intero per partecipare. Consigliato.</span><span class="en">Balanced. A full day to participate. Recommended.</span></div>
+          </label>
+          <label class="sub-duration-card" id="sub-dur-extended">
+            <input type="radio" name="sub-duration" value="extended" style="display:none">
+            <div class="sub-dur-icon">&#9203;</div>
+            <div class="sub-dur-name">Extended</div>
+            <div class="sub-dur-time">72h</div>
+            <div class="sub-dur-desc"><span class="it">Pi&ugrave; tempo per raccogliere partecipanti. Ideale per oggetti di alto valore.</span><span class="en">More time to gather participants. Ideal for high-value items.</span></div>
+          </label>
+        </div>
+        <div style="font-size:11px;color:var(--gray-500);margin-top:8px;line-height:1.5"><span class="it">La durata determina la soglia di blocchi presale per passare alla fase Sale e il tempo a disposizione dei partecipanti.</span><span class="en">Duration determines the presale block threshold to move to Sale phase and the time available to participants.</span></div>
+      </div>
+
       <!-- COSTO VALUTAZIONE -->
       <div id="sub-cost-box" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin-bottom:20px;border:1px solid rgba(74,158,255,.2);background:rgba(74,158,255,.04)">
         <div>
@@ -977,7 +1006,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.15-3.12.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.15-3.13.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1049,6 +1078,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.12.0"></script>
+<script src="/src/dapp.js?v=3.13.0"></script>
 </body>
 </html>

@@ -547,8 +547,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <div><label>Presale abilitato</label><select id="bo-approve-presale-enabled"><option value="yes">Si (presale + sale)</option><option value="no">No (solo sale)</option></select></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><label>Deadline (opzionale)</label><input type="date" id="bo-approve-deadline"></div>
-        <div><label>Durata</label><select id="bo-approve-duration"><option value="flash">Flash (6h) ⚡</option><option value="standard" selected>Standard (24h)</option><option value="extended">Extended (72h)</option></select></div>
+        <div><label>Durata</label><select id="bo-approve-duration" onchange="boAutoDeadline()"><option value="flash">Flash (6h) &#9889;</option><option value="standard" selected>Standard (24h)</option><option value="extended">Extended (72h)</option></select></div>
+        <div><label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto)</span></label><input type="datetime-local" id="bo-approve-deadline"><div style="font-size:9px;color:var(--gray-500);margin-top:2px" id="bo-deadline-info"></div></div>
       </div>
       <!-- Calc preview -->
       <div id="bo-calc-preview" style="display:none;margin-top:12px;padding:12px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);font-size:11px;line-height:1.8">
@@ -707,20 +707,34 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <!-- ── SEZIONE OPERATIVA ── -->
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
         <div>
-          <label>Deadline</label>
-          <input type="datetime-local" id="ad-deadline">
-        </div>
-        <div>
           <label>Durata</label>
-          <select id="ad-duration-type">
-            <option value="flash">Flash (6h) ⚡</option>
+          <select id="ad-duration-type" onchange="adAutoDeadline()">
+            <option value="flash">Flash (6h) &#9889;</option>
             <option value="standard" selected>Standard (24h)</option>
             <option value="extended">Extended (72h)</option>
           </select>
         </div>
         <div>
+          <label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto-calcolata)</span></label>
+          <input type="datetime-local" id="ad-deadline">
+          <div style="font-size:9px;color:var(--gray-500);margin-top:3px">Dalla prossima ora piena + durata</div>
+        </div>
+        <div>
           <label>Auto-draw</label>
           <div style="padding-top:8px"><label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0"><input type="checkbox" id="ad-auto-draw" style="accent-color:var(--gold);width:16px;height:16px"> Estrai alla deadline</label></div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
+        <div>
+          <label>Soglia presale &rarr; sale <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none" id="ad-threshold-hint"></span></label>
+          <div style="display:flex;align-items:center;gap:6px">
+            <input type="number" id="ad-presale-threshold" min="5" max="100" style="width:70px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:14px">
+            <span style="color:var(--gray-400)">%</span>
+            <span style="font-size:10px;color:var(--gray-500)">dei blocchi venduti in presale</span>
+          </div>
+        </div>
+        <div id="ad-deadline-preview" style="display:flex;align-items:flex-end;padding-bottom:6px">
+          <div style="font-size:11px;color:var(--gray-400);line-height:1.5" id="ad-deadline-info"></div>
         </div>
       </div>
       <label>Status</label>
@@ -1431,6 +1445,17 @@ async function adOpenModal(id){
     document.getElementById('ad-rejection').value=a.rejection_reason||'';
     document.getElementById('ad-auto-draw').checked=!!a.auto_draw;
     document.getElementById('ad-duration-type').value=a.duration_type||'standard';
+    // Preset threshold based on duration
+    var dur=a.duration_type||'standard';
+    var th=DURATION_THRESHOLDS[dur]||20;
+    var thEl=document.getElementById('ad-presale-threshold');
+    if(thEl)thEl.value=th;
+    var hint=document.getElementById('ad-threshold-hint');
+    if(hint)hint.textContent='(default '+dur+': '+th+'%)';
+    // Auto-calc deadline if not set
+    if(!a.deadline)adAutoDeadline();
+    var info=document.getElementById('ad-deadline-info');
+    if(info&&a.deadline)info.textContent='Deadline impostata manualmente';
     document.getElementById('ad-modal-title').textContent='Modifica: '+a.title;
     var simSection=document.getElementById('ad-sim-section');
     var canSim=['presale','sale'].indexOf(a.status)!==-1&&!a.draw_executed_at;
@@ -2856,9 +2881,11 @@ function openBoApprove(id){
   document.getElementById('bo-approve-price').value=sug.price;
   document.getElementById('bo-approve-blocks').value=sug.blocks;
   document.getElementById('bo-approve-presale').value='';
-  var deadline=new Date();deadline.setDate(deadline.getDate()+30);
-  document.getElementById('bo-approve-deadline').value=deadline.toISOString().substring(0,10);
+  // Set duration from airdrop's saved value (user chose at submission)
+  var durEl=document.getElementById('bo-approve-duration');
+  if(durEl)durEl.value=a.duration_type||'standard';
   document.getElementById('bo-approve-presale-enabled').value='yes';
+  boAutoDeadline(); // auto-calc deadline from duration
   boCalcPreview();
   document.getElementById('bo-approve-modal').classList.add('active');
 }
@@ -2890,6 +2917,61 @@ function boCalcPreview(){
   }
 }
 
+// ── Auto-deadline calculation ──
+var DURATION_HOURS={flash:6,standard:24,extended:72};
+var DURATION_THRESHOLDS={flash:30,standard:20,extended:15};
+
+function calcAutoDeadline(durationType){
+  var hours=DURATION_HOURS[durationType]||24;
+  var now=new Date();
+  // Next full hour
+  var start=new Date(now);
+  start.setMinutes(0,0,0);
+  start.setHours(start.getHours()+1);
+  // Add duration
+  var deadline=new Date(start.getTime()+hours*60*60*1000);
+  return deadline;
+}
+
+function formatDatetimeLocal(d){
+  var y=d.getFullYear();
+  var m=String(d.getMonth()+1).padStart(2,'0');
+  var day=String(d.getDate()).padStart(2,'0');
+  var h=String(d.getHours()).padStart(2,'0');
+  var min=String(d.getMinutes()).padStart(2,'0');
+  return y+'-'+m+'-'+day+'T'+h+':'+min;
+}
+
+function formatDeadlineInfo(d,durationType){
+  var hours=DURATION_HOURS[durationType]||24;
+  var opts={weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'};
+  return d.toLocaleDateString('it-IT',opts)+' ('+hours+'h dalla prossima ora piena)';
+}
+
+function boAutoDeadline(){
+  var dur=(document.getElementById('bo-approve-duration')||{}).value||'standard';
+  var dl=calcAutoDeadline(dur);
+  var el=document.getElementById('bo-approve-deadline');
+  if(el)el.value=formatDatetimeLocal(dl);
+  var info=document.getElementById('bo-deadline-info');
+  if(info)info.textContent=formatDeadlineInfo(dl,dur);
+}
+
+function adAutoDeadline(){
+  var dur=(document.getElementById('ad-duration-type')||{}).value||'standard';
+  var dl=calcAutoDeadline(dur);
+  var el=document.getElementById('ad-deadline');
+  if(el)el.value=formatDatetimeLocal(dl);
+  var info=document.getElementById('ad-deadline-info');
+  if(info)info.textContent=formatDeadlineInfo(dl,dur);
+  // Preset threshold
+  var th=DURATION_THRESHOLDS[dur]||20;
+  var thEl=document.getElementById('ad-presale-threshold');
+  if(thEl)thEl.value=th;
+  var hint=document.getElementById('ad-threshold-hint');
+  if(hint)hint.textContent='(default '+dur+': '+th+'%)';
+}
+
 async function doBoApprove(){
   if(!_boTarget)return;
   var s=getSession();if(!s)return;
@@ -2908,7 +2990,7 @@ async function doBoApprove(){
     var durationType=(document.getElementById('bo-approve-duration')||{}).value||'standard';
     var args={p_airdrop_id:_boTarget.id,p_status:status,p_block_price_aria:price,p_total_blocks:blocks,p_object_value_eur:quotation,p_auto_draw:true,p_duration_type:durationType};
     if(presale)args.p_presale_block_price=presale;
-    if(deadline)args.p_deadline=deadline+'T23:59:59Z';
+    if(deadline)args.p_deadline=new Date(deadline).toISOString();
     // Setta presale_enabled via UPDATE diretto (il manager_update_airdrop non gestisce il flag)
     await fetch(SB_URL+'/rest/v1/airdrops?id=eq.'+_boTarget.id,{
       method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},

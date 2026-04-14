@@ -2636,6 +2636,24 @@ function updateSubmitCostUI(){
   }
 }
 
+// ── Duration type card selection ──
+(function(){
+  document.addEventListener('click',function(e){
+    var card=e.target.closest('.sub-duration-card');
+    if(!card)return;
+    var grid=document.getElementById('sub-duration-grid');
+    if(!grid)return;
+    grid.querySelectorAll('.sub-duration-card').forEach(function(c){c.classList.remove('selected')});
+    card.classList.add('selected');
+    card.querySelector('input[type=radio]').checked=true;
+  });
+})();
+
+function getSelectedDuration(){
+  var r=document.querySelector('input[name="sub-duration"]:checked');
+  return r?r.value:'standard';
+}
+
 // ── Photo management for submission form ──
 var _subPhotos=[]; // {type:'url'|'file', url:string, file?:File}
 var SUB_MAX_PHOTOS=5;
@@ -2742,7 +2760,8 @@ async function submitObject(){
         p_image_url:mainImg,
         p_seller_desired_price:desired,
         p_seller_min_price:minP,
-        p_image_urls:photoUrls
+        p_image_urls:photoUrls,
+        p_duration_type:getSelectedDuration()
       })
     });
     if(res.ok){
