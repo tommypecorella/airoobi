@@ -12,6 +12,7 @@
 :root{
   --black:#000;--white:#FFF;--gold:#B8960C;
   --gold-dim:rgba(184,150,12,.3);
+  --aria:#4A9EFF;
   --gray-400:#888;--gray-600:#555;--gray-700:#333;
   --font-h:'Cormorant Garamond',Georgia,serif;
   --font-b:'Instrument Sans',system-ui,sans-serif;
@@ -41,6 +42,7 @@ html:not([data-lang]) .it-block{display:block}
 .scene p{font-family:var(--font-b);font-size:clamp(14px,2vw,19px);color:var(--gray-400);line-height:1.7;max-width:560px;margin-top:20px}
 .label{font-family:var(--font-m);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
 .gold{color:var(--gold)}
+.aria-c{color:var(--aria)}
 .rule{width:48px;height:1px;background:var(--gold);margin:24px auto}
 
 /* Animations */
@@ -71,7 +73,7 @@ html:not([data-lang]) .it-block{display:block}
 @media(min-width:500px){.earn-grid{grid-template-columns:repeat(4,1fr);max-width:520px}}
 .earn-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:16px 8px;text-align:center}
 .earn-icon{font-size:24px;margin-bottom:6px}
-.earn-val{font-family:var(--font-m);font-size:14px;color:var(--gold)}
+.earn-val{font-family:var(--font-m);font-size:14px;color:var(--aria)}
 .earn-name{font-size:11px;color:var(--gray-400);margin-top:4px}
 
 /* Category grid */
@@ -144,7 +146,7 @@ html:not([data-lang]) .it-block{display:block}
   <h2 class="fade-up"><span class="it">Tre passi. <em>Nessun trucco.</em></span><span class="en">Three steps. <em>No tricks.</em></span></h2>
   <div class="flow fade-up">
     <div class="flow-step">
-      <div class="flow-icon" style="color:var(--gold)">&#9733;</div>
+      <div class="flow-icon" style="color:var(--aria)">&#9733;</div>
       <div class="flow-label"><span class="it">Ricevi</span><span class="en">Get</span> ARIA</div>
     </div>
     <div class="flow-arrow">&rarr;</div>
@@ -164,7 +166,7 @@ html:not([data-lang]) .it-block{display:block}
 <!-- S4: GET TEST ARIA -->
 <div class="scene" id="s4">
   <div class="fade-up label"><span class="it">Passo 1</span><span class="en">Step 1</span></div>
-  <h2 class="fade-up"><span class="it">Muovi <span class="gold">ARIA</span> di test.<br><em>Ogni giorno.</em></span><span class="en">Move test <span class="gold">ARIA</span> coins.<br><em>Every day.</em></span></h2>
+  <h2 class="fade-up"><span class="it">Muovi <span class="aria-c">ARIA</span> di test.<br><em>Ogni giorno.</em></span><span class="en">Move test <span class="aria-c">ARIA</span> coins.<br><em>Every day.</em></span></h2>
   <div class="earn-grid fade-up">
     <div class="earn-item">
       <div class="earn-icon">&#10004;</div>

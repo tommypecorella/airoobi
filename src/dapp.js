@@ -1933,6 +1933,12 @@ async function confirmBuy(){
     var data=await sbRpc('buy_blocks',{p_airdrop_id:buy.airdropId,p_block_numbers:buy.blocks},token);
     console.log('buy_blocks response:',data);
     if(data&&data.ok){
+      // Toast conferma acquisto
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      showToast(lang==='it'
+        ?data.blocks_bought+' '+(data.blocks_bought===1?'blocco acquisito':'blocchi acquisiti')+' per '+data.aria_spent+' ARIA'
+        :data.blocks_bought+' block'+(data.blocks_bought===1?'':'s')+' purchased for '+data.aria_spent+' ARIA');
+
       // Mining animation — calculate ROBI discovery
       var oldMyBlocks=_gridData?_gridData.filter(function(b){return b.is_mine}).length:0;
       var rate=_currentDetail?calcMiningRate(_currentDetail):50;
@@ -2489,7 +2495,7 @@ function renderMySubmissions(subs){
     if(s.rejection_reason){
       html+='<div style="margin-top:8px;padding:8px 12px;border-left:3px solid #ef4444;background:rgba(239,68,68,.06);font-size:12px;color:#ef4444">'+escHtml(s.rejection_reason)+'</div>';
     }
-    var canWithdraw=s.status!=='annullato'&&s.status!=='completed'&&s.status!=='presale'&&s.status!=='sale'&&s.status!=='closed';
+    var canWithdraw=s.status!=='annullato'&&s.status!=='completed'&&s.status!=='closed';
     var isValutazioneCompletata=s.status==='valutazione_completata';
     html+='<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">';
     html+='<button onclick="this.style.display=\'none\';loadAirdropChat(\''+s.id+'\',\'sub-chat-'+s.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'"><span class="it">MESSAGGI</span><span class="en">MESSAGES</span></button>';
@@ -2506,17 +2512,24 @@ function renderMySubmissions(subs){
   container.innerHTML=html;
 }
 
-// ── Withdraw submission ──
+// ── Withdraw submission (doppia conferma) ──
 async function withdrawSubmission(airdropId,title){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
-  var msg=lang==='it'
-    ?'Vuoi ritirare la proposta "'+title+'"? Questa azione non è reversibile.'
-    :'Withdraw proposal "'+title+'"? This action cannot be undone.';
-  if(!confirm(msg))return;
+  var msg1=lang==='it'
+    ?'Vuoi ritirare la proposta "'+title+'"?\n\nL\'airdrop diventerà ANNULLATO. I 50 ARIA di valutazione non saranno rimborsati.\nTutti gli ARIA spesi dai partecipanti saranno rimborsati automaticamente.\nNessun ROBI verrà generato.'
+    :'Withdraw proposal "'+title+'"?\n\nThe airdrop will be CANCELLED. The 50 ARIA valuation fee will not be refunded.\nAll ARIA spent by participants will be automatically refunded.\nNo ROBI will be generated.';
+  if(!confirm(msg1))return;
+  var msg2=lang==='it'
+    ?'CONFERMA DEFINITIVA: Sei sicuro di voler annullare "'+title+'"?\n\nQuesta azione NON è reversibile.'
+    :'FINAL CONFIRMATION: Are you sure you want to cancel "'+title+'"?\n\nThis action CANNOT be undone.';
+  if(!confirm(msg2))return;
   var token=await getValidToken();if(!token)return;
   var res=await sbRpc('withdraw_my_submission',{p_airdrop_id:airdropId},token);
   if(res&&res.ok){
-    showToast(lang==='it'?'Proposta ritirata':'Proposal withdrawn');
+    var toast=lang==='it'
+      ?'Proposta ritirata.'+(res.aria_refunded>0?' '+res.aria_refunded+' ARIA rimborsati a '+res.users_refunded+' partecipante/i.':'')
+      :'Proposal withdrawn.'+(res.aria_refunded>0?' '+res.aria_refunded+' ARIA refunded to '+res.users_refunded+' participant(s).':'');
+    showToast(toast);
     loadMySubmissions();
   }else{
     var err=res&&res.error?res.error:'UNKNOWN';
