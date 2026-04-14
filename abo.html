@@ -2699,6 +2699,11 @@ var _boTarget=null;
 async function loadBoData(){
   var s=getSession();if(!s)return;
   try{
+    // Precarica categorie se non già in cache
+    if(!_categoriesCache||!_categoriesCache.length){
+      var cats=await sbGet('categories?order=sort_order.asc',s.access_token);
+      _categoriesCache=cats||[];
+    }
     var res=await fetch(SB_URL+'/rest/v1/rpc/get_all_airdrops',{
       method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:'{}'
     });
@@ -2739,7 +2744,7 @@ function renderBoTable(){
   var list=getBoFiltered();
   var wrap=document.getElementById('bo-table-wrap');
   if(!list||!list.length){wrap.innerHTML='<div class="bo-empty">Nessun airdrop in questa sezione</div>';return;}
-  var catLabels={mobile:'Mobile',tech:'Tech',luxury:'Luxury',ultra_luxury:'Ultra Luxury'};
+  var catLabels={};(_categoriesCache||[]).forEach(function(c){catLabels[c.slug]=c.name_it;});
   var html='<table class="bo-table"><thead><tr><th>Oggetto</th><th>Cat.</th><th>Desid.</th><th>Min.</th><th>Quotaz.</th><th>Status</th><th>Blocchi</th><th>Data</th><th>Azioni</th></tr></thead><tbody>';
   list.forEach(function(a){
     var date=new Date(a.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});
@@ -2767,6 +2772,26 @@ function renderBoTable(){
   wrap.innerHTML=html;
 }
 
+function buildCatOptions(current){
+  var opts='<option value="">—</option>';
+  (_categoriesCache||[]).forEach(function(c){
+    if(!c.is_active)return;
+    opts+='<option value="'+c.slug+'"'+(c.slug===current?' selected':'')+'>'+escHtml(c.icon+' '+c.name_it)+'</option>';
+  });
+  return opts;
+}
+
+async function saveBoCategory(airdropId){
+  var sel=document.getElementById('bo-detail-cat');
+  if(!sel)return;
+  var cat=sel.value;
+  var s=getSession();if(!s)return;
+  await sbPatch('airdrops?id=eq.'+airdropId,{category:cat||null},s.access_token);
+  var a=(_boAllAirdrops||[]).find(function(x){return x.id===airdropId});
+  if(a)a.category=cat||null;
+  showToast('Categoria aggiornata','success');
+}
+
 function viewBoDetail(id){
   var a=(_boAllAirdrops||[]).find(function(x){return x.id===id});
   if(!a){showToast('Airdrop non trovato','error');return;}
@@ -2778,7 +2803,7 @@ function viewBoDetail(id){
   if(a.description)html+='<div class="bo-detail-desc">'+escHtml(a.description)+'</div>';
   html+='<div class="bo-detail-grid">'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">ID</div><div class="bo-detail-item-val mono" style="font-size:10px">'+a.id+'</div></div>'
-    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Categoria</div><div class="bo-detail-item-val">'+(a.category||'—')+'</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Categoria</div><div class="bo-detail-item-val"><select id="bo-detail-cat" style="background:var(--gray-800);color:var(--white);border:1px solid var(--gray-600);padding:4px 8px;font-family:var(--font-m);font-size:11px">'+buildCatOptions(a.category)+'</select> <button onclick="saveBoCategory(\''+a.id+'\')" style="background:none;border:1px solid var(--gold-dim);color:var(--gold);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px">SALVA</button></div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Desiderato</div><div class="bo-detail-item-val">€'+(a.seller_desired_price?parseFloat(a.seller_desired_price).toFixed(2):'—')+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Minimo</div><div class="bo-detail-item-val">€'+(a.seller_min_price?parseFloat(a.seller_min_price).toFixed(2):'—')+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Quotazione</div><div class="bo-detail-item-val" style="color:var(--gold)">€'+Number(a.object_value_eur).toLocaleString('it-IT')+'</div></div>'
