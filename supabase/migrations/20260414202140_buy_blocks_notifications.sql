@@ -106,7 +106,11 @@ BEGIN
   -- ══ NOTIFICHE ══
 
   -- Nome acquirente per la notifica al venditore
-  SELECT COALESCE(display_name, split_part(email, '@', 1), 'Qualcuno')
+  SELECT COALESCE(
+    NULLIF(TRIM(COALESCE(first_name, '') || ' ' || COALESCE(last_name, '')), ''),
+    split_part(email, '@', 1),
+    'Qualcuno'
+  )
   INTO v_buyer_name
   FROM profiles WHERE id = v_user_id;
 

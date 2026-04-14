@@ -117,7 +117,7 @@ BEGIN
       m.is_admin,
       m.created_at,
       m.sender_id,
-      COALESCE(p.display_name, split_part(u.email, '@', 1)) AS sender_name
+      COALESCE(NULLIF(TRIM(COALESCE(p.first_name, '') || ' ' || COALESCE(p.last_name, '')), ''), split_part(u.email, '@', 1)) AS sender_name
     FROM airdrop_messages m
     JOIN auth.users u ON u.id = m.sender_id
     LEFT JOIN profiles p ON p.id = m.sender_id
