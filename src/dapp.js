@@ -2457,6 +2457,7 @@ function renderMySubmissions(subs){
   if(emptyEl)emptyEl.style.display='none';
   var statusLabels={
     'in_valutazione':{it:'In valutazione',en:'Under evaluation',cls:'status-pending'},
+    'valutazione_completata':{it:'Valutazione completata',en:'Evaluation complete',cls:'status-ready'},
     'presale':{it:'Pre-vendita',en:'Pre-sale',cls:'status-live'},
     'sale':{it:'In vendita',en:'On sale',cls:'status-live'},
     'dropped':{it:'Draw eseguito',en:'Draw executed',cls:'status-done'},
@@ -2488,10 +2489,14 @@ function renderMySubmissions(subs){
     if(s.rejection_reason){
       html+='<div style="margin-top:8px;padding:8px 12px;border-left:3px solid #ef4444;background:rgba(239,68,68,.06);font-size:12px;color:#ef4444">'+escHtml(s.rejection_reason)+'</div>';
     }
-    var canWithdraw=s.status!=='annullato'&&s.status!=='completed';
-    html+='<div style="display:flex;gap:8px;margin-top:12px">';
+    var canWithdraw=s.status!=='annullato'&&s.status!=='completed'&&s.status!=='presale'&&s.status!=='sale'&&s.status!=='closed';
+    var isValutazioneCompletata=s.status==='valutazione_completata';
+    html+='<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">';
     html+='<button onclick="this.style.display=\'none\';loadAirdropChat(\''+s.id+'\',\'sub-chat-'+s.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'"><span class="it">MESSAGGI</span><span class="en">MESSAGES</span></button>';
-    if(canWithdraw){
+    if(isValutazioneCompletata){
+      html+='<button onclick="acceptValuation(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);color:#22c55e;padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.background=\'rgba(34,197,94,.2)\';this.style.borderColor=\'#22c55e\'" onmouseout="this.style.background=\'rgba(34,197,94,.1)\';this.style.borderColor=\'rgba(34,197,94,.4)\'"><span class="it">ACCETTA</span><span class="en">ACCEPT</span></button>';
+      html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RIFIUTA</span><span class="en">REJECT</span></button>';
+    }else if(canWithdraw){
       html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RITIRA</span><span class="en">WITHDRAW</span></button>';
     }
     html+='</div>';
@@ -2518,6 +2523,31 @@ async function withdrawSubmission(airdropId,title){
     var msgs={
       'ALREADY_FINALIZED':{it:'Proposta già finalizzata.',en:'Proposal already finalized.'},
       'NOT_AUTHORIZED':{it:'Non sei autorizzato.',en:'Not authorized.'}
+    };
+    var m=msgs[err]||{it:'Errore: '+err,en:'Error: '+err};
+    showToast('<span style="color:var(--red)">'+(lang==='it'?m.it:m.en)+'</span>');
+  }
+}
+
+// ── Accept valuation ──
+async function acceptValuation(airdropId,title){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var msg=lang==='it'
+    ?'Accetti la valutazione per "'+title+'"? L\'airdrop verrà avviato.'
+    :'Accept the valuation for "'+title+'"? The airdrop will go live.';
+  if(!confirm(msg))return;
+  var token=await getValidToken();if(!token)return;
+  var res=await sbRpc('accept_airdrop_valuation',{p_airdrop_id:airdropId},token);
+  if(res&&res.ok){
+    showToast(lang==='it'
+      ?'Airdrop avviato in '+res.new_status+'!'
+      :'Airdrop launched in '+res.new_status+'!');
+    loadMySubmissions();
+  }else{
+    var err=res&&res.error?res.error:'UNKNOWN';
+    var msgs={
+      'WRONG_STATUS':{it:'Lo stato non permette l\'accettazione.',en:'Status does not allow acceptance.'},
+      'NOT_FOUND_OR_NOT_OWNER':{it:'Airdrop non trovato.',en:'Airdrop not found.'}
     };
     var m=msgs[err]||{it:'Errore: '+err,en:'Error: '+err};
     showToast('<span style="color:var(--red)">'+(lang==='it'?m.it:m.en)+'</span>');

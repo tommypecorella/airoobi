@@ -161,6 +161,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .bo-table .truncate{max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .bo-status{font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:3px 8px;display:inline-block;white-space:nowrap}
 .bo-status.in_valutazione{background:#f0a030;color:var(--black)}
+.bo-status.valutazione_completata{background:#22c55e;color:var(--black)}
 .bo-status.presale{background:var(--aria);color:var(--black)}
 .bo-status.sale{background:var(--gold);color:var(--black)}
 .bo-status.dropped{background:var(--kas);color:var(--black)}
@@ -522,6 +523,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <h2>Valutazioni</h2>
     <div class="bo-tabs" id="bo-tabs">
       <button class="bo-tab active" data-bo="in_valutazione" onclick="boFilter('in_valutazione')">In valutazione <span class="bo-tab-count alert" id="cnt-in_valutazione">0</span></button>
+      <button class="bo-tab" data-bo="valutazione_completata" onclick="boFilter('valutazione_completata')">Val. completata <span class="bo-tab-count" id="cnt-valutazione_completata" style="background:#22c55e;color:var(--black)">0</span></button>
       <button class="bo-tab" data-bo="presale" onclick="boFilter('presale')">Presale <span class="bo-tab-count" id="cnt-presale">0</span></button>
       <button class="bo-tab" data-bo="sale" onclick="boFilter('sale')">Sale <span class="bo-tab-count" id="cnt-sale">0</span></button>
       <button class="bo-tab" data-bo="rifiutato" onclick="boFilter('rifiutato')">Rifiutati <span class="bo-tab-count" id="cnt-rifiutato">0</span></button>
@@ -542,7 +544,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div><label>Presale price ARIA (opzionale)</label><input type="number" id="bo-approve-presale" min="1" placeholder="—"></div>
-        <div><label>Status iniziale</label><select id="bo-approve-status"><option value="presale">Presale</option><option value="sale">Sale (live)</option></select></div>
+        <div><label>Presale abilitato</label><select id="bo-approve-presale-enabled"><option value="yes">Si (presale + sale)</option><option value="no">No (solo sale)</option></select></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div><label>Deadline (opzionale)</label><input type="date" id="bo-approve-deadline"></div>
@@ -724,6 +726,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <label>Status</label>
       <select id="ad-status">
         <option value="in_valutazione">In valutazione</option>
+        <option value="valutazione_completata">Valutazione completata</option>
         <option value="presale">Presale</option>
         <option value="sale">Sale</option>
         <option value="rifiutato_min500">Rifiutato (min &euro;500)</option>
@@ -2721,9 +2724,10 @@ function getBoFiltered(){
 }
 
 function renderBoCounts(){
-  var c={in_valutazione:0,presale:0,sale:0,rifiutato:0,all:_boAllAirdrops.length};
+  var c={in_valutazione:0,valutazione_completata:0,presale:0,sale:0,rifiutato:0,all:_boAllAirdrops.length};
   _boAllAirdrops.forEach(function(a){
     if(a.status==='in_valutazione')c.in_valutazione++;
+    else if(a.status==='valutazione_completata')c.valutazione_completata++;
     else if(a.status==='presale')c.presale++;
     else if(a.status==='sale')c.sale++;
     else if(a.status&&a.status.indexOf('rifiutato')===0)c.rifiutato++;
@@ -2807,7 +2811,7 @@ function openBoApprove(id){
   document.getElementById('bo-approve-presale').value='';
   var deadline=new Date();deadline.setDate(deadline.getDate()+30);
   document.getElementById('bo-approve-deadline').value=deadline.toISOString().substring(0,10);
-  document.getElementById('bo-approve-status').value='presale';
+  document.getElementById('bo-approve-presale-enabled').value='yes';
   boCalcPreview();
   document.getElementById('bo-approve-modal').classList.add('active');
 }
@@ -2845,7 +2849,8 @@ async function doBoApprove(){
   var price=parseInt(document.getElementById('bo-approve-price').value);
   var blocks=parseInt(document.getElementById('bo-approve-blocks').value);
   var presale=document.getElementById('bo-approve-presale').value?parseInt(document.getElementById('bo-approve-presale').value):null;
-  var status=document.getElementById('bo-approve-status').value;
+  var presaleEnabled=document.getElementById('bo-approve-presale-enabled').value==='yes';
+  var status='valutazione_completata';
   var deadline=document.getElementById('bo-approve-deadline').value||null;
   if(!price||price<1||!blocks||blocks<1){showToast('Prezzo e blocchi obbligatori','warning');return;}
   if(presale&&presale>=price){showToast('Il prezzo presale ('+presale+') deve essere inferiore al prezzo pieno ('+price+')','error');return;}
@@ -2857,12 +2862,17 @@ async function doBoApprove(){
     var args={p_airdrop_id:_boTarget.id,p_status:status,p_block_price_aria:price,p_total_blocks:blocks,p_object_value_eur:quotation,p_auto_draw:true,p_duration_type:durationType};
     if(presale)args.p_presale_block_price=presale;
     if(deadline)args.p_deadline=deadline+'T23:59:59Z';
+    // Setta presale_enabled via UPDATE diretto (il manager_update_airdrop non gestisce il flag)
+    await fetch(SB_URL+'/rest/v1/airdrops?id=eq.'+_boTarget.id,{
+      method:'PATCH',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({presale_enabled:presaleEnabled})
+    });
     var res=await fetch(SB_URL+'/rest/v1/rpc/manager_update_airdrop',{
       method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
       body:JSON.stringify(args)
     });
     var result=await res.json();
-    if(result&&result.ok){var t=_boTarget.title;closeBoModals();showToast('Approvato: '+t,'success');loadBoData();}
+    if(result&&result.ok){var t=_boTarget.title;closeBoModals();showToast('Valutazione completata: '+t+' — in attesa accettazione utente','success');loadBoData();}
     else{showToast('Errore: '+(result.error||'sconosciuto'),'error');}
   }catch(e){showToast('Errore: '+e.message,'error');}
   btn.disabled=false;
