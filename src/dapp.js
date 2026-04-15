@@ -978,7 +978,7 @@ function buildMineTower(a,myBlocks){
   }
 
   html+='</div>'
-    +'<div class="mine-label"><span style="color:#B8960C">⛏</span> <span class="it">La tua miniera</span><span class="en">Your mine</span></div>'
+    +'<div class="mine-label"></div>'
     +'</div>';
 
   // Legend
