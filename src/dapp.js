@@ -1405,11 +1405,29 @@ function renderGrid(){
     else if(pct>=50)badge='<div class="card-badge hot">Hot</div>';
     else badge='<div class="card-badge sale">Live</div>';
 
-    var imgHtml=a.image_url
-      ?'<img class="card-img" src="'+a.image_url+'" alt="" loading="lazy">'
-      :'<div class="card-img-placeholder">'+placeholderSvg+'</div>';
+    // Gallery images for card
+    var cardImgs=[a.image_url];
+    var cpi=a.product_info||{};
+    var cExtra=cpi.extra_photos||[];
+    for(var ci=0;ci<cExtra.length;ci++){if(cExtra[ci]&&cardImgs.indexOf(cExtra[ci])===-1)cardImgs.push(cExtra[ci]);}
 
-    // Price display: presale shows discounted price + strikethrough sale price
+    var imgHtml;
+    if(cardImgs.length>1&&cardImgs[0]){
+      var dotsHtml='<div class="card-gallery-dots">';
+      var imgsHtml='';
+      for(var gi=0;gi<cardImgs.length;gi++){
+        imgsHtml+='<img src="'+cardImgs[gi]+'" alt="" loading="lazy"'+(gi===0?' class="active"':'')+' data-idx="'+gi+'">';
+        dotsHtml+='<span class="card-gallery-dot'+(gi===0?' active':'')+'"></span>';
+      }
+      dotsHtml+='</div>';
+      imgHtml='<div class="card-gallery" data-card-gallery>'+imgsHtml+dotsHtml+'</div>';
+    } else if(a.image_url){
+      imgHtml='<div class="card-gallery"><img class="active" src="'+a.image_url+'" alt="" loading="lazy"></div>';
+    } else {
+      imgHtml='<div class="card-img-placeholder">'+placeholderSvg+'</div>';
+    }
+
+    // Price display
     var currentPrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
     var priceHtml=currentPrice+' ARIA / <span class="it">blocco</span><span class="en">block</span>';
     if(isPresale&&a.presale_block_price)priceHtml+='<span class="card-presale-price">'+a.block_price_aria+'</span>';
@@ -1418,33 +1436,35 @@ function renderGrid(){
     var cdHtml=cd?'<span class="card-countdown'+(cd.urgent?' urgent':'')+'" data-deadline="'+a.deadline+'">'+(cd.expired?'—':cd.text)+'</span>':'';
     var heartCls=isInWatchlist(a.id)?'heart-btn active':'heart-btn';
     var rankInfo=_myRanks[a.id];
-    var rankHtml=rankInfo
-      ?'<div class="card-rank"><span class="it">'+rankInfo.rank+'° su '+rankInfo.total+'</span><span class="en">#'+rankInfo.rank+' of '+rankInfo.total+'</span></div>'
-      :'';
 
     // ROBI projection for this user
     var miningRate=calcMiningRate(a);
     var myBlk=rankInfo?rankInfo.blocks:0;
     var myRobi=miningRate>0&&myBlk>0?(myBlk/miningRate):0;
     var robiEur=myRobi*_robiPrice;
-    var robiHtml=myBlk>0
-      ?'<div class="card-robi"><span class="card-robi-val"><span style="color:var(--gold)">&#9830;</span> '+myRobi.toFixed(1)+' ROBI</span>'
-      +'<span class="card-robi-eur">&euro;'+robiEur.toFixed(2).replace('.',',')+'</span></div>'
-      :'';
+
+    // Combined rank + ROBI row
+    var myStatsHtml='';
+    if(myBlk>0){
+      myStatsHtml='<div class="card-my-stats">';
+      if(rankInfo)myStatsHtml+='<div class="card-rank-pill"><span class="it">'+rankInfo.rank+'&ordm; / '+rankInfo.total+'</span><span class="en">#'+rankInfo.rank+' / '+rankInfo.total+'</span></div>';
+      myStatsHtml+='<div class="card-robi-pill"><span>&#9830; '+myRobi.toFixed(1)+' ROBI</span>'
+        +(_robiPrice>0?'<span class="card-robi-eur">&euro;'+robiEur.toFixed(2).replace('.',',')+'</span>':'')
+        +'</div></div>';
+    }
 
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
       +badge
       +durationBadge(a.duration_type)
       +imgHtml
-      +'<div class="card-body">'
-      +'<div class="card-cat-row">'
+      +'<div class="card-img-row">'
       +'<div class="card-cat">'+(CAT_ICONS[a.category]||'')+' '+(a.category||'')+'</div>'
       +'<button class="'+heartCls+' card-heart" onclick="toggleWatchlist(\''+a.id+'\',event)">&#9825;</button>'
       +'</div>'
+      +'<div class="card-body">'
       +'<div class="card-title">'+a.title+'</div>'
       +cdHtml
-      +rankHtml
-      +robiHtml
+      +myStatsHtml
       +'<div class="card-progress"><div class="card-progress-bar" style="width:'+pct+'%"></div></div>'
       +'<div class="card-footer">'
       +'<span class="card-price">'+priceHtml+'</span>'
@@ -1453,6 +1473,33 @@ function renderGrid(){
       +'<div class="card-mining"><span style="color:var(--gold)">&#9935;</span> '+miningRate+' bl / 1 ROBI</div>'
       +'</div></div>';
   }).join('');
+
+  // Start card gallery autoplay
+  startCardGalleries();
+}
+
+// ── Card gallery autoplay ──
+var _cardGalleryInterval=null;
+function startCardGalleries(){
+  if(_cardGalleryInterval)clearInterval(_cardGalleryInterval);
+  _cardGalleryInterval=setInterval(function(){
+    var galleries=document.querySelectorAll('[data-card-gallery]');
+    for(var i=0;i<galleries.length;i++){
+      var g=galleries[i];
+      var imgs=g.querySelectorAll('img');
+      var dots=g.querySelectorAll('.card-gallery-dot');
+      if(imgs.length<2)continue;
+      var curr=-1;
+      for(var j=0;j<imgs.length;j++){if(imgs[j].classList.contains('active')){curr=j;break;}}
+      var next=(curr+1)%imgs.length;
+      if(curr>=0)imgs[curr].classList.remove('active');
+      imgs[next].classList.add('active');
+      if(dots.length){
+        if(curr>=0&&dots[curr])dots[curr].classList.remove('active');
+        if(dots[next])dots[next].classList.add('active');
+      }
+    }
+  },3000);
 }
 
 // ── Detail ──
@@ -1768,8 +1815,7 @@ async function openDetail(id){
     +'</div>' // close detail-right
 
     // ── CONTROL ROOM (solo admin/CEO) ──
-    +(_isAdmin?'<div style="margin-top:24px;text-align:center"><button onclick="openControlRoom(\''+id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;font-family:var(--font-m);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .3s" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'var(--black)\'" onmouseout="this.style.background=\'none\';this.style.color=\'var(--gold)\'">CONTROL ROOM</button></div>':'')
-    +'<div id="control-room-panel" style="display:none"></div>'
+    +(_isAdmin?'<div style="margin-top:24px;text-align:center"><button onclick="openControlRoom(\''+id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;font-family:var(--font-m);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .3s;border-radius:var(--radius-sm)" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'var(--black)\'" onmouseout="this.style.background=\'none\';this.style.color=\'var(--gold)\'">CONTROL ROOM</button></div>':'')
 
     +'</div>'; // close detail-split
 
@@ -2455,21 +2501,26 @@ async function checkUserRoles(){
   }
 }
 
-// ── Control Room (CEO/Admin) ──
+// ── Control Room (CEO/Admin modal) ──
+function closeControlRoom(){
+  var ov=document.getElementById('cr-overlay');
+  if(ov)ov.classList.remove('active');
+  document.body.style.overflow='';
+}
+
 async function openControlRoom(airdropId){
   if(!_isAdmin)return;
-  var panel=document.getElementById('control-room-panel');
-  if(!panel)return;
-  panel.style.display='block';
-  panel.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-400)">Loading...</div>';
+  var overlay=document.getElementById('cr-overlay');
+  var modal=document.getElementById('cr-modal');
+  if(!overlay||!modal)return;
+  overlay.classList.add('active');
+  document.body.style.overflow='hidden';
+  modal.innerHTML='<div style="text-align:center;padding:60px;color:var(--gray-400)">Loading...</div>';
 
   var token=await getValidToken();
-  if(!token)return;
+  if(!token){closeControlRoom();return;}
 
-  // Fetch draw preview (scores, split, success check)
   var preview=await sbRpc('get_draw_preview',{p_airdrop_id:airdropId},token);
-
-  // Fetch participations
   var parts=[];
   try{
     var pRes=await fetch(SB_URL+'/rest/v1/airdrop_participations?airdrop_id=eq.'+airdropId+'&select=user_id,blocks_count,aria_spent',{
@@ -2478,7 +2529,6 @@ async function openControlRoom(airdropId){
     if(pRes.ok)parts=await pRes.json();
   }catch(e){}
 
-  // Fetch presale vs sale blocks
   var presaleBlocks=0,saleBlocks=0;
   try{
     var bRes=await fetch(SB_URL+'/rest/v1/airdrop_blocks?airdrop_id=eq.'+airdropId+'&select=purchased_phase',{
@@ -2493,7 +2543,6 @@ async function openControlRoom(airdropId){
     }
   }catch(e){}
 
-  // Fetch treasury
   var treasuryBal=0,nftCirc=0;
   try{
     var tRes=await fetch(SB_URL+'/rest/v1/treasury_stats?select=balance_eur,nft_circulating&order=created_at.desc&limit=1',{
@@ -2504,11 +2553,10 @@ async function openControlRoom(airdropId){
 
   var a=_currentDetail;
   if(!a||!preview||!preview.ok){
-    panel.innerHTML='<div style="padding:20px;color:#ef4444">Errore caricamento dati</div>';
+    modal.innerHTML='<div style="padding:40px;color:#ef4444;text-align:center">Errore caricamento dati</div>';
     return;
   }
 
-  // KPIs
   var uniqueUsers=[...new Set(parts.map(function(p){return p.user_id}))].length;
   var totalAria=parts.reduce(function(s,p){return s+p.aria_spent},0);
   var totalEur=(totalAria*0.10).toFixed(2);
@@ -2521,14 +2569,12 @@ async function openControlRoom(airdropId){
   var nftPrice=nftCirc>0?(treasuryBal/nftCirc).toFixed(2):'N/A';
   var estShares=(presaleBlocks*2+saleBlocks)/divisor;
 
-  // Success prediction
   var venditoreEur=preview.split?preview.split.venditore_eur:0;
   var sellerMin=preview.seller_min_price||0;
   var successLabel=preview.success
-    ?'<span style="color:var(--kas)">✓ SUCCESS</span>'
-    :'<span style="color:#ef4444">✗ BELOW MIN (€'+venditoreEur+' vs €'+sellerMin+')</span>';
+    ?'<span style="color:var(--kas)">SUCCESS</span>'
+    :'<span style="color:#ef4444">BELOW MIN (&euro;'+venditoreEur+' vs &euro;'+sellerMin+')</span>';
 
-  // Top participants (anonymized)
   var userAgg={};
   parts.forEach(function(p){
     if(!userAgg[p.user_id])userAgg[p.user_id]={blocks:0,aria:0};
@@ -2537,16 +2583,22 @@ async function openControlRoom(airdropId){
   });
   var topParts=Object.keys(userAgg).map(function(uid){return{uid:uid.substring(0,6),blocks:userAgg[uid].blocks,aria:userAgg[uid].aria}}).sort(function(a,b){return b.aria-a.aria}).slice(0,5);
 
-  // Scores preview
+  function kpi(label,val,sub,color){
+    var c=color||'var(--white)';
+    return '<div class="cr-kpi">'
+      +'<div class="cr-kpi-val" style="color:'+c+'">'+val+'</div>'
+      +'<div class="cr-kpi-label">'+label+'</div>'
+      +(sub?'<div class="cr-kpi-sub">'+sub+'</div>':'')
+      +'</div>';
+  }
+
   var scoresHtml='';
   if(preview.scores&&preview.scores.length){
-    scoresHtml='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:8px">'
-      +'<tr style="color:var(--gray-500);border-bottom:1px solid var(--gray-800)"><th style="text-align:left;padding:4px">Rank</th><th>F1</th><th>F2</th><th>F3</th><th>Score</th><th>Blocks</th><th>ARIA</th></tr>';
+    scoresHtml='<div class="cr-section"><div class="cr-section-title">Score Leaderboard</div>'
+      +'<table class="cr-table"><thead><tr><th>Rank</th><th style="text-align:center">F1</th><th style="text-align:center">F2</th><th style="text-align:center">F3</th><th style="text-align:center">Score</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th></tr></thead><tbody>';
     preview.scores.slice(0,8).forEach(function(s){
-      var isWinner=s.rank===1;
-      var rowColor=isWinner?'color:var(--kas)':'';
-      scoresHtml+='<tr style="border-bottom:1px solid var(--gray-800);'+rowColor+'">'
-        +'<td style="padding:4px">#'+s.rank+(isWinner?' ★':'')+'</td>'
+      scoresHtml+='<tr'+(s.rank===1?' class="winner"':'')+'>'
+        +'<td>#'+s.rank+(s.rank===1?' &#9733;':'')+'</td>'
         +'<td style="text-align:center">'+s.f1+'</td>'
         +'<td style="text-align:center">'+s.f2+'</td>'
         +'<td style="text-align:center">'+s.f3+'</td>'
@@ -2554,57 +2606,44 @@ async function openControlRoom(airdropId){
         +'<td style="text-align:center">'+s.blocks+'</td>'
         +'<td style="text-align:center">'+s.aria_spent+'</td></tr>';
     });
-    scoresHtml+='</table>';
+    scoresHtml+='</tbody></table></div>';
   }
 
-  // Build panel
-  var h='<div style="border:1px solid var(--gold);padding:20px;margin-top:12px;background:rgba(184,150,12,.03)">'
-    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center"><span>CONTROL ROOM</span><button onclick="document.getElementById(\'control-room-panel\').style.display=\'none\'" style="background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:16px">&times;</button></div>'
+  var h=''
+    +'<div class="cr-header"><h3>CONTROL ROOM</h3><button class="cr-close" onclick="closeControlRoom()">&times;</button></div>'
 
-    // KPI grid
-    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
-    +crKpi('Partecipanti',uniqueUsers,'utenti unici')
-    +crKpi('Fill Rate',fillPct+'%',totalBlks+'/'+a.total_blocks)
-    +crKpi('Revenue','€'+totalEur,totalAria+' ARIA')
-    +crKpi('Media/Utente',avgPerUser+' AR','€'+(avgPerUser*0.10).toFixed(0)+' eq.')
-    +'</div>'
+    +'<div class="cr-section"><div class="cr-section-title">Partecipazione</div>'
+    +'<div class="cr-kpi-grid">'
+    +kpi('Partecipanti',uniqueUsers,'utenti unici')
+    +kpi('Fill Rate',fillPct+'%',totalBlks+'/'+a.total_blocks)
+    +kpi('Revenue','&euro;'+totalEur,totalAria+' ARIA')
+    +kpi('Media/Utente',avgPerUser+' AR','&euro;'+(avgPerUser*0.10).toFixed(0)+' eq.')
+    +'</div></div>'
 
-    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
-    +crKpi('Presale',presaleBlocks+' bl.',presalePct+'% interesse','var(--aria)')
-    +crKpi('Sale',saleBlocks+' bl.',(100-presalePct)+'%')
-    +crKpi('Mining','div '+divisor,'~'+estShares.toFixed(1)+' quote est.','var(--gold)')
-    +crKpi('NFT Price','€'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
-    +'</div>'
+    +'<div class="cr-section"><div class="cr-section-title">Economia</div>'
+    +'<div class="cr-kpi-grid">'
+    +kpi('Presale',presaleBlocks+' bl.',presalePct+'%','var(--aria)')
+    +kpi('Sale',saleBlocks+' bl.',(100-presalePct)+'%')
+    +kpi('Mining','div '+divisor,'~'+estShares.toFixed(1)+' quote','var(--gold)')
+    +kpi('NFT Price','&euro;'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
+    +'</div></div>'
 
-    // Status
-    +'<div style="padding:10px 14px;border:1px solid var(--gray-800);margin-bottom:16px;font-size:12px">'
-    +'<strong>Status:</strong> '+successLabel
-    +'<br><strong>Venditore:</strong> €'+venditoreEur+' / min €'+sellerMin
-    +'<br><strong>Split:</strong> Fondo €'+(preview.split?preview.split.fondo_eur:0)+' | Fee €'+(preview.split?preview.split.airoobi_eur:0)
-    +'<br><strong>Treasury:</strong> €'+treasuryBal.toFixed(2)+' | Quota: €'+nftPrice
-    +'</div>'
+    +'<div class="cr-section"><div class="cr-section-title">Status</div>'
+    +'<div class="cr-status">'
+    +'<strong>Esito:</strong> '+successLabel
+    +'<br><strong>Venditore:</strong> &euro;'+venditoreEur+' / min &euro;'+sellerMin
+    +'<br><strong>Split:</strong> Fondo &euro;'+(preview.split?preview.split.fondo_eur:0)+' | Fee &euro;'+(preview.split?preview.split.airoobi_eur:0)
+    +'<br><strong>Treasury:</strong> &euro;'+treasuryBal.toFixed(2)+' | Quota ROBI: &euro;'+nftPrice
+    +'</div></div>'
 
-    // Top participants
-    +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin-bottom:6px">TOP PARTECIPANTI</div>'
-    +'<div style="font-size:11px">'
-    +topParts.map(function(p,i){return '<div style="padding:3px 0;border-bottom:1px solid var(--gray-800)">#'+(i+1)+' <span style="font-family:var(--font-mono,monospace)">'+p.uid+'…</span> — '+p.blocks+' bl. — '+p.aria+' AR (€'+(p.aria*0.10).toFixed(0)+')</div>'}).join('')
-    +'</div>'
+    +'<div class="cr-section"><div class="cr-section-title">Top Partecipanti</div>'
+    +'<table class="cr-table"><thead><tr><th>#</th><th>User</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th><th style="text-align:right">&euro; eq.</th></tr></thead><tbody>'
+    +topParts.map(function(p,i){return '<tr><td>'+(i+1)+'</td><td style="font-family:var(--font-mono,monospace)">'+p.uid+'&hellip;</td><td style="text-align:center">'+p.blocks+'</td><td style="text-align:center">'+p.aria+'</td><td style="text-align:right">&euro;'+(p.aria*0.10).toFixed(0)+'</td></tr>'}).join('')
+    +'</tbody></table></div>'
 
-    // Scores leaderboard
-    +(scoresHtml?'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin:12px 0 6px">SCORE LEADERBOARD</div>'+scoresHtml:'')
+    +scoresHtml;
 
-    +'</div>';
-
-  panel.innerHTML=h;
-}
-
-function crKpi(label,val,sub,color){
-  var c=color||'var(--white)';
-  return '<div style="text-align:center">'
-    +'<div style="font-size:18px;font-weight:600;color:'+c+'">'+val+'</div>'
-    +'<div style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-400);margin-top:2px">'+label+'</div>'
-    +(sub?'<div style="font-size:10px;color:var(--gray-500);margin-top:1px">'+sub+'</div>':'')
-    +'</div>';
+  modal.innerHTML=h;
 }
 
 // ── Submit object ──

@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.14.0">
+<link rel="stylesheet" href="/src/dapp.css?v=3.15.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -993,6 +993,11 @@
   </div>
 </div>
 
+<!-- CONTROL ROOM MODAL (admin only) -->
+<div class="cr-overlay" id="cr-overlay" onclick="if(event.target===this)closeControlRoom()">
+  <div class="cr-modal" id="cr-modal"></div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 <div class="notif-toast-container" id="notif-toast-container"></div>
@@ -1006,7 +1011,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.15-3.14.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.16-3.15.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1078,6 +1083,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.14.0"></script>
+<script src="/src/dapp.js?v=3.15.0"></script>
 </body>
 </html>

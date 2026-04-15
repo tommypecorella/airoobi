@@ -1138,7 +1138,6 @@ async function renderDetail(){
 
     // CONTROL ROOM (admin only)
     +(_isAdmin?'<div style="margin-top:24px;text-align:center"><button onclick="openControlRoom(\''+a.id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;font-family:var(--font-m);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .3s;border-radius:var(--radius-sm)" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'var(--black)\'" onmouseout="this.style.background=\'none\';this.style.color=\'var(--gold)\'">CONTROL ROOM</button></div>':'')
-    +'<div id="control-room-panel" style="display:none"></div>'
 
     +'</div>'; // close detail-split
 
@@ -1163,15 +1162,23 @@ async function renderDetail(){
   if(myBlocks>0&&!_publicMode)loadAutoBuyStatus(a.id);
 }
 
-// ── Control Room (admin) ──
+// ── Control Room (admin modal) ──
+function closeControlRoom(){
+  var ov=document.getElementById('cr-overlay');
+  if(ov)ov.classList.remove('active');
+  document.body.style.overflow='';
+}
+
 async function openControlRoom(airdropId){
   if(!_isAdmin)return;
-  var panel=document.getElementById('control-room-panel');
-  if(!panel)return;
-  panel.style.display='block';
-  panel.innerHTML='<div style="text-align:center;padding:40px;color:var(--gray-400)">Loading...</div>';
+  var overlay=document.getElementById('cr-overlay');
+  var modal=document.getElementById('cr-modal');
+  if(!overlay||!modal)return;
+  overlay.classList.add('active');
+  document.body.style.overflow='hidden';
+  modal.innerHTML='<div style="text-align:center;padding:60px;color:var(--gray-400)">Loading...</div>';
 
-  var token=await getValidToken();if(!token)return;
+  var token=await getValidToken();if(!token){closeControlRoom();return;}
   var preview=await sbRpc('get_draw_preview',{p_airdrop_id:airdropId},token);
   var parts=[];
   try{
@@ -1199,7 +1206,7 @@ async function openControlRoom(airdropId){
 
   var a=_currentDetail;
   if(!a||!preview||!preview.ok){
-    panel.innerHTML='<div style="padding:20px;color:#ef4444">Errore caricamento dati</div>';
+    modal.innerHTML='<div style="padding:40px;color:#ef4444;text-align:center">Errore caricamento dati</div>';
     return;
   }
 
@@ -1218,8 +1225,8 @@ async function openControlRoom(airdropId){
   var venditoreEur=preview.split?preview.split.venditore_eur:0;
   var sellerMin=preview.seller_min_price||0;
   var successLabel=preview.success
-    ?'<span style="color:var(--kas)">✓ SUCCESS</span>'
-    :'<span style="color:#ef4444">✗ BELOW MIN (€'+venditoreEur+' vs €'+sellerMin+')</span>';
+    ?'<span style="color:var(--kas)">SUCCESS</span>'
+    :'<span style="color:#ef4444">BELOW MIN (&euro;'+venditoreEur+' vs &euro;'+sellerMin+')</span>';
 
   var userAgg={};
   parts.forEach(function(p){
@@ -1229,15 +1236,22 @@ async function openControlRoom(airdropId){
   });
   var topParts=Object.keys(userAgg).map(function(uid){return{uid:uid.substring(0,6),blocks:userAgg[uid].blocks,aria:userAgg[uid].aria}}).sort(function(a,b){return b.aria-a.aria}).slice(0,5);
 
+  function kpi(label,val,sub,color){
+    var c=color||'var(--white)';
+    return '<div class="cr-kpi">'
+      +'<div class="cr-kpi-val" style="color:'+c+'">'+val+'</div>'
+      +'<div class="cr-kpi-label">'+label+'</div>'
+      +(sub?'<div class="cr-kpi-sub">'+sub+'</div>':'')
+      +'</div>';
+  }
+
   var scoresHtml='';
   if(preview.scores&&preview.scores.length){
-    scoresHtml='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-top:8px">'
-      +'<tr style="color:var(--gray-500);border-bottom:1px solid var(--gray-800)"><th style="text-align:left;padding:4px">Rank</th><th>F1</th><th>F2</th><th>F3</th><th>Score</th><th>Blocks</th><th>ARIA</th></tr>';
+    scoresHtml='<div class="cr-section"><div class="cr-section-title">Score Leaderboard</div>'
+      +'<table class="cr-table"><thead><tr><th>Rank</th><th style="text-align:center">F1</th><th style="text-align:center">F2</th><th style="text-align:center">F3</th><th style="text-align:center">Score</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th></tr></thead><tbody>';
     preview.scores.slice(0,8).forEach(function(s){
-      var isWinner=s.rank===1;
-      var rowColor=isWinner?'color:var(--kas)':'';
-      scoresHtml+='<tr style="border-bottom:1px solid var(--gray-800);'+rowColor+'">'
-        +'<td style="padding:4px">#'+s.rank+(isWinner?' ★':'')+'</td>'
+      scoresHtml+='<tr'+(s.rank===1?' class="winner"':'')+'>'
+        +'<td>#'+s.rank+(s.rank===1?' &#9733;':'')+'</td>'
         +'<td style="text-align:center">'+s.f1+'</td>'
         +'<td style="text-align:center">'+s.f2+'</td>'
         +'<td style="text-align:center">'+s.f3+'</td>'
@@ -1245,46 +1259,50 @@ async function openControlRoom(airdropId){
         +'<td style="text-align:center">'+s.blocks+'</td>'
         +'<td style="text-align:center">'+s.aria_spent+'</td></tr>';
     });
-    scoresHtml+='</table>';
+    scoresHtml+='</tbody></table></div>';
   }
 
-  function crKpi(label,val,sub,color){
-    var c=color||'var(--white)';
-    return '<div style="text-align:center">'
-      +'<div style="font-size:18px;font-weight:600;color:'+c+'">'+val+'</div>'
-      +'<div style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-400);margin-top:2px">'+label+'</div>'
-      +(sub?'<div style="font-size:10px;color:var(--gray-500);margin-top:1px">'+sub+'</div>':'')
-      +'</div>';
-  }
+  var h=''
+    // Header
+    +'<div class="cr-header"><h3>CONTROL ROOM</h3><button class="cr-close" onclick="closeControlRoom()">&times;</button></div>'
 
-  var h='<div style="border:1px solid var(--gold);padding:20px;margin-top:12px;background:rgba(184,150,12,.03)">'
-    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:16px;display:flex;justify-content:space-between;align-items:center"><span>CONTROL ROOM</span><button onclick="document.getElementById(\'control-room-panel\').style.display=\'none\'" style="background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:16px">&times;</button></div>'
-    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
-    +crKpi('Partecipanti',uniqueUsers,'utenti unici')
-    +crKpi('Fill Rate',fillPct+'%',totalBlks+'/'+a.total_blocks)
-    +crKpi('Revenue','€'+totalEur,totalAria+' ARIA')
-    +crKpi('Media/Utente',avgPerUser+' AR','€'+(avgPerUser*0.10).toFixed(0)+' eq.')
-    +'</div>'
-    +'<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px">'
-    +crKpi('Presale',presaleBlocks+' bl.',presalePct+'% interesse','var(--aria)')
-    +crKpi('Sale',saleBlocks+' bl.',(100-presalePct)+'%')
-    +crKpi('Mining','div '+divisor,'~'+estShares.toFixed(1)+' quote est.','var(--gold)')
-    +crKpi('NFT Price','€'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
-    +'</div>'
-    +'<div style="padding:10px 14px;border:1px solid var(--gray-800);margin-bottom:16px;font-size:12px">'
-    +'<strong>Status:</strong> '+successLabel
-    +'<br><strong>Venditore:</strong> €'+venditoreEur+' / min €'+sellerMin
-    +'<br><strong>Split:</strong> Fondo €'+(preview.split?preview.split.fondo_eur:0)+' | Fee €'+(preview.split?preview.split.airoobi_eur:0)
-    +'<br><strong>Treasury:</strong> €'+treasuryBal.toFixed(2)+' | Quota: €'+nftPrice
-    +'</div>'
-    +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin-bottom:6px">TOP PARTECIPANTI</div>'
-    +'<div style="font-size:11px">'
-    +topParts.map(function(p,i){return '<div style="padding:3px 0;border-bottom:1px solid var(--gray-800)">#'+(i+1)+' <span style="font-family:var(--font-mono,monospace)">'+p.uid+'…</span> — '+p.blocks+' bl. — '+p.aria+' AR (€'+(p.aria*0.10).toFixed(0)+')</div>'}).join('')
-    +'</div>'
-    +(scoresHtml?'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);margin:12px 0 6px">SCORE LEADERBOARD</div>'+scoresHtml:'')
-    +'</div>';
+    // KPI — Partecipazione
+    +'<div class="cr-section"><div class="cr-section-title">Partecipazione</div>'
+    +'<div class="cr-kpi-grid">'
+    +kpi('Partecipanti',uniqueUsers,'utenti unici')
+    +kpi('Fill Rate',fillPct+'%',totalBlks+'/'+a.total_blocks)
+    +kpi('Revenue','&euro;'+totalEur,totalAria+' ARIA')
+    +kpi('Media/Utente',avgPerUser+' AR','&euro;'+(avgPerUser*0.10).toFixed(0)+' eq.')
+    +'</div></div>'
 
-  panel.innerHTML=h;
+    // KPI — Economia
+    +'<div class="cr-section"><div class="cr-section-title">Economia</div>'
+    +'<div class="cr-kpi-grid">'
+    +kpi('Presale',presaleBlocks+' bl.',presalePct+'%','var(--aria)')
+    +kpi('Sale',saleBlocks+' bl.',(100-presalePct)+'%')
+    +kpi('Mining','div '+divisor,'~'+estShares.toFixed(1)+' quote','var(--gold)')
+    +kpi('NFT Price','&euro;'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
+    +'</div></div>'
+
+    // Status
+    +'<div class="cr-section"><div class="cr-section-title">Status</div>'
+    +'<div class="cr-status">'
+    +'<strong>Esito:</strong> '+successLabel
+    +'<br><strong>Venditore:</strong> &euro;'+venditoreEur+' / min &euro;'+sellerMin
+    +'<br><strong>Split:</strong> Fondo &euro;'+(preview.split?preview.split.fondo_eur:0)+' | Fee &euro;'+(preview.split?preview.split.airoobi_eur:0)
+    +'<br><strong>Treasury:</strong> &euro;'+treasuryBal.toFixed(2)+' | Quota ROBI: &euro;'+nftPrice
+    +'</div></div>'
+
+    // Top partecipanti
+    +'<div class="cr-section"><div class="cr-section-title">Top Partecipanti</div>'
+    +'<table class="cr-table"><thead><tr><th>#</th><th>User</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th><th style="text-align:right">&euro; eq.</th></tr></thead><tbody>'
+    +topParts.map(function(p,i){return '<tr><td>'+(i+1)+'</td><td style="font-family:var(--font-mono,monospace)">'+p.uid+'&hellip;</td><td style="text-align:center">'+p.blocks+'</td><td style="text-align:center">'+p.aria+'</td><td style="text-align:right">&euro;'+(p.aria*0.10).toFixed(0)+'</td></tr>'}).join('')
+    +'</tbody></table></div>'
+
+    // Score leaderboard
+    +scoresHtml;
+
+  modal.innerHTML=h;
 }
 
 // ── Get airdrop ID from URL path ──

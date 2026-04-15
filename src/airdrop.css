@@ -253,6 +253,29 @@ html:not([data-lang]) .it{display:inline}
 .modal-confirm{background:var(--accent);color:var(--black);border-radius:var(--radius-sm)}
 .modal-confirm:hover{background:var(--white)}
 
+/* ── CONTROL ROOM MODAL ── */
+.cr-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:400;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
+.cr-overlay.active{display:flex}
+.cr-modal{background:rgba(8,12,28,.97);backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);border:1px solid var(--gold);max-width:600px;width:100%;padding:28px 24px;border-radius:var(--radius-lg);box-shadow:0 32px 100px rgba(0,0,0,.7);animation:fadeIn .2s ease;max-height:90vh;overflow-y:auto}
+.cr-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid rgba(184,150,12,.2)}
+.cr-header h3{font-family:var(--font-m);font-size:11px;letter-spacing:2.5px;color:var(--gold);margin:0}
+.cr-close{background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:20px;padding:4px 8px;transition:color .2s}
+.cr-close:hover{color:var(--white)}
+.cr-section{margin-bottom:20px}
+.cr-section-title{font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gray-400);margin-bottom:10px;text-transform:uppercase}
+.cr-kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+@media(min-width:480px){.cr-kpi-grid{grid-template-columns:repeat(4,1fr)}}
+.cr-kpi{text-align:center;padding:12px 8px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);background:rgba(255,255,255,.02)}
+.cr-kpi-val{font-size:18px;font-weight:600;color:var(--white)}
+.cr-kpi-label{font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-400);margin-top:3px}
+.cr-kpi-sub{font-size:10px;color:var(--gray-500);margin-top:2px}
+.cr-status{padding:12px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);font-size:12px;line-height:1.8;background:rgba(255,255,255,.02)}
+.cr-status strong{color:var(--gray-300)}
+.cr-table{width:100%;border-collapse:collapse;font-size:11px}
+.cr-table th{text-align:left;padding:6px 8px;color:var(--gray-500);border-bottom:1px solid var(--gray-800);font-family:var(--font-m);font-size:8px;letter-spacing:1px}
+.cr-table td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.04)}
+.cr-table tr.winner{color:var(--kas)}
+
 /* ── Duration badges ── */
 .duration-badge{position:absolute;top:10px;left:10px;font-family:var(--font-b);font-size:10px;font-weight:600;letter-spacing:1px;padding:4px 10px;border-radius:20px;z-index:2;pointer-events:none}
 .duration-badge.flash{background:rgba(255,107,107,.9);color:var(--white)}
