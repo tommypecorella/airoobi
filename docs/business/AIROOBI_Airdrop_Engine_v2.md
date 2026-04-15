@@ -48,6 +48,8 @@
 > - UI: Legenda F1/F2 aggiunta in Control Room, ABO Draw Preview, ABO Analisi
 > - UI: Linguaggio semplificato nella strategy guide ("Blocchi" e "Esperienza" invece di F1/F2)
 > - UI: Dettagli prodotto spostati sotto il titolo (non più in accordion)
+> - FIX: F2 denominatore ora è il totale globale ARIA nella categoria (non max singolo partecipante)
+>   Questo stabilizza F2 quando un utente si azzera dopo vittoria (One Category Rule)
 
 ---
 
@@ -339,15 +341,19 @@ Normalizzato 0→1. Chi ha il massimo dei blocchi ottiene F1=1.
 
 **F2 — ARIA spesi nella categoria (storico fedeltà, 30%):**
 ```
-F2 = log(1 + aria_spesi_categoria_post_vittoria) /
-     log(1 + max_aria_spesi_categoria_tra_tutti_partecipanti)
+F2 = log(1 + aria_spesi_utente_post_vittoria) /
+     log(1 + totale_aria_spesi_nella_categoria_da_tutti)
 ```
-- `aria_spesi_categoria` = totale ARIA effettivamente spesi (transati) in airdrop
-  della stessa categoria, ESCLUSO l'airdrop corrente
+- **Numeratore**: ARIA spesi dall'utente nella stessa categoria, ESCLUSO l'airdrop corrente
+- **Denominatore**: somma di TUTTI gli ARIA spesi da TUTTI gli utenti nella categoria
+  (globale, non solo tra i partecipanti correnti)
 - **Solo partecipazioni NON cancellate** (`cancelled_at IS NULL`)
-- **Reset su vittoria**: conta SOLO gli ARIA spesi DOPO l'ultima vittoria nella
-  stessa categoria. Se hai vinto un airdrop "Tech", il tuo storico Tech riparte
+- **Reset su vittoria**: il numeratore conta SOLO gli ARIA spesi DOPO l'ultima vittoria
+  nella stessa categoria. Se hai vinto un airdrop "Tech", il tuo storico Tech riparte
   da zero. Questo è la **One Category Rule** applicata allo scoring.
+- Il denominatore globale NON si resetta — resta stabile. Quando un singolo utente
+  si azzera dopo una vittoria, il denominatore non cambia e il peso relativo degli
+  altri partecipanti resta corretto.
 - Se l'utente non ha mai vinto nella categoria, conta tutto lo storico
 - Usa logaritmo per smorzare i gap estremi
 - Normalizzato 0→1
