@@ -965,6 +965,10 @@ async function renderDetail(){
     +'</div>'
     :'';
 
+  var currentPrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
+  var miningRate=calcMiningRate(a);
+  var pct=a.total_blocks>0?Math.round(a.blocks_sold/a.total_blocks*100):0;
+
   var html=''
     +'<div class="detail-split">'
 
@@ -976,98 +980,72 @@ async function renderDetail(){
     +'<button class="'+(isInWatchlist(a.id)?'heart-btn detail active':'heart-btn detail')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" style="position:absolute;top:14px;right:14px;z-index:2">&#9825;</button>'
     +'</div>'
 
+    // ══════════════════════════════════════════════════
     // ── RIGHT: CONTENT ──
+    // ══════════════════════════════════════════════════
     +'<div class="detail-right" id="detail-right">'
 
-    // Product info
+    // ┌─────────────────────────────────────┐
+    // │  1. PRODUCT INFO                    │
+    // └─────────────────────────────────────┘
     +'<div class="product-info">'
-    +(brand?'<div class="product-brand">'+escHtml(brand)+'</div>':'')
-    +'<h2 class="product-title">'+escHtml(a.title)+'</h2>'
-    +(model?'<div class="product-model">'+escHtml(model)+'</div>':'')
-    +'<div class="product-price-row">'
-    +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' ARIA</div>'
-    +'<div class="product-price-aria">'
-    +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-400);margin-right:6px">'+a.block_price_aria+'</span>':'')
-    +'<span class="it">per blocco</span><span class="en">per block</span> &middot; '+a.total_blocks.toLocaleString('it-IT')+' <span class="it">blocchi totali</span><span class="en">total blocks</span>'
-    +(isPresale?' &middot; <span style="color:var(--aria)">PRESALE</span>':'')
-    +'</div>'
-    +'</div>'
-    +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>&#9935; 2x MINING BOOST</strong> — <span class="it">Compra in presale e guadagna il doppio dei ROBI</span><span class="en">Buy in presale and earn 2x ROBI</span></div>':'')
-    +(condition?'<div class="product-condition">'+escHtml(condition)+'</div>':'')
     +'<div class="detail-cat"><a href="/airdrops?cat='+encodeURIComponent(a.category)+'" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s" onmouseover="this.style.opacity=\'.7\'" onmouseout="this.style.opacity=\'1\'">'+(CAT_ICONS[a.category]||'')+' '+escHtml(a.category)+'</a></div>'
+    +(brand?'<div class="product-brand">'+escHtml(brand)+(model?' &middot; '+escHtml(model):'')+'</div>':'')
+    +'<h2 class="product-title">'+escHtml(a.title)+'</h2>'
+    +(condition?'<div class="product-condition">'+escHtml(condition)+'</div>':'')
     +durationBadge(a.duration_type)
     +'</div>'
 
-    // ── ACCORDION SECTIONS ──
-    +(a.description?acc('desc','Descrizione','Description','<p class="acc-desc">'+escHtml(a.description)+'</p>',true):'')
-    +(highlights.length>0?acc('highlights','Caratteristiche','Highlights',
-      '<ul class="acc-list">'+highlights.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>',false)
-    :'')
-    +(included.length>0?acc('included','Contenuto della confezione','What\'s included',
-      '<ul class="acc-list neutral">'+included.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>',false)
-    :'')
-    +acc('airdrop','Dettagli airdrop','Airdrop details',
-      '<ul class="acc-list neutral">'
-      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'
-      +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
-      +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
-      +'<li><span class="it">Costo totale airdrop:</span><span class="en">Total airdrop cost:</span> <strong style="color:var(--aria)">'+totalAriaCost.toLocaleString('it-IT')+' ARIA</strong></li>'
-      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 ROBI ogni '+calcMiningRate(a)+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' blocchi)</span>':'')+'</li>'
-      +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
-      +'</ul>',false)
-
-    // DIVIDER → PARTECIPA
-    +'<div class="product-divider">'
-    +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
-    +'<p class="product-participate-sub"><span class="it">Ogni blocco ti fa guadagnare ROBI — il loro valore cresce nel tempo</span><span class="en">Each block earns you ROBI — their value grows over time</span></p>'
+    // ┌─────────────────────────────────────┐
+    // │  2. PRICE + PROGRESS                │
+    // └─────────────────────────────────────┘
+    +'<div class="ap-price-section">'
+    +'<div class="ap-price-main">'+currentPrice+' <span class="ap-price-unit">ARIA</span></div>'
+    +'<div class="ap-price-detail">'
+    +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-500);margin-right:6px">'+a.block_price_aria+'</span>':'')
+    +'<span class="it">per blocco</span><span class="en">per block</span>'
+    +(isPresale?' &middot; <span style="color:var(--aria);font-weight:600">PRESALE</span>':'')
+    +'</div>'
+    +(isPresale?'<div class="ap-presale-boost"><strong>&#9935; 2x MINING</strong> — <span class="it">Ogni blocco presale guadagna il doppio dei ROBI</span><span class="en">Each presale block earns double ROBI</span></div>':'')
     +'</div>'
 
-    // MY BLOCKS badge
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria))+' ARIA <span class="it">investiti</span><span class="en">invested</span></div>':'')
-
-    // MINE TOWER 3D
-    +buildMineTower(a,myBlocks)
-
-    // STATS
-    +'<div class="detail-stats">'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+'</div><div class="detail-stat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
+    // Progress bar
+    +'<div class="ap-progress">'
+    +'<div class="ap-progress-bar"><div class="ap-progress-fill" style="width:'+pct+'%"></div></div>'
+    +'<div class="ap-progress-stats">'
+    +'<span>'+a.blocks_sold+' / '+a.total_blocks+' <span class="it">blocchi venduti</span><span class="en">blocks sold</span></span>'
+    +'<span style="color:var(--accent)">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
+    +'</div>'
     +'</div>'
 
-    // Live countdown
+    // Quick stats row
+    +'<div class="ap-quick-stats">'
+    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--accent)">'+currentPrice+'</div><div class="ap-qstat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--gold)">1:'+miningRate+'</div><div class="ap-qstat-label">ROBI/<span class="it">blocchi</span><span class="en">blocks</span></div></div>'
+    +'<div class="ap-qstat"><div class="ap-qstat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="ap-qstat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
+    +'</div>'
+
+    // Countdown
     +(a.deadline?'<div class="detail-countdown" id="detail-countdown" data-deadline="'+a.deadline+'"></div>':'')
 
-    // Position live
-    +'<div class="detail-position" id="detail-position"></div>'
-
-    // Strategy guide
-    +'<div class="detail-strategy" id="detail-strategy"></div>'
-
-    // MY STATS panel
-    +(myBlocks>0&&!_publicMode?
-    '<div class="detail-mystats" id="detail-mystats">'
-    +'<div class="mystats-header"><span class="it">Le tue statistiche</span><span class="en">Your stats</span></div>'
-    +'<div class="mystats-grid" id="mystats-grid"></div>'
-    +'<div class="mystats-history" id="mystats-history"></div>'
-    +'</div>'
-    :'')
-
-    // BUY BOX
+    // ┌─────────────────────────────────────┐
+    // │  3. BUY BOX (CTA prominente)        │
+    // └─────────────────────────────────────┘
     +(_publicMode
+      // ── Non loggato: CTA registrazione ──
       ?'<div class="buy-box">'
       +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
-      +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi in questo airdrop.</span><span class="en">Sign up free to earn ARIA every day and buy blocks in this airdrop.</span></p>'
+      +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi.</span><span class="en">Sign up free to earn ARIA every day and buy blocks.</span></p>'
       +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>'
       +'<a href="/login?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" style="display:block;text-align:center;margin-top:10px;color:var(--gray-400);font-size:13px;text-decoration:none"><span class="it">Hai gi&agrave; un account? Accedi</span><span class="en">Already have an account? Log in</span></a>'
       +'</div>'
+      // ── Loggato: buy box con slider ──
       :'<div class="buy-box">'
-      +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-      +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
-      +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
+      +'<div class="buy-box-label"><span class="it">Acquista blocchi</span><span class="en">Buy blocks</span></div>'
+      +(isPresale?'<div class="ap-presale-boost" style="margin-bottom:16px"><strong>&#9935; PRESALE 2x</strong> — <span class="it">Ogni blocco guadagna il doppio dei ROBI!</span><span class="en">Each block earns double ROBI!</span></div>':'')
       +'<div class="buy-display">'
       +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-      +'<div class="buy-display-cost" id="buy-display-cost">= '+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' ARIA</div>'
+      +'<div class="buy-display-cost" id="buy-display-cost">= '+currentPrice+' ARIA</div>'
       +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA</div>'
       +'</div>'
       +'<div class="buy-slider-wrap">'
@@ -1090,20 +1068,68 @@ async function renderDetail(){
       +'</div>'
     )
 
-    // AUTO-BUY
+    // ┌─────────────────────────────────────┐
+    // │  4. POSIZIONE + STRATEGY            │
+    // └─────────────────────────────────────┘
+    +'<div class="detail-position" id="detail-position"></div>'
+    +'<div class="detail-strategy" id="detail-strategy"></div>'
+
+    // ┌─────────────────────────────────────┐
+    // │  5. LE TUE STATISTICHE              │
+    // └─────────────────────────────────────┘
+    +(myBlocks>0&&!_publicMode?
+    '<div class="detail-mystats" id="detail-mystats">'
+    +'<div class="mystats-header"><span class="it">Le tue statistiche</span><span class="en">Your stats</span></div>'
+    +'<div class="ap-myblocks-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> <strong>'+myBlocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+(myBlocks*currentPrice)+' ARIA <span class="it">investiti</span><span class="en">invested</span></div>'
+    +'<div class="mystats-grid" id="mystats-grid"></div>'
+    +'<div class="mystats-history" id="mystats-history"></div>'
+    +'</div>'
+    :'')
+
+    // ┌─────────────────────────────────────┐
+    // │  6. DETTAGLI PRODOTTO (accordion)   │
+    // └─────────────────────────────────────┘
+    +(a.description||highlights.length>0||included.length>0
+      ?'<div class="ap-section-divider"><span class="it">Dettagli prodotto</span><span class="en">Product details</span></div>'
+      :'')
+    +(a.description?acc('desc','Descrizione','Description','<p class="acc-desc">'+escHtml(a.description)+'</p>',true):'')
+    +(highlights.length>0?acc('highlights','Caratteristiche','Highlights',
+      '<ul class="acc-list">'+highlights.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>',false)
+    :'')
+    +(included.length>0?acc('included','Contenuto della confezione','What\'s included',
+      '<ul class="acc-list neutral">'+included.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>',false)
+    :'')
+    +acc('airdrop','Dettagli airdrop','Airdrop details',
+      '<ul class="acc-list neutral">'
+      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'
+      +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
+      +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
+      +'<li><span class="it">Costo totale airdrop:</span><span class="en">Total airdrop cost:</span> <strong style="color:var(--aria)">'+totalAriaCost.toLocaleString('it-IT')+' ARIA</strong></li>'
+      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 ROBI ogni '+miningRate+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(miningRate/2))+' blocchi)</span>':'')+'</li>'
+      +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
+      +'</ul>',false)
+
+    // ┌─────────────────────────────────────┐
+    // │  7. MINE TOWER 3D (visual)          │
+    // └─────────────────────────────────────┘
+    +buildMineTower(a,myBlocks)
+
+    // ┌─────────────────────────────────────┐
+    // │  8. AUTO-BUY (advanced)             │
+    // └─────────────────────────────────────┘
     +(myBlocks>0&&!_publicMode?
     '<div class="auto-buy-box" id="auto-buy-box">'
     +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px"><span class="it">&#9889; AUTO-BUY</span><span class="en">&#9889; AUTO-BUY</span></div>'
     +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Compra automaticamente blocchi a intervalli regolari.</span><span class="en">Automatically buy blocks at regular intervals.</span></p>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">BLOCCHI</span><span class="en">BLOCKS</span></label>'
-    +'<select id="ab-qty" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option>1</option><option>2</option><option>3</option><option>5</option><option>10</option></select></div>'
+    +'<select id="ab-qty" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px;border-radius:var(--radius-sm)"><option>1</option><option>2</option><option>3</option><option>5</option><option>10</option></select></div>'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">OGNI</span><span class="en">EVERY</span></label>'
-    +'<select id="ab-interval" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option value="1">1h</option><option value="2">2h</option><option value="4" selected>4h</option><option value="6">6h</option><option value="12">12h</option></select></div>'
+    +'<select id="ab-interval" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px;border-radius:var(--radius-sm)"><option value="1">1h</option><option value="2">2h</option><option value="4" selected>4h</option><option value="6">6h</option><option value="12">12h</option></select></div>'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px">MAX</label>'
-    +'<input type="number" id="ab-max" value="50" min="1" max="500" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"></div>'
+    +'<input type="number" id="ab-max" value="50" min="1" max="500" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px;border-radius:var(--radius-sm)"></div>'
     +'</div>'
-    +'<button id="ab-toggle" onclick="toggleAutoBuy(\''+a.id+'\')" style="width:100%;padding:8px;background:var(--aria);color:var(--white);border:none;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">ATTIVA AUTO-BUY</span><span class="en">ACTIVATE AUTO-BUY</span></button>'
+    +'<button id="ab-toggle" onclick="toggleAutoBuy(\''+a.id+'\')" style="width:100%;padding:10px;background:var(--aria);color:var(--white);border:none;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">ATTIVA AUTO-BUY</span><span class="en">ACTIVATE AUTO-BUY</span></button>'
     +'<div id="ab-status" style="margin-top:6px;font-size:10px;color:var(--gray-500);text-align:center"></div>'
     +'</div>'
     :'')
@@ -1111,7 +1137,7 @@ async function renderDetail(){
     +'</div>' // close detail-right
 
     // CONTROL ROOM (admin only)
-    +(_isAdmin?'<div style="margin-top:24px;text-align:center"><button onclick="openControlRoom(\''+a.id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;font-family:var(--font-m);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .3s" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'var(--black)\'" onmouseout="this.style.background=\'none\';this.style.color=\'var(--gold)\'">CONTROL ROOM</button></div>':'')
+    +(_isAdmin?'<div style="margin-top:24px;text-align:center"><button onclick="openControlRoom(\''+a.id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;font-family:var(--font-m);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .3s;border-radius:var(--radius-sm)" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'var(--black)\'" onmouseout="this.style.background=\'none\';this.style.color=\'var(--gold)\'">CONTROL ROOM</button></div>':'')
     +'<div id="control-room-panel" style="display:none"></div>'
 
     +'</div>'; // close detail-split

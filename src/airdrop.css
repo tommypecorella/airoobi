@@ -59,6 +59,32 @@ html:not([data-lang]) .it{display:inline}
 .product-back{display:inline-flex;align-items:center;gap:8px;color:var(--gray-400);font-size:13px;text-decoration:none;margin-bottom:24px;transition:color .25s;font-family:var(--font-b)}
 .product-back:hover{color:var(--accent)}
 
+/* ── PRICE SECTION ── */
+.ap-price-section{margin-bottom:24px}
+.ap-price-main{font-family:var(--font-h);font-size:clamp(36px,7vw,52px);font-weight:600;color:var(--accent);line-height:1}
+.ap-price-unit{font-family:var(--font-m);font-size:clamp(14px,2.5vw,18px);font-weight:400;color:var(--aria);letter-spacing:2px}
+.ap-price-detail{font-family:var(--font-m);font-size:13px;color:var(--gray-400);margin-top:6px}
+.ap-presale-boost{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:10px;font-size:12px;color:var(--aria);letter-spacing:.5px;border-radius:var(--radius-sm)}
+
+/* ── PROGRESS ── */
+.ap-progress{margin-bottom:20px}
+.ap-progress-bar{height:6px;background:var(--gray-800);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.ap-progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--kas));border-radius:3px;transition:width .6s ease}
+.ap-progress-stats{display:flex;justify-content:space-between;font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.3px}
+
+/* ── QUICK STATS ── */
+.ap-quick-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:20px;background:var(--gray-700);border:1px solid var(--gray-700);border-radius:var(--radius);overflow:hidden}
+.ap-qstat{background:var(--card-bg);padding:14px 10px;text-align:center}
+.ap-qstat-val{font-family:var(--font-h);font-size:clamp(20px,3.5vw,26px);font-weight:600;color:var(--white)}
+.ap-qstat-label{font-size:9px;color:var(--gray-400);margin-top:4px;letter-spacing:.8px;text-transform:uppercase;font-weight:500}
+
+/* ── MY BLOCKS BADGE ── */
+.ap-myblocks-badge{display:flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:12px;color:var(--accent);margin-bottom:12px;padding:10px 14px;background:rgba(74,158,255,.04);border:1px solid rgba(74,158,255,.12);border-radius:var(--radius-sm)}
+.ap-myblocks-badge strong{color:var(--white);font-size:16px}
+
+/* ── SECTION DIVIDER ── */
+.ap-section-divider{font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-500);padding:24px 0 12px;margin-top:8px;border-top:1px solid var(--gray-800)}
+
 /* ── LOADING / ERROR ── */
 .ap-loading{display:flex;align-items:center;justify-content:center;min-height:60vh;color:var(--gray-500);font-family:var(--font-m);font-size:12px;letter-spacing:2px}
 .ap-error{text-align:center;padding:80px 20px;color:var(--gray-400)}
