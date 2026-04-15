@@ -15,34 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=alfa-2026.04.15-3.10.0">
-<style>
-/* ── TOPBAR (standalone) ── */
-.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:rgba(6,11,24,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
-.topbar-logo{font-family:var(--font-b);font-size:22px;font-weight:700;letter-spacing:-2px;color:var(--accent);opacity:.8;text-decoration:none}
-.topbar-right{display:flex;align-items:center;gap:16px}
-.topbar-btn{background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 18px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .25s;text-decoration:none;border-radius:var(--radius-sm)}
-.topbar-btn:hover{border-color:var(--accent);color:var(--accent)}
-.topbar-btn-gold{border-color:rgba(184,150,12,.4);color:var(--gold)}
-.topbar-btn-gold:hover{border-color:var(--gold);background:rgba(184,150,12,.08)}
-
-/* ── PAGE CONTAINER ── */
-.product-page{max-width:1100px;margin:0 auto;padding:24px 20px 80px}
-.product-back{display:inline-flex;align-items:center;gap:8px;color:var(--gray-400);font-size:13px;text-decoration:none;margin-bottom:24px;transition:color .25s;font-family:var(--font-b)}
-.product-back:hover{color:var(--accent)}
-
-/* ── FOOTER ── */
-.ap-footer{text-align:center;padding:40px 20px;border-top:1px solid rgba(255,255,255,.04);margin-top:60px;font-size:11px;color:var(--gray-500)}
-.ap-footer a{color:var(--gray-400);text-decoration:none}
-
-/* ── LOADING / ERROR ── */
-.ap-loading{display:flex;align-items:center;justify-content:center;min-height:60vh;color:var(--gray-500);font-family:var(--font-m);font-size:12px;letter-spacing:2px}
-.ap-error{text-align:center;padding:80px 20px;color:var(--gray-400)}
-.ap-error h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:12px;color:var(--white)}
-
-/* ── MODAL ── */
-#modal-bg.active{display:flex!important}
-</style>
+<link rel="stylesheet" href="/src/airdrop.css?v=3.14.0">
 </head>
 <body>
 
@@ -55,7 +28,7 @@
   </div>
 </div>
 
-<!-- BACK LINK + CONTENT -->
+<!-- CONTENT -->
 <div class="product-page" id="ap-page">
   <a href="/airdrops" class="product-back">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
@@ -66,28 +39,29 @@
 </div>
 
 <!-- BUY CONFIRM MODAL -->
-<div id="modal-bg" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:500;align-items:center;justify-content:center" onclick="closeModal(event)">
-  <div style="background:var(--gray-900);border:1px solid var(--gray-700);padding:32px;max-width:380px;width:90%;border-radius:var(--radius)">
-    <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:16px"><span class="it">CONFERMA ACQUISTO</span><span class="en">CONFIRM PURCHASE</span></div>
-    <div id="modal-desc" style="font-size:14px;color:var(--gray-300);margin-bottom:12px;line-height:1.5"></div>
-    <div style="font-size:24px;font-weight:700;color:var(--white);margin-bottom:24px" id="modal-cost"></div>
-    <div style="display:flex;gap:12px">
-      <button onclick="closeModalBtn()" style="flex:1;padding:14px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">ANNULLA</span><span class="en">CANCEL</span></button>
-      <button onclick="confirmBuy()" style="flex:2;padding:14px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:1.5px;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">CONFERMA</span><span class="en">CONFIRM</span></button>
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal">
+    <h3><span class="it">Conferma acquisto</span><span class="en">Confirm purchase</span></h3>
+    <p id="modal-desc"></p>
+    <div class="modal-highlight" id="modal-cost"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModalBtn()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button class="modal-confirm" onclick="confirmBuy()"><span class="it">Conferma</span><span class="en">Confirm</span></button>
     </div>
   </div>
 </div>
 
-<!-- TOAST (uses .toast / .toast.show from dapp.css) -->
-<div id="ap-toast" class="toast"></div>
+<!-- TOAST -->
+<div class="toast" id="ap-toast"></div>
 
 <!-- FOOTER -->
 <div class="ap-footer">
-  <a href="https://airoobi.com">airoobi.com</a> · <a href="https://airoobi.app">airoobi.app</a><br>
+  <a href="https://airoobi.com">airoobi.com</a> &middot; <a href="https://airoobi.app">airoobi.app</a><br>
   <span style="display:inline-block;margin-top:8px">&copy; 2026 AIROOBI — Dream Robe E-Commerce.</span><br>
-  <span style="display:inline-block;margin-top:4px;font-size:10px;color:var(--gray-600)"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></span>
+  <span style="display:inline-block;margin-top:4px;font-size:10px;color:var(--gray-600)"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></span><br>
+  <span style="display:inline-block;margin-top:4px;font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600)">alfa-2026.04.15-3.14.0</span>
 </div>
 
-<script src="/src/airdrop.js?v=alfa-2026.04.15-3.10.0"></script>
+<script src="/src/airdrop.js?v=3.14.0"></script>
 </body>
 </html>
