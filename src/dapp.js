@@ -2625,7 +2625,7 @@ async function openControlRoom(airdropId){
     +kpi('Presale',presaleBlocks+' bl.',presalePct+'%','var(--aria)')
     +kpi('Sale',saleBlocks+' bl.',(100-presalePct)+'%')
     +kpi('Mining','div '+divisor,'~'+estShares.toFixed(1)+' quote','var(--gold)')
-    +kpi('NFT Price','&euro;'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
+    +kpi('Quota ROBI','&euro;'+nftPrice,nftCirc.toFixed(1)+' circ.','var(--gold)')
     +'</div></div>'
 
     +'<div class="cr-section"><div class="cr-section-title">Status</div>'
