@@ -160,7 +160,7 @@ html:not([data-lang]) .it{display:inline}
 .product-participate-sub{font-family:var(--font-b);font-size:12px;font-weight:500;color:var(--gray-400);letter-spacing:.8px;text-align:center;margin-bottom:32px}
 
 /* ── MINE TOWER 3D ── */
-.mine-scene{perspective:600px;width:100%;max-width:320px;height:340px;margin:10px auto 8px;position:relative;overflow:visible}
+.mine-scene{perspective:600px;width:100%;max-width:320px;margin:10px auto 8px;position:relative;overflow:visible;padding-bottom:24px}
 .mine-tower{width:100%;height:100%;transform-style:preserve-3d;animation:tower-spin 22s linear infinite;position:relative}
 .mine-ring{position:absolute;left:50%;transform-style:preserve-3d;width:0;height:0}
 .mine-block{position:absolute;left:-18px;top:-11px;width:36px;height:22px;border-radius:4px;backface-visibility:hidden;transition:all .4s;font-size:0}
@@ -170,7 +170,7 @@ html:not([data-lang]) .it{display:inline}
 .mine-block.robi{border-color:#B8960C !important;box-shadow:0 0 10px rgba(184,150,12,.45);animation:robi-pulse 2.5s ease-in-out infinite}
 .mine-block.robi::after{content:'✦';position:absolute;font-size:9px;color:#B8960C;top:50%;left:50%;transform:translate(-50%,-50%);text-shadow:0 0 6px rgba(184,150,12,.8)}
 .mine-block.mine.robi{background:linear-gradient(135deg,var(--accent),#B8960C);box-shadow:0 0 18px rgba(184,150,12,.6)}
-.mine-label{position:absolute;bottom:-8px;left:0;right:0;text-align:center;font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500)}
+.mine-label{position:relative;bottom:auto;left:0;right:0;text-align:center;font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);margin-top:8px}
 .mine-legend{display:flex;justify-content:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
 .mine-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-400)}
 .mine-legend-dot{width:10px;height:10px;border-radius:3px}

@@ -221,7 +221,7 @@ function buildMineTower(a,myBlocks){
 
   var ringH=26;
   var totalH=RINGS*ringH;
-  var html='<div class="mine-scene" style="height:'+(totalH+40)+'px">'
+  var html='<div class="mine-scene" style="height:'+(totalH+60)+'px">'
     +'<div class="mine-tower" id="mine-tower">';
 
   var idx=0;
