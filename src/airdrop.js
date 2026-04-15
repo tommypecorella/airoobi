@@ -992,6 +992,7 @@ async function renderDetail(){
     +'<div class="detail-cat"><a href="/airdrops?cat='+encodeURIComponent(a.category)+'" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s" onmouseover="this.style.opacity=\'.7\'" onmouseout="this.style.opacity=\'1\'">'+(CAT_ICONS[a.category]||'')+' '+escHtml(a.category)+'</a></div>'
     +(brand?'<div class="product-brand">'+escHtml(brand)+(model?' &middot; '+escHtml(model):'')+'</div>':'')
     +'<h2 class="product-title">'+escHtml(a.title)+'</h2>'
+    +(a.description?'<p class="product-desc">'+escHtml(a.description)+'</p>':'')
     +(condition?'<div class="product-condition">'+escHtml(condition)+'</div>':'')
     +(highlights.length>0
       ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>'
@@ -1094,18 +1095,8 @@ async function renderDetail(){
     :'')
 
     // ┌─────────────────────────────────────┐
-    // │  6. DETTAGLI PRODOTTO (accordion)   │
+    // │  6. DETTAGLI AIRDROP (accordion)    │
     // └─────────────────────────────────────┘
-    +(a.description||highlights.length>0||included.length>0
-      ?'<div class="ap-section-divider"><span class="it">Dettagli prodotto</span><span class="en">Product details</span></div>'
-      :'')
-    +(a.description?acc('desc','Descrizione','Description','<p class="acc-desc">'+escHtml(a.description)+'</p>',true):'')
-    +(highlights.length>0?acc('highlights','Caratteristiche','Highlights',
-      '<ul class="acc-list">'+highlights.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>',false)
-    :'')
-    +(included.length>0?acc('included','Contenuto della confezione','What\'s included',
-      '<ul class="acc-list neutral">'+included.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>',false)
-    :'')
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
       +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'

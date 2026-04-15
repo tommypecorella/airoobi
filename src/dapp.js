@@ -1687,6 +1687,7 @@ async function openDetail(id){
     +'<div class="product-info">'
     +(brand?'<div class="product-brand">'+brand+'</div>':'')
     +'<h2 class="product-title">'+a.title+'</h2>'
+    +(a.description?'<p class="product-desc">'+a.description+'</p>':'')
     +(model?'<div class="product-model">'+model+'</div>':'')
     +(condition?'<div class="product-condition">'+condition+'</div>':'')
     // Product details inline (under title)
@@ -1711,7 +1712,6 @@ async function openDetail(id){
     +'</div>'
 
     // ── ACCORDION SECTIONS ──
-    +(a.description?acc('desc','Descrizione','Description','<p class="acc-desc">'+a.description+'</p>',true):'')
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
       +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'
