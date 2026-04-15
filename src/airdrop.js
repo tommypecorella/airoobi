@@ -977,8 +977,8 @@ async function renderDetail(){
     +'<div class="gallery-track" id="gallery-track">'+slidesHtml+'</div>'
     +playerHtml
     +'<div class="product-badge" style="position:absolute;top:14px;left:14px;z-index:2">Airdrop</div>'
-    +'<button class="'+(isInWatchlist(a.id)?'heart-btn detail active':'heart-btn detail')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" style="position:absolute;top:14px;right:14px;z-index:2">&#9825;</button>'
     +'</div>'
+    +'<div class="detail-below-gallery"><button class="'+(isInWatchlist(a.id)?'heart-btn detail active':'heart-btn detail')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')">&#9825;</button></div>'
 
     // ══════════════════════════════════════════════════
     // ── RIGHT: CONTENT ──
