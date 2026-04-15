@@ -1,5 +1,5 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 2.2 · 12 Aprile 2026 · DOCUMENTO FONDATIVO**
+**Version 2.3 · 16 Aprile 2026 · DOCUMENTO FONDATIVO**
 
 > Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
 > del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
@@ -38,6 +38,16 @@
 > - CHANGE: Annullamento solo da parte dell'utente (non più admin), perde ARIA pagati
 > - ADD: Badge valutazione — ogni airdrop valutato genera un badge, winner riceve lo stesso badge
 > - ADD: Workflow completo documentato (Sezione 0)
+>
+> **Changelog 16 Apr 2026 (v2.3) — Scoring v3 Deployato:**
+> - DEPLOY: Formula v3 attiva nel DB — `calculate_winner_score` usa solo F1 (70%) + F2 (30%)
+> - REMOVE: F3 (seniority) rimosso dallo scoring. Seniority resta solo come tiebreaker finale
+> - FIX: F2 ora rispetta la One Category Rule — conta ARIA spesi solo DOPO l'ultima vittoria nella categoria
+> - FIX: F2 esclude partecipazioni cancellate (`cancelled_at IS NULL`)
+> - CHANGE: Config DB aggiornata — rimossi `score_w3`, `score_alpha_f3`, `score_beta_f3`
+> - UI: Legenda F1/F2 aggiunta in Control Room, ABO Draw Preview, ABO Analisi
+> - UI: Linguaggio semplificato nella strategy guide ("Blocchi" e "Esperienza" invece di F1/F2)
+> - UI: Dettagli prodotto spostati sotto il titolo (non più in accordion)
 
 ---
 
@@ -311,11 +321,11 @@ Prima di eseguire il draw il sistema verifica:
 Determinismo puro. Il vincitore è chi ha lo score più alto.
 Nessuna estrazione casuale — il risultato è verificabile e riproducibile.
 
-### 5.2 Formula Score (v3 — 12 Aprile 2026)
+### 5.2 Formula Score (v3 — deployata 16 Aprile 2026)
 
-> **DEPRECATA la formula v2** con 3 fattori (F1/F2/F3 con pesi 0.65/0.20/0.15).
-> La v3 semplifica a 2 fattori con pesi 70/30, rimuovendo la seniority (F3).
-> La seniority creava un vantaggio non meritocratico per i primi iscritti.
+> Formula v3 ATTIVA nel DB. La v2 con 3 fattori (F1/F2/F3) è deprecata.
+> Semplificato a 2 fattori con pesi 70/30, rimuovendo la seniority (F3).
+> La seniority resta come tiebreaker finale, non influisce sullo score.
 
 ```
 score(utente) = (F1 × 0.70) + (F2 × 0.30)

@@ -1705,7 +1705,8 @@ async function adDrawPreview(airdropId){
       h+='</div></div>';
     }
     if(d.scores&&d.scores.length){
-      h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-m);margin-bottom:8px">CLASSIFICA SCORE</div>';
+      h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-m);margin-bottom:4px">CLASSIFICA SCORE</div>';
+      h+='<div style="font-size:10px;color:var(--gray-500);margin-bottom:8px">F1 = Blocchi acquistati (70%) · F2 = ARIA spesi nella categoria (30%)</div>';
       h+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
       h+='<thead><tr style="border-bottom:1px solid var(--gray-700)">';
       h+='<th style="text-align:left;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">#</th>';
@@ -1713,7 +1714,6 @@ async function adDrawPreview(airdropId){
       h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">BLOCCHI</th>';
       h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">F1</th>';
       h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">F2</th>';
-      h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">F3</th>';
       h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">SCORE</th>';
       h+='</tr></thead><tbody>';
       d.scores.forEach(function(sc){
@@ -1726,7 +1726,6 @@ async function adDrawPreview(airdropId){
         h+='<td style="padding:6px 8px;color:#4A9EFF;text-align:right">'+sc.blocks+'</td>';
         h+='<td style="padding:6px 8px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f1).toFixed(3)+'</td>';
         h+='<td style="padding:6px 8px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f2).toFixed(3)+'</td>';
-        h+='<td style="padding:6px 8px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f3).toFixed(3)+'</td>';
         h+='<td style="padding:6px 8px;color:'+(isWinner?'#49b583':'var(--white)')+';text-align:right;font-weight:600">'+parseFloat(sc.score).toFixed(4)+'</td>';
         h+='</tr>';
       });
@@ -1956,14 +1955,15 @@ async function toggleAnalysisDetail(row,airdropId){
       h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
       h+='<div><span style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">VINCITORE</span><br><span style="color:#49b583;font-family:var(--font-mono);font-size:13px">'+escHtml(winnerEmail)+'</span></div>';
       h+='<div style="text-align:right"><span style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">SCORE</span><br><span style="color:#49b583;font-weight:600;font-size:18px">'+parseFloat(winner.score).toFixed(4)+'</span></div></div>';
-      h+='<div style="font-size:12px;color:var(--gray-400);margin-bottom:8px">Decomposizione: <span style="color:#4A9EFF">F1='+parseFloat(winner.f1).toFixed(2)+'</span> | <span style="color:var(--gold)">F2='+parseFloat(winner.f2).toFixed(2)+'</span> | <span style="color:#f59e0b">F3='+parseFloat(winner.f3).toFixed(2)+'</span></div>';
+      h+='<div style="font-size:12px;color:var(--gray-400);margin-bottom:8px">Decomposizione: <span style="color:#4A9EFF">F1 (Blocchi)='+parseFloat(winner.f1).toFixed(2)+'</span> | <span style="color:var(--gold)">F2 (Categoria)='+parseFloat(winner.f2).toFixed(2)+'</span></div>';
       if(d.winner_explanation){h+='<div style="color:var(--gray-200);font-size:12px;font-style:italic;border-top:1px solid rgba(73,181,131,.2);padding-top:8px">'+escHtml(d.winner_explanation)+'</div>';}
       h+='</div>';
     }else{h+='<div style="color:var(--gray-400);font-size:12px;margin-bottom:16px">Draw non ancora eseguito.</div>';}
     if(d.scores&&d.scores.length){
       h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;font-family:var(--font-m);margin-bottom:8px">2. CLASSIFICA SCORE'+(d.scores.length>5?' (TOP 5 di '+d.scores.length+')':'')+'</div>';
       h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px">';
-      h+='<thead><tr style="border-bottom:1px solid var(--gray-700)"><th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">RANK</th><th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">EMAIL</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">SCORE</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F1</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F2</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F3</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">BLOCCHI</th></tr></thead><tbody>';
+      h+='<div style="font-size:10px;color:var(--gray-500);margin-bottom:6px">F1 = Blocchi acquistati (70%) · F2 = ARIA spesi nella categoria (30%)</div>';
+      h+='<thead><tr style="border-bottom:1px solid var(--gray-700)"><th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">RANK</th><th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">EMAIL</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">SCORE</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F1</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F2</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">BLOCCHI</th></tr></thead><tbody>';
       d.scores.slice(0,5).forEach(function(sc){
         var isWinner=sc.rank===1&&d.draw_executed;
         var rowBg=isWinner?'rgba(73,181,131,.1)':'transparent';
@@ -1977,7 +1977,6 @@ async function toggleAnalysisDetail(row,airdropId){
         h+='<td style="padding:5px 6px;color:'+(isWinner?'#49b583':'var(--white)')+';text-align:right;font-weight:600">'+parseFloat(sc.score).toFixed(4)+'</td>';
         h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f1).toFixed(3)+'</td>';
         h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f2).toFixed(3)+'</td>';
-        h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f3).toFixed(3)+'</td>';
         h+='<td style="padding:5px 6px;color:#4A9EFF;text-align:right">'+sc.blocks+'</td></tr>';
       });
       h+='</tbody></table>';

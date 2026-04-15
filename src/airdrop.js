@@ -993,6 +993,13 @@ async function renderDetail(){
     +(brand?'<div class="product-brand">'+escHtml(brand)+(model?' &middot; '+escHtml(model):'')+'</div>':'')
     +'<h2 class="product-title">'+escHtml(a.title)+'</h2>'
     +(condition?'<div class="product-condition">'+escHtml(condition)+'</div>':'')
+    +(highlights.length>0
+      ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>'
+      :'')
+    +(included.length>0
+      ?'<div class="product-included-label"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
+      +'<ul class="product-included">'+included.map(function(h){return '<li>'+escHtml(h)+'</li>'}).join('')+'</ul>'
+      :'')
     +durationBadge(a.duration_type)
     +'</div>'
 
@@ -1021,7 +1028,7 @@ async function renderDetail(){
     // Quick stats row
     +'<div class="ap-quick-stats">'
     +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--accent)">'+currentPrice+'</div><div class="ap-qstat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
-    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--gold)">1:'+miningRate+'</div><div class="ap-qstat-label">ROBI/<span class="it">blocchi</span><span class="en">blocks</span></div></div>'
+    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--gold)">'+miningRate+'</div><div class="ap-qstat-label"><span class="it">blocchi per ROBI</span><span class="en">blocks per ROBI</span></div></div>'
     +'<div class="ap-qstat"><div class="ap-qstat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="ap-qstat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
     +'</div>'
 
@@ -1248,14 +1255,14 @@ async function openControlRoom(airdropId){
   var scoresHtml='';
   if(preview.scores&&preview.scores.length){
     scoresHtml='<div class="cr-section"><div class="cr-section-title">Score Leaderboard</div>'
-      +'<table class="cr-table"><thead><tr><th>Rank</th><th style="text-align:center">F1</th><th style="text-align:center">F2</th><th style="text-align:center">F3</th><th style="text-align:center">Score</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th></tr></thead><tbody>';
+      +'<div style="font-size:10px;color:var(--gray-500);margin-bottom:8px">F1 = Blocchi acquistati (70%) &middot; F2 = ARIA spesi nella categoria (30%)</div>'
+      +'<table class="cr-table"><thead><tr><th>Rank</th><th style="text-align:center">F1</th><th style="text-align:center">F2</th><th style="text-align:center">Score</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th></tr></thead><tbody>';
     preview.scores.slice(0,8).forEach(function(s){
       scoresHtml+='<tr'+(s.rank===1?' class="winner"':'')+'>'
         +'<td>#'+s.rank+(s.rank===1?' &#9733;':'')+'</td>'
-        +'<td style="text-align:center">'+s.f1+'</td>'
-        +'<td style="text-align:center">'+s.f2+'</td>'
-        +'<td style="text-align:center">'+s.f3+'</td>'
-        +'<td style="text-align:center;font-weight:600">'+s.score+'</td>'
+        +'<td style="text-align:center">'+(parseFloat(s.f1)||0).toFixed(3)+'</td>'
+        +'<td style="text-align:center">'+(parseFloat(s.f2)||0).toFixed(3)+'</td>'
+        +'<td style="text-align:center;font-weight:600">'+(parseFloat(s.score)||0).toFixed(4)+'</td>'
         +'<td style="text-align:center">'+s.blocks+'</td>'
         +'<td style="text-align:center">'+s.aria_spent+'</td></tr>';
     });

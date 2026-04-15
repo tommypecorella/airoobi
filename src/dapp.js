@@ -1470,7 +1470,7 @@ function renderGrid(){
       +'<span class="card-price">'+priceHtml+'</span>'
       +'<span class="card-remain">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
       +'</div>'
-      +'<div class="card-mining"><span style="color:var(--gold)">&#9935;</span> '+miningRate+' bl / 1 ROBI</div>'
+      +'<div class="card-mining"><span style="color:var(--gold)">&#9935;</span> <span class="it">1 ROBI ogni '+miningRate+' blocchi</span><span class="en">1 ROBI per '+miningRate+' blocks</span></div>'
       +'</div></div>';
   }).join('');
 
@@ -1688,6 +1688,17 @@ async function openDetail(id){
     +(brand?'<div class="product-brand">'+brand+'</div>':'')
     +'<h2 class="product-title">'+a.title+'</h2>'
     +(model?'<div class="product-model">'+model+'</div>':'')
+    +(condition?'<div class="product-condition">'+condition+'</div>':'')
+    // Product details inline (under title)
+    +(highlights.length>0
+      ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
+      :'')
+    +(included.length>0
+      ?'<div class="product-included-label"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
+      +'<ul class="product-included">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
+      :'')
+    +'<div class="detail-cat"><a href="#" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s" onmouseover="this.style.opacity=\'.7\'" onmouseout="this.style.opacity=\'1\'">'+(CAT_ICONS[a.category]||'')+' '+a.category+'</a></div>'
+    +durationBadge(a.duration_type)
     +'<div class="product-price-row">'
     +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' ARIA</div>'
     +'<div class="product-price-aria">'
@@ -1697,19 +1708,10 @@ async function openDetail(id){
     +'</div>'
     +'</div>'
     +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>&#9935; 2x MINING BOOST</strong> — <span class="it">Compra in presale e guadagna il doppio dei ROBI</span><span class="en">Buy in presale and earn 2x ROBI</span></div>':'')
-    +(condition?'<div class="product-condition">'+condition+'</div>':'')
-    +'<div class="detail-cat"><a href="#" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s" onmouseover="this.style.opacity=\'.7\'" onmouseout="this.style.opacity=\'1\'">'+(CAT_ICONS[a.category]||'')+' '+a.category+'</a></div>'
-    +durationBadge(a.duration_type)
     +'</div>'
 
     // ── ACCORDION SECTIONS ──
     +(a.description?acc('desc','Descrizione','Description','<p class="acc-desc">'+a.description+'</p>',true):'')
-    +(highlights.length>0?acc('highlights','Caratteristiche','Highlights',
-      '<ul class="acc-list">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>',false)
-    :'')
-    +(included.length>0?acc('included','Contenuto della confezione','What\'s included',
-      '<ul class="acc-list neutral">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>',false)
-    :'')
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
       +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'
@@ -1736,7 +1738,7 @@ async function openDetail(id){
     +'<div class="detail-stats">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'</div><div class="detail-stat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="detail-stat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">blocchi per ROBI</span><span class="en">blocks per ROBI</span></div></div>'
     +'</div>'
 
     // Live countdown
@@ -1916,26 +1918,24 @@ function updateStrategyGuide(scores,pos,total,myScore){
 
   // ── PUBLIC / NOT PARTICIPATING ──
   if(!_session||!myScore||pos===0){
-    var topScore=scores&&scores.length>0?scores[0]:null;
-    var topBlocks=topScore?topScore.blocks:0;
     el.innerHTML=''
       +'<div class="strategy-box">'
-      +'<div class="strategy-title"><span class="it">Come funziona la classifica</span><span class="en">How the ranking works</span></div>'
+      +'<div class="strategy-title"><span class="it">Come si vince?</span><span class="en">How do you win?</span></div>'
       +'<div class="strategy-formula">'
       +'<div class="strategy-factor">'
       +'<div class="strategy-factor-pct">70%</div>'
-      +'<div class="strategy-factor-name">F1 — <span class="it">Blocchi</span><span class="en">Blocks</span></div>'
-      +'<div class="strategy-factor-desc"><span class="it">Quanti blocchi hai rispetto a chi ne ha di pi&ugrave;</span><span class="en">Your blocks vs. the top holder</span></div>'
+      +'<div class="strategy-factor-name"><span class="it">Blocchi acquistati</span><span class="en">Blocks purchased</span></div>'
+      +'<div class="strategy-factor-desc"><span class="it">Pi&ugrave; blocchi compri, pi&ugrave; sali</span><span class="en">More blocks = higher rank</span></div>'
       +'</div>'
       +'<div class="strategy-factor">'
       +'<div class="strategy-factor-pct">30%</div>'
-      +'<div class="strategy-factor-name">F2 — <span class="it">Fedelt&agrave;</span><span class="en">Loyalty</span></div>'
-      +'<div class="strategy-factor-desc"><span class="it">ARIA spesi nella stessa categoria in passato</span><span class="en">ARIA spent in this category before</span></div>'
+      +'<div class="strategy-factor-name"><span class="it">Esperienza categoria</span><span class="en">Category experience</span></div>'
+      +'<div class="strategy-factor-desc"><span class="it">ARIA gi&agrave; spesi in questa categoria</span><span class="en">ARIA already spent in this category</span></div>'
       +'</div>'
       +'</div>'
       +'<div class="strategy-tip">'
-      +'<span class="it">&#9889; Pi&ugrave; blocchi compri, pi&ugrave; sali in classifica. Chi &egrave; al 1&deg; posto quando l\'airdrop si chiude ottiene l\'oggetto.</span>'
-      +'<span class="en">&#9889; The more blocks you buy, the higher you climb. Whoever is #1 when the airdrop closes gets the item.</span>'
+      +'<span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti gli altri guadagnano ROBI.</span>'
+      +'<span class="en">Whoever is #1 at close gets the item. Everyone else earns ROBI.</span>'
       +'</div>'
       +'</div>';
     return;
@@ -1946,90 +1946,76 @@ function updateStrategyGuide(scores,pos,total,myScore){
   var f2=parseFloat(myScore.f2)||0;
   var myBlocks=myScore.blocks||0;
 
-  // Leader data
   var leader=scores[0];
   var leaderBlocks=leader?leader.blocks:myBlocks;
   var blocksToFirst=0;
   if(pos>1&&leader){
-    // Estimate blocks needed to match leader's F1
-    // F1 = myBlocks / maxBlocks → to beat leader, need more blocks than leader
     blocksToFirst=Math.max(0,leaderBlocks-myBlocks+1);
   }
 
-  // Determine which factor is weaker
   var f1weak=f1<f2;
   var isFirst=pos===1;
 
-  // Build contextual tips
   var tipsIt=[];
   var tipsEn=[];
 
   if(isFirst){
-    tipsIt.push('&#9733; Sei in testa! Continua ad accumulare blocchi per difendere la posizione.');
-    tipsEn.push('&#9733; You\'re in the lead! Keep buying blocks to defend your position.');
+    tipsIt.push('Sei in testa! Continua a comprare blocchi per mantenere il vantaggio.');
+    tipsEn.push('You\'re in the lead! Keep buying blocks to stay ahead.');
     if(a.status==='presale'){
-      tipsIt.push('&#9889; Approfitta della presale: ogni blocco vale 2x ROBI e costa meno.');
-      tipsEn.push('&#9889; Take advantage of presale: each block earns 2x ROBI and costs less.');
+      tipsIt.push('Approfitta della presale: prezzo ridotto e doppi ROBI.');
+      tipsEn.push('Take advantage of presale: lower price and double ROBI.');
     }
     if(total>1){
       var second=scores[1];
       var gap=second?myBlocks-(second.blocks||0):0;
       if(gap<=5){
-        tipsIt.push('&#9888; Il 2&deg; &egrave; a soli <strong>'+gap+'</strong> blocchi — margine stretto!');
-        tipsEn.push('&#9888; #2 is only <strong>'+gap+'</strong> blocks behind — tight margin!');
+        tipsIt.push('Attenzione: il 2&deg; &egrave; a soli <strong>'+gap+'</strong> blocchi!');
+        tipsEn.push('Watch out: #2 is only <strong>'+gap+'</strong> blocks behind!');
       }
     }
   } else {
     if(blocksToFirst>0){
-      tipsIt.push('&#127919; Ti servono circa <strong>'+blocksToFirst+'</strong> blocchi in pi&ugrave; per raggiungere il 1&deg; posto.');
-      tipsEn.push('&#127919; You need about <strong>'+blocksToFirst+'</strong> more blocks to reach #1.');
+      tipsIt.push('Ti servono circa <strong>'+blocksToFirst+'</strong> blocchi per arrivare 1&deg;.');
+      tipsEn.push('You need about <strong>'+blocksToFirst+'</strong> more blocks to reach #1.');
     }
     if(f1weak){
-      tipsIt.push('&#9650; Il tuo F1 (blocchi) &egrave; il fattore pi&ugrave; debole — compra pi&ugrave; blocchi per salire.');
-      tipsEn.push('&#9650; Your F1 (blocks) is your weaker factor — buy more blocks to climb.');
+      tipsIt.push('Compra pi&ugrave; blocchi — &egrave; il modo pi&ugrave; veloce per salire.');
+      tipsEn.push('Buy more blocks — it\'s the fastest way to climb.');
     } else {
-      tipsIt.push('&#9650; Il tuo F2 (fedelt&agrave;) &egrave; pi&ugrave; basso — partecipa ad altri airdrop della stessa categoria per migliorarlo.');
-      tipsEn.push('&#9650; Your F2 (loyalty) is lower — join other airdrops in this category to improve it.');
+      tipsIt.push('Partecipa ad altri airdrop di questa categoria per aumentare la tua esperienza.');
+      tipsEn.push('Join other airdrops in this category to build your experience.');
     }
     if(a.status==='presale'){
-      tipsIt.push('&#9889; La presale &egrave; il momento migliore: prezzo ridotto e 2x ROBI.');
-      tipsEn.push('&#9889; Presale is the best time: lower price and 2x ROBI.');
+      tipsIt.push('La presale &egrave; il momento migliore: prezzo ridotto e doppi ROBI.');
+      tipsEn.push('Presale is the best time: lower price and double ROBI.');
     }
   }
 
-  // Build bars
   var f1Pct=Math.round(f1*100);
   var f2Pct=Math.round(f2*100);
 
   el.innerHTML=''
     +'<div class="strategy-box'+(isFirst?' first':'')+'">'
-    +'<div class="strategy-title"><span class="it">'+(isFirst?'&#9733; Stai vincendo':'&#127919; Come arrivare 1&deg;')+'</span>'
-    +'<span class="en">'+(isFirst?'&#9733; You\'re winning':'&#127919; How to reach #1')+'</span></div>'
+    +'<div class="strategy-title"><span class="it">'+(isFirst?'Stai vincendo!':'Come arrivare 1&deg;')+'</span>'
+    +'<span class="en">'+(isFirst?'You\'re winning!':'How to reach #1')+'</span></div>'
 
-    // Score bars
     +'<div class="strategy-bars">'
     +'<div class="strategy-bar-row">'
-    +'<div class="strategy-bar-label">F1 <span class="strategy-bar-weight">70%</span></div>'
+    +'<div class="strategy-bar-label"><span class="it">Blocchi</span><span class="en">Blocks</span> <span class="strategy-bar-weight">70%</span></div>'
     +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+f1Pct+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+f1.toFixed(2)+'</div>'
+    +'<div class="strategy-bar-val">'+f1Pct+'%</div>'
     +'</div>'
     +'<div class="strategy-bar-row">'
-    +'<div class="strategy-bar-label">F2 <span class="strategy-bar-weight">30%</span></div>'
+    +'<div class="strategy-bar-label"><span class="it">Esperienza</span><span class="en">Experience</span> <span class="strategy-bar-weight">30%</span></div>'
     +'<div class="strategy-bar-track"><div class="strategy-bar-fill f2" style="width:'+f2Pct+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+f2.toFixed(2)+'</div>'
+    +'<div class="strategy-bar-val">'+f2Pct+'%</div>'
     +'</div>'
     +'</div>'
 
-    // Tips
     +'<div class="strategy-tips">'
     +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span>'}).join('')
     +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span>'}).join('')
-    +'</div>'
-
-    // Legend
-    +'<div class="strategy-legend">'
-    +'<span class="it">F1 = blocchi rispetto al leader &middot; F2 = ARIA spesi nella categoria &middot; Score = F1&times;0.7 + F2&times;0.3</span>'
-    +'<span class="en">F1 = blocks vs. leader &middot; F2 = ARIA spent in category &middot; Score = F1&times;0.7 + F2&times;0.3</span>'
     +'</div>'
     +'</div>';
 }
@@ -2071,7 +2057,7 @@ async function loadDetailStats(airdropId){
     gridEl.innerHTML=''
       +'<div class="mystats-cell">'
       +'<div class="mystats-val" style="color:var(--gold)">'+projectedRobi.toFixed(2)+'</div>'
-      +'<div class="mystats-label"><span class="it">ROBI proiettati</span><span class="en">Projected ROBI</span></div>'
+      +'<div class="mystats-label"><span class="it">ROBI che guadagni</span><span class="en">ROBI you earn</span></div>'
       +'</div>'
       +'<div class="mystats-cell">'
       +'<div class="mystats-val" style="color:var(--aria)">'+pctOwned.toFixed(1)+'%</div>'
@@ -2595,14 +2581,14 @@ async function openControlRoom(airdropId){
   var scoresHtml='';
   if(preview.scores&&preview.scores.length){
     scoresHtml='<div class="cr-section"><div class="cr-section-title">Score Leaderboard</div>'
-      +'<table class="cr-table"><thead><tr><th>Rank</th><th style="text-align:center">F1</th><th style="text-align:center">F2</th><th style="text-align:center">F3</th><th style="text-align:center">Score</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th></tr></thead><tbody>';
+      +'<div style="font-size:10px;color:var(--gray-500);margin-bottom:8px">F1 = Blocchi acquistati (70%) &middot; F2 = ARIA spesi nella categoria (30%)</div>'
+      +'<table class="cr-table"><thead><tr><th>Rank</th><th style="text-align:center">F1</th><th style="text-align:center">F2</th><th style="text-align:center">Score</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th></tr></thead><tbody>';
     preview.scores.slice(0,8).forEach(function(s){
       scoresHtml+='<tr'+(s.rank===1?' class="winner"':'')+'>'
         +'<td>#'+s.rank+(s.rank===1?' &#9733;':'')+'</td>'
-        +'<td style="text-align:center">'+s.f1+'</td>'
-        +'<td style="text-align:center">'+s.f2+'</td>'
-        +'<td style="text-align:center">'+s.f3+'</td>'
-        +'<td style="text-align:center;font-weight:600">'+s.score+'</td>'
+        +'<td style="text-align:center">'+(parseFloat(s.f1)||0).toFixed(3)+'</td>'
+        +'<td style="text-align:center">'+(parseFloat(s.f2)||0).toFixed(3)+'</td>'
+        +'<td style="text-align:center;font-weight:600">'+(parseFloat(s.score)||0).toFixed(4)+'</td>'
         +'<td style="text-align:center">'+s.blocks+'</td>'
         +'<td style="text-align:center">'+s.aria_spent+'</td></tr>';
     });
