@@ -172,19 +172,19 @@ html:not([data-lang]) .it{display:inline}
 .mine-tower{width:100%;height:100%;transform-style:preserve-3d;animation:tower-spin 22s linear infinite;position:relative}
 .mine-ring{position:absolute;left:50%;transform-style:preserve-3d;width:0;height:0}
 .mine-block{position:absolute;left:-18px;top:-11px;width:36px;height:22px;border-radius:4px;backface-visibility:hidden;transition:all .4s;font-size:0}
-.mine-block.avail{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06)}
-.mine-block.others{background:var(--gray-700);border:1px solid var(--gray-600)}
+.mine-block.avail{background:var(--gray-700);border:1px solid var(--gray-600)}
+.mine-block.others{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.35)}
 .mine-block.mine{background:var(--accent);border:1px solid var(--aria);box-shadow:0 0 14px var(--accent-dim)}
 .mine-block.robi{border-color:#B8960C !important;box-shadow:0 0 10px rgba(184,150,12,.45);animation:robi-pulse 2.5s ease-in-out infinite}
 .mine-block.robi::after{content:'✦';position:absolute;font-size:9px;color:#B8960C;top:50%;left:50%;transform:translate(-50%,-50%);text-shadow:0 0 6px rgba(184,150,12,.8)}
 .mine-block.mine.robi{background:linear-gradient(135deg,var(--accent),#B8960C);box-shadow:0 0 18px rgba(184,150,12,.6)}
-.mine-label{position:relative;bottom:auto;left:0;right:0;text-align:center;font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);margin-top:8px}
-.mine-legend{display:flex;justify-content:center;gap:16px;margin-bottom:18px;flex-wrap:wrap}
+.mine-label{display:none}
+.mine-legend{display:flex;justify-content:center;gap:16px;margin-top:24px;margin-bottom:18px;flex-wrap:wrap}
 .mine-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-400)}
 .mine-legend-dot{width:10px;height:10px;border-radius:3px}
 .mine-legend-dot.m-mine{background:var(--accent);box-shadow:0 0 6px var(--accent-dim)}
-.mine-legend-dot.m-others{background:var(--gray-700)}
-.mine-legend-dot.m-avail{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08)}
+.mine-legend-dot.m-others{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.35)}
+.mine-legend-dot.m-avail{background:var(--gray-700)}
 .mine-legend-dot.m-robi{background:#B8960C;box-shadow:0 0 6px rgba(184,150,12,.5)}
 @keyframes tower-spin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
 @keyframes robi-pulse{0%,100%{box-shadow:0 0 6px rgba(184,150,12,.3)}50%{box-shadow:0 0 20px rgba(184,150,12,.7)}}

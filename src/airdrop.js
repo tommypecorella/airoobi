@@ -242,7 +242,7 @@ function buildMineTower(a,myBlocks){
   }
 
   html+='</div>'
-    +'<div class="mine-label"><span style="color:#B8960C">⛏</span> <span class="it">La tua miniera</span><span class="en">Your mine</span></div>'
+    +'<div class="mine-label"></div>'
     +'</div>';
 
   html+='<div class="mine-legend">'
@@ -840,7 +840,7 @@ async function loadDetailStats(airdropId){
     gridEl.innerHTML=''
       +'<div class="mystats-cell">'
       +'<div class="mystats-val" style="color:var(--gold)">'+projectedRobi.toFixed(2)+'</div>'
-      +'<div class="mystats-label"><span class="it">ROBI proiettati</span><span class="en">Projected ROBI</span></div>'
+      +'<div class="mystats-label"><span class="it">ROBI che guadagni</span><span class="en">ROBI you earn</span></div>'
       +'</div>'
       +'<div class="mystats-cell">'
       +'<div class="mystats-val" style="color:var(--aria)">'+pctOwned.toFixed(1)+'%</div>'
