@@ -479,6 +479,9 @@ select option{background:var(--gray-800);color:var(--white)}
 .modal-confirm:hover{background:var(--white)}
 
 /* ── CONTROL ROOM MODAL ── */
+.topbar-cr-btn{background:none;border:1px solid var(--gold);color:var(--gold);padding:6px 14px;font-family:var(--font-m);font-size:10px;font-weight:600;letter-spacing:1.5px;cursor:pointer;border-radius:var(--radius-sm);transition:all .2s;margin-right:8px;white-space:nowrap}
+.topbar-cr-btn:hover{background:var(--gold);color:var(--black)}
+@media(max-width:720px){.topbar-cr-btn{padding:4px 8px;font-size:9px;letter-spacing:1px}}
 .cr-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.75);z-index:400;align-items:center;justify-content:center;padding:16px;overflow-y:auto}
 .cr-overlay.active{display:flex}
 .cr-modal{background:rgba(8,12,28,.97);backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);border:1px solid var(--gold);max-width:600px;width:100%;padding:28px 24px;border-radius:var(--radius-lg);box-shadow:0 32px 100px rgba(0,0,0,.7);animation:fadeIn .2s ease;max-height:90vh;overflow-y:auto}

@@ -1581,6 +1581,7 @@ async function openDetail(id){
   if(valBanner)valBanner.style.display='none';
   document.getElementById('cat-filter').style.display='none';
   document.getElementById('detail').classList.add('active');
+  showTopbarCR(id);
   window.scrollTo({top:0,behavior:'smooth'});
 
   // Load grid data + participants
@@ -1814,9 +1815,6 @@ async function openDetail(id){
     :'')
 
     +'</div>' // close detail-right
-
-    // ── CONTROL ROOM (solo admin/CEO) ──
-    +(_isAdmin?'<div style="margin-top:24px;text-align:center"><button onclick="openControlRoom(\''+id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;font-family:var(--font-m);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .3s;border-radius:var(--radius-sm)" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'var(--black)\'" onmouseout="this.style.background=\'none\';this.style.color=\'var(--gold)\'">CONTROL ROOM</button></div>':'')
 
     +'</div>'; // close detail-split
 
@@ -2256,8 +2254,27 @@ function backToList(){
   document.getElementById('list-view').classList.remove('hidden');
   document.getElementById('list-view').style.display='';
   document.getElementById('cat-filter').style.display='';
+  hideTopbarCR();
   loadValuationCount();
   history.pushState({page:'explore'},null,'/airdrops');
+}
+
+function showTopbarCR(airdropId){
+  if(!_isAdmin)return;
+  var right=document.getElementById('topbar-right');
+  if(!right)return;
+  var existing=document.getElementById('topbar-cr-btn');
+  if(existing)existing.remove();
+  var btn=document.createElement('button');
+  btn.id='topbar-cr-btn';
+  btn.className='topbar-cr-btn';
+  btn.textContent='CONTROL ROOM';
+  btn.onclick=function(){openControlRoom(airdropId)};
+  right.insertBefore(btn,right.firstChild);
+}
+function hideTopbarCR(){
+  var e=document.getElementById('topbar-cr-btn');
+  if(e)e.remove();
 }
 
 function initBuy(){
@@ -2483,6 +2500,10 @@ async function checkUserRoles(){
   });
   if(_isAdmin||_isManager){
     document.getElementById('dapp-admin-link').style.display='';
+  }
+  // Se siamo gi&agrave; dentro a un detail airdrop, iniettare il pulsante topbar ora che sappiamo il ruolo
+  if(_isAdmin&&_currentDetail&&document.getElementById('detail').classList.contains('active')){
+    showTopbarCR(_currentDetail.id);
   }
 }
 
