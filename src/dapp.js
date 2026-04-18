@@ -1805,7 +1805,7 @@ async function openDetail(id){
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">BLOCCHI</span><span class="en">BLOCKS</span></label>'
     +'<select id="ab-qty" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option>1</option><option>2</option><option>3</option><option>5</option><option>10</option></select></div>'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">OGNI</span><span class="en">EVERY</span></label>'
-    +'<select id="ab-interval" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option value="1">1h</option><option value="2">2h</option><option value="4" selected>4h</option><option value="6">6h</option><option value="12">12h</option></select></div>'
+    +'<select id="ab-interval" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option value="0.25">15min</option><option value="0.5">30min</option><option value="1">1h</option><option value="2">2h</option><option value="4" selected>4h</option><option value="6">6h</option><option value="12">12h</option></select></div>'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px">MAX</label>'
     +'<input type="number" id="ab-max" value="50" min="1" max="500" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"></div>'
     +'</div>'
@@ -1852,9 +1852,11 @@ async function loadAutoBuyStatus(airdropId){
   }
   if(btn){btn.innerHTML='<span class="it">DISATTIVA AUTO-BUY</span><span class="en">DISABLE AUTO-BUY</span>';btn.style.background='var(--red)';}
   var lang=document.documentElement.getAttribute('data-lang')||'it';
-  if(status)status.textContent=(lang==='it'?'Attivo: ':'Active: ')+rule.blocks_per_interval+' blocchi ogni '+rule.interval_hours+'h ('+rule.total_bought+'/'+rule.max_blocks+')';
+  var h=parseFloat(rule.interval_hours);
+  var intervalLabel=h<1?Math.round(h*60)+'min':h+'h';
+  if(status)status.textContent=(lang==='it'?'Attivo: ':'Active: ')+rule.blocks_per_interval+(lang==='it'?' blocchi ogni ':' blocks every ')+intervalLabel+' ('+rule.total_bought+'/'+rule.max_blocks+')';
   var qty=document.getElementById('ab-qty');if(qty)qty.value=rule.blocks_per_interval;
-  var interval=document.getElementById('ab-interval');if(interval)interval.value=rule.interval_hours;
+  var interval=document.getElementById('ab-interval');if(interval)interval.value=h;
   var max=document.getElementById('ab-max');if(max)max.value=rule.max_blocks;
 }
 
@@ -3664,7 +3666,7 @@ async function toggleAutoBuy(airdropId){
     showToast('<span class="it">Auto-buy disattivato</span><span class="en">Auto-buy disabled</span>');
   }else{
     var qty=parseInt(document.getElementById('ab-qty')?document.getElementById('ab-qty').value:1)||1;
-    var interval=parseInt(document.getElementById('ab-interval')?document.getElementById('ab-interval').value:4)||4;
+    var interval=parseFloat(document.getElementById('ab-interval')?document.getElementById('ab-interval').value:4)||4;
     var max=parseInt(document.getElementById('ab-max')?document.getElementById('ab-max').value:50)||50;
     await sbRpc('upsert_auto_buy',{p_airdrop_id:airdropId,p_blocks_per_interval:qty,p_interval_hours:interval,p_max_blocks:max,p_active:true},token);
     showToast('<span class="it">Auto-buy attivato!</span><span class="en">Auto-buy activated!</span>');
