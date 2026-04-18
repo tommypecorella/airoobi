@@ -1448,7 +1448,7 @@ function renderGrid(){
     if(myBlk>0){
       myStatsHtml='<div class="card-my-stats">';
       if(rankInfo)myStatsHtml+='<div class="card-stat-pill rank"><div class="card-stat-icon">#</div><div class="card-stat-content"><div class="card-stat-value">'+rankInfo.rank+' / '+rankInfo.total+'</div><div class="card-stat-label"><span class="it">Posizione</span><span class="en">Rank</span></div></div></div>';
-      myStatsHtml+='<div class="card-stat-pill robi"><div class="card-stat-icon"><img src="/public/images/AIROOBI_Symbol_White.png" alt="ROBI"></div><div class="card-stat-content"><div class="card-stat-value">'+myRobi.toFixed(1)+'</div><div class="card-stat-label">ROBI</div></div></div>';
+      myStatsHtml+='<div class="card-stat-pill robi"><span class="info-i" onclick="event.stopPropagation();showInfoTip(this,\'robi-card-projection\')">i</span><div class="card-stat-icon"><img src="/public/images/AIROOBI_Symbol_White.png" alt="ROBI"></div><div class="card-stat-content"><div class="card-stat-value">'+myRobi.toFixed(1)+'</div><div class="card-stat-label">ROBI</div></div></div>';
       myStatsHtml+='</div>';
     }
 
@@ -3833,6 +3833,10 @@ var INFO_TIPS={
   'faucet':{
     it:'Il faucet ti dà 100 ARIA gratis ogni giorno. Si resetta a mezzanotte UTC. In futuro la quantità diminuirà progressivamente — approfittane ora.',
     en:'The faucet gives you 100 free ARIA every day. Resets at midnight UTC. The amount will decrease over time — take advantage now.'
+  },
+  'robi-card-projection':{
+    it:'I ROBI che stai accumulando in questo airdrop in base ai blocchi acquistati. Sono tuoi a prescindere dall\'esito: li riscuoti in KAS al termine, anche se non ottieni l\'oggetto.',
+    en:'The ROBI you\'re accumulating in this airdrop based on your blocks. They\'re yours regardless of outcome: redeem them for KAS when it ends, even if you don\'t get the object.'
   }
 };
 
