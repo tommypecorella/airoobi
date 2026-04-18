@@ -222,8 +222,12 @@ function buildMineTower(a,myBlocks){
 
   var ringH=26;
   var totalH=RINGS*ringH;
-  var html='<div class="mine-scene" style="height:'+(totalH+60)+'px">'
-    +'<div class="mine-tower" id="mine-tower">';
+  // Horizontal tower: virtual tower (towerW × towerH) is rotated -90° via CSS,
+  // so on screen it appears as a lying cylinder of size towerH × towerW.
+  var towerW=190;           // virtual width  → becomes display height (cylinder diameter)
+  var towerH=totalH+60;     // virtual height → becomes display width (cylinder length)
+  var html='<div class="mine-scene horizontal" style="height:'+towerW+'px">'
+    +'<div class="mine-tower" id="mine-tower" style="width:'+towerW+'px;height:'+towerH+'px;margin:0">';
 
   var idx=0;
   for(var ring=0;ring<RINGS;ring++){
@@ -1006,6 +1010,11 @@ async function renderDetail(){
     +'</div>'
 
     // ┌─────────────────────────────────────┐
+    // │  1b. MINE TOWER (horizontal visual) │
+    // └─────────────────────────────────────┘
+    +buildMineTower(a,myBlocks)
+
+    // ┌─────────────────────────────────────┐
     // │  2. PRICE + PROGRESS                │
     // └─────────────────────────────────────┘
     +'<div class="ap-price-section">'
@@ -1109,12 +1118,7 @@ async function renderDetail(){
       +'</ul>',false)
 
     // ┌─────────────────────────────────────┐
-    // │  7. MINE TOWER 3D (visual)          │
-    // └─────────────────────────────────────┘
-    +buildMineTower(a,myBlocks)
-
-    // ┌─────────────────────────────────────┐
-    // │  8. AUTO-BUY (advanced)             │
+    // │  7. AUTO-BUY (advanced)             │
     // └─────────────────────────────────────┘
     +(myBlocks>0&&!_publicMode?
     '<div class="auto-buy-box" id="auto-buy-box">'
