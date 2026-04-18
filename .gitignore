@@ -44,3 +44,6 @@ tests/fixtures/.auth-*.json
 
 # Claude
 .claude/
+
+# Screenshots (local workflow, non in repo)
+screenshots/
