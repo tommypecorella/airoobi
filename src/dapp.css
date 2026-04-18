@@ -210,9 +210,17 @@ select option{background:var(--gray-800);color:var(--white)}
 .card-price{font-family:var(--font-m);font-size:12px;color:var(--aria)}
 .card-remain{font-size:12px;color:var(--gray-400)}
 .card-my-stats{display:flex;gap:8px;margin:8px 0;align-items:stretch}
-.card-rank-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:4px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--aria);padding:6px 8px;border:1px solid rgba(74,158,255,.2);border-radius:4px;background:rgba(74,158,255,.05)}
-.card-robi-pill{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--gold);padding:6px 8px;border:1px solid rgba(184,150,12,.2);border-radius:4px;background:rgba(184,150,12,.05)}
-.card-robi-eur{font-size:10px;color:var(--gray-400)}
+.card-stat-pill{flex:1;display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--gray-700);border-radius:6px;background:rgba(255,255,255,.02)}
+.card-stat-pill.rank{border-color:rgba(74,158,255,.25);background:rgba(74,158,255,.05)}
+.card-stat-pill.robi{border-color:rgba(184,150,12,.25);background:rgba(184,150,12,.05)}
+.card-stat-icon{flex-shrink:0;width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:12px;font-weight:700}
+.card-stat-pill.rank .card-stat-icon{color:var(--aria);border:1px solid rgba(74,158,255,.4);border-radius:50%}
+.card-stat-pill.robi .card-stat-icon img{width:24px;height:24px;object-fit:contain;display:block}
+.card-stat-content{display:flex;flex-direction:column;line-height:1;min-width:0}
+.card-stat-value{font-family:var(--font-m);font-size:13px;font-weight:700;letter-spacing:.3px;white-space:nowrap}
+.card-stat-pill.rank .card-stat-value{color:var(--aria)}
+.card-stat-pill.robi .card-stat-value{color:var(--gold)}
+.card-stat-label{font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-500);margin-top:3px;text-transform:uppercase}
 .card-mining{font-family:var(--font-m);font-size:10px;letter-spacing:.5px;color:var(--gray-500);margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.04)}
 .card-pct{font-family:var(--font-m);font-size:11px;color:var(--accent)}
 .card-cat-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}

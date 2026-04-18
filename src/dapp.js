@@ -1447,10 +1447,9 @@ function renderGrid(){
     var myStatsHtml='';
     if(myBlk>0){
       myStatsHtml='<div class="card-my-stats">';
-      if(rankInfo)myStatsHtml+='<div class="card-rank-pill"><span class="it">'+rankInfo.rank+'&ordm; / '+rankInfo.total+'</span><span class="en">#'+rankInfo.rank+' / '+rankInfo.total+'</span></div>';
-      myStatsHtml+='<div class="card-robi-pill"><span>&#9830; '+myRobi.toFixed(1)+' ROBI</span>'
-        +(_robiPrice>0?'<span class="card-robi-eur">&euro;'+robiEur.toFixed(2).replace('.',',')+'</span>':'')
-        +'</div></div>';
+      if(rankInfo)myStatsHtml+='<div class="card-stat-pill rank"><div class="card-stat-icon">#</div><div class="card-stat-content"><div class="card-stat-value">'+rankInfo.rank+' / '+rankInfo.total+'</div><div class="card-stat-label"><span class="it">Posizione</span><span class="en">Rank</span></div></div></div>';
+      myStatsHtml+='<div class="card-stat-pill robi"><div class="card-stat-icon"><img src="/public/images/AIROOBI_Symbol_White.png" alt="ROBI"></div><div class="card-stat-content"><div class="card-stat-value">'+myRobi.toFixed(1)+'</div><div class="card-stat-label">ROBI</div></div></div>';
+      myStatsHtml+='</div>';
     }
 
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
