@@ -187,6 +187,12 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .bo-detail-img{max-width:160px;max-height:160px;object-fit:contain;border:1px solid var(--gray-700);margin-bottom:12px}
 [data-lang="it"] .en{display:none!important}
 [data-lang="en"] .it{display:none!important}
+/* ── Info-i tooltips ── */
+.info-i{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--gray-600);font-family:var(--font-b);font-size:9px;font-weight:600;color:var(--gray-500);cursor:pointer;vertical-align:middle;margin-left:6px;transition:all .2s;line-height:1;user-select:none;flex-shrink:0}
+.info-i:hover{border-color:var(--gold);color:var(--gold)}
+.admin-card-label .info-i{margin-left:4px;width:14px;height:14px;font-size:8px}
+#abo-tooltip{display:none;position:fixed;z-index:400;max-width:300px;padding:14px 16px;background:rgba(10,16,34,.98);backdrop-filter:blur(20px);border:1px solid rgba(139,92,246,.3);border-radius:8px;color:var(--white);font-family:var(--font-b);font-size:12px;line-height:1.55;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+#abo-tooltip::before{content:'';position:absolute;top:-6px;left:16px;width:10px;height:10px;background:rgba(10,16,34,.98);border-left:1px solid rgba(139,92,246,.3);border-top:1px solid rgba(139,92,246,.3);transform:rotate(45deg)}
 </style>
 </head>
 <body>
@@ -285,36 +291,36 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- OVERVIEW -->
   <div class="admin-section active" id="sec-overview">
-    <h2>Overview</h2>
+    <h2>Overview <span class="info-i" onclick="showAboTip(this,'sec-overview')">i</span></h2>
     <div class="admin-grid">
-      <div class="admin-card"><div class="admin-card-val" id="adm-users">—</div><div class="admin-card-label">Utenti registrati</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-remaining">—</div><div class="admin-card-label">Posti rimasti (Alpha Brave)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-points">—</div><div class="admin-card-label">ARIA in circolazione</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-checkins">—</div><div class="admin-card-label">Check-in oggi</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-videos">—</div><div class="admin-card-label">Video visti oggi</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-referrals">—</div><div class="admin-card-label">Referral confermati</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-avatars">—</div><div class="admin-card-label">Foto profilo impostata</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating-ov">—</div><div class="admin-card-label">ROBI in circolazione</div></div>
-      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal-ov" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-users">—</div><div class="admin-card-label">Utenti registrati <span class="info-i" onclick="showAboTip(this,'ov-users')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-remaining">—</div><div class="admin-card-label">Posti rimasti (Alpha Brave) <span class="info-i" onclick="showAboTip(this,'ov-remaining')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-points">—</div><div class="admin-card-label">ARIA in circolazione <span class="info-i" onclick="showAboTip(this,'ov-points')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-checkins">—</div><div class="admin-card-label">Check-in oggi <span class="info-i" onclick="showAboTip(this,'ov-checkins')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-videos">—</div><div class="admin-card-label">Video visti oggi <span class="info-i" onclick="showAboTip(this,'ov-videos')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-referrals">—</div><div class="admin-card-label">Referral confermati <span class="info-i" onclick="showAboTip(this,'ov-referrals')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-avatars">—</div><div class="admin-card-label">Foto profilo impostata <span class="info-i" onclick="showAboTip(this,'ov-avatars')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating-ov">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'ov-nft-circulating')">i</span></div></div>
+      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal-ov" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI <span class="info-i" onclick="showAboTip(this,'ov-robi-nominal')">i</span></div></div>
     </div>
     <div class="admin-grid" style="margin-top:8px">
-      <div class="admin-card"><div class="admin-card-val" id="adm-avg-points">—</div><div class="admin-card-label">ARIA media/utente</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-max-streak">—</div><div class="admin-card-label">Streak massima</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-conversion">—</div><div class="admin-card-label">Conversione (utenti/waitlist)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-inv-leads">—</div><div class="admin-card-label">Investor leads</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-avg-points">—</div><div class="admin-card-label">ARIA media/utente <span class="info-i" onclick="showAboTip(this,'ov-avg-points')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-max-streak">—</div><div class="admin-card-label">Streak massima <span class="info-i" onclick="showAboTip(this,'ov-max-streak')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-conversion">—</div><div class="admin-card-label">Conversione (utenti/waitlist) <span class="info-i" onclick="showAboTip(this,'ov-conversion')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-inv-leads">—</div><div class="admin-card-label">Investor leads <span class="info-i" onclick="showAboTip(this,'ov-inv-leads')">i</span></div></div>
     </div>
   </div>
 
   <!-- TREASURY -->
   <div class="admin-section" id="sec-treasury">
-    <h2>Treasury</h2>
+    <h2>Treasury <span class="info-i" onclick="showAboTip(this,'sec-treasury')">i</span></h2>
     <div class="admin-grid" style="margin-bottom:20px">
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-treasury-balance" style="color:var(--gold)">€0.00</div><div class="admin-card-label">Treasury Balance</div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.3)"><div class="admin-card-val" id="adm-robi-circ-funds" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione</div></div>
-      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-service-balance" style="color:var(--white)">€0.00</div><div class="admin-card-label"><span class="it">Service Balance (AIROOBI)</span><span class="en">Service Balance (AIROOBI)</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-revenue-ads">—</div><div class="admin-card-label">Revenue Ads (A-Ads)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-revenue-adsense">—</div><div class="admin-card-label">Revenue AdSense</div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-treasury-balance" style="color:var(--gold)">€0.00</div><div class="admin-card-label">Treasury Balance <span class="info-i" onclick="showAboTip(this,'tr-balance')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.3)"><div class="admin-card-val" id="adm-robi-circ-funds" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'tr-robi-circ')">i</span></div></div>
+      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI <span class="info-i" onclick="showAboTip(this,'tr-robi-nominal')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-service-balance" style="color:var(--white)">€0.00</div><div class="admin-card-label"><span class="it">Service Balance (AIROOBI)</span><span class="en">Service Balance (AIROOBI)</span> <span class="info-i" onclick="showAboTip(this,'tr-service')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-revenue-ads">—</div><div class="admin-card-label">Revenue Ads (A-Ads) <span class="info-i" onclick="showAboTip(this,'tr-ads')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-revenue-adsense">—</div><div class="admin-card-label">Revenue AdSense <span class="info-i" onclick="showAboTip(this,'tr-adsense')">i</span></div></div>
     </div>
 
     <!-- Treasury Fondi -->
@@ -359,7 +365,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- USERS TABLE -->
   <div class="admin-section" id="sec-users">
-    <h2>Ultimi utenti <span id="adm-users-total" style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gray-400);font-weight:400"></span></h2>
+    <h2>Ultimi utenti <span id="adm-users-total" style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gray-400);font-weight:400"></span> <span class="info-i" onclick="showAboTip(this,'sec-users')">i</span></h2>
     <table class="admin-table" id="adm-users-table">
       <thead><tr><th>Email</th><th>ARIA</th><th>ROBI</th><th>Streak</th><th>Referral</th><th>Registrato</th></tr></thead>
       <tbody id="adm-users-body"><tr><td colspan="6" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
@@ -368,7 +374,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- COIN METRICS ARIA -->
   <div class="admin-section" id="sec-coin">
-    <h2>ARIA Metrics <span style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:rgba(74,158,255,.5);margin-left:8px">TEST COIN</span></h2>
+    <h2>ARIA Metrics <span style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:rgba(74,158,255,.5);margin-left:8px">TEST COIN</span> <span class="info-i" onclick="showAboTip(this,'sec-coin')">i</span></h2>
     <p class="admin-note" style="margin-bottom:16px">ARIA è una moneta di test — nessun valore monetario. Più ARIA un utente muove, più peso ha per l'airdrop finale al lancio mainnet.</p>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
       <div class="admin-card"><div class="admin-card-val blue" id="adm-coin-supply">—</div><div class="admin-card-label">ARIA in circolazione</div></div>
@@ -380,7 +386,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- ROBI VALUATION & TOKENOMICS -->
   <div class="admin-section" id="sec-nft-valuation">
-    <h2>ROBI Valuation &amp; Tokenomics</h2>
+    <h2>ROBI Valuation &amp; Tokenomics <span class="info-i" onclick="showAboTip(this,'sec-nft-valuation')">i</span></h2>
     <p class="admin-note" style="margin-bottom:20px">Dati calcolati in tempo reale. Valore ROBI = Treasury × 95% / ROBI emessi. Aggiorna treasury manualmente.</p>
     <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap">
       <div>
@@ -415,7 +421,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- NFT PER TIPO -->
   <div class="admin-section" id="sec-nft-types">
-    <h2>NFT per tipo</h2>
+    <h2>NFT per tipo <span class="info-i" onclick="showAboTip(this,'sec-nft-types')">i</span></h2>
     <table class="admin-table">
       <thead><tr><th>Tipo NFT</th><th>Possessori unici</th><th>Totale emessi</th></tr></thead>
       <tbody id="adm-nft-breakdown">
@@ -427,7 +433,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- MESSAGGI AIRDROP -->
   <div class="admin-section" id="sec-messages">
-    <h2>Messaggi Airdrop</h2>
+    <h2>Messaggi Airdrop <span class="info-i" onclick="showAboTip(this,'sec-messages')">i</span></h2>
     <div class="admin-grid" style="margin-bottom:20px">
       <div class="admin-card" style="border-color:rgba(74,158,255,.4)"><div class="admin-card-val" id="msg-total" style="color:var(--aria)">—</div><div class="admin-card-label">Totale messaggi</div></div>
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="msg-threads" style="color:var(--gold)">—</div><div class="admin-card-label">Conversazioni</div></div>
@@ -440,7 +446,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- CONTO AIROOBI -->
   <div class="admin-section" id="sec-company-assets">
-    <h2>Conto AIROOBI</h2>
+    <h2>Conto AIROOBI <span class="info-i" onclick="showAboTip(this,'sec-company-assets')">i</span></h2>
 
     <!-- Totale patrimonio -->
     <div class="admin-grid" style="margin-bottom:24px">
@@ -501,7 +507,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- COST TRACKER -->
   <div class="admin-section" id="sec-costs">
-    <h2>Cost Tracker</h2>
+    <h2>Cost Tracker <span class="info-i" onclick="showAboTip(this,'sec-costs')">i</span></h2>
     <div class="admin-grid" style="margin-bottom:20px">
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="ct-total-prev" style="color:var(--gold)">—</div><div class="admin-card-label">Previsto (mese)</div></div>
       <div class="admin-card" style="border-color:rgba(73,181,131,.3)"><div class="admin-card-val" id="ct-total-paid" style="color:#49b583">—</div><div class="admin-card-label">Pagato (mese)</div></div>
@@ -520,7 +526,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- VALUTAZIONI (Backoffice approvazione/rifiuto) -->
   <div class="admin-section" id="sec-valutazioni">
-    <h2>Valutazioni</h2>
+    <h2>Valutazioni <span class="info-i" onclick="showAboTip(this,'sec-valutazioni')">i</span></h2>
     <div class="bo-tabs" id="bo-tabs">
       <button class="bo-tab active" data-bo="in_valutazione" onclick="boFilter('in_valutazione')">In valutazione <span class="bo-tab-count alert" id="cnt-in_valutazione">0</span></button>
       <button class="bo-tab" data-bo="valutazione_completata" onclick="boFilter('valutazione_completata')">Val. completata <span class="bo-tab-count" id="cnt-valutazione_completata" style="background:#22c55e;color:var(--black)">0</span></button>
@@ -585,7 +591,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- GESTIONE AIRDROP -->
   <div class="admin-section" id="sec-airdrops">
-    <h2>Gestione Airdrop</h2>
+    <h2>Gestione Airdrop <span class="info-i" onclick="showAboTip(this,'sec-airdrops')">i</span></h2>
     <div style="margin-bottom:16px">
       <button onclick="loadAdminAirdrops()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RICARICA</button>
     </div>
@@ -790,14 +796,14 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- TEST POOL -->
   <div class="admin-section" id="sec-testpool">
-    <h2>Test Pool</h2>
+    <h2>Test Pool <span class="info-i" onclick="showAboTip(this,'sec-testpool')">i</span></h2>
     <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Pool di 1000 utenti test con 1000 ARIA ciascuno. Date di registrazione distribuite negli ultimi 180 giorni. Non conteggiati nelle statistiche.</p>
     <button id="btn-create-test-pool" onclick="adCreateTestPool()" style="background:#f59e0b;color:#000;border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">CREA TEST POOL</button>
   </div>
 
   <!-- AIRDROP ANALYSIS -->
   <div class="admin-section" id="sec-analysis">
-    <h2>Airdrop Analysis</h2>
+    <h2>Airdrop Analysis <span class="info-i" onclick="showAboTip(this,'sec-analysis')">i</span></h2>
     <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Analisi algoritmo per ogni airdrop. Clicca su una riga per espandere i dettagli: score, fattori F1/F2, e motivazione vincitore.</p>
     <div style="margin-bottom:12px">
       <button onclick="loadAirdropAnalysis()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RICARICA</button>
@@ -810,7 +816,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- AIRDROP STATISTICS -->
   <div class="admin-section" id="sec-airdrop-stats">
-    <h2>Statistiche Airdrop</h2>
+    <h2>Statistiche Airdrop <span class="info-i" onclick="showAboTip(this,'sec-airdrop-stats')">i</span></h2>
     <div style="margin-bottom:16px">
       <button onclick="loadAirdropStats()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">AGGIORNA</button>
     </div>
@@ -844,7 +850,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- TEST USERS & FAIRNESS -->
   <div class="admin-section" id="sec-fairness">
-    <h2>Test Users &amp; Fairness Index</h2>
+    <h2>Test Users &amp; Fairness Index <span class="info-i" onclick="showAboTip(this,'sec-fairness')">i</span></h2>
     <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Elenco utenti test, partecipazioni, e indice di fairness per airdrop. Usa le simulazioni per vedere come cambiano i numeri.</p>
     <div style="margin-bottom:20px">
       <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap">
@@ -873,7 +879,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- COLLABORATORI (Validatori) -->
   <div class="admin-section" id="sec-collaborators">
-    <h2>Collaboratori</h2>
+    <h2>Collaboratori <span class="info-i" onclick="showAboTip(this,'sec-collaborators')">i</span></h2>
     <p style="color:var(--gray-400);font-size:12px;margin-bottom:20px">Gestisci i validatori che possono accedere a <strong>/gestione</strong>. Ogni validatore vede solo gli airdrop delle categorie assegnate.</p>
 
     <!-- Cerca utente -->
@@ -898,7 +904,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- CATEGORIE -->
   <div class="admin-section" id="sec-categories">
-    <h2>Categorie</h2>
+    <h2>Categorie <span class="info-i" onclick="showAboTip(this,'sec-categories')">i</span></h2>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <p style="color:var(--gray-400);font-size:12px;margin:0">Gestisci le categorie del marketplace airdrop.</p>
       <button onclick="catOpenModal()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;padding:8px 18px;cursor:pointer;font-weight:700">+ NUOVA</button>
@@ -947,7 +953,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- ENGINE CONFIG -->
   <div class="admin-section" id="sec-engine">
-    <h2>Engine Config</h2>
+    <h2>Engine Config <span class="info-i" onclick="showAboTip(this,'sec-engine')">i</span></h2>
     <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Pesi algoritmo vincitore, split economica, divisori NFT per fase. <span style="color:#ef4444">Modificare con cautela.</span></p>
     <div style="margin-bottom:12px">
       <button onclick="loadEngineConfig()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;margin-right:8px">RICARICA</button>
@@ -3602,6 +3608,83 @@ document.addEventListener('DOMContentLoaded',function(){
     if(s&&s.user)loadAboNotifications();
   },2000);
 });
+
+// ── Info tooltip system ──
+var ABO_TIPS={
+  'sec-overview':{it:'Panoramica generale: utenti registrati, ARIA in circolo, check-in, referral, valore nominale ROBI e conversione dalla waitlist.',en:'General overview: registered users, ARIA in circulation, check-ins, referrals, ROBI nominal value and waitlist conversion.'},
+  'sec-users':{it:'Gli ultimi utenti iscritti con saldo ARIA, streak, ROBI accumulati e stato profilo. Clicca una riga per il dettaglio utente.',en:'Recent signups with ARIA balance, streak, ROBI and profile status. Click a row for user detail.'},
+  'sec-valutazioni':{it:'Coda delle submission utenti: foto oggetto + dati, da valutare e trasformare in draft airdrop. Solo admin ed evaluator (filtrati per categoria).',en:'User submission queue: photos + data, to review and convert into airdrop drafts. Admin and evaluators only (filtered by category).'},
+  'sec-airdrops':{it:'Gestione airdrop in tutti gli stati: draft, accettato, presale, sale, closed, completed. Crea, modifica, blocca/sblocca e promuovi.',en:'Airdrop management across all states: draft, accepted, presale, sale, closed, completed. Create, edit, block/unblock and promote.'},
+  'sec-analysis':{it:'Analisi per airdrop: distribuzione blocchi, partecipanti, ROBI minati, fairness. Usa per capire se un airdrop sta funzionando.',en:'Per-airdrop analysis: blocks distribution, participants, mined ROBI, fairness. Use to gauge airdrop health.'},
+  'sec-airdrop-stats':{it:'KPI aggregati sugli airdrop: totali venduti, ARIA incassate, ROBI distribuiti, tasso completamento.',en:'Aggregate airdrop KPIs: total sold, ARIA collected, ROBI distributed, completion rate.'},
+  'sec-messages':{it:'Messaggi inviati agli utenti (broadcast e per-airdrop) e chat operative. Usa per comunicazioni ufficiali.',en:'Messages sent to users (broadcast and per-airdrop) and ops chats. Use for official communications.'},
+  'sec-treasury':{it:'Il cuore economico: Treasury balance, valore nominale ROBI, Service balance, revenue ads. Qui aggiungi fondi e vedi lo split automatico Treasury/Service.',en:'Economic core: Treasury balance, ROBI nominal value, Service balance, ad revenue. Add funds here and see automatic Treasury/Service split.'},
+  'sec-coin':{it:'Metriche del token ARIA: circolazione totale, emissione giornaliera, distribuzione per fonte (faucet, check-in, referral, video).',en:'ARIA token metrics: total supply, daily emission, distribution by source (faucet, check-in, referral, video).'},
+  'sec-nft-valuation':{it:'Valutazione aggregata dei ROBI: quanti in circolazione, valore nominale per unità, proiezione in KAS.',en:'Aggregate ROBI valuation: how many in circulation, nominal value per unit, KAS projection.'},
+  'sec-nft-types':{it:'Split degli NFT per tipo: ROBI (reward con valore) vs Badge (collezione, no valore). Utile per compliance ADM.',en:'NFT split by type: ROBI (reward with value) vs Badge (collection, no value). Useful for ADM compliance.'},
+  'sec-company-assets':{it:'Conto operativo AIROOBI: asset aziendali, estratto movimenti, bilancio attuale. Separato dalla Treasury utenti.',en:'AIROOBI operating account: company assets, movements, current balance. Separate from user Treasury.'},
+  'sec-costs':{it:'Cost tracker: spese infrastruttura (Vercel, Supabase, Postmark, DNS) e operative mensili. Alimenta break-even analysis.',en:'Cost tracker: infrastructure spend (Vercel, Supabase, Postmark, DNS) and monthly opex. Feeds break-even analysis.'},
+  'sec-testpool':{it:'Simulatore: crea pool test, assegna partecipanti virtuali, esegui draw. Non tocca dati reali.',en:'Simulator: create test pools, assign virtual participants, run draws. Does not touch real data.'},
+  'sec-fairness':{it:'Fairness Index: misura quanto l\'engine è equo nei draw reali. Verifica che nessun utente sia penalizzato o privilegiato.',en:'Fairness Index: measures how fair the engine is across real draws. Checks no user is penalized or privileged.'},
+  'sec-collaborators':{it:'Gestione ruoli: admin, evaluator (con categoria opzionale). Da qui assegni/rimuovi permessi operativi.',en:'Role management: admin, evaluator (optional category). Assign/remove operational permissions here.'},
+  'sec-categories':{it:'Categorie merceologiche per airdrop: arredamento, tech, orologi, ecc. Usate per routing delle valutazioni agli evaluator dedicati.',en:'Product categories for airdrops: furniture, tech, watches, etc. Used to route reviews to dedicated evaluators.'},
+  'sec-engine':{it:'Engine Config: parametri algoritmo draw, split economica, mining rate, prezzi blocchi. Modifiche qui impattano TUTTI gli airdrop — massima attenzione.',en:'Engine Config: draw algorithm params, economic split, mining rate, block prices. Changes here impact ALL airdrops — handle with care.'},
+  // Overview cards
+  'ov-users':{it:'Numero totale di utenti registrati (con profilo creato). Include admin, evaluator, partecipanti.',en:'Total registered users (with profile). Includes admins, evaluators and participants.'},
+  'ov-remaining':{it:'Posti rimanenti nel programma Alpha Brave (target 1.000 utenti prima dello Stage 1).',en:'Remaining slots in the Alpha Brave program (target 1,000 users before Stage 1).'},
+  'ov-points':{it:'ARIA totali in circolazione: somma dei saldi utenti + ARIA non ancora spese negli airdrop.',en:'Total ARIA in circulation: sum of user balances + ARIA not yet spent in airdrops.'},
+  'ov-checkins':{it:'Utenti che hanno completato il check-in giornaliero oggi (reset a mezzanotte UTC).',en:'Users who completed today\'s check-in (resets at midnight UTC).'},
+  'ov-videos':{it:'Visualizzazioni video totali oggi (max 5 per utente, +1 ARIA ciascuna).',en:'Total video views today (max 5 per user, +1 ARIA each).'},
+  'ov-referrals':{it:'Referral confermati (utente invitato che ha fatto signup + primo check-in). Bonus +10/+15 ARIA al referente.',en:'Confirmed referrals (invited user signed up + did first check-in). Bonus +10/+15 ARIA to referrer.'},
+  'ov-avatars':{it:'Utenti che hanno impostato una foto profilo — proxy per engagement iniziale.',en:'Users with a profile photo set — proxy for initial engagement.'},
+  'ov-nft-circulating':{it:'ROBI totali distribuiti agli utenti (fractional + interi). Somma di tutti i ROBI minati da tutti gli airdrop.',en:'Total ROBI distributed to users (fractional + whole). Sum of all ROBI mined across airdrops.'},
+  'ov-robi-nominal':{it:'Valore nominale attuale di 1 ROBI in EUR (Treasury balance / ROBI in circolazione). Indicativo — non è il prezzo di riscossione.',en:'Current nominal value of 1 ROBI in EUR (Treasury balance / ROBI in circulation). Indicative — not the redemption price.'},
+  'ov-avg-points':{it:'ARIA media per utente attivo. Utile per capire la distribuzione tra heavy-user e nuovi iscritti.',en:'Average ARIA per active user. Useful to gauge distribution between heavy users and newcomers.'},
+  'ov-max-streak':{it:'Streak giornaliera massima raggiunta da un utente (check-in consecutivi).',en:'Highest daily streak ever reached (consecutive check-ins).'},
+  'ov-conversion':{it:'% conversione: utenti registrati / iscritti alla waitlist. Misura qualità del traffico in ingresso.',en:'Conversion rate: registered users / waitlist signups. Measures quality of inbound traffic.'},
+  'ov-inv-leads':{it:'Lead investitori raccolti via form dedicato. Processati manualmente dal founder.',en:'Investor leads collected via dedicated form. Handled manually by the founder.'},
+  // Treasury cards
+  'tr-balance':{it:'Treasury balance: riserva in EUR che garantisce il valore ROBI. Alimentata da % delle entrate (default 20%).',en:'Treasury balance: EUR reserve backing ROBI value. Fed by a share of revenue (default 20%).'},
+  'tr-robi-circ':{it:'ROBI totali in circolazione (identico a Overview). Denominatore del valore nominale.',en:'Total ROBI in circulation (same as Overview). Denominator of the nominal value.'},
+  'tr-robi-nominal':{it:'Valore nominale 1 ROBI = Treasury / ROBI circolanti. Cresce all\'aumentare del Treasury.',en:'Nominal value of 1 ROBI = Treasury / circulating ROBI. Grows as the Treasury grows.'},
+  'tr-service':{it:'Service balance: parte delle entrate destinata a coprire costi operativi (hosting, team, legal).',en:'Service balance: share of revenue covering opex (hosting, team, legal).'},
+  'tr-ads':{it:'Ricavi da A-Ads (banner crypto). Confluiscono in Treasury + Service secondo lo split.',en:'A-Ads revenue (crypto banners). Goes into Treasury + Service per the split.'},
+  'tr-adsense':{it:'Ricavi da Google AdSense (in attesa approvazione). Confluiscono in Treasury + Service secondo lo split.',en:'Google AdSense revenue (awaiting approval). Goes into Treasury + Service per the split.'}
+};
+function showAboTip(el,key){
+  var tip=document.getElementById('abo-tooltip');
+  if(!tip)return;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var info=ABO_TIPS[key];
+  if(!info)return;
+  tip.textContent=info[lang]||info.it;
+  tip.style.display='block';
+  var rect=el.getBoundingClientRect();
+  var tipW=Math.min(300,window.innerWidth-32);
+  tip.style.maxWidth=tipW+'px';
+  var left=Math.min(rect.left,window.innerWidth-tipW-16);
+  left=Math.max(8,left);
+  var top=rect.bottom+10;
+  tip.style.left=left+'px';
+  tip.style.top=top+'px';
+  // Adjust if tooltip goes off bottom
+  requestAnimationFrame(function(){
+    var tr=tip.getBoundingClientRect();
+    if(tr.bottom>window.innerHeight-8){
+      tip.style.top=(rect.top-tr.height-10)+'px';
+    }
+  });
+}
+function closeAboTip(){
+  var tip=document.getElementById('abo-tooltip');
+  if(tip)tip.style.display='none';
+}
+document.addEventListener('click',function(e){
+  if(!e.target.classList||!e.target.classList.contains('info-i')){
+    if(!e.target.closest('#abo-tooltip'))closeAboTip();
+  }
+});
 </script>
+<div id="abo-tooltip" role="tooltip"></div>
 </body>
 </html>

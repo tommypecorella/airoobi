@@ -229,9 +229,13 @@ function buildMineTower(a,myBlocks){
   var html='<div class="mine-scene horizontal" style="height:'+towerW+'px">'
     +'<div class="mine-tower" id="mine-tower" style="width:'+towerW+'px;height:'+towerH+'px;margin:0">';
 
+  // Center rings vertically in the virtual tower so the cylinder is
+  // centered horizontally on screen after the -90° rotation.
+  var ringsSpan=(RINGS-1)*ringH;
+  var ringOffset=(towerH-ringsSpan)/2;
   var idx=0;
   for(var ring=0;ring<RINGS;ring++){
-    var y=ring*ringH;
+    var y=ringOffset+ring*ringH;
     html+='<div class="mine-ring" style="bottom:'+y+'px">';
     for(var col=0;col<BPR;col++){
       var angle=col*(360/BPR);
