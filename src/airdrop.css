@@ -49,6 +49,9 @@ html:not([data-lang]) .it{display:inline}
 .topbar-btn:hover{border-color:var(--accent);color:var(--accent)}
 .topbar-btn-gold{border-color:rgba(184,150,12,.4);color:var(--gold)}
 .topbar-btn-gold:hover{border-color:var(--gold);background:rgba(184,150,12,.08)}
+.topbar-cr-btn{border-color:var(--gold);color:var(--gold);font-weight:600}
+.topbar-cr-btn:hover{background:var(--gold);color:var(--black);border-color:var(--gold)}
+@media(max-width:720px){.topbar-cr-btn{padding:6px 10px;font-size:9px;letter-spacing:1px}}
 
 /* ── FOOTER ── */
 .ap-footer{text-align:center;padding:40px 20px;border-top:1px solid rgba(255,255,255,.04);margin-top:60px;font-size:11px;color:var(--gray-500)}

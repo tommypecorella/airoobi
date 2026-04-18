@@ -167,6 +167,7 @@ async function checkAdmin(){
   var roles=await sbRpc('get_my_roles',{},token);
   if(!Array.isArray(roles))return;
   roles.forEach(function(r){if(r.role==='admin')_isAdmin=true;});
+  if(_isAdmin&&_currentDetail)showTopbarCR(_currentDetail.id);
 }
 
 // ── Watchlist ──
@@ -1134,9 +1135,6 @@ async function renderDetail(){
 
     +'</div>' // close detail-right
 
-    // CONTROL ROOM (admin only)
-    +(_isAdmin?'<div style="margin-top:24px;text-align:center"><button onclick="openControlRoom(\''+a.id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:10px 24px;font-family:var(--font-m);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .3s;border-radius:var(--radius-sm)" onmouseover="this.style.background=\'var(--gold)\';this.style.color=\'var(--black)\'" onmouseout="this.style.background=\'none\';this.style.color=\'var(--gold)\'">CONTROL ROOM</button></div>':'')
-
     +'</div>'; // close detail-split
 
   var content=document.getElementById('ap-content');
@@ -1158,6 +1156,23 @@ async function renderDetail(){
 
   // Auto-buy status
   if(myBlocks>0&&!_publicMode)loadAutoBuyStatus(a.id);
+
+  // Topbar CONTROL ROOM (admin only)
+  if(_isAdmin)showTopbarCR(a.id);
+}
+
+function showTopbarCR(airdropId){
+  if(!_isAdmin)return;
+  var right=document.querySelector('.topbar-right');
+  if(!right)return;
+  var existing=document.getElementById('topbar-cr-btn');
+  if(existing)existing.remove();
+  var btn=document.createElement('button');
+  btn.id='topbar-cr-btn';
+  btn.className='topbar-btn topbar-cr-btn';
+  btn.textContent='CONTROL ROOM';
+  btn.onclick=function(){openControlRoom(airdropId)};
+  right.insertBefore(btn,right.firstChild);
 }
 
 // ── Control Room (admin modal) ──
