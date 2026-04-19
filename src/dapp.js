@@ -1128,7 +1128,7 @@ function showPage(page){
   if(page==='home'){loadHomeDashboard();startFeedPolling();}
   if(page==='explore'){bindExploreSearch();}
   if(page==='my'){renderMyAirdrops();loadMySubmissions();}
-  if(page==='submit'){loadValuationCost().then(function(){updateSubmitCostUI();});}
+  if(page==='submit'){loadValuationCost().then(function(){updateSubmitCostUI();});renderSubPhotos();}
   if(page==='referral')loadDappReferral();
   if(page==='wallet')loadDappWallet();
   if(page==='archive')loadDappArchive();
@@ -2808,65 +2808,332 @@ function getSelectedDuration(){
   return r?r.value:'standard';
 }
 
-// ── Photo management for submission form ──
-var _subPhotos=[]; // {type:'url'|'file', url:string, file?:File}
-var SUB_MAX_PHOTOS=5;
+// ══ Photo Wizard — slot-based guided upload ══
+// _subPhotos: array di {slot, type, url, file?, caption?}
+// Slot base (6, required): front, back, left, right, top, bottom
+// Slot extra (6, opzionali): brand, box, certificate, accessories, defects, other
+// 'other' supporta multipli con caption libera
+var _subPhotos=[];
+var SUB_MAX_PHOTOS=20; // limite alto: 6 base + 5 extra + N "altro"
+var _pwCurrentSlotIdx=0;
+var _pwPickedFile=null; // File | null
 
-function renderSubPhotos(){
-  var grid=document.getElementById('sub-photos-grid');
-  grid.innerHTML='';
-  _subPhotos.forEach(function(p,i){
-    var div=document.createElement('div');
-    div.style.cssText='position:relative;width:80px;height:80px;border-radius:6px;overflow:hidden;border:1px solid var(--gray-700)';
-    var img=document.createElement('img');
-    img.src=p.url;
-    img.style.cssText='width:100%;height:100%;object-fit:cover';
-    img.onerror=function(){this.style.display='none';div.style.background='var(--gray-800)';div.innerHTML+='<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gray-500)">ERR</span>'};
-    var del=document.createElement('button');
-    del.innerHTML='&times;';
-    del.style.cssText='position:absolute;top:2px;right:2px;width:20px;height:20px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center';
-    del.onclick=function(){_subPhotos.splice(i,1);renderSubPhotos()};
-    div.appendChild(img);div.appendChild(del);grid.appendChild(div);
-  });
+var PW_SLOT_SVG={
+  front:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="12" y="10" width="40" height="44" rx="3"/><circle cx="32" cy="28" r="6"/><path d="M22 44c2-4 6-6 10-6s8 2 10 6"/></svg>',
+  back:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="12" y="10" width="40" height="44" rx="3"/><path d="M20 22h24M20 30h24M20 38h16" stroke-dasharray="3 3"/></svg>',
+  left:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="20" y="10" width="24" height="44" rx="3"/><path d="M28 22v20" stroke-dasharray="2 3"/><path d="M10 32l6-6M10 32l6 6M10 32h10"/></svg>',
+  right:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="20" y="10" width="24" height="44" rx="3"/><path d="M36 22v20" stroke-dasharray="2 3"/><path d="M54 32l-6-6M54 32l-6 6M54 32H44"/></svg>',
+  top:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="12" y="20" width="40" height="24" rx="2"/><path d="M32 8v10M26 14l6-6 6 6"/></svg>',
+  bottom:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="12" y="20" width="40" height="24" rx="2"/><path d="M32 56v-10M26 50l6 6 6-6"/></svg>',
+  brand:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="32" cy="32" r="16"/><path d="M24 28l4 6 12-10"/></svg>',
+  box:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M10 22l22-10 22 10v20L32 52 10 42z"/><path d="M10 22l22 10 22-10M32 32v20"/></svg>',
+  certificate:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 10h26l10 10v34a3 3 0 01-3 3H14z"/><path d="M40 10v10h10M22 32h20M22 40h20M22 48h14"/></svg>',
+  accessories:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="18" cy="20" r="6"/><circle cx="46" cy="20" r="6"/><path d="M24 20h16M18 26v22M46 26v22M12 48h12M40 48h12"/></svg>',
+  defects:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M32 8l24 44H8z"/><line x1="32" y1="26" x2="32" y2="38"/><circle cx="32" cy="44" r="1.5" fill="currentColor"/></svg>',
+  other:'<svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="32" cy="32" r="20"/><path d="M32 22v10M32 40v2"/></svg>'
+};
+
+var PW_SLOTS=[
+  {id:'front',    required:true, it:'Fronte',           en:'Front',        hint_it:'Vista frontale intera. Luce naturale, oggetto centrato, senza riflessi.', hint_en:'Full front view. Natural light, centered, no reflections.'},
+  {id:'back',     required:true, it:'Retro',            en:'Back',         hint_it:'Vista posteriore intera.',                                                  hint_en:'Full back view.'},
+  {id:'left',     required:true, it:'Lato sinistro',    en:'Left side',    hint_it:'Lato sinistro dell\'oggetto.',                                              hint_en:'Left side of the object.'},
+  {id:'right',    required:true, it:'Lato destro',      en:'Right side',   hint_it:'Lato destro dell\'oggetto.',                                                hint_en:'Right side of the object.'},
+  {id:'top',      required:true, it:'Dall\'alto',       en:'Top view',     hint_it:'Vista dall\'alto.',                                                         hint_en:'Top-down view.'},
+  {id:'bottom',   required:true, it:'Dal basso',        en:'Bottom view',  hint_it:'Vista inferiore / base dell\'oggetto.',                                    hint_en:'Bottom / base of the object.'},
+  {id:'brand',    required:false,it:'Marchio / logo',   en:'Brand / logo', hint_it:'Dettaglio marchio, seriale o logo.',                                        hint_en:'Close-up of brand, serial or logo.'},
+  {id:'box',      required:false,it:'Scatola / imballo',en:'Box / packaging',hint_it:'Scatola originale o imballo.',                                           hint_en:'Original box or packaging.'},
+  {id:'certificate',required:false,it:'Certificato',    en:'Certificate',  hint_it:'Certificato di garanzia, autenticità o provenance.',                        hint_en:'Warranty, authenticity or provenance certificate.'},
+  {id:'accessories',required:false,it:'Accessori',      en:'Accessories',  hint_it:'Tutti gli accessori inclusi (cavi, libretti, telecomando…).',               hint_en:'All included accessories (cables, manuals, remote…).'},
+  {id:'defects',  required:false,it:'Difetti',          en:'Defects',      hint_it:'Eventuali difetti o segni d\'usura. Meglio documentarli.',                  hint_en:'Any defects or wear marks. Better to document them.'},
+  {id:'other',    required:false,it:'Altro',            en:'Other',        hint_it:'Foto libera. Aggiungi una descrizione breve.',                              hint_en:'Free shot. Add a short description.', freeform:true}
+];
+
+function pwFindPhoto(slotId){
+  // Restituisce la prima foto (o undefined) per quello slot
+  return _subPhotos.find(function(p){return p.slot===slotId});
+}
+function pwCountBase(){return PW_SLOTS.slice(0,6).filter(function(s){return !!pwFindPhoto(s.id)}).length}
+function pwCountExtra(){
+  var extras=PW_SLOTS.slice(6);
+  var c=0;
+  for(var i=0;i<extras.length;i++){
+    var s=extras[i];
+    if(s.id==='other'){
+      c+=Math.min(1,_subPhotos.filter(function(p){return p.slot==='other'}).length>0?1:0);
+    } else if(pwFindPhoto(s.id)) c++;
+  }
+  return c;
 }
 
+function renderSubPhotos(){
+  var grid=document.getElementById('pw-slots-grid');
+  if(!grid)return;
+  var langIt=document.documentElement.getAttribute('data-lang')!=='en';
+  var html='';
+  PW_SLOTS.forEach(function(slot,idx){
+    if(slot.id==='other'){
+      // 'other' è multi-item: mostra tutte le foto caricate + un tile "+ Aggiungi"
+      var others=_subPhotos.filter(function(p){return p.slot==='other'});
+      others.forEach(function(p,oi){
+        html+=pwRenderSlotTile(slot,idx,p,oi);
+      });
+      html+=pwRenderSlotTile(slot,idx,null,null,true);
+    } else {
+      var photo=pwFindPhoto(slot.id);
+      html+=pwRenderSlotTile(slot,idx,photo,null);
+    }
+  });
+  grid.innerHTML=html;
+  // Progress
+  var base=pwCountBase(), extra=pwCountExtra();
+  var baseEl=document.getElementById('pw-prog-base-val'); if(baseEl)baseEl.textContent=base+'/6';
+  var extraEl=document.getElementById('pw-prog-extra-val'); if(extraEl)extraEl.textContent=extra+'/6';
+  var fill=document.getElementById('pw-prog-fill'); if(fill)fill.style.width=Math.round((base+extra)/12*100)+'%';
+}
+function pwRenderSlotTile(slot,slotIdx,photo,otherIdx,isAddMore){
+  var isExtra=!slot.required;
+  var cls='pw-slot';
+  if(isExtra)cls+=' extra';
+  if(photo)cls+=' has-photo';
+  var dataAttrs='data-slot="'+slot.id+'" data-slot-idx="'+slotIdx+'"';
+  if(otherIdx!=null)dataAttrs+=' data-other-idx="'+otherIdx+'"';
+  var html='<div class="'+cls+'" '+dataAttrs+' onclick="pwOpenForSlot('+slotIdx+(otherIdx!=null?','+otherIdx:'')+(isAddMore?',true':'')+')">';
+  if(slot.required)html+='<span class="pw-slot-required-badge">!</span>';
+  if(photo){
+    html+='<img src="'+(photo.url||'')+'" alt="" class="pw-slot-img">';
+    html+='<div class="pw-slot-tag">'+(slot.id==='other'&&photo.caption?escHtml(photo.caption):(slot.it||slot.id))+'</div>';
+    html+='<button type="button" class="pw-slot-remove" onclick="event.stopPropagation();pwRemoveSlotPhoto(\''+slot.id+'\''+(otherIdx!=null?','+otherIdx:'')+')" aria-label="Rimuovi">&times;</button>';
+    html+='<div class="pw-slot-redo"><span class="it">Cambia</span><span class="en">Replace</span></div>';
+  } else {
+    html+='<div class="pw-slot-placeholder">'
+      +'<span class="pw-slot-icon">'+(PW_SLOT_SVG[slot.id]||PW_SLOT_SVG.other)+'</span>'
+      +'<span class="pw-slot-label"><span class="it">'+slot.it+'</span><span class="en">'+slot.en+'</span></span>';
+    if(isAddMore)html+='<span style="font-family:var(--font-m);font-size:9px;letter-spacing:.5px;color:var(--gold);margin-top:2px">+</span>';
+    html+='</div>';
+  }
+  html+='</div>';
+  return html;
+}
+
+function pwOpenForSlot(slotIdx,otherIdx,isAddMore){
+  _pwCurrentSlotIdx=slotIdx;
+  _pwPickedFile=null;
+  _pwEditingOtherIdx=(otherIdx!=null&&!isAddMore)?otherIdx:null;
+  var slot=PW_SLOTS[slotIdx];
+  var modal=document.getElementById('pw-modal');
+  var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  document.getElementById('pw-modal-eyebrow').innerHTML=
+    (slot.required?'<span class="it">FOTO TECNICA</span><span class="en">TECHNICAL SHOT</span>':'<span class="it">EXTRA · OPZIONALE</span><span class="en">EXTRA · OPTIONAL</span>')
+    +' · '+(slotIdx+1)+'/'+PW_SLOTS.length;
+  document.getElementById('pw-modal-title').innerHTML='<span class="it">'+slot.it+'</span><span class="en">'+slot.en+'</span>';
+  document.getElementById('pw-modal-hint').innerHTML='<span class="it">'+slot.hint_it+'</span><span class="en">'+slot.hint_en+'</span>';
+  var sil=document.getElementById('pw-silhouette'); sil.innerHTML=PW_SLOT_SVG[slot.id]||PW_SLOT_SVG.other;
+  // Preview se esiste già
+  var preview=document.getElementById('pw-preview'), prevImg=document.getElementById('pw-preview-img');
+  var existing=null;
+  if(slot.id==='other' && _pwEditingOtherIdx!=null){
+    var others=_subPhotos.filter(function(p){return p.slot==='other'});
+    existing=others[_pwEditingOtherIdx];
+  } else {
+    existing=pwFindPhoto(slot.id);
+  }
+  if(existing){
+    preview.style.display='';
+    prevImg.src=existing.url;
+    sil.style.display='none';
+  } else {
+    preview.style.display='none';
+    sil.style.display='';
+  }
+  // Caption per "other"
+  var capWrap=document.getElementById('pw-caption-wrap');
+  var capInput=document.getElementById('pw-caption-input');
+  capWrap.style.display=slot.freeform?'block':'none';
+  capInput.value=(existing&&existing.caption)?existing.caption:'';
+  // Buttons
+  var btnSkip=document.getElementById('pw-btn-skip');
+  btnSkip.style.display=slot.required?'none':'';
+  var btnConfirm=document.getElementById('pw-btn-confirm');
+  btnConfirm.style.display='none'; // mostra solo dopo pick
+  // Nav
+  pwUpdateNav();
+  modal.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+var _pwEditingOtherIdx=null;
+
+function pwUpdateNav(){
+  var counter=document.getElementById('pw-nav-counter');
+  if(counter)counter.textContent=(_pwCurrentSlotIdx+1)+' / '+PW_SLOTS.length;
+  var prev=document.getElementById('pw-nav-prev');
+  var next=document.getElementById('pw-nav-next');
+  if(prev)prev.disabled=_pwCurrentSlotIdx<=0;
+  if(next)next.disabled=_pwCurrentSlotIdx>=PW_SLOTS.length-1;
+}
+function pwPrevSlot(){if(_pwCurrentSlotIdx>0){pwOpenForSlot(_pwCurrentSlotIdx-1)}}
+function pwNextSlot(){if(_pwCurrentSlotIdx<PW_SLOTS.length-1){pwOpenForSlot(_pwCurrentSlotIdx+1)}}
+function pwSkip(){
+  if(_pwCurrentSlotIdx<PW_SLOTS.length-1){pwNextSlot()}else{pwClose()}
+}
+function pwClose(){
+  var modal=document.getElementById('pw-modal');
+  modal.classList.remove('open');
+  document.body.style.overflow='';
+  _pwPickedFile=null;
+}
+function pwOpenCamera(){
+  document.getElementById('pw-camera-input').click();
+}
+function pwPickFile(){
+  document.getElementById('pw-file-input').click();
+}
+function pwHandleSlotFile(files){
+  if(!files||!files.length)return;
+  var f=files[0];
+  if(!f.type.startsWith('image/')){showToast('<span class="it">File non valido</span><span class="en">Invalid file</span>');return}
+  _pwPickedFile=f;
+  // Preview
+  var url=URL.createObjectURL(f);
+  var preview=document.getElementById('pw-preview'), prevImg=document.getElementById('pw-preview-img');
+  preview.style.display='';
+  prevImg.src=url;
+  document.getElementById('pw-silhouette').style.display='none';
+  document.getElementById('pw-btn-confirm').style.display='';
+  // Blur check async (non bloccante)
+  pwBlurCheck(f,url);
+  // reset file inputs
+  document.getElementById('pw-camera-input').value='';
+  document.getElementById('pw-file-input').value='';
+}
+function pwBlurCheck(file,objectUrl){
+  // Variance check: foto molto sfocata → warning
+  try{
+    var img=new Image();
+    img.onload=function(){
+      var size=Math.min(96,img.width,img.height);
+      var c=document.createElement('canvas');
+      c.width=size;c.height=size;
+      var ctx=c.getContext('2d');
+      ctx.drawImage(img,0,0,size,size);
+      var data=ctx.getImageData(0,0,size,size).data;
+      var gray=[];
+      for(var i=0;i<data.length;i+=4){gray.push(.299*data[i]+.587*data[i+1]+.114*data[i+2])}
+      // Laplacian approx: somma delle differenze tra vicini
+      var sum=0,count=0;
+      for(var y=1;y<size-1;y++){
+        for(var x=1;x<size-1;x++){
+          var idx=y*size+x;
+          var dx=gray[idx+1]-gray[idx-1];
+          var dy=gray[idx+size]-gray[idx-size];
+          sum+=Math.abs(dx)+Math.abs(dy);count++;
+        }
+      }
+      var variance=count?sum/count:0;
+      if(variance<6){
+        showToast('<span class="it">Foto sembra sfocata — puoi confermare o rifare.</span><span class="en">Photo looks blurry — confirm or retake.</span>');
+      }
+    };
+    img.src=objectUrl;
+  }catch(e){}
+}
+function pwConfirmSlot(){
+  var slot=PW_SLOTS[_pwCurrentSlotIdx];
+  if(!_pwPickedFile){pwClose();return}
+  var caption='';
+  if(slot.freeform){
+    caption=(document.getElementById('pw-caption-input').value||'').trim();
+    if(!caption){showToast('<span class="it">Aggiungi una descrizione per ALTRO.</span><span class="en">Add a description for OTHER.</span>');return}
+  }
+  var entry={slot:slot.id,type:'file',url:URL.createObjectURL(_pwPickedFile),file:_pwPickedFile,caption:caption};
+  if(slot.id==='other'){
+    if(_pwEditingOtherIdx!=null){
+      // Replace by index
+      var others=_subPhotos.filter(function(p){return p.slot==='other'});
+      var target=others[_pwEditingOtherIdx];
+      var idx=_subPhotos.indexOf(target);
+      if(idx>=0)_subPhotos[idx]=entry;
+    } else {
+      _subPhotos.push(entry);
+    }
+  } else {
+    // Replace existing or push
+    var existingIdx=_subPhotos.findIndex(function(p){return p.slot===slot.id});
+    if(existingIdx>=0)_subPhotos[existingIdx]=entry;
+    else _subPhotos.push(entry);
+  }
+  renderSubPhotos();
+  // Auto-avanza se è uno slot obbligatorio e c'è uno slot successivo
+  if(slot.required && _pwCurrentSlotIdx<PW_SLOTS.length-1){
+    setTimeout(function(){pwNextSlot()},250);
+  } else {
+    pwClose();
+  }
+}
+function pwRemoveSlotPhoto(slotId,otherIdx){
+  if(slotId==='other' && otherIdx!=null){
+    var others=_subPhotos.filter(function(p){return p.slot==='other'});
+    var target=others[otherIdx];
+    var idx=_subPhotos.indexOf(target);
+    if(idx>=0)_subPhotos.splice(idx,1);
+  } else {
+    var i=_subPhotos.findIndex(function(p){return p.slot===slotId});
+    if(i>=0)_subPhotos.splice(i,1);
+  }
+  renderSubPhotos();
+}
+
+// Legacy helpers (per retrocompat, chiamate da altre parti del codice)
 function handlePhotoFiles(files){
+  // Se viene usato il vecchio input, associa al primo slot vuoto utile
   for(var i=0;i<files.length;i++){
     if(_subPhotos.length>=SUB_MAX_PHOTOS)break;
     var f=files[i];
     if(!f.type.startsWith('image/'))continue;
-    _subPhotos.push({type:'file',url:URL.createObjectURL(f),file:f});
+    // Trova primo slot base vuoto, altrimenti 'other'
+    var slotId='other';
+    for(var s=0;s<6;s++){if(!pwFindPhoto(PW_SLOTS[s].id)){slotId=PW_SLOTS[s].id;break}}
+    _subPhotos.push({slot:slotId,type:'file',url:URL.createObjectURL(f),file:f,caption:slotId==='other'?'Legacy':''});
   }
   renderSubPhotos();
-  document.getElementById('sub-file-input').value='';
 }
-
 function promptPhotoUrl(){
-  if(_subPhotos.length>=SUB_MAX_PHOTOS){showToast('Max '+SUB_MAX_PHOTOS+' foto');return}
   var url=prompt('URL immagine:');
   if(!url||!url.trim())return;
   url=url.trim();
-  _subPhotos.push({type:'url',url:url});
+  _subPhotos.push({slot:'other',type:'url',url:url,caption:'Link esterno'});
   renderSubPhotos();
 }
 
 async function uploadSubPhotos(token){
-  var urls=[];
+  // Ritorna {urls:[], photosBySlot:{}} per la nuova struttura
+  var urls=[]; // legacy flat array per image_url / extra_photos
+  var photosBySlot={};
+  var others=[];
   for(var i=0;i<_subPhotos.length;i++){
     var p=_subPhotos[i];
-    if(p.type==='url'){urls.push(p.url);continue}
-    var ext=p.file.name.split('.').pop()||'jpg';
-    var path=_session.user.id+'/'+Date.now()+'_'+i+'.'+ext;
-    var upRes=await fetch(SB_URL+'/storage/v1/object/submissions/'+path,{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':p.file.type,'x-upsert':'true'},
-      body:p.file
-    });
-    if(upRes.ok){
-      urls.push(SB_URL+'/storage/v1/object/public/submissions/'+path);
+    var finalUrl;
+    if(p.type==='url'){
+      finalUrl=p.url;
+    } else {
+      var ext=(p.file.name||'').split('.').pop()||'jpg';
+      var path=_session.user.id+'/'+Date.now()+'_'+(p.slot||'x')+'_'+i+'.'+ext;
+      var upRes=await fetch(SB_URL+'/storage/v1/object/submissions/'+path,{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':p.file.type,'x-upsert':'true'},
+        body:p.file
+      });
+      if(!upRes.ok)continue;
+      finalUrl=SB_URL+'/storage/v1/object/public/submissions/'+path;
+    }
+    urls.push(finalUrl);
+    if(p.slot==='other'){
+      others.push({url:finalUrl,caption:p.caption||''});
+    } else if(p.slot){
+      photosBySlot[p.slot]=finalUrl;
     }
   }
-  return urls;
+  if(others.length)photosBySlot.others=others;
+  return {urls:urls,photosBySlot:photosBySlot};
 }
 
 async function submitObject(){
@@ -2901,9 +3168,20 @@ async function submitObject(){
   btn.disabled=true;btn.classList.add('loading');
   try{
     var token=await getValidToken();
-    // Upload file photos to storage, collect all URLs
-    var photoUrls=await uploadSubPhotos(token);
-    var mainImg=photoUrls.length>0?photoUrls[0]:null;
+    // Upload file photos to storage — returns {urls, photosBySlot}
+    var upload=await uploadSubPhotos(token);
+    // Ordine canonico dell'array per il valutatore ABO (preserva info di slot
+    // anche senza migrazione DB): front, back, left, right, top, bottom,
+    // brand, box, certificate, accessories, defects, others...
+    var orderedUrls=[];
+    var sbs=upload.photosBySlot||{};
+    ['front','back','left','right','top','bottom','brand','box','certificate','accessories','defects'].forEach(function(k){
+      if(sbs[k])orderedUrls.push(sbs[k]);
+    });
+    (sbs.others||[]).forEach(function(o){if(o.url)orderedUrls.push(o.url)});
+    // fallback alle urls raw se per qualche motivo photosBySlot è vuoto (legacy)
+    var photoUrls=orderedUrls.length?orderedUrls:(upload.urls||[]);
+    var mainImg=sbs.front||(photoUrls.length>0?photoUrls[0]:null);
     var res=await fetch(SB_URL+'/rest/v1/rpc/submit_object_for_valuation',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
