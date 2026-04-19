@@ -516,10 +516,12 @@ async function loadHomeDashboard(){
   document.getElementById('home-airdrops').textContent=_myParts.length;
   document.getElementById('home-blocks').textContent=totalBlocks;
   document.getElementById('home-spent').textContent=totalSpent+' ARIA';
-  // Check-in status
-  checkCheckinStatus();
+  // Streak giornaliero (v2: stato calendario settimanale)
+  loadStreakState();
   // Check faucet status
   checkFaucetStatus();
+  // Referral auto-confirm (se utente ha referred_by e non ancora confirmed)
+  autoConfirmReferral();
   // Portfolio chart
   loadPortfolioChart(token,robiCount);
 }
@@ -675,79 +677,126 @@ async function loadPortfolioChart(token,userRobi){
 }
 
 // ── Check-in ──
-async function claimCheckin(){
-  var btn=document.getElementById('checkin-btn');
+// ══ Streak giornaliero v2 (earnings v2) ══
+// Timbra il giorno corrente: +50 ARIA. Completa lun-dom: +1 ROBI.
+async function claimStreakDay(){
+  var btn=document.getElementById('streak-btn');
+  if(!btn)return;
   btn.disabled=true;btn.style.opacity='.5';btn.style.cursor='not-allowed';
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var origLabel=btn.innerHTML;
   btn.textContent='...';
   try{
     var token=await getValidToken();
-    if(!token)return;
-    var res=await sbRpc('claim_checkin',{},token);
+    if(!token){btn.disabled=false;btn.style.opacity='1';btn.innerHTML=origLabel;return;}
+    var res=await sbRpc('daily_checkin_v2',{},token);
     if(res&&res.ok){
-      _balance+=res.amount;
-      updateBalanceUI();
-      var lang=document.documentElement.getAttribute('data-lang')||'it';
-      btn.style.background='var(--kas)';btn.style.color='var(--black)';
-      btn.textContent=lang==='it'?'+50 ARIA fatto!':'+50 ARIA done!';
-      showToast('<span style="color:var(--kas)">+50 ARIA</span> — <span class="it">ogni ARIA è un passo verso il tuo ROBI</span><span class="en">every ARIA is a step toward your ROBI</span>');
-      var homeAria=document.getElementById('home-aria');
-      if(homeAria)homeAria.innerHTML=_balance;
-    }else if(res&&res.error==='already_checked'){
-      showCheckinDone();
-    }else{
+      if(res.aria_awarded>0){
+        _balance+=res.aria_awarded;
+        updateBalanceUI();
+        var homeAria=document.getElementById('home-aria');
+        if(homeAria)homeAria.innerHTML=_balance;
+        showToast('<span style="color:var(--aria)">+'+res.aria_awarded+' ARIA</span> &middot; <span class="it">giorno timbrato</span><span class="en">day checked</span>');
+      }
+      if(res.week_complete){
+        showToast('<span style="color:var(--gold)">+1 ROBI</span> &middot; <span class="it">settimana completa!</span><span class="en">week complete!</span>');
+        _robi=(_robi||0)+1;
+        updateBalanceUI();
+      } else if(res.already_today){
+        showToast('<span class="it">Gi&agrave; timbrato oggi</span><span class="en">Already checked today</span>');
+      }
+      renderStreakCalendar(res.days_checked||[],res.day_of_week);
+      updateStreakButton(res.already_today || res.aria_awarded>0);
+    } else {
       btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
-      var _l=document.documentElement.getAttribute('data-lang')||'it';
-      btn.innerHTML=_l==='it'?'<span class="it">+50 ARIA</span>':'<span class="en">+50 ARIA</span>';
+      btn.innerHTML=origLabel;
     }
   }catch(e){
     btn.disabled=false;btn.style.opacity='1';btn.style.cursor='pointer';
-    btn.textContent='+50 ARIA';
+    btn.innerHTML=origLabel;
   }
 }
 
-function showCheckinDone(){
-  var btn=document.getElementById('checkin-btn');
-  if(!btn)return;
-  btn.disabled=true;btn.style.opacity='.5';btn.style.cursor='not-allowed';
-  btn.style.background='var(--gray-700)';btn.style.color='var(--gray-400)';
-  var lang=document.documentElement.getAttribute('data-lang')||'it';
-  btn.textContent=lang==='it'?'Fatto oggi ✓':'Done today ✓';
-  markDailyTask('checkin',true);
-}
-
-async function checkCheckinStatus(){
+async function loadStreakState(){
+  if(!_session||!_session.user)return;
   try{
     var token=await getValidToken();
     if(!token)return;
-    var today=new Date().toISOString().slice(0,10);
-    var rows=await sbGet('checkins?user_id=eq.'+_session.user.id+'&checked_at=eq.'+today+'&select=id&limit=1',token);
-    if(rows&&rows.length>0)showCheckinDone();
+    var res=await sbRpc('get_my_weekly_streak',{},token);
+    if(!res||!res.ok){renderStreakCalendar([],null);return;}
+    var days=res.days_checked||[];
+    var today=new Date();
+    var jsDow=today.getDay(); // 0=Sun..6=Sat
+    var isoDow=jsDow===0?7:jsDow; // 1=Mon..7=Sun
+    renderStreakCalendar(days,isoDow);
+    updateStreakButton(days.indexOf(isoDow)>=0);
   }catch(e){}
 }
 
-function markDailyTask(task,done){
-  var icon=document.getElementById('dt-'+task+'-icon');
-  var row=document.getElementById('dt-'+task);
-  if(icon){
-    if(done){
-      icon.style.borderColor='var(--kas)';icon.style.background='var(--kas)';icon.style.color='var(--black)';
-      icon.innerHTML='✓';
-    }else{
-      icon.style.borderColor='var(--gray-600)';icon.style.background='none';icon.style.color='';
-      icon.innerHTML='';
+function renderStreakCalendar(daysChecked,today){
+  var el=document.getElementById('streak-calendar');
+  if(!el)return;
+  var labels=['L','M','M','G','V','S','D'];
+  var html='';
+  for(var i=0;i<7;i++){
+    var dow=i+1; // 1..7
+    var checked=daysChecked.indexOf(dow)>=0;
+    var isToday=today===dow;
+    var bg=checked?'var(--gold)':(isToday?'rgba(184,150,12,.1)':'rgba(255,255,255,.02)');
+    var color=checked?'var(--black)':(isToday?'var(--gold)':'var(--gray-500)');
+    var border=isToday?'1px solid var(--gold)':'1px solid var(--gray-800)';
+    html+='<div style="aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:'+bg+';border:'+border+';border-radius:var(--radius-sm);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:'+color+';font-weight:'+(checked?'700':'500')+'">'
+      +'<div>'+labels[i]+'</div>'
+      +(checked?'<div style="font-size:10px;margin-top:2px">&#10003;</div>':'')
+      +'</div>';
+  }
+  el.innerHTML=html;
+  var status=document.getElementById('streak-status');
+  if(status){
+    var count=daysChecked.length;
+    if(count===7){
+      status.innerHTML='<span style="color:var(--gold)"><span class="it">Settimana completa &mdash; +1 ROBI assegnato</span><span class="en">Week complete &mdash; +1 ROBI awarded</span></span>';
+    } else if(count>0){
+      status.innerHTML='<span class="it">'+count+'/7 giorni timbrati questa settimana &middot; mancano '+(7-count)+' per il ROBI</span><span class="en">'+count+'/7 days checked this week &middot; '+(7-count)+' left for the ROBI</span>';
+    } else {
+      status.textContent='';
     }
   }
-  if(row&&done){row.style.borderColor='rgba(73,234,203,.15)';row.style.opacity='.6';}
-  updateDailyTasksScore();
 }
 
-function updateDailyTasksScore(){
-  var done=0,total=2;
-  if(document.getElementById('dt-faucet-icon')&&document.getElementById('dt-faucet-icon').innerHTML==='✓')done++;
-  if(document.getElementById('dt-checkin-icon')&&document.getElementById('dt-checkin-icon').innerHTML==='✓')done++;
-  var el=document.getElementById('daily-tasks-score');
-  if(el)el.textContent=done+'/'+total;
-  if(el)el.style.color=done===total?'var(--kas)':'var(--gray-500)';
+function updateStreakButton(doneToday){
+  var btn=document.getElementById('streak-btn');
+  if(!btn)return;
+  if(doneToday){
+    btn.disabled=true;btn.style.background='var(--gray-700)';btn.style.color='var(--gray-400)';btn.style.cursor='not-allowed';btn.style.opacity='1';
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    btn.innerHTML=lang==='it'?'<span class="it">TIMBRATO ✓</span>':'<span class="en">CHECKED ✓</span>';
+  } else {
+    btn.disabled=false;btn.style.background='var(--gold)';btn.style.color='#000';btn.style.cursor='pointer';btn.style.opacity='1';
+    btn.innerHTML='<span class="it">TIMBRA OGGI</span><span class="en">CHECK IN</span>';
+  }
+}
+
+// Legacy wrapper (nel caso qualcosa chiami ancora claimCheckin)
+async function claimCheckin(){return claimStreakDay();}
+function checkCheckinStatus(){return loadStreakState();}
+function markDailyTask(){/* no-op v2 */}
+function updateDailyTasksScore(){/* no-op v2 */}
+
+// Referral auto-confirm al login (chiamata silente)
+async function autoConfirmReferral(){
+  if(!_session||!_session.user)return;
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await sbRpc('confirm_referral',{},token);
+    if(res&&res.ok){
+      _robi=(_robi||0)+5;
+      updateBalanceUI();
+      showToast('<span style="color:var(--gold)">+5 ROBI</span> &middot; <span class="it">benvenuto! Il tuo referrer ha ricevuto +5 ROBI</span><span class="en">welcome! Your referrer earned +5 ROBI</span>');
+    }
+    // Errori silenti (no_referral_code, already_confirmed, ecc): normali
+  }catch(e){}
 }
 
 // ── Faucet ──

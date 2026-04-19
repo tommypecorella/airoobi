@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.29.1">
+<link rel="stylesheet" href="/src/dapp.css?v=3.32.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -238,55 +238,52 @@
       </div>
     </div>
 
-    <!-- OGGI — cosa puoi fare adesso -->
+    <!-- GUADAGNI — earning actions v2 (close F2) -->
     <div class="dash-section" style="margin-top:28px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
-        <div class="dash-section-title" style="margin:0;font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Oggi per te</span><span class="en">Today for you</span></div>
-        <div id="daily-tasks-score" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500)"></div>
+        <div class="dash-section-title" style="margin:0;font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Guadagni</span><span class="en">Earnings</span></div>
+        <a href="/come-funziona-airdrop#earnings" style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-decoration:none"><span class="it">Come funziona →</span><span class="en">How it works →</span></a>
       </div>
 
-      <!-- FAUCET — CTA principale, generoso -->
+      <!-- FAUCET — 100 ARIA/gg -->
       <div id="faucet-section" style="margin-bottom:12px">
         <div class="dash-faucet-card" style="background:linear-gradient(135deg,rgba(74,158,255,.08) 0%,rgba(184,150,12,.06) 100%);border:1px solid rgba(74,158,255,.18);border-radius:var(--radius-sm);padding:20px">
           <div class="dash-faucet-info">
-            <div class="dash-faucet-title" style="font-family:var(--font-h);font-size:18px;font-weight:400"><span class="it">Il tuo ARIA quotidiano</span><span class="en">Your daily ARIA</span> <span class="info-i" onclick="showInfoTip(this,'faucet')">i</span></div>
-            <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> gratis — ogni giorno, senza limiti</span><span class="en">Get <strong>100 ARIA</strong> free — every day, no limits</span></div>
+            <div class="dash-faucet-title" style="font-family:var(--font-h);font-size:18px;font-weight:400"><span class="it">Il tuo ARIA quotidiano</span><span class="en">Your daily ARIA</span></div>
+            <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> gratis &mdash; ogni giorno, senza limiti</span><span class="en">Get <strong>100 ARIA</strong> free &mdash; every day, no limits</span></div>
           </div>
           <button id="faucet-btn" onclick="claimFaucet()" class="dash-faucet-btn"><span class="it">RICEVI</span><span class="en">GET</span></button>
           <div id="faucet-status" style="margin-top:8px;font-size:12px;color:var(--gray-400);text-align:center;display:none;grid-column:1/-1"></div>
         </div>
       </div>
 
-      <!-- DAILY TASKS — checklist amichevole -->
-      <div style="display:grid;gap:8px" id="daily-tasks-grid">
-        <div class="daily-task" id="dt-faucet" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);transition:all .3s">
-          <div class="dt-check" id="dt-faucet-icon" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .3s"></div>
-          <div style="flex:1">
-            <div style="font-family:var(--font-b);font-size:13px;color:var(--white)"><span class="it">Faucet</span><span class="en">Faucet</span></div>
-            <div style="font-size:11px;color:var(--gray-500)"><span class="it">Richiedi i tuoi ARIA gratuiti</span><span class="en">Claim your free ARIA</span></div>
+      <!-- STREAK GIORNALIERO — 50 ARIA/gg + 1 ROBI/settimana -->
+      <div id="streak-section" style="margin-bottom:12px">
+        <div style="background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.22);border-radius:var(--radius-sm);padding:18px 20px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+            <div>
+              <div style="font-family:var(--font-h);font-size:17px;font-weight:400;color:var(--white);margin-bottom:2px"><span class="it">Streak giornaliero</span><span class="en">Daily streak</span></div>
+              <div style="font-size:12px;color:var(--gray-400);line-height:1.45"><span class="it">+50 <span style="color:var(--aria)">ARIA</span> per ogni giorno timbrato &middot; +1 <span style="color:var(--gold)">ROBI</span> se completi lun&ndash;dom</span><span class="en">+50 <span style="color:var(--aria)">ARIA</span> per day checked &middot; +1 <span style="color:var(--gold)">ROBI</span> if you complete Mon&ndash;Sun</span></div>
+            </div>
+            <button id="streak-btn" onclick="claimStreakDay()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:10px 22px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm);white-space:nowrap"><span class="it">TIMBRA OGGI</span><span class="en">CHECK IN</span></button>
           </div>
-          <div style="font-family:var(--font-m);font-size:13px;color:var(--aria);letter-spacing:1px">+100</div>
-        </div>
-        <div class="daily-task" id="dt-checkin" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);transition:all .3s">
-          <div class="dt-check" id="dt-checkin-icon" style="width:24px;height:24px;border-radius:50%;border:2px solid var(--gray-600);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:all .3s"></div>
-          <div style="flex:1">
-            <div style="font-family:var(--font-b);font-size:13px;color:var(--white)">Check-in</div>
-            <div style="font-size:11px;color:var(--gray-500)"><span class="it">Passa a salutare, ricevi ARIA</span><span class="en">Say hello, earn ARIA</span></div>
-          </div>
-          <button id="checkin-btn" onclick="claimCheckin()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:6px 16px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it" style="color:#000">+50</span><span class="en" style="color:#000">+50</span></button>
-        </div>
-        <div class="daily-task" id="dt-referral" style="display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid rgba(74,158,255,.2);background:rgba(74,158,255,.03);border-radius:var(--radius-sm);cursor:pointer" onclick="navigateTo('referral')">
-          <div style="width:24px;height:24px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;color:var(--black);font-weight:700">+</div>
-          <div style="flex:1">
-            <div style="font-family:var(--font-b);font-size:13px;color:var(--white);font-weight:600"><span class="it">+Invita amici</span><span class="en">+Invite friends</span></div>
-            <div style="font-size:11px;color:var(--gray-400)"><span class="it">Tu ricevi +10 ARIA, il tuo amico +15</span><span class="en">You get +10 ARIA, your friend gets +15</span></div>
-          </div>
-          <div style="font-family:var(--font-m);font-size:13px;color:var(--accent);letter-spacing:1px;font-weight:700">+10</div>
+          <div id="streak-calendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+          <div id="streak-status" style="margin-top:10px;font-size:11px;color:var(--gray-500);text-align:center"></div>
         </div>
       </div>
 
+      <!-- REFERRAL — +5 ROBI + +5 ROBI -->
+      <div class="daily-task" id="dt-referral" style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px solid rgba(184,150,12,.22);background:rgba(184,150,12,.04);border-radius:var(--radius-sm);cursor:pointer" onclick="navigateTo('referral')">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:var(--black);font-weight:700">+</div>
+        <div style="flex:1">
+          <div style="font-family:var(--font-b);font-size:14px;color:var(--white);font-weight:600"><span class="it">+Invita amici</span><span class="en">+Invite friends</span></div>
+          <div style="font-size:12px;color:var(--gray-400)"><span class="it">+5 <span style="color:var(--gold)">ROBI</span> per te &middot; +5 <span style="color:var(--gold)">ROBI</span> al tuo amico quando si registra e fa login</span><span class="en">+5 <span style="color:var(--gold)">ROBI</span> for you &middot; +5 <span style="color:var(--gold)">ROBI</span> for your friend on signup + login</span></div>
+        </div>
+        <div style="font-family:var(--font-m);font-size:13px;color:var(--gold);letter-spacing:1px;font-weight:700">+5&thinsp;ROBI</div>
+      </div>
+
       <!-- Motivazione -->
-      <div style="margin-top:12px;padding:14px 18px;background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.1);border-radius:var(--radius-sm);font-family:var(--font-h);font-size:14px;font-weight:400;color:var(--gray-300);line-height:1.6;text-align:center;font-style:italic">
+      <div style="margin-top:14px;padding:14px 18px;background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.1);border-radius:var(--radius-sm);font-family:var(--font-h);font-size:14px;font-weight:400;color:var(--gray-300);line-height:1.6;text-align:center;font-style:italic">
         <span class="it">Accumula <strong style="color:var(--aria);font-style:normal">ARIA</strong>, partecipa agli airdrop, guadagna <strong style="color:var(--gold);font-style:normal">ROBI</strong> reali.</span>
         <span class="en">Accumulate <strong style="color:var(--aria);font-style:normal">ARIA</strong>, join airdrops, earn real <strong style="color:var(--gold);font-style:normal">ROBI</strong>.</span>
       </div>
@@ -650,7 +647,7 @@
 
     <div class="ref-card" style="border-color:rgba(74,158,255,.3)">
       <h3><span class="it">Come funziona</span><span class="en">How it works</span></h3>
-      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login l'invito si conferma automaticamente<br>4. Tu ricevi +10 ARIA, il tuo amico +15 ARIA — più accumuli, più ROBI guadagni!</span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. The invite auto-confirms at their first login<br>4. You get +10 ARIA, your friend gets +15 ARIA — the more you accumulate, the more ROBI you earn!</span></p>
+      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login l'invito si conferma automaticamente<br>4. Tu ricevi <strong style="color:var(--gold)">+5 ROBI</strong> e anche il tuo amico riceve <strong style="color:var(--gold)">+5 ROBI</strong></span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. The invite auto-confirms at their first login<br>4. You get <strong style="color:var(--gold)">+5 ROBI</strong> and your friend also gets <strong style="color:var(--gold)">+5 ROBI</strong></span></p>
     </div>
 
     <div class="ref-history-section">
@@ -1061,7 +1058,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.29.1</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.32.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1133,6 +1130,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.29.1"></script>
+<script src="/src/dapp.js?v=3.32.0"></script>
 </body>
 </html>

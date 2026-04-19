@@ -1,5 +1,5 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 2.5 · 19 Aprile 2026 · DOCUMENTO FONDATIVO**
+**Version 2.6 · 19 Aprile 2026 · DOCUMENTO FONDATIVO**
 
 > Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
 > del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
@@ -50,6 +50,21 @@
 > - UI: Dettagli prodotto spostati sotto il titolo (non più in accordion)
 > - FIX: F2 denominatore ora è il totale globale ARIA nella categoria (non max singolo partecipante)
 >   Questo stabilizza F2 quando un utente si azzera dopo vittoria (One Category Rule)
+>
+> **Changelog 19 Apr 2026 (v2.6) — Earnings v2 (chiusura F2):**
+> - REWRITE: Policy earnings semplificata. Eliminate tutte le vecchie task (check-in +1 stand-alone, video, streak bonus 7gg in ARIA).
+> - KEEP: Faucet `claim_faucet` invariato (+100 ARIA/gg).
+> - ADD: Tabella `weekly_checkins(user_id, week_start, days_checked smallint[], robi_awarded bool)`.
+> - ADD: RPC `daily_checkin_v2()` — timbra il giorno corrente (ISO dow 1=Mon..7=Sun), +50 ARIA al primo timbro del giorno, +1 ROBI quando `array_length(days_checked)=7`.
+> - ADD: RPC `get_my_weekly_streak()` — snapshot calendario settimana corrente per UI.
+> - ADD: RPC `confirm_referral()` — chiamata silente al primo login: +5 ROBI inviter + +5 ROBI new user, incrementa `profiles.referral_count`. Idempotente via `referral_confirmations`.
+> - ADD: Trigger `tf_airdrop_accepted_robi` su airdrops: status → `accettato` ⇒ +1 ROBI al `submitted_by` (source='submission_accepted', deduplicato per airdrop_id).
+> - ADD: Trigger `tf_airdrop_completed_robi` su airdrops: status → `completed` ⇒ +5 ROBI seller (source='airdrop_completed_seller') + +5 ROBI winner (source='airdrop_won') se `winner_id NOT NULL`.
+> - ADD: Colonna `airdrop_config.mining_enabled boolean DEFAULT false` — flag per attivazione futura. In alpha: `execute_draw` continua a funzionare ma i ROBI Mining (NFT_REWARD type, source='airdrop_draw') sono **mostrati nell'UI come info** e non vengono prodotti perché nessun airdrop reale viene concluso (DB alpha resettato).
+> - DEPRECATED: `claim_checkin` ora wrapper di `daily_checkin_v2` (back-compat).
+> - UI: Sezione "Guadagni" nel dapp.home ridisegnata: Faucet + Streak (calendario lun-dom con timbri + pulsante "TIMBRA OGGI") + Referral. Vecchie daily-task rimosse.
+> - UI: Pagina EDU `/come-funziona-airdrop` §10 nuova sezione "Come si guadagna" con policy completa.
+> - TEST: Playwright deliverable Alpha Brave in preparazione per chiusura F2 (fase 2 roadmap interna Skeezu).
 >
 > **Changelog 19 Apr 2026 (v2.5) — Fasi progetto allineate a airoobi.com/#roadmap:**
 > - CHANGE: Le fasi progetto passano da 3 (Alpha/Beta/Mainnet) a **4**: **Alpha · Beta · Pre-Prod · Mainnet** (allineamento con la roadmap pubblica su airoobi.com/#roadmap).
