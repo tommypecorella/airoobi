@@ -545,16 +545,16 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <h3>Approva <em id="bo-approve-title" style="color:var(--gold);font-style:italic"></em></h3>
       <div id="bo-approve-info" style="font-size:12px;color:var(--gray-400);margin-bottom:14px;line-height:1.6;padding:10px;border:1px solid var(--gray-700)"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><label>Prezzo blocco (ARIA)</label><input type="number" id="bo-approve-price" min="1" placeholder="20" oninput="boCalcPreview()"></div>
-        <div><label>Blocchi totali</label><input type="number" id="bo-approve-blocks" min="10" placeholder="500" oninput="boCalcPreview()"></div>
+        <div><label>Prezzo blocco (ARIA) <span class="info-i" onclick="showAboTip(this,'bo-app-price')">i</span></label><input type="number" id="bo-approve-price" min="1" placeholder="20" oninput="boCalcPreview()"></div>
+        <div><label>Blocchi totali <span class="info-i" onclick="showAboTip(this,'bo-app-blocks')">i</span></label><input type="number" id="bo-approve-blocks" min="10" placeholder="500" oninput="boCalcPreview()"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><label>Presale price ARIA (opzionale)</label><input type="number" id="bo-approve-presale" min="1" placeholder="—"></div>
-        <div><label>Presale abilitato</label><select id="bo-approve-presale-enabled"><option value="yes">Si (presale + sale)</option><option value="no">No (solo sale)</option></select></div>
+        <div><label>Presale price ARIA (opzionale) <span class="info-i" onclick="showAboTip(this,'bo-app-presale')">i</span></label><input type="number" id="bo-approve-presale" min="1" placeholder="—"></div>
+        <div><label>Presale abilitato <span class="info-i" onclick="showAboTip(this,'bo-app-presale-en')">i</span></label><select id="bo-approve-presale-enabled"><option value="yes">Si (presale + sale)</option><option value="no">No (solo sale)</option></select></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><label>Durata</label><select id="bo-approve-duration" onchange="boAutoDeadline()"><option value="flash">Flash (6h) &#9889;</option><option value="standard" selected>Standard (24h)</option><option value="extended">Extended (72h)</option></select></div>
-        <div><label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto)</span></label><input type="datetime-local" id="bo-approve-deadline"><div style="font-size:9px;color:var(--gray-500);margin-top:2px" id="bo-deadline-info"></div></div>
+        <div><label>Durata <span class="info-i" onclick="showAboTip(this,'bo-app-duration')">i</span></label><select id="bo-approve-duration" onchange="boAutoDeadline()"><option value="flash">Flash (6h) &#9889;</option><option value="standard" selected>Standard (24h)</option><option value="extended">Extended (72h)</option></select></div>
+        <div><label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto)</span> <span class="info-i" onclick="showAboTip(this,'bo-app-deadline')">i</span></label><input type="datetime-local" id="bo-approve-deadline"><div style="font-size:9px;color:var(--gray-500);margin-top:2px" id="bo-deadline-info"></div></div>
       </div>
       <!-- Calc preview -->
       <div id="bo-calc-preview" style="display:none;margin-top:12px;padding:12px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);font-size:11px;line-height:1.8">
@@ -578,9 +578,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="ct-modal-bg" id="bo-reject-modal">
     <div class="ct-modal" style="max-width:480px">
       <h3>Rifiuta <em id="bo-reject-title" style="color:#ef4444;font-style:italic"></em></h3>
-      <label>Motivo rifiuto</label>
+      <label>Motivo rifiuto <span class="info-i" onclick="showAboTip(this,'bo-rej-reason')">i</span></label>
       <select id="bo-reject-reason"><option value="rifiutato_min500">Valore sotto €500</option><option value="rifiutato_generico">Rifiuto generico</option></select>
-      <label>Note (opzionale)</label>
+      <label>Note (opzionale) <span class="info-i" onclick="showAboTip(this,'bo-rej-note')">i</span></label>
       <input type="text" id="bo-reject-note" placeholder="Motivo dettagliato...">
       <div class="ct-modal-actions" style="margin-top:16px">
         <button class="ct-btn-del" id="bo-reject-ok" onclick="doBoReject()" style="flex:1!important;padding:10px!important;font-size:11px!important">RIFIUTA</button>
@@ -608,29 +608,29 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <h3 id="ad-modal-title">Modifica Airdrop</h3>
       <input type="hidden" id="ad-edit-id">
       <div style="display:flex;gap:12px">
-        <div style="flex:1"><label>Prezzo desiderato (venditore)</label><input type="number" id="ad-desired-price" readonly style="opacity:.6;cursor:not-allowed"></div>
-        <div style="flex:1"><label>Prezzo minimo (venditore)</label><input type="number" id="ad-min-price" readonly style="opacity:.6;cursor:not-allowed"></div>
+        <div style="flex:1"><label>Prezzo desiderato (venditore) <span class="info-i" onclick="showAboTip(this,'ad-desired')">i</span></label><input type="number" id="ad-desired-price" readonly style="opacity:.6;cursor:not-allowed"></div>
+        <div style="flex:1"><label>Prezzo minimo (venditore) <span class="info-i" onclick="showAboTip(this,'ad-min')">i</span></label><input type="number" id="ad-min-price" readonly style="opacity:.6;cursor:not-allowed"></div>
       </div>
       <!-- ── SEZIONE PRICING ── -->
       <div style="border:1px solid var(--gray-700);padding:16px;margin-bottom:16px">
         <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">PRICING &amp; BLOCCHI
-          <button type="button" onclick="adSuggestValues()" style="background:var(--gold);color:#000;border:none;padding:3px 10px;font-size:9px;letter-spacing:1px;cursor:pointer;margin-left:8px;font-family:var(--font-m)">SUGGERISCI</button>
+          <button type="button" onclick="adSuggestValues()" style="background:var(--gold);color:#000;border:none;padding:3px 10px;font-size:9px;letter-spacing:1px;cursor:pointer;margin-left:8px;font-family:var(--font-m)">SUGGERISCI</button> <span class="info-i" onclick="showAboTip(this,'ad-suggest')">i</span>
         </div>
 
-        <label>Quotazione AIROOBI (&euro;)</label>
+        <label>Quotazione AIROOBI (&euro;) <span class="info-i" onclick="showAboTip(this,'ad-quotaz')">i</span></label>
         <input type="number" id="ad-object-value" step="0.01" min="0" placeholder="Valore proposto dalla piattaforma" oninput="adAutoCalcBlocks()">
 
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:12px">
           <div>
-            <label>Block price (ARIA)</label>
+            <label>Block price (ARIA) <span class="info-i" onclick="showAboTip(this,'ad-bprice')">i</span></label>
             <input type="number" id="ad-block-price" min="1" placeholder="5" oninput="adAutoCalcBlocks()">
           </div>
           <div>
-            <label>Presale price (ARIA)</label>
+            <label>Presale price (ARIA) <span class="info-i" onclick="showAboTip(this,'ad-pprice')">i</span></label>
             <input type="number" id="ad-presale-price" min="0" placeholder="opzionale" oninput="adAutoCalcBlocks()">
           </div>
           <div>
-            <label>% Blocchi presale</label>
+            <label>% Blocchi presale <span class="info-i" onclick="showAboTip(this,'ad-ppct')">i</span></label>
             <select id="ad-presale-pct" onchange="adAutoCalcBlocks()">
               <option value="">—</option>
               <option value="5">5%</option>
@@ -656,11 +656,11 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
             </select>
           </div>
           <div>
-            <label>Extra % <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(costi)</span></label>
+            <label>Extra % <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(costi)</span> <span class="info-i" onclick="showAboTip(this,'ad-extra')">i</span></label>
             <input type="number" id="ad-extra-pct" min="0" max="100" step="1" value="10" placeholder="10" oninput="adAutoCalcBlocks()">
           </div>
           <div>
-            <label>N&ordm; Blocchi <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(auto)</span></label>
+            <label>N&ordm; Blocchi <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(auto)</span> <span class="info-i" onclick="showAboTip(this,'ad-blocks')">i</span></label>
             <input type="number" id="ad-total-blocks" min="0" placeholder="Auto" oninput="adAutoCalcBlocks()">
           </div>
         </div>
@@ -713,7 +713,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <!-- ── SEZIONE OPERATIVA ── -->
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
         <div>
-          <label>Durata</label>
+          <label>Durata <span class="info-i" onclick="showAboTip(this,'ad-dur')">i</span></label>
           <select id="ad-duration-type" onchange="adAutoDeadline()">
             <option value="flash">Flash (6h) &#9889;</option>
             <option value="standard" selected>Standard (24h)</option>
@@ -721,18 +721,18 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           </select>
         </div>
         <div>
-          <label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto-calcolata)</span></label>
+          <label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto-calcolata)</span> <span class="info-i" onclick="showAboTip(this,'ad-dl')">i</span></label>
           <input type="datetime-local" id="ad-deadline">
           <div style="font-size:9px;color:var(--gray-500);margin-top:3px">Dalla prossima ora piena + durata</div>
         </div>
         <div>
-          <label>Auto-draw</label>
+          <label>Auto-draw <span class="info-i" onclick="showAboTip(this,'ad-autodraw')">i</span></label>
           <div style="padding-top:8px"><label style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0"><input type="checkbox" id="ad-auto-draw" style="accent-color:var(--gold);width:16px;height:16px"> Estrai alla deadline</label></div>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:8px">
         <div>
-          <label>Soglia presale &rarr; sale <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none" id="ad-threshold-hint"></span></label>
+          <label>Soglia presale &rarr; sale <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none" id="ad-threshold-hint"></span> <span class="info-i" onclick="showAboTip(this,'ad-thr')">i</span></label>
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="ad-presale-threshold" min="5" max="100" style="width:70px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:14px">
             <span style="color:var(--gray-400)">%</span>
@@ -743,7 +743,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <div style="font-size:11px;color:var(--gray-400);line-height:1.5" id="ad-deadline-info"></div>
         </div>
       </div>
-      <label>Status</label>
+      <label>Status <span class="info-i" onclick="showAboTip(this,'ad-status')">i</span></label>
       <select id="ad-status">
         <option value="in_valutazione">In valutazione</option>
         <option value="valutazione_completata">Valutazione completata</option>
@@ -756,23 +756,23 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <option value="completed">Completed</option>
         <option value="annullato">Annullato</option>
       </select>
-      <label>Motivo rifiuto <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(se rifiutato)</span></label>
+      <label>Motivo rifiuto <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(se rifiutato)</span> <span class="info-i" onclick="showAboTip(this,'ad-reject')">i</span></label>
       <input type="text" id="ad-rejection" placeholder="">
       <!-- auto-draw moved to block calculator section above -->
       <div id="ad-sim-section" style="margin-top:20px;padding:16px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);display:none">
         <div style="font-size:11px;color:#f59e0b;font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:12px">TEST &amp; SIMULAZIONE</div>
         <div id="ad-sim-info" style="color:var(--gray-400);font-size:12px;margin-bottom:12px"></div>
-        <label style="font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:4px;display:block">% BLOCCHI DA RIEMPIRE</label>
+        <label style="font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:4px;display:block">% BLOCCHI DA RIEMPIRE <span class="info-i" onclick="showAboTip(this,'ad-sim-pct')">i</span></label>
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
           <input type="range" id="ad-sim-pct" min="1" max="100" value="50" oninput="document.getElementById('ad-sim-pct-label').textContent=this.value+'%'" style="flex:1;accent-color:#f59e0b">
           <span id="ad-sim-pct-label" style="color:#f59e0b;font-weight:600;font-family:var(--font-m);font-size:16px;min-width:40px;text-align:right">50%</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
           <input type="checkbox" id="ad-sim-spread" style="width:auto;accent-color:#f59e0b">
-          <label style="margin:0;font-size:12px;color:var(--gray-300)">Distribuisci su più giorni <span style="color:var(--gray-500);text-transform:none;letter-spacing:0">(simula acquisti distribuiti nel tempo)</span></label>
+          <label style="margin:0;font-size:12px;color:var(--gray-300)">Distribuisci su più giorni <span style="color:var(--gray-500);text-transform:none;letter-spacing:0">(simula acquisti distribuiti nel tempo)</span> <span class="info-i" onclick="showAboTip(this,'ad-sim-spread')">i</span></label>
         </div>
         <div id="ad-sim-result" style="margin-bottom:12px"></div>
-        <button id="ad-sim-btn-run" onclick="adSimulateRunInModal()" style="background:#f59e0b;color:#000;border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RUN SIMULATION</button>
+        <button id="ad-sim-btn-run" onclick="adSimulateRunInModal()" style="background:#f59e0b;color:#000;border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RUN SIMULATION</button> <span class="info-i" onclick="showAboTip(this,'ad-sim-run')">i</span>
       </div>
       <div class="ct-modal-actions">
         <button class="ct-btn-cancel" onclick="adCloseModal()">ANNULLA</button>
@@ -957,7 +957,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Pesi algoritmo vincitore, split economica, divisori NFT per fase. <span style="color:#ef4444">Modificare con cautela.</span></p>
     <div style="margin-bottom:12px">
       <button onclick="loadEngineConfig()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;margin-right:8px">RICARICA</button>
-      <button onclick="saveEngineConfig()" style="background:none;border:1px solid #49b583;color:#49b583;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;transition:all .2s" onmouseover="this.style.background='#49b583';this.style.color='#000'" onmouseout="this.style.background='none';this.style.color='#49b583'">SALVA CONFIG</button>
+      <button onclick="saveEngineConfig()" style="background:none;border:1px solid #49b583;color:#49b583;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;transition:all .2s" onmouseover="this.style.background='#49b583';this.style.color='#000'" onmouseout="this.style.background='none';this.style.color='#49b583'">SALVA CONFIG</button> <span class="info-i" onclick="showAboTip(this,'eng-save-cfg')">i</span>
     </div>
     <table class="admin-table">
       <thead><tr><th>Chiave</th><th>Valore</th><th>Descrizione</th></tr></thead>
@@ -970,7 +970,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <p style="color:var(--gray-500);font-size:11px;margin-bottom:16px;line-height:1.5">Percentuale di blocchi venduti in presale per far scattare automaticamente il passaggio a Sale. Quando un airdrop raggiunge il 100% → auto-close + draw.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
         <div style="text-align:center;padding:16px;border:1px solid rgba(255,107,107,.3);background:rgba(255,107,107,.04)">
-          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ff6b6b;margin-bottom:8px">⚡ FLASH (6h)</div>
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ff6b6b;margin-bottom:8px">⚡ FLASH (6h) <span class="info-i" onclick="showAboTip(this,'eng-thr-flash')">i</span></div>
           <div style="display:flex;align-items:center;justify-content:center;gap:6px">
             <input type="number" id="threshold-flash" min="5" max="100" value="30" style="width:60px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:16px">
             <span style="color:var(--gray-400);font-size:14px">%</span>
@@ -978,7 +978,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <div style="font-size:10px;color:var(--gray-500);margin-top:6px">presale → sale</div>
         </div>
         <div style="text-align:center;padding:16px;border:1px solid rgba(74,158,255,.3);background:rgba(74,158,255,.04)">
-          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">24H STANDARD</div>
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">24H STANDARD <span class="info-i" onclick="showAboTip(this,'eng-thr-std')">i</span></div>
           <div style="display:flex;align-items:center;justify-content:center;gap:6px">
             <input type="number" id="threshold-standard" min="5" max="100" value="20" style="width:60px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:16px">
             <span style="color:var(--gray-400);font-size:14px">%</span>
@@ -986,7 +986,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <div style="font-size:10px;color:var(--gray-500);margin-top:6px">presale → sale</div>
         </div>
         <div style="text-align:center;padding:16px;border:1px solid rgba(184,150,12,.3);background:rgba(184,150,12,.04)">
-          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">72H EXTENDED</div>
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">72H EXTENDED <span class="info-i" onclick="showAboTip(this,'eng-thr-ext')">i</span></div>
           <div style="display:flex;align-items:center;justify-content:center;gap:6px">
             <input type="number" id="threshold-extended" min="5" max="100" value="15" style="width:60px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:16px">
             <span style="color:var(--gray-400);font-size:14px">%</span>
@@ -997,10 +997,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;color:var(--gray-300)">
           <input type="checkbox" id="threshold-auto-close" checked style="accent-color:var(--gold);width:14px;height:14px">
-          Auto-close + draw al 100% blocchi venduti
+          Auto-close + draw al 100% blocchi venduti <span class="info-i" onclick="showAboTip(this,'eng-autoclose')">i</span>
         </label>
       </div>
-      <button onclick="saveThresholds()" style="margin-top:14px;background:var(--gold);color:var(--black);border:none;padding:8px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">SALVA SOGLIE</button>
+      <button onclick="saveThresholds()" style="margin-top:14px;background:var(--gold);color:var(--black);border:none;padding:8px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">SALVA SOGLIE</button> <span class="info-i" onclick="showAboTip(this,'eng-save-thr')">i</span>
     </div>
   </div>
 
@@ -3649,7 +3649,43 @@ var ABO_TIPS={
   'tr-robi-nominal':{it:'Valore nominale 1 ROBI = Treasury / ROBI circolanti. Cresce all\'aumentare del Treasury.',en:'Nominal value of 1 ROBI = Treasury / circulating ROBI. Grows as the Treasury grows.'},
   'tr-service':{it:'Service balance: parte delle entrate destinata a coprire costi operativi (hosting, team, legal).',en:'Service balance: share of revenue covering opex (hosting, team, legal).'},
   'tr-ads':{it:'Ricavi da A-Ads (banner crypto). Confluiscono in Treasury + Service secondo lo split.',en:'A-Ads revenue (crypto banners). Goes into Treasury + Service per the split.'},
-  'tr-adsense':{it:'Ricavi da Google AdSense (in attesa approvazione). Confluiscono in Treasury + Service secondo lo split.',en:'Google AdSense revenue (awaiting approval). Goes into Treasury + Service per the split.'}
+  'tr-adsense':{it:'Ricavi da Google AdSense (in attesa approvazione). Confluiscono in Treasury + Service secondo lo split.',en:'Google AdSense revenue (awaiting approval). Goes into Treasury + Service per the split.'},
+  // Approve modal (Valutazioni)
+  'bo-app-price':{it:'Costo in ARIA per 1 blocco. Più alto = airdrop più esclusivo. Tipico 5-50 ARIA. ARIA totali raccolte = price × blocchi.',en:'ARIA cost per block. Higher = more exclusive. Typical 5-50 ARIA. Total ARIA = price × blocks.'},
+  'bo-app-blocks':{it:'Numero totale blocchi vendibili. Più blocchi = airdrop più affollato (probabilità vincita minore). Tipico 100-1000.',en:'Total sellable blocks. More blocks = more crowded airdrop (lower win probability). Typical 100-1000.'},
+  'bo-app-presale':{it:'Prezzo scontato in ARIA per la fase presale (early-bird). Vuoto = presale al prezzo sale. Solo se presale abilitato.',en:'Discounted ARIA price for presale (early-bird). Empty = presale at sale price. Only if presale is on.'},
+  'bo-app-presale-en':{it:'Si = airdrop parte in PRESALE poi passa a SALE alla soglia. No = parte direttamente in SALE.',en:'Yes = airdrop starts in PRESALE then switches to SALE at threshold. No = starts directly in SALE.'},
+  'bo-app-duration':{it:'Flash (6h) = urgenza alta, soglia 30%. Standard (24h) = default, soglia 20%. Extended (72h) = oggetti importanti, soglia 15%.',en:'Flash (6h) = high urgency, 30% threshold. Standard (24h) = default, 20% threshold. Extended (72h) = important items, 15% threshold.'},
+  'bo-app-deadline':{it:'Calcolata automaticamente: prossima ora piena + durata scelta. Modificabile a mano se serve.',en:'Auto-computed: next full hour + chosen duration. Editable manually if needed.'},
+  // Reject modal (Valutazioni)
+  'bo-rej-reason':{it:'Motivo strutturato del rifiuto. "Sotto €500" = regola minimum value. "Generico" per altri casi (foto pessime, oggetto sospetto, duplicato).',en:'Structured rejection reason. "Below €500" = minimum value rule. "Generic" for other cases (bad photos, suspect item, duplicate).'},
+  'bo-rej-note':{it:'Spiegazione libera mostrata all\'utente. Sii cortese ma chiaro: l\'utente leggerà questo nel suo dashboard.',en:'Free-text explanation shown to the user. Be courteous but clear: the user will see this in their dashboard.'},
+  // Ad-modal (Gestione Airdrop edit)
+  'ad-desired':{it:'Prezzo desiderato dichiarato dal venditore in submission. NON modificabile: riferimento per la quotazione AIROOBI.',en:'Desired price declared by the seller at submission. NOT editable: reference for AIROOBI valuation.'},
+  'ad-min':{it:'Prezzo minimo accettabile dal venditore. NON modificabile. Lo split economica deve garantire al venditore almeno questo importo.',en:'Minimum price acceptable to the seller. NOT editable. The economic split must guarantee the seller at least this amount.'},
+  'ad-suggest':{it:'Calcola valori suggeriti per blocchi, prezzi e percentuali partendo da quotazione AIROOBI e prezzo minimo venditore. Punto di partenza, sempre verificabile.',en:'Computes suggested values for blocks, prices and percentages from AIROOBI valuation and seller minimum. Starting point, always verifiable.'},
+  'ad-quotaz':{it:'Quotazione di mercato AIROOBI in EUR. Determina lo split economica e il fill-rate target per coprire i costi.',en:'AIROOBI market valuation in EUR. Determines the economic split and target fill-rate to cover costs.'},
+  'ad-bprice':{it:'ARIA per 1 blocco in fase SALE. Prezzo finale dopo eventuale presale scontata.',en:'ARIA per block in SALE phase. Final price after optional discounted presale.'},
+  'ad-pprice':{it:'ARIA per 1 blocco in fase PRESALE (early-bird). Vuoto per disattivare la presale.',en:'ARIA per block in PRESALE phase (early-bird). Empty to disable presale.'},
+  'ad-ppct':{it:'% del totale blocchi destinata alla presale. Es: 20% di 500 blocchi = 100 blocchi presale.',en:'% of total blocks allocated to presale. E.g. 20% of 500 blocks = 100 presale blocks.'},
+  'ad-extra':{it:'% extra sopra la quotazione per coprire costi (fee 10%, charity 0.01%, fondo). Default 10%. Più alto = più margine ma airdrop meno appetibile.',en:'Extra % above valuation to cover costs (fee 10%, charity 0.01%, fund). Default 10%. Higher = more margin but less attractive.'},
+  'ad-blocks':{it:'Totale blocchi vendibili. Auto-calcolato da quotazione + extra% / block-price. Modificabile manualmente.',en:'Total sellable blocks. Auto-computed from valuation + extra% / block-price. Editable manually.'},
+  'ad-dur':{it:'Flash (6h) = urgenza, scarsità. Standard (24h) = default. Extended (72h) = airdrop importanti, più tempo per partecipare.',en:'Flash (6h) = urgency, scarcity. Standard (24h) = default. Extended (72h) = important airdrops, more participation time.'},
+  'ad-dl':{it:'Auto-calcolata: prossima ora piena + durata. Sovrascrivibile.',en:'Auto-computed: next full hour + duration. Overridable.'},
+  'ad-autodraw':{it:'Attivo: alla deadline il sistema esegue il draw e assegna il vincitore automaticamente. Disattivo: draw va lanciato a mano.',en:'On: at deadline the system runs the draw and assigns the winner automatically. Off: draw must be triggered manually.'},
+  'ad-thr':{it:'% di blocchi venduti in presale per attivare il passaggio automatico a SALE. Default per durata: Flash 30%, Standard 20%, Extended 15%.',en:'% of presale blocks sold to trigger the automatic switch to SALE. Defaults: Flash 30%, Standard 20%, Extended 15%.'},
+  'ad-status':{it:'Stato corrente: in_valutazione → valutazione_completata (utente accetta) → presale → sale → closed → completed. Modifica manuale solo per casi eccezionali.',en:'Current state: in_valutazione → valutazione_completata (user accepts) → presale → sale → closed → completed. Manual change only for exceptional cases.'},
+  'ad-reject':{it:'Motivo rifiuto in chiaro mostrato all\'utente. Compilare solo se status = rifiutato_*.',en:'Plain-text rejection reason shown to the user. Fill only if status = rifiutato_*.'},
+  'ad-sim-pct':{it:'% di blocchi da riempire nella simulazione. Test del comportamento engine senza toccare dati reali.',en:'% of blocks to fill in the simulation. Tests engine behavior without touching real data.'},
+  'ad-sim-spread':{it:'Distribuisce gli acquisti simulati su più giorni invece che istantanei. Più realistico per testare i bonus temporali.',en:'Spreads simulated purchases across multiple days instead of instant. More realistic for testing time-based bonuses.'},
+  'ad-sim-run':{it:'Lancia la simulazione: assegna acquisti virtuali, esegue draw, mostra risultato. NON scrive su DB.',en:'Runs the simulation: assigns virtual purchases, executes draw, shows result. Does NOT write to DB.'},
+  // Engine Config
+  'eng-save-cfg':{it:'Salva pesi algoritmo, split economica e divisori NFT. ATTENZIONE: impatta TUTTI gli airdrop futuri.',en:'Saves algorithm weights, economic split and NFT divisors. WARNING: affects ALL future airdrops.'},
+  'eng-thr-flash':{it:'Flash (6h): a quale % di blocchi presale venduti scattare il passaggio a SALE. Default 30% (alto = scarsità più aggressiva).',en:'Flash (6h): % of presale blocks sold to trigger SALE. Default 30% (high = more aggressive scarcity).'},
+  'eng-thr-std':{it:'Standard (24h): soglia presale → sale. Default 20%. Bilanciamento normale.',en:'Standard (24h): presale → sale threshold. Default 20%. Normal balance.'},
+  'eng-thr-ext':{it:'Extended (72h): soglia presale → sale. Default 15% (basso = transizione rapida per dare tempo alla SALE).',en:'Extended (72h): presale → sale threshold. Default 15% (low = faster transition to give SALE more time).'},
+  'eng-autoclose':{it:'Attivo: al 100% blocchi venduti chiude l\'airdrop e lancia il draw subito (anche prima della deadline).',en:'On: at 100% blocks sold the airdrop closes and the draw runs immediately (even before deadline).'},
+  'eng-save-thr':{it:'Salva le 3 soglie di auto-transizione. Effetto su tutti i nuovi airdrop creati con queste durate.',en:'Saves the 3 auto-transition thresholds. Affects every new airdrop created with these durations.'}
 };
 function showAboTip(el,key){
   var tip=document.getElementById('abo-tooltip');
