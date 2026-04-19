@@ -53,6 +53,18 @@ html:not([data-lang]) .it{display:inline}
 .topbar-cr-btn:hover{background:var(--gold);color:var(--black);border-color:var(--gold)}
 @media(max-width:720px){.topbar-cr-btn{padding:6px 10px;font-size:9px;letter-spacing:1px}}
 
+/* ── User menu (dropdown) ── */
+.ap-user-btn{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.04);border:1px solid var(--gray-700);color:var(--gray-400);cursor:pointer;transition:all .2s}
+.ap-user-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(184,150,12,.06)}
+.ap-user-btn.open{border-color:var(--gold);color:var(--gold);background:rgba(184,150,12,.1)}
+.ap-user-menu{position:fixed;top:60px;right:16px;z-index:120;min-width:220px;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:8px;box-shadow:0 10px 40px rgba(0,0,0,.5);opacity:0;transform:translateY(-6px);pointer-events:none;transition:opacity .18s ease,transform .18s ease}
+.ap-user-menu.open{opacity:1;transform:translateY(0);pointer-events:auto}
+.ap-user-menu-email{font-family:var(--font-m);font-size:10px;letter-spacing:.3px;color:var(--gray-500);padding:8px 10px 10px;border-bottom:1px solid var(--gray-800);margin-bottom:6px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ap-user-menu-item{display:block;width:100%;text-align:left;background:none;border:none;color:var(--gray-300);font-family:var(--font-b);font-size:13px;padding:9px 10px;border-radius:var(--radius-sm);cursor:pointer;text-decoration:none;transition:background .15s,color .15s}
+.ap-user-menu-item:hover{background:rgba(255,255,255,.04);color:var(--white)}
+.ap-um-logout{color:var(--gold);margin-top:4px;border-top:1px solid var(--gray-800);border-radius:0;padding-top:10px}
+.ap-um-logout:hover{color:var(--gold);background:rgba(184,150,12,.08)}
+
 /* ── FOOTER ── */
 .ap-footer{text-align:center;padding:40px 20px;border-top:1px solid rgba(255,255,255,.04);margin-top:60px;font-size:11px;color:var(--gray-500)}
 .ap-footer a{color:var(--gray-400);text-decoration:none}

@@ -82,6 +82,28 @@ function getSession(){
   try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch(e){return null}
 }
 
+// ── User menu (topbar dropdown) ──
+function toggleApUserMenu(e){
+  if(e){e.stopPropagation();}
+  var menu=document.getElementById('ap-user-menu');
+  var btn=document.getElementById('ap-user-btn');
+  if(!menu||!btn)return;
+  var open=menu.classList.toggle('open');
+  btn.classList.toggle('open',open);
+}
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('ap-user-menu');
+  var btn=document.getElementById('ap-user-btn');
+  if(!menu||!menu.classList.contains('open'))return;
+  if(menu.contains(e.target)||(btn&&btn.contains(e.target)))return;
+  menu.classList.remove('open');
+  if(btn)btn.classList.remove('open');
+});
+function apLogout(){
+  try{localStorage.removeItem('airoobi_session');}catch(e){}
+  window.location.href='/';
+}
+
 // ── Token refresh ──
 async function refreshToken(){
   if(!_session||!_session.refresh_token)return false;
@@ -1404,10 +1426,14 @@ var _airdropId=(function(){
   _session=getSession();
   _publicMode=!_session;
 
-  // Update topbar login button
+  // Update topbar: show user menu button when logged in, hide Login button
   if(_session&&_session.user){
-    var btn=document.getElementById('ap-login-btn');
-    if(btn){btn.textContent='APP';btn.href='/airdrops';}
+    var loginBtn=document.getElementById('ap-login-btn');
+    if(loginBtn)loginBtn.style.display='none';
+    var userBtn=document.getElementById('ap-user-btn');
+    if(userBtn)userBtn.style.display='inline-flex';
+    var emailEl=document.getElementById('ap-user-menu-email');
+    if(emailEl&&_session.user.email)emailEl.textContent=_session.user.email;
   }
 
   if(!_airdropId){
