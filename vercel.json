@@ -36,6 +36,9 @@
     { "source": "/abo", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/abo.html" },
     { "source": "/admin", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/abo.html" },
     { "source": "/faq", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/faq.html" },
+    { "source": "/come-funziona-airdrop", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
+    { "source": "/come-funziona", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
+    { "source": "/regolamento", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
     { "source": "/explorer", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/explorer.html" },
 
     { "source": "/", "destination": "/home.html" },
@@ -60,6 +63,9 @@
     { "source": "/admin", "destination": "/home.html" },
     { "source": "/abo", "destination": "/abo.html" },
     { "source": "/faq", "destination": "/faq.html" },
+    { "source": "/come-funziona-airdrop", "destination": "/come-funziona-airdrop.html" },
+    { "source": "/come-funziona", "destination": "/come-funziona-airdrop.html" },
+    { "source": "/regolamento", "destination": "/come-funziona-airdrop.html" },
     { "source": "/explorer", "destination": "/explorer.html" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/signup", "destination": "/signup.html" }

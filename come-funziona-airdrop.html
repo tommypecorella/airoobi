@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>Come funziona un airdrop — AIROOBI</title>
+<meta name="description" content="Il regolamento e le meccaniche di un airdrop AIROOBI spiegati in linguaggio semplice: blocchi, ROBI, rullo, posizione, fasi, fairness.">
+<meta name="robots" content="index, follow">
+<meta property="og:title" content="Come funziona un airdrop — AIROOBI">
+<meta property="og:description" content="Il regolamento e le meccaniche di un airdrop AIROOBI spiegati in linguaggio semplice.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.airoobi.app/come-funziona-airdrop">
+<link rel="canonical" href="https://www.airoobi.app/come-funziona-airdrop">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq009HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kexWKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/topbar.css">
+<style>
+:root{
+  --black:#060b18;--white:#f0f2f8;--gold:#B8960C;
+  --accent:#4A9EFF;--kas:#49EACB;
+  --gray-900:#0c1224;--gray-800:#151d33;--gray-700:#1f2942;
+  --gray-600:#2d3a56;--gray-500:#44547a;--gray-400:#8892ae;--gray-300:#b4bdd4;
+  --red:#ef4444;
+  --font-h:'Cormorant Garamond',serif;
+  --font-b:'Instrument Sans',system-ui,sans-serif;
+  --font-m:'DM Mono',monospace;
+  --radius:14px;--radius-sm:10px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;scroll-behavior:smooth;background:var(--black);color-scheme:dark}
+body{color:var(--white);background:var(--black);font-family:var(--font-b);line-height:1.65;min-height:100vh;-webkit-font-smoothing:antialiased}
+[data-lang="en"] .it{display:none!important}
+[data-lang="it"] .en{display:none!important}
+
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+.cf-hero{text-align:center;padding:clamp(72px,12vh,120px) 24px clamp(40px,6vh,64px);max-width:760px;margin:0 auto}
+.cf-hero .cf-eyebrow{font-family:var(--font-m);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+.cf-hero h1{font-family:var(--font-h);font-size:clamp(2.2rem,6vw,3.6rem);font-weight:600;line-height:1.1;margin-bottom:18px;font-style:italic;background:linear-gradient(135deg,#fff 0%,var(--accent) 60%,var(--kas) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.cf-hero p{color:var(--gray-300);font-size:clamp(.95rem,2vw,1.1rem);line-height:1.75}
+
+.cf-nav{max-width:760px;margin:0 auto 40px;padding:0 24px}
+.cf-nav-title{font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-500);margin-bottom:12px}
+.cf-nav-list{display:flex;flex-wrap:wrap;gap:8px}
+.cf-nav-list a{display:inline-block;padding:7px 14px;background:rgba(74,158,255,.05);border:1px solid rgba(74,158,255,.15);border-radius:var(--radius-sm);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--accent);text-decoration:none;transition:all .2s}
+.cf-nav-list a:hover{background:rgba(74,158,255,.12);border-color:rgba(74,158,255,.4);text-decoration:none}
+
+.cf-section{max-width:760px;margin:0 auto;padding:0 24px 48px}
+.cf-section h2{font-family:var(--font-h);font-size:clamp(1.6rem,4vw,2.2rem);font-weight:500;color:var(--white);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--gray-800);scroll-margin-top:80px}
+.cf-section h2 .cf-num{font-family:var(--font-m);font-size:12px;letter-spacing:2px;color:var(--gold);margin-right:10px;vertical-align:middle}
+.cf-section h3{font-family:var(--font-h);font-size:1.25rem;font-weight:500;color:var(--white);margin:24px 0 10px}
+.cf-section p{color:var(--gray-300);font-size:15px;line-height:1.8;margin-bottom:14px}
+.cf-section p strong{color:var(--white);font-weight:600}
+.cf-section ul,.cf-section ol{color:var(--gray-300);font-size:15px;line-height:1.8;margin:0 0 14px 20px}
+.cf-section ul li,.cf-section ol li{margin-bottom:8px}
+.cf-aria{color:var(--accent);font-weight:600}
+.cf-robi{color:var(--gold);font-weight:600}
+.cf-kas{color:var(--kas);font-weight:600}
+
+.cf-callout{padding:18px 22px;border:1px solid var(--gray-800);border-left:3px solid var(--accent);background:rgba(74,158,255,.03);border-radius:var(--radius-sm);margin:18px 0}
+.cf-callout.gold{border-left-color:var(--gold);background:rgba(184,150,12,.04)}
+.cf-callout.red{border-left-color:var(--red);background:rgba(239,68,68,.03)}
+.cf-callout .cf-co-title{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
+.cf-callout.gold .cf-co-title{color:var(--gold)}
+.cf-callout.red .cf-co-title{color:var(--red)}
+.cf-callout p{margin-bottom:0;font-size:14px}
+
+.cf-stage-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(184,150,12,.08);border:1px solid rgba(184,150,12,.3);border-radius:20px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin:0 4px;vertical-align:middle}
+
+.cf-steps{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.cf-step{display:flex;gap:14px;padding:14px 16px;background:rgba(255,255,255,.02);border:1px solid var(--gray-800);border-radius:var(--radius-sm)}
+.cf-step-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(74,158,255,.12);border:1px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:11px;font-weight:700}
+.cf-step-body{flex:1}
+.cf-step-title{font-family:var(--font-b);font-size:14px;font-weight:600;color:var(--white);margin-bottom:3px}
+.cf-step-desc{font-size:13px;color:var(--gray-300);line-height:1.6}
+
+.cf-footer{max-width:760px;margin:40px auto 0;padding:40px 24px 60px;text-align:center;border-top:1px solid var(--gray-800)}
+.cf-footer-links{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;margin-bottom:20px}
+.cf-footer-links a{font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-400);text-transform:uppercase}
+.cf-footer-links a:hover{color:var(--gold);text-decoration:none}
+.cf-footer-copy{font-size:12px;color:var(--gray-500);line-height:1.8}
+.cf-footer-copy .cf-ver{display:inline-block;margin-top:6px;font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600)}
+.cf-cta{display:inline-block;margin-top:18px;padding:12px 28px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);text-decoration:none;transition:all .15s}
+.cf-cta:hover{background:#d0ab14;transform:translateY(-1px);text-decoration:none;color:var(--black)}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="/" class="topbar-logo">Oo</a>
+  <div class="topbar-right">
+    <a href="/airdrops" class="topbar-btn"><span class="it">AIRDROP</span><span class="en">AIRDROPS</span></a>
+    <a href="/login" class="topbar-btn topbar-btn-gold">Login</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="cf-hero">
+  <div class="cf-eyebrow"><span class="it">Regolamento & Meccaniche</span><span class="en">Rules & Mechanics</span></div>
+  <h1><span class="it">Come funziona un airdrop</span><span class="en">How an airdrop works</span></h1>
+  <p>
+    <span class="it">Questa pagina spiega in linguaggio semplice <strong>tutto quello che devi sapere</strong> prima di partecipare a un airdrop AIROOBI: blocchi, ROBI, rullo, posizione in classifica, fasi, fairness guard. Aggiornata ad ogni modifica del motore airdrop.</span>
+    <span class="en">This page explains in plain language <strong>everything you need to know</strong> before participating in an AIROOBI airdrop: blocks, ROBI, reel, leaderboard position, phases, fairness guard. Updated at every engine change.</span>
+  </p>
+</div>
+
+<!-- NAV -->
+<nav class="cf-nav">
+  <div class="cf-nav-title"><span class="it">In questa pagina</span><span class="en">On this page</span></div>
+  <div class="cf-nav-list">
+    <a href="#cose-airdrop"><span class="it">1. Cos'è un airdrop</span><span class="en">1. What is an airdrop</span></a>
+    <a href="#aria-robi"><span class="it">2. ARIA e ROBI</span><span class="en">2. ARIA and ROBI</span></a>
+    <a href="#fasi"><span class="it">3. Le fasi di un airdrop</span><span class="en">3. Airdrop phases</span></a>
+    <a href="#posizione"><span class="it">4. Come arrivare 1°</span><span class="en">4. How to reach #1</span></a>
+    <a href="#rullo"><span class="it">5. Il rullo e i ROBI</span><span class="en">5. The reel and ROBI</span></a>
+    <a href="#fallimento"><span class="it">6. Se l'airdrop fallisce</span><span class="en">6. If the airdrop fails</span></a>
+    <a href="#fairness"><span class="it">7. Fairness guard</span><span class="en">7. Fairness guard</span></a>
+    <a href="#auto-buy"><span class="it">8. Auto-buy</span><span class="en">8. Auto-buy</span></a>
+    <a href="#one-cat"><span class="it">9. One Category Rule</span><span class="en">9. One Category Rule</span></a>
+    <a href="#alpha-brave"><span class="it">10. Alpha Brave & fasi</span><span class="en">10. Alpha Brave & phases</span></a>
+  </div>
+</nav>
+
+<!-- 1. COS'E' UN AIRDROP -->
+<section id="cose-airdrop" class="cf-section">
+  <h2><span class="cf-num">01</span><span class="it">Cos'è un airdrop AIROOBI</span><span class="en">What is an AIROOBI airdrop</span></h2>
+  <p>
+    <span class="it">Un airdrop AIROOBI è un modo per <strong>realizzare il tuo desiderio</strong>: un oggetto di valore (minimo €500) viene diviso in tanti piccoli <strong>blocchi</strong>. Tu partecipi acquistando i blocchi con la tua <span class="cf-aria">ARIA</span> (la valuta di AIROOBI, che accumuli gratuitamente sulla piattaforma). Chi è in <strong>1ª posizione</strong> quando l'airdrop si chiude ottiene l'oggetto. Tutti gli altri partecipanti guadagnano <span class="cf-robi">ROBI</span> — tessere rendimento che generano valore nel tempo.</span>
+    <span class="en">An AIROOBI airdrop is a way to <strong>make your wish come true</strong>: a valuable item (min €500) is split into small <strong>blocks</strong>. You participate by buying blocks with your <span class="cf-aria">ARIA</span> (AIROOBI's platform currency, earned freely on the platform). Whoever is <strong>1st</strong> when the airdrop closes gets the item. All other participants earn <span class="cf-robi">ROBI</span> — yield tokens that build value over time.</span>
+  </p>
+  <div class="cf-callout">
+    <div class="cf-co-title"><span class="it">In breve</span><span class="en">Short version</span></div>
+    <p><span class="it">Chi vuole l'oggetto → compra blocchi per salire in classifica. Chi vuole solo accumulare <span class="cf-robi">ROBI</span> → compra blocchi per attivare il mining. <strong>Partecipare conviene a tutti</strong>.</span><span class="en">If you want the item → buy blocks to climb the leaderboard. If you just want to accumulate <span class="cf-robi">ROBI</span> → buying blocks activates mining. <strong>Everyone benefits</strong>.</span></p>
+  </div>
+</section>
+
+<!-- 2. ARIA E ROBI -->
+<section id="aria-robi" class="cf-section">
+  <h2><span class="cf-num">02</span><span class="it">ARIA e ROBI</span><span class="en">ARIA and ROBI</span></h2>
+  <h3><span class="cf-aria">ARIA</span> — <span class="it">la valuta di piattaforma</span><span class="en">platform currency</span></h3>
+  <p><span class="it">È la valuta che usi per partecipare. <strong>Si guadagna gratis</strong> con login giornaliero (+1), faucet (+100 in fase testnet), check-in quotidiano, video visti, referral, bonus streak. Non ha controvalore in euro — è una valuta interna della piattaforma.</span><span class="en">The currency you use to participate. <strong>Earned for free</strong> through daily login (+1), faucet (+100 in testnet phase), daily check-in, watched videos, referrals, streak bonuses. No euro equivalent — it's an internal platform currency.</span></p>
+
+  <h3><span class="cf-robi">ROBI</span> — <span class="it">le tessere rendimento</span><span class="en">yield tokens</span></h3>
+  <p><span class="it">I <span class="cf-robi">ROBI</span> sono <strong>tessere rendimento</strong> — come buoni fruttiferi. Si accumulano partecipando agli airdrop. 1 <span class="cf-robi">ROBI</span> = 1 NFT, riscuotibile in <span class="cf-kas">KAS</span> (Kaspa) quando vuoi, a un prezzo che cresce man mano che il Fondo Comune di AIROOBI cresce. <strong>Non sono acquistabili</strong> — si ottengono solo partecipando.</span><span class="en"><span class="cf-robi">ROBI</span> are <strong>yield tokens</strong> — like interest-bearing certificates. Accumulated by participating in airdrops. 1 <span class="cf-robi">ROBI</span> = 1 NFT, redeemable in <span class="cf-kas">KAS</span> (Kaspa) at any time, at a price that grows as the AIROOBI Fund grows. <strong>Not purchasable</strong> — only earned by participating.</span></p>
+</section>
+
+<!-- 3. FASI -->
+<section id="fasi" class="cf-section">
+  <h2><span class="cf-num">03</span><span class="it">Le fasi di un airdrop</span><span class="en">Airdrop phases</span></h2>
+  <p><span class="it">Ogni airdrop passa attraverso fasi precise, tutte tracciate on-chain:</span><span class="en">Every airdrop goes through specific phases, all tracked on-chain:</span></p>
+  <div class="cf-steps">
+    <div class="cf-step"><div class="cf-step-num">1</div><div class="cf-step-body">
+      <div class="cf-step-title">DRAFT / <span class="it">Bozza</span><span class="en">Draft</span></div>
+      <div class="cf-step-desc"><span class="it">Il venditore crea la proposta privatamente. Può averne quante vuole in bozza.</span><span class="en">The seller creates the proposal privately. Any number of drafts allowed.</span></div>
+    </div></div>
+    <div class="cf-step"><div class="cf-step-num">2</div><div class="cf-step-body">
+      <div class="cf-step-title">IN VALUTAZIONE / <span class="it">In valutazione</span><span class="en">Under review</span></div>
+      <div class="cf-step-desc"><span class="it">Il venditore paga una fee in <span class="cf-aria">ARIA</span> e il team AIROOBI valuta l'oggetto (valore, autenticità, ammissibilità).</span><span class="en">The seller pays an <span class="cf-aria">ARIA</span> fee and the AIROOBI team evaluates the item (value, authenticity, eligibility).</span></div>
+    </div></div>
+    <div class="cf-step"><div class="cf-step-num">3</div><div class="cf-step-body">
+      <div class="cf-step-title">ACCETTATO / <span class="it">Accettato</span><span class="en">Accepted</span></div>
+      <div class="cf-step-desc"><span class="it">Il team accetta e stabilisce prezzo di mercato, numero di blocchi, eventuale presale. Il venditore conferma e paga la launch fee.</span><span class="en">The team accepts and sets market price, block count, optional presale. Seller confirms and pays launch fee.</span></div>
+    </div></div>
+    <div class="cf-step"><div class="cf-step-num">4</div><div class="cf-step-body">
+      <div class="cf-step-title">PRESALE <span class="it">(opzionale)</span><span class="en">(optional)</span></div>
+      <div class="cf-step-desc"><span class="it">Blocchi in vendita a prezzo ridotto e con <strong>2× <span class="cf-robi">ROBI</span></strong> di mining. Fase dedicata a chi segue l'airdrop fin dall'inizio.</span><span class="en">Blocks on sale at reduced price with <strong>2× <span class="cf-robi">ROBI</span></strong> mining. Phase for early followers.</span></div>
+    </div></div>
+    <div class="cf-step"><div class="cf-step-num">5</div><div class="cf-step-body">
+      <div class="cf-step-title">SALE / <span class="it">Vendita</span><span class="en">Sale</span></div>
+      <div class="cf-step-desc"><span class="it">Blocchi in vendita a prezzo pieno. Continua fino al 100% dei blocchi venduti o alla scadenza.</span><span class="en">Blocks on sale at full price. Runs until 100% blocks sold or deadline.</span></div>
+    </div></div>
+    <div class="cf-step"><div class="cf-step-num">6</div><div class="cf-step-body">
+      <div class="cf-step-title">CLOSED &amp; DRAW / <span class="it">Chiuso & estrazione</span><span class="en">Closed & draw</span></div>
+      <div class="cf-step-desc"><span class="it">Dopo una finestra di sicurezza (≥15 min), il sistema calcola la classifica finale. Chi è 1° ottiene l'oggetto. Tutti i partecipanti ricevono i <span class="cf-robi">ROBI</span> del mining.</span><span class="en">After a safety window (≥15 min), the system calculates the final leaderboard. #1 gets the item. All participants receive mining <span class="cf-robi">ROBI</span>.</span></div>
+    </div></div>
+  </div>
+</section>
+
+<!-- 4. POSIZIONE -->
+<section id="posizione" class="cf-section">
+  <h2><span class="cf-num">04</span><span class="it">Come arrivare 1° in classifica</span><span class="en">How to reach #1</span></h2>
+  <p><span class="it">La classifica è <strong>deterministica</strong>: il vincitore è chi ha il <strong>Punteggio</strong> più alto alla chiusura. Niente estrazioni casuali — tutto verificabile. Il punteggio si compone di due fattori:</span><span class="en">The leaderboard is <strong>deterministic</strong>: the winner is whoever has the highest <strong>Score</strong> at close. No random draws — everything verifiable. The score has two factors:</span></p>
+
+  <h3><span class="it">Vantaggio</span><span class="en">Advantage</span> <span style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);margin-left:8px">70%</span></h3>
+  <p><span class="it">Quanto sei vicino al primo in classifica per blocchi acquistati in questo airdrop. Formula: <code style="font-family:var(--font-m);color:var(--accent)">tuoi_blocchi / max_blocchi_singolo_utente</code>. Normalizzato 0→1. Chi ha il massimo dei blocchi ottiene <strong>Vantaggio = 1</strong>.</span><span class="en">How close you are to #1 by blocks bought in this airdrop. Formula: <code style="font-family:var(--font-m);color:var(--accent)">your_blocks / max_blocks_single_user</code>. Normalized 0→1. Top blockholder gets <strong>Advantage = 1</strong>.</span></p>
+
+  <h3><span class="it">Impegno</span><span class="en">Commitment</span> <span style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);margin-left:8px">30%</span></h3>
+  <p><span class="it">Gli <span class="cf-aria">ARIA</span> che hai speso nel tempo in questa categoria (es. "Orologi", "Tech", "Arredamento"). Premia chi partecipa con costanza a una categoria. Formula logaritmica per equità, normalizzata sul totale globale della categoria.</span><span class="en">The <span class="cf-aria">ARIA</span> you've spent over time in this category (e.g. "Watches", "Tech", "Furniture"). Rewards consistent participation in a category. Logarithmic formula for fairness, normalized on the global category total.</span></p>
+
+  <div class="cf-callout">
+    <div class="cf-co-title"><span class="it">Formula</span><span class="en">Formula</span></div>
+    <p><code style="font-family:var(--font-m);color:var(--white)">Punteggio = Vantaggio × 0.70 + Impegno × 0.30</code></p>
+  </div>
+
+  <h3><span class="it">In caso di parità</span><span class="en">Tiebreaker</span></h3>
+  <p><span class="it">Se due utenti hanno lo stesso Punteggio, vince chi ha <strong>più blocchi acquistati</strong>. Se anche questi sono uguali, vince chi è registrato da <strong>più tempo</strong> (seniority). Nessun elemento casuale.</span><span class="en">If two users have the same Score, the one with <strong>more blocks</strong> wins. If tied again, the one registered <strong>earlier</strong> (seniority) wins. No random elements.</span></p>
+</section>
+
+<!-- 5. RULLO -->
+<section id="rullo" class="cf-section">
+  <h2><span class="cf-num">05</span><span class="it">Il rullo e i ROBI in regalo</span><span class="en">The reel and giveaway ROBI</span></h2>
+  <p><span class="it">Il rullo è la visualizzazione dei blocchi dell'airdrop. Ogni tassello è un blocco. I colori ti dicono cosa rappresenta:</span><span class="en">The reel is the visualization of airdrop blocks. Each tile is a block. Colors tell you what it represents:</span></p>
+  <ul>
+    <li><strong style="color:var(--accent)"><span class="it">Blu</span><span class="en">Blue</span></strong> — <span class="it">i tuoi blocchi</span><span class="en">your blocks</span></li>
+    <li><strong style="color:#ff9b70"><span class="it">Rosso</span><span class="en">Red</span></strong> — <span class="it">blocchi di altri partecipanti</span><span class="en">other participants' blocks</span></li>
+    <li><strong style="color:var(--gray-400)"><span class="it">Grigio</span><span class="en">Gray</span></strong> — <span class="it">blocchi ancora disponibili</span><span class="en">blocks still available</span></li>
+    <li><strong style="color:var(--gold)"><span class="it">Puntino oro</span><span class="en">Gold dot</span></strong> — <span class="it">un <span class="cf-robi">ROBI</span> in regalo nascosto sotto quel blocco</span><span class="en">a giveaway <span class="cf-robi">ROBI</span> hidden under that block</span></li>
+  </ul>
+
+  <h3><span class="it">Due tipi di ROBI</span><span class="en">Two kinds of ROBI</span></h3>
+  <p><span class="it">AIROOBI distribuisce <span class="cf-robi">ROBI</span> in due modi distinti:</span><span class="en">AIROOBI distributes <span class="cf-robi">ROBI</span> in two distinct ways:</span></p>
+
+  <div class="cf-callout gold">
+    <div class="cf-co-title"><span class="it">ROBI Mining (a fine airdrop)</span><span class="en">Mining ROBI (at airdrop close)</span></div>
+    <p><span class="it">Ogni blocco che compri "mina" una frazione di <span class="cf-robi">ROBI</span>. Alla chiusura dell'airdrop, il totale minato viene distribuito a tutti i partecipanti, proporzionalmente ai blocchi acquistati. Il mining rate viene comunicato prima dell'acquisto (es. "1 ROBI ogni 10 blocchi"). In presale, il rate è <strong>doppio</strong>.</span><span class="en">Every block you buy "mines" a fraction of <span class="cf-robi">ROBI</span>. At airdrop close, the total mined is distributed to all participants proportionally to blocks bought. Mining rate is shown before purchase (e.g. "1 ROBI per 10 blocks"). In presale the rate is <strong>doubled</strong>.</span></p>
+  </div>
+
+  <div class="cf-callout gold">
+    <div class="cf-co-title"><span class="it">ROBI Scoperti nel rullo (al momento)</span><span class="en">Reel-discovered ROBI (on the spot)</span></div>
+    <p><span class="it">Alcuni blocchi nascondono un <span class="cf-robi">ROBI</span> in regalo (i puntini oro). Quando compri un blocco e sotto c'è un puntino, <strong>lo trovi subito</strong> ed è tuo. Un vero ritrovamento. Il numero totale di <span class="cf-robi">ROBI</span> in regalo è pubblico (lo vedi nella card "Come funziona?" sulla pagina airdrop) e dipende dal budget del Fondo Comune di AIROOBI.</span><span class="en">Some blocks hide a giveaway <span class="cf-robi">ROBI</span> (the gold dots). When you buy a block with a dot under it, <strong>you find it instantly</strong> and it's yours. A real discovery. The total number of giveaway <span class="cf-robi">ROBI</span> is public (visible in the "How does it work?" card on the airdrop page) and depends on the AIROOBI Fund budget.</span></p>
+  </div>
+</section>
+
+<!-- 6. FALLIMENTO -->
+<section id="fallimento" class="cf-section">
+  <h2><span class="cf-num">06</span><span class="it">Se l'airdrop fallisce</span><span class="en">If the airdrop fails</span></h2>
+  <p><span class="it">Un airdrop "fallisce" quando, alla scadenza, non sono stati venduti abbastanza blocchi per garantire al venditore il prezzo di mercato minimo. In quel caso:</span><span class="en">An airdrop "fails" when, at deadline, not enough blocks were sold to guarantee the minimum market price to the seller. In that case:</span></p>
+
+  <div class="cf-callout">
+    <div class="cf-co-title"><span class="it">ARIA rimborsata</span><span class="en">ARIA refunded</span></div>
+    <p><span class="it">Tutti gli <span class="cf-aria">ARIA</span> spesi per i blocchi <strong>tornano ai partecipanti</strong>. L'oggetto resta al venditore.</span><span class="en">All <span class="cf-aria">ARIA</span> spent on blocks is <strong>refunded to participants</strong>. The item stays with the seller.</span></p>
+  </div>
+
+  <div class="cf-callout red">
+    <div class="cf-co-title"><span class="it">ROBI Mining NON distribuiti</span><span class="en">Mining ROBI NOT distributed</span></div>
+    <p><span class="it">Dato che i tuoi <span class="cf-aria">ARIA</span> tornano indietro, i <span class="cf-robi">ROBI</span> da mining (che erano la ricompensa per aver "investito" blocchi) <strong>non vengono assegnati</strong>. È il principio di reciprocità: niente blocchi trattenuti, niente mining reward.</span><span class="en">Since your <span class="cf-aria">ARIA</span> is refunded, mining <span class="cf-robi">ROBI</span> (the reward for "investing" blocks) are <strong>not assigned</strong>. Reciprocity principle: no blocks retained, no mining reward.</span></p>
+  </div>
+
+  <div class="cf-callout gold">
+    <div class="cf-co-title"><span class="it">ROBI Scoperti nel rullo: TUOI</span><span class="en">Reel-discovered ROBI: YOURS</span></div>
+    <p><span class="it">I <span class="cf-robi">ROBI</span> che hai <strong>scoperto nel rullo</strong> durante l'airdrop <strong>restano tuoi a prescindere</strong>. Sono un ritrovamento, non una ricompensa: se hai trovato un <span class="cf-robi">ROBI</span>, te lo sei guadagnato sul campo e nessuno te lo toglie.</span><span class="en">The <span class="cf-robi">ROBI</span> you <strong>discovered in the reel</strong> during the airdrop <strong>stay yours regardless</strong>. They're a find, not a reward: if you found a <span class="cf-robi">ROBI</span>, you earned it on the spot and no one takes it back.</span></p>
+  </div>
+</section>
+
+<!-- 7. FAIRNESS -->
+<section id="fairness" class="cf-section">
+  <h2><span class="cf-num">07</span><span class="it">Fairness guard</span><span class="en">Fairness guard</span></h2>
+  <p><span class="it">AIROOBI <strong>non ti fa sprecare <span class="cf-aria">ARIA</span></strong>. Se i blocchi che ti servono per superare il primo in classifica sono <strong>più di quelli ancora disponibili</strong>, arrivare 1° diventa matematicamente impossibile. In quel caso la piattaforma <strong>blocca ogni acquisto</strong> per quell'airdrop: non puoi comprare altri blocchi, e non puoi nemmeno attivare l'Auto-buy. La tua <span class="cf-aria">ARIA</span> resta al sicuro per un altro airdrop dove hai ancora chance reali.</span><span class="en">AIROOBI <strong>won't let you waste <span class="cf-aria">ARIA</span></strong>. If the blocks you'd need to overtake #1 are <strong>more than those still available</strong>, reaching #1 becomes mathematically impossible. The platform then <strong>blocks every purchase</strong> for that airdrop: you can't buy more blocks, and you can't activate Auto-buy. Your <span class="cf-aria">ARIA</span> stays safe for another airdrop where you still have real chances.</span></p>
+  <p><span class="it">Se ti interessano i <span class="cf-robi">ROBI</span> (non l'oggetto), puoi comunque partecipare agli airdrop dove non sei 1° — il mining va avanti fino all'ultimo. La guard scatta solo nella condizione specifica in cui il podio è fuori portata matematica.</span><span class="en">If you're after <span class="cf-robi">ROBI</span> (not the item), you can still participate in airdrops where you're not #1 — mining continues until the end. The guard only kicks in when the top spot is mathematically out of reach.</span></p>
+</section>
+
+<!-- 8. AUTO-BUY -->
+<section id="auto-buy" class="cf-section">
+  <h2><span class="cf-num">08</span><span class="it">Auto-buy</span><span class="en">Auto-buy</span></h2>
+  <p><span class="it">Puoi configurare l'acquisto automatico di blocchi a intervalli regolari: <strong>N blocchi ogni X ore, fino a un massimo di M totali</strong>. Utile se vuoi seguire un airdrop lungo (72h) senza dover tornare ogni ora a comprare manualmente.</span><span class="en">You can set up automatic block purchases at regular intervals: <strong>N blocks every X hours, up to M total</strong>. Useful for long airdrops (72h) without manually returning every hour.</span></p>
+  <p><span class="it">L'Auto-buy si disattiva automaticamente se scatta la <a href="#fairness">Fairness guard</a>, se finisce il budget massimo, o se l'airdrop non è più in fase di vendita.</span><span class="en">Auto-buy turns off automatically if the <a href="#fairness">Fairness guard</a> triggers, if the max budget is reached, or if the airdrop is no longer in sale phase.</span></p>
+</section>
+
+<!-- 9. ONE CATEGORY RULE -->
+<section id="one-cat" class="cf-section">
+  <h2><span class="cf-num">09</span><span class="it">One Category Rule</span><span class="en">One Category Rule</span></h2>
+  <p><span class="it">Principio di equità assoluta: <strong>se vinci un airdrop in una categoria, il tuo contatore "Impegno" in quella categoria si azzera</strong>. Non puoi accumulare vittorie multiple nella stessa categoria sfruttando la stessa fedeltà.</span><span class="en">Absolute fairness principle: <strong>if you win an airdrop in a category, your "Commitment" counter in that category resets</strong>. You can't stack multiple wins in the same category on the same loyalty.</span></p>
+  <p><span class="it">Puoi comunque partecipare ad altri airdrop della stessa categoria — semplicemente riparti da zero sull'Impegno, come ogni altro nuovo partecipante. Così tutti hanno la loro chance, e nessuno "monopolizza" una categoria.</span><span class="en">You can still participate in more airdrops of the same category — you just restart from zero on Commitment, like any newcomer. Everyone gets their chance, no one "monopolizes" a category.</span></p>
+</section>
+
+<!-- 10. ALPHA BRAVE & FASI -->
+<section id="alpha-brave" class="cf-section">
+  <h2><span class="cf-num">10</span><span class="it">Alpha Brave e le fasi del progetto</span><span class="en">Alpha Brave and project phases</span></h2>
+  <p><span class="it">AIROOBI evolve in fasi. Le regole restano le stesse — cambia la <strong>generosità delle ricompense</strong>.</span><span class="en">AIROOBI evolves in phases. Rules stay the same — what changes is the <strong>reward generosity</strong>.</span></p>
+
+  <div class="cf-steps">
+    <div class="cf-step"><div class="cf-step-num">α</div><div class="cf-step-body">
+      <div class="cf-step-title">ALPHA NET <span class="cf-stage-badge">qui ora</span></div>
+      <div class="cf-step-desc"><span class="it">Primi <strong>1.000 utenti</strong> ("Alpha Brave"): faucet <span class="cf-aria">ARIA</span> generoso (+100/giorno), mining rate e <span class="cf-robi">ROBI</span> in regalo al massimo. Chi entra adesso accumula il <strong>vantaggio più alto</strong> dell'intera storia di AIROOBI.</span><span class="en">First <strong>1,000 users</strong> ("Alpha Brave"): generous <span class="cf-aria">ARIA</span> faucet (+100/day), max mining rate and giveaway <span class="cf-robi">ROBI</span>. Joining now gives you the <strong>highest advantage</strong> in AIROOBI's entire history.</span></div>
+    </div></div>
+    <div class="cf-step"><div class="cf-step-num">β</div><div class="cf-step-body">
+      <div class="cf-step-title">BETA</div>
+      <div class="cf-step-desc"><span class="it">Faucet <span class="cf-aria">ARIA</span> ridotto, mining rate più basso, <span class="cf-robi">ROBI</span> in regalo ridotti. Si guadagna ancora, ma meno degli Alpha Brave.</span><span class="en">Reduced <span class="cf-aria">ARIA</span> faucet, lower mining rate, fewer giveaway <span class="cf-robi">ROBI</span>. Still rewarding, but less than Alpha Brave.</span></div>
+    </div></div>
+    <div class="cf-step"><div class="cf-step-num">M</div><div class="cf-step-body">
+      <div class="cf-step-title">MAINNET</div>
+      <div class="cf-step-desc"><span class="it"><strong>Regole, formule e ricompense fisse</strong>, uguali per tutti. Chi è entrato in alpha/beta trova qui il <strong>terreno dove monetizzare</strong> il vantaggio accumulato: i <span class="cf-robi">ROBI</span> raccolti valgono di più perché il Fondo Comune è più grande.</span><span class="en"><strong>Fixed rules, formulas and rewards</strong>, same for everyone. Alpha/beta participants find here the <strong>ground to monetize</strong> their accumulated edge: <span class="cf-robi">ROBI</span> collected early are worth more as the AIROOBI Fund grows.</span></div>
+    </div></div>
+  </div>
+
+  <div class="cf-callout gold">
+    <div class="cf-co-title"><span class="it">Perché partecipare ora</span><span class="en">Why participate now</span></div>
+    <p><span class="it">Il <span class="cf-robi">ROBI</span> che raccogli oggi è un <strong>asset</strong> che porti con te in beta e in mainnet. Il Fondo Comune cresce con ogni airdrop: di conseguenza, il prezzo di riscatto del singolo <span class="cf-robi">ROBI</span> cresce nel tempo. Chi arriva prima, raccoglie a buon prezzo.</span><span class="en">The <span class="cf-robi">ROBI</span> you collect today is an <strong>asset</strong> you carry into beta and mainnet. The AIROOBI Fund grows with every airdrop: consequently, the redemption price of a single <span class="cf-robi">ROBI</span> grows over time. Early adopters collect at a good price.</span></p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="cf-footer">
+  <a href="/airdrops" class="cf-cta"><span class="it">Vai agli airdrop</span><span class="en">Go to airdrops</span></a>
+  <div class="cf-footer-links" style="margin-top:40px">
+    <a href="/faq">FAQ</a>
+    <a href="/termini"><span class="it">Termini</span><span class="en">Terms</span></a>
+    <a href="/privacy">Privacy</a>
+    <a href="/contatti"><span class="it">Contatti</span><span class="en">Contacts</span></a>
+  </div>
+  <div class="cf-footer-copy">
+    &copy; 2026 AIROOBI — Dream Robe E-Commerce.
+    <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br>
+    <span class="it">Piattaforma riservata ai maggiorenni (18+). Questa pagina viene aggiornata ad ogni modifica del motore airdrop.</span>
+    <span class="en">Platform for adults only (18+). This page is updated at every airdrop engine change.</span><br>
+    <span class="cf-ver">alfa-2026.04.19-3.27.0</span>
+  </div>
+</footer>
+
+<script>
+// Language toggle persistence (consistent with rest of app)
+(function(){
+  var saved=localStorage.getItem('airoobi_lang');
+  if(saved==='en'){
+    document.documentElement.setAttribute('data-lang','en');
+    document.documentElement.setAttribute('lang','en');
+  }
+})();
+</script>
+
+</body>
+</html>

@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.26.0">
+<link rel="stylesheet" href="/src/dapp.css?v=3.27.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -161,6 +161,9 @@
   <button class="user-menu-item" onclick="showChangePw();toggleUserMenu()">
     <span class="it">Cambia password</span><span class="en">Change password</span>
   </button>
+  <a href="/come-funziona-airdrop" class="user-menu-item" style="display:block;text-decoration:none">
+    <span class="it">Come funziona</span><span class="en">How it works</span>
+  </a>
   <button class="user-menu-item" id="dapp-admin-link" onclick="window.open('/abo','_blank')" style="display:none"><span class="it">Gestisci (ABO)</span><span class="en">Manage (ABO)</span></button>
   <button class="user-menu-item um-logout" onclick="doLogout()">Logout</button>
   <button class="user-menu-item" onclick="showDeleteAccount();toggleUserMenu()" style="color:var(--gray-600);font-size:12px;margin-top:4px;border-top:none">
@@ -1036,13 +1039,13 @@
 <!-- FOOTER -->
 <div class="dapp-footer">
   <div class="dapp-footer-brand">AIROOBI <em>APP</em></div>
-  <a href="https://airoobi.com" class="dapp-footer-link">airoobi.com</a> · <a href="https://airoobi.app" class="dapp-footer-link">airoobi.app</a>
+  <a href="https://airoobi.com" class="dapp-footer-link">airoobi.com</a> · <a href="https://airoobi.app" class="dapp-footer-link">airoobi.app</a> · <a href="/come-funziona-airdrop" class="dapp-footer-link"><span class="it">Come funziona</span><span class="en">How it works</span></a> · <a href="/faq" class="dapp-footer-link">FAQ</a>
   <div class="dapp-footer-copy">
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.26.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.27.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1114,6 +1117,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.26.0"></script>
+<script src="/src/dapp.js?v=3.27.0"></script>
 </body>
 </html>

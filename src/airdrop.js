@@ -423,6 +423,8 @@ function openMineInfo(){
       +'<div class="mine-info-footer">'
         +'<span class="it">1 ROBI ogni <strong>'+rate+'</strong> blocchi acquistati.</span>'
         +'<span class="en">1 ROBI every <strong>'+rate+'</strong> blocks purchased.</span>'
+        +'<br><a href="/come-funziona-airdrop" style="color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;margin-top:6px;display:inline-block" target="_blank" rel="noopener">'
+        +'<span class="it">Regolamento completo &rarr;</span><span class="en">Full rules &rarr;</span></a>'
       +'</div>'
     +'</div>';
   document.body.appendChild(ov);
