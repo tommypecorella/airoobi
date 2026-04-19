@@ -2017,15 +2017,15 @@ function updateDetailPosition(airdropId,scores){
     return;
   }
   var myScore=scores.find(function(s){return s.user_id===_session.user.id});
-  var f1=myScore?parseFloat(myScore.f1):0;
-  var f2=myScore?parseFloat(myScore.f2):0;
-  var sc=myScore?parseFloat(myScore.score):0;
+  var leaderScoreV=scores[0]?parseFloat(scores[0].score)||0:0;
+  var myScoreV=myScore?parseFloat(myScore.score)||0:0;
+  var ariaNeeded=pos>1?Math.max(0,leaderScoreV-myScoreV+1):0;
   el.innerHTML='<div class="pos-main"><span class="it">Sei <strong>'+pos+'°</strong> su '+total+' partecipanti</span>'
     +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span></div>'
     +'<div class="pos-breakdown">'
-    +'<span title="Vantaggio sul primo in classifica (pesa 70%)"><span class="pos-label"><span class="it">Vantaggio</span><span class="en">Advantage</span></span> '+f1.toFixed(2)+'</span>'
-    +'<span title="Impegno nella categoria (pesa 30%)"><span class="pos-label"><span class="it">Impegno</span><span class="en">Commitment</span></span> '+f2.toFixed(2)+'</span>'
-    +'<span title="Punteggio totale"><span class="pos-label"><span class="it">Punteggio</span><span class="en">Score</span></span> '+sc.toFixed(3)+'</span>'
+    +'<span title="ARIA totali che hai impegnato in questa categoria (storico + airdrop corrente)"><span class="pos-label"><span class="it">Tuoi ARIA cat.</span><span class="en">Your category ARIA</span></span> '+Math.round(myScoreV).toLocaleString('it-IT')+'</span>'
+    +'<span title="ARIA del primo in classifica"><span class="pos-label"><span class="it">Primo</span><span class="en">Leader</span></span> '+Math.round(leaderScoreV).toLocaleString('it-IT')+'</span>'
+    +(ariaNeeded>0?'<span title="ARIA necessari per superare il primo"><span class="pos-label"><span class="it">Ti servono</span><span class="en">You need</span></span> +'+Math.round(ariaNeeded).toLocaleString('it-IT')+'</span>':'')
     +'</div>';
   el.className='detail-position in';
   // Check if position worsened
@@ -2053,17 +2053,9 @@ function updateStrategyGuide(scores,pos,total,myScore){
     el.innerHTML=''
       +'<div class="strategy-box">'
       +'<div class="strategy-title"><span class="it">Come si vince?</span><span class="en">How do you win?</span></div>'
-      +'<div class="strategy-formula">'
-      +'<div class="strategy-factor">'
-      +'<div class="strategy-factor-pct">70%</div>'
-      +'<div class="strategy-factor-name"><span class="it">Vantaggio</span><span class="en">Advantage</span></div>'
-      +'<div class="strategy-factor-desc"><span class="it">Quanto sei vicino al primo in classifica per blocchi acquistati</span><span class="en">How close you are to #1 by blocks bought</span></div>'
-      +'</div>'
-      +'<div class="strategy-factor">'
-      +'<div class="strategy-factor-pct">30%</div>'
-      +'<div class="strategy-factor-name"><span class="it">Impegno</span><span class="en">Commitment</span></div>'
-      +'<div class="strategy-factor-desc"><span class="it">ARIA spesi in questa categoria nel tempo</span><span class="en">ARIA spent in this category over time</span></div>'
-      +'</div>'
+      +'<div style="padding:14px 16px;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
+      +'<span class="it">Un unico criterio: chi ha impegnato <strong style="color:var(--gold)">pi&ugrave; ARIA in questa categoria</strong> dal giorno dell\'iscrizione vince. Storico + airdrop corrente si sommano. Nessun peso, nessuna formula astratta.</span>'
+      +'<span class="en">One criterion: whoever committed <strong style="color:var(--gold)">more ARIA in this category</strong> since signup wins. History + current airdrop sum up. No weights.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
       +'<span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti gli altri guadagnano ROBI.</span>'
@@ -2073,50 +2065,42 @@ function updateStrategyGuide(scores,pos,total,myScore){
     return;
   }
 
-  // ── PARTICIPATING ──
-  var f1=parseFloat(myScore.f1)||0;
-  var f2=parseFloat(myScore.f2)||0;
+  // ── PARTICIPATING (scoring v4: ARIA cumulative in categoria) ──
+  var myScoreV=parseFloat(myScore.score)||0;
   var myBlocks=myScore.blocks||0;
+  var myCurrentAria=parseFloat(myScore.current_aria||myScore.aria_spent)||0;
+  var myHistoricAria=parseFloat(myScore.historic_aria||0);
 
   var leader=scores[0];
-  var leaderBlocks=leader?leader.blocks:myBlocks;
-  var blocksToFirst=0;
-  if(pos>1&&leader){
-    blocksToFirst=Math.max(0,leaderBlocks-myBlocks+1);
-  }
+  var leaderScoreV=leader?parseFloat(leader.score)||0:0;
+  var blockPrice=a.block_price_aria||1;
+  var ariaNeeded=pos>1?Math.max(0,leaderScoreV-myScoreV+1):0;
+  var blocksNeeded=ariaNeeded>0?Math.ceil(ariaNeeded/blockPrice):0;
 
-  var f1weak=f1<f2;
   var isFirst=pos===1;
-
-  var tipsIt=[];
-  var tipsEn=[];
+  var tipsIt=[], tipsEn=[];
 
   if(isFirst){
-    tipsIt.push('Sei in testa! Continua a comprare blocchi per mantenere il vantaggio.');
-    tipsEn.push('You\'re in the lead! Keep buying blocks to stay ahead.');
+    tipsIt.push('Sei in testa! Continua a impegnare ARIA in categoria per difendere il primato.');
+    tipsEn.push('You\'re in the lead! Keep committing ARIA in category to defend #1.');
     if(a.status==='presale'){
       tipsIt.push('Approfitta della presale: prezzo ridotto e doppi ROBI.');
       tipsEn.push('Take advantage of presale: lower price and double ROBI.');
     }
     if(total>1){
       var second=scores[1];
-      var gap=second?myBlocks-(second.blocks||0):0;
-      if(gap<=5){
-        tipsIt.push('Attenzione: il 2&deg; &egrave; a soli <strong>'+gap+'</strong> blocchi!');
-        tipsEn.push('Watch out: #2 is only <strong>'+gap+'</strong> blocks behind!');
+      var gap=second?myScoreV-(parseFloat(second.score)||0):0;
+      if(gap>0 && gap<=blockPrice*5){
+        tipsIt.push('Attenzione: il 2&deg; &egrave; a soli <strong>'+Math.round(gap)+' ARIA</strong>!');
+        tipsEn.push('Watch out: #2 is only <strong>'+Math.round(gap)+' ARIA</strong> behind!');
       }
     }
   } else {
-    if(blocksToFirst>0){
-      tipsIt.push('Ti servono circa <strong>'+blocksToFirst+'</strong> blocchi per arrivare 1&deg;.');
-      tipsEn.push('You need about <strong>'+blocksToFirst+'</strong> more blocks to reach #1.');
-    }
-    if(f1weak){
-      tipsIt.push('Il tuo <strong>Vantaggio</strong> &egrave; il fattore pi&ugrave; debole — compra pi&ugrave; blocchi per salire.');
-      tipsEn.push('Your <strong>Advantage</strong> is your weaker factor — buy more blocks to climb.');
-    } else {
-      tipsIt.push('Il tuo <strong>Impegno</strong> &egrave; pi&ugrave; basso — partecipa ad altri airdrop di questa categoria per migliorarlo.');
-      tipsEn.push('Your <strong>Commitment</strong> is lower — join other airdrops in this category to improve it.');
+    tipsIt.push('Ti servono <strong>'+ariaNeeded.toLocaleString('it-IT')+' ARIA</strong> in pi&ugrave; (circa <strong>'+blocksNeeded+' blocchi</strong>) per superare il 1&deg;.');
+    tipsEn.push('You need <strong>'+ariaNeeded.toLocaleString('it-IT')+' more ARIA</strong> (about <strong>'+blocksNeeded+' blocks</strong>) to pass #1.');
+    if(myHistoricAria>0){
+      tipsIt.push('Gi&agrave; impegnati in categoria: <strong>'+Math.round(myHistoricAria).toLocaleString('it-IT')+' storici</strong> + '+Math.round(myCurrentAria).toLocaleString('it-IT')+' in questo airdrop.');
+      tipsEn.push('Already committed: <strong>'+Math.round(myHistoricAria).toLocaleString('it-IT')+' historic</strong> + '+Math.round(myCurrentAria).toLocaleString('it-IT')+' in this airdrop.');
     }
     if(a.status==='presale'){
       tipsIt.push('La presale &egrave; il momento migliore: prezzo ridotto e doppi ROBI.');
@@ -2124,52 +2108,35 @@ function updateStrategyGuide(scores,pos,total,myScore){
     }
   }
 
-  var f1Pct=Math.round(f1*100);
-  var f2Pct=Math.round(f2*100);
-
-  var scoreVal=(parseFloat(myScore.score)||0).toFixed(3);
+  var progressPct=leaderScoreV>0?Math.min(100,Math.round(myScoreV/leaderScoreV*100)):100;
 
   el.innerHTML=''
     +'<div class="strategy-box'+(isFirst?' first':'')+'">'
     +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Stai vincendo!':'Come arrivare 1&deg;')+'</span>'
     +'<span class="en">'+(isFirst?'You\'re winning!':'How to reach #1')+'</span></div>'
     +'<div class="strategy-score-top">'
-    +'<span class="it">Il tuo punteggio: <strong>'+scoreVal+'</strong></span>'
-    +'<span class="en">Your score: <strong>'+scoreVal+'</strong></span>'
+    +'<span class="it">ARIA in categoria: <strong>'+Math.round(myScoreV).toLocaleString('it-IT')+'</strong>'+(pos>1?' &middot; primo: <strong>'+Math.round(leaderScoreV).toLocaleString('it-IT')+'</strong>':'')+'</span>'
+    +'<span class="en">Category ARIA: <strong>'+Math.round(myScoreV).toLocaleString('it-IT')+'</strong>'+(pos>1?' &middot; leader: <strong>'+Math.round(leaderScoreV).toLocaleString('it-IT')+'</strong>':'')+'</span>'
     +'</div>'
     +'<div class="strategy-factors">'
     +'<div class="strategy-factor-block van">'
     +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Vantaggio sul primo in classifica</span><span class="en">Advantage over #1</span></span>'
-    +'<span class="strategy-factor-weight-badge"><span class="it">pesa 70%</span><span class="en">weight 70%</span></span>'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Impegno in categoria</span><span class="en">Category commitment</span></span>'
+    +'<span class="strategy-factor-weight-badge">'+progressPct+'%</span>'
     +'</div>'
     +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+f1Pct+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+f1.toFixed(2)+'</div>'
+    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+progressPct+'%"></div></div>'
+    +'<div class="strategy-bar-val">'+Math.round(myScoreV).toLocaleString('it-IT')+'</div>'
     +'</div>'
     +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Acquista pi&ugrave; blocchi per colmare il distacco dal primo</span>'
-    +'<span class="en">Buy more blocks to close the gap with #1</span>'
-    +'</div>'
-    +'</div>'
-    +'<div class="strategy-factor-block imp">'
-    +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.gem+' <span class="it">Impegno nella categoria</span><span class="en">Commitment in this category</span></span>'
-    +'<span class="strategy-factor-weight-badge"><span class="it">pesa 30%</span><span class="en">weight 30%</span></span>'
-    +'</div>'
-    +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f2" style="width:'+f2Pct+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+f2.toFixed(2)+'</div>'
-    +'</div>'
-    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Partecipa spesso agli airdrop di questa categoria per accumulare impegno nel tempo</span>'
-    +'<span class="en">Join airdrops in this category often to build commitment over time</span>'
+    +' <span class="it">Il Punteggio &egrave; la somma degli ARIA spesi in categoria. Vince chi ne ha impegnati di pi&ugrave;.</span>'
+    +'<span class="en">Score = total ARIA spent in category. Highest wins.</span>'
     +'</div>'
     +'</div>'
     +'</div>'
     +'<div class="strategy-tips">'
-    +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span>'}).join('')
-    +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span>'}).join('')
+    +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span></div>'}).join('')
+    +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span></div>'}).join('')
     +'</div>'
     +'</div>';
 }
@@ -3312,7 +3279,8 @@ function renderMySubmissions(subs){
     'completed':{it:'Completato',en:'Completed',cls:'status-done'},
     'rifiutato_min500':{it:'Rifiutato (min €500)',en:'Rejected (min €500)',cls:'status-rejected'},
     'rifiutato_generico':{it:'Rifiutato',en:'Rejected',cls:'status-rejected'},
-    'annullato':{it:'Annullato',en:'Cancelled',cls:'status-rejected'}
+    'annullato':{it:'Annullato',en:'Cancelled',cls:'status-rejected'},
+    'pending_seller_decision':{it:'Chiusura anticipata — decidi',en:'Early close — your decision',cls:'status-ready'}
   };
   var html='';
   for(var i=0;i<subs.length;i++){
@@ -3337,21 +3305,105 @@ function renderMySubmissions(subs){
     if(s.rejection_reason){
       html+='<div style="margin-top:8px;padding:8px 12px;border-left:3px solid #ef4444;background:rgba(239,68,68,.06);font-size:12px;color:#ef4444">'+escHtml(s.rejection_reason)+'</div>';
     }
-    var canWithdraw=s.status!=='annullato'&&s.status!=='completed'&&s.status!=='closed';
+    var canWithdraw=s.status!=='annullato'&&s.status!=='completed'&&s.status!=='closed'&&s.status!=='pending_seller_decision';
     var isValutazioneCompletata=s.status==='valutazione_completata';
+    var isPendingSellerDecision=s.status==='pending_seller_decision';
     html+='<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">';
     html+='<button onclick="this.style.display=\'none\';loadAirdropChat(\''+s.id+'\',\'sub-chat-'+s.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'"><span class="it">MESSAGGI</span><span class="en">MESSAGES</span></button>';
     if(isValutazioneCompletata){
       html+='<button onclick="acceptValuation(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);color:#22c55e;padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.background=\'rgba(34,197,94,.2)\';this.style.borderColor=\'#22c55e\'" onmouseout="this.style.background=\'rgba(34,197,94,.1)\';this.style.borderColor=\'rgba(34,197,94,.4)\'"><span class="it">ACCETTA</span><span class="en">ACCEPT</span></button>';
       html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RIFIUTA</span><span class="en">REJECT</span></button>';
-    }else if(canWithdraw){
+    } else if(isPendingSellerDecision){
+      html+='<button onclick="openCompleteEarlyClose(\''+s.id+'\')" style="background:var(--gold);color:#000;border:none;padding:7px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:700;cursor:pointer;transition:all .15s;border-radius:var(--radius-sm)"><span class="it">COMPLETA</span><span class="en">COMPLETE</span></button>';
+      html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">ANNULLA</span><span class="en">CANCEL</span></button>';
+    } else if(canWithdraw){
       html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RITIRA</span><span class="en">WITHDRAW</span></button>';
     }
     html+='</div>';
+    if(isPendingSellerDecision){
+      var reason=s.early_close_reason==='value_threshold'?'soglia valore raggiunta dal primo':'fairness lockdown (tutti i non-primi bloccati)';
+      var reasonEn=s.early_close_reason==='value_threshold'?'value threshold reached by leader':'fairness lockdown (all non-leaders blocked)';
+      html+='<div style="margin-top:10px;padding:12px 14px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.25);border-radius:var(--radius-sm);font-size:12px;line-height:1.55;color:var(--gray-300)"><span class="it">&#9888; Airdrop chiuso anticipatamente ('+reason+'). Blocchi venduti: <strong>'+(s.blocks_sold||0)+'</strong>/<strong>'+(s.original_total_blocks||s.total_blocks||0)+'</strong>. Clicca COMPLETA per vedere il riepilogo e accettare il payout ridotto, o ANNULLA per ritirare (fee di valutazione NON rimborsata).</span><span class="en">&#9888; Airdrop closed early ('+reasonEn+'). Blocks sold: <strong>'+(s.blocks_sold||0)+'</strong>/<strong>'+(s.original_total_blocks||s.total_blocks||0)+'</strong>. Click COMPLETE to review the reduced payout, or CANCEL to withdraw (valuation fee NOT refunded).</span></div>';
+    }
     html+='<div id="sub-chat-'+s.id+'" style="margin-top:8px"></div>';
     html+='</div>';
   }
   container.innerHTML=html;
+}
+
+// ── Early-close completion (seller decide COMPLETA post-lockdown) ──
+async function openCompleteEarlyClose(airdropId){
+  var token=await getValidToken();if(!token)return;
+  // Fetch airdrop per riepilogo
+  var rows=await sbGet('airdrops?id=eq.'+airdropId+'&select=id,title,status,blocks_sold,total_blocks,original_total_blocks,block_price_aria,seller_min_price,seller_desired_price,early_close_reason,object_value_eur',token);
+  if(!rows||!rows[0]){showToast('<span class="it">Airdrop non trovato</span><span class="en">Airdrop not found</span>');return;}
+  var a=rows[0];
+  if(a.status!=='pending_seller_decision'){showToast('<span class="it">Questo airdrop non è in attesa di decisione</span><span class="en">This airdrop is not pending decision</span>');return;}
+
+  var blocksSold=a.blocks_sold||0;
+  var originalBlocks=a.original_total_blocks||a.total_blocks||0;
+  var burned=originalBlocks-blocksSold;
+  var blockPrice=a.block_price_aria||0;
+  var revenueAria=blocksSold*blockPrice;
+  var revenueEur=revenueAria/10; // ARIA_EUR=0.10
+  var sellerMin=parseFloat(a.seller_min_price)||0;
+  var sellerDesired=parseFloat(a.seller_desired_price)||0;
+  // Stima quota seller (78% del revenue se split std; fallback: tutto meno AIROOBI fee)
+  var sellerShare=revenueEur*0.78;
+  var belowMin=sellerShare<sellerMin;
+  var belowDesired=sellerShare<sellerDesired;
+  var reasonIt=a.early_close_reason==='value_threshold'?'Il primo ha raggiunto il valore dell\'oggetto in ARIA (protezione anti-gambling)':'Tutti gli altri partecipanti sono matematicamente bloccati (fairness lockdown)';
+  var reasonEn=a.early_close_reason==='value_threshold'?'Leader reached object value in ARIA (anti-gambling protection)':'All non-leader participants are mathematically blocked (fairness lockdown)';
+
+  var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  var existing=document.getElementById('ec-modal-overlay');
+  if(existing)existing.remove();
+  var ov=document.createElement('div');
+  ov.id='ec-modal-overlay';
+  ov.style.cssText='position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+
+  var html=''
+    +'<div style="max-width:540px;width:100%;max-height:90vh;overflow-y:auto;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:28px 24px">'
+    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px"><span class="it">Chiusura anticipata</span><span class="en">Early close</span></div>'
+    +'<h3 style="font-family:var(--font-h);font-size:22px;font-weight:500;color:var(--white);margin:0 0 14px">'+escHtml(a.title)+'</h3>'
+    +'<div style="padding:14px 16px;background:rgba(184,150,12,.05);border-left:3px solid var(--gold);border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;color:var(--gray-300);line-height:1.55"><span class="it">Motivo: '+reasonIt+'.</span><span class="en">Reason: '+reasonEn+'.</span></div>'
+    +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-bottom:18px;font-size:13px">'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Blocchi venduti</span><span class="en">Blocks sold</span></div><div style="color:var(--white);font-size:15px"><strong>'+blocksSold.toLocaleString('it-IT')+'</strong> / '+originalBlocks.toLocaleString('it-IT')+'</div></div>'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Blocchi bruciati</span><span class="en">Burned</span></div><div style="color:var(--gray-400);font-size:15px">'+burned.toLocaleString('it-IT')+'</div></div>'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Revenue lordo</span><span class="en">Gross revenue</span></div><div style="color:var(--aria);font-size:15px"><strong>'+revenueAria.toLocaleString('it-IT')+' ARIA</strong><br><span style="font-size:12px;color:var(--gray-400)">&asymp; &euro;'+revenueEur.toFixed(2)+'</span></div></div>'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Tua quota stimata</span><span class="en">Your est. share</span></div><div style="color:var(--gold);font-size:15px"><strong>&euro;'+sellerShare.toFixed(2)+'</strong></div></div>'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Il tuo minimo</span><span class="en">Your minimum</span></div><div style="color:'+(belowMin?'#ef4444':'var(--gray-300)')+';font-size:15px">&euro;'+sellerMin.toFixed(2)+'</div></div>'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Il tuo desiderato</span><span class="en">Your desired</span></div><div style="color:var(--gray-400);font-size:15px">&euro;'+sellerDesired.toFixed(2)+'</div></div>'
+    +'</div>'
+    +(belowMin
+      ?'<div style="padding:12px 14px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;line-height:1.55;color:#ff9b70"><span class="it">&#9888; La quota stimata (&euro;'+sellerShare.toFixed(2)+') &egrave; <strong>sotto il tuo minimo</strong> (&euro;'+sellerMin.toFixed(2)+'). Se accetti, rinunci a parte di quello che speravi. Se annulli: ARIA rimborsata ai partecipanti, oggetto resta a te, fee di valutazione NON rimborsata.</span><span class="en">&#9888; Estimated share (&euro;'+sellerShare.toFixed(2)+') is <strong>below your minimum</strong> (&euro;'+sellerMin.toFixed(2)+'). If you accept, you give up part of what you hoped for. If you cancel: ARIA refunded to participants, item stays with you, valuation fee NOT refunded.</span></div>'
+      :'<div style="padding:12px 14px;background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.3);border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;line-height:1.55;color:#22c55e"><span class="it">&#10003; La quota stimata copre il tuo minimo. Ricevi meno di quanto speravi ma l\'airdrop pu&ograve; chiudersi con successo.</span><span class="en">&#10003; Estimated share covers your minimum. Less than you hoped but the airdrop can close successfully.</span></div>')
+    +'<div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap">'
+    +'<button onclick="document.getElementById(\'ec-modal-overlay\').remove()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:12px 18px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">Chiudi</span><span class="en">Close</span></button>'
+    +'<button onclick="confirmCompleteEarlyClose(\''+a.id+'\')" style="background:var(--gold);color:#000;border:none;padding:12px 24px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">ACCETTA E COMPLETA</span><span class="en">ACCEPT & COMPLETE</span></button>'
+    +'</div>'
+    +'</div>';
+
+  ov.innerHTML=html;
+  document.body.appendChild(ov);
+}
+
+async function confirmCompleteEarlyClose(airdropId){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var msg=lang==='it'
+    ?'Confermi la chiusura dell\'airdrop? Riceverai il payout indicato, il vincitore otterrà l\'oggetto e le partecipazioni saranno finalizzate.'
+    :'Confirm airdrop completion? You\'ll receive the indicated payout, the winner gets the item, and participations are finalized.';
+  if(!confirm(msg))return;
+  var token=await getValidToken();if(!token)return;
+  var res=await sbRpc('complete_airdrop_seller_accept',{p_airdrop_id:airdropId},token);
+  if(res&&res.ok){
+    showToast('<span class="it">Airdrop completato!</span><span class="en">Airdrop completed!</span>');
+    var ov=document.getElementById('ec-modal-overlay');if(ov)ov.remove();
+    loadMySubmissions();
+  }else{
+    showToast('<span class="it">Errore: '+(res&&res.error?res.error:'sconosciuto')+'</span><span class="en">Error: '+(res&&res.error?res.error:'unknown')+'</span>');
+  }
 }
 
 // ── Withdraw submission (doppia conferma) ──

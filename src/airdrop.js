@@ -825,15 +825,15 @@ function updateDetailPosition(airdropId,scores){
     return;
   }
   var myScore=scores.find(function(s){return s.user_id===_session.user.id});
-  var f1=myScore?parseFloat(myScore.f1):0;
-  var f2=myScore?parseFloat(myScore.f2):0;
-  var sc=myScore?parseFloat(myScore.score):0;
+  var leaderScore=scores[0]?parseFloat(scores[0].score)||0:0;
+  var myScoreVal=myScore?parseFloat(myScore.score)||0:0;
+  var ariaNeeded=pos>1?Math.max(0,leaderScore-myScoreVal+1):0;
   el.innerHTML='<div class="pos-main"><span class="it">Sei <strong>'+pos+'°</strong> su '+total+' partecipanti</span>'
     +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span></div>'
     +'<div class="pos-breakdown">'
-    +'<span title="Vantaggio sul primo in classifica (pesa 70%)"><span class="pos-label"><span class="it">Vantaggio</span><span class="en">Advantage</span></span> '+f1.toFixed(2)+'</span>'
-    +'<span title="Impegno nella categoria (pesa 30%)"><span class="pos-label"><span class="it">Impegno</span><span class="en">Commitment</span></span> '+f2.toFixed(2)+'</span>'
-    +'<span title="Punteggio totale"><span class="pos-label"><span class="it">Punteggio</span><span class="en">Score</span></span> '+sc.toFixed(3)+'</span>'
+    +'<span title="ARIA totali che hai impegnato in questa categoria (storico + airdrop corrente)"><span class="pos-label"><span class="it">Tuoi ARIA cat.</span><span class="en">Your category ARIA</span></span> '+Math.round(myScoreVal).toLocaleString('it-IT')+'</span>'
+    +'<span title="ARIA del primo in classifica"><span class="pos-label"><span class="it">Primo</span><span class="en">Leader</span></span> '+Math.round(leaderScore).toLocaleString('it-IT')+'</span>'
+    +(ariaNeeded>0?'<span title="ARIA necessari per superare il primo"><span class="pos-label"><span class="it">Ti servono</span><span class="en">You need</span></span> +'+Math.round(ariaNeeded).toLocaleString('it-IT')+'</span>':'')
     +'</div>';
   el.className='detail-position in';
   if(_lastPosition!==null&&pos>_lastPosition){
@@ -908,17 +908,9 @@ function updateStrategyGuide(scores,pos,total,myScore){
     el.innerHTML=''
       +'<div class="strategy-box">'
       +'<div class="strategy-title"><span class="it">Come funziona la classifica</span><span class="en">How the ranking works</span></div>'
-      +'<div class="strategy-formula">'
-      +'<div class="strategy-factor">'
-      +'<div class="strategy-factor-pct">70%</div>'
-      +'<div class="strategy-factor-name"><span class="it">Vantaggio</span><span class="en">Advantage</span></div>'
-      +'<div class="strategy-factor-desc"><span class="it">Quanto sei vicino al primo in classifica per blocchi acquistati</span><span class="en">How close you are to #1 by blocks bought</span></div>'
-      +'</div>'
-      +'<div class="strategy-factor">'
-      +'<div class="strategy-factor-pct">30%</div>'
-      +'<div class="strategy-factor-name"><span class="it">Impegno</span><span class="en">Commitment</span></div>'
-      +'<div class="strategy-factor-desc"><span class="it">ARIA spesi in questa categoria nel tempo</span><span class="en">ARIA spent in this category over time</span></div>'
-      +'</div>'
+      +'<div style="padding:14px 16px;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
+      +'<span class="it">Un unico criterio: chi ha impegnato <strong style="color:var(--gold)">pi&ugrave; ARIA in questa categoria</strong> dal giorno dell\'iscrizione vince. Lo storico in categoria + gli ARIA dell\'airdrop corrente si sommano. Nessun peso, nessuna formula astratta &mdash; pura trasparenza.</span>'
+      +'<span class="en">One criterion: whoever committed <strong style="color:var(--gold)">more ARIA in this category</strong> since signup wins. Category history + current airdrop ARIA sum up. No weights, no abstract formula &mdash; pure transparency.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
       +UI_ICONS.zap+' <span class="it">Pi&ugrave; blocchi compri, pi&ugrave; sali in classifica. Chi &egrave; al 1&deg; posto quando l\'airdrop si chiude ottiene l\'oggetto.</span>'
@@ -928,57 +920,51 @@ function updateStrategyGuide(scores,pos,total,myScore){
     return;
   }
 
-  var f1=parseFloat(myScore.f1)||0;
-  var f2=parseFloat(myScore.f2)||0;
+  // Scoring v4: score = ARIA totali in categoria (storico + corrente)
+  var myScoreV=parseFloat(myScore.score)||0;
   var myBlocks=myScore.blocks||0;
+  var myCurrentAria=parseFloat(myScore.current_aria||myScore.aria_spent)||0;
+  var myHistoricAria=parseFloat(myScore.historic_aria||0);
 
   var leader=scores[0];
-  var leaderBlocks=leader?leader.blocks:myBlocks;
-  var blocksToFirst=0;
-  if(pos>1&&leader){
-    blocksToFirst=Math.max(0,leaderBlocks-myBlocks+1);
-  }
-
-  // Fairness: matematicamente impossibile arrivare 1° con i blocchi rimanenti?
+  var leaderScoreV=leader?parseFloat(leader.score)||0:0;
+  var blockPrice=a.block_price_aria||1;
   var remainingBlocks=Math.max(0,(a.total_blocks||0)-(a.blocks_sold||0));
-  var mathImpossible=pos>1&&blocksToFirst>0&&blocksToFirst>remainingBlocks;
-  applyFairnessBlock(mathImpossible,blocksToFirst,remainingBlocks);
+  var ariaNeeded=pos>1?Math.max(0,leaderScoreV-myScoreV+1):0;
+  var blocksNeeded=ariaNeeded>0?Math.ceil(ariaNeeded/blockPrice):0;
+  var maxReachableAria=myScoreV+(remainingBlocks*blockPrice);
 
-  var f1weak=f1<f2;
+  // Fairness v4: score-based (ARIA, non blocchi)
+  var mathImpossible=pos>1&&maxReachableAria<leaderScoreV;
+  applyFairnessBlock(mathImpossible,blocksNeeded,remainingBlocks);
+
   var isFirst=pos===1;
-
-  var tipsIt=[];
-  var tipsEn=[];
+  var tipsIt=[], tipsEn=[];
 
   if(isFirst){
-    tipsIt.push(UI_ICONS.star+' Sei in testa! Continua ad accumulare blocchi per difendere la posizione.');
-    tipsEn.push(UI_ICONS.star+' You\'re in the lead! Keep buying blocks to defend your position.');
+    tipsIt.push(UI_ICONS.star+' Sei in testa! Continua ad impegnare ARIA in categoria per difendere il primato.');
+    tipsEn.push(UI_ICONS.star+' You\'re in the lead! Keep committing ARIA in category to defend #1.');
     if(a.status==='presale'){
       tipsIt.push(UI_ICONS.zap+' Approfitta della presale: ogni blocco vale 2x ROBI e costa meno.');
       tipsEn.push(UI_ICONS.zap+' Take advantage of presale: each block earns 2x ROBI and costs less.');
     }
     if(total>1){
       var second=scores[1];
-      var gap=second?myBlocks-(second.blocks||0):0;
-      if(gap<=5){
-        tipsIt.push(UI_ICONS.alert+' Il 2&deg; &egrave; a soli <strong>'+gap+'</strong> blocchi — margine stretto!');
-        tipsEn.push(UI_ICONS.alert+' #2 is only <strong>'+gap+'</strong> blocks behind — tight margin!');
+      var gap=second?myScoreV-(parseFloat(second.score)||0):0;
+      if(gap>0 && gap<=blockPrice*5){
+        tipsIt.push(UI_ICONS.alert+' Il 2&deg; &egrave; a soli <strong>'+Math.round(gap)+' ARIA</strong> &mdash; margine stretto!');
+        tipsEn.push(UI_ICONS.alert+' #2 is only <strong>'+Math.round(gap)+' ARIA</strong> behind &mdash; tight margin!');
       }
     }
   } else if(mathImpossible){
-    tipsIt.push(UI_ICONS.ban+' <strong>Matematicamente impossibile arrivare 1&deg;</strong>: ti servono '+blocksToFirst+' blocchi ma ne restano solo '+remainingBlocks+'. Acquisto bloccato per fairness — la tua ARIA resta al sicuro.');
-    tipsEn.push(UI_ICONS.ban+' <strong>Mathematically impossible to reach #1</strong>: you need '+blocksToFirst+' blocks but only '+remainingBlocks+' remain. Purchase blocked for fairness — your ARIA stays safe.');
+    tipsIt.push(UI_ICONS.ban+' <strong>Matematicamente impossibile arrivare 1&deg;</strong>: ti servirebbero '+ariaNeeded.toLocaleString('it-IT')+' ARIA in pi&ugrave; in categoria, ma restano solo '+remainingBlocks+' blocchi ('+(remainingBlocks*blockPrice).toLocaleString('it-IT')+' ARIA). Acquisto bloccato &mdash; la tua ARIA resta al sicuro.');
+    tipsEn.push(UI_ICONS.ban+' <strong>Mathematically impossible to reach #1</strong>: you\'d need '+ariaNeeded.toLocaleString('it-IT')+' more ARIA in category but only '+remainingBlocks+' blocks remain ('+(remainingBlocks*blockPrice).toLocaleString('it-IT')+' ARIA). Purchase blocked &mdash; your ARIA stays safe.');
   } else {
-    if(blocksToFirst>0){
-      tipsIt.push(UI_ICONS.target+' Ti servono circa <strong>'+blocksToFirst+'</strong> blocchi in pi&ugrave; per raggiungere il 1&deg; posto.');
-      tipsEn.push(UI_ICONS.target+' You need about <strong>'+blocksToFirst+'</strong> more blocks to reach #1.');
-    }
-    if(f1weak){
-      tipsIt.push(UI_ICONS.up+' Il tuo <strong>Vantaggio</strong> &egrave; il fattore pi&ugrave; debole — compra pi&ugrave; blocchi per salire.');
-      tipsEn.push(UI_ICONS.up+' Your <strong>Advantage</strong> is your weaker factor — buy more blocks to climb.');
-    } else {
-      tipsIt.push(UI_ICONS.up+' Il tuo <strong>Impegno</strong> &egrave; pi&ugrave; basso — partecipa ad altri airdrop della stessa categoria per migliorarlo.');
-      tipsEn.push(UI_ICONS.up+' Your <strong>Commitment</strong> is lower — join other airdrops in this category to improve it.');
+    tipsIt.push(UI_ICONS.target+' Ti servono <strong>'+ariaNeeded.toLocaleString('it-IT')+' ARIA</strong> in pi&ugrave; in categoria per superare il 1&deg; &mdash; circa <strong>'+blocksNeeded+' blocchi</strong>.');
+    tipsEn.push(UI_ICONS.target+' You need <strong>'+ariaNeeded.toLocaleString('it-IT')+' more ARIA</strong> in category to pass #1 &mdash; about <strong>'+blocksNeeded+' blocks</strong>.');
+    if(myHistoricAria>0){
+      tipsIt.push(UI_ICONS.gem+' Gi&agrave; impegnati in categoria: <strong>'+Math.round(myHistoricAria).toLocaleString('it-IT')+' ARIA storici</strong> + '+Math.round(myCurrentAria).toLocaleString('it-IT')+' in questo airdrop.');
+      tipsEn.push(UI_ICONS.gem+' Already committed: <strong>'+Math.round(myHistoricAria).toLocaleString('it-IT')+' ARIA history</strong> + '+Math.round(myCurrentAria).toLocaleString('it-IT')+' in this airdrop.');
     }
     if(a.status==='presale'){
       tipsIt.push(UI_ICONS.zap+' La presale &egrave; il momento migliore: prezzo ridotto e 2x ROBI.');
@@ -986,52 +972,36 @@ function updateStrategyGuide(scores,pos,total,myScore){
     }
   }
 
-  var f1Pct=Math.round(f1*100);
-  var f2Pct=Math.round(f2*100);
-
-  var scoreVal=(parseFloat(myScore.score)||0).toFixed(3);
+  // Progress bar: ARIA tuoi vs ARIA leader (0→100% dove 100% = leader)
+  var progressPct=leaderScoreV>0?Math.min(100,Math.round(myScoreV/leaderScoreV*100)):100;
 
   el.innerHTML=''
     +'<div class="strategy-box'+(isFirst?' first':'')+'">'
     +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Stai vincendo':'Come arrivare 1&deg;')+'</span>'
     +'<span class="en">'+(isFirst?'You\'re winning':'How to reach #1')+'</span></div>'
     +'<div class="strategy-score-top">'
-    +'<span class="it">Il tuo punteggio: <strong>'+scoreVal+'</strong></span>'
-    +'<span class="en">Your score: <strong>'+scoreVal+'</strong></span>'
+    +'<span class="it">ARIA in categoria: <strong>'+Math.round(myScoreV).toLocaleString('it-IT')+'</strong>'+(pos>1?' &middot; primo: <strong>'+Math.round(leaderScoreV).toLocaleString('it-IT')+'</strong>':'')+'</span>'
+    +'<span class="en">Category ARIA: <strong>'+Math.round(myScoreV).toLocaleString('it-IT')+'</strong>'+(pos>1?' &middot; leader: <strong>'+Math.round(leaderScoreV).toLocaleString('it-IT')+'</strong>':'')+'</span>'
     +'</div>'
     +'<div class="strategy-factors">'
     +'<div class="strategy-factor-block van">'
     +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Vantaggio sul primo in classifica</span><span class="en">Advantage over #1</span></span>'
-    +'<span class="strategy-factor-weight-badge"><span class="it">pesa 70%</span><span class="en">weight 70%</span></span>'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Impegno in categoria</span><span class="en">Category commitment</span></span>'
+    +'<span class="strategy-factor-weight-badge">'+progressPct+'%</span>'
     +'</div>'
     +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+f1Pct+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+f1.toFixed(2)+'</div>'
+    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+progressPct+'%"></div></div>'
+    +'<div class="strategy-bar-val">'+Math.round(myScoreV).toLocaleString('it-IT')+'</div>'
     +'</div>'
     +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Acquista pi&ugrave; blocchi per colmare il distacco dal primo</span>'
-    +'<span class="en">Buy more blocks to close the gap with #1</span>'
-    +'</div>'
-    +'</div>'
-    +'<div class="strategy-factor-block imp">'
-    +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.gem+' <span class="it">Impegno nella categoria</span><span class="en">Commitment in this category</span></span>'
-    +'<span class="strategy-factor-weight-badge"><span class="it">pesa 30%</span><span class="en">weight 30%</span></span>'
-    +'</div>'
-    +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f2" style="width:'+f2Pct+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+f2.toFixed(2)+'</div>'
-    +'</div>'
-    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Partecipa spesso agli airdrop di questa categoria per accumulare impegno nel tempo</span>'
-    +'<span class="en">Join airdrops in this category often to build commitment over time</span>'
+    +' <span class="it">Il Punteggio &egrave; la somma degli ARIA spesi in questa categoria (storico + airdrop corrente). Vince chi ne ha impegnati di pi&ugrave;.</span>'
+    +'<span class="en">Score = total ARIA spent in this category (history + current airdrop). Highest wins.</span>'
     +'</div>'
     +'</div>'
     +'</div>'
     +'<div class="strategy-tips">'
-    +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span>'}).join('')
-    +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span>'}).join('')
+    +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span></div>'}).join('')
+    +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span></div>'}).join('')
     +'</div>'
     +'</div>';
 }

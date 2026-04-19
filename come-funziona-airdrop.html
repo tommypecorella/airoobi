@@ -179,21 +179,28 @@ a:hover{text-decoration:underline}
 <!-- 4. POSIZIONE -->
 <section id="posizione" class="cf-section">
   <h2><span class="cf-num">04</span><span class="it">Come arrivare 1° in classifica</span><span class="en">How to reach #1</span></h2>
-  <p><span class="it">La classifica è <strong>deterministica</strong>: il vincitore è chi ha il <strong>Punteggio</strong> più alto alla chiusura. Niente estrazioni casuali — tutto verificabile. Il punteggio si compone di due fattori:</span><span class="en">The leaderboard is <strong>deterministic</strong>: the winner is whoever has the highest <strong>Score</strong> at close. No random draws — everything verifiable. The score has two factors:</span></p>
+  <p><span class="it">La classifica è <strong>deterministica e monofattoriale</strong>: vince chi ha impegnato più <span class="cf-aria">ARIA</span> in questa categoria dal giorno dell'iscrizione. Nessun peso, nessuna formula astratta — <strong>pura trasparenza</strong>.</span><span class="en">The leaderboard is <strong>deterministic and single-factor</strong>: whoever committed the most <span class="cf-aria">ARIA</span> in this category since signup wins. No weights, no abstract formula — <strong>pure transparency</strong>.</span></p>
 
-  <h3><span class="it">Vantaggio</span><span class="en">Advantage</span> <span style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);margin-left:8px">70%</span></h3>
-  <p><span class="it">Quanto sei vicino al primo in classifica per blocchi acquistati in questo airdrop. Formula: <code style="font-family:var(--font-m);color:var(--accent)">tuoi_blocchi / max_blocchi_singolo_utente</code>. Normalizzato 0→1. Chi ha il massimo dei blocchi ottiene <strong>Vantaggio = 1</strong>.</span><span class="en">How close you are to #1 by blocks bought in this airdrop. Formula: <code style="font-family:var(--font-m);color:var(--accent)">your_blocks / max_blocks_single_user</code>. Normalized 0→1. Top blockholder gets <strong>Advantage = 1</strong>.</span></p>
+  <div class="cf-callout gold">
+    <div class="cf-co-title"><span class="it">Formula</span><span class="en">Formula</span></div>
+    <p><code style="font-family:var(--font-m);color:var(--white)">Punteggio = ARIA storici in categoria + ARIA airdrop corrente</code></p>
+  </div>
 
-  <h3><span class="it">Impegno</span><span class="en">Commitment</span> <span style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);margin-left:8px">30%</span></h3>
-  <p><span class="it">Gli <span class="cf-aria">ARIA</span> che hai speso nel tempo in questa categoria (es. "Orologi", "Tech", "Arredamento"). Premia chi partecipa con costanza a una categoria. Formula logaritmica per equità, normalizzata sul totale globale della categoria.</span><span class="en">The <span class="cf-aria">ARIA</span> you've spent over time in this category (e.g. "Watches", "Tech", "Furniture"). Rewards consistent participation in a category. Logarithmic formula for fairness, normalized on the global category total.</span></p>
+  <h3><span class="it">Cosa conta come "ARIA in categoria"</span><span class="en">What counts as "category ARIA"</span></h3>
+  <ul>
+    <li><span class="it">✅ <strong><span class="cf-aria">ARIA</span> spesi in airdrop completati con successo</strong> della stessa categoria (storico).</span><span class="en">✅ <strong><span class="cf-aria">ARIA</span> spent on successfully completed airdrops</strong> of the same category (history).</span></li>
+    <li><span class="it">✅ <strong><span class="cf-aria">ARIA</span> dell'airdrop corrente</strong> (si sommano ai storici in tempo reale).</span><span class="en">✅ <strong><span class="cf-aria">ARIA</span> of the current airdrop</strong> (added to history in real time).</span></li>
+    <li><span class="it">❌ <span class="cf-aria">ARIA</span> di airdrop annullati o falliti: <strong>non contano</strong> (non sono realmente usciti dalle tue tasche, ti sono stati rimborsati).</span><span class="en">❌ <span class="cf-aria">ARIA</span> from cancelled/failed airdrops: <strong>don't count</strong> (never truly spent, refunded to you).</span></li>
+    <li><span class="it">❌ <span class="cf-aria">ARIA</span> spesi <em>prima</em> della tua ultima vittoria nella stessa categoria (<strong>One Category Rule</strong>): azzerati dopo ogni vittoria per dare chance ad altri.</span><span class="en">❌ <span class="cf-aria">ARIA</span> spent <em>before</em> your last win in the same category (<strong>One Category Rule</strong>): reset after each win to give others a chance.</span></li>
+  </ul>
 
   <div class="cf-callout">
-    <div class="cf-co-title"><span class="it">Formula</span><span class="en">Formula</span></div>
-    <p><code style="font-family:var(--font-m);color:var(--white)">Punteggio = Vantaggio × 0.70 + Impegno × 0.30</code></p>
+    <div class="cf-co-title"><span class="it">Perché solo 1 fattore — protezione anti-gambling</span><span class="en">Why a single factor — anti-gambling protection</span></div>
+    <p><span class="it">Se dovessi sommare V × 0.7 + I × 0.3 (vecchia formula), un utente con molti ARIA oggi potrebbe superare chi ha speso 400 ARIA in mesi di fedeltà. Risultato: chi ti arriva dopo potrebbe "rubarti" l'oggetto dopo averlo già quasi pagato tu. Con <strong>1 solo fattore cumulativo</strong>, questo non accade: chi ha speso più ARIA in categoria <strong>dal primo giorno</strong> vince. Niente sorpassi ingiusti, niente gambling.</span><span class="en">With weighted V × 0.7 + I × 0.3 (old formula), a whale today could overtake someone who spent 400 ARIA over months of loyalty. Result: a latecomer could "steal" the item after you'd already almost paid for it. With <strong>1 cumulative factor</strong>, this can't happen: whoever spent more ARIA in category <strong>from day one</strong> wins. No unfair overtakes, no gambling.</span></p>
   </div>
 
   <h3><span class="it">In caso di parità</span><span class="en">Tiebreaker</span></h3>
-  <p><span class="it">Se due utenti hanno lo stesso Punteggio, vince chi ha <strong>più blocchi acquistati</strong>. Se anche questi sono uguali, vince chi è registrato da <strong>più tempo</strong> (seniority). Nessun elemento casuale.</span><span class="en">If two users have the same Score, the one with <strong>more blocks</strong> wins. If tied again, the one registered <strong>earlier</strong> (seniority) wins. No random elements.</span></p>
+  <p><span class="it">Se due utenti hanno lo stesso Punteggio, vince chi ha <strong>più blocchi nell'airdrop corrente</strong>. In estrema ratio: chi è registrato da più tempo (seniority). Nessun elemento casuale.</span><span class="en">If two users have the same Score, whoever has <strong>more blocks in the current airdrop</strong> wins. Last resort: whoever is registered longer (seniority). No random elements.</span></p>
 </section>
 
 <!-- 5. RULLO -->
@@ -239,6 +246,24 @@ a:hover{text-decoration:underline}
   <div class="cf-callout gold">
     <div class="cf-co-title"><span class="it">ROBI Scoperti nel rullo: TUOI</span><span class="en">Reel-discovered ROBI: YOURS</span></div>
     <p><span class="it">I <span class="cf-robi">ROBI</span> che hai <strong>scoperto nel rullo</strong> durante l'airdrop <strong>restano tuoi a prescindere</strong>. Sono un ritrovamento, non una ricompensa: se hai trovato un <span class="cf-robi">ROBI</span>, te lo sei guadagnato sul campo e nessuno te lo toglie.</span><span class="en">The <span class="cf-robi">ROBI</span> you <strong>discovered in the reel</strong> during the airdrop <strong>stay yours regardless</strong>. They're a find, not a reward: if you found a <span class="cf-robi">ROBI</span>, you earned it on the spot and no one takes it back.</span></p>
+  </div>
+
+  <h3 style="margin-top:28px"><span class="it">Chiusura anticipata</span><span class="en">Early close</span></h3>
+  <p><span class="it">Due casi speciali fermano l'airdrop <strong>prima</strong> della scadenza naturale:</span><span class="en">Two special cases stop the airdrop <strong>before</strong> the natural deadline:</span></p>
+
+  <div class="cf-callout">
+    <div class="cf-co-title"><span class="it">1. Soglia valore raggiunta (anti-gambling)</span><span class="en">1. Value threshold reached (anti-gambling)</span></div>
+    <p><span class="it">Se il primo classificato raggiunge in <span class="cf-aria">ARIA</span> l'equivalente del valore €-dell'oggetto, l'airdrop si chiude <strong>immediatamente</strong>. È la protezione definitiva: nessuno spende più del valore dell'oggetto per ottenerlo.</span><span class="en">If the leader reaches in <span class="cf-aria">ARIA</span> the equivalent of the object's €-value, the airdrop closes <strong>immediately</strong>. Definitive protection: no one spends more than the item's value to get it.</span></p>
+  </div>
+
+  <div class="cf-callout">
+    <div class="cf-co-title"><span class="it">2. Fairness lockdown (tutti bloccati tranne il primo)</span><span class="en">2. Fairness lockdown (everyone blocked except leader)</span></div>
+    <p><span class="it">Se tutti i partecipanti diversi dal 1° sono matematicamente impossibilitati a superarlo (il loro Punteggio massimo raggiungibile &lt; Punteggio del leader), l'airdrop si chiude: non ha senso tenerlo aperto, nessuno potrebbe più scalare.</span><span class="en">If every participant other than #1 is mathematically unable to overtake (their max reachable score &lt; leader's score), the airdrop closes: no point keeping it open, no one can climb anymore.</span></p>
+  </div>
+
+  <div class="cf-callout gold">
+    <div class="cf-co-title"><span class="it">Blocchi bruciati &amp; decisione venditore</span><span class="en">Burned blocks &amp; seller decision</span></div>
+    <p><span class="it">In entrambi i casi: i <strong>blocchi non venduti vengono "bruciati"</strong> (il totale effettivo dell'airdrop diventa = ai blocchi venduti). La penalizzazione economica ricade sul venditore, che potrebbe ricevere meno del prezzo sperato. Il venditore riceve una notifica con il tasto <strong>COMPLETA</strong>: cliccando vede il riepilogo con la somma finale che riceverebbe. Pu&ograve; <strong>accettare</strong> (il 1&deg; ottiene l'oggetto, i partecipanti ricevono i <span class="cf-robi">ROBI</span> milestone) o <strong>annullare</strong> l'airdrop (<span class="cf-aria">ARIA</span> rimborsata ai partecipanti, oggetto resta al venditore, fee di valutazione NON rimborsata).</span><span class="en">In both cases: the <strong>unsold blocks are "burned"</strong> (effective total = blocks sold). The economic penalty falls on the seller, who may receive less than hoped. The seller gets a notification with a <strong>COMPLETE</strong> button: clicking shows the final payout summary. The seller can <strong>accept</strong> (#1 gets the item, participants receive milestone <span class="cf-robi">ROBI</span>) or <strong>cancel</strong> the airdrop (<span class="cf-aria">ARIA</span> refunded to participants, item stays with seller, valuation fee NOT refunded).</span></p>
   </div>
 </section>
 
@@ -342,7 +367,7 @@ a:hover{text-decoration:underline}
     <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br>
     <span class="it">Piattaforma riservata ai maggiorenni (18+). Questa pagina viene aggiornata ad ogni modifica del motore airdrop.</span>
     <span class="en">Platform for adults only (18+). This page is updated at every airdrop engine change.</span><br>
-    <span class="cf-ver">alfa-2026.04.19-3.32.0</span>
+    <span class="cf-ver">alfa-2026.04.19-3.33.0</span>
   </div>
 </footer>
 

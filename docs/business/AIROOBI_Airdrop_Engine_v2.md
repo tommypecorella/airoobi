@@ -1,5 +1,5 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 2.6 · 19 Aprile 2026 · DOCUMENTO FONDATIVO**
+**Version 2.7 · 19 Aprile 2026 · DOCUMENTO FONDATIVO**
 
 > Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
 > del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
@@ -50,6 +50,23 @@
 > - UI: Dettagli prodotto spostati sotto il titolo (non più in accordion)
 > - FIX: F2 denominatore ora è il totale globale ARIA nella categoria (non max singolo partecipante)
 >   Questo stabilizza F2 quando un utente si azzera dopo vittoria (One Category Rule)
+>
+> **Changelog 19 Apr 2026 (v2.7) — Scoring v4 anti-gambling + Early close lockdown:**
+> - REWRITE: `calculate_winner_score` torna mono-fattoriale. **Punteggio = SUM(ARIA spesi in categoria post-ultima-vittoria, escluso airdrop annullati) + ARIA airdrop corrente**. Niente più F1/F2/pesi, niente normalizzazione.
+> - RATIONALE (Skeezu): evitare che per ottenere un oggetto €500 tu ne abbia già spesi > €500 in categoria. Principio: "vince chi dal primo giorno ha impegnato più ARIA in categoria". Anti-gambling by design.
+> - ADD: RPC `my_category_score_snapshot(airdrop_id)` per FE — ritorna my_score, leader_score, max_reachable, math_impossible, aria_needed_to_lead.
+> - CHANGE: Tiebreaker aggiornato (1) più blocchi nell'airdrop corrente (2) primo blocco prima (3) seniority come estrema ratio.
+> - ADD: Stato nuovo `pending_seller_decision` in constraint `valid_status`.
+> - ADD: Colonne `airdrops.early_close_reason` (`fairness_lockdown`|`value_threshold`) e `original_total_blocks` (backup prima del burn).
+> - ADD: RPC `check_fairness_lockdown(airdrop_id)` — tutti i non-primi hanno `score + remaining × block_price < leader_score`? (richiede ≥3 partecipanti).
+> - ADD: RPC `check_value_threshold_reached(airdrop_id)` — `leader_score ≥ object_value_eur × 10` (conversione ARIA_EUR=0.10).
+> - ADD: RPC `early_close_airdrop(airdrop_id, reason)` — burn blocchi (`total_blocks ← blocks_sold`), status → `pending_seller_decision`, notifica seller.
+> - ADD: Trigger `tf_check_early_close_after_buy` su `airdrop_blocks` AFTER INSERT — verifica threshold+lockdown dopo ogni acquisto e auto-closed se necessario.
+> - ADD: RPC `complete_airdrop_seller_accept(airdrop_id)` — seller conferma payout ridotto, status → `closed` → `completed` via `execute_draw`.
+> - ADD: Seller flow FE in "I miei airdrop": bottone **COMPLETA** al posto di RITIRA quando `pending_seller_decision`. Modal con riepilogo (blocchi venduti/bruciati, revenue, quota stimata vs min/desiderato). Se rifiuta → `withdraw_my_submission` → annullato (fee non rimborsata).
+> - UI: Card "Come arrivare 1°" semplificata a 1 progress bar ("Impegno in categoria"). Pos-breakdown ora mostra "Tuoi ARIA cat.", "Primo", "Ti servono". Rimossi blocchi tecnici Vantaggio/Impegno/Punteggio decimali.
+> - Pagina EDU `/come-funziona-airdrop` §4 riscritta come mono-fattoriale + §6 arricchita con Chiusura anticipata (2 trigger + decisione venditore).
+> - Migrations: `20260419170000_scoring_v4_anti_gambling.sql`, `20260419170100_early_close_lockdown.sql`, `20260419170200_get_my_submissions_v2.sql`.
 >
 > **Changelog 19 Apr 2026 (v2.6) — Earnings v2 (chiusura F2):**
 > - REWRITE: Policy earnings semplificata. Eliminate tutte le vecchie task (check-in +1 stand-alone, video, streak bonus 7gg in ARIA).
