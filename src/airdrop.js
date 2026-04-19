@@ -655,6 +655,11 @@ async function toggleAutoBuy(airdropId){
     await sbRpc('disable_auto_buy',{p_airdrop_id:airdropId},token);
     showToast('<span class="it">Auto-buy disattivato</span><span class="en">Auto-buy disabled</span>');
   }else{
+    // Guard fairness: non attivare se matematicamente impossibile arrivare 1°
+    if(_fairnessBlocked||document.querySelector('.buy-box.fair-blocked')){
+      showToast('<span class="it">Auto-buy non disponibile: arrivo al 1&deg; non pi&ugrave; matematicamente possibile.</span><span class="en">Auto-buy unavailable: reaching #1 is no longer mathematically possible.</span>');
+      return;
+    }
     var qty=parseInt(document.getElementById('ab-qty')?document.getElementById('ab-qty').value:1)||1;
     var interval=parseInt(document.getElementById('ab-interval')?document.getElementById('ab-interval').value:4)||4;
     var max=parseInt(document.getElementById('ab-max')?document.getElementById('ab-max').value:50)||50;
@@ -767,6 +772,7 @@ function updateDetailPosition(airdropId,scores){
 }
 
 // ── Fairness guard: blocca acquisto se matematicamente impossibile arrivare 1° ──
+var _fairnessBlocked=false;
 function applyFairnessBlock(blocked,needed,remaining){
   var buyBtn=document.getElementById('buy-btn');
   if(!buyBtn)return;
@@ -780,8 +786,41 @@ function applyFairnessBlock(blocked,needed,remaining){
     if(buySlider)buySlider.disabled=true;
     document.querySelectorAll('.buy-preset').forEach(function(b){b.disabled=true;b.style.opacity='.4';b.style.cursor='not-allowed';});
     if(buyMsg)buyMsg.innerHTML='<div style="margin-top:10px;padding:10px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:6px;font-size:12px;line-height:1.55;color:#ff9b70"><span class="it">Ti servono <strong>'+needed+'</strong> blocchi ma ne restano solo <strong>'+remaining+'</strong>. Acquisto bloccato per non farti sprecare ARIA.</span><span class="en">You need <strong>'+needed+'</strong> blocks but only <strong>'+remaining+'</strong> remain. Purchase blocked to save your ARIA.</span></div>';
+
+    // Auto-buy: disabilita controlli + disattiva rule se attiva
+    var abBox=document.getElementById('auto-buy-box');
+    if(abBox)abBox.classList.add('fair-blocked');
+    var abToggle=document.getElementById('ab-toggle');
+    if(abToggle){
+      abToggle.disabled=true;
+      abToggle.innerHTML=UI_ICONS.ban+' <span class="it">Disabilitato per fairness</span><span class="en">Disabled for fairness</span>';
+      abToggle.style.background='var(--gray-700)';
+      abToggle.style.cursor='not-allowed';
+    }
+    ['ab-qty','ab-interval','ab-max'].forEach(function(id){
+      var el=document.getElementById(id);
+      if(el){el.disabled=true;el.style.opacity='.4';el.style.cursor='not-allowed';}
+    });
+    var abStatus=document.getElementById('ab-status');
+    if(abStatus)abStatus.innerHTML='<span style="color:#ff9b70"><span class="it">Non puoi pi&ugrave; raggiungere il 1&deg; posto — auto-buy bloccato.</span><span class="en">You can no longer reach #1 — auto-buy blocked.</span></span>';
+
+    // Se auto-buy era attivo, disattivalo lato server (una sola volta)
+    if(!_fairnessBlocked&&_currentDetail){
+      _fairnessBlocked=true;
+      disableAutoBuyIfActive(_currentDetail.id);
+    }
   }
   // Nota: non ri-abilitiamo mai (la condizione è monotona — una volta impossibile, resta impossibile).
+}
+
+async function disableAutoBuyIfActive(airdropId){
+  try{
+    var rule=await loadAutoBuyRule(airdropId);
+    if(!rule||!rule.active)return;
+    var token=await getValidToken();if(!token)return;
+    await sbRpc('disable_auto_buy',{p_airdrop_id:airdropId},token);
+    showToast('<span class="it">Auto-buy disattivato: arrivo al 1&deg; non pi&ugrave; possibile.</span><span class="en">Auto-buy disabled: reaching #1 no longer possible.</span>');
+  }catch(e){}
 }
 
 // ── Strategy Guide ──

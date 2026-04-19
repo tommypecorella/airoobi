@@ -1,5 +1,5 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 2.3 · 16 Aprile 2026 · DOCUMENTO FONDATIVO**
+**Version 2.4 · 19 Aprile 2026 · DOCUMENTO FONDATIVO**
 
 > Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
 > del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
@@ -50,6 +50,15 @@
 > - UI: Dettagli prodotto spostati sotto il titolo (non più in accordion)
 > - FIX: F2 denominatore ora è il totale globale ARIA nella categoria (non max singolo partecipante)
 >   Questo stabilizza F2 quando un utente si azzera dopo vittoria (One Category Rule)
+>
+> **Changelog 19 Apr 2026 (v2.4) — Fairness Guard + UI Refinement:**
+> - ADD: Fairness Guard completa — blocca acquisto blocchi quando matematicamente impossibile arrivare 1° (`blocchi_necessari > blocchi_rimanenti`). Mai restituisce ARIA al sicuro.
+> - ADD: Fairness Guard estesa all'AUTO-BUY — non attivabile se bloccato; se già attivo al momento in cui scatta, viene disattivato server-side via `disable_auto_buy` (una sola volta, con toast).
+> - UI: KPI user-facing ridenominati — F1/F2/S → **Vantaggio / Impegno / Punteggio**. "Leader" → "primo in classifica". Formula `F1×0.7 + F2×0.3` rimossa dall'UI utente. Control Room (admin) mantiene la notazione tecnica F1/F2/S.
+> - UI: Card "Come arrivare 1°" ridisegnata in stile coach (tip azionabile sotto ogni fattore: "Acquista più blocchi per colmare il distacco" / "Partecipa spesso agli airdrop di questa categoria").
+> - UI: Tutte le emoji colorate sostituite con SVG inline monocromatici Lucide-style (target, trophy, gem, bulb, ban, star, zap, alert, up). Regola di design: icone flat/stilizzate/monocromatiche con `currentColor`, mai emoji.
+> - UI: Topbar pagina airdrop arricchita con avatar utente + dropdown menu (Home, Esplora, I miei airdrop, Portafoglio, Vendi, Invita, Logout). Carica `profiles.avatar_url` con fallback all'iniziale dell'email.
+> - CLEANUP: Rimosso banner A-ADS dalla dApp (`dapp.html` tra airdrop attivi e "In arrivo").
 
 ---
 
@@ -308,6 +317,94 @@ effetto immediato su tutti i futuri acquisti blocchi.
 - Invio: Edge Function `send-push` (Supabase, VAPID)
 - Trigger: DB trigger su `airdrops` UPDATE + cron `check-deadlines` ogni 15 min
 
+## 4C. Fairness Guard (v2.4 — 19 Aprile 2026)
+
+### 4C.1 Principio
+Non devi poter spendere ARIA per un airdrop che non puoi più vincere. Se il
+distacco dal primo in classifica è superiore al numero di blocchi rimanenti,
+raggiungere il 1° posto è **matematicamente impossibile** — la guard blocca
+l'acquisto per non far sprecare ARIA all'utente.
+
+### 4C.2 Condizione
+```
+blocksToFirst = leaderBlocks − myBlocks + 1   (minimo superare il leader)
+remainingBlocks = total_blocks − blocks_sold
+mathImpossible = pos > 1 AND blocksToFirst > remainingBlocks
+```
+
+Nota: `pos > 1` è necessario. Chi è già 1° non è mai bloccato (sta vincendo).
+
+### 4C.3 Monotonicità
+La condizione `mathImpossible` è **monotona**: una volta vera, resta vera fino
+a chiusura airdrop. Questo perché `blocksToFirst` non decresce (il leader può
+solo acquistare più blocchi) e `remainingBlocks` decresce. Quindi una volta
+bloccato, l'utente NON viene mai ri-abilitato in questo airdrop.
+
+### 4C.4 Effetti UI (client-side)
+Quando `mathImpossible` scatta in `applyFairnessBlock()`:
+
+| Elemento | Stato dopo guard |
+|---|---|
+| Bottone `buy-btn` | `disabled`, label "Fairness: impossibile arrivare 1°" + icona ban |
+| `buy-slider` | `disabled` |
+| `.buy-preset` | `disabled`, opacity 40% |
+| `buy-msg` | Banner rosso: "Ti servono N blocchi ma ne restano solo M. Acquisto bloccato per non farti sprecare ARIA." |
+| `.buy-box` | Classe `.fair-blocked` applicata |
+| **Auto-Buy box** | `disabled`, opacity 55%, bordo rosso tenue, messaggio "Non puoi più raggiungere il 1° posto — auto-buy bloccato" |
+| Toggle auto-buy | `disabled`, label "Disabilitato per fairness" |
+
+### 4C.5 Auto-Buy attivo al momento del blocco
+Se l'utente aveva già una regola `auto_buy_rules.active=true` quando scatta la
+guard, il client chiama **una sola volta** `disable_auto_buy(p_airdrop_id)` e
+mostra un toast: "Auto-buy disattivato: arrivo al 1° non più possibile".
+
+Flag client-side: `_fairnessBlocked` (resettato a ogni cambio di airdrop).
+
+### 4C.6 Guard anche sul toggle
+`toggleAutoBuy()` ha un controllo preventivo: se `_fairnessBlocked` o
+`.buy-box.fair-blocked` è presente, rifiuta l'attivazione con toast esplicativo.
+Questo protegge contro race condition tra click utente e update async.
+
+### 4C.7 Backend (TODO)
+La guard è attualmente **client-side only**. Per chiusura loop: la RPC
+`process_auto_buys` (cron) deve validare fairness prima di eseguire ogni
+acquisto programmato, altrimenti un attaccante con ARIA sufficiente potrebbe
+aggirare la guard via API diretta. Tracciata come follow-up Stage 1.
+
+## 4D. Auto-Buy (v2.1)
+
+### 4D.1 Principio
+Utente configura: N blocchi ogni X ore, fino a max M blocchi totali. Il cron
+server esegue gli acquisti in base alla regola.
+
+### 4D.2 Tabella DB
+```sql
+auto_buy_rules (
+  user_id uuid,
+  airdrop_id uuid,
+  blocks_per_interval int,
+  interval_hours int,
+  max_blocks int,
+  total_bought int,
+  active boolean,
+  last_run_at timestamptz,
+  PRIMARY KEY (user_id, airdrop_id)
+)
+```
+
+### 4D.3 RPC
+- `upsert_auto_buy(p_airdrop_id, p_blocks_per_interval, p_interval_hours, p_max_blocks, p_active)` — crea/aggiorna regola
+- `disable_auto_buy(p_airdrop_id)` — disattiva regola
+- `process_auto_buys()` — cron, esegue acquisti dovuti
+
+### 4D.4 Condizioni di blocco
+Auto-buy NON esegue se:
+- `active = false`
+- `total_bought >= max_blocks`
+- Tempo trascorso da `last_run_at` < `interval_hours`
+- Airdrop non più in `presale`/`sale`
+- **Fairness Guard attiva per quell'utente** (vedi 4C — da implementare server-side)
+
 ### 4.3 Pre-draw checks
 Prima di eseguire il draw il sistema verifica:
 1. Airdrop in stato `sale` o `presale`
@@ -328,18 +425,24 @@ Nessuna estrazione casuale — il risultato è verificabile e riproducibile.
 > Formula v3 ATTIVA nel DB. La v2 con 3 fattori (F1/F2/F3) è deprecata.
 > Semplificato a 2 fattori con pesi 70/30, rimuovendo la seniority (F3).
 > La seniority resta come tiebreaker finale, non influisce sullo score.
+>
+> **Naming (v2.4 · 19 Apr 2026):** In UI user-facing i fattori sono chiamati
+> **Vantaggio** (F1) e **Impegno** (F2), e lo score è **Punteggio**.
+> In Control Room, ABO e in questo documento tecnico continuiamo a usare
+> F1/F2/S per compattezza.
 
 ```
 score(utente) = (F1 × 0.70) + (F2 × 0.30)
 ```
 
-**F1 — Blocchi nell'airdrop corrente (partecipazione diretta, 70%):**
+**F1 — Blocchi nell'airdrop corrente · user-facing "Vantaggio" (70%):**
 ```
 F1 = blocchi_utente_corrente / max_blocchi_singolo_utente_in_airdrop
 ```
 Normalizzato 0→1. Chi ha il massimo dei blocchi ottiene F1=1.
+Intuizione per l'utente: quanto sei vicino al primo in classifica.
 
-**F2 — ARIA spesi nella categoria (storico fedeltà, 30%):**
+**F2 — ARIA spesi nella categoria · user-facing "Impegno" (30%):**
 ```
 F2 = log(1 + aria_spesi_utente_post_vittoria) /
      log(1 + totale_aria_spesi_nella_categoria_da_tutti)

@@ -1,6 +1,7 @@
 # AIROOBI — Tokenomics & Economic Model
-**TECH-001 · Version 3.3 · Final · 28 Marzo 2026**
+**TECH-001 · Version 3.4 · Final · 19 Aprile 2026**
 
+> v3.4 (19 Apr 2026): Fairness Guard applicata anche all'Auto-Buy (ARIA non spesa quando è matematicamente impossibile arrivare 1°). Naming UI: F1/F2/S → Vantaggio/Impegno/Punteggio. Vedi Airdrop_Engine_v2 §4C-4D.
 > v3.3: DB reset 28 Mar 2026. Multi-foto upload nel form valutazione (Supabase Storage bucket `submissions`). Riferimenti engine aggiornati a v2.
 > Alpha 0 APERTO. Questo documento riflette il sistema in produzione su airoobi.com e airoobi.app.
 

@@ -1,6 +1,7 @@
 # AIROOBI — Sitemap & Product Structure
-**TECH-002 · Version 2.3 · Final · 28 Marzo 2026**
+**TECH-002 · Version 2.4 · Final · 19 Aprile 2026**
 
+> v2.4 (19 Apr 2026): `airdrop.html` standalone (pagina dettaglio singolo airdrop, rotta `/airdrop/:slug`). Topbar arricchita con avatar utente + dropdown (Home, Esplora, I miei airdrop, Portafoglio, Vendi, Invita, Logout). Fairness Guard estesa all'Auto-Buy. UI refresh: icone flat monocromatiche (SVG Lucide-style), KPI ridenominati (Vantaggio/Impegno/Punteggio), banner A-ADS rimosso dalla dApp.
 > v2.3: Architettura multi-file (home.html, dapp.html, login.html, signup.html, abo.html, vendi.html). Host-based routing Vercel (airoobi.com + airoobi.app). Tabelle DB airdrop engine complete. Multi-photo upload. Chat valutazione. "dApp" → "APP".
 > v2.2: Hash routing esteso. Tabelle DB aggiornate. RPC corretti. Autoconfirm email ON.
 
