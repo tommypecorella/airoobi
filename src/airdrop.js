@@ -696,9 +696,9 @@ function updateDetailPosition(airdropId,scores){
   el.innerHTML='<div class="pos-main"><span class="it">Sei <strong>'+pos+'°</strong> su '+total+' partecipanti</span>'
     +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span></div>'
     +'<div class="pos-breakdown">'
-    +'<span title="Blocchi / Blocks"><span class="pos-label">F1</span> '+f1.toFixed(2)+'</span>'
-    +'<span title="Fedeltà categoria / Category loyalty"><span class="pos-label">F2</span> '+f2.toFixed(2)+'</span>'
-    +'<span title="Score"><span class="pos-label">S</span> '+sc.toFixed(3)+'</span>'
+    +'<span title="Vantaggio sul primo in classifica (pesa 70%)"><span class="pos-label"><span class="it">Vantaggio</span><span class="en">Advantage</span></span> '+f1.toFixed(2)+'</span>'
+    +'<span title="Impegno nella categoria (pesa 30%)"><span class="pos-label"><span class="it">Impegno</span><span class="en">Commitment</span></span> '+f2.toFixed(2)+'</span>'
+    +'<span title="Punteggio totale"><span class="pos-label"><span class="it">Punteggio</span><span class="en">Score</span></span> '+sc.toFixed(3)+'</span>'
     +'</div>';
   el.className='detail-position in';
   if(_lastPosition!==null&&pos>_lastPosition){
@@ -742,13 +742,13 @@ function updateStrategyGuide(scores,pos,total,myScore){
       +'<div class="strategy-formula">'
       +'<div class="strategy-factor">'
       +'<div class="strategy-factor-pct">70%</div>'
-      +'<div class="strategy-factor-name">F1 — <span class="it">Blocchi</span><span class="en">Blocks</span></div>'
-      +'<div class="strategy-factor-desc"><span class="it">Quanti blocchi hai rispetto a chi ne ha di pi&ugrave;</span><span class="en">Your blocks vs. the top holder</span></div>'
+      +'<div class="strategy-factor-name"><span class="it">Vantaggio</span><span class="en">Advantage</span></div>'
+      +'<div class="strategy-factor-desc"><span class="it">Quanto sei vicino al primo in classifica per blocchi acquistati</span><span class="en">How close you are to #1 by blocks bought</span></div>'
       +'</div>'
       +'<div class="strategy-factor">'
       +'<div class="strategy-factor-pct">30%</div>'
-      +'<div class="strategy-factor-name">F2 — <span class="it">Fedelt&agrave;</span><span class="en">Loyalty</span></div>'
-      +'<div class="strategy-factor-desc"><span class="it">ARIA spesi nella stessa categoria in passato</span><span class="en">ARIA spent in this category before</span></div>'
+      +'<div class="strategy-factor-name"><span class="it">Impegno</span><span class="en">Commitment</span></div>'
+      +'<div class="strategy-factor-desc"><span class="it">ARIA spesi in questa categoria nel tempo</span><span class="en">ARIA spent in this category over time</span></div>'
       +'</div>'
       +'</div>'
       +'<div class="strategy-tip">'
@@ -805,11 +805,11 @@ function updateStrategyGuide(scores,pos,total,myScore){
       tipsEn.push('&#127919; You need about <strong>'+blocksToFirst+'</strong> more blocks to reach #1.');
     }
     if(f1weak){
-      tipsIt.push('&#9650; Il tuo F1 (blocchi) &egrave; il fattore pi&ugrave; debole — compra pi&ugrave; blocchi per salire.');
-      tipsEn.push('&#9650; Your F1 (blocks) is your weaker factor — buy more blocks to climb.');
+      tipsIt.push('&#9650; Il tuo <strong>Vantaggio</strong> &egrave; il fattore pi&ugrave; debole — compra pi&ugrave; blocchi per salire.');
+      tipsEn.push('&#9650; Your <strong>Advantage</strong> is your weaker factor — buy more blocks to climb.');
     } else {
-      tipsIt.push('&#9650; Il tuo F2 (fedelt&agrave;) &egrave; pi&ugrave; basso — partecipa ad altri airdrop della stessa categoria per migliorarlo.');
-      tipsEn.push('&#9650; Your F2 (loyalty) is lower — join other airdrops in this category to improve it.');
+      tipsIt.push('&#9650; Il tuo <strong>Impegno</strong> &egrave; pi&ugrave; basso — partecipa ad altri airdrop della stessa categoria per migliorarlo.');
+      tipsEn.push('&#9650; Your <strong>Commitment</strong> is lower — join other airdrops in this category to improve it.');
     }
     if(a.status==='presale'){
       tipsIt.push('&#9889; La presale &egrave; il momento migliore: prezzo ridotto e 2x ROBI.');
@@ -820,29 +820,49 @@ function updateStrategyGuide(scores,pos,total,myScore){
   var f1Pct=Math.round(f1*100);
   var f2Pct=Math.round(f2*100);
 
+  var scoreVal=(parseFloat(myScore.score)||0).toFixed(3);
+
   el.innerHTML=''
     +'<div class="strategy-box'+(isFirst?' first':'')+'">'
     +'<div class="strategy-title"><span class="it">'+(isFirst?'&#9733; Stai vincendo':'&#127919; Come arrivare 1&deg;')+'</span>'
     +'<span class="en">'+(isFirst?'&#9733; You\'re winning':'&#127919; How to reach #1')+'</span></div>'
-    +'<div class="strategy-bars">'
-    +'<div class="strategy-bar-row">'
-    +'<div class="strategy-bar-label">F1 <span class="strategy-bar-weight">70%</span></div>'
+    +'<div class="strategy-score-top">'
+    +'<span class="it">Il tuo punteggio: <strong>'+scoreVal+'</strong></span>'
+    +'<span class="en">Your score: <strong>'+scoreVal+'</strong></span>'
+    +'</div>'
+    +'<div class="strategy-factors">'
+    +'<div class="strategy-factor-block van">'
+    +'<div class="strategy-factor-head">'
+    +'<span class="strategy-factor-heading">&#127942; <span class="it">Vantaggio sul primo in classifica</span><span class="en">Advantage over #1</span></span>'
+    +'<span class="strategy-factor-weight-badge"><span class="it">pesa 70%</span><span class="en">weight 70%</span></span>'
+    +'</div>'
+    +'<div class="strategy-factor-bar">'
     +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+f1Pct+'%"></div></div>'
     +'<div class="strategy-bar-val">'+f1.toFixed(2)+'</div>'
     +'</div>'
-    +'<div class="strategy-bar-row">'
-    +'<div class="strategy-bar-label">F2 <span class="strategy-bar-weight">30%</span></div>'
+    +'<div class="strategy-factor-hint">'
+    +'<span class="it">&#128161; Acquista pi&ugrave; blocchi per colmare il distacco dal primo</span>'
+    +'<span class="en">&#128161; Buy more blocks to close the gap with #1</span>'
+    +'</div>'
+    +'</div>'
+    +'<div class="strategy-factor-block imp">'
+    +'<div class="strategy-factor-head">'
+    +'<span class="strategy-factor-heading">&#128142; <span class="it">Impegno nella categoria</span><span class="en">Commitment in this category</span></span>'
+    +'<span class="strategy-factor-weight-badge"><span class="it">pesa 30%</span><span class="en">weight 30%</span></span>'
+    +'</div>'
+    +'<div class="strategy-factor-bar">'
     +'<div class="strategy-bar-track"><div class="strategy-bar-fill f2" style="width:'+f2Pct+'%"></div></div>'
     +'<div class="strategy-bar-val">'+f2.toFixed(2)+'</div>'
+    +'</div>'
+    +'<div class="strategy-factor-hint">'
+    +'<span class="it">&#128161; Partecipa spesso agli airdrop di questa categoria per accumulare impegno nel tempo</span>'
+    +'<span class="en">&#128161; Join airdrops in this category often to build commitment over time</span>'
+    +'</div>'
     +'</div>'
     +'</div>'
     +'<div class="strategy-tips">'
     +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span>'}).join('')
     +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span>'}).join('')
-    +'</div>'
-    +'<div class="strategy-legend">'
-    +'<span class="it">F1 = blocchi rispetto al leader &middot; F2 = ARIA spesi nella categoria &middot; Score = F1&times;0.7 + F2&times;0.3</span>'
-    +'<span class="en">F1 = blocks vs. leader &middot; F2 = ARIA spent in category &middot; Score = F1&times;0.7 + F2&times;0.3</span>'
     +'</div>'
     +'</div>';
 }

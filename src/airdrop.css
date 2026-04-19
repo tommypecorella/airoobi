@@ -309,7 +309,7 @@ html:not([data-lang]) .it{display:inline}
 .detail-position.not-in{color:var(--gray-400)}
 .detail-position.shake{animation:shake .5s ease-in-out}
 .pos-main{margin-bottom:6px}
-.pos-breakdown{display:flex;gap:14px;font-size:10px;color:var(--gray-400);letter-spacing:.3px}
+.pos-breakdown{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:10px;color:var(--gray-400);letter-spacing:.3px}
 .pos-label{font-weight:700;color:var(--gray-500);margin-right:3px}
 .pos-breakdown span[title]{cursor:help}
 
@@ -335,6 +335,16 @@ html:not([data-lang]) .it{display:inline}
 .strategy-tip{font-size:12px;line-height:1.5;color:var(--gray-300);padding:6px 10px;background:rgba(255,255,255,.02);border-radius:var(--radius-sm);border-left:2px solid var(--gray-600)}
 .strategy-box.first .strategy-tip{border-left-color:var(--gold)}
 .strategy-legend{font-size:9px;color:var(--gray-500);letter-spacing:.3px;line-height:1.5;padding-top:8px;border-top:1px solid var(--gray-800)}
+.strategy-score-top{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.3px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid var(--gray-800)}
+.strategy-score-top strong{color:var(--white);font-size:13px}
+.strategy-factors{display:flex;flex-direction:column;gap:14px;margin-bottom:12px}
+.strategy-factor-block{display:flex;flex-direction:column;gap:6px}
+.strategy-factor-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.strategy-factor-heading{font-family:var(--font-m);font-size:11px;letter-spacing:.3px;color:var(--white);line-height:1.35}
+.strategy-factor-weight-badge{font-family:var(--font-m);font-size:9px;color:var(--gray-500);letter-spacing:.5px;white-space:nowrap;text-transform:uppercase}
+.strategy-factor-bar{display:flex;align-items:center;gap:10px}
+.strategy-factor-hint{font-size:11px;line-height:1.5;color:var(--gray-400);padding:6px 10px;background:rgba(255,255,255,.02);border-radius:var(--radius-sm);border-left:2px solid var(--aria)}
+.strategy-factor-block.imp .strategy-factor-hint{border-left-color:var(--gold)}
 
 /* ── My Stats panel ── */
 .detail-mystats{border:1px solid var(--gray-700);background:var(--card-bg);border-radius:var(--radius);padding:18px;margin:12px 0 20px}
