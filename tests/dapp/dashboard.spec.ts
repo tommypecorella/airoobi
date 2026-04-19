@@ -19,10 +19,13 @@ test.describe('Dashboard', () => {
   });
 
   test('topbar visibile con saldo ARIA', async ({ page }) => {
+    // La card saldo ha SVG con "A" + valore numerico (badge ARIA testnet).
+    // Verifichiamo che sia visibile e contenga un numero.
     const balance = page.locator('#topbar-bal');
     await expect(balance).toBeVisible();
-    const text = await balance.textContent();
-    expect(text).toContain('ARIA');
+    const text = (await balance.textContent()) || '';
+    // Deve contenere "A" (badge) + almeno una cifra
+    expect(text).toMatch(/A\d|A\s*—/);
   });
 
   test('navigazione tab visibile', async ({ page }) => {
@@ -30,7 +33,8 @@ test.describe('Dashboard', () => {
     const nav = page.locator('#topbar-nav');
     await expect(nav).toBeVisible();
 
-    const tabs = ['home', 'explore', 'my', 'wallet', 'archive', 'learn', 'submit'];
+    // Tab attualmente nella topbar dApp (post redesign Apr 2026)
+    const tabs = ['home', 'explore', 'my', 'wallet', 'learn', 'submit'];
     for (const tab of tabs) {
       await expect(nav.locator(`[data-page="${tab}"]`)).toBeAttached();
     }
