@@ -19,12 +19,15 @@ var ICONS={
   my:'<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
   wallet:'<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>',
   login:'<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>',
-  faq:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  faq:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  rules:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>',
+  logout:'<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>'
 };
 
 var PUBLIC_LINKS=[
   {href:'/',        page:'home',    icon:ICONS.home,    it:'Home',    en:'Home'},
   {href:'/airdrops',page:'explore', icon:ICONS.explore, it:'Airdrops',en:'Airdrops', primary:true},
+  {href:'/come-funziona-airdrop',page:'rules', icon:ICONS.rules, it:'Come funziona', en:'How it works'},
   {href:'/impara',  page:'learn',   icon:ICONS.learn,   it:'Impara',  en:'Learn'},
   {href:'/blog',    page:'blog',    icon:ICONS.blog,    it:'Blog',    en:'Blog'},
   {href:'/faq',     page:'faq',     icon:ICONS.faq,     it:'FAQ',     en:'FAQ'}
@@ -79,6 +82,49 @@ window._topbarToggle=function(){
   }
 };
 
+window._topbarToggleUserMenu=function(e){
+  if(e){e.stopPropagation();}
+  var menu=document.getElementById('tb-user-menu');
+  var btn=document.getElementById('tb-avatar-btn');
+  if(!menu||!btn)return;
+  var open=menu.classList.toggle('open');
+  btn.classList.toggle('open',open);
+};
+window._topbarLogout=function(){
+  try{localStorage.removeItem('airoobi_session');}catch(e){}
+  window.location.href='/';
+};
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('tb-user-menu');
+  var btn=document.getElementById('tb-avatar-btn');
+  if(!menu||!menu.classList.contains('open'))return;
+  if(menu.contains(e.target)||(btn&&btn.contains(e.target)))return;
+  menu.classList.remove('open');
+  if(btn)btn.classList.remove('open');
+});
+
+async function loadTopbarAvatar(session){
+  if(!session||!session.user||!session.user.id)return;
+  try{
+    var token=await getValidTokenFromSession(session);
+    if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+session.user.id+'&select=avatar_url',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok)return;
+    var rows=await res.json();
+    if(!rows||!rows[0]||!rows[0].avatar_url)return;
+    var btn=document.getElementById('tb-avatar-btn');
+    var letter=document.getElementById('tb-avatar-letter');
+    if(!btn)return;
+    if(letter)letter.style.display='none';
+    var img=document.createElement('img');
+    img.src=rows[0].avatar_url+'?t='+Date.now();
+    img.alt='';
+    btn.appendChild(img);
+  }catch(e){}
+}
+
 window._topbarLang=function(){
   var root=document.documentElement;
   var c=root.getAttribute('data-lang')||'it';
@@ -128,7 +174,7 @@ function upgradeToLoggedIn(session){
     nav.innerHTML=allLinks.map(function(l){return linkHtml(l,active)}).join('');
   }
 
-  // Replace auth buttons with balance + avatar
+  // Replace auth buttons with balance + avatar (with contextual dropdown menu)
   var topRight=document.getElementById('topbar-right');
   if(topRight){
     var lang=(document.documentElement.getAttribute('data-lang')||'it')==='it'?'EN':'IT';
@@ -136,8 +182,31 @@ function upgradeToLoggedIn(session){
       '<span class="topbar-bal" id="tb-aria"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700">A</text></svg><span id="tb-aria-val">\u2014</span></span>'
       +'<span class="topbar-bal topbar-bal-robi" id="tb-robi"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700">R</text></svg><span id="tb-robi-val">\u2014</span></span>'
       +'<button class="lang-toggle" id="lang-btn" onclick="window._topbarLang()">'+lang+'</button>'
-      +'<a href="/airdrops" class="topbar-avatar">'+letter+'</a>';
+      +'<button class="topbar-avatar" id="tb-avatar-btn" onclick="window._topbarToggleUserMenu(event)" aria-label="Menu utente"><span id="tb-avatar-letter">'+letter+'</span></button>';
   }
+
+  // Build user dropdown menu (mounted as sibling, fixed position)
+  if(!document.getElementById('tb-user-menu')){
+    var menu=document.createElement('div');
+    menu.id='tb-user-menu';
+    menu.className='tb-user-menu';
+    menu.innerHTML=
+      '<div class="tb-user-menu-email" id="tb-user-menu-email">'+(email||'')+'</div>'
+      +'<a href="/" class="tb-user-menu-item">'+ICONS.home+' <span class="it">Home</span><span class="en">Home</span></a>'
+      +'<a href="/airdrops" class="tb-user-menu-item">'+ICONS.explore+' <span class="it">Esplora airdrop</span><span class="en">Explore airdrops</span></a>'
+      +'<a href="/miei-airdrop" class="tb-user-menu-item">'+ICONS.my+' <span class="it">I miei airdrop</span><span class="en">My airdrops</span></a>'
+      +'<a href="/portafoglio-dapp" class="tb-user-menu-item">'+ICONS.wallet+' <span class="it">Portafoglio</span><span class="en">Wallet</span></a>'
+      +'<a href="/proponi" class="tb-user-menu-item">'+ICONS.submit+' <span class="it">Vendi (airdroppa)</span><span class="en">Sell (airdrop)</span></a>'
+      +'<a href="/invita" class="tb-user-menu-item">'+ICONS.referral+' <span class="it">+Invita amici</span><span class="en">+Invite friends</span></a>'
+      +'<div class="tb-user-menu-sep"></div>'
+      +'<a href="/come-funziona-airdrop" class="tb-user-menu-item">'+ICONS.rules+' <span class="it">Come funziona</span><span class="en">How it works</span></a>'
+      +'<a href="/faq" class="tb-user-menu-item">'+ICONS.faq+' FAQ</a>'
+      +'<button class="tb-user-menu-item tb-user-menu-logout" onclick="window._topbarLogout()">'+ICONS.logout+' Logout</button>';
+    document.body.appendChild(menu);
+  }
+
+  // Load avatar image if present in profile
+  loadTopbarAvatar(session);
 
   // Update mobile menu
   var mm=document.getElementById('topbar-mobile-menu');

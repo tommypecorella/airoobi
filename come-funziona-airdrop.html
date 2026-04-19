@@ -90,14 +90,8 @@ a:hover{text-decoration:underline}
 </head>
 <body>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <a href="/" class="topbar-logo">Oo</a>
-  <div class="topbar-right">
-    <a href="/airdrops" class="topbar-btn"><span class="it">AIRDROP</span><span class="en">AIRDROPS</span></a>
-    <a href="/login" class="topbar-btn topbar-btn-gold">Login</a>
-  </div>
-</div>
+<!-- TOPBAR (shared component) -->
+<div id="topbar-mount" data-active="rules"></div>
 
 <!-- HERO -->
 <div class="cf-hero">
@@ -308,20 +302,11 @@ a:hover{text-decoration:underline}
     <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br>
     <span class="it">Piattaforma riservata ai maggiorenni (18+). Questa pagina viene aggiornata ad ogni modifica del motore airdrop.</span>
     <span class="en">Platform for adults only (18+). This page is updated at every airdrop engine change.</span><br>
-    <span class="cf-ver">alfa-2026.04.19-3.27.0</span>
+    <span class="cf-ver">alfa-2026.04.19-3.28.0</span>
   </div>
 </footer>
 
-<script>
-// Language toggle persistence (consistent with rest of app)
-(function(){
-  var saved=localStorage.getItem('airoobi_lang');
-  if(saved==='en'){
-    document.documentElement.setAttribute('data-lang','en');
-    document.documentElement.setAttribute('lang','en');
-  }
-})();
-</script>
+<script src="/src/topbar.js"></script>
 
 </body>
 </html>

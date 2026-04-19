@@ -162,8 +162,14 @@ select option{background:var(--gray-800);color:var(--white)}
   .etb-sort label{display:none}
 }
 
+/* ── Separatori sezioni /airdrops ── */
+#tab-explore #coming-soon-section{margin-top:56px!important;padding-top:32px;border-top:1px solid var(--gray-800);position:relative}
+#tab-explore #coming-soon-section::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+#tab-explore .list-view{padding-bottom:8px}
+
 /* ── CTA VALUTA (footer, dopo In Arrivo) ── */
-.explore-cta-valuta{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:22px 24px;margin:32px 0 24px;border:1px solid rgba(184,150,12,.25);background:linear-gradient(180deg,rgba(184,150,12,.04),rgba(184,150,12,.01));cursor:pointer;border-radius:var(--radius);transition:all .2s;flex-wrap:wrap}
+.explore-cta-valuta{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:28px 28px;margin:48px 0 24px;border:1px solid rgba(184,150,12,.25);background:linear-gradient(180deg,rgba(184,150,12,.04),rgba(184,150,12,.01));cursor:pointer;border-radius:var(--radius);transition:all .2s;flex-wrap:wrap;position:relative}
+.explore-cta-valuta::before{content:'';position:absolute;top:-32px;left:50%;transform:translateX(-50%);width:60px;height:1px;background:var(--gray-800)}
 .explore-cta-valuta:hover{border-color:rgba(184,150,12,.5);background:linear-gradient(180deg,rgba(184,150,12,.08),rgba(184,150,12,.02))}
 .ecv-text{flex:1;min-width:200px}
 .ecv-title{font-family:var(--font-h);font-size:20px;font-weight:400;color:var(--white);margin-bottom:4px;line-height:1.25}
