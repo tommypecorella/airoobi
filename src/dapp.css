@@ -131,11 +131,11 @@ select option{background:var(--gray-800);color:var(--white)}
 /* ── MAIN CONTENT ── */
 .main{max-width:960px;margin:0 auto;padding:24px 20px 100px}
 
-/* ── HERO BANNER ── */
-.dapp-hero{padding:36px 0 28px;text-align:center}
-.dapp-hero h1{font-family:var(--font-h);font-size:clamp(32px,7vw,52px);font-weight:400;line-height:1.1;margin-bottom:10px}
+/* ── HERO BANNER (compatto) ── */
+.dapp-hero{padding:18px 0 14px;text-align:center}
+.dapp-hero h1{font-family:var(--font-h);font-size:clamp(22px,4.5vw,34px);font-weight:400;line-height:1.15;margin-bottom:4px}
 .dapp-hero h1 em{color:var(--accent);font-style:italic}
-.dapp-hero-sub{font-size:15px;color:var(--gray-400);max-width:420px;margin:0 auto;line-height:1.6}
+.dapp-hero-sub{font-size:13px;color:var(--gray-400);max-width:440px;margin:0 auto;line-height:1.5}
 
 /* ── EXPLORE HERO SLIM (1 riga) ── */
 .explore-hero-slim{display:flex;align-items:baseline;justify-content:space-between;gap:16px;padding:20px 0 14px;border-bottom:1px solid var(--gray-800);margin-bottom:14px;flex-wrap:wrap}
@@ -569,11 +569,11 @@ select option{background:var(--gray-800);color:var(--white)}
 .card-presale-price{font-family:var(--font-m);font-size:11px;color:var(--gray-400);text-decoration:line-through;margin-left:6px}
 
 /* ── SUBMIT FORM ── */
-.submit-wrap{max-width:520px;margin:0 auto}
-.submit-title{font-family:var(--font-h);font-size:clamp(26px,5vw,38px);font-weight:400;margin-bottom:10px;text-align:center}
+.submit-wrap{max-width:520px;margin:0 auto;padding-top:8px}
+.submit-title{font-family:var(--font-h);font-size:clamp(22px,4vw,30px);font-weight:400;margin-bottom:4px;text-align:center}
 .submit-title em{color:var(--accent);font-style:italic}
-.submit-sub{font-size:15px;color:var(--gray-400);text-align:center;margin-bottom:36px;line-height:1.6}
-.submit-field{margin-bottom:22px}
+.submit-sub{font-size:13px;color:var(--gray-400);text-align:center;margin-bottom:18px;line-height:1.5}
+.submit-field{margin-bottom:16px}
 .submit-label{display:block;font-family:var(--font-b);font-size:11px;font-weight:600;color:var(--gray-400);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
 .submit-input,.submit-textarea,.submit-select{width:100%;padding:14px 16px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:15px;transition:border-color .25s;border-radius:var(--radius-sm)}
 .submit-input:focus,.submit-textarea:focus,.submit-select:focus{outline:none;border-color:var(--accent)}
