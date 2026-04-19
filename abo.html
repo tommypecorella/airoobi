@@ -191,8 +191,14 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .info-i{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;border:1px solid var(--gray-600);font-family:var(--font-b);font-size:9px;font-weight:600;color:var(--gray-500);cursor:pointer;vertical-align:middle;margin-left:6px;transition:all .2s;line-height:1;user-select:none;flex-shrink:0}
 .info-i:hover{border-color:var(--gold);color:var(--gold)}
 .admin-card-label .info-i{margin-left:4px;width:14px;height:14px;font-size:8px}
-#abo-tooltip{display:none;position:fixed;z-index:400;max-width:300px;padding:14px 16px;background:rgba(10,16,34,.98);backdrop-filter:blur(20px);border:1px solid rgba(139,92,246,.3);border-radius:8px;color:var(--white);font-family:var(--font-b);font-size:12px;line-height:1.55;box-shadow:0 12px 40px rgba(0,0,0,.5)}
+#abo-tooltip{display:none;position:fixed;z-index:400;max-width:340px;padding:14px 16px;background:rgba(10,16,34,.98);backdrop-filter:blur(20px);border:1px solid rgba(139,92,246,.3);border-radius:8px;color:var(--white);font-family:var(--font-b);font-size:12px;line-height:1.55;box-shadow:0 12px 40px rgba(0,0,0,.5)}
 #abo-tooltip::before{content:'';position:absolute;top:-6px;left:16px;width:10px;height:10px;background:rgba(10,16,34,.98);border-left:1px solid rgba(139,92,246,.3);border-top:1px solid rgba(139,92,246,.3);transform:rotate(45deg)}
+#abo-tooltip .tt-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(184,150,12,.2)}
+#abo-tooltip .tt-i{font-size:16px;line-height:1;flex-shrink:0}
+#abo-tooltip .tt-t{font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;font-weight:600}
+#abo-tooltip .tt-d{color:var(--white);margin-bottom:8px;line-height:1.55}
+#abo-tooltip .tt-ex{font-family:var(--font-m);font-size:11px;color:var(--gray-300);background:rgba(74,158,255,.06);padding:8px 10px;border-left:2px solid var(--aria);margin-bottom:8px;letter-spacing:.3px;line-height:1.55}
+#abo-tooltip .tt-tip{font-size:11px;color:var(--kas);font-style:italic;line-height:1.55}
 </style>
 </head>
 <body>
@@ -3650,53 +3656,64 @@ var ABO_TIPS={
   'tr-service':{it:'Service balance: parte delle entrate destinata a coprire costi operativi (hosting, team, legal).',en:'Service balance: share of revenue covering opex (hosting, team, legal).'},
   'tr-ads':{it:'Ricavi da A-Ads (banner crypto). Confluiscono in Treasury + Service secondo lo split.',en:'A-Ads revenue (crypto banners). Goes into Treasury + Service per the split.'},
   'tr-adsense':{it:'Ricavi da Google AdSense (in attesa approvazione). Confluiscono in Treasury + Service secondo lo split.',en:'Google AdSense revenue (awaiting approval). Goes into Treasury + Service per the split.'},
-  // Approve modal (Valutazioni)
-  'bo-app-price':{it:'Quanti ARIA costa comprare 1 blocco. Più costa, meno gente partecipa (più esclusivo). Esempio: 500 blocchi a 10 ARIA = raccogli 5.000 ARIA totali.',en:'How many ARIA it costs to buy 1 block. The higher the price, the fewer people join (more exclusive). Example: 500 blocks × 10 ARIA = 5,000 ARIA collected.'},
-  'bo-app-blocks':{it:'Quanti blocchi totali metti in vendita. Più blocchi = più gente partecipa, ma vincere è più difficile. Per oggetti normali: 100-1000 blocchi.',en:'How many blocks total you put on sale. More blocks = more participants, but harder to win. For normal items: 100-1000.'},
-  'bo-app-presale':{it:'Quanto costa 1 blocco nei primi giorni (sconto early-bird). Lascia vuoto se non vuoi fare lo sconto.',en:'How much 1 block costs in the early days (early-bird discount). Leave empty if you don\'t want a discount.'},
-  'bo-app-presale-en':{it:'Sì = parte con sconto iniziale, poi prezzo pieno. No = parte subito a prezzo pieno, niente sconto.',en:'Yes = starts with an early discount, then full price. No = starts at full price right away, no discount.'},
-  'bo-app-duration':{it:'Quanto dura l\'airdrop. 6h = urgenza, gente compra di fretta. 24h = normale. 72h = oggetti importanti, più tempo per decidere.',en:'How long the airdrop runs. 6h = urgency, people buy fast. 24h = normal. 72h = important items, more time to decide.'},
-  'bo-app-deadline':{it:'Data e ora in cui chiude. Si calcola da sola dalla durata che hai scelto. Puoi cambiarla a mano se serve.',en:'When it closes. Calculated automatically from the duration you picked. You can edit it by hand if needed.'},
-  // Reject modal (Valutazioni)
-  'bo-rej-reason':{it:'Perché stai rifiutando l\'oggetto. "Sotto €500" = vale troppo poco (regola della piattaforma). "Generico" = altri motivi (foto brutte, oggetto strano, già visto).',en:'Why you\'re rejecting the item. "Below €500" = worth too little (platform rule). "Generic" = other reasons (bad photos, weird item, duplicate).'},
-  'bo-rej-note':{it:'Spiegazione che vede l\'utente nel suo profilo. Sii educato ma chiaro.',en:'Explanation the user will see in their profile. Be polite but clear.'},
-  // Ad-modal (Gestione Airdrop edit)
-  'ad-desired':{it:'Quanto voleva guadagnare il venditore quando ha proposto l\'oggetto. Non si può cambiare, serve solo come riferimento.',en:'How much the seller wanted to earn when they proposed the item. Cannot be changed, just for reference.'},
-  'ad-min':{it:'Il minimo che il venditore accetta. Non si può cambiare. Devi assicurarti che alla fine prenda almeno questa cifra.',en:'The minimum the seller will accept. Cannot be changed. Make sure they end up with at least this amount.'},
-  'ad-suggest':{it:'Riempie i campi sotto con valori sensati calcolati dalla piattaforma. Punto di partenza, poi puoi modificare.',en:'Fills the fields below with sensible values calculated by the platform. Starting point, then you can adjust.'},
-  'ad-quotaz':{it:'Quanto vale l\'oggetto in EUR secondo AIROOBI. Da qui parte tutto il calcolo dei prezzi.',en:'How much the item is worth in EUR according to AIROOBI. All price calculations start from here.'},
-  'ad-bprice':{it:'Quanti ARIA costa 1 blocco quando l\'airdrop è a prezzo pieno (dopo l\'eventuale sconto iniziale).',en:'How many ARIA 1 block costs at full price (after the optional initial discount).'},
-  'ad-pprice':{it:'Quanti ARIA costa 1 blocco nei primi giorni (sconto iniziale). Lascia vuoto se non vuoi fare lo sconto.',en:'How many ARIA 1 block costs in the early days (initial discount). Leave empty for no discount.'},
-  'ad-ppct':{it:'Quale fetta dei blocchi va con il prezzo scontato. Esempio: 20% di 500 blocchi = i primi 100 a sconto.',en:'What share of the blocks gets the discounted price. Example: 20% of 500 blocks = the first 100 are discounted.'},
-  'ad-extra':{it:'Margine extra sopra il valore dell\'oggetto per coprire le spese (commissioni, beneficenza, fondo). Default 10%. Più alto = guadagni di più ma l\'airdrop attira meno gente.',en:'Extra margin above the item value to cover costs (fees, charity, fund). Default 10%. Higher = you earn more but the airdrop attracts fewer people.'},
-  'ad-blocks':{it:'Quanti blocchi totali in vendita. Si calcola da solo, ma puoi scrivere il numero a mano.',en:'Total blocks on sale. Calculated automatically, but you can type a number by hand.'},
-  'ad-dur':{it:'Per quanto tempo è aperto l\'airdrop. Breve = senso di urgenza. Lungo = oggetti importanti, più tempo per decidere.',en:'How long the airdrop stays open. Short = urgency. Long = important items, more time to decide.'},
-  'ad-dl':{it:'Data e ora di chiusura. Si calcola da sola dalla durata. Puoi cambiarla a mano.',en:'Closing date and time. Calculated from the duration. You can change it by hand.'},
-  'ad-autodraw':{it:'Acceso = quando scade il tempo, il sistema sceglie il vincitore da solo. Spento = devi farlo tu a mano.',en:'On = when time runs out, the system picks the winner automatically. Off = you have to do it by hand.'},
-  'ad-thr':{it:'Quando i blocchi scontati venduti raggiungono questa percentuale, lo sconto finisce e parte il prezzo pieno. Esempio: 20% = al 20% dei blocchi venduti si chiude lo sconto.',en:'When sold discounted blocks reach this percentage, the discount ends and full price starts. Example: 20% = at 20% sold the discount closes.'},
-  'ad-status':{it:'In che fase è l\'airdrop adesso. Va in ordine: in valutazione → utente accetta → sconto iniziale → prezzo pieno → chiuso → completato. Cambia a mano solo in casi strani.',en:'What phase the airdrop is in now. Order: under review → user accepts → initial discount → full price → closed → completed. Change by hand only in unusual cases.'},
-  'ad-reject':{it:'Cosa vede l\'utente quando hai rifiutato. Da scrivere solo se hai messo lo status su "rifiutato".',en:'What the user sees when you reject. Only fill in if you set status to "rejected".'},
-  'ad-sim-pct':{it:'Quanti blocchi simulare come venduti. Per provare cosa succede senza toccare i dati veri.',en:'How many blocks to simulate as sold. To test what happens without touching real data.'},
-  'ad-sim-spread':{it:'Acceso = simula acquisti spalmati su più giorni (più realistico). Spento = tutti gli acquisti tutti insieme.',en:'On = simulates purchases spread across days (more realistic). Off = all purchases at once.'},
-  'ad-sim-run':{it:'Avvia la prova: il sistema finge di vendere e di estrarre il vincitore. NON salva niente, è solo una prova.',en:'Runs the test: the system pretends to sell and pick a winner. NOTHING is saved, it\'s just a test.'},
-  // Engine Config
-  'eng-save-cfg':{it:'Salva tutti i parametri dell\'algoritmo (pesi, divisioni, premi). ATTENZIONE: cambia il funzionamento di TUTTI gli airdrop futuri.',en:'Saves all the algorithm parameters (weights, divisions, rewards). WARNING: changes how ALL future airdrops work.'},
-  'eng-thr-flash':{it:'Per gli airdrop FLASH (6h): a che % di blocchi venduti finisce lo sconto e parte il prezzo pieno. Default 30% (alto = lo sconto finisce presto, atmosfera urgente).',en:'For FLASH airdrops (6h): at what % of blocks sold the discount ends and full price starts. Default 30% (high = discount ends fast, urgent feel).'},
-  'eng-thr-std':{it:'Per gli airdrop STANDARD (24h): a che % di blocchi venduti finisce lo sconto e parte il prezzo pieno. Default 20%.',en:'For STANDARD airdrops (24h): at what % of blocks sold the discount ends and full price starts. Default 20%.'},
-  'eng-thr-ext':{it:'Per gli airdrop EXTENDED (72h): a che % di blocchi venduti finisce lo sconto e parte il prezzo pieno. Default 15% (basso = lo sconto finisce subito, così il prezzo pieno ha più giorni).',en:'For EXTENDED airdrops (72h): at what % of blocks sold the discount ends and full price starts. Default 15% (low = discount ends quickly so full price gets more days).'},
-  'eng-autoclose':{it:'Acceso = quando vendi tutti i blocchi (100%), l\'airdrop chiude e si fa subito l\'estrazione del vincitore (anche prima della scadenza).',en:'On = when you sell all blocks (100%), the airdrop closes and the winner is picked right away (even before deadline).'},
-  'eng-save-thr':{it:'Salva le 3 percentuali sopra. Cambia il comportamento di tutti i nuovi airdrop creati con queste durate.',en:'Saves the 3 percentages above. Changes how all new airdrops with these durations behave.'}
+  // Approve modal (Valutazioni) — rich format
+  'bo-app-price':{it:{i:'💰',t:'Prezzo blocco',d:'Quanti ARIA per 1 blocco.',ex:'500 blocchi × 10 ARIA = 5.000 ARIA totali',tip:'Più alto = airdrop esclusivo, meno gente'},en:{i:'💰',t:'Block price',d:'How many ARIA per 1 block.',ex:'500 blocks × 10 ARIA = 5,000 ARIA total',tip:'Higher = exclusive airdrop, fewer participants'}},
+  'bo-app-blocks':{it:{i:'🧱',t:'Blocchi totali',d:'Quanti blocchi metti in vendita.',ex:'Range tipico: 100-1000 blocchi',tip:'Più blocchi = più gente, ma vincere è più difficile'},en:{i:'🧱',t:'Total blocks',d:'How many blocks you put on sale.',ex:'Typical range: 100-1000 blocks',tip:'More blocks = more participants but harder to win'}},
+  'bo-app-presale':{it:{i:'🎟️',t:'Prezzo presale',d:'ARIA per 1 blocco nei primi giorni (sconto).',ex:'Sale 10 ARIA → presale 7 ARIA (-30%)',tip:'Vuoto = niente sconto'},en:{i:'🎟️',t:'Presale price',d:'ARIA per block in early days (discount).',ex:'Sale 10 ARIA → presale 7 ARIA (-30%)',tip:'Empty = no discount'}},
+  'bo-app-presale-en':{it:{i:'🔀',t:'Presale on/off',d:'Decidi se partire con uno sconto iniziale.',ex:'Sì = presale → sale · No = subito sale',tip:'Sì = premi chi crede subito nell\'airdrop'},en:{i:'🔀',t:'Presale on/off',d:'Choose if you start with an early discount.',ex:'Yes = presale → sale · No = sale only',tip:'Yes = rewards early believers'}},
+  'bo-app-duration':{it:{i:'⏱️',t:'Durata',d:'Per quanto tempo è aperto.',ex:'6h flash · 24h standard · 72h extended',tip:'Breve = urgenza · Lungo = oggetti importanti'},en:{i:'⏱️',t:'Duration',d:'How long it stays open.',ex:'6h flash · 24h standard · 72h extended',tip:'Short = urgency · Long = important items'}},
+  'bo-app-deadline':{it:{i:'📅',t:'Deadline',d:'Quando chiude.',ex:'Auto: prossima ora piena + durata scelta',tip:'Cambiala a mano solo se serve davvero'},en:{i:'📅',t:'Deadline',d:'When it closes.',ex:'Auto: next full hour + chosen duration',tip:'Edit by hand only if really needed'}},
+  // Reject modal (Valutazioni) — rich format
+  'bo-rej-reason':{it:{i:'❌',t:'Motivo rifiuto',d:'Categoria del rifiuto.',ex:'"Sotto €500" oppure "Generico"',tip:'Regola: oggetti < €500 non si accettano'},en:{i:'❌',t:'Rejection reason',d:'Type of rejection.',ex:'"Below €500" or "Generic"',tip:'Rule: items below €500 are not accepted'}},
+  'bo-rej-note':{it:{i:'✍️',t:'Note utente',d:'Spiegazione che vede l\'utente.',ex:'"Foto sfocate, riproponi con immagini chiare"',tip:'Educato ma chiaro — è il suo unico feedback'},en:{i:'✍️',t:'User notes',d:'Explanation the user will see.',ex:'"Blurry photos, please resubmit clearly"',tip:'Polite but clear — it\'s their only feedback'}},
+  // Ad-modal (Gestione Airdrop) — rich format
+  'ad-desired':{it:{i:'🔒',t:'Prezzo desiderato',d:'Quanto chiedeva il venditore in submission.',ex:'Read-only — solo riferimento',tip:'Da qui parti per fissare la quotazione'},en:{i:'🔒',t:'Desired price',d:'What the seller asked at submission.',ex:'Read-only — reference only',tip:'Use as starting point for valuation'}},
+  'ad-min':{it:{i:'🔒',t:'Prezzo minimo',d:'Sotto questo, il venditore rifiuta.',ex:'Read-only — devi sempre garantirlo',tip:'Se la quotazione lo viola, salta l\'airdrop'},en:{i:'🔒',t:'Minimum price',d:'Below this, the seller refuses.',ex:'Read-only — must always be guaranteed',tip:'If valuation breaks it, skip the airdrop'}},
+  'ad-suggest':{it:{i:'🪄',t:'Suggerisci valori',d:'La piattaforma riempie i campi sotto.',ex:'Calcola da quotazione + minimo venditore',tip:'Punto di partenza — controlla sempre'},en:{i:'🪄',t:'Suggest values',d:'The platform fills the fields below.',ex:'Computed from valuation + seller minimum',tip:'Starting point — always double-check'}},
+  'ad-quotaz':{it:{i:'💎',t:'Quotazione AIROOBI',d:'Quanto vale l\'oggetto in EUR.',ex:'Submission €600 → quotazione €580 (mercato)',tip:'Da qui partono tutti gli altri calcoli'},en:{i:'💎',t:'AIROOBI valuation',d:'How much the item is worth in EUR.',ex:'Submission €600 → valuation €580 (market)',tip:'All other calculations start here'}},
+  'ad-bprice':{it:{i:'💰',t:'Block price (sale)',d:'ARIA per 1 blocco a prezzo pieno.',ex:'500 blocchi × 10 ARIA = 5.000 ARIA',tip:'Prezzo finale dopo l\'eventuale sconto'},en:{i:'💰',t:'Block price (sale)',d:'ARIA per block at full price.',ex:'500 blocks × 10 ARIA = 5,000 ARIA',tip:'Final price after the optional discount'}},
+  'ad-pprice':{it:{i:'🎟️',t:'Presale price',d:'ARIA per 1 blocco con sconto iniziale.',ex:'Sale 10 → presale 7 (sconto ~30%)',tip:'Vuoto = niente fase presale'},en:{i:'🎟️',t:'Presale price',d:'ARIA per block with early discount.',ex:'Sale 10 → presale 7 (~30% off)',tip:'Empty = no presale phase'}},
+  'ad-ppct':{it:{i:'📊',t:'% blocchi presale',d:'Che fetta vendi a sconto.',ex:'20% di 500 = primi 100 a sconto',tip:'Range tipico: 10-30%'},en:{i:'📊',t:'% presale blocks',d:'What share you sell discounted.',ex:'20% of 500 = first 100 discounted',tip:'Typical range: 10-30%'}},
+  'ad-extra':{it:{i:'➕',t:'Margine extra',d:'% sopra la quotazione per coprire spese.',ex:'Quot €500 + 10% = airdrop incassa €550',tip:'Default 10% — alto = guadagni più, attiri meno'},en:{i:'➕',t:'Extra margin',d:'% above valuation to cover costs.',ex:'Val €500 + 10% = airdrop collects €550',tip:'Default 10% — high = more profit, less appeal'}},
+  'ad-blocks':{it:{i:'🧱',t:'N° Blocchi',d:'Totale blocchi in vendita.',ex:'Auto: quotazione + extra% / block-price',tip:'Sovrascrivi se vuoi un numero "tondo"'},en:{i:'🧱',t:'Block count',d:'Total blocks on sale.',ex:'Auto: valuation + extra% / block-price',tip:'Override for a "round" number'}},
+  'ad-dur':{it:{i:'⏱️',t:'Durata',d:'Per quanto tempo è aperto.',ex:'6h flash · 24h standard · 72h extended',tip:'Oggetti importanti = extended (72h)'},en:{i:'⏱️',t:'Duration',d:'How long it stays open.',ex:'6h flash · 24h standard · 72h extended',tip:'Important items = extended (72h)'}},
+  'ad-dl':{it:{i:'📅',t:'Deadline',d:'Data e ora di chiusura.',ex:'Auto: prossima ora piena + durata',tip:'Modifica solo per casi eccezionali'},en:{i:'📅',t:'Deadline',d:'Closing date and time.',ex:'Auto: next full hour + duration',tip:'Only override in exceptional cases'}},
+  'ad-autodraw':{it:{i:'🎲',t:'Auto-draw',d:'Estrazione automatica alla scadenza.',ex:'ON = sistema sceglie · OFF = decidi tu',tip:'ON in produzione, OFF per testare'},en:{i:'🎲',t:'Auto-draw',d:'Automatic draw at deadline.',ex:'ON = system picks · OFF = you decide',tip:'ON in production, OFF for testing'}},
+  'ad-thr':{it:{i:'🎯',t:'Soglia presale → sale',d:'% sotto cui chiude lo sconto e parte il pieno.',ex:'20% = al 20% blocchi venduti, fine sconto',tip:'Default per durata: 30/20/15%'},en:{i:'🎯',t:'Presale → sale threshold',d:'% at which discount ends and full price starts.',ex:'20% = at 20% sold the discount closes',tip:'Defaults by duration: 30/20/15%'}},
+  'ad-status':{it:{i:'🚦',t:'Status',d:'Fase attuale dell\'airdrop.',ex:'in_valutazione → presale → sale → closed',tip:'Modifica a mano solo per casi strani'},en:{i:'🚦',t:'Status',d:'Current airdrop phase.',ex:'review → presale → sale → closed',tip:'Manual change only in unusual cases'}},
+  'ad-reject':{it:{i:'❌',t:'Motivo rifiuto',d:'Cosa vede l\'utente quando rifiuti.',ex:'Compila solo se status = rifiutato_*',tip:'Sii chiaro, è il suo unico feedback'},en:{i:'❌',t:'Rejection reason',d:'What the user sees when you reject.',ex:'Only fill if status = rejected_*',tip:'Be clear — it\'s their only feedback'}},
+  'ad-sim-pct':{it:{i:'🔢',t:'% blocchi simulati',d:'Quanti blocchi finti vendere nella prova.',ex:'50% di 500 = 250 blocchi venduti finti',tip:'Per testare scenari senza dati reali'},en:{i:'🔢',t:'% simulated blocks',d:'How many fake blocks to sell in the test.',ex:'50% of 500 = 250 fake-sold blocks',tip:'Test scenarios without real data'}},
+  'ad-sim-spread':{it:{i:'📈',t:'Distribuisci nel tempo',d:'Acquisti spalmati o tutti insieme.',ex:'ON = realistico · OFF = burst istantaneo',tip:'ON per testare bonus temporali'},en:{i:'📈',t:'Spread over time',d:'Purchases spread out or all at once.',ex:'ON = realistic · OFF = instant burst',tip:'ON to test time-based bonuses'}},
+  'ad-sim-run':{it:{i:'▶️',t:'Run simulation',d:'Avvia la prova (NON salva nulla).',ex:'Finge vendite + estrazione, mostra risultato',tip:'Sicuro — è solo una prova'},en:{i:'▶️',t:'Run simulation',d:'Runs the test (saves NOTHING).',ex:'Fakes sales + draw, shows result',tip:'Safe — it\'s just a test'}},
+  // Engine Config — rich format
+  'eng-save-cfg':{it:{i:'⚠️',t:'Salva config engine',d:'Salva pesi, divisioni e premi.',ex:'Impatta TUTTI gli airdrop futuri',tip:'Sicuro di voler cambiare?'},en:{i:'⚠️',t:'Save engine config',d:'Saves weights, splits and rewards.',ex:'Affects ALL future airdrops',tip:'Sure you want to change this?'}},
+  'eng-thr-flash':{it:{i:'⚡',t:'Soglia FLASH (6h)',d:'% blocchi venduti che chiude lo sconto.',ex:'Default 30% — alto = sconto finisce presto',tip:'Flash = atmosfera urgente'},en:{i:'⚡',t:'FLASH threshold (6h)',d:'% of sold blocks that ends the discount.',ex:'Default 30% — high = discount ends fast',tip:'Flash = urgent vibe'}},
+  'eng-thr-std':{it:{i:'🕐',t:'Soglia STANDARD (24h)',d:'% blocchi venduti che chiude lo sconto.',ex:'Default 20% — bilanciamento normale',tip:'Il caso più comune'},en:{i:'🕐',t:'STANDARD threshold (24h)',d:'% of sold blocks that ends the discount.',ex:'Default 20% — normal balance',tip:'The most common case'}},
+  'eng-thr-ext':{it:{i:'🕒',t:'Soglia EXTENDED (72h)',d:'% blocchi venduti che chiude lo sconto.',ex:'Default 15% — basso = pieno ha più giorni',tip:'Extended = oggetti importanti'},en:{i:'🕒',t:'EXTENDED threshold (72h)',d:'% of sold blocks that ends the discount.',ex:'Default 15% — low = full price has more days',tip:'Extended = important items'}},
+  'eng-autoclose':{it:{i:'🏁',t:'Auto-close al 100%',d:'Chiude e estrae appena vendi tutto.',ex:'100% blocchi venduti = draw immediato',tip:'ON = niente attese inutili'},en:{i:'🏁',t:'Auto-close at 100%',d:'Closes and draws as soon as everything is sold.',ex:'100% sold = immediate draw',tip:'ON = no needless waiting'}},
+  'eng-save-thr':{it:{i:'💾',t:'Salva soglie',d:'Salva le 3 % sopra.',ex:'Effetto su tutti i nuovi airdrop',tip:'Modifica solo dopo simulazioni'},en:{i:'💾',t:'Save thresholds',d:'Saves the 3 percentages above.',ex:'Affects every new airdrop',tip:'Only change after simulations'}}
 };
+function _ttEsc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
 function showAboTip(el,key){
   var tip=document.getElementById('abo-tooltip');
   if(!tip)return;
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var info=ABO_TIPS[key];
   if(!info)return;
-  tip.textContent=info[lang]||info.it;
+  var c=info[lang]||info.it;
+  if(typeof c==='string'){
+    tip.textContent=c;
+  }else{
+    var html='';
+    if(c.t)html+='<div class="tt-h">'+(c.i?'<span class="tt-i">'+_ttEsc(c.i)+'</span>':'')+'<span class="tt-t">'+_ttEsc(c.t)+'</span></div>';
+    if(c.d)html+='<div class="tt-d">'+_ttEsc(c.d)+'</div>';
+    if(c.ex)html+='<div class="tt-ex">▸ '+_ttEsc(c.ex)+'</div>';
+    if(c.tip)html+='<div class="tt-tip">💡 '+_ttEsc(c.tip)+'</div>';
+    tip.innerHTML=html;
+  }
   tip.style.display='block';
   var rect=el.getBoundingClientRect();
-  var tipW=Math.min(300,window.innerWidth-32);
+  var tipW=Math.min(340,window.innerWidth-32);
   tip.style.maxWidth=tipW+'px';
   var left=Math.min(rect.left,window.innerWidth-tipW-16);
   left=Math.max(8,left);
