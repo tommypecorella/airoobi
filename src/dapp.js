@@ -29,6 +29,19 @@ var CAT_ICONS={
   vino:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2h8l-1 7a5 5 0 01-3 4.5 5 5 0 01-3-4.5L8 2zM12 13.5V21M8 21h8"/></svg>'
 };
 
+// UI icons (Lucide-style, monochrome, currentColor). Never use colored emoji in UI.
+var UI_ICONS={
+  target:'<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+  trophy:'<svg class="ico" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>',
+  gem:'<svg class="ico" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>',
+  bulb:'<svg class="ico" viewBox="0 0 24 24"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>',
+  ban:'<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>',
+  star:'<svg class="ico" viewBox="0 0 24 24"><polygon points="12 2 15 8.5 22 9.3 17 14.1 18.2 21 12 17.8 5.8 21 7 14.1 2 9.3 9 8.5 12 2"/></svg>',
+  zap:'<svg class="ico" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+  alert:'<svg class="ico" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  up:'<svg class="ico" viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>'
+};
+
 async function loadRobiPrice(){
   try{
     var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
@@ -1799,7 +1812,7 @@ async function openDetail(id){
     // AUTO-BUY
     +(myBlocks>0?
     '<div class="auto-buy-box" id="auto-buy-box">'
-    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px"><span class="it">&#9889; AUTO-BUY</span><span class="en">&#9889; AUTO-BUY</span></div>'
+    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">'+UI_ICONS.zap+' AUTO-BUY</div>'
     +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Compra automaticamente blocchi a intervalli regolari.</span><span class="en">Automatically buy blocks at regular intervals.</span></p>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">BLOCCHI</span><span class="en">BLOCKS</span></label>'
@@ -1998,8 +2011,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
 
   el.innerHTML=''
     +'<div class="strategy-box'+(isFirst?' first':'')+'">'
-    +'<div class="strategy-title"><span class="it">'+(isFirst?'Stai vincendo!':'&#127919; Come arrivare 1&deg;')+'</span>'
-    +'<span class="en">'+(isFirst?'You\'re winning!':'&#127919; How to reach #1')+'</span></div>'
+    +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Stai vincendo!':'Come arrivare 1&deg;')+'</span>'
+    +'<span class="en">'+(isFirst?'You\'re winning!':'How to reach #1')+'</span></div>'
     +'<div class="strategy-score-top">'
     +'<span class="it">Il tuo punteggio: <strong>'+scoreVal+'</strong></span>'
     +'<span class="en">Your score: <strong>'+scoreVal+'</strong></span>'
@@ -2007,30 +2020,30 @@ function updateStrategyGuide(scores,pos,total,myScore){
     +'<div class="strategy-factors">'
     +'<div class="strategy-factor-block van">'
     +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">&#127942; <span class="it">Vantaggio sul primo in classifica</span><span class="en">Advantage over #1</span></span>'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Vantaggio sul primo in classifica</span><span class="en">Advantage over #1</span></span>'
     +'<span class="strategy-factor-weight-badge"><span class="it">pesa 70%</span><span class="en">weight 70%</span></span>'
     +'</div>'
     +'<div class="strategy-factor-bar">'
     +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+f1Pct+'%"></div></div>'
     +'<div class="strategy-bar-val">'+f1.toFixed(2)+'</div>'
     +'</div>'
-    +'<div class="strategy-factor-hint">'
-    +'<span class="it">&#128161; Acquista pi&ugrave; blocchi per colmare il distacco dal primo</span>'
-    +'<span class="en">&#128161; Buy more blocks to close the gap with #1</span>'
+    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
+    +' <span class="it">Acquista pi&ugrave; blocchi per colmare il distacco dal primo</span>'
+    +'<span class="en">Buy more blocks to close the gap with #1</span>'
     +'</div>'
     +'</div>'
     +'<div class="strategy-factor-block imp">'
     +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">&#128142; <span class="it">Impegno nella categoria</span><span class="en">Commitment in this category</span></span>'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.gem+' <span class="it">Impegno nella categoria</span><span class="en">Commitment in this category</span></span>'
     +'<span class="strategy-factor-weight-badge"><span class="it">pesa 30%</span><span class="en">weight 30%</span></span>'
     +'</div>'
     +'<div class="strategy-factor-bar">'
     +'<div class="strategy-bar-track"><div class="strategy-bar-fill f2" style="width:'+f2Pct+'%"></div></div>'
     +'<div class="strategy-bar-val">'+f2.toFixed(2)+'</div>'
     +'</div>'
-    +'<div class="strategy-factor-hint">'
-    +'<span class="it">&#128161; Partecipa spesso agli airdrop di questa categoria per accumulare impegno nel tempo</span>'
-    +'<span class="en">&#128161; Join airdrops in this category often to build commitment over time</span>'
+    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
+    +' <span class="it">Partecipa spesso agli airdrop di questa categoria per accumulare impegno nel tempo</span>'
+    +'<span class="en">Join airdrops in this category often to build commitment over time</span>'
     +'</div>'
     +'</div>'
     +'</div>'

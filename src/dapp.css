@@ -778,6 +778,10 @@ select option{background:var(--gray-800);color:var(--white)}
 .strategy-factor-bar{display:flex;align-items:center;gap:10px}
 .strategy-factor-hint{font-size:11px;line-height:1.5;color:var(--gray-400);padding:6px 10px;background:rgba(255,255,255,.02);border-radius:var(--radius-sm);border-left:2px solid var(--aria)}
 .strategy-factor-block.imp .strategy-factor-hint{border-left-color:var(--gold)}
+.ico{display:inline-block;vertical-align:-.18em;width:1.1em;height:1.1em;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.strategy-factor-block.van .strategy-factor-heading .ico{color:var(--aria)}
+.strategy-factor-block.imp .strategy-factor-heading .ico{color:var(--gold)}
+.strategy-factor-hint .ico{color:var(--gray-500);margin-right:2px}
 
 /* ── My Stats panel ── */
 .detail-mystats{border:1px solid var(--gray-700);background:var(--card-bg);border-radius:var(--radius);padding:18px;margin:12px 0 20px}
