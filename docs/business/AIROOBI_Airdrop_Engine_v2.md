@@ -51,6 +51,12 @@
 > - FIX: F2 denominatore ora è il totale globale ARIA nella categoria (non max singolo partecipante)
 >   Questo stabilizza F2 quando un utente si azzera dopo vittoria (One Category Rule)
 >
+> **Changelog 19 Apr 2026 (v2.7.1) — Tiebreaker power-user:**
+> - ADD: Nuovo tiebreaker `lifetime_aria` (ARIA totali cross-cat, escluso cancellati/annullati) inserito tra "più blocchi airdrop corrente" e "primo blocco prima".
+> - RATIONALE: premia i power-user (attività generale su AIROOBI) SOLO in caso di pareggio Punteggio. Non altera il principio mono-fattoriale anti-gambling (Skeezu confirm "prova del 9").
+> - Ordine completo: (1) score v4 (2) più blocchi corrente (3) più ARIA lifetime (4) primo blocco prima (5) seniority.
+> - Migrazione: `20260419170300_scoring_v4_tiebreaker_lifetime.sql`.
+>
 > **Changelog 19 Apr 2026 (v2.7) — Scoring v4 anti-gambling + Early close lockdown:**
 > - REWRITE: `calculate_winner_score` torna mono-fattoriale. **Punteggio = SUM(ARIA spesi in categoria post-ultima-vittoria, escluso airdrop annullati) + ARIA airdrop corrente**. Niente più F1/F2/pesi, niente normalizzazione.
 > - RATIONALE (Skeezu): evitare che per ottenere un oggetto €500 tu ne abbia già spesi > €500 in categoria. Principio: "vince chi dal primo giorno ha impegnato più ARIA in categoria". Anti-gambling by design.
