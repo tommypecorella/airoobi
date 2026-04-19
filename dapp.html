@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.33.1">
+<link rel="stylesheet" href="/src/dapp.css?v=3.34.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -40,10 +40,6 @@
     <span></span><span></span><span></span>
   </button>
   <nav class="topbar-nav" id="topbar-nav">
-    <a href="/" data-page="home" onclick="navigateTo('home',event)">
-      <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
-      Home
-    </a>
     <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
       <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
       AIRDROPS
@@ -64,19 +60,36 @@
       <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
       <span class="it">Portafoglio</span><span class="en">Wallet</span>
     </a>
-    <a href="/come-funziona-airdrop" data-page="rules">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
-      <span class="it">Come funziona</span><span class="en">How it works</span>
-    </a>
-    <a href="/impara" data-page="learn" onclick="navigateTo('learn',event)">
-      <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-      <span class="it">Impara</span><span class="en">Learn</span>
-    </a>
-    <a href="/blog" data-page="blog">
-      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-      Blog
-    </a>
-    <a href="/faq" data-page="faq">
+    <div class="nav-dropdown" style="position:relative">
+      <button class="nav-dropdown-trigger" id="nav-discover-btn" onclick="toggleDiscoverMenu(event)" type="button" style="background:none;border:none;color:var(--gray-400);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;gap:7px;height:60px;padding:0 16px;border-bottom:2px solid transparent;transition:all .25s">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        <span class="it">Scopri</span><span class="en">Discover</span>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="nav-dropdown-menu" id="nav-discover-menu" style="display:none;position:absolute;top:60px;right:0;min-width:200px;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:8px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:110">
+        <a href="/" data-page="home" onclick="navigateTo('home',event);closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
+          <span class="it">Home</span><span class="en">Home</span>
+        </a>
+        <a href="/come-funziona-airdrop" data-page="rules" onclick="closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+          <span class="it">Come funziona</span><span class="en">How it works</span>
+        </a>
+        <a href="/impara" data-page="learn" onclick="navigateTo('learn',event);closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          <span class="it">Impara</span><span class="en">Learn</span>
+        </a>
+        <a href="/blog" data-page="blog" onclick="closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          Blog
+        </a>
+        <a href="/faq" data-page="faq" onclick="closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          FAQ
+        </a>
+      </div>
+    </div>
+    <a href="/faq" data-page="faq" style="display:none">
       <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
       FAQ
     </a>
@@ -503,10 +516,22 @@
         <label class="submit-label"><span class="it">Categoria</span><span class="en">Category</span> *</label>
         <select class="submit-select" id="sub-cat">
           <option value="">—</option>
-          <option value="mobile">Mobile / Tech Entry</option>
-          <option value="tech">Tech / Strumenti</option>
-          <option value="luxury">Luxury / 2 Ruote</option>
-          <option value="ultra_luxury">Ultra Luxury</option>
+          <option value="smartphone">Smartphone</option>
+          <option value="tablet">Tablet</option>
+          <option value="computer">Computer</option>
+          <option value="gaming">Gaming</option>
+          <option value="audio">Audio</option>
+          <option value="fotografia">Fotografia</option>
+          <option value="orologi">Orologi</option>
+          <option value="gioielli">Gioielli</option>
+          <option value="borse">Borse</option>
+          <option value="moda">Moda</option>
+          <option value="biciclette">Biciclette</option>
+          <option value="arredamento">Arredamento</option>
+          <option value="sport">Sport</option>
+          <option value="strumenti">Strumenti musicali</option>
+          <option value="arte">Arte</option>
+          <option value="vino">Vini</option>
         </select>
       </div>
       <!-- ── FOTO GUIDATE ── -->
@@ -765,7 +790,7 @@
         <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold)"><span class="it">ANDAMENTO ROBI</span><span class="en">ROBI TREND</span></div>
         <div id="robi-sparkline-val" style="font-family:var(--font-h);font-size:16px;color:var(--gold)">—</div>
       </div>
-      <canvas id="robi-sparkline" style="width:100%;height:40px"></canvas>
+      <canvas id="robi-sparkline" style="width:100%;height:120px"></canvas>
       <div style="margin-top:10px">
         <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-500);margin-bottom:6px"><span class="it">STORICO</span><span class="en">HISTORY</span></div>
         <div id="robi-history-list" style="max-height:150px;overflow-y:auto">
@@ -1066,7 +1091,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.33.1</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.34.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1138,6 +1163,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.33.1"></script>
+<script src="/src/dapp.js?v=3.34.0"></script>
 </body>
 </html>

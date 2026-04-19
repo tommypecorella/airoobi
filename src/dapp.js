@@ -428,6 +428,24 @@ async function loadDappAvatar(){
   }catch(e){}
 }
 
+function toggleDiscoverMenu(e){
+  if(e){e.stopPropagation();e.preventDefault();}
+  var menu=document.getElementById('nav-discover-menu');
+  if(!menu)return;
+  menu.style.display=menu.style.display==='block'?'none':'block';
+}
+function closeDiscoverMenu(){
+  var menu=document.getElementById('nav-discover-menu');
+  if(menu)menu.style.display='none';
+}
+// Click-outside per chiudere dropdown "Scopri"
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('nav-discover-menu');
+  var btn=document.getElementById('nav-discover-btn');
+  if(!menu||menu.style.display!=='block')return;
+  if(menu.contains(e.target)||(btn&&btn.contains(e.target)))return;
+  menu.style.display='none';
+});
 function toggleUserMenu(){
   document.getElementById('user-menu').classList.toggle('active');
 }
@@ -2532,7 +2550,6 @@ function renderMyAirdrops(){
       +'<button style="display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:7px 14px;font-family:var(--font-b);font-size:11px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:all .25s;border-radius:var(--radius-sm)" onclick="toggleMyChat(\''+a.id+'\')" onmouseover="this.style.borderColor=\'var(--accent)\';this.style.color=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">'
       +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>'
       +'<span class="it">Messaggi</span><span class="en">Messages</span></button>'
-      +(canCancel?'<button class="cancel-part-btn" onclick="confirmCancelParticipation(\''+a.id+'\',\''+escHtml(a.title)+'\','+item.blocks+','+item.spent+')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg> <span class="it">Ritira</span><span class="en">Withdraw</span></button>':'')
       +'</div>'
       +'<div id="my-chat-'+a.id+'" style="display:none;padding:0 16px 16px">'
       +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
@@ -4059,23 +4076,91 @@ async function loadRobiHistory(token){
       canvas.style.display='';
       var ctx=canvas.getContext('2d');
       var dpr=window.devicePixelRatio||1;
-      var w=canvas.offsetWidth;var h=48;
+      var w=canvas.offsetWidth;var h=120;
       canvas.width=w*dpr;canvas.height=h*dpr;
       ctx.scale(dpr,dpr);
-      // Cumulative ROBI over time
+
+      // Padding per assi (sinistra Y labels, basso X labels)
+      var pL=46, pR=8, pT=10, pB=22;
+      var plotW=w-pL-pR, plotH=h-pT-pB;
+
+      // Ordina cronologicamente + calcola cumulativo
       var sorted=items.slice().reverse();
-      var cum=0;var pts=[];
-      sorted.forEach(function(it){cum+=parseFloat(it.shares)||0;pts.push(cum);});
-      var max=Math.max.apply(null,pts)||1;
-      ctx.strokeStyle='#B8960C';ctx.lineWidth=1.5;ctx.beginPath();
-      pts.forEach(function(v,i){
-        var x=(i/(pts.length-1||1))*w;var y=h-(v/max)*(h-4)-2;
+      var cum=0; var pts=[];
+      sorted.forEach(function(it){
+        cum+=parseFloat(it.shares)||0;
+        pts.push({val:cum, at:it.created_at});
+      });
+      var max=Math.max.apply(null,pts.map(function(p){return p.val}))||1;
+      // Scala Y arrotondata ai 5/10/50/100 per labels pulite
+      function niceScale(v){
+        var e=Math.pow(10,Math.floor(Math.log10(Math.max(1,v))));
+        var n=v/e;
+        if(n<=1)n=1;else if(n<=2)n=2;else if(n<=5)n=5;else n=10;
+        return n*e;
+      }
+      var yMax=niceScale(max);
+
+      // Grid + asse Y
+      ctx.font='9px DM Mono, monospace';
+      ctx.fillStyle='rgba(136,146,174,.7)';
+      ctx.textAlign='right';
+      ctx.textBaseline='middle';
+      var yTicks=4;
+      ctx.strokeStyle='rgba(255,255,255,.04)';
+      ctx.lineWidth=1;
+      for(var i=0;i<=yTicks;i++){
+        var yVal=(yMax*i/yTicks);
+        var yPx=pT+plotH-(yVal/yMax)*plotH;
+        ctx.fillText(yVal.toFixed(yMax<5?2:yMax<20?1:0),pL-6,yPx);
+        ctx.beginPath();ctx.moveTo(pL,yPx);ctx.lineTo(w-pR,yPx);ctx.stroke();
+      }
+      // Label asse Y
+      ctx.save();
+      ctx.translate(10,pT+plotH/2);
+      ctx.rotate(-Math.PI/2);
+      ctx.textAlign='center';
+      ctx.fillStyle='rgba(184,150,12,.8)';
+      ctx.fillText('ROBI',0,0);
+      ctx.restore();
+
+      // Asse X: label start/end (ed eventualmente midpoint)
+      ctx.textAlign='center';
+      ctx.textBaseline='top';
+      ctx.fillStyle='rgba(136,146,174,.7)';
+      function fmtD(iso){var d=new Date(iso);return (d.getDate()+'/'+(d.getMonth()+1));}
+      if(pts.length>=1){
+        ctx.fillText(fmtD(pts[0].at),pL,h-pB+5);
+        if(pts.length>=3){
+          var midIdx=Math.floor(pts.length/2);
+          ctx.fillText(fmtD(pts[midIdx].at),pL+plotW/2,h-pB+5);
+        }
+        ctx.fillText(fmtD(pts[pts.length-1].at),w-pR,h-pB+5);
+      }
+
+      // Linea ROBI cumulativa
+      ctx.strokeStyle='#B8960C';ctx.lineWidth=2;ctx.beginPath();
+      pts.forEach(function(p,i){
+        var x=pL+(i/(pts.length-1||1))*plotW;
+        var y=pT+plotH-(p.val/yMax)*plotH;
         i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
       });
       ctx.stroke();
-      // Fill
-      ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.closePath();
-      ctx.fillStyle='rgba(184,150,12,.08)';ctx.fill();
+
+      // Area sotto la linea
+      ctx.lineTo(pL+plotW,pT+plotH);
+      ctx.lineTo(pL,pT+plotH);
+      ctx.closePath();
+      ctx.fillStyle='rgba(184,150,12,.12)';
+      ctx.fill();
+
+      // Puntini sui dati
+      ctx.fillStyle='#B8960C';
+      pts.forEach(function(p,i){
+        var x=pL+(i/(pts.length-1||1))*plotW;
+        var y=pT+plotH-(p.val/yMax)*plotH;
+        ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();
+      });
     }
     var valEl=document.getElementById('robi-sparkline-val');
     if(valEl){
