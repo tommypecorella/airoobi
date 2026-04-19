@@ -1,5 +1,5 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 2.4 · 19 Aprile 2026 · DOCUMENTO FONDATIVO**
+**Version 2.5 · 19 Aprile 2026 · DOCUMENTO FONDATIVO**
 
 > Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
 > del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
@@ -50,6 +50,16 @@
 > - UI: Dettagli prodotto spostati sotto il titolo (non più in accordion)
 > - FIX: F2 denominatore ora è il totale globale ARIA nella categoria (non max singolo partecipante)
 >   Questo stabilizza F2 quando un utente si azzera dopo vittoria (One Category Rule)
+>
+> **Changelog 19 Apr 2026 (v2.5) — Fasi progetto allineate a airoobi.com/#roadmap:**
+> - CHANGE: Le fasi progetto passano da 3 (Alpha/Beta/Mainnet) a **4**: **Alpha · Beta · Pre-Prod · Mainnet** (allineamento con la roadmap pubblica su airoobi.com/#roadmap).
+> - ADD: **Criterio CORE di avanzamento** = soglia utenti registrati.
+>   * **Alpha**: 0→1.000 utenti (Alpha Brave + Alpha Wise, in quest'ordine)
+>   * **Beta**: 1.000→5.000 utenti — dApp navigabile con dati simulati, primi airdrop di test
+>   * **Pre-Prod**: 5.000→10.000 utenti — test reali community ristretta, pagamenti, KYC, stress test
+>   * **Mainnet**: da 10.000 utenti in poi — blockchain live Kaspa, primo airdrop reale, ARIA/ROBI/KAS operativi
+> - IMPACT: I parametri GIFT_PCT (ROBI scoperti) pianificati per v2.4 si espandono da 3 a 4 valori: Alpha 15% · Beta 10% · Pre-Prod 7% · Mainnet 5% (valori indicativi, da tarare coi feedback alpha).
+> - UI: Pagina EDU `/come-funziona-airdrop` §10 aggiornata con 4 fasi + soglie esplicite.
 >
 > **Changelog 19 Apr 2026 (v2.4) — Fairness Guard + UI Refinement:**
 > - ADD: Fairness Guard completa — blocca acquisto blocchi quando matematicamente impossibile arrivare 1° (`blocchi_necessari > blocchi_rimanenti`). Mai restituisce ARIA al sicuro.

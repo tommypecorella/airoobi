@@ -1,6 +1,7 @@
 # AIROOBI — Business Foundations
-**BUS-001 · Version 3.3 · Final · 19 Aprile 2026**
+**BUS-001 · Version 3.4 · Final · 19 Aprile 2026**
 
+> v3.4 (19 Apr 2026 · tardo pom): **Fasi progetto a 4 stadi** allineate alla roadmap pubblica: Alpha (0→1k utenti) · Beta (1k→5k) · Pre-Prod (5k→10k) · Mainnet (10k+). Soglia utenti = **criterio CORE** di avanzamento. Deliverable EDU `/come-funziona-airdrop` §10 e Engine v2.5 aggiornati. Pagina EDU `/come-funziona-airdrop` pubblica (no auth) come fonte di verità utente.
 > v3.3 (19 Apr 2026): Fairness Guard estesa all'Auto-Buy. KPI user-facing ridenominati (Vantaggio/Impegno/Punteggio). UI refresh: icone flat monocromatiche, avatar utente nella topbar airdrop, banner A-ADS rimosso dalla dApp.
 > v3.2: DB reset 28 Mar 2026 (airdrops clean slate per testing). Airdrop engine v2 live. Chat valutazione. Multi-foto. "dApp" → "APP". Dominio split: airoobi.com + airoobi.app.
 > v3.1: Importi ARIA corretti. Stage Alpha 0 APERTO (DB reset 11 Mar 2026). Terminologia "vincere" rimossa.
