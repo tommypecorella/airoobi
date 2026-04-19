@@ -472,6 +472,12 @@ function hideMsg(){
 
 function initBuy(){
   if(!_currentDetail||_buyQty<=0)return;
+  // Fairness guard: acquisto bloccato se matematicamente impossibile arrivare 1°
+  var bb=document.querySelector('.buy-box');
+  if(bb&&bb.classList.contains('fair-blocked')){
+    showMsg('err','<span class="it">&#9940; Acquisto bloccato per fairness: non potresti arrivare 1&deg;.</span><span class="en">&#9940; Purchase blocked for fairness: you can\'t reach #1.</span>');
+    return;
+  }
   var a=_currentDetail;
   var isPresale=a.status==='presale';
   var price=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
@@ -705,6 +711,24 @@ function updateDetailPosition(airdropId,scores){
   updateStrategyGuide(scores,pos,total,myScore);
 }
 
+// ── Fairness guard: blocca acquisto se matematicamente impossibile arrivare 1° ──
+function applyFairnessBlock(blocked,needed,remaining){
+  var buyBtn=document.getElementById('buy-btn');
+  if(!buyBtn)return;
+  var buyBox=buyBtn.closest('.buy-box');
+  var buySlider=document.getElementById('buy-slider');
+  var buyMsg=document.getElementById('buy-msg');
+  if(blocked){
+    if(buyBox)buyBox.classList.add('fair-blocked');
+    buyBtn.disabled=true;
+    buyBtn.innerHTML='<span class="it">&#9940; Fairness: impossibile arrivare 1&deg;</span><span class="en">&#9940; Fairness: can\'t reach #1</span>';
+    if(buySlider)buySlider.disabled=true;
+    document.querySelectorAll('.buy-preset').forEach(function(b){b.disabled=true;b.style.opacity='.4';b.style.cursor='not-allowed';});
+    if(buyMsg)buyMsg.innerHTML='<div style="margin-top:10px;padding:10px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);border-radius:6px;font-size:12px;line-height:1.55;color:#ff9b70"><span class="it">Ti servono <strong>'+needed+'</strong> blocchi ma ne restano solo <strong>'+remaining+'</strong>. Acquisto bloccato per non farti sprecare ARIA.</span><span class="en">You need <strong>'+needed+'</strong> blocks but only <strong>'+remaining+'</strong> remain. Purchase blocked to save your ARIA.</span></div>';
+  }
+  // Nota: non ri-abilitiamo mai (la condizione è monotona — una volta impossibile, resta impossibile).
+}
+
 // ── Strategy Guide ──
 function updateStrategyGuide(scores,pos,total,myScore){
   var el=document.getElementById('detail-strategy');if(!el)return;
@@ -746,6 +770,11 @@ function updateStrategyGuide(scores,pos,total,myScore){
     blocksToFirst=Math.max(0,leaderBlocks-myBlocks+1);
   }
 
+  // Fairness: matematicamente impossibile arrivare 1° con i blocchi rimanenti?
+  var remainingBlocks=Math.max(0,(a.total_blocks||0)-(a.blocks_sold||0));
+  var mathImpossible=pos>1&&blocksToFirst>0&&blocksToFirst>remainingBlocks;
+  applyFairnessBlock(mathImpossible,blocksToFirst,remainingBlocks);
+
   var f1weak=f1<f2;
   var isFirst=pos===1;
 
@@ -767,6 +796,9 @@ function updateStrategyGuide(scores,pos,total,myScore){
         tipsEn.push('&#9888; #2 is only <strong>'+gap+'</strong> blocks behind — tight margin!');
       }
     }
+  } else if(mathImpossible){
+    tipsIt.push('&#9940; <strong>Matematicamente impossibile arrivare 1&deg;</strong>: ti servono '+blocksToFirst+' blocchi ma ne restano solo '+remainingBlocks+'. Acquisto bloccato per fairness — la tua ARIA resta al sicuro.');
+    tipsEn.push('&#9940; <strong>Mathematically impossible to reach #1</strong>: you need '+blocksToFirst+' blocks but only '+remainingBlocks+' remain. Purchase blocked for fairness — your ARIA stays safe.');
   } else {
     if(blocksToFirst>0){
       tipsIt.push('&#127919; Ti servono circa <strong>'+blocksToFirst+'</strong> blocchi in pi&ugrave; per raggiungere il 1&deg; posto.');
