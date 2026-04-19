@@ -76,6 +76,9 @@ var _myParts=[];
 var _myRanks={}; // {airdrop_id: {rank, total, score}}
 var _robiPrice=0; // treasury×0.999/robi_circolanti
 var _currentFilter='all';
+var _currentSort='deadline';
+var _searchQuery='';
+var _searchDebounce=null;
 var _currentDetail=null;
 var _pendingBuy=null;
 var _isAdmin=false;
@@ -203,11 +206,27 @@ function toggleLang(){
   root.setAttribute('lang',next);
   document.getElementById('lang-btn').textContent=next==='it'?'EN':'IT';
   localStorage.setItem('airoobi_lang',next);
+  applyExploreI18n(next);
+}
+function applyExploreI18n(lang){
+  var input=document.getElementById('etb-search-input');
+  if(input){
+    var p=input.getAttribute('data-placeholder-'+lang);
+    if(p)input.setAttribute('placeholder',p);
+  }
+  document.querySelectorAll('#etb-sort-select option').forEach(function(opt){
+    var t=opt.getAttribute('data-'+lang);
+    if(t)opt.textContent=t;
+  });
 }
 // Restore saved language
 (function(){
   var saved=localStorage.getItem('airoobi_lang');
   if(saved&&saved!=='it'){toggleLang();}
+  else{
+    // Ensure explore i18n applied even when staying on default 'it'
+    document.addEventListener('DOMContentLoaded',function(){applyExploreI18n('it')});
+  }
 })();
 
 // ── Token refresh ──
@@ -1090,9 +1109,9 @@ function showPage(page){
     var panel=document.getElementById('tab-'+t);
     if(panel)panel.style.display=page===t?'block':'none';
   });
-  // Show/hide page header (not on home page)
+  // Show/hide page header (home and explore use their own hero)
   var pageHeader=document.getElementById('page-header');
-  if(pageHeader)pageHeader.style.display=page==='home'?'none':'block';
+  if(pageHeader)pageHeader.style.display=(page==='home'||page==='explore')?'none':'block';
   // Update nav active state
   document.querySelectorAll('.topbar-nav a, .topbar-mobile-menu a').forEach(function(a){
     a.classList.toggle('active',a.dataset.page===page);
@@ -1107,6 +1126,7 @@ function showPage(page){
     }
   }
   if(page==='home'){loadHomeDashboard();startFeedPolling();}
+  if(page==='explore'){bindExploreSearch();}
   if(page==='my'){renderMyAirdrops();loadMySubmissions();}
   if(page==='submit'){loadValuationCost().then(function(){updateSubmitCostUI();});}
   if(page==='referral')loadDappReferral();
@@ -1141,6 +1161,25 @@ function filterCat(cat){
     p.classList.toggle('active',isCat);
   });
   renderGrid();
+}
+
+function changeSort(value){
+  _currentSort=value||'deadline';
+  renderGrid();
+}
+
+function bindExploreSearch(){
+  var input=document.getElementById('etb-search-input');
+  if(!input||input.dataset.bound)return;
+  input.dataset.bound='1';
+  input.addEventListener('input',function(){
+    clearTimeout(_searchDebounce);
+    var v=input.value||'';
+    _searchDebounce=setTimeout(function(){
+      _searchQuery=v.trim();
+      renderGrid();
+    },180);
+  });
 }
 
 // ── Category Dashboard ──
@@ -1396,6 +1435,39 @@ function renderGrid(){
     list=_airdrops.filter(function(a){return myPartIds[a.id]||(uid&&a.submitted_by===uid)});
   }
   else list=_airdrops.filter(function(a){return a.category===_currentFilter});
+
+  // Search filter (title + category)
+  if(_searchQuery){
+    var q=_searchQuery.toLowerCase();
+    list=list.filter(function(a){
+      return (a.title||'').toLowerCase().indexOf(q)>-1
+        || (a.category||'').toLowerCase().indexOf(q)>-1;
+    });
+  }
+
+  // Sort
+  list=list.slice().sort(function(a,b){
+    switch(_currentSort){
+      case 'robi':
+        var rA=a.total_blocks/(calcMiningRate(a)||50);
+        var rB=b.total_blocks/(calcMiningRate(b)||50);
+        return rB-rA;
+      case 'popularity':
+        return (b.blocks_sold||0)-(a.blocks_sold||0);
+      case 'newest':
+        return new Date(b.created_at||0)-new Date(a.created_at||0);
+      case 'deadline':
+      default:
+        var dA=a.deadline?new Date(a.deadline):new Date('2099-01-01');
+        var dB=b.deadline?new Date(b.deadline):new Date('2099-01-01');
+        return dA-dB;
+    }
+  });
+
+  // Update live count in hero slim
+  var countEl=document.getElementById('ehs-count-val');
+  if(countEl)countEl.textContent=list.length;
+
   renderCatDashboard();
 
   if(!list||list.length===0){

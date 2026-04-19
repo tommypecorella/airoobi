@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.23.0">
+<link rel="stylesheet" href="/src/dapp.css?v=3.26.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -357,23 +357,40 @@
   <!-- ═══ EXPLORE TAB ═══ -->
   <div id="tab-explore">
 
-    <!-- CATEGORY FILTER -->
-    <div class="cat-filter" id="cat-filter">
-      <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
+    <!-- HERO SLIM (1 riga con contatore live) -->
+    <div class="explore-hero-slim">
+      <div class="ehs-title"><span class="it">Marketplace airdrop</span><span class="en">Airdrop marketplace</span></div>
+      <div class="ehs-count" id="ehs-count">
+        <strong id="ehs-count-val">—</strong>
+        <span class="it">attivi ora</span><span class="en">active now</span>
+      </div>
     </div>
 
-    <!-- MINI DASHBOARD PER CATEGORIA -->
+    <!-- TOOLBAR STICKY: ricerca + categorie + ordinamento -->
+    <div class="explore-toolbar" id="explore-toolbar">
+      <div class="etb-row">
+        <div class="etb-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="etb-search-input" autocomplete="off" data-placeholder-it="Cerca airdrop…" data-placeholder-en="Search airdrops…" placeholder="Cerca airdrop…"/>
+        </div>
+        <div class="etb-sort">
+          <label for="etb-sort-select"><span class="it">Ordina</span><span class="en">Sort</span></label>
+          <select id="etb-sort-select" onchange="changeSort(this.value)" data-i18n-sort>
+            <option value="deadline" data-it="Scadenza" data-en="Deadline">Scadenza</option>
+            <option value="robi" data-it="Più ROBI" data-en="Most ROBI">Più ROBI</option>
+            <option value="popularity" data-it="Popolarità" data-en="Popularity">Popolarità</option>
+            <option value="newest" data-it="Più recenti" data-en="Newest">Più recenti</option>
+          </select>
+        </div>
+      </div>
+      <div class="cat-filter" id="cat-filter">
+        <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
+      </div>
+    </div>
+
+    <!-- MINI DASHBOARD PER CATEGORIA (mostrato solo quando categoria è filtrata) -->
     <div id="cat-dashboard" style="display:none;margin-bottom:20px">
       <div style="display:flex;overflow-x:auto;gap:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px" id="cat-dashboard-row"></div>
-    </div>
-
-    <!-- CTA VALUTA -->
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin-bottom:20px;border:1px solid rgba(74,158,255,.2);background:rgba(74,158,255,.04);cursor:pointer" onclick="navigateTo('submit')">
-      <div>
-        <div style="font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white);margin-bottom:2px"><span class="it">Hai un oggetto di valore?</span><span class="en">Have a valuable item?</span></div>
-        <div style="font-size:12px;color:var(--gray-400)"><span class="it">Fallo valutare da AIROOBI e mettilo in airdrop. Valore minimo €500.</span><span class="en">Get it evaluated by AIROOBI and put it on airdrop. Min value €500.</span></div>
-      </div>
-      <button onclick="navigateTo('submit');event.stopPropagation()" style="background:var(--gold);color:var(--black);border:none;padding:10px 24px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0">VALUTA</button>
     </div>
 
     <!-- LIST VIEW -->
@@ -405,6 +422,15 @@
         <span style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:3px 10px;border-radius:12px"><span class="it">IN VALUTAZIONE</span><span class="en">UNDER REVIEW</span></span>
       </div>
       <div class="coming-carousel" id="coming-grid"></div>
+    </div>
+
+    <!-- CTA VALUTA (spostata in fondo — non blocca lo scan della grid) -->
+    <div class="explore-cta-valuta" onclick="navigateTo('submit')">
+      <div class="ecv-text">
+        <div class="ecv-title"><span class="it">Hai un oggetto di valore?</span><span class="en">Have a valuable item?</span></div>
+        <div class="ecv-sub"><span class="it">Fallo valutare da AIROOBI e mettilo in airdrop. Valore minimo €500.</span><span class="en">Get it evaluated by AIROOBI and put it on airdrop. Min value €500.</span></div>
+      </div>
+      <button class="ecv-btn" onclick="navigateTo('submit');event.stopPropagation()"><span class="it">VALUTA</span><span class="en">EVALUATE</span></button>
     </div>
     <!-- TODO: AdSense slot — attivare quando approvato per airoobi.app
     <div style="text-align:center;padding:20px 0">
@@ -1016,7 +1042,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.24.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.26.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1088,6 +1114,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.23.0"></script>
+<script src="/src/dapp.js?v=3.26.0"></script>
 </body>
 </html>

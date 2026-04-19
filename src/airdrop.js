@@ -316,6 +316,20 @@ function buildMineTower(a,myBlocks){
     +'<div class="mine-legend-item"><div class="mine-legend-dot m-robi"></div>ROBI</div>'
     +'</div>';
 
+  // ROBI counter + info button
+  var robiTotal=Math.max(0,Math.round(total/rate));
+  var robiFound=Math.max(0,Math.round(sold/rate));
+  html+='<div class="mine-robi-bar">'
+    +'<div class="mine-robi-stats">'
+    +'<span class="it">ROBI in regalo: <strong>'+robiTotal+'</strong> &middot; gi&agrave; trovati: <strong style="color:var(--gold)">'+robiFound+'</strong></span>'
+    +'<span class="en">ROBI giveaway: <strong>'+robiTotal+'</strong> &middot; already found: <strong style="color:var(--gold)">'+robiFound+'</strong></span>'
+    +'</div>'
+    +'<button class="mine-info-btn" onclick="openMineInfo()" type="button">'
+    +'<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'
+    +' <span class="it">Come funziona?</span><span class="en">How does it work?</span>'
+    +'</button>'
+    +'</div>';
+
   return html;
 }
 
@@ -361,6 +375,65 @@ function spawnConfetti(){
     c.appendChild(p);
   }
   setTimeout(function(){c.remove()},3500);
+}
+
+// ── Mine Info modal (spiega il rullo + ROBI) ──
+function openMineInfo(){
+  var a=_currentDetail;if(!a)return;
+  var total=a.total_blocks||0;
+  var sold=a.blocks_sold||0;
+  var rate=calcMiningRate(a)||50;
+  var robiTotal=Math.max(0,Math.round(total/rate));
+  var robiFound=Math.max(0,Math.round(sold/rate));
+  var pct=robiTotal>0?Math.round(robiFound/robiTotal*100):0;
+
+  var existing=document.getElementById('mine-info-overlay');
+  if(existing)existing.remove();
+
+  var ov=document.createElement('div');
+  ov.id='mine-info-overlay';
+  ov.className='mine-info-overlay';
+  ov.onclick=function(e){if(e.target===ov)closeMineInfo();};
+  ov.innerHTML=''
+    +'<div class="mine-info-modal" role="dialog" aria-modal="true">'
+      +'<button class="mine-info-close" onclick="closeMineInfo()" aria-label="Chiudi">'
+        +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      +'</button>'
+      +'<h3><span class="it">Cos\'&egrave; il rullo e cosa sono i ROBI</span><span class="en">What is the reel and what are ROBI</span></h3>'
+      +'<div class="mine-info-section">'
+        +'<h4><span class="it">Il rullo</span><span class="en">The reel</span></h4>'
+        +'<p><span class="it">Ogni blocco colorato rappresenta un blocco dell\'airdrop. Blu = i tuoi, rosso = altri partecipanti, grigio = ancora disponibili.</span><span class="en">Each colored block represents one airdrop block. Blue = yours, red = others, gray = still available.</span></p>'
+      +'</div>'
+      +'<div class="mine-info-section">'
+        +'<h4><span class="it">I ROBI in regalo (puntini oro)</span><span class="en">Giveaway ROBI (gold dots)</span></h4>'
+        +'<p><span class="it">Ogni blocco ti avvicina al 1&deg; posto. In pi&ugrave;, alcuni blocchi contengono ROBI "in regalo": ogni acquisto scopre un tassello del rullo. Se sotto c\'&egrave; un puntino oro, hai trovato un ROBI. I ROBI scoperti sono tuoi a prescindere dall\'esito dell\'airdrop.</span><span class="en">Each block brings you closer to #1. In addition, some blocks contain giveaway ROBI: every purchase uncovers a tile. If there\'s a gold dot underneath, you found a ROBI. Found ROBI are yours regardless of airdrop outcome.</span></p>'
+      +'</div>'
+      +'<div class="mine-info-stats">'
+        +'<div class="mis-row">'
+          +'<span class="mis-label"><span class="it">ROBI in regalo (totale)</span><span class="en">Total giveaway ROBI</span></span>'
+          +'<span class="mis-val">'+robiTotal+'</span>'
+        +'</div>'
+        +'<div class="mis-row">'
+          +'<span class="mis-label"><span class="it">Gi&agrave; trovati</span><span class="en">Already found</span></span>'
+          +'<span class="mis-val gold">'+robiFound+'</span>'
+        +'</div>'
+        +'<div class="mis-progress"><div class="mis-progress-fill" style="width:'+pct+'%"></div></div>'
+        +'<div class="mis-progress-label">'+pct+'%</div>'
+      +'</div>'
+      +'<div class="mine-info-footer">'
+        +'<span class="it">1 ROBI ogni <strong>'+rate+'</strong> blocchi acquistati.</span>'
+        +'<span class="en">1 ROBI every <strong>'+rate+'</strong> blocks purchased.</span>'
+      +'</div>'
+    +'</div>';
+  document.body.appendChild(ov);
+  requestAnimationFrame(function(){ov.classList.add('open')});
+  document.body.style.overflow='hidden';
+}
+function closeMineInfo(){
+  var ov=document.getElementById('mine-info-overlay');
+  if(!ov)return;
+  ov.classList.remove('open');
+  setTimeout(function(){ov.remove();document.body.style.overflow='';},200);
 }
 
 // ── Gallery ──

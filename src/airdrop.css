@@ -203,6 +203,38 @@ html:not([data-lang]) .it{display:inline}
 .mine-legend-dot.m-others{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.35)}
 .mine-legend-dot.m-avail{background:var(--gray-700)}
 .mine-legend-dot.m-robi{background:#B8960C;box-shadow:0 0 6px rgba(184,150,12,.5)}
+
+/* ROBI bar: totale/trovati + bottone info */
+.mine-robi-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 auto 18px;max-width:520px;padding:10px 14px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);background:rgba(184,150,12,.03);flex-wrap:wrap}
+.mine-robi-stats{font-size:12px;color:var(--gray-400);line-height:1.4}
+.mine-robi-stats strong{color:var(--white);font-weight:600}
+.mine-info-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);background:rgba(184,150,12,.08);border:1px solid rgba(184,150,12,.35);border-radius:var(--radius-sm);cursor:pointer;transition:all .2s;text-transform:uppercase}
+.mine-info-btn:hover{background:rgba(184,150,12,.16);border-color:var(--gold)}
+.mine-info-btn .ico{color:var(--gold);width:14px;height:14px}
+
+/* Mine info modal */
+.mine-info-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.72);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;transition:opacity .2s ease}
+.mine-info-overlay.open{opacity:1}
+.mine-info-modal{position:relative;max-width:520px;width:100%;max-height:85vh;overflow-y:auto;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:28px 24px 22px;transform:translateY(8px);transition:transform .2s ease;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.mine-info-overlay.open .mine-info-modal{transform:translateY(0)}
+.mine-info-close{position:absolute;top:10px;right:10px;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;background:none;border:none;color:var(--gray-500);cursor:pointer;border-radius:var(--radius-sm);transition:all .15s}
+.mine-info-close:hover{background:rgba(255,255,255,.05);color:var(--white)}
+.mine-info-close svg{width:20px;height:20px}
+.mine-info-modal h3{font-family:var(--font-h);font-size:22px;font-weight:400;color:var(--white);margin:0 0 18px;padding-right:30px;line-height:1.3}
+.mine-info-section{margin-bottom:16px}
+.mine-info-section h4{font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin:0 0 6px;text-transform:uppercase;font-weight:600}
+.mine-info-section p{font-size:13px;line-height:1.55;color:var(--gray-300);margin:0}
+.mine-info-stats{margin:18px 0 10px;padding:14px 16px;background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.18);border-radius:var(--radius-sm)}
+.mis-row{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--gray-400);margin-bottom:6px}
+.mis-label{font-family:var(--font-m);letter-spacing:.3px}
+.mis-val{font-family:var(--font-h);font-size:22px;font-weight:600;color:var(--white);line-height:1}
+.mis-val.gold{color:var(--gold)}
+.mis-progress{height:6px;background:var(--gray-800);border-radius:3px;overflow:hidden;margin-top:10px}
+.mis-progress-fill{height:100%;background:linear-gradient(90deg,rgba(184,150,12,.6),#B8960C);border-radius:3px;transition:width .4s ease}
+.mis-progress-label{text-align:right;font-family:var(--font-m);font-size:10px;color:var(--gold);margin-top:4px;letter-spacing:.5px}
+.mine-info-footer{margin-top:8px;padding-top:14px;border-top:1px solid var(--gray-800);font-size:11px;color:var(--gray-500);text-align:center}
+.mine-info-footer strong{color:var(--white)}
+
 @keyframes tower-spin{from{transform:rotateY(0deg)}to{transform:rotateY(360deg)}}
 @keyframes robi-pulse{0%,100%{box-shadow:0 0 6px rgba(184,150,12,.3)}50%{box-shadow:0 0 20px rgba(184,150,12,.7)}}
 
