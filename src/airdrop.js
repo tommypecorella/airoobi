@@ -103,6 +103,26 @@ function apLogout(){
   try{localStorage.removeItem('airoobi_session');}catch(e){}
   window.location.href='/';
 }
+async function loadApAvatar(){
+  if(!_session||!_session.user)return;
+  try{
+    var token=await getValidToken();if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+_session.user.id+'&select=avatar_url',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok)return;
+    var rows=await res.json();
+    if(!rows||!rows[0]||!rows[0].avatar_url)return;
+    var btn=document.getElementById('ap-user-btn');
+    var letterEl=document.getElementById('ap-user-btn-letter');
+    if(!btn)return;
+    if(letterEl)letterEl.style.display='none';
+    var img=document.createElement('img');
+    img.src=rows[0].avatar_url+'?t='+Date.now();
+    img.alt='';
+    btn.appendChild(img);
+  }catch(e){}
+}
 
 // ── Token refresh ──
 async function refreshToken(){
@@ -1432,8 +1452,12 @@ var _airdropId=(function(){
     if(loginBtn)loginBtn.style.display='none';
     var userBtn=document.getElementById('ap-user-btn');
     if(userBtn)userBtn.style.display='inline-flex';
+    var email=_session.user.email||'';
     var emailEl=document.getElementById('ap-user-menu-email');
-    if(emailEl&&_session.user.email)emailEl.textContent=_session.user.email;
+    if(emailEl)emailEl.textContent=email;
+    var letterEl=document.getElementById('ap-user-btn-letter');
+    if(letterEl)letterEl.textContent=email?email[0].toUpperCase():'?';
+    loadApAvatar();
   }
 
   if(!_airdropId){
