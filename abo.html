@@ -276,8 +276,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-costs')"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Cost Tracker</div>
   </div>
   <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label">Test &amp; <span class="it">Simulazione</span><span class="en">Simulation</span></span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-testpool')"><svg viewBox="0 0 24 24"><path d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197"/></svg>Test Pool</div>
+    <span class="admin-sidebar-label">Fairness</span>
     <div class="admin-sidebar-item" onclick="adminNav('sec-fairness')"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.636 5.636l12.728 12.728M18.364 5.636L5.636 18.364"/></svg>Fairness Index</div>
   </div>
   <div class="admin-sidebar-group">
@@ -312,7 +311,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-grid" style="margin-top:8px">
       <div class="admin-card"><div class="admin-card-val" id="adm-avg-points">—</div><div class="admin-card-label">ARIA media/utente <span class="info-i" onclick="showAboTip(this,'ov-avg-points')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-max-streak">—</div><div class="admin-card-label">Streak massima <span class="info-i" onclick="showAboTip(this,'ov-max-streak')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-conversion">—</div><div class="admin-card-label">Conversione (utenti/waitlist) <span class="info-i" onclick="showAboTip(this,'ov-conversion')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-inv-leads">—</div><div class="admin-card-label">Investor leads <span class="info-i" onclick="showAboTip(this,'ov-inv-leads')">i</span></div></div>
     </div>
   </div>
@@ -765,21 +763,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <label>Motivo rifiuto <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(se rifiutato)</span> <span class="info-i" onclick="showAboTip(this,'ad-reject')">i</span></label>
       <input type="text" id="ad-rejection" placeholder="">
       <!-- auto-draw moved to block calculator section above -->
-      <div id="ad-sim-section" style="margin-top:20px;padding:16px;background:rgba(245,158,11,.05);border:1px solid rgba(245,158,11,.2);display:none">
-        <div style="font-size:11px;color:#f59e0b;font-family:var(--font-m);letter-spacing:1.5px;margin-bottom:12px">TEST &amp; SIMULAZIONE</div>
-        <div id="ad-sim-info" style="color:var(--gray-400);font-size:12px;margin-bottom:12px"></div>
-        <label style="font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:4px;display:block">% BLOCCHI DA RIEMPIRE <span class="info-i" onclick="showAboTip(this,'ad-sim-pct')">i</span></label>
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-          <input type="range" id="ad-sim-pct" min="1" max="100" value="50" oninput="document.getElementById('ad-sim-pct-label').textContent=this.value+'%'" style="flex:1;accent-color:#f59e0b">
-          <span id="ad-sim-pct-label" style="color:#f59e0b;font-weight:600;font-family:var(--font-m);font-size:16px;min-width:40px;text-align:right">50%</span>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-          <input type="checkbox" id="ad-sim-spread" style="width:auto;accent-color:#f59e0b">
-          <label style="margin:0;font-size:12px;color:var(--gray-300)">Distribuisci su più giorni <span style="color:var(--gray-500);text-transform:none;letter-spacing:0">(simula acquisti distribuiti nel tempo)</span> <span class="info-i" onclick="showAboTip(this,'ad-sim-spread')">i</span></label>
-        </div>
-        <div id="ad-sim-result" style="margin-bottom:12px"></div>
-        <button id="ad-sim-btn-run" onclick="adSimulateRunInModal()" style="background:#f59e0b;color:#000;border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RUN SIMULATION</button> <span class="info-i" onclick="showAboTip(this,'ad-sim-run')">i</span>
-      </div>
       <div class="ct-modal-actions">
         <button class="ct-btn-cancel" onclick="adCloseModal()">ANNULLA</button>
         <button class="ct-btn-save" onclick="adSaveAirdrop()">SALVA</button>
@@ -798,13 +781,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <button class="ct-btn-cancel" onclick="drawModalClose()">CHIUDI</button>
       </div>
     </div>
-  </div>
-
-  <!-- TEST POOL -->
-  <div class="admin-section" id="sec-testpool">
-    <h2>Test Pool <span class="info-i" onclick="showAboTip(this,'sec-testpool')">i</span></h2>
-    <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Pool di 1000 utenti test con 1000 ARIA ciascuno. Date di registrazione distribuite negli ultimi 180 giorni. Non conteggiati nelle statistiche.</p>
-    <button id="btn-create-test-pool" onclick="adCreateTestPool()" style="background:#f59e0b;color:#000;border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">CREA TEST POOL</button>
   </div>
 
   <!-- AIRDROP ANALYSIS -->
@@ -867,19 +843,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <button onclick="loadFairnessAnalysis()" style="background:var(--gold);color:#000;border:none;padding:6px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">ANALIZZA</button>
       </div>
       <div id="fairness-result"></div>
-    </div>
-    <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">UTENTI TEST</div>
-    <div style="margin-bottom:12px">
-      <button onclick="loadTestUsersTable()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'">CARICA</button>
-      <span id="test-users-count" style="font-family:var(--font-m);font-size:11px;color:var(--gray-500);margin-left:12px"></span>
-    </div>
-    <div style="max-height:400px;overflow-y:auto;border:1px solid var(--gray-800)">
-      <table class="admin-table" style="margin:0">
-        <thead style="position:sticky;top:0;background:var(--gray-900);z-index:1">
-          <tr><th>#</th><th>Email</th><th>ARIA</th><th>Registrato</th><th>Airdrop</th><th>Blocchi tot.</th><th>ARIA spesi</th></tr>
-        </thead>
-        <tbody id="test-users-body"><tr><td colspan="7" style="color:var(--gray-400)">Clicca CARICA</td></tr></tbody>
-      </table>
     </div>
   </div>
 
@@ -1316,7 +1279,7 @@ async function loadAdminData(){
   const t=s.access_token;
   try{
     const allProfiles=await sbGet('profiles?select=*&order=created_at.desc',t);
-    const users=allProfiles?allProfiles.filter(function(u){return !u.is_test_user}):[];
+    const users=allProfiles||[];
     var userCount=users.length;
     document.getElementById('adm-users').textContent=userCount;
     var totalEl=document.getElementById('adm-users-total');if(totalEl)totalEl.textContent='('+userCount+' registrati)';
@@ -1366,8 +1329,6 @@ async function loadAdminData(){
       var avgEl=document.getElementById('adm-avg-points');if(avgEl)avgEl.textContent=avgPts;
       var maxStreak=Math.max.apply(null,users.map(function(u){return u.longest_streak||0}));
       var msEl=document.getElementById('adm-max-streak');if(msEl)msEl.textContent=maxStreak+'d';
-      var wl=await sbGet('waitlist?select=id',t);
-      var convEl=document.getElementById('adm-conversion');if(convEl)convEl.textContent=users.length+'/'+(wl?wl.length:0);
     }
     // ARIA metrics
     var avgEl=document.getElementById('adm-coin-avg');
@@ -1469,19 +1430,6 @@ async function adOpenModal(id){
     var info=document.getElementById('ad-deadline-info');
     if(info&&a.deadline)info.textContent='Deadline impostata manualmente';
     document.getElementById('ad-modal-title').textContent='Modifica: '+a.title;
-    var simSection=document.getElementById('ad-sim-section');
-    var canSim=['presale','sale'].indexOf(a.status)!==-1&&!a.draw_executed_at;
-    simSection.style.display=canSim?'block':'none';
-    if(canSim){
-      var remaining=(a.total_blocks||0)-(a.blocks_sold||0);
-      document.getElementById('ad-sim-info').innerHTML='Blocchi: <strong>'+(a.blocks_sold||0)+'/'+(a.total_blocks||0)+'</strong> — Rimanenti: <strong style="color:#f59e0b">'+remaining+'</strong>';
-      document.getElementById('ad-sim-pct').value=50;
-      document.getElementById('ad-sim-pct-label').textContent='50%';
-      document.getElementById('ad-sim-spread').checked=false;
-      document.getElementById('ad-sim-result').innerHTML='';
-      document.getElementById('ad-sim-btn-run').disabled=false;
-      document.getElementById('ad-sim-btn-run').textContent='RUN SIMULATION';
-    }
     document.getElementById('ad-modal-bg').classList.add('active');
   }catch(e){console.error('adOpenModal:',e);showToast('Errore: '+e.message,'error');}
 }
@@ -1793,62 +1741,6 @@ async function adExecuteDraw(airdropId,title){
 
 function drawModalClose(){document.getElementById('draw-modal-bg').classList.remove('active');}
 
-// ── Test Pool & Simulation ──
-async function adCreateTestPool(){
-  var s=getSession();if(!s)return;
-  var btn=document.getElementById('btn-create-test-pool');
-  if(btn){btn.disabled=true;btn.textContent='CREAZIONE...';}
-  try{
-    var res=await fetch(SB_URL+'/rest/v1/rpc/create_test_pool',{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
-      body:'{}'
-    });
-    var d=await res.json();
-    if(d&&d.ok){
-      showToast('Test pool: '+d.created+' utenti creati (totale: '+d.total+')','success');
-      if(btn){btn.textContent='POOL CREATO ('+d.total+')';}
-    }else{
-      showToast('Errore: '+(d.error||d.message||'sconosciuto'),'error');
-      if(btn){btn.disabled=false;btn.textContent='CREA TEST POOL';}
-    }
-  }catch(e){
-    console.error('createTestPool:',e);showToast('Errore: '+e.message,'error');
-    if(btn){btn.disabled=false;btn.textContent='CREA TEST POOL';}
-  }
-}
-
-async function adSimulateRunInModal(){
-  var s=getSession();if(!s)return;
-  var airdropId=document.getElementById('ad-edit-id').value;
-  var pct=parseInt(document.getElementById('ad-sim-pct').value);
-  var spread=document.getElementById('ad-sim-spread').checked;
-  var btn=document.getElementById('ad-sim-btn-run');
-  var result=document.getElementById('ad-sim-result');
-  btn.disabled=true;btn.textContent='SIMULAZIONE...';
-  result.innerHTML='<p style="color:var(--gray-400)">Acquisto blocchi in corso...</p>';
-  try{
-    var res=await fetch(SB_URL+'/rest/v1/rpc/simulate_airdrop_participation',{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
-      body:JSON.stringify({p_airdrop_id:airdropId,p_fill_pct:pct,p_spread_days:spread})
-    });
-    var d=await res.json();
-    if(d&&d.ok){
-      var h='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px">';
-      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-700);text-align:center"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">BLOCCHI</div><div style="color:#f59e0b;font-weight:600;font-size:16px">'+d.blocks_filled+'</div></div>';
-      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-700);text-align:center"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">UTENTI</div><div style="color:#4A9EFF;font-weight:600;font-size:16px">'+d.participants+'</div></div>';
-      h+='<div style="background:var(--gray-900);padding:8px;border:1px solid var(--gray-700);text-align:center"><div style="font-size:9px;color:var(--gray-500);font-family:var(--font-m)">RIMANENTI</div><div style="color:var(--gray-300);font-weight:600;font-size:16px">'+d.blocks_remaining+'/'+d.total_blocks+'</div></div>';
-      h+='</div>';
-      result.innerHTML=h;
-      showToast('Simulazione: '+d.blocks_filled+' blocchi, '+d.participants+' partecipanti','success');
-      document.getElementById('ad-sim-info').innerHTML='Blocchi: <strong>'+(d.total_blocks-d.blocks_remaining)+'/'+d.total_blocks+'</strong> — Rimanenti: <strong style="color:#f59e0b">'+d.blocks_remaining+'</strong>';
-      loadAdminAirdrops();
-    }else{result.innerHTML='<p style="color:#ef4444">Errore: '+(d.error||'sconosciuto')+'</p>';}
-  }catch(e){console.error('simulate:',e);result.innerHTML='<p style="color:#ef4444">'+e.message+'</p>';}
-  btn.disabled=false;btn.textContent='RUN SIMULATION';
-}
-
 // ── Airdrop Analysis ──
 async function loadAirdropStats(){
   var s=getSession();if(!s)return;
@@ -1980,12 +1872,11 @@ async function toggleAnalysisDetail(row,airdropId){
         var isWinner=sc.rank===1&&d.draw_executed;
         var rowBg=isWinner?'rgba(73,181,131,.1)':'transparent';
         var pDetail=d.participants?d.participants.find(function(p){return p.user_id===sc.user_id}):null;
-        var isTest=pDetail&&pDetail.is_test_user;
         var email=pDetail?pDetail.email:sc.user_id.substring(0,8)+'...';
         var emailTrunc=email.length>25?email.substring(0,25)+'...':email;
         h+='<tr style="background:'+rowBg+';border-bottom:1px solid var(--gray-800)">';
         h+='<td style="padding:5px 6px;color:var(--gray-400)">'+(isWinner?'👑 ':'')+sc.rank+'</td>';
-        h+='<td style="padding:5px 6px;color:var(--gray-300);font-family:var(--font-mono);font-size:10px" title="'+escHtml(email)+'">'+escHtml(emailTrunc)+' <span style="font-size:8px;color:'+(isTest?'#f59e0b':'#4A9EFF')+'">'+(isTest?'TEST':'REAL')+'</span></td>';
+        h+='<td style="padding:5px 6px;color:var(--gray-300);font-family:var(--font-mono);font-size:10px" title="'+escHtml(email)+'">'+escHtml(emailTrunc)+'</td>';
         h+='<td style="padding:5px 6px;color:'+(isWinner?'#49b583':'var(--white)')+';text-align:right;font-weight:600">'+parseFloat(sc.score).toFixed(4)+'</td>';
         h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f1).toFixed(3)+'</td>';
         h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f2).toFixed(3)+'</td>';
@@ -2014,42 +1905,6 @@ async function toggleAnalysisDetail(row,airdropId){
     }else{h+='<div style="color:var(--gray-400);font-size:12px;margin-bottom:16px">Split non disponibile.</div>';}
     detailRow.querySelector('td').innerHTML=h;
   }catch(e){console.error('analysisDetail:',e);detailRow.querySelector('td').innerHTML='<p style="color:#ef4444">'+e.message+'</p>';}
-}
-
-// ── Test Users Table ──
-async function loadTestUsersTable(){
-  var s=getSession();if(!s)return;
-  var tbody=document.getElementById('test-users-body');
-  var countEl=document.getElementById('test-users-count');
-  tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-400)">Caricamento...</td></tr>';
-  try{
-    var profiles=await sbGet('profiles?is_test_user=eq.true&select=id,email,total_points,created_at&order=total_points.desc&limit=200',s.access_token);
-    if(!profiles||!profiles.length){tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-400)">Nessun utente test</td></tr>';countEl.textContent='0 utenti';return;}
-    var parts=await sbGet('airdrop_participations?select=user_id,blocks_count,aria_spent,airdrop_id',s.access_token);
-    var partMap={};
-    if(parts)parts.forEach(function(p){
-      if(!partMap[p.user_id])partMap[p.user_id]={airdrops:{},blocks:0,aria:0};
-      partMap[p.user_id].airdrops[p.airdrop_id]=true;
-      partMap[p.user_id].blocks+=(p.blocks_count||0);
-      partMap[p.user_id].aria+=(p.aria_spent||0);
-    });
-    var html='';
-    profiles.forEach(function(u,i){
-      var pm=partMap[u.id]||{airdrops:{},blocks:0,aria:0};
-      var nAirdrops=Object.keys(pm.airdrops).length;
-      var regDate=new Date(u.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});
-      html+='<tr>';
-      html+='<td style="color:var(--gray-500)">'+(i+1)+'</td>';
-      html+='<td style="font-family:var(--font-m);font-size:10px">'+escHtml(u.email)+'</td>';
-      html+='<td style="color:var(--aria)">'+u.total_points.toLocaleString()+'</td>';
-      html+='<td>'+regDate+'</td>';
-      html+='<td style="color:'+(nAirdrops>0?'var(--gold)':'var(--gray-600)')+'">'+nAirdrops+'</td>';
-      html+='<td style="color:#4A9EFF">'+(pm.blocks||0)+'</td>';
-      html+='<td style="color:#f59e0b">'+(pm.aria||0)+'</td></tr>';
-    });
-    tbody.innerHTML=html;
-    countEl.textContent=profiles.length+' utenti (top 200 per ARIA)';
-  }catch(e){console.error('loadTestUsers:',e);tbody.innerHTML='<tr><td colspan="7" style="color:#ef4444">'+escHtml(e.message)+'</td></tr>';}
 }
 
 // ── Fairness Analysis ──
@@ -2365,7 +2220,7 @@ async function loadAdminTreasury(){
     var rs=document.getElementById('adm-revenue-adsense');if(rs)rs.textContent='$'+(parseFloat(t.revenue_adsense)||0).toFixed(2);
     // Treasury balance now sourced from treasury_funds table (see loadTreasuryFunds)
     try{
-      var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',tk);
+      var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id,shares',tk);
       var earnOnly=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}):[];
       var nftCount=earnOnly.length;
       var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
@@ -2377,7 +2232,8 @@ async function loadAdminTreasury(){
         if(nfts&&nfts.length){
           nfts.forEach(function(n){
             var tp=n.nft_type||'unknown';
-            breakdown[tp]=(breakdown[tp]||0)+1;
+            // Somma shares (es. ROBI ha shares fractional); fallback a 1 per i badge (ALPHA_BRAVE, VALUATION)
+            breakdown[tp]=(breakdown[tp]||0)+(parseFloat(n.shares)||1);
             if(!owners[tp])owners[tp]={};
             if(n.user_id)owners[tp][n.user_id]=true;
           });
@@ -2386,9 +2242,10 @@ async function loadAdminTreasury(){
         if(types.length>0){
           types.sort(function(a,b){return breakdown[b]-breakdown[a]});
           bTbody.innerHTML=types.map(function(tp){
-            var cnt=breakdown[tp];
+            var total=breakdown[tp];
+            var totalStr=total%1===0?total:total.toFixed(2);
             var ownerCount=Object.keys(owners[tp]||{}).length;
-            return '<tr><td>'+tp+'</td><td>'+ownerCount+'</td><td>'+cnt+'</td></tr>';
+            return '<tr><td>'+tp+'</td><td>'+ownerCount+'</td><td>'+totalStr+'</td></tr>';
           }).join('');
         }else{bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';}
         var braveEl=document.getElementById('adm-nft-brave-count');if(braveEl)braveEl.textContent=breakdown['NFT_ALPHA_BRAVE']||0;
@@ -2396,8 +2253,8 @@ async function loadAdminTreasury(){
       }
     }catch(e){console.error('NFT auto-calc error:',e);}
     try{
-      var ariaProfiles=await sbGet('profiles?select=total_points,is_test_user',tk);
-      var totalAria=ariaProfiles?ariaProfiles.filter(function(u){return !u.is_test_user}).reduce(function(a,b){return a+(b.total_points||0)},0):0;
+      var ariaProfiles=await sbGet('profiles?select=total_points',tk);
+      var totalAria=ariaProfiles?ariaProfiles.reduce(function(a,b){return a+(b.total_points||0)},0):0;
       var i6=document.getElementById('adm-aico-input');if(i6)i6.value=totalAria;
       var au=document.getElementById('adm-aria-updated');if(au)au.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     }catch(e){console.error('ARIA auto-calc error:',e);}
@@ -2409,8 +2266,8 @@ async function loadAdminTreasury(){
 async function refreshAriaCircolante(){
   var s=getSession();if(!s)return;
   try{
-    var p=await sbGet('profiles?select=total_points,is_test_user',s.access_token);
-    var total=p?p.filter(function(u){return !u.is_test_user}).reduce(function(a,b){return a+(b.total_points||0)},0):0;
+    var p=await sbGet('profiles?select=total_points',s.access_token);
+    var total=p?p.reduce(function(a,b){return a+(b.total_points||0)},0):0;
     var i=document.getElementById('adm-aico-input');if(i)i.value=total;
     var u=document.getElementById('adm-aria-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     recalcNFTValue();
@@ -3617,7 +3474,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
 // ── Info tooltip system ──
 var ABO_TIPS={
-  'sec-overview':{it:'Panoramica generale: utenti registrati, ARIA in circolo, check-in, referral, valore nominale ROBI e conversione dalla waitlist.',en:'General overview: registered users, ARIA in circulation, check-ins, referrals, ROBI nominal value and waitlist conversion.'},
+  'sec-overview':{it:'Panoramica generale: utenti registrati, ARIA in circolo, check-in, referral, valore nominale ROBI.',en:'General overview: registered users, ARIA in circulation, check-ins, referrals, ROBI nominal value.'},
   'sec-users':{it:'Gli ultimi utenti iscritti con saldo ARIA, streak, ROBI accumulati e stato profilo. Clicca una riga per il dettaglio utente.',en:'Recent signups with ARIA balance, streak, ROBI and profile status. Click a row for user detail.'},
   'sec-valutazioni':{it:'Coda delle submission utenti: foto oggetto + dati, da valutare e trasformare in draft airdrop. Solo admin ed evaluator (filtrati per categoria).',en:'User submission queue: photos + data, to review and convert into airdrop drafts. Admin and evaluators only (filtered by category).'},
   'sec-airdrops':{it:'Gestione airdrop in tutti gli stati: draft, accettato, presale, sale, closed, completed. Crea, modifica, blocca/sblocca e promuovi.',en:'Airdrop management across all states: draft, accepted, presale, sale, closed, completed. Create, edit, block/unblock and promote.'},
@@ -3630,7 +3487,6 @@ var ABO_TIPS={
   'sec-nft-types':{it:'Split degli NFT per tipo: ROBI (reward con valore) vs Badge (collezione, no valore). Utile per compliance ADM.',en:'NFT split by type: ROBI (reward with value) vs Badge (collection, no value). Useful for ADM compliance.'},
   'sec-company-assets':{it:'Conto operativo AIROOBI: asset aziendali, estratto movimenti, bilancio attuale. Separato dalla Treasury utenti.',en:'AIROOBI operating account: company assets, movements, current balance. Separate from user Treasury.'},
   'sec-costs':{it:'Cost tracker: spese infrastruttura (Vercel, Supabase, Postmark, DNS) e operative mensili. Alimenta break-even analysis.',en:'Cost tracker: infrastructure spend (Vercel, Supabase, Postmark, DNS) and monthly opex. Feeds break-even analysis.'},
-  'sec-testpool':{it:'Simulatore: crea pool test, assegna partecipanti virtuali, esegui draw. Non tocca dati reali.',en:'Simulator: create test pools, assign virtual participants, run draws. Does not touch real data.'},
   'sec-fairness':{it:'Fairness Index: misura quanto l\'engine è equo nei draw reali. Verifica che nessun utente sia penalizzato o privilegiato.',en:'Fairness Index: measures how fair the engine is across real draws. Checks no user is penalized or privileged.'},
   'sec-collaborators':{it:'Gestione ruoli: admin, evaluator (con categoria opzionale). Da qui assegni/rimuovi permessi operativi.',en:'Role management: admin, evaluator (optional category). Assign/remove operational permissions here.'},
   'sec-categories':{it:'Categorie merceologiche per airdrop: arredamento, tech, orologi, ecc. Usate per routing delle valutazioni agli evaluator dedicati.',en:'Product categories for airdrops: furniture, tech, watches, etc. Used to route reviews to dedicated evaluators.'},
@@ -3647,7 +3503,6 @@ var ABO_TIPS={
   'ov-robi-nominal':{it:'Valore nominale attuale di 1 ROBI in EUR (Treasury balance / ROBI in circolazione). Indicativo — non è il prezzo di riscossione.',en:'Current nominal value of 1 ROBI in EUR (Treasury balance / ROBI in circulation). Indicative — not the redemption price.'},
   'ov-avg-points':{it:'ARIA media per utente attivo. Utile per capire la distribuzione tra heavy-user e nuovi iscritti.',en:'Average ARIA per active user. Useful to gauge distribution between heavy users and newcomers.'},
   'ov-max-streak':{it:'Streak giornaliera massima raggiunta da un utente (check-in consecutivi).',en:'Highest daily streak ever reached (consecutive check-ins).'},
-  'ov-conversion':{it:'% conversione: utenti registrati / iscritti alla waitlist. Misura qualità del traffico in ingresso.',en:'Conversion rate: registered users / waitlist signups. Measures quality of inbound traffic.'},
   'ov-inv-leads':{it:'Lead investitori raccolti via form dedicato. Processati manualmente dal founder.',en:'Investor leads collected via dedicated form. Handled manually by the founder.'},
   // Treasury cards
   'tr-balance':{it:'Treasury balance: riserva in EUR che garantisce il valore ROBI. Alimentata da % delle entrate (default 20%).',en:'Treasury balance: EUR reserve backing ROBI value. Fed by a share of revenue (default 20%).'},
@@ -3682,9 +3537,6 @@ var ABO_TIPS={
   'ad-thr':{it:{i:'🎯',t:'Soglia presale → sale',d:'% sotto cui chiude lo sconto e parte il pieno.',ex:'20% = al 20% blocchi venduti, fine sconto',tip:'Default per durata: 30/20/15%'},en:{i:'🎯',t:'Presale → sale threshold',d:'% at which discount ends and full price starts.',ex:'20% = at 20% sold the discount closes',tip:'Defaults by duration: 30/20/15%'}},
   'ad-status':{it:{i:'🚦',t:'Status',d:'Fase attuale dell\'airdrop.',ex:'in_valutazione → presale → sale → closed',tip:'Modifica a mano solo per casi strani'},en:{i:'🚦',t:'Status',d:'Current airdrop phase.',ex:'review → presale → sale → closed',tip:'Manual change only in unusual cases'}},
   'ad-reject':{it:{i:'❌',t:'Motivo rifiuto',d:'Cosa vede l\'utente quando rifiuti.',ex:'Compila solo se status = rifiutato_*',tip:'Sii chiaro, è il suo unico feedback'},en:{i:'❌',t:'Rejection reason',d:'What the user sees when you reject.',ex:'Only fill if status = rejected_*',tip:'Be clear — it\'s their only feedback'}},
-  'ad-sim-pct':{it:{i:'🔢',t:'% blocchi simulati',d:'Quanti blocchi finti vendere nella prova.',ex:'50% di 500 = 250 blocchi venduti finti',tip:'Per testare scenari senza dati reali'},en:{i:'🔢',t:'% simulated blocks',d:'How many fake blocks to sell in the test.',ex:'50% of 500 = 250 fake-sold blocks',tip:'Test scenarios without real data'}},
-  'ad-sim-spread':{it:{i:'📈',t:'Distribuisci nel tempo',d:'Acquisti spalmati o tutti insieme.',ex:'ON = realistico · OFF = burst istantaneo',tip:'ON per testare bonus temporali'},en:{i:'📈',t:'Spread over time',d:'Purchases spread out or all at once.',ex:'ON = realistic · OFF = instant burst',tip:'ON to test time-based bonuses'}},
-  'ad-sim-run':{it:{i:'▶️',t:'Run simulation',d:'Avvia la prova (NON salva nulla).',ex:'Finge vendite + estrazione, mostra risultato',tip:'Sicuro — è solo una prova'},en:{i:'▶️',t:'Run simulation',d:'Runs the test (saves NOTHING).',ex:'Fakes sales + draw, shows result',tip:'Safe — it\'s just a test'}},
   // Engine Config — rich format
   'eng-save-cfg':{it:{i:'⚠️',t:'Salva config engine',d:'Salva pesi, divisioni e premi.',ex:'Impatta TUTTI gli airdrop futuri',tip:'Sicuro di voler cambiare?'},en:{i:'⚠️',t:'Save engine config',d:'Saves weights, splits and rewards.',ex:'Affects ALL future airdrops',tip:'Sure you want to change this?'}},
   'eng-thr-flash':{it:{i:'⚡',t:'Soglia FLASH (6h)',d:'% blocchi venduti che chiude lo sconto.',ex:'Default 30% — alto = sconto finisce presto',tip:'Flash = atmosfera urgente'},en:{i:'⚡',t:'FLASH threshold (6h)',d:'% of sold blocks that ends the discount.',ex:'Default 30% — high = discount ends fast',tip:'Flash = urgent vibe'}},
