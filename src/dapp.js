@@ -755,30 +755,78 @@ function renderStreakCalendar(daysChecked,today){
   var el=document.getElementById('streak-calendar');
   if(!el)return;
   var labels=['L','M','M','G','V','S','D'];
+  // Calcola lunedì della settimana ISO corrente
+  var now=new Date();
+  var jsDow=now.getDay();
+  var isoNow=jsDow===0?7:jsDow;
+  var monday=new Date(now);
+  monday.setDate(now.getDate()-(isoNow-1));
+
   var html='';
   for(var i=0;i<7;i++){
-    var dow=i+1; // 1..7
+    var dow=i+1;
     var checked=daysChecked.indexOf(dow)>=0;
     var isToday=today===dow;
-    var bg=checked?'var(--gold)':(isToday?'rgba(184,150,12,.1)':'rgba(255,255,255,.02)');
-    var color=checked?'var(--black)':(isToday?'var(--gold)':'var(--gray-500)');
-    var border=isToday?'1px solid var(--gold)':'1px solid var(--gray-800)';
-    html+='<div style="aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:'+bg+';border:'+border+';border-radius:var(--radius-sm);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:'+color+';font-weight:'+(checked?'700':'500')+'">'
-      +'<div>'+labels[i]+'</div>'
-      +(checked?'<div style="font-size:10px;margin-top:2px">&#10003;</div>':'')
+    var isPastMissed=today!==null&&dow<today&&!checked;
+    var isFuture=today!==null&&dow>today;
+    var dayDate=new Date(monday);dayDate.setDate(monday.getDate()+i);
+    var dayNum=dayDate.getDate();
+
+    var bg,fg,border,topLine,bottomContent,weight;
+    if(checked){
+      bg='linear-gradient(180deg,var(--gold) 0%,#9a7d0a 100%)';
+      fg='var(--black)';
+      border='1px solid var(--gold)';
+      weight='700';
+      bottomContent='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      topLine='<div style="font-size:10px;letter-spacing:.5px;color:'+fg+';font-weight:'+weight+';opacity:.85">'+labels[i]+'</div>';
+    } else if(isToday){
+      bg='rgba(184,150,12,.06)';
+      fg='var(--gold)';
+      border='1.5px solid var(--gold)';
+      weight='700';
+      bottomContent='<div style="font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;color:var(--gold)">OGGI</div>';
+      topLine='<div style="font-size:11px;letter-spacing:.5px;color:'+fg+';font-weight:'+weight+'">'+labels[i]+'</div>';
+    } else if(isPastMissed){
+      bg='transparent';
+      fg='var(--gray-600)';
+      border='1px dashed var(--gray-700)';
+      weight='400';
+      bottomContent='<div style="font-size:14px;color:var(--gray-700);line-height:1">&middot;</div>';
+      topLine='<div style="font-size:10px;letter-spacing:.5px;color:'+fg+';font-weight:'+weight+'">'+labels[i]+'</div>';
+    } else { // future
+      bg='rgba(255,255,255,.015)';
+      fg='var(--gray-500)';
+      border='1px solid var(--gray-800)';
+      weight='400';
+      bottomContent='<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-600)">'+dayNum+'</div>';
+      topLine='<div style="font-size:10px;letter-spacing:.5px;color:'+fg+';font-weight:'+weight+'">'+labels[i]+'</div>';
+    }
+
+    html+='<div style="aspect-ratio:1/1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:'+bg+';border:'+border+';border-radius:var(--radius-sm);font-family:var(--font-m);transition:all .25s ease"'
+      +(isToday?' class="streak-today-pulse"':'')
+      +'>'
+      +topLine
+      +bottomContent
       +'</div>';
   }
   el.innerHTML=html;
+
+  // Status: progress bar + testo
   var status=document.getElementById('streak-status');
   if(status){
     var count=daysChecked.length;
+    var pct=Math.round((count/7)*100);
+    var bar='<div style="width:100%;height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin-bottom:6px"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--gold) 0%,#d4ae22 100%);border-radius:2px;transition:width .4s ease"></div></div>';
+    var text='';
     if(count===7){
-      status.innerHTML='<span style="color:var(--gold)"><span class="it">Settimana completa &mdash; +1 ROBI assegnato</span><span class="en">Week complete &mdash; +1 ROBI awarded</span></span>';
+      text='<span style="color:var(--gold);font-weight:600"><span class="it">&#9819; Settimana completa &middot; +1 ROBI assegnato</span><span class="en">&#9819; Week complete &middot; +1 ROBI awarded</span></span>';
     } else if(count>0){
-      status.innerHTML='<span class="it">'+count+'/7 giorni timbrati questa settimana &middot; mancano '+(7-count)+' per il ROBI</span><span class="en">'+count+'/7 days checked this week &middot; '+(7-count)+' left for the ROBI</span>';
+      text='<span class="it"><strong style="color:var(--gold)">'+count+'/7</strong> timbrati &middot; mancano <strong>'+(7-count)+'</strong> per il ROBI</span><span class="en"><strong style="color:var(--gold)">'+count+'/7</strong> checked &middot; <strong>'+(7-count)+'</strong> left for the ROBI</span>';
     } else {
-      status.textContent='';
+      text='<span class="it">Inizia la tua streak della settimana</span><span class="en">Start your weekly streak</span>';
     }
+    status.innerHTML=bar+text;
   }
 }
 

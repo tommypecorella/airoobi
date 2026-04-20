@@ -950,3 +950,7 @@ select option{background:var(--gray-800);color:var(--white)}
 
 /* ── Auto-buy box ── */
 .auto-buy-box{margin-top:18px;padding:18px;border:1px solid rgba(74,158,255,.15);background:rgba(74,158,255,.02);border-radius:var(--radius-sm)}
+
+/* ── Streak calendar ── */
+.streak-today-pulse{animation:streakPulse 2.4s ease-in-out infinite}
+@keyframes streakPulse{0%,100%{box-shadow:0 0 0 0 rgba(184,150,12,.35)}50%{box-shadow:0 0 0 6px rgba(184,150,12,0)}}
