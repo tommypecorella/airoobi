@@ -639,10 +639,20 @@ async function loadPortfolioChart(token,userRobi){
     if(eurEl)eurEl.textContent='€ 0,00';
     return;
   }
-  // Ensure canvas is visible if we have data
+  // Ensure canvas is visible if we have data — reset parent layout from any previous empty-state render
+  canvas.parentElement.style.display='';
+  canvas.parentElement.style.alignItems='';
+  canvas.parentElement.style.justifyContent='';
   canvas.style.display='';
   var existingEmpty=canvas.parentElement.querySelector('.portfolio-empty');
   if(existingEmpty)existingEmpty.remove();
+  // Re-measure dopo reset layout (raf per assicurare reflow)
+  await new Promise(function(r){requestAnimationFrame(r);});
+  rect=canvas.parentElement.getBoundingClientRect();
+  canvas.width=rect.width*2;canvas.height=rect.height*2;
+  ctx=canvas.getContext('2d');
+  ctx.scale(2,2);
+  W=rect.width;H=rect.height;
 
   // Draw
   var pad={top:10,right:10,bottom:20,left:10};
