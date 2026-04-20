@@ -12,6 +12,12 @@ var _publicMode=false;
 var ARIA_EUR=0.10;
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+function tokIcon(t,sz){
+  sz=sz||14;
+  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#B8960C':t==='KAS'?'#49EACB':'var(--gray-500)';
+  var l=t==='ARIA'?'A':t==='ROBI'?'R':t==='KAS'?'K':'?';
+  return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 16 16" style="vertical-align:-2px;flex-shrink:0;display:inline-block"><circle cx="8" cy="8" r="7" fill="none" stroke="'+c+'" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="'+c+'" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">'+l+'</text></svg>';
+}
 
 var CAT_ICONS={
   smartphone:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>',
@@ -582,7 +588,7 @@ function updateBuyDisplay(){
   var countEl=document.getElementById('buy-display-count');
   var costEl=document.getElementById('buy-display-cost');
   if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'blocco':'blocchi')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
-  if(costEl)costEl.innerHTML='= '+cost+' ARIA &middot; <span style="color:var(--gold)">'+sharesStr+' ROBI</span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
+  if(costEl)costEl.innerHTML='= '+cost+' '+tokIcon('ARIA')+' &middot; <span style="color:var(--gold)">'+sharesStr+' '+tokIcon('ROBI')+'</span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
 }
 
 // ── Buy flow ──
@@ -1213,7 +1219,7 @@ async function renderDetail(){
     // │  2. PRICE + PROGRESS                │
     // └─────────────────────────────────────┘
     +'<div class="ap-price-section">'
-    +'<div class="ap-price-main">'+currentPrice+' <span class="ap-price-unit">ARIA</span></div>'
+    +'<div class="ap-price-main">'+currentPrice+' <span class="ap-price-unit">'+tokIcon('ARIA',18)+'</span></div>'
     +'<div class="ap-price-detail">'
     +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-500);margin-right:6px">'+a.block_price_aria+'</span>':'')
     +'<span class="it">per blocco</span><span class="en">per block</span>'
@@ -1233,8 +1239,8 @@ async function renderDetail(){
 
     // Quick stats row
     +'<div class="ap-quick-stats">'
-    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--accent)">'+currentPrice+'</div><div class="ap-qstat-label">ARIA/<span class="it">blocco</span><span class="en">block</span></div></div>'
-    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--gold)">'+miningRate+'</div><div class="ap-qstat-label"><span class="it">blocchi per ROBI</span><span class="en">blocks per ROBI</span></div></div>'
+    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--accent)">'+currentPrice+'</div><div class="ap-qstat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--gold)">'+miningRate+'</div><div class="ap-qstat-label"><span class="it">blocchi per</span><span class="en">blocks per</span> '+tokIcon('ROBI')+'</div></div>'
     +'<div class="ap-qstat"><div class="ap-qstat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="ap-qstat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
     +'</div>'
 
@@ -1258,8 +1264,8 @@ async function renderDetail(){
       +(isPresale?'<div class="ap-presale-boost" style="margin-bottom:16px"><strong>&#9935; PRESALE 2x</strong> — <span class="it">Ogni blocco guadagna il doppio dei ROBI!</span><span class="en">Each block earns double ROBI!</span></div>':'')
       +'<div class="buy-display">'
       +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-      +'<div class="buy-display-cost" id="buy-display-cost">= '+currentPrice+' ARIA</div>'
-      +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' ARIA</div>'
+      +'<div class="buy-display-cost" id="buy-display-cost">= '+currentPrice+' '+tokIcon('ARIA')+'</div>'
+      +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
       +'</div>'
       +'<div class="buy-slider-wrap">'
       +'<input type="range" class="buy-slider" id="buy-slider" min="1" max="'+(maxBuy||1)+'" value="1" '+(maxBuy<1?'disabled':'')+' oninput="onSlider()">'
@@ -1307,7 +1313,7 @@ async function renderDetail(){
       +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'
       +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
-      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 ROBI ogni '+miningRate+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(miningRate/2))+' blocchi)</span>':'')+'</li>'
+      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' ogni '+miningRate+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(miningRate/2))+' blocchi)</span>':'')+'</li>'
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
 
