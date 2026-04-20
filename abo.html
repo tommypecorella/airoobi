@@ -391,7 +391,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <!-- ROBI VALUATION & TOKENOMICS -->
   <div class="admin-section" id="sec-nft-valuation">
     <h2>ROBI Valuation &amp; Tokenomics <span class="info-i" onclick="showAboTip(this,'sec-nft-valuation')">i</span></h2>
-    <p class="admin-note" style="margin-bottom:20px">Dati calcolati in tempo reale. Valore ROBI = Treasury × 95% / ROBI emessi. Aggiorna treasury manualmente.</p>
+    <p class="admin-note" style="margin-bottom:20px">Dati in tempo reale da <code>nft_rewards</code>. <strong>Valore ROBI stimato = Treasury / ROBI in circolazione</strong>. Buyback = 95% del valore (riscossione garantita). Upside = 5% (crescita futura). Aggiorna Treasury manualmente.</p>
     <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap">
       <div>
         <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€)</label>
@@ -414,12 +414,12 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </button>
     </div>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">Treasury totale</div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-minted-2" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI emessi</div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.3)"><div class="admin-card-val" id="adm-robi-circ-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione</div></div>
-      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-nft-value-2" style="color:var(--gold);font-size:28px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore ROBI stimato</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-buyback">—</div><div class="admin-card-label">Buyback garantito (95%)</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-upside">—</div><div class="admin-card-label">Upside potenziale (5%)</div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">Treasury totale <span class="info-i" onclick="showAboTip(this,'val-treasury')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-minted-2" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI emessi <span class="info-i" onclick="showAboTip(this,'val-minted')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(184,150,12,.3)"><div class="admin-card-val" id="adm-robi-circ-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'val-circ')">i</span></div></div>
+      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-nft-value-2" style="color:var(--gold);font-size:28px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore ROBI stimato <span class="info-i" onclick="showAboTip(this,'val-value')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-nft-buyback">—</div><div class="admin-card-label">Buyback garantito (95%) <span class="info-i" onclick="showAboTip(this,'val-buyback')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-nft-upside">—</div><div class="admin-card-label">Upside potenziale (5%) <span class="info-i" onclick="showAboTip(this,'val-upside')">i</span></div></div>
     </div>
   </div>
 
@@ -2439,14 +2439,17 @@ function recalcNFTValue(){
 
 function updateNftMetrics(){
   var treasury=parseFloat(document.getElementById('adm-input-treasury')?.value)||0;
-  var minted=parseInt(document.getElementById('adm-input-minted')?.value)||0;
+  var mintedLegacy=parseInt(document.getElementById('adm-input-minted')?.value)||0;
   var circulating=parseInt(document.getElementById('adm-input-circulating')?.value)||0;
   var maxSupply=parseInt(document.getElementById('adm-input-maxsupply')?.value)||1000;
-  var nftValue=minted>0?treasury/minted:0;
+  // Usa il conteggio ROBI vivo (SUM(shares)) invece del campo legacy treasury_stats.nft_minted
+  var robiLive=(window._robiTotal!=null)?window._robiTotal:mintedLegacy;
+  var robiLiveStr=robiLive%1===0?robiLive:robiLive.toFixed(2);
+  var nftValue=robiLive>0?treasury/robiLive:0;
   var v1=document.getElementById('adm-treasury-val');if(v1)v1.textContent='€ '+treasury.toFixed(2);
-  var v2=document.getElementById('adm-nft-minted');if(v2)v2.textContent=minted;
-  var v2b=document.getElementById('adm-nft-minted-2');if(v2b)v2b.textContent=minted;
-  var v2c=document.getElementById('adm-robi-circ-treasury');if(v2c)v2c.textContent=window._robiTotal!=null?(window._robiTotal%1===0?window._robiTotal:window._robiTotal.toFixed(2)):minted;
+  var v2=document.getElementById('adm-nft-minted');if(v2)v2.textContent=robiLiveStr;
+  var v2b=document.getElementById('adm-nft-minted-2');if(v2b)v2b.textContent=robiLiveStr;
+  var v2c=document.getElementById('adm-robi-circ-treasury');if(v2c)v2c.textContent=robiLiveStr;
   var v3=document.getElementById('adm-nft-value');if(v3)v3.textContent='€ '+nftValue.toFixed(2);
   var v3b=document.getElementById('adm-nft-value-2');if(v3b)v3b.textContent='€ '+nftValue.toFixed(2);
   var v4=document.getElementById('adm-nft-marketcap');if(v4)v4.textContent='€ '+(nftValue*circulating).toFixed(2);
@@ -3509,6 +3512,12 @@ var ABO_TIPS={
   'sec-treasury':{it:'Il cuore economico: Treasury balance, valore nominale ROBI, Service balance, revenue ads. Qui aggiungi fondi e vedi lo split automatico Treasury/Service.',en:'Economic core: Treasury balance, ROBI nominal value, Service balance, ad revenue. Add funds here and see automatic Treasury/Service split.'},
   'sec-coin':{it:'Metriche del token ARIA: circolazione totale, emissione giornaliera, distribuzione per fonte (faucet, check-in, referral, video).',en:'ARIA token metrics: total supply, daily emission, distribution by source (faucet, check-in, referral, video).'},
   'sec-nft-valuation':{it:'Valutazione aggregata dei ROBI: quanti in circolazione, valore nominale per unità, proiezione in KAS.',en:'Aggregate ROBI valuation: how many in circulation, nominal value per unit, KAS projection.'},
+  'val-treasury':{it:'Capitale in EUR accantonato per garantire il valore dei ROBI. Si alimenta da % sui ricavi degli airdrop (venditori, ads, buyback). Inserito a mano nel campo TREASURY (€) sopra.',en:'EUR reserve backing ROBI value. Fed by revenue cuts from airdrops (sellers, ads, buybacks). Manually entered in the TREASURY (€) field above.'},
+  'val-minted':{it:'Totale ROBI esistenti nel sistema (SUM shares da nft_rewards tipo ROBI/NFT_REWARD). In assenza di burn, coincide con i ROBI in circolazione.',en:'Total ROBI existing in system (SUM shares from nft_rewards type ROBI/NFT_REWARD). Without burn, equals circulating ROBI.'},
+  'val-circ':{it:'ROBI attualmente detenuti dagli utenti (stesso valore di ROBI emessi finché non introduciamo burn/riscossioni).',en:'ROBI currently held by users (same as ROBI minted until we add burn/redemption).'},
+  'val-value':{it:'Valore nominale 1 ROBI = Treasury / ROBI in circolazione. Cresce automaticamente all\'aumentare del Treasury (più airdrop completati = più Treasury = più valore per ROBI).',en:'Nominal value of 1 ROBI = Treasury / circulating ROBI. Grows automatically as Treasury grows (more completed airdrops → more Treasury → higher ROBI value).'},
+  'val-buyback':{it:'Valore garantito per riscossione: 95% del Valore ROBI stimato. È ciò che un utente può effettivamente convertire in KAS riscattando oggi.',en:'Guaranteed redemption value: 95% of estimated ROBI value. What a user can actually convert to KAS by redeeming today.'},
+  'val-upside':{it:'Quota di upside trattenuta (5% del Valore ROBI stimato) — cuscinetto per crescita futura del Treasury e margini di servizio.',en:'Retained upside slice (5% of estimated ROBI value) — buffer for future Treasury growth and service margins.'},
   'sec-nft-types':{it:'Split degli NFT per tipo: ROBI (reward con valore) vs Badge (collezione, no valore). Utile per compliance ADM.',en:'NFT split by type: ROBI (reward with value) vs Badge (collection, no value). Useful for ADM compliance.'},
   'sec-company-assets':{it:'Conto operativo AIROOBI: asset aziendali, estratto movimenti, bilancio attuale. Separato dalla Treasury utenti.',en:'AIROOBI operating account: company assets, movements, current balance. Separate from user Treasury.'},
   'sec-costs':{it:'Cost tracker: spese infrastruttura (Vercel, Supabase, Postmark, DNS) e operative mensili. Alimenta break-even analysis.',en:'Cost tracker: infrastructure spend (Vercel, Supabase, Postmark, DNS) and monthly opex. Feeds break-even analysis.'},
