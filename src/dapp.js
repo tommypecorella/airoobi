@@ -655,25 +655,29 @@ async function loadPortfolioChart(token,userRobi){
   W=rect.width;H=rect.height;
 
   // Draw
-  var pad={top:10,right:10,bottom:20,left:10};
+  var pad={top:14,right:10,bottom:20,left:10};
   var cW=W-pad.left-pad.right;
   var cH=H-pad.top-pad.bottom;
 
-  // Find max values for each axis
-  var maxAria=Math.max.apply(null,ariaData)||1;
-  var maxRobi=Math.max.apply(null,robiData)||1;
-  var maxKas=kasData.length?Math.max.apply(null,kasData)||1:1;
-
-  function drawLine(data,maxVal,color,alpha){
+  // drawLine: normalizza con min-max + padding verticale; se flat disegna a flatPct (distribuiti)
+  function drawLine(data,color,alpha,flatPct){
     if(!data.length)return;
+    var mn=Math.min.apply(null,data);
+    var mx=Math.max.apply(null,data);
+    var flat=mx-mn<1e-9;
+    if(flat&&mx<=0)return; // non disegnare serie completamente zero
+    var step=cW/(data.length-1||1);
+    var yFor=function(v){
+      if(flat)return pad.top+cH*(flatPct||0.5);
+      return pad.top+cH-((v-mn)/(mx-mn))*cH*0.92-cH*0.04;
+    };
     ctx.beginPath();
     ctx.strokeStyle=color;
     ctx.lineWidth=1.5;
     ctx.globalAlpha=1;
-    var step=cW/(data.length-1||1);
     for(var i=0;i<data.length;i++){
       var x=pad.left+i*step;
-      var y=pad.top+cH-(data[i]/maxVal)*cH;
+      var y=yFor(data[i]);
       if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
     }
     ctx.stroke();
@@ -697,10 +701,10 @@ async function loadPortfolioChart(token,userRobi){
     ctx.beginPath();ctx.moveTo(pad.left,gy);ctx.lineTo(W-pad.right,gy);ctx.stroke();
   }
 
-  // Draw lines
-  drawLine(ariaData,maxAria,'#4A9EFF',0.06);
-  drawLine(robiData,maxRobi,'#B8960C',0.08);
-  if(kasData.length)drawLine(kasData,maxKas,'#49EACB',0.05);
+  // Draw lines — se flat distribuisci a 25/50/75% per visibilità
+  drawLine(ariaData,'#4A9EFF',0.06,0.25);
+  drawLine(robiData,'#B8960C',0.08,0.5);
+  if(kasData.length)drawLine(kasData,'#49EACB',0.05,0.75);
 
   // Date labels (first, mid, last)
   ctx.font='9px monospace';ctx.fillStyle='rgba(255,255,255,.2)';ctx.textBaseline='top';
