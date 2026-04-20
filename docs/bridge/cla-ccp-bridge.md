@@ -15,7 +15,7 @@
 ## 📌 Stato corrente
 
 - **Alpha-Net live** su airoobi.app (scoring v4 · earnings v2 · early-close lockdown · fairness guard)
-- Versione corrente: `alfa-2026.04.19-3.34.0`
+- Versione corrente: `alfa-2026.04.20-3.35.0`
 - Ultimo deploy DB: `supabase db push` del 19 Apr 19:30 + fix migrations 20:00
 - Test Playwright: 104/104 post-scoring-v4
 - Blocker: **nessuno** (pronti per campagna apertura Alpha Brave)

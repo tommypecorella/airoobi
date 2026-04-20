@@ -40,6 +40,10 @@
     <span></span><span></span><span></span>
   </button>
   <nav class="topbar-nav" id="topbar-nav">
+    <a href="/" data-page="home" onclick="navigateTo('home',event)">
+      <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
+      <span class="it">Home</span><span class="en">Home</span>
+    </a>
     <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
       <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
       AIRDROPS
@@ -62,15 +66,11 @@
     </a>
     <div class="nav-dropdown" style="position:relative">
       <button class="nav-dropdown-trigger" id="nav-discover-btn" onclick="toggleDiscoverMenu(event)" type="button" style="background:none;border:none;color:var(--gray-400);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;gap:7px;height:60px;padding:0 16px;border-bottom:2px solid transparent;transition:all .25s">
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        <span class="it">Scopri</span><span class="en">Discover</span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 10v6"/></svg>
+        EDU
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
       <div class="nav-dropdown-menu" id="nav-discover-menu" style="display:none;position:absolute;top:60px;right:0;min-width:200px;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:8px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:110">
-        <a href="/" data-page="home" onclick="navigateTo('home',event);closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
-          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
-          <span class="it">Home</span><span class="en">Home</span>
-        </a>
         <a href="/come-funziona-airdrop" data-page="rules" onclick="closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
           <span class="it">Come funziona</span><span class="en">How it works</span>
@@ -1091,7 +1091,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.19-3.34.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.20-3.35.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->

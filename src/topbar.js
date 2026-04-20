@@ -21,13 +21,18 @@ var ICONS={
   login:'<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>',
   faq:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
   rules:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>',
+  edu:'<svg viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 10v6"/></svg>',
+  caret:'<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>',
   logout:'<svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>'
 };
 
 var PUBLIC_LINKS=[
   {href:'/',        page:'home',    icon:ICONS.home,    it:'Home',    en:'Home'},
   {href:'/airdrops',page:'explore', icon:ICONS.explore, it:'Airdrops',en:'Airdrops', primary:true},
-  {href:'/come-funziona-airdrop',page:'rules', icon:ICONS.rules, it:'Come funziona', en:'How it works'},
+  {href:'/come-funziona-airdrop',page:'rules', icon:ICONS.rules, it:'Come funziona', en:'How it works'}
+];
+
+var EDU_LINKS=[
   {href:'/impara',  page:'learn',   icon:ICONS.learn,   it:'Impara',  en:'Learn'},
   {href:'/blog',    page:'blog',    icon:ICONS.blog,    it:'Blog',    en:'Blog'},
   {href:'/faq',     page:'faq',     icon:ICONS.faq,     it:'FAQ',     en:'FAQ'}
@@ -51,8 +56,24 @@ function linkHtml(l,active){
     +l.icon+' <span class="it">'+l.it+'</span><span class="en">'+l.en+'</span></a>';
 }
 
+function eduDropdownHtml(active){
+  var isActive=EDU_LINKS.some(function(l){return l.page===active});
+  var items=EDU_LINKS.map(function(l){
+    var ac=l.page===active?' active':'';
+    return '<a href="'+l.href+'" data-page="'+l.page+'" class="topbar-edu-item'+ac+'">'
+      +l.icon+' <span class="it">'+l.it+'</span><span class="en">'+l.en+'</span></a>';
+  }).join('');
+  return '<div class="topbar-dropdown" id="topbar-edu-wrap">'
+    +'<button class="topbar-edu-btn'+(isActive?' active':'')+'" id="topbar-edu-btn" type="button" onclick="window._topbarToggleEdu(event)">'
+    +ICONS.edu+' <span class="it">EDU</span><span class="en">EDU</span> '+ICONS.caret
+    +'</button>'
+    +'<div class="topbar-edu-menu" id="topbar-edu-menu">'+items+'</div>'
+    +'</div>';
+}
+
 function buildTopbar(active,links){
   var navHtml=links.map(function(l){return linkHtml(l,active)}).join('');
+  navHtml+=eduDropdownHtml(active);
   return '<header class="topbar">'
     +'<button class="topbar-burger" id="topbar-burger" onclick="window._topbarToggle()"><span></span><span></span><span></span></button>'
     +'<nav class="topbar-nav" id="topbar-nav">'+navHtml+'</nav>'
@@ -64,7 +85,9 @@ function buildTopbar(active,links){
 }
 
 function buildMobile(active,links){
-  var html=links.map(function(l){return linkHtml(l,active)}).join('');
+  // Mobile resta piatto: include PUBLIC + EDU come lista verticale
+  var all=links.concat(EDU_LINKS);
+  var html=all.map(function(l){return linkHtml(l,active)}).join('');
   html+='<div class="topbar-mobile-auth" id="topbar-mobile-auth">'
     +'<a href="/login">'+ICONS.login+' <span class="it">Accedi</span><span class="en">Log in</span></a>'
     +'<a href="/signup" class="topbar-auth-cta">'+ICONS.referral+' <span class="it">Registrati gratis</span><span class="en">Sign up free</span></a>'
@@ -90,6 +113,14 @@ window._topbarToggleUserMenu=function(e){
   var open=menu.classList.toggle('open');
   btn.classList.toggle('open',open);
 };
+window._topbarToggleEdu=function(e){
+  if(e){e.stopPropagation();}
+  var menu=document.getElementById('topbar-edu-menu');
+  var btn=document.getElementById('topbar-edu-btn');
+  if(!menu||!btn)return;
+  var open=menu.classList.toggle('open');
+  btn.classList.toggle('open',open);
+};
 window._topbarLogout=function(){
   try{localStorage.removeItem('airoobi_session');}catch(e){}
   window.location.href='/';
@@ -97,6 +128,14 @@ window._topbarLogout=function(){
 document.addEventListener('click',function(e){
   var menu=document.getElementById('tb-user-menu');
   var btn=document.getElementById('tb-avatar-btn');
+  if(!menu||!menu.classList.contains('open'))return;
+  if(menu.contains(e.target)||(btn&&btn.contains(e.target)))return;
+  menu.classList.remove('open');
+  if(btn)btn.classList.remove('open');
+});
+document.addEventListener('click',function(e){
+  var menu=document.getElementById('topbar-edu-menu');
+  var btn=document.getElementById('topbar-edu-btn');
   if(!menu||!menu.classList.contains('open'))return;
   if(menu.contains(e.target)||(btn&&btn.contains(e.target)))return;
   menu.classList.remove('open');
@@ -166,12 +205,12 @@ function upgradeToLoggedIn(session){
   var letter=email?email.charAt(0).toUpperCase():'?';
   var uid=session.user?session.user.id:'';
 
-  // Expand nav with auth links (insert before Impara)
+  // Expand nav: [Home, Airdrops] + AUTH + [Come funziona] + EDU dropdown
   var nav=document.getElementById('topbar-nav');
   if(nav){
     var active=document.querySelector('#topbar-mount')?.getAttribute('data-active')||'';
     var allLinks=PUBLIC_LINKS.slice(0,2).concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2));
-    nav.innerHTML=allLinks.map(function(l){return linkHtml(l,active)}).join('');
+    nav.innerHTML=allLinks.map(function(l){return linkHtml(l,active)}).join('')+eduDropdownHtml(active);
   }
 
   // Replace auth buttons with balance + avatar (with contextual dropdown menu)
@@ -208,11 +247,11 @@ function upgradeToLoggedIn(session){
   // Load avatar image if present in profile
   loadTopbarAvatar(session);
 
-  // Update mobile menu
+  // Update mobile menu (flat: [Home, Airdrops] + AUTH + [ComeFunziona] + EDU_LINKS)
   var mm=document.getElementById('topbar-mobile-menu');
   if(mm){
     var active2=document.querySelector('#topbar-mount')?.getAttribute('data-active')||'';
-    var allLinks2=PUBLIC_LINKS.slice(0,2).concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2));
+    var allLinks2=PUBLIC_LINKS.slice(0,2).concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2)).concat(EDU_LINKS);
     // Remove auth section, add full links
     var mobileAuth=document.getElementById('topbar-mobile-auth');
     if(mobileAuth)mobileAuth.remove();
