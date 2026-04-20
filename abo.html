@@ -1325,8 +1325,9 @@ async function loadAdminData(){
       }).join('');
     }
     if(users&&users.length>0){
-      var avgPts=Math.round(totalPts/users.length);
-      var avgEl=document.getElementById('adm-avg-points');if(avgEl)avgEl.textContent=avgPts;
+      var avgPts=users.length>0?totalPts/users.length:0;
+      var avgEl=document.getElementById('adm-avg-points');
+      if(avgEl)avgEl.textContent=avgPts.toLocaleString('it-IT',{maximumFractionDigits:1,minimumFractionDigits:avgPts%1===0?0:1});
       // Streak massima v2: max giorni timbrati in una settimana (weekly_checkins.days_checked)
       try{
         var weekly=await sbGet('weekly_checkins?select=days_checked',t);
