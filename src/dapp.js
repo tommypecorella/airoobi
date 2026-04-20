@@ -4089,7 +4089,7 @@ async function loadRobiHistory(token){
       var cum=0; var pts=[];
       sorted.forEach(function(it){
         cum+=parseFloat(it.shares)||0;
-        pts.push({val:cum, at:it.created_at});
+        pts.push({val:cum, at:it.date});
       });
       var max=Math.max.apply(null,pts.map(function(p){return p.val}))||1;
       // Scala Y arrotondata ai 5/10/50/100 per labels pulite
