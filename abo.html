@@ -1345,7 +1345,19 @@ async function loadAdminData(){
     }
     // ARIA metrics
     var avgEl=document.getElementById('adm-coin-avg');
-    if(avgEl)avgEl.textContent=userCount>0?Math.round(totalPts/userCount).toLocaleString():'—';
+    if(avgEl){
+      var avgV=userCount>0?totalPts/userCount:0;
+      avgEl.textContent=avgV.toLocaleString('it-IT',{maximumFractionDigits:1,minimumFractionDigits:avgV%1===0?0:1});
+    }
+    // ARIA per ROBI (ratio): ARIA totali / ROBI totali
+    var ratioEl=document.getElementById('adm-coin-nft-ratio');
+    if(ratioEl){
+      var rTotal=window._robiTotal||0;
+      if(rTotal>0){
+        var ratio=totalPts/rTotal;
+        ratioEl.textContent=ratio.toLocaleString('it-IT',{maximumFractionDigits:2,minimumFractionDigits:ratio%1===0?0:1});
+      }else ratioEl.textContent='—';
+    }
     try{
       var faucetToday=await sbGet('points_ledger?reason=eq.faucet&created_at=gte.'+today+'T00:00:00&select=id',t);
       var ftEl=document.getElementById('adm-coin-faucet-today');if(ftEl)ftEl.textContent=faucetToday?faucetToday.length:0;
