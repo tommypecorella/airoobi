@@ -4125,16 +4125,18 @@ async function loadRobiHistory(token){
       ctx.restore();
 
       // Asse X: label start/end (ed eventualmente midpoint)
-      ctx.textAlign='center';
       ctx.textBaseline='top';
       ctx.fillStyle='rgba(136,146,174,.7)';
       function fmtD(iso){var d=new Date(iso);return (d.getDate()+'/'+(d.getMonth()+1));}
       if(pts.length>=1){
+        ctx.textAlign='left';
         ctx.fillText(fmtD(pts[0].at),pL,h-pB+5);
         if(pts.length>=3){
           var midIdx=Math.floor(pts.length/2);
+          ctx.textAlign='center';
           ctx.fillText(fmtD(pts[midIdx].at),pL+plotW/2,h-pB+5);
         }
+        ctx.textAlign='right';
         ctx.fillText(fmtD(pts[pts.length-1].at),w-pR,h-pB+5);
       }
 
