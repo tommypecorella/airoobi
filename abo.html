@@ -394,10 +394,13 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <p class="admin-note" style="margin-bottom:20px">Dati in tempo reale da <code>nft_rewards</code>. <strong>Valore ROBI stimato = Treasury / ROBI in circolazione</strong>. Buyback = 95% del valore (riscossione garantita). Upside = 5% (crescita futura). Aggiorna Treasury manualmente.</p>
     <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap">
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€)</label>
-        <input type="number" id="adm-treasury-input" placeholder="0.00" step="0.01" min="0"
-          style="background:#111;border:1px solid var(--gold);color:var(--white);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none"
-          oninput="recalcNFTValue()">
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€) <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="number" id="adm-treasury-input" placeholder="0.00" readonly
+            style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none;cursor:not-allowed">
+          <button onclick="refreshTreasuryTotal()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:8px 10px;cursor:pointer;font-size:14px;transition:all .3s" onmouseover="this.style.borderColor='var(--gold)';this.style.color='var(--gold)'" onmouseout="this.style.borderColor='var(--gray-700)';this.style.color='var(--gray-400)'" title="Refresh">&#8635;</button>
+        </div>
+        <div id="adm-treasury-updated" style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px"></div>
       </div>
       <div>
         <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">ARIA IN CIRCOLAZIONE <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
@@ -2299,6 +2302,11 @@ async function refreshAriaCircolante(){
   }catch(e){console.error('Refresh ARIA error:',e);}
 }
 
+async function refreshTreasuryTotal(){
+  // Ricarica treasury_funds e ricalcola treasury totale
+  await loadTreasuryFunds();
+}
+
 async function refreshNftCircolante(){
   var s=getSession();if(!s)return;
   try{
@@ -2344,6 +2352,15 @@ async function loadTreasuryFunds(){
       treasuryTotal+=amt*(pct/100);
       serviceTotal+=amt*((100-pct)/100);
     }
+    // Prefill Treasury input (AUTO) nella sezione ROBI Valuation
+    var tIn=document.getElementById('adm-treasury-input');
+    if(tIn)tIn.value=treasuryTotal.toFixed(2);
+    var tInUp=document.getElementById('adm-treasury-updated');
+    if(tInUp)tInUp.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    // Ricompute valore ROBI con il treasury fresh
+    var tInputHidden=document.getElementById('adm-input-treasury');
+    if(tInputHidden)tInputHidden.value=treasuryTotal;
+    if(typeof updateNftMetrics==='function')updateNftMetrics();
     var tb=document.getElementById('adm-treasury-balance');
     if(tb)tb.textContent='€'+treasuryTotal.toFixed(2);
     var sb=document.getElementById('adm-service-balance');
