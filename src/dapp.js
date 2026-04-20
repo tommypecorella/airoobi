@@ -706,9 +706,6 @@ async function loadPortfolioChart(token,userRobi){
   drawLine(robiData,'#B8960C',0.08,0.5);
   if(kasData.length)drawLine(kasData,'#49EACB',0.05,0.75);
 
-  // DEBUG visuale (temporaneo)
-  ctx.fillStyle='#ff00ff';ctx.font='10px monospace';
-  ctx.fillText('DBG W='+W.toFixed(0)+' H='+H.toFixed(0)+' bal='+_balance+' aria[0]='+ariaData[0]+' maxA='+Math.max.apply(null,ariaData)+' robiEur='+robiValEur.toFixed(2)+' kasPx='+kasPrice.toFixed(4),pad.left+4,pad.top+10);
 
   // Date labels (first, mid, last)
   ctx.font='9px monospace';ctx.fillStyle='rgba(255,255,255,.2)';ctx.textBaseline='top';

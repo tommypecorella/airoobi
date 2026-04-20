@@ -59,6 +59,18 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 .btn-secondary{display:inline-block;background:none;border:1px solid var(--gray-700);color:var(--gray-300);padding:14px 36px;font-family:var(--font-b);font-size:13px;letter-spacing:1px;text-decoration:none;transition:all .25s;border-radius:var(--radius-sm);text-transform:uppercase}
 .btn-secondary:hover{color:var(--white);border-color:var(--accent);background:rgba(74,158,255,.04)}
 
+/* Welcome grant */
+.welcome-grant{margin:36px auto 0;max-width:520px;padding:22px 28px;border:1px solid rgba(184,150,12,.22);border-radius:var(--radius);background:linear-gradient(135deg,rgba(74,158,255,.04) 0%,rgba(184,150,12,.05) 100%);text-align:center;position:relative}
+.welcome-grant-label{font-family:var(--font-m);font-size:10px;letter-spacing:2.5px;color:var(--gold);margin-bottom:16px}
+.welcome-grant-row{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:14px}
+.welcome-grant-item{display:flex;flex-direction:column;align-items:center;gap:4px}
+.welcome-grant-item svg{margin-bottom:4px}
+.welcome-grant-amt{font-family:var(--font-h);font-size:clamp(28px,5vw,38px);font-weight:400;line-height:1}
+.welcome-grant-tok{font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gray-300)}
+.welcome-grant-sub{font-family:var(--font-m);font-size:9px;letter-spacing:.8px;color:var(--gray-500);margin-top:2px}
+.welcome-grant-plus{font-family:var(--font-h);font-size:28px;color:var(--gray-600);font-weight:300}
+.welcome-grant-note{font-size:12px;color:var(--gray-400);line-height:1.5;margin-top:10px;padding-top:14px;border-top:1px solid rgba(255,255,255,.04)}
+
 /* How it works */
 .how{max-width:900px;margin:0 auto;padding:0 24px 96px}
 .how-title{font-family:var(--font-h);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:600;text-align:center;margin-bottom:52px;color:var(--white);letter-spacing:-.01em}
@@ -188,6 +200,30 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
   <div class="hero-ctas">
     <a href="/signup" class="btn-primary"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>
     <a href="/login" class="btn-secondary"><span class="it">Accedi &rarr;</span><span class="en">Log in &rarr;</span></a>
+  </div>
+
+  <!-- WELCOME GRANT — Alpha-Net -->
+  <div class="welcome-grant">
+    <div class="welcome-grant-label"><span class="it">REGISTRANDOTI OGGI RICEVI</span><span class="en">SIGN UP TODAY AND GET</span></div>
+    <div class="welcome-grant-row">
+      <div class="welcome-grant-item">
+        <svg width="28" height="28" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.3"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">A</text></svg>
+        <div class="welcome-grant-amt" style="color:#4A9EFF">1.000</div>
+        <div class="welcome-grant-tok">ARIA</div>
+        <div class="welcome-grant-sub"><span class="it">valuta testnet</span><span class="en">testnet currency</span></div>
+      </div>
+      <div class="welcome-grant-plus">+</div>
+      <div class="welcome-grant-item">
+        <svg width="28" height="28" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.3"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">R</text></svg>
+        <div class="welcome-grant-amt" style="color:#B8960C">5</div>
+        <div class="welcome-grant-tok">ROBI</div>
+        <div class="welcome-grant-sub"><span class="it">reward con valore reale</span><span class="en">real-value reward</span></div>
+      </div>
+    </div>
+    <div class="welcome-grant-note">
+      <span class="it">In Alpha ogni nuovo utente parte con <strong style="color:#4A9EFF">1.000 ARIA</strong> per partecipare subito agli airdrop e <strong style="color:#B8960C">5 ROBI</strong> che iniziano a crescere di valore nel tempo.</span>
+      <span class="en">In Alpha every new user starts with <strong style="color:#4A9EFF">1,000 ARIA</strong> to join airdrops immediately and <strong style="color:#B8960C">5 ROBI</strong> that grow in value over time.</span>
+    </div>
   </div>
 </section>
 
