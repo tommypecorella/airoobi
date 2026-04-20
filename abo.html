@@ -1371,7 +1371,7 @@ async function loadAdminData(){
     }catch(e){var leadsEl2=document.getElementById('adm-inv-leads');if(leadsEl2)leadsEl2.textContent='—';}
     loadCostTracker();
     await loadAdminTreasury();
-    loadTreasuryFunds();
+    await loadTreasuryFunds(); // authoritative source for treasury + ROBI valuation
     loadAdminAirdrops();
     loadFairnessAirdrops();
   }catch(e){console.error('Admin load error:',e);}
@@ -2240,10 +2240,10 @@ async function loadAdminTreasury(){
   try{
     var rows=await sbGet('treasury_stats?select=*&order=created_at.desc&limit=1',tk);
     var t=(rows&&rows.length)?rows[0]:{};
-    var i1=document.getElementById('adm-input-treasury');if(i1)i1.value=t.balance_eur||0;
+    // NB: adm-input-treasury e adm-treasury-input sono popolati da loadTreasuryFunds
+    // (fonte autoritativa = treasury_funds); treasury_stats.balance_eur resta legacy.
     var i2=document.getElementById('adm-input-minted');if(i2)i2.value=t.nft_minted||0;
     var i4=document.getElementById('adm-input-maxsupply');if(i4)i4.value=t.nft_max_supply||1000;
-    var i5=document.getElementById('adm-treasury-input');if(i5)i5.value=t.balance_eur||0;
     var ra=document.getElementById('adm-revenue-ads');if(ra)ra.textContent='$'+(parseFloat(t.revenue_ads)||0).toFixed(2);
     var rs=document.getElementById('adm-revenue-adsense');if(rs)rs.textContent='$'+(parseFloat(t.revenue_adsense)||0).toFixed(2);
     // Treasury balance now sourced from treasury_funds table (see loadTreasuryFunds)
