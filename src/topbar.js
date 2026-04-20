@@ -209,7 +209,9 @@ function upgradeToLoggedIn(session){
   var nav=document.getElementById('topbar-nav');
   if(nav){
     var active=document.querySelector('#topbar-mount')?.getAttribute('data-active')||'';
-    var allLinks=PUBLIC_LINKS.slice(0,2).concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2));
+    // Override Home link → /dashboard for logged users
+    var homeLogged=Object.assign({},PUBLIC_LINKS[0],{href:'/dashboard'});
+    var allLinks=[homeLogged,PUBLIC_LINKS[1]].concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2));
     nav.innerHTML=allLinks.map(function(l){return linkHtml(l,active)}).join('')+eduDropdownHtml(active);
   }
 
@@ -231,7 +233,7 @@ function upgradeToLoggedIn(session){
     menu.className='tb-user-menu';
     menu.innerHTML=
       '<div class="tb-user-menu-email" id="tb-user-menu-email">'+(email||'')+'</div>'
-      +'<a href="/" class="tb-user-menu-item">'+ICONS.home+' <span class="it">Home</span><span class="en">Home</span></a>'
+      +'<a href="/dashboard" class="tb-user-menu-item">'+ICONS.home+' <span class="it">Home</span><span class="en">Home</span></a>'
       +'<a href="/airdrops" class="tb-user-menu-item">'+ICONS.explore+' <span class="it">Esplora airdrop</span><span class="en">Explore airdrops</span></a>'
       +'<a href="/miei-airdrop" class="tb-user-menu-item">'+ICONS.my+' <span class="it">I miei airdrop</span><span class="en">My airdrops</span></a>'
       +'<a href="/portafoglio-dapp" class="tb-user-menu-item">'+ICONS.wallet+' <span class="it">Portafoglio</span><span class="en">Wallet</span></a>'
@@ -251,7 +253,8 @@ function upgradeToLoggedIn(session){
   var mm=document.getElementById('topbar-mobile-menu');
   if(mm){
     var active2=document.querySelector('#topbar-mount')?.getAttribute('data-active')||'';
-    var allLinks2=PUBLIC_LINKS.slice(0,2).concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2)).concat(EDU_LINKS);
+    var homeLogged2=Object.assign({},PUBLIC_LINKS[0],{href:'/dashboard'});
+    var allLinks2=[homeLogged2,PUBLIC_LINKS[1]].concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2)).concat(EDU_LINKS);
     // Remove auth section, add full links
     var mobileAuth=document.getElementById('topbar-mobile-auth');
     if(mobileAuth)mobileAuth.remove();

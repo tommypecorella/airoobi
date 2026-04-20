@@ -154,6 +154,16 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 </head>
 <body>
 
+<!-- Redirect a /dashboard se utente loggato -->
+<script>
+(function(){
+  try{
+    var s=localStorage.getItem('airoobi_session');
+    if(s){var p=JSON.parse(s);if(p&&p.access_token){location.replace('/dashboard');}}
+  }catch(e){}
+})();
+</script>
+
 <!-- TOPBAR (shared component) -->
 <div id="topbar-mount" data-active="home"></div>
 <script src="/src/topbar.js"></script>

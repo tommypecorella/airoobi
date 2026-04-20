@@ -1139,9 +1139,9 @@ function spawnConfetti(){
 // ── Page routing ──
 var _isApp=location.hostname==='airoobi.app'||location.hostname==='www.airoobi.app';
 var PAGE_PATHS=_isApp
-  ?{home:'/',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio',archive:'/archivio',learn:'/impara'}
+  ?{home:'/dashboard',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio',archive:'/archivio',learn:'/impara'}
   :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/impara'};
-var PATH_TO_PAGE={'/':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/impara':'learn'};
+var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/impara':'learn'};
 var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
