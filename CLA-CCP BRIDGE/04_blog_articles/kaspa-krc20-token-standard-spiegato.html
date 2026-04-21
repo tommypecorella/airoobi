@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KRC-20: lo standard token di Kaspa che alimenta AIROOBI — AIROOBI Blog</title>
+  <meta name="description" content="Cos'è KRC-20, lo standard token di Kaspa analogo all'ERC-20 di Ethereum. Come funziona, perché è rilevante per AIROOBI e cosa significa per il futuro di ARIA come token nativo.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="KRC-20: lo standard token di Kaspa che alimenta AIROOBI">
+  <meta property="og:description" content="Cos'è KRC-20, lo standard token di Kaspa analogo all'ERC-20 di Ethereum. Come funziona, perché è rilevante per AIROOBI e cosa significa per il futuro di ARIA come token nativo.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/kaspa-krc20-token-standard-spiegato.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/kaspa-krc20-token-standard-spiegato.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{--black:#000;--white:#FFF;--gold:#B8960C;--gray-900:#0d0d0d;--gray-800:#1a1a1a;--gray-700:#2a2a2a;--gray-600:#3a3a3a;--gray-400:#888;--gray-300:#aaa;--aria:#4A9EFF;--kas:#49EACB}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:16px;scroll-behavior:smooth}
+    body{background:var(--black);color:var(--white);font-family:'Instrument Sans',sans-serif;line-height:1.6;min-height:100vh}
+    .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:60px;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-800)}
+    .topbar-logo img{height:32px;display:block}
+    .topbar-back{color:var(--gray-300);text-decoration:none;font-size:.875rem;transition:color .2s}
+    .topbar-back:hover{color:var(--gold)}
+    .breadcrumb{max-width:800px;margin:0 auto;padding:1.25rem 1.5rem 0;font-size:.8rem;color:var(--gray-400);display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+    .breadcrumb a{color:var(--gray-400);text-decoration:none}
+    .breadcrumb a:hover{color:var(--gold)}
+    .breadcrumb .sep{color:var(--gray-600)}
+    .breadcrumb .current{color:var(--gray-300)}
+    .article-wrap{max-width:800px;margin:0 auto;padding:2.5rem 1.5rem 4rem}
+    .article-meta{font-family:'DM Mono',monospace;font-size:.75rem;color:var(--gray-400);letter-spacing:.04em;margin-bottom:1rem}
+    article h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3rem);font-weight:600;line-height:1.15;margin-bottom:2rem;letter-spacing:-.02em}
+    article p{font-size:1.05rem;line-height:1.8;color:var(--gray-300);margin-bottom:1.5rem}
+    article h2{font-family:'Cormorant Garamond',serif;font-size:1.65rem;font-weight:600;color:var(--white);margin:2.5rem 0 1rem;line-height:1.2}
+    article h3{font-family:'Instrument Sans',sans-serif;font-size:1.05rem;font-weight:600;color:var(--white);margin:1.75rem 0 .6rem}
+    article ul,article ol{color:var(--gray-300);margin:0 0 1.5rem 1.5rem;font-size:1.05rem;line-height:1.8}
+    article li{margin-bottom:.5rem}
+    .cta-box{border:1px solid var(--gold);background:var(--gray-900);border-radius:10px;padding:2.5rem 2rem;text-align:center;margin:3.5rem 0 2rem}
+    .cta-box h2{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:600;color:var(--gold);margin-bottom:.75rem}
+    .cta-box p{color:var(--gray-300);font-size:1rem;margin-bottom:1.5rem}
+    .cta-btn{display:inline-block;background:var(--gold);color:var(--black);font-family:'Instrument Sans',sans-serif;font-weight:600;font-size:.95rem;padding:.75rem 2rem;border-radius:6px;text-decoration:none;transition:opacity .2s}
+    .cta-btn:hover{opacity:.85}
+    .ads-section{text-align:center;padding:2rem 1rem}
+    .blog-footer{border-top:1px solid var(--gray-800);padding:2rem 1rem;text-align:center;color:var(--gray-400);font-size:.85rem}
+    .blog-footer a{color:var(--gray-400);text-decoration:none}
+    .blog-footer a:hover{color:var(--gold)}
+    .back-link{display:inline-block;margin-bottom:2rem;color:var(--gray-400);text-decoration:none;font-size:.875rem;transition:color .2s}
+    .back-link:hover{color:var(--gold)}
+    .tech-tag{display:inline-block;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--kas);font-family:'DM Mono',monospace;font-size:.75rem;padding:.2rem .5rem;border-radius:4px;margin-right:.4rem}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo"><img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32"></a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a><span class="sep">›</span>
+    <a href="/blog.html">Blog</a><span class="sep">›</span>
+    <span class="current">KRC-20 Kaspa</span>
+  </nav>
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">26 Marzo 2026</div>
+    <article>
+      <h1>KRC-20: lo standard token di Kaspa che alimenta AIROOBI</h1>
+
+      <p>Se hai sentito parlare di Ethereum e dei suoi token ERC-20 — come USDC, DAI, o le migliaia di token DeFi che hanno popolato il mercato negli ultimi anni — allora capirai immediatamente cos'è KRC-20. È lo stesso concetto applicato alla blockchain Kaspa: uno standard tecnico che permette di creare e gestire token fungibili nativi sulla rete Kaspa.</p>
+
+      <p>Per AIROOBI, KRC-20 non è solo un dettaglio tecnico. È la base su cui verrà costruita la fase on-chain della piattaforma, quella in cui ARIA — la valuta della community — diventerà un token verificabile, trasferibile e scambiabile direttamente sulla blockchain più veloce attualmente in produzione.</p>
+
+      <h2>Cos'è uno standard token e perché esiste</h2>
+
+      <p>Per capire KRC-20 bisogna prima capire il problema che risolve. Una blockchain come Kaspa è fondamentalmente un registro distribuito che tiene traccia di chi possiede quante unità della valuta nativa (KAS). Ma molti progetti hanno bisogno di creare la propria valuta — un token — senza costruire una blockchain da zero.</p>
+
+      <p>La soluzione è definire uno standard: un insieme di regole condivise che descrivono come un token deve comportarsi. Tutti i token che rispettano queste regole sono interoperabili: portafogli, exchange e applicazioni sanno già come gestirli senza dover scrivere codice personalizzato per ognuno.</p>
+
+      <p>Su Ethereum, questo standard si chiama ERC-20 ed è diventato la base dell'intero ecosistema DeFi. Su Kaspa, il corrispettivo è KRC-20.</p>
+
+      <h2>Le basi tecniche di KRC-20, senza gergo inutile</h2>
+
+      <p>KRC-20 è un protocollo che sfrutta le transazioni native di Kaspa per inscrivere dati aggiuntivi nel ledger. In termini più semplici: ogni operazione con un token KRC-20 (coniare, trasferire, bruciare) viene registrata come una transazione Kaspa con metadati strutturati che descrivono l'operazione.</p>
+
+      <h3>Deploy, mint e transfer</h3>
+      <p>Le tre operazioni fondamentali di KRC-20 sono:</p>
+      <ul>
+        <li><strong>Deploy:</strong> creazione del token. Si definiscono nome (ticker), supply massima, e le regole di emissione. Una volta fatto il deploy, queste regole sono immutabili.</li>
+        <li><strong>Mint:</strong> coniazione di nuove unità, nel rispetto delle regole stabilite al deploy. Può essere pubblica (chiunque può partecipare) o controllata (solo l'emittente).</li>
+        <li><strong>Transfer:</strong> trasferimento di token da un wallet a un altro. Su Kaspa, con la sua architettura BlockDAG, questi trasferimenti sono quasi istantanei e costano frazioni di centesimo.</li>
+      </ul>
+
+      <h3>Differenza rispetto agli smart contract EVM</h3>
+      <p>Su Ethereum, i token ERC-20 vengono gestiti da smart contract: programmi autonomi che vivono sulla blockchain e eseguono logica complessa. Kaspa, nella sua architettura attuale, non ha smart contract nel senso EVM del termine. KRC-20 utilizza invece un approccio basato su iscrizioni e indicizzazione off-chain: i dati del token vengono inseriti nelle transazioni Kaspa, e un layer di indicizzazione (come gli indexer KRC-20) li interpreta e tiene il conto dei saldi.</p>
+
+      <p>Questo approccio ha vantaggi concreti: è più semplice da auditare, non introduce vulnerabilità legate a bug negli smart contract, e beneficia direttamente della velocità e della sicurezza della blockchain Kaspa sottostante.</p>
+
+      <h2>Perché Kaspa e non Ethereum o Solana</h2>
+
+      <p>La scelta di costruire AIROOBI su Kaspa non è casuale. Kaspa ha caratteristiche uniche che la rendono particolarmente adatta per un marketplace che deve gestire transazioni frequenti, micro-pagamenti in token, e trasferimenti di NFT.</p>
+
+      <h3>BlockDAG: il paradigma oltre la blockchain</h3>
+      <p>Kaspa non è una blockchain nel senso tradizionale: è un BlockDAG (Directed Acyclic Graph of blocks). Mentre Bitcoin e Ethereum processano un blocco alla volta in sequenza, Kaspa può processare decine di blocchi al secondo in parallelo, grazie al protocollo GHOSTDAG sviluppato da Yonatan Sompolinsky.</p>
+
+      <p>Il risultato pratico: Kaspa produce un blocco ogni secondo (attualmente 1 BPS, con la roadmap Crescendo che punta a 10 BPS e oltre). Le transazioni vengono confermate in pochi secondi, non in minuti o ore.</p>
+
+      <h3>Fee quasi nulle</h3>
+      <p>Le fee su Kaspa sono nell'ordine di frazioni di centesimo per transazione. Per un marketplace come AIROOBI, dove gli utenti potrebbero effettuare decine di micro-transazioni (acquisto di blocchi, trasferimenti di ARIA, distribuzione di ROBI), questo fa una differenza enorme rispetto a Ethereum, dove le gas fee possono rendere anti-economiche le operazioni di piccolo valore.</p>
+
+      <h3>Sicurezza PoW senza compromessi</h3>
+      <p>Kaspa usa Proof of Work come Bitcoin, ma con l'algoritmo kHeavyHash ottimizzato per GPU. A differenza dei sistemi Proof of Stake, PoW offre garanzie di sicurezza che non dipendono dalla concentrazione di stake in pochi validatori. Per una piattaforma che gestisce transazioni di valore elevato come gli airdrop di AIROOBI, questa è una considerazione importante.</p>
+
+      <h2>ARIA come token KRC-20: la roadmap</h2>
+
+      <p>Nella fase attuale (Alpha), ARIA è una valuta interna gestita dal database di AIROOBI. I saldi sono registrati off-chain, le transazioni avvengono tramite le API della piattaforma, e l'intera gestione è centralizzata. Questo è appropriato per la fase di sviluppo: permette flessibilità, facilità di correzione degli errori, e un'esperienza utente senza attrito.</p>
+
+      <p>Con il passaggio allo Stage 2, ARIA farà il salto su blockchain come token KRC-20 nativo. Questo cambiamento porterà diversi benefici concreti:</p>
+
+      <h3>Verificabilità on-chain</h3>
+      <p>Ogni saldo ARIA sarà visibile sul ledger pubblico di Kaspa. Chiunque potrà verificare la supply totale, la distribuzione, e la storia delle transazioni. Non ci sarà più bisogno di fidarsi di AIROOBI come entità centralizzata: le prove sono sulla blockchain.</p>
+
+      <h3>Trasferibilità e componibilità</h3>
+      <p>Un token KRC-20 può essere inviato a qualsiasi wallet Kaspa compatibile, listato su exchange, e potenzialmente integrato in altri protocolli dell'ecosistema Kaspa. ARIA off-chain esiste solo dentro AIROOBI; ARIA on-chain può diventare parte di un ecosistema più ampio.</p>
+
+      <h3>Tokenomics difendibili</h3>
+      <p>Le regole di emissione definite al momento del deploy KRC-20 sono immutabili. Questo significa che la supply massima di ARIA, le regole di distribuzione e le fee di burning possono essere fissate in modo permanente, non modificabile nemmeno da AIROOBI stessa. Per gli utenti, è una garanzia che le regole del gioco non cambieranno a loro danno.</p>
+
+      <h2>KRC-20 e ROBI</h2>
+
+      <p>I ROBI — gli NFT che rappresentano il reward principale per chi partecipa agli airdrop su AIROOBI — saranno anch'essi implementati sulla blockchain Kaspa. Kaspa supporta un standard NFT analogo a KRC-20 per i token non fungibili, su cui i ROBI verranno emessi.</p>
+
+      <p>Ogni ROBI sarà un NFT unico, registrato sulla blockchain, con metadati immutabili che certificano quando è stato emesso, a quale airdrop era associato, e il suo valore iniziale nel Fondo Comune. Come i buoni fruttiferi postali che crescono di valore nel tempo, i ROBI accumulano rendimento progressivamente — ma a differenza dei buoni cartacei, sono interamente verificabili su una blockchain pubblica e non richiedono fiducia in un ente centrale per esistere.</p>
+
+      <h2>Cosa significa per te come utente AIROOBI</h2>
+
+      <p>Oggi non hai bisogno di capire i dettagli tecnici di KRC-20 per usare AIROOBI. La piattaforma gestisce tutto per te: accumuli ARIA tramite le attività quotidiane, acquisti blocchi negli airdrop, e ricevi ROBI. L'interfaccia è intenzionalmente semplice.</p>
+
+      <p>Ma sapere che sotto ci sono tecnologie solide come KRC-20 e la blockchain Kaspa ti dà una garanzia importante: quello che stai costruendo oggi — il tuo saldo ARIA, i tuoi ROBI e Badge, la tua storia di partecipazione — ha un percorso di migrazione su blockchain già definito. Non è un sistema chiuso che svanirà quando AIROOBI crescerà: è una fondazione progettata per scalare.</p>
+
+      <p>L'ecosistema Kaspa è in rapida espansione. KRC-20 ha già generato centinaia di token e una community attiva di sviluppatori. AIROOBI si inserisce in questo ecosistema con una proposta concreta: non un token speculativo, ma una valuta con utilità reale e immediata, radicata in un marketplace di beni fisici di valore.</p>
+
+      <div class="cta-box">
+        <h2>Scopri AIROOBI</h2>
+        <p>Entra nella community, accumula ARIA e preparati alla fase on-chain. Il futuro di AIROOBI su Kaspa inizia oggi con la tua registrazione.</p>
+        <a href="https://airoobi.com/signup.html" class="cta-btn">Registrati gratis</a>
+      </div>
+    </article>
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+</body>
+</html>

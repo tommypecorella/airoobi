@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosa succede se un airdrop non raggiunge il minimo su AIROOBI — AIROOBI Blog</title>
+  <meta name="description" content="Se un airdrop non raggiunge il minimo: blocchi rimborsati in ARIA, consolation ROBI ai top 3, protezione totale per i partecipanti.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Cosa succede se un airdrop non raggiunge il minimo su AIROOBI">
+  <meta property="og:description" content="Se un airdrop non raggiunge il minimo: blocchi rimborsati in ARIA, consolation ROBI ai top 3, protezione totale per i partecipanti.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/cosa-succede-airdrop-fallito-airoobi.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/cosa-succede-airdrop-fallito-airoobi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Airdrop fallito</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">1 Aprile 2026</div>
+
+    <article>
+      <h1>Cosa succede se un airdrop non raggiunge il minimo su AIROOBI</h1>
+
+      <div class="update-notice" style="padding:16px 20px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.22);border-radius:10px;margin:20px 0 28px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#B8960C;text-transform:uppercase;margin-bottom:6px">Aggiornato &middot; motore airdrop v2.5</div>
+        <p style="font-size:13px;color:#b4bdd4;line-height:1.6;margin:0"><span class="it">Questo articolo &egrave; stato scritto prima di alcune evoluzioni della piattaforma. Per il regolamento e le formule in vigore oggi (scoring a 2 fattori <strong>Vantaggio</strong> 70% + <strong>Impegno</strong> 30%, Fairness Guard, distinzione ROBI Mining vs Scoperti, 4 fasi Alpha/Beta/Pre-Prod/Mainnet) vedi la pagina aggiornata: <a href="/come-funziona-airdrop" style="color:#B8960C;text-decoration:underline">Come funziona un airdrop &rarr;</a></span><span class="en">This article was written before some platform evolutions. For today's rules and formulas (2-factor scoring <strong>Advantage</strong> 70% + <strong>Commitment</strong> 30%, Fairness Guard, distinction Mining vs Reel-discovered ROBI, 4 phases Alpha/Beta/Pre-Prod/Mainnet) see the updated page: <a href="/come-funziona-airdrop" style="color:#B8960C;text-decoration:underline">How an airdrop works &rarr;</a></span></p>
+      </div>
+
+      <p>Una delle domande più frequenti tra i nuovi utenti di AIROOBI è questa: cosa succede se partecipo a un airdrop ma non si raccoglie abbastanza? È una domanda legittima, e la risposta è progettata per essere completamente trasparente e protettiva nei confronti dei partecipanti. Non esiste ambiguità: le regole sono definite prima ancora che l'airdrop inizi.</p>
+
+      <h2>Il prezzo minimo: cos'è e chi lo fissa</h2>
+
+      <p>Ogni airdrop su AIROOBI ha un prezzo minimo di realizzo. Questo numero è stabilito dal venditore al momento della presentazione dell'oggetto, ed è basato sulla valutazione di mercato effettuata da AIROOBI. Il venditore decide di quanto è disposto a scendere rispetto al valore pieno, ma non può fissare un minimo inferiore a quello che la valutazione ritiene sostenibile.</p>
+
+      <p>Questo prezzo minimo è visibile ai partecipanti durante l'airdrop, insieme al totale corrente dei blocchi acquistati. La trasparenza è totale: chiunque può vedere, in tempo reale, a che punto si trova l'airdrop rispetto all'obiettivo minimo.</p>
+
+      <h2>Cosa succede quando il minimo non viene raggiunto</h2>
+
+      <p>Se alla chiusura dell'airdrop il totale dei blocchi acquistati non raggiunge il prezzo minimo fissato dal venditore, l'airdrop viene dichiarato non realizzato. A questo punto si attiva automaticamente il meccanismo di protezione per i partecipanti.</p>
+
+      <h3>Rimborso integrale in ARIA</h3>
+
+      <p>Tutti i blocchi acquistati durante l'airdrop vengono rimborsati integralmente in ARIA. Ogni utente che ha partecipato si ritrova sul proprio saldo esattamente la quantità di ARIA che aveva speso, senza nessuna trattenuta, senza nessuna commissione. L'ARIA torna disponibile immediatamente, pronta per essere usata nel prossimo airdrop.</p>
+
+      <p>Non c'è un processo di richiesta del rimborso, non c'è una finestra temporale entro cui fare domanda, non c'è bisogno di contattare il supporto. Il rimborso è automatico, immediato e completo. È parte integrante del meccanismo, non un'eccezione gestita manualmente.</p>
+
+      <h3>Consolation ROBI per i top 3</h3>
+
+      <p>C'è però un riconoscimento speciale per i tre partecipanti che hanno contribuito di più all'airdrop non realizzato: i top 3 per volume di blocchi acquistati ricevono una consolation ROBI assegnata come riconoscimento del loro impegno.</p>
+
+      <p>Questo non è un compenso economico diretto, ma un riconoscimento del contributo. I ROBI crescono di valore nel tempo, legati all'andamento della piattaforma e al meccanismo di riscossione in KAS. Chi ha partecipato di più in un airdrop che non è andato a buon fine non torna a mani vuote: porta a casa qualcosa di concreto che potrebbe valere nel lungo periodo.</p>
+
+      <h2>Il venditore non incassa nulla</h2>
+
+      <p>È importante chiarire anche la posizione del venditore in questo scenario: se l'airdrop non raggiunge il minimo, il venditore non riceve nessun pagamento. L'oggetto rimane di sua proprietà e lui non incassa alcun importo. Può scegliere di riproporre lo stesso oggetto in un airdrop successivo, eventualmente con condizioni diverse, oppure di ritirare la proposta.</p>
+
+      <p>Questa simmetria è deliberata. Il meccanismo protegge sia i partecipanti che la logica del sistema: non esiste una situazione in cui qualcuno vende un oggetto senza che la comunità abbia raggiunto un accordo collettivo sul suo valore minimo. Il prezzo minimo non è una formalità — è la soglia reale sotto la quale la transazione semplicemente non avviene.</p>
+
+      <h2>Perché questo meccanismo esiste</h2>
+
+      <p>La protezione in caso di airdrop non realizzato è uno dei pilastri della fiducia su AIROOBI. Senza di essa, partecipare sarebbe un atto di fede cieca: non sapresti mai se i tuoi ARIA sono al sicuro o se potrebbero sparire in un airdrop che non ha senso economico.</p>
+
+      <p>Con questo meccanismo, la logica cambia completamente. Partecipare a un airdrop significa contribuire a costruire un obiettivo collettivo. Se la comunità non raggiunge quell'obiettivo, ognuno riprende ciò che ha messo — più un eventuale riconoscimento per i più attivi. Non c'è perdita per i partecipanti, solo un tentativo che non è andato a buon fine.</p>
+
+      <p>Questo abbassa enormemente la barriera psicologica alla partecipazione. Un utente che sa di poter recuperare l'ARIA speso in caso di insuccesso è molto più propenso a esplorare airdrop nuovi, a supportare categorie che non conosce bene, a partecipare a più airdrop contemporaneamente. La protezione genera fiducia, e la fiducia genera partecipazione.</p>
+
+      <h2>L'airdrop non realizzato non è un fallimento</h2>
+
+      <p>Vale la pena cambiare prospettiva su cosa significa un airdrop che non raggiunge il minimo. Non è un fallimento della piattaforma, non è un errore del venditore, non è una sconfitta per i partecipanti. È semplicemente un segnale di mercato: la comunità non ha valutato quell'oggetto abbastanza da raggiungere quella soglia in quel momento.</p>
+
+      <p>Questo segnale è prezioso. Aiuta AIROOBI a calibrare meglio le valutazioni degli oggetti, aiuta i venditori a capire quali prezzi minimi sono realistici, aiuta la comunità a esprimere in modo collettivo la propria preferenza. Il meccanismo di rimborso trasforma ogni airdrop non realizzato in informazione utile, senza danni per nessuno.</p>
+
+      <div class="cta-box">
+        <h2>Partecipa senza rischi</h2>
+        <p>Su AIROOBI i tuoi ARIA sono sempre protetti. Se l'airdrop non raggiunge il minimo, li riavrai subito. Registrati e inizia ad accumulare.</p>
+        <a href="https://airoobi.app/signup.html" class="cta-btn">Registrati su AIROOBI</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

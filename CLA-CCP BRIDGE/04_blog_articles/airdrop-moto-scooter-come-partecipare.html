@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airdrop di moto e scooter: come partecipare e cosa aspettarti — AIROOBI Blog</title>
+  <meta name="description" content="Come funzionano gli airdrop moto e scooter su AIROOBI: processo per i venditori, valutazione, blocchi di partecipazione, score di categoria e cosa succede al draw.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Airdrop di moto e scooter: come partecipare e cosa aspettarti">
+  <meta property="og:description" content="Come funzionano gli airdrop moto e scooter su AIROOBI: processo per i venditori, valutazione, blocchi di partecipazione, score di categoria e cosa succede al draw.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/airdrop-moto-scooter-come-partecipare.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/airdrop-moto-scooter-come-partecipare.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Moto e Scooter</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">21 Marzo 2026</div>
+
+    <article>
+      <h1>Airdrop di moto e scooter: come partecipare e cosa aspettarti</h1>
+
+      <div class="update-notice" style="padding:16px 20px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.22);border-radius:10px;margin:20px 0 28px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#B8960C;text-transform:uppercase;margin-bottom:6px">Aggiornato &middot; motore airdrop v2.5</div>
+        <p style="font-size:13px;color:#b4bdd4;line-height:1.6;margin:0"><span class="it">Questo articolo &egrave; stato scritto prima di alcune evoluzioni della piattaforma. Per il regolamento e le formule in vigore oggi (scoring a 2 fattori <strong>Vantaggio</strong> 70% + <strong>Impegno</strong> 30%, Fairness Guard, distinzione ROBI Mining vs Scoperti, 4 fasi Alpha/Beta/Pre-Prod/Mainnet) vedi la pagina aggiornata: <a href="/come-funziona-airdrop" style="color:#B8960C;text-decoration:underline">Come funziona un airdrop &rarr;</a></span><span class="en">This article was written before some platform evolutions. For today's rules and formulas (2-factor scoring <strong>Advantage</strong> 70% + <strong>Commitment</strong> 30%, Fairness Guard, distinction Mining vs Reel-discovered ROBI, 4 phases Alpha/Beta/Pre-Prod/Mainnet) see the updated page: <a href="/come-funziona-airdrop" style="color:#B8960C;text-decoration:underline">How an airdrop works &rarr;</a></span></p>
+      </div>
+
+      <p>Una moto sportiva di media cilindrata parte da €5.000-7.000 nella versione d'accesso, mentre i modelli premium di marca — BMW, Ducati, Triumph, Honda CB — si attestano facilmente tra i €10.000 e i €20.000. Uno scooter cittadino di fascia alta come un Vespa GTS o un BMW C 400 X vale tra €6.000 e €10.000. Sono acquisti importanti, spesso rimandati di anni. Su AIROOBI, la categoria moto e scooter porta questi oggetti in un contesto completamente diverso: quello dell'airdrop equo su blockchain, dove partecipare attivamente costruisce la possibilità reale di realizzare il proprio desiderio a un prezzo che non troveresti mai su nessun altro canale.</p>
+
+      <h2>Per i venditori: come proporre una moto su AIROOBI</h2>
+
+      <h3>Il requisito di valore minimo</h3>
+      <p>Per essere ammessa come airdrop su AIROOBI, una moto o uno scooter deve avere un valore di mercato verificabile di almeno €500. In pratica, per la categoria moto questo requisito è quasi sempre ampiamente superato: anche un motorino 50cc usato in buone condizioni o uno scooter di piccola cilindrata di qualità si posiziona spesso sopra quella soglia. Il limite minimo è stato pensato per escludere oggetti di scarso interesse, non per mettere barriere alla categoria motociclistica.</p>
+
+      <h3>Il processo di sottomissione</h3>
+      <p>Il venditore avvia la procedura di sottomissione dalla piattaforma AIROOBI. Sono necessarie fotografie dettagliate del veicolo — frontale, laterali, posteriore, quadro strumenti, numero di telaio — insieme alla documentazione principale: libretto di circolazione, certificato di proprietà o atto di acquisto e, per veicoli di valore elevato, eventuali ricevute di manutenzione ordinaria o straordinaria che attestino lo stato del mezzo.</p>
+
+      <p>Un team di valutatori di AIROOBI esamina la documentazione e verifica il valore di mercato attraverso parametri oggettivi: anno di immatricolazione, chilometraggio, condizioni generali, prezzo di listino originale e quotazioni correnti sul mercato dell'usato per lo stesso modello. Questa valutazione non è una trattativa: produce una stima oggettiva che diventa il valore di riferimento per l'airdrop.</p>
+
+      <h3>Cosa ottiene il venditore</h3>
+      <p>Una volta approvato l'airdrop, il venditore cede la moto alla piattaforma che gestisce il processo di distribuzione. In cambio, riceve la quota maggioritaria del valore generato dalla vendita dei blocchi di partecipazione — una quota che riflette il prezzo di mercato certificato del veicolo, in KAS. Il venditore non dipende dal trovare un acquirente diretto né dall'esito di un'asta: il meccanismo di AIROOBI garantisce che il valore venga distribuito attraverso la partecipazione della community, indipendentemente da chi ottiene il mezzo e da quando.</p>
+
+      <p>Per un privato che vuole cedere la propria moto, questo si traduce in una certezza che né eBay né le piattaforme di annunci classiche possono offrire: nessuna trattativa al ribasso, nessun acquirente che sparisce all'ultimo momento, nessuna fee che erode il guadagno.</p>
+
+      <h2>Per i partecipanti: come funziona un airdrop moto</h2>
+
+      <h3>La fase di partecipazione</h3>
+      <p>Quando un airdrop moto diventa attivo su AIROOBI, compare nella sezione marketplace con tutte le informazioni rilevanti: marca, modello, anno, chilometraggio, valore certificato, prezzo per blocco in ARIA e data di chiusura della fase di partecipazione. Gli utenti che hanno ARIA nel proprio portafoglio possono acquistare blocchi fino al massimo consentito per quell'airdrop.</p>
+
+      <p>La finestra di partecipazione ha una durata definita — tipicamente diversi giorni — dando il tempo a tutti gli utenti interessati di organizzare i propri ARIA e decidere quanti blocchi acquistare. Non c'è fretta artificiosa: la data di chiusura è chiara fin dall'inizio.</p>
+
+      <h3>Costruire il punteggio nella categoria moto</h3>
+      <p>Il punteggio di ogni partecipante per un airdrop moto non dipende solo dai blocchi acquistati in quel round specifico. L'algoritmo di AIROOBI considera anche il fattore di fedeltà alla categoria (F2): quante volte hai già partecipato ad airdrop nella stessa categoria. Chi ha una storia di partecipazione agli airdrop moto e scooter accumula un vantaggio strutturale che non può essere annullato semplicemente acquistando più blocchi in un singolo round.</p>
+
+      <p>Questo significa che la strategia migliore per chi ha uno scooter o una moto come obiettivo non è aspettare passivamente il momento "giusto" e poi investire tutto. Conviene partecipare anche con pochi blocchi ai round disponibili, costruire il proprio F2 di categoria e presentarsi ai round futuri con un profilo più solido.</p>
+
+      <h3>Il fattore seniority: perché conta anche quanto sei presente</h3>
+      <p>Il terzo componente del punteggio (F3) misura la tua presenza complessiva su AIROOBI: da quanto tempo sei iscritto, con quale regolarità hai fatto il check-in, quanta attività hai generato. Per la categoria moto — dove il valore degli oggetti tende a essere significativo e la competizione tra partecipanti potenzialmente alta — il fattore seniority può fare la differenza tra due utenti con blocchi e F2 simili.</p>
+
+      <p>Questo è uno dei motivi per cui iscriversi a AIROOBI adesso, nella fase Alpha Brave, ha un valore che va oltre i 10 ARIA di benvenuto. Ogni giorno di attività accumulata adesso si trasforma in vantaggio di seniority nei round futuri, inclusi quelli della categoria moto e scooter.</p>
+
+      <h2>Cosa succede al draw</h2>
+      <p>Quando la fase di partecipazione si chiude, l'algoritmo deterministico di AIROOBI elabora i punteggi di tutti i partecipanti — combinando F1 (blocchi), F2 (fedeltà categoria) e F3 (seniority) — e seleziona il partecipante che riceverà il veicolo. Il risultato è registrato su blockchain Kaspa: verificabile pubblicamente, non modificabile, non manipolabile.</p>
+
+      <p>Il partecipante selezionato viene contattato dalla piattaforma per le procedure di trasferimento del veicolo. Per una moto o uno scooter, questo include il trasferimento del libretto di circolazione, l'eventuale organizzazione del trasporto o ritiro in accordo tra le parti, e tutti gli adempimenti burocratici standard per il passaggio di proprietà di un veicolo.</p>
+
+      <h2>La logistica del trasferimento</h2>
+      <p>Il trasferimento di una moto o di uno scooter richiede attenzione alla logistica, specialmente se venditore e partecipante selezionato si trovano in zone geografiche diverse. AIROOBI gestisce il coordinamento attraverso una rete di partner logistici specializzati nel trasporto di veicoli a due ruote. Le spese di trasporto sono incluse nel meccanismo della split economica dell'airdrop, senza costi aggiuntivi imprevisti per il partecipante selezionato.</p>
+
+      <h2>Anche chi non ottiene la moto non esce a mani vuote</h2>
+      <p>Come per tutti gli airdrop di AIROOBI, ogni partecipante che ha acquistato blocchi riceve ROBI come reward, indipendentemente dall'esito del draw. I ROBI sono NFT il cui valore è ancorato al treasury della piattaforma e crescono nel tempo. Non è un premio di consolazione simbolico: è un asset digitale reale che accumula valore con ogni airdrop completato su AIROOBI.</p>
+
+      <p>Parallelamente, ogni partecipazione aumenta il punteggio F2 nella categoria moto, rendendo i round futuri progressivamente più favorevoli. AIROOBI è costruita sulla premessa che la partecipazione costante e leale venga ricompensata — non solo nell'immediato, ma nel lungo periodo.</p>
+
+      <div class="cta-box">
+        <h2>Scopri AIROOBI</h2>
+        <p>Registrati ora, inizia ad accumulare ARIA e costruisci il tuo vantaggio per il prossimo airdrop moto. I posti Alpha Brave sono limitati.</p>
+        <a href="https://airoobi.com/signup.html" class="cta-btn">Entra in AIROOBI — è gratis</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

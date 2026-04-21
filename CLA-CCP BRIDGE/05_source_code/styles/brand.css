@@ -1,0 +1,19 @@
+/* AIROOBI Brand System — TASSATIVO: solo questi colori */
+:root {
+  /* Core palette */
+  --airoobi-black: #000000;
+  --airoobi-white: #FFFFFF;
+  --airoobi-gold: #B8960C;
+
+  /* Semantic */
+  --bg-primary: var(--airoobi-black);
+  --bg-secondary: var(--airoobi-white);
+  --text-primary: var(--airoobi-white);
+  --text-secondary: var(--airoobi-black);
+  --accent: var(--airoobi-gold);
+
+  /* Typography */
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Instrument Sans', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vendere oggetti di lusso online: le alternative a eBay che non conosci — AIROOBI Blog</title>
+  <meta name="description" content="Commissioni alte, frodi e guerre di offerte: i problemi di eBay per il lusso. Scopri le alternative più sicure, incluso il modello airdrop di AIROOBI su blockchain Kaspa.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Vendere oggetti di lusso online: le alternative a eBay che non conosci">
+  <meta property="og:description" content="Commissioni alte, frodi e guerre di offerte: i problemi di eBay per il lusso. Scopri le alternative più sicure, incluso il modello airdrop di AIROOBI su blockchain Kaspa.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/vendere-oggetti-di-lusso-online-alternative-ebay.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/vendere-oggetti-di-lusso-online-alternative-ebay.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Alternative a eBay</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">17 Marzo 2026</div>
+
+    <article>
+      <h1>Vendere oggetti di lusso online: le alternative a eBay che non conosci</h1>
+
+      <p>Hai un orologio da collezione, una borsa firmata o una bicicletta da competizione che vuoi vendere. Apri eBay, crei l'annuncio, aspetti giorni e poi arrivano le offerte — quasi sempre inferiori a quello che speravi. E quando finalmente hai un acquirente, la piattaforma trattiene fino al 13% del prezzo finale. Benvenuto nel paradosso del mercato online del lusso: più l'oggetto vale, più perdi sulla vendita.</p>
+
+      <h2>I problemi strutturali di eBay per il lusso</h2>
+
+      <h3>Le commissioni erodono il margine</h3>
+      <p>eBay applica una commissione sul valore finale che varia tra il 10% e il 13% a seconda della categoria, più la quota fissa del piano venditore. Su un oggetto da €2.000, puoi tranquillamente lasciare €260 sul tavolo prima ancora di considerare le spese di spedizione e imballaggio. Per oggetti di lusso — dove i margini del venditore privato sono spesso già ridotti — questa erosione è difficilmente accettabile.</p>
+
+      <h3>Il rischio frode è concreto</h3>
+      <p>Il mercato dei falsi di lusso online è enorme. Come venditore su piattaforme generaliste, rischi di ricevere contestazioni da acquirenti che dichiarano di aver ricevuto un prodotto diverso da quello descritto — anche quando la descrizione era accuratissima. Il meccanismo di dispute resolution favorisce storicamente l'acquirente, lasciando il venditore esposto a rimborsi forzati anche dopo aver spedito un oggetto autentico e in perfette condizioni.</p>
+
+      <h3>Le aste non garantiscono il prezzo di mercato</h3>
+      <p>L'asta è uno strumento potente per creare competizione, ma su piattaforme generaliste il traffico specifico per categoria di lusso è spesso insufficiente. Il risultato è che molti oggetti di valore vengono aggiudicati a prezzi inferiori alla stima di mercato semplicemente perché gli acquirenti giusti non erano presenti in quel momento. Il prezzo finale dipende da chi si connette il giorno della chiusura, non dal reale valore intrinseco dell'oggetto.</p>
+
+      <h2>Le alternative tradizionali e i loro limiti</h2>
+
+      <h3>Marketplace verticali del lusso</h3>
+      <p>Esistono piattaforme dedicate al lusso come Vestiaire Collective, Chrono24 o Catawiki. Offrono un pubblico più qualificato rispetto a eBay, ma le commissioni rimangono elevate — spesso tra il 15% e il 25% — e i processi di autenticazione possono richiedere settimane. La liquidità è migliore per le categorie popolari (orologi, borse), ma per oggetti di nicchia i tempi di vendita si allungano considerevolmente.</p>
+
+      <h3>Aste fisiche</h3>
+      <p>Le case d'aste tradizionali come Christie's o Sotheby's garantiscono autenticità e un pubblico di collezionisti, ma richiedono oggetti di valore elevato (tipicamente sopra €5.000-10.000), applicano commissioni del 25-30% e i tempi di liquidazione sono lunghi. Non è uno strumento accessibile per la maggior parte dei venditori privati.</p>
+
+      <h3>Annunci diretti e social</h3>
+      <p>Vendere direttamente su Subito, Facebook Marketplace o Instagram elimina le commissioni di piattaforma, ma introduce tutto il rischio della trattativa privata: nessuna protezione per il venditore, negoziazioni infinite, acquirenti non qualificati e zero garanzie di pagamento.</p>
+
+      <h2>Il modello AIROOBI: incasso garantito a prezzo di mercato</h2>
+      <p>AIROOBI propone un approccio radicalmente diverso. Il venditore propone il proprio oggetto — il valore minimo accettato è €500 — e AIROOBI lo valuta e certifica. Una volta approvato, l'oggetto viene messo a disposizione della community come airdrop: gli utenti acquistano blocchi di partecipazione con ARIA, la valuta della piattaforma, per avere la possibilità di riceverlo.</p>
+
+      <p>La differenza cruciale rispetto a eBay o alle aste tradizionali è che il venditore non dipende dall'esito del sorteggio. Il valore dell'oggetto viene distribuito attraverso la vendita dei blocchi di partecipazione, e il venditore riceve la quota maggioritaria di quel valore a prezzo di mercato — indipendentemente da chi ottiene l'oggetto e da quando. Non ci sono trattative al ribasso, non ci sono acquirenti che spariscono all'ultimo momento, non c'è rischio di contestazioni retroattive.</p>
+
+      <h2>Trasparenza blockchain: ogni transazione è verificabile</h2>
+      <p>AIROOBI si appoggia sulla blockchain Kaspa per registrare le transazioni principali. Questo significa che il flusso economico di ogni airdrop è verificabile pubblicamente: quanti blocchi sono stati acquistati, qual è stato l'algoritmo di selezione, chi ha ricevuto l'oggetto. Per un venditore abituato all'opacità delle piattaforme tradizionali, questa trasparenza rappresenta una garanzia concreta.</p>
+
+      <p>Il valore dell'oggetto non viene "dilazionato" nel tempo né soggetto a volatilità: il venditore riceve la sua quota in KAS, la criptovaluta nativa di Kaspa, che può convertire in valuta tradizionale attraverso i normali canali di exchange.</p>
+
+      <h2>Economia circolare e valore per tutti</h2>
+      <p>Il modello di AIROOBI non è estrattivo: non guadagna creando perdite per il venditore o per il compratore. La piattaforma trattiene una commissione operativa che è strutturalmente inferiore a quella di eBay, ma soprattutto garantisce che il venditore riceva il valore di mercato e che chi partecipa all'airdrop ottenga l'oggetto a un prezzo che sarebbe impossibile spuntare in qualsiasi altro canale di vendita.</p>
+
+      <p>Una parte del valore generato da ogni airdrop confluisce nel Fondo Comune, che sostiene i ROBI — gli NFT che ogni partecipante accumula nel tempo. Questo significa che anche chi non ottiene l'oggetto in un singolo airdrop non esce a mani vuote: costruisce un patrimonio digitale certificato che cresce con la piattaforma.</p>
+
+      <h2>Chi può vendere su AIROOBI</h2>
+      <p>Per proporre un oggetto su AIROOBI è necessario che abbia un valore di mercato verificabile di almeno €500. La valutazione viene effettuata dal team di AIROOBI prima dell'approvazione, garantendo che ogni airdrop presente sulla piattaforma sia certificato e autentico. Il processo di sottomissione richiede documentazione fotografica e, per oggetti di particolare valore, eventuali certificati di autenticità.</p>
+
+      <p>Questa barriera qualitativa non è un ostacolo per i venditori seri: è la garanzia che gli utenti della community trovino sempre oggetti genuini e di valore reale, creando un mercato di fiducia reciproca.</p>
+
+      <div class="cta-box">
+        <h2>Scopri AIROOBI</h2>
+        <p>Sei un venditore con un oggetto di valore? O vuoi partecipare ai prossimi airdrop? Registrati e scopri come funziona il marketplace equo su Kaspa.</p>
+        <a href="https://airoobi.com/signup.html" class="cta-btn">Registrati su AIROOBI</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

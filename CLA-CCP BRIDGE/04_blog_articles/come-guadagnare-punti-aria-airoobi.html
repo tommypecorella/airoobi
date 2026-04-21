@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Come muovere ARIA su AIROOBI: la guida completa — AIROOBI Blog</title>
+  <meta name="description" content="Guida completa per muovere ARIA di test su AIROOBI: check-in, video, referral, streak settimanale e strategia. Tutto l'ARIA che accumuli in Alpha conta per il grande airdrop finale.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Come muovere ARIA su AIROOBI: la guida completa">
+  <meta property="og:description" content="Guida completa per muovere ARIA di test su AIROOBI: check-in, video, referral, streak settimanale e strategia. Tutto l'ARIA che accumuli in Alpha conta per il grande airdrop finale.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/come-guadagnare-punti-aria-airoobi.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/come-guadagnare-punti-aria-airoobi.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">Come muovere ARIA</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">14 Marzo 2026</div>
+
+    <article>
+      <h1>Come muovere ARIA su AIROOBI: la guida completa</h1>
+
+      <p>ARIA è la valuta di test di AIROOBI. Riceverla è semplice, ma farlo in modo strategico può fare la differenza tra aggiudicarsi un oggetto ambito o lasciarlo ad altri. Ecco tutto quello che devi sapere.</p>
+
+      <h2>Cos'è ARIA</h2>
+      <p>ARIA è la valuta di test interna di AIROOBI che misura il tuo livello di partecipazione alla piattaforma. Non si compra — si riceve attraverso attività concrete. Questo principio è fondamentale per la filosofia di AIROOBI: il valore non dipende da quanto sei ricco, ma da quanto sei presente e attivo. Più ARIA muovi, più partecipi. Tutto l'ARIA che accumuli durante la fase Alpha conterà per il grande airdrop di lancio al mainnet.</p>
+
+      <h2>I modi per ricevere ARIA di test</h2>
+
+      <h3>Check-in giornaliero</h3>
+      <p>Ogni giorno che accedi alla piattaforma e completi il check-in ricevi +1 ARIA di test. Sembra poco, ma la costanza è premiata: chi entra ogni giorno accumula un vantaggio significativo rispetto a chi partecipa in modo irregolare. Il check-in vale solo per il giorno corrente — non è possibile recuperare i giorni persi.</p>
+
+      <h3>Bonus di benvenuto</h3>
+      <p>Al momento della registrazione ricevi +10 ARIA di test come bonus iniziale. È un punto di partenza, non un traguardo.</p>
+
+      <h3>Visualizzazione video</h3>
+      <p>Guardare i contenuti informativi sulla piattaforma vale +1 ARIA di test per video, fino a un massimo di 5 video al giorno. Non si tratta di contenuti casuali ma di materiali che approfondiscono il funzionamento della piattaforma e del mondo crypto.</p>
+
+      <h3>Streak settimanale</h3>
+      <p>Chi completa il check-in per sette giorni consecutivi riceve un bonus di +1 ARIA di test aggiuntivo. La regolarità viene premiata nel tempo.</p>
+
+      <h3>Programma referral</h3>
+      <p>Invitare un amico che si registra vale +10 ARIA di test per chi invita, +15 ARIA di test per chi viene invitato. Il referral è uno degli strumenti più potenti per chi vuole scalare rapidamente la classifica.</p>
+
+      <h2>Strategia per i nuovi utenti</h2>
+      <p>Il consiglio per chi inizia è semplice: priorità assoluta alla costanza. Un utente che non salta mai un check-in per trenta giorni accumula più ARIA di test di uno che partecipa in modo intensivo per una settimana e poi sparisce. Il sistema è progettato per premiare chi costruisce un'abitudine, non chi brucia energie in sprint.</p>
+
+      <h2>ARIA di test e ROBI: due livelli distinti</h2>
+      <p>ARIA di test è la moneta con cui partecipi e ti muovi sulla piattaforma — più ne accumuli, più alta è la tua presenza negli airdrop. Ma la vera ricompensa con valore reale è il ROBI: ogni volta che partecipi a un airdrop puoi ottenere ROBI, gli NFT fruttiferi di AIROOBI che crescono di valore nel tempo e che a mainnet potranno essere riscattati in KAS. ARIA ti porta a partecipare; ROBI è ciò che guadagni davvero.</p>
+
+      <h2>ARIA nella fase Alpha</h2>
+      <p>Durante la fase Alpha — aperta ai primi utenti — tutti gli ARIA accumulati sono monete di test in attesa dell'attivazione del mainnet. Questo significa che stai costruendo la tua posizione in anticipo: chi accumula oggi avrà un vantaggio strutturale sugli utenti che arriveranno dopo, e tutto l'ARIA accumulato in Alpha conterà nel grande airdrop di lancio.</p>
+
+      <div class="cta-box">
+        <h2>Scopri AIROOBI</h2>
+        <p>Registrati ora, inizia a ricevere ARIA di test dal primo giorno e costruisci il tuo vantaggio in anticipo. Tutto conta per il lancio al mainnet.</p>
+        <a href="https://airoobi.com/#signup" class="cta-btn">Inizia ora — è gratis</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

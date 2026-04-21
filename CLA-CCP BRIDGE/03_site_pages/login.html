@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>Login — AIROOBI</title>
+<meta name="description" content="Accedi al tuo account AIROOBI. Accumula ARIA e partecipa agli airdrop per guadagnare ROBI.">
+<meta name="robots" content="index, follow">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
+<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#060b18;--white:#f0f2f8;--accent:#4A9EFF;--accent-dim:rgba(74,158,255,.25);--gray-300:#b4bdd4;--gray-400:#8892ae;--gray-700:#1f2942;--gray-800:#151d33;--aria:#4A9EFF;--kas:#49EACB;--font-h:'Cormorant Garamond',Georgia,serif;--font-b:'Instrument Sans','Helvetica Neue',sans-serif;--font-m:'DM Mono','Courier New',monospace;--radius:14px;--radius-sm:10px}
+html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased;color-scheme:dark}
+body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:var(--black)}
+.auth-logo-wrap{margin-bottom:32px;text-align:center}
+.auth-logo{font-family:var(--font-b);font-size:36px;font-weight:700;letter-spacing:-3px;color:var(--accent);opacity:.8}
+.auth-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);max-width:420px;width:100%;padding:48px 40px;position:relative;border-radius:var(--radius);box-shadow:0 4px 24px rgba(0,0,0,.3)}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.15),transparent);border-radius:var(--radius) var(--radius) 0 0}
+.auth-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:8px}
+.auth-box .auth-sub{font-size:13px;color:var(--gray-400);margin-bottom:32px}
+.auth-box label{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px}
+.auth-box input[type="email"],.auth-box input[type="password"],.auth-box input[type="text"]{width:100%;padding:14px 16px;background:rgba(0,0,0,.3);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;outline:none;margin-bottom:20px;transition:border-color .3s;border-radius:var(--radius-sm)}
+.pw-wrap{position:relative}.pw-wrap input{padding-right:48px}
+.pw-toggle{position:absolute;right:14px;top:14px;background:none;border:none;cursor:pointer;color:var(--gray-400);padding:0;transition:color .25s;line-height:0}
+.pw-toggle:hover{color:var(--accent)}
+.pw-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
+.auth-box input:focus{border-color:var(--accent)}
+.auth-btn{width:100%;padding:14px;background:var(--accent);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:16px;border-radius:var(--radius-sm)}
+.auth-btn:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 6px 20px rgba(74,158,255,.25)}
+.auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
+.auth-toggle{font-size:13px;color:var(--gray-400);text-align:center}
+.auth-toggle a{color:var(--accent);cursor:pointer;text-decoration:none}
+.auth-toggle a:hover{text-decoration:underline}
+.auth-error{background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none;border-radius:var(--radius-sm)}
+.cf-turnstile-wrap{margin-bottom:16px;display:flex;justify-content:center}
+@media(max-width:768px){.auth-box{padding:32px 24px}}
+.back-link{display:inline-flex;align-items:center;gap:6px;color:var(--gray-400);font-size:12px;letter-spacing:1px;text-decoration:none;margin-bottom:24px;transition:color .3s}
+.back-link:hover{color:var(--accent)}
+.it{display:none}.en{display:none}
+html[data-lang="it"] .it{display:inline}
+html[data-lang="en"] .en{display:inline}
+html:not([data-lang]) .it{display:inline}
+footer{padding:32px 0;text-align:center;width:100%;margin-top:auto}
+.footer-copy{font-size:11px;color:var(--gray-400)}
+</style>
+</head>
+<body>
+
+<a href="/" class="back-link">&larr; <span class="it">Torna su AIROOBI</span><span class="en">Back to AIROOBI</span></a>
+
+<div class="auth-logo-wrap">
+  <div class="auth-logo">Oo</div>
+</div>
+
+<div class="auth-box">
+  <h2>Login</h2>
+  <p class="auth-sub"><span class="it">Bentornato</span><span class="en">Welcome back</span></p>
+  <div class="auth-error" id="login-error"></div>
+  <label>Email</label>
+  <input type="email" id="login-email" placeholder="email@example.com">
+  <label>Password</label>
+  <div class="pw-wrap">
+    <input type="password" id="login-password" placeholder="Password">
+    <button type="button" class="pw-toggle" onclick="togglePw('login-password',this)" aria-label="Mostra password">
+      <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    </button>
+  </div>
+  <div class="cf-turnstile-wrap" id="login-turnstile">
+    <div class="cf-turnstile" data-sitekey="0x4AAAAAACovg89u9bGYrc0E" data-theme="dark"></div>
+  </div>
+  <button class="auth-btn" id="login-btn" onclick="doLogin()">Login</button>
+  <p class="auth-toggle" style="margin-bottom:8px"><a onclick="showForgot()" style="cursor:pointer;color:var(--accent);font-size:12px"><span class="it">Hai dimenticato la password?</span><span class="en">Forgot your password?</span></a></p>
+  <p class="auth-toggle"><span class="it">Non hai un account?</span><span class="en">Don't have an account?</span> <a href="/signup.html"><span class="it">Registrati</span><span class="en">Sign Up</span></a></p>
+</div>
+
+<!-- FORGOT PASSWORD -->
+<div class="auth-box" id="forgot-box" style="display:none">
+  <h2><span class="it">Recupera password</span><span class="en">Reset password</span></h2>
+  <p class="auth-sub"><span class="it">Inserisci la tua email e ti invieremo un link per reimpostare la password.</span><span class="en">Enter your email and we'll send you a link to reset your password.</span></p>
+  <div class="auth-error" id="forgot-error"></div>
+  <div class="auth-success" id="forgot-success" style="display:none;background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);color:#34d399;padding:10px 14px;font-size:13px;margin-bottom:16px"></div>
+  <label>Email</label>
+  <input type="email" id="forgot-email" placeholder="email@example.com">
+  <button class="auth-btn" id="forgot-btn" onclick="doForgot()"><span class="it">Invia link di recupero</span><span class="en">Send reset link</span></button>
+  <p class="auth-toggle"><a onclick="hideForgot()" style="cursor:pointer;color:var(--accent)"><span class="it">&larr; Torna al login</span><span class="en">&larr; Back to login</span></a></p>
+</div>
+
+<footer>
+  <p class="footer-copy">&copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span><br><span style="font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--accent);display:inline-block;margin-top:8px">alfa-2026.04.11-2.8.1</span></p>
+  <p class="footer-copy" style="margin-top:6px;font-size:10px;color:var(--gray-400)"><span class="it">Piattaforma riservata ai maggiorenni (18+).</span><span class="en">Platform reserved for adults (18+).</span></p>
+</footer>
+
+<script>
+function togglePw(id,btn){
+  var inp=document.getElementById(id);
+  var show=inp.type==='password';
+  inp.type=show?'text':'password';
+  btn.innerHTML=show
+    ?'<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>'
+    :'<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+}
+// ── Lang ──
+(function(){
+  var saved=localStorage.getItem('airoobi_lang');
+  if(saved)document.documentElement.setAttribute('data-lang',saved);
+})();
+
+function toggleLang(){
+  var cur=document.documentElement.getAttribute('data-lang')||'it';
+  var next=cur==='it'?'en':'it';
+  document.documentElement.setAttribute('data-lang',next);
+  localStorage.setItem('airoobi_lang',next);
+}
+
+// ── Supabase ──
+var SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+async function sbAuth(endpoint,body){
+  var res=await fetch(SB_URL+'/auth/v1/'+endpoint,{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify(body)});
+  return {status:res.status,data:await res.json()};
+}
+
+function saveSession(s){localStorage.setItem('airoobi_session',JSON.stringify(s))}
+function getSession(){try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch(e){return null}}
+
+// ── Tracking ──
+async function track(event,props){
+  try{
+    var s=getSession();
+    var payload={event:event,user_id:s&&s.user?s.user.id:null,props:Object.keys(props||{}).length?props:null,url:location.pathname+location.hash,referrer:document.referrer||null,ua:navigator.userAgent.substring(0,120),created_at:new Date().toISOString()};
+    fetch(SB_URL+'/rest/v1/events',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(payload)}).catch(function(){});
+  }catch(e){}
+}
+
+// ── Turnstile ──
+function getTurnstileToken(formId){
+  var container=document.getElementById(formId);
+  if(!container)return null;
+  var input=container.querySelector('[name="cf-turnstile-response"]');
+  return input?input.value:null;
+}
+
+// ── Helpers ──
+function showError(id,msg){var e=document.getElementById(id);e.innerHTML=msg;e.style.display='block'}
+
+// ── Login ──
+async function doLogin(){
+  document.getElementById('login-error').style.display='none';
+  var email=document.getElementById('login-email').value.trim();
+  var pw=document.getElementById('login-password').value;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+
+  if(!email)return showError('login-error',lang==='it'?'Inserisci email':'Enter email');
+  if(!pw)return showError('login-error',lang==='it'?'Inserisci password':'Enter password');
+
+  var turnstileToken=getTurnstileToken('login-turnstile');
+  if(!turnstileToken){
+    return showError('login-error',lang==='it'?'Completa la verifica anti-bot.':'Complete the anti-bot verification.');
+  }
+
+  document.getElementById('login-btn').disabled=true;
+  var result=await sbAuth('token?grant_type=password',{email:email,password:pw});
+  var status=result.status;var data=result.data;
+
+  if(status===200&&data.access_token){
+    // Let user in regardless of email confirmation status
+    saveSession(data);
+    track('login',{lang:lang,email_confirmed:!!data.user.email_confirmed_at});
+    var returnTo=new URLSearchParams(window.location.search).get('returnTo');
+    if(returnTo&&returnTo.startsWith('/')){
+      window.location.href=returnTo;
+    }else{
+      // If on airoobi.com, go to home; if on airoobi.app, go to dashboard
+      var isDapp=window.location.hostname.indexOf('airoobi.app')!==-1;
+      window.location.href=isDapp?'/airdrops':'/home.html';
+    }
+  }else{
+    var msg=data.error_description||data.msg||data.message||'';
+    if(msg.toLowerCase().includes('email not confirmed')){
+      track('login_email_not_confirmed',{lang:lang});
+      showError('login-error',lang==='it'?'Devi confermare la tua email prima di accedere. Controlla la tua casella di posta.':'You must confirm your email before logging in. Check your inbox.');
+    }else{
+      track('login_error',{lang:lang});
+      showError('login-error',lang==='it'?'Email o password errati':'Wrong email or password');
+    }
+  }
+  document.getElementById('login-btn').disabled=false;
+}
+
+// ── Enter key ──
+document.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    var active=document.activeElement;
+    if(active&&(active.id==='login-email'||active.id==='login-password'))doLogin();
+    if(active&&active.id==='forgot-email')doForgot();
+  }
+});
+
+// ── Forgot password ──
+function showForgot(){
+  document.querySelector('.auth-box:not(#forgot-box)').style.display='none';
+  document.getElementById('forgot-box').style.display='block';
+  document.getElementById('forgot-error').style.display='none';
+  document.getElementById('forgot-success').style.display='none';
+  // Pre-fill email if already typed
+  var loginEmail=document.getElementById('login-email').value.trim();
+  if(loginEmail)document.getElementById('forgot-email').value=loginEmail;
+}
+function hideForgot(){
+  document.getElementById('forgot-box').style.display='none';
+  document.querySelector('.auth-box:not(#forgot-box)').style.display='block';
+}
+async function doForgot(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var email=document.getElementById('forgot-email').value.trim();
+  document.getElementById('forgot-error').style.display='none';
+  document.getElementById('forgot-success').style.display='none';
+  if(!email||!email.includes('@'))return showError('forgot-error',lang==='it'?'Inserisci un\'email valida':'Enter a valid email');
+  document.getElementById('forgot-btn').disabled=true;
+  try{
+    var res=await fetch(SB_URL+'/auth/v1/recover',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email:email,redirectTo:location.origin+'/reset-password.html'})
+    });
+    if(res.ok||res.status===200){
+      track('password_reset_requested',{email:email});
+      var el=document.getElementById('forgot-success');
+      el.innerHTML=lang==='it'?'Se l\'email esiste, riceverai un link di recupero a breve. Controlla la tua casella di posta (anche lo spam).':'If the email exists, you\'ll receive a reset link shortly. Check your inbox (and spam folder).';
+      el.style.display='block';
+    }else{
+      // Supabase returns 200 even if email doesn't exist (security), so this is a real error
+      showError('forgot-error',lang==='it'?'Errore. Riprova tra poco.':'Error. Try again shortly.');
+    }
+  }catch(e){
+    showError('forgot-error',lang==='it'?'Errore di rete. Riprova.':'Network error. Try again.');
+  }
+  document.getElementById('forgot-btn').disabled=false;
+}
+
+// ── Track pageview ──
+track('pageview',{page:'login'});
+</script>
+</body>
+</html>

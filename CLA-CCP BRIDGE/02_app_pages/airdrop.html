@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#000000">
+<title>Airdrop — AIROOBI</title>
+<meta name="description" content="Partecipa a questo airdrop su AIROOBI. Compra blocchi con ARIA e guadagna ROBI.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Airdrop — AIROOBI">
+<meta property="og:description" content="Partecipa a questo airdrop su AIROOBI. Compra blocchi con ARIA e guadagna ROBI.">
+<meta property="og:image" content="https://airoobi.com/og-image.png">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/airdrop.css?v=3.33.0">
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <a href="/airdrops" class="topbar-logo">Oo</a>
+  <div class="topbar-right">
+    <a href="/airdrops" class="topbar-btn"><span class="it">AIRDROP</span><span class="en">AIRDROPS</span></a>
+    <a href="/login" class="topbar-btn topbar-btn-gold" id="ap-login-btn">Login</a>
+    <button class="ap-user-btn" id="ap-user-btn" onclick="toggleApUserMenu(event)" aria-label="Menu utente" style="display:none">
+      <span class="ap-user-btn-letter" id="ap-user-btn-letter">?</span>
+    </button>
+  </div>
+</div>
+
+<!-- USER MENU DROPDOWN -->
+<div class="ap-user-menu" id="ap-user-menu">
+  <div class="ap-user-menu-email" id="ap-user-menu-email">—</div>
+  <a href="/" class="ap-user-menu-item"><span class="it">Home</span><span class="en">Home</span></a>
+  <a href="/airdrops" class="ap-user-menu-item"><span class="it">Esplora airdrop</span><span class="en">Explore airdrops</span></a>
+  <a href="/miei-airdrop" class="ap-user-menu-item"><span class="it">I miei airdrop</span><span class="en">My airdrops</span></a>
+  <a href="/portafoglio" class="ap-user-menu-item"><span class="it">Portafoglio</span><span class="en">Wallet</span></a>
+  <a href="/proponi" class="ap-user-menu-item"><span class="it">Vendi (airdroppa)</span><span class="en">Sell (airdrop)</span></a>
+  <a href="/invita" class="ap-user-menu-item"><span class="it">+Invita amici</span><span class="en">+Invite friends</span></a>
+  <a href="/come-funziona-airdrop" class="ap-user-menu-item"><span class="it">Come funziona</span><span class="en">How it works</span></a>
+  <button class="ap-user-menu-item ap-um-logout" onclick="apLogout()">Logout</button>
+</div>
+
+<!-- CONTENT -->
+<div class="product-page" id="ap-page">
+  <a href="/airdrops" class="product-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    <span class="it">Tutti gli airdrop</span><span class="en">All airdrops</span>
+  </a>
+  <div class="ap-loading" id="ap-loading"><span class="it">CARICAMENTO...</span><span class="en">LOADING...</span></div>
+  <div id="ap-content"></div>
+</div>
+
+<!-- BUY CONFIRM MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal">
+    <h3><span class="it">Conferma acquisto</span><span class="en">Confirm purchase</span></h3>
+    <p id="modal-desc"></p>
+    <div class="modal-highlight" id="modal-cost"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModalBtn()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button class="modal-confirm" onclick="confirmBuy()"><span class="it">Conferma</span><span class="en">Confirm</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROL ROOM MODAL (admin only) -->
+<div class="cr-overlay" id="cr-overlay" onclick="if(event.target===this)closeControlRoom()">
+  <div class="cr-modal" id="cr-modal"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="ap-toast"></div>
+
+<!-- FOOTER -->
+<div class="ap-footer">
+  <a href="https://airoobi.com">airoobi.com</a> &middot; <a href="https://airoobi.app">airoobi.app</a><br>
+  <span style="display:inline-block;margin-top:8px">&copy; 2026 AIROOBI — Dream Robe E-Commerce.</span><br>
+  <span style="display:inline-block;margin-top:4px;font-size:10px;color:var(--gray-600)"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></span><br>
+  <span style="display:inline-block;margin-top:4px;font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600)">alfa-2026.04.19-3.33.0</span>
+</div>
+
+<script src="/src/airdrop.js?v=3.43.0"></script>
+</body>
+</html>

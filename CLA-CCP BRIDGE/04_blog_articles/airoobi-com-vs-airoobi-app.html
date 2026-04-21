@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>airoobi.com e airoobi.app: due mondi separati, un'unica piattaforma — AIROOBI Blog</title>
+  <meta name="description" content="airoobi.com è il sito istituzionale, airoobi.app è la dApp marketplace. Perché questa separazione e come orientarsi.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="airoobi.com e airoobi.app: due mondi separati, un'unica piattaforma">
+  <meta property="og:description" content="airoobi.com è il sito istituzionale, airoobi.app è la dApp marketplace. Perché questa separazione e come orientarsi.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://www.airoobi.com/blog/airoobi-com-vs-airoobi-app.html">
+  <link rel="canonical" href="https://www.airoobi.com/blog/airoobi-com-vs-airoobi-app.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --aria: #4A9EFF;
+      --kas: #49EACB;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Instrument Sans', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      height: 60px;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-800);
+    }
+    .topbar-logo img { height: 32px; display: block; }
+    .topbar-back {
+      color: var(--gray-300);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .topbar-back:hover { color: var(--gold); }
+    .breadcrumb {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem 0;
+      font-size: 0.8rem;
+      color: var(--gray-400);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--gold); }
+    .breadcrumb .sep { color: var(--gray-600); }
+    .breadcrumb .current { color: var(--gray-300); }
+    .article-wrap {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+    .article-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--gray-400);
+      letter-spacing: 0.04em;
+      margin-bottom: 1rem;
+    }
+    article h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 600;
+      line-height: 1.15;
+      margin-bottom: 2rem;
+      letter-spacing: -0.02em;
+    }
+    article p {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--gray-300);
+      margin-bottom: 1.5rem;
+    }
+    article h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.65rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 2.5rem 0 1rem;
+      line-height: 1.2;
+    }
+    article h3 {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--white);
+      margin: 1.75rem 0 0.6rem;
+    }
+    .cta-box {
+      border: 1px solid var(--gold);
+      background: var(--gray-900);
+      border-radius: 10px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      margin: 3.5rem 0 2rem;
+    }
+    .cta-box h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .cta-box p {
+      color: var(--gray-300);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-family: 'Instrument Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      padding: 0.75rem 2rem;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .cta-btn:hover { opacity: 0.85; }
+    .ads-section { text-align: center; padding: 2rem 1rem; }
+    .blog-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .blog-footer a { color: var(--gray-400); text-decoration: none; }
+    .blog-footer a:hover { color: var(--gold); }
+    .back-link {
+      display: inline-block;
+      margin-bottom: 2rem;
+      color: var(--gray-400);
+      text-decoration: none;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--gold); }
+  </style>
+</head>
+<body>
+
+  <header class="topbar">
+    <a href="https://airoobi.com" class="topbar-logo">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
+    </a>
+    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
+  </header>
+
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="https://airoobi.com">AIROOBI</a>
+    <span class="sep">›</span>
+    <a href="/blog.html">Blog</a>
+    <span class="sep">›</span>
+    <span class="current">com vs app</span>
+  </nav>
+
+  <div class="article-wrap">
+    <a href="/blog.html" class="back-link">← Tutti gli articoli</a>
+    <div class="article-meta">1 Aprile 2026</div>
+
+    <article>
+      <h1>airoobi.com e airoobi.app: due mondi separati, un'unica piattaforma</h1>
+
+      <p>Se hai cercato AIROOBI online, potresti aver notato che esistono due domini: airoobi.com e airoobi.app. Non è un errore, non è una duplicazione, e non è un problema tecnico da segnalare. È una scelta architettonica precisa, pensata per far funzionare meglio l'intera piattaforma nel lungo periodo.</p>
+
+      <h2>airoobi.com — la vetrina istituzionale</h2>
+
+      <p>airoobi.com è il sito istituzionale di AIROOBI. È il luogo dove si racconta il progetto: chi siamo, come funziona il meccanismo degli airdrop, qual è la visione, cosa differenzia AIROOBI da qualsiasi altra piattaforma di commercio digitale. È anche dove si trova questo blog — un archivio di articoli che approfondiscono ogni aspetto della piattaforma, dalla tecnologia blockchain alla filosofia dietro le regole di partecipazione.</p>
+
+      <p>Quando una persona sente parlare di AIROOBI per la prima volta, airoobi.com è il posto giusto dove mandarla. Qui può leggere, capire, farsi un'idea completa prima di fare qualsiasi cosa. Non ci sono login richiesti, non ci sono azioni da compiere subito — solo informazioni, chiare e accessibili.</p>
+
+      <p>Su airoobi.com si trovano anche le pagine di accesso al profilo e di registrazione, che rimandano poi alla dApp vera e propria. È il punto d'ingresso nel mondo AIROOBI per chi arriva dall'esterno.</p>
+
+      <h2>airoobi.app — la dApp, il marketplace, la piattaforma vera</h2>
+
+      <p>airoobi.app è dove succede tutto. È la decentralized application — la dApp — che ospita il marketplace degli airdrop. Qui gli utenti registrati trovano il proprio saldo ARIA, i ROBI accumulati, il pannello di partecipazione agli airdrop attivi, il sistema di referral, le notifiche e tutto ciò che riguarda la propria esperienza sulla piattaforma.</p>
+
+      <p>Se airoobi.com è la vetrina, airoobi.app è il negozio. È l'ambiente operativo, quello che un utente attivo apre ogni giorno per fare il check-in, verificare i nuovi airdrop, controllare la propria posizione nella classifica. È progettato per essere veloce, reattivo e focalizzato sull'azione — senza le distrazioni informative tipiche di un sito istituzionale.</p>
+
+      <h2>Perché separare i due domini</h2>
+
+      <p>La scelta di avere due domini distinti non è solo estetica. Ci sono ragioni tecniche, di prodotto e di strategia che rendono questa separazione vantaggiosa.</p>
+
+      <h3>Evoluzione indipendente</h3>
+
+      <p>Il sito istituzionale e la dApp hanno cicli di aggiornamento molto diversi. airoobi.com cambia quando ci sono nuovi contenuti da comunicare — nuovi articoli, aggiornamenti sulla roadmap, cambiamenti nel progetto. airoobi.app cambia quasi continuamente: nuove funzionalità, ottimizzazioni dell'interfaccia, nuovi meccanismi di partecipazione. Se i due fossero sullo stesso dominio, ogni aggiornamento tecnico della dApp rischierebbe di interferire con la stabilità della parte informativa, e viceversa.</p>
+
+      <h3>Esperienza utente mirata</h3>
+
+      <p>Chi arriva su airoobi.com sta cercando informazioni. Chi arriva su airoobi.app sta cercando di fare qualcosa. Sono due intenzioni diverse che meritano due esperienze diverse. Separare i domini permette di ottimizzare ogni superficie per il proprio pubblico specifico, senza compromessi.</p>
+
+      <h3>Sicurezza e isolamento</h3>
+
+      <p>In un'architettura Web3, dove la dApp gestisce portafogli, saldi e transazioni in ARIA, è buona pratica separare l'ambiente operativo da quello informativo. Se un dominio dovesse avere problemi tecnici, l'altro rimane operativo. Gli utenti possono sempre accedere alle informazioni su airoobi.com anche se airoobi.app è in manutenzione, e viceversa.</p>
+
+      <h3>Branding e posizionamento</h3>
+
+      <p>Il suffisso .app è diventato il riferimento per le applicazioni web moderne e le dApp in particolare. Usare airoobi.app per la parte operativa comunica immediatamente che stai entrando in un ambiente interattivo, non in una pagina statica. È un segnale che l'utente può leggere ancora prima di caricare la prima schermata.</p>
+
+      <h2>Come orientarsi nella pratica</h2>
+
+      <p>La regola è semplice: se vuoi leggere, capire o condividere AIROOBI con qualcuno, usa airoobi.com. Se vuoi fare qualcosa — partecipare, muovere ARIA, controllare i ROBI e i Badge, invitare amici — vai su airoobi.app.</p>
+
+      <p>I link di referral puntano sempre ad airoobi.app, perché portano direttamente alla registrazione sulla dApp. I link degli articoli del blog puntano ad airoobi.com, perché è lì che vivono i contenuti informativi. Il login funziona su entrambi i domini e riporta sempre all'ambiente giusto dopo l'autenticazione.</p>
+
+      <h2>La direzione futura</h2>
+
+      <p>Man mano che AIROOBI cresce, i due domini diventeranno sempre più distinti e specializzati. airoobi.com si arricchirà di contenuti, casi studio, approfondimenti tecnici e comunicazioni ufficiali. airoobi.app evolverà verso un'esperienza sempre più ricca, con funzionalità on-chain, integrazione diretta con la blockchain Kaspa e strumenti avanzati per i partecipanti più attivi.</p>
+
+      <p>La separazione di oggi è la fondazione che rende possibile questa evoluzione parallela senza compromessi. Due indirizzi, un progetto solo.</p>
+
+      <div class="cta-box">
+        <h2>Pronto a entrare nella dApp?</h2>
+        <p>airoobi.app ti aspetta. Registrati, accumula ARIA e partecipa ai prossimi airdrop.</p>
+        <a href="https://airoobi.app/signup.html" class="cta-btn">Vai su airoobi.app — registrati</a>
+      </div>
+    </article>
+
+    <div class="ads-section">
+      <script async src="//www.a-ads.com/2429619/aads.js"></script>
+    </div>
+  </div>
+
+  <footer class="blog-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
+  </footer>
+
+</body>
+</html>

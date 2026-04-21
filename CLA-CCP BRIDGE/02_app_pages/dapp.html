@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#000000">
+<meta name="robots" content="index, follow">
+<title>AIROOBI APP — Airdrop Marketplace</title>
+<meta name="description" content="Oggetti di valore, blocchi di opportunità. Ricevi ARIA gratis ogni giorno e partecipa agli airdrop. Più partecipi, più ROBI guadagni.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AIROOBI — Oggetti di valore. Blocchi di opportunità.">
+<meta property="og:description" content="Entri gratis, ricevi ARIA ogni giorno e acquisti blocchi per portarti a casa oggetti di valore a prezzi incredibili.">
+<meta property="og:image" content="https://airoobi.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://airoobi.app">
+<meta property="og:site_name" content="AIROOBI">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AIROOBI — Oggetti di valore. Blocchi di opportunità.">
+<meta name="twitter:description" content="Entri gratis, ricevi ARIA ogni giorno e acquisti blocchi per portarti a casa oggetti di valore a prezzi incredibili.">
+<meta name="twitter:image" content="https://airoobi.com/og-image.png">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNldVVZ2kBhOSCU8PrznnwsLj5TsMxKD/1/sP0LtUG/GOd6wAAAAASUVORK5CYII=">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/dapp.css?v=3.48.2">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="AIROOBI">
+<link rel="apple-touch-icon" href="/public/images/AIROOBI_Symbol_White.png">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <button class="topbar-burger" id="topbar-burger" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
+  <nav class="topbar-nav" id="topbar-nav">
+    <a href="/" data-page="home" onclick="navigateTo('home',event)">
+      <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
+      <span class="it">Home</span><span class="en">Home</span>
+    </a>
+    <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
+      <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+      AIRDROPS
+    </a>
+    <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
+      <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <span class="it"><b>Valuta</b></span><span class="en"><b>Evaluate</b></span>
+    </a>
+    <a href="/invita" data-page="referral" class="nav-invite" onclick="navigateTo('referral',event)">
+      <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+      <span class="it"><b>+Invita</b></span><span class="en"><b>+Invite</b></span>
+    </a>
+    <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="it">I miei</span><span class="en">My drops</span>
+    </a>
+    <a href="/portafoglio-dapp" data-page="wallet" onclick="navigateTo('wallet',event)">
+      <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+      <span class="it">Portafoglio</span><span class="en">Wallet</span>
+    </a>
+    <div class="nav-dropdown" style="position:relative">
+      <button class="nav-dropdown-trigger" id="nav-discover-btn" onclick="toggleDiscoverMenu(event)" type="button" style="background:none;border:none;color:var(--gray-400);cursor:pointer;font-family:var(--font-b);font-size:12px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;display:flex;align-items:center;gap:7px;height:60px;padding:0 16px;border-bottom:2px solid transparent;transition:all .25s">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 10v6"/></svg>
+        EDU
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <div class="nav-dropdown-menu" id="nav-discover-menu" style="display:none;position:absolute;top:60px;right:0;min-width:200px;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:8px;box-shadow:0 12px 40px rgba(0,0,0,.55);z-index:110">
+        <a href="/come-funziona-airdrop" data-page="rules" onclick="closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+          <span class="it">Come funziona</span><span class="en">How it works</span>
+        </a>
+        <a href="/impara" data-page="learn" onclick="navigateTo('learn',event);closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+          <span class="it">Impara</span><span class="en">Learn</span>
+        </a>
+        <a href="/blog" data-page="blog" onclick="closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+          Blog
+        </a>
+        <a href="/faq" data-page="faq" onclick="closeDiscoverMenu()" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          FAQ
+        </a>
+      </div>
+    </div>
+    <a href="/faq" data-page="faq" style="display:none">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      FAQ
+    </a>
+  </nav>
+  <div class="topbar-right">
+    <span class="topbar-bal" id="topbar-bal"><svg class="topbar-bal-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700" font-family="var(--font-b)">A</text></svg><span id="topbar-aria-val">—</span></span>
+    <span class="topbar-bal topbar-bal-robi" id="topbar-bal-robi"><svg class="topbar-bal-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700" font-family="var(--font-b)">R</text></svg><span id="topbar-robi-val">—</span></span>
+    <button class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notifiche">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" class="bell-icon"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="notif-badge" id="notif-badge" style="display:none">0</span>
+      <span class="notif-dot"></span>
+    </button>
+    <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">EN</button>
+    <div class="topbar-avatar" id="topbar-avatar" onclick="toggleUserMenu()">
+      <span id="avatar-letter">?</span>
+    </div>
+  </div>
+</div>
+
+<!-- NOTIFICATION PANEL -->
+<div class="notif-panel" id="notif-panel" style="display:none">
+  <div class="notif-panel-header">
+    <span><span class="it">Notifiche</span><span class="en">Notifications</span></span>
+    <button onclick="markAllNotifRead()" style="background:none;border:none;color:var(--aria);font-family:var(--font-m);font-size:9px;letter-spacing:1px;cursor:pointer"><span class="it">SEGNA TUTTE LETTE</span><span class="en">MARK ALL READ</span></button>
+  </div>
+  <div class="notif-panel-list" id="notif-list">
+    <div style="color:var(--gray-500);font-size:12px;text-align:center;padding:24px"><span class="it">Nessuna notifica</span><span class="en">No notifications</span></div>
+  </div>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="topbar-mobile-menu" id="topbar-mobile-menu">
+  <a href="/" data-page="home" onclick="navigateTo('home',event)">
+    <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
+    Home
+  </a>
+  <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
+    <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+    AIRDROPS
+  </a>
+  <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    <span class="it"><b>Valuta</b></span><span class="en"><b>Evaluate</b></span>
+  </a>
+  <a href="/invita" data-page="referral" class="nav-invite" onclick="navigateTo('referral',event)">
+    <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+    <span class="it"><b>+Invita</b></span><span class="en"><b>+Invite</b></span>
+  </a>
+  <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
+    <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
+  </a>
+  <a href="/portafoglio-dapp" data-page="wallet" onclick="navigateTo('wallet',event)">
+    <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+    <span class="it">Portafoglio</span><span class="en">Wallet</span>
+  </a>
+  <a href="/come-funziona-airdrop" data-page="rules">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+    <span class="it">Come funziona</span><span class="en">How it works</span>
+  </a>
+  <a href="/impara" data-page="learn" onclick="navigateTo('learn',event)">
+    <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2zM22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+    <span class="it">Impara</span><span class="en">Learn</span>
+  </a>
+  <a href="/blog" data-page="blog">
+    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+    Blog
+  </a>
+  <a href="/faq" data-page="faq">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    FAQ
+  </a>
+</div>
+
+<!-- USER MENU DROPDOWN -->
+<div class="user-menu" id="user-menu">
+  <div class="user-menu-email" id="user-menu-email">—</div>
+  <button class="user-menu-item" onclick="navigateTo('home');toggleUserMenu()">
+    <span class="it">Home</span><span class="en">Home</span>
+  </button>
+  <button class="user-menu-item" onclick="window.location.href='/portafoglio'">
+    <span class="it">Portafoglio</span><span class="en">Wallet</span>
+  </button>
+  <button class="user-menu-item" onclick="navigateTo('referral');toggleUserMenu()">
+    <span class="it">+Invita amici</span><span class="en">+Invite friends</span>
+  </button>
+  <button class="user-menu-item" onclick="navigateTo('submit');toggleUserMenu()">
+    <span class="it">Vendi (airdroppa)</span><span class="en">Sell (airdrop)</span>
+  </button>
+  <button class="user-menu-item" onclick="showChangePw();toggleUserMenu()">
+    <span class="it">Cambia password</span><span class="en">Change password</span>
+  </button>
+  <a href="/come-funziona-airdrop" class="user-menu-item" style="display:block;text-decoration:none">
+    <span class="it">Come funziona</span><span class="en">How it works</span>
+  </a>
+  <button class="user-menu-item" id="dapp-admin-link" onclick="window.open('/abo','_blank')" style="display:none"><span class="it">Gestisci (ABO)</span><span class="en">Manage (ABO)</span></button>
+  <button class="user-menu-item um-logout" onclick="doLogout()">Logout</button>
+  <button class="user-menu-item" onclick="showDeleteAccount();toggleUserMenu()" style="color:var(--gray-600);font-size:12px;margin-top:4px;border-top:none">
+    <span class="it">Elimina account</span><span class="en">Delete account</span>
+  </button>
+</div>
+
+<!-- DELETE ACCOUNT MODAL -->
+<div class="modal-bg" id="deleteaccount-modal">
+  <div class="modal" style="text-align:left;max-width:440px">
+    <h3 style="margin-bottom:8px;color:#f87171"><span class="it">Elimina account</span><span class="en">Delete account</span></h3>
+    <p style="font-size:13px;color:var(--gray-300);margin-bottom:16px;line-height:1.6">
+      <span class="it">Questa azione è <strong style="color:#f87171">irreversibile</strong>. Tutti i tuoi dati verranno eliminati: ARIA, ROBI, badge, partecipazioni, referral, notifiche — tutto.</span>
+      <span class="en">This action is <strong style="color:#f87171">irreversible</strong>. All your data will be deleted: ARIA, ROBI, badges, participations, referrals, notifications — everything.</span>
+    </p>
+    <div id="deleteaccount-error" style="background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:14px;display:none;border-radius:var(--radius-sm)"></div>
+    <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px"><span class="it">Scrivi ELIMINA per confermare</span><span class="en">Type DELETE to confirm</span></label>
+    <input type="text" id="deleteaccount-confirm" style="width:100%;padding:12px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:14px;border-radius:var(--radius-sm);margin-bottom:16px;outline:none;font-family:var(--font-m);letter-spacing:2px" placeholder="">
+    <div style="display:flex;gap:12px">
+      <button onclick="closeDeleteAccount()" style="flex:1;padding:12px;background:var(--gray-700);border:none;color:var(--gray-300);font-family:var(--font-b);font-size:13px;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button id="deleteaccount-btn" onclick="doDeleteAccount()" style="flex:1;padding:12px;background:#B91C1C;border:none;color:var(--white);font-family:var(--font-b);font-size:13px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);letter-spacing:1px"><span class="it">Elimina</span><span class="en">Delete</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal-bg" id="changepw-modal">
+  <div class="modal" style="text-align:left">
+    <h3 style="margin-bottom:16px"><span class="it">Cambia password</span><span class="en">Change password</span></h3>
+    <div id="changepw-error" style="background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:14px;display:none;border-radius:var(--radius-sm)"></div>
+    <div id="changepw-success" style="background:rgba(73,234,203,.05);border:1px solid rgba(73,234,203,.15);color:var(--kas);padding:10px 14px;font-size:13px;margin-bottom:14px;display:none;border-radius:var(--radius-sm)"></div>
+    <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px"><span class="it">Password attuale</span><span class="en">Current password</span></label>
+    <input type="password" id="changepw-old" style="width:100%;padding:12px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:14px;border-radius:var(--radius-sm);margin-bottom:16px;outline:none;font-family:var(--font-b)" placeholder="">
+    <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px"><span class="it">Nuova password</span><span class="en">New password</span></label>
+    <input type="password" id="changepw-new" style="width:100%;padding:12px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:14px;border-radius:var(--radius-sm);margin-bottom:16px;outline:none;font-family:var(--font-b)" placeholder="">
+    <label style="display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px"><span class="it">Conferma nuova password</span><span class="en">Confirm new password</span></label>
+    <input type="password" id="changepw-confirm" style="width:100%;padding:12px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:14px;border-radius:var(--radius-sm);margin-bottom:20px;outline:none;font-family:var(--font-b)" placeholder="">
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="hideChangePw()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button class="modal-confirm" id="changepw-btn" onclick="doChangePw()"><span class="it">Cambia</span><span class="en">Change</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDA RAPIDA — banner dismissable, stato globale (localStorage) -->
+<div id="guida-banner" class="guida-banner" style="display:none">
+  <div class="guida-banner-icon">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.663 17h4.673M12 3v1M12 21a8 8 0 006-13.3A8 8 0 006 7.7 8 8 0 0012 21z"/><path d="M10 17h4v2a2 2 0 01-4 0z" fill="currentColor" opacity=".15"/></svg>
+  </div>
+  <div class="guida-banner-body">
+    <div class="guida-banner-title">
+      <span class="it">Valuta. Partecipa. Guadagna.</span>
+      <span class="en">Evaluate. Join. Earn.</span>
+    </div>
+    <div class="guida-banner-text">
+      <span class="it">ARIA è la valuta di test: accumulala ogni giorno con faucet, check-in e referral. I ROBI sono reali — li ricevi partecipando agli airdrop. Più sei attivo, più ROBI porti a casa.</span>
+      <span class="en">ARIA is the test currency: collect it daily via faucet, check-in and referrals. ROBI are real — you get them by joining airdrops. The more active you are, the more ROBI you bring home.</span>
+    </div>
+    <div class="guida-banner-ctas">
+      <a class="guida-banner-cta" onclick="navigateTo('submit',event)"><span class="it">Valuta un oggetto</span><span class="en">Evaluate an item</span></a>
+      <a class="guida-banner-cta" onclick="navigateTo('explore',event)"><span class="it">Vai agli airdrop</span><span class="en">See airdrops</span></a>
+      <a class="guida-banner-cta" onclick="navigateTo('home',event);setTimeout(function(){var el=document.getElementById('faucet-section');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},120)"><span class="it">ARIA del giorno</span><span class="en">Daily ARIA</span></a>
+      <a class="guida-banner-cta" onclick="navigateTo('home',event);setTimeout(function(){var el=document.getElementById('streak-section');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},120)"><span class="it">Sequenza giornaliera</span><span class="en">Daily streak</span></a>
+      <a class="guida-banner-cta" onclick="navigateTo('home',event)"><span class="it">Dashboard</span><span class="en">Dashboard</span></a>
+    </div>
+  </div>
+  <button class="guida-banner-close" onclick="toggleGuidaBanner(false)" aria-label="Chiudi guida">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+<button id="guida-banner-toggle" class="guida-banner-toggle" style="display:none" onclick="toggleGuidaBanner(true)" aria-label="Apri guida rapida" title="Guida rapida">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+</button>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ═══ HOME ═══ -->
+  <div id="tab-home" class="dash-home" style="display:none">
+
+    <!-- WELCOME — friendly, caldo -->
+    <div style="padding:32px 0 8px;text-align:center">
+      <div style="font-family:var(--font-h);font-size:clamp(26px,5vw,36px);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:6px"><span class="it">Bentornato, <em id="home-user-name" style="color:var(--gold)">—</em></span><span class="en">Welcome back, <em id="home-user-name-en" style="color:var(--gold)">—</em></span></div>
+      <div style="font-family:var(--font-b);font-size:13px;color:var(--gray-400);letter-spacing:.3px"><span class="it">Il tuo spazio su AIROOBI. Accumula, partecipa, realizza.</span><span class="en">Your space on AIROOBI. Accumulate, participate, achieve.</span></div>
+      <span class="dash-alpha-badge" style="margin-top:10px;display:inline-block">alpha brave</span>
+    </div>
+
+    <!-- SALDI — card eleganti con glow sottile -->
+    <div class="dash-stats" style="margin-top:16px">
+      <div class="dash-stat" style="background:rgba(74,158,255,.04);border:1px solid rgba(74,158,255,.12);border-radius:var(--radius-sm);padding:20px 16px">
+        <div class="dash-stat-val blue" id="home-aria" style="font-size:clamp(28px,5vw,36px)">0</div>
+        <div class="dash-stat-label" style="display:inline-flex;align-items:center;gap:6px;justify-content:center"><svg width="14" height="14" viewBox="0 0 16 16" style="display:inline-block;flex-shrink:0"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">A</text></svg>ARIA <span class="info-i" onclick="showInfoTip(this,'aria-balance')">i</span></div>
+        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:rgba(74,158,255,.4);margin-top:4px">TESTNET</div>
+      </div>
+      <div class="dash-stat" style="background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.12);border-radius:var(--radius-sm);padding:20px 16px">
+        <div class="dash-stat-val" id="home-robi" style="color:var(--gold);font-size:clamp(28px,5vw,36px)">0</div>
+        <div class="dash-stat-label" style="display:inline-flex;align-items:center;gap:6px;justify-content:center"><svg width="14" height="14" viewBox="0 0 16 16" style="display:inline-block;flex-shrink:0"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">R</text></svg>ROBI <span class="info-i" onclick="showInfoTip(this,'robi-balance')">i</span></div>
+      </div>
+      <div class="dash-stat" style="background:rgba(73,234,203,.04);border:1px solid rgba(73,234,203,.12);border-radius:var(--radius-sm);padding:20px 16px">
+        <div class="dash-stat-val" id="home-kas" style="color:var(--kas);font-size:clamp(28px,5vw,36px)">—</div>
+        <div class="dash-stat-label" style="display:inline-flex;align-items:center;gap:6px;justify-content:center"><svg width="14" height="14" viewBox="0 0 16 16" style="display:inline-block;flex-shrink:0"><circle cx="8" cy="8" r="7" fill="none" stroke="#49EACB" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#49EACB" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">K</text></svg><span class="it">KAS pot.</span><span class="en">KAS pot.</span> <span class="info-i" onclick="showInfoTip(this,'kas-potential')">i</span></div>
+      </div>
+    </div>
+
+    <!-- GUADAGNI — earning actions v2 (close F2) -->
+    <div class="dash-section" style="margin-top:28px">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+        <div class="dash-section-title" style="margin:0;font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Guadagni</span><span class="en">Earnings</span></div>
+        <a href="/come-funziona-airdrop#earnings" style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-decoration:none"><span class="it">Come funziona →</span><span class="en">How it works →</span></a>
+      </div>
+
+      <!-- FAUCET — 100 ARIA/gg -->
+      <div id="faucet-section" style="margin-bottom:12px">
+        <div class="dash-faucet-card" style="background:linear-gradient(135deg,rgba(74,158,255,.08) 0%,rgba(184,150,12,.06) 100%);border:1px solid rgba(74,158,255,.18);border-radius:var(--radius-sm);padding:20px">
+          <div class="dash-faucet-info">
+            <div class="dash-faucet-title" style="font-family:var(--font-h);font-size:18px;font-weight:400"><span class="it">Il tuo ARIA quotidiano</span><span class="en">Your daily ARIA</span></div>
+            <div class="dash-faucet-sub"><span class="it">Ricevi <strong>100 ARIA</strong> gratis &mdash; ogni giorno, senza limiti</span><span class="en">Get <strong>100 ARIA</strong> free &mdash; every day, no limits</span></div>
+          </div>
+          <button id="faucet-btn" onclick="claimFaucet()" class="dash-faucet-btn"><span class="it">RICEVI</span><span class="en">GET</span></button>
+          <div id="faucet-status" style="margin-top:8px;font-size:12px;color:var(--gray-400);text-align:center;display:none;grid-column:1/-1"></div>
+        </div>
+      </div>
+
+      <!-- STREAK GIORNALIERO — 50 ARIA/gg + 1 ROBI/settimana -->
+      <div id="streak-section" style="margin-bottom:12px">
+        <div style="background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.22);border-radius:var(--radius-sm);padding:18px 20px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+            <div>
+              <div style="font-family:var(--font-h);font-size:17px;font-weight:400;color:var(--white);margin-bottom:2px"><span class="it">Sequenza giornaliera</span><span class="en">Daily streak</span></div>
+              <div style="font-size:12px;color:var(--gray-400);line-height:1.45"><span class="it">+50 <span style="color:var(--aria)">ARIA</span> per ogni giorno timbrato &middot; +1 <span style="color:var(--gold)">ROBI</span> se completi lun&ndash;dom</span><span class="en">+50 <span style="color:var(--aria)">ARIA</span> per day checked &middot; +1 <span style="color:var(--gold)">ROBI</span> if you complete Mon&ndash;Sun</span></div>
+            </div>
+            <button id="streak-btn" onclick="claimStreakDay()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:10px 22px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm);white-space:nowrap"><span class="it">TIMBRA OGGI</span><span class="en">CHECK IN</span></button>
+          </div>
+          <div id="streak-calendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+          <div id="streak-status" style="margin-top:10px;font-size:11px;color:var(--gray-500);text-align:center"></div>
+        </div>
+      </div>
+
+      <!-- REFERRAL — +5 ROBI + +5 ROBI -->
+      <div class="daily-task" id="dt-referral" style="display:flex;align-items:center;gap:12px;padding:16px 18px;border:1px solid rgba(184,150,12,.22);background:rgba(184,150,12,.04);border-radius:var(--radius-sm);cursor:pointer" onclick="navigateTo('referral')">
+        <div style="width:28px;height:28px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;color:var(--black);font-weight:700">+</div>
+        <div style="flex:1">
+          <div style="font-family:var(--font-b);font-size:14px;color:var(--white);font-weight:600"><span class="it">+Invita amici</span><span class="en">+Invite friends</span></div>
+          <div style="font-size:12px;color:var(--gray-400)"><span class="it">+5 <span style="color:var(--gold)">ROBI</span> per te &middot; +5 <span style="color:var(--gold)">ROBI</span> al tuo amico quando si registra e fa login</span><span class="en">+5 <span style="color:var(--gold)">ROBI</span> for you &middot; +5 <span style="color:var(--gold)">ROBI</span> for your friend on signup + login</span></div>
+        </div>
+        <div style="font-family:var(--font-m);font-size:13px;color:var(--gold);letter-spacing:1px;font-weight:700">+5&thinsp;ROBI</div>
+      </div>
+
+      <!-- Reward automatiche — recap -->
+      <div style="margin-top:18px">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase"><span class="it">Reward automatiche</span><span class="en">Automatic rewards</span></div>
+          <a href="/come-funziona-airdrop#earnings" style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-500);text-decoration:none"><span class="it">Dettagli →</span><span class="en">Details →</span></a>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px">
+          <!-- Oggetto accettato -->
+          <div style="padding:12px;border:1px solid var(--gray-700);border-radius:var(--radius-sm);background:rgba(255,255,255,.01)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M20 6L9 17l-5-5"/></svg>
+              <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);font-weight:700">+1 ROBI</div>
+            </div>
+            <div style="font-size:12px;color:var(--gray-300);line-height:1.4"><span class="it">Oggetto accettato</span><span class="en">Item accepted</span></div>
+            <div style="font-size:10px;color:var(--gray-500);margin-top:2px"><span class="it">Proposta valutata ok</span><span class="en">Valuation approved</span></div>
+          </div>
+          <!-- Airdrop vinto -->
+          <div style="padding:12px;border:1px solid var(--gray-700);border-radius:var(--radius-sm);background:rgba(255,255,255,.01)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M6 9H4.5a2.5 2.5 0 010-5H6m12 5h1.5a2.5 2.5 0 000-5H18M4 22h16M10 14.66V17a2 2 0 01-2 2h-.6M14 14.66V17a2 2 0 002 2h.6M18 2H6v7a6 6 0 0012 0V2z"/></svg>
+              <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);font-weight:700">+5 ROBI</div>
+            </div>
+            <div style="font-size:12px;color:var(--gray-300);line-height:1.4"><span class="it">Airdrop vinto</span><span class="en">Airdrop won</span></div>
+            <div style="font-size:10px;color:var(--gray-500);margin-top:2px"><span class="it">Al vincitore</span><span class="en">To the winner</span></div>
+          </div>
+          <!-- Airdrop completato seller -->
+          <div style="padding:12px;border:1px solid var(--gray-700);border-radius:var(--radius-sm);background:rgba(255,255,255,.01)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);font-weight:700">+5 ROBI</div>
+            </div>
+            <div style="font-size:12px;color:var(--gray-300);line-height:1.4"><span class="it">Airdrop concluso</span><span class="en">Airdrop completed</span></div>
+            <div style="font-size:10px;color:var(--gray-500);margin-top:2px"><span class="it">Al venditore</span><span class="en">To the seller</span></div>
+          </div>
+          <!-- Settimana completa lun-dom -->
+          <div style="padding:12px;border:1px solid var(--gray-700);border-radius:var(--radius-sm);background:rgba(255,255,255,.01)">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);font-weight:700">+1 ROBI</div>
+            </div>
+            <div style="font-size:12px;color:var(--gray-300);line-height:1.4"><span class="it">Settimana completa</span><span class="en">Week complete</span></div>
+            <div style="font-size:10px;color:var(--gray-500);margin-top:2px"><span class="it">Lun&rarr;dom timbrati</span><span class="en">Mon&rarr;Sun checked</span></div>
+          </div>
+          <!-- ROBI mining (sospeso in Alpha) -->
+          <div style="padding:12px;border:1px dashed var(--gray-700);border-radius:var(--radius-sm);background:rgba(255,255,255,.01);opacity:.6">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></svg>
+              <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);font-weight:700"><span class="it">SOSPESO</span><span class="en">PAUSED</span></div>
+            </div>
+            <div style="font-size:12px;color:var(--gray-300);line-height:1.4"><span class="it">ROBI mining (rullo)</span><span class="en">ROBI mining (reel)</span></div>
+            <div style="font-size:10px;color:var(--gray-500);margin-top:2px"><span class="it">Attivo da Stage 1</span><span class="en">Active from Stage 1</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Motivazione -->
+      <div style="margin-top:14px;padding:14px 18px;background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.1);border-radius:var(--radius-sm);font-family:var(--font-h);font-size:14px;font-weight:400;color:var(--gray-300);line-height:1.6;text-align:center;font-style:italic">
+        <span class="it">Accumula <strong style="color:var(--aria);font-style:normal">ARIA</strong>, partecipa agli airdrop, guadagna <strong style="color:var(--gold);font-style:normal">ROBI</strong> reali.</span>
+        <span class="en">Accumulate <strong style="color:var(--aria);font-style:normal">ARIA</strong>, join airdrops, earn real <strong style="color:var(--gold);font-style:normal">ROBI</strong>.</span>
+      </div>
+    </div>
+
+    <!-- IL TUO PERCORSO — stats in formato amichevole -->
+    <div class="dash-section">
+      <div class="dash-section-title" style="font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Il tuo percorso</span><span class="en">Your journey</span></div>
+      <div class="dash-activity" id="home-activity">
+        <div class="dash-activity-row"><span><span class="it">Blocchi acquistati</span><span class="en">Blocks purchased</span></span><span id="home-blocks">0</span></div>
+        <div class="dash-activity-row"><span><span class="it">ARIA investiti</span><span class="en">ARIA invested</span></span><span id="home-spent">0</span></div>
+        <div class="dash-activity-row"><span><span class="it">Con noi dal</span><span class="en">With us since</span></span><span id="home-reg-date">—</span><span id="home-reg-date-en" style="display:none">—</span><span id="home-reg-date2" style="display:none">—</span><span id="home-reg-date2-en" style="display:none">—</span></div>
+      </div>
+    </div>
+
+    <!-- PORTAFOGLIO CHART -->
+    <div class="dash-section">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <div class="dash-section-title" style="margin:0;font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Portafoglio</span><span class="en">Portfolio</span> <span class="info-i" onclick="showInfoTip(this,'portfolio')">i</span></div>
+        <div id="portfolio-eur-val" style="font-family:var(--font-h);font-size:clamp(18px,3vw,24px);font-weight:300;color:var(--white)">—</div>
+      </div>
+      <div style="position:relative;width:100%;height:160px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);overflow:hidden;background:rgba(255,255,255,.01)">
+        <canvas id="portfolio-chart" style="width:100%;height:100%"></canvas>
+      </div>
+      <div style="display:flex;gap:16px;margin-top:8px;font-family:var(--font-m);font-size:10px;letter-spacing:1px">
+        <span style="color:var(--aria);display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 16 16" style="display:inline-block;flex-shrink:0"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">A</text></svg>ARIA</span>
+        <span style="color:var(--gold);display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 16 16" style="display:inline-block;flex-shrink:0"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">R</text></svg>ROBI</span>
+        <span style="color:var(--kas);display:inline-flex;align-items:center;gap:6px"><svg width="14" height="14" viewBox="0 0 16 16" style="display:inline-block;flex-shrink:0"><circle cx="8" cy="8" r="7" fill="none" stroke="#49EACB" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#49EACB" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">K</text></svg>KAS pot.</span>
+      </div>
+    </div>
+
+    <!-- ESPLORA — accesso rapido -->
+    <div class="dash-section">
+      <div class="dash-section-title" style="font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Esplora</span><span class="en">Explore</span></div>
+      <div class="dash-quick-links">
+        <a class="dash-quick-link" onclick="navigateTo('explore')" style="border-color:rgba(74,158,255,.15)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--aria)"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+          <span class="it">Airdrop</span><span class="en">Airdrops</span>
+        </a>
+        <a class="dash-quick-link" onclick="navigateTo('referral')" style="border-color:rgba(74,158,255,.2);background:rgba(74,158,255,.03)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--accent)"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg>
+          <span class="it" style="color:var(--accent);font-weight:600">+Invita</span><span class="en" style="color:var(--accent);font-weight:600">+Invite</span>
+        </a>
+        <a class="dash-quick-link" onclick="navigateTo('wallet')" style="border-color:rgba(73,234,203,.15)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--kas)"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>
+          <span class="it">Wallet</span><span class="en">Wallet</span>
+        </a>
+        <a class="dash-quick-link" onclick="navigateTo('submit')" style="border-color:rgba(184,150,12,.15)">
+          <svg viewBox="0 0 24 24" style="stroke:var(--gold)"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <span class="it">Vendi</span><span class="en">Sell</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ACTIVITY FEED -->
+    <div class="dash-section">
+      <div class="dash-section-title" style="font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Sta succedendo</span><span class="en">Happening now</span></div>
+      <div id="activity-feed" style="display:grid;gap:6px;min-height:60px">
+        <div style="color:var(--gray-500);font-size:12px;text-align:center;padding:16px"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PAGE HEADER (for non-home pages) -->
+  <div class="dapp-hero" id="page-header" style="display:none">
+    <h1><span class="it">Airdrop <em>Marketplace</em></span><span class="en">Airdrop <em>Marketplace</em></span></h1>
+    <p class="dapp-hero-sub"><span class="it">Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all'oggetto.</span><span class="en">Use your ARIA to participate. Each block purchased brings you closer.</span></p>
+  </div>
+
+  <!-- ═══ EXPLORE TAB ═══ -->
+  <div id="tab-explore">
+
+    <!-- HERO SLIM (1 riga con contatore live) -->
+    <div class="explore-hero-slim">
+      <div class="ehs-title"><span class="it">Marketplace airdrop</span><span class="en">Airdrop marketplace</span></div>
+      <div class="ehs-count" id="ehs-count">
+        <strong id="ehs-count-val">—</strong>
+        <span class="it">attivi ora</span><span class="en">active now</span>
+      </div>
+    </div>
+
+    <!-- TOOLBAR STICKY: ricerca + categorie + ordinamento -->
+    <div class="explore-toolbar" id="explore-toolbar">
+      <div class="etb-row">
+        <div class="etb-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="search" id="etb-search-input" autocomplete="off" data-placeholder-it="Cerca airdrop…" data-placeholder-en="Search airdrops…" placeholder="Cerca airdrop…"/>
+        </div>
+        <div class="etb-sort">
+          <label for="etb-sort-select"><span class="it">Ordina</span><span class="en">Sort</span></label>
+          <select id="etb-sort-select" onchange="changeSort(this.value)" data-i18n-sort>
+            <option value="deadline" data-it="Scadenza" data-en="Deadline">Scadenza</option>
+            <option value="robi" data-it="Più ROBI" data-en="Most ROBI">Più ROBI</option>
+            <option value="popularity" data-it="Popolarità" data-en="Popularity">Popolarità</option>
+            <option value="newest" data-it="Più recenti" data-en="Newest">Più recenti</option>
+          </select>
+        </div>
+      </div>
+      <div class="cat-filter" id="cat-filter">
+        <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
+      </div>
+    </div>
+
+    <!-- MINI DASHBOARD PER CATEGORIA (mostrato solo quando categoria è filtrata) -->
+    <div id="cat-dashboard" style="display:none;margin-bottom:20px">
+      <div style="display:flex;overflow-x:auto;gap:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px" id="cat-dashboard-row"></div>
+    </div>
+
+    <!-- LIST VIEW -->
+    <div class="list-view" id="list-view">
+      <div class="grid" id="grid">
+        <div class="skel skel-card"></div>
+        <div class="skel skel-card"></div>
+      </div>
+      <div class="empty" id="empty" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>
+        <div class="empty-title"><span class="it">Nessun airdrop attivo</span><span class="en">No active airdrops</span></div>
+        <p class="empty-sub"><span class="it">Torna presto — nuovi oggetti in arrivo.</span><span class="en">Come back soon — new items incoming.</span></p>
+      </div>
+    </div>
+
+    <!-- DETAIL VIEW -->
+    <div class="detail" id="detail">
+      <button class="detail-back" onclick="backToList()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span class="it">Tutti gli airdrop</span><span class="en">All airdrops</span>
+      </button>
+      <div id="detail-content"></div>
+    </div>
+
+    <!-- IN ARRIVO — carousel a fondo pagina -->
+    <div id="coming-soon-section" style="display:none;margin-bottom:32px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <h3 style="font-family:var(--font-h);font-size:20px;font-weight:400;color:var(--white);margin:0"><span class="it">In arrivo</span><span class="en">Coming soon</span></h3>
+        <span style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:3px 10px;border-radius:12px"><span class="it">IN VALUTAZIONE</span><span class="en">UNDER REVIEW</span></span>
+      </div>
+      <div class="coming-carousel" id="coming-grid"></div>
+    </div>
+
+    <!-- CTA VALUTA (spostata in fondo — non blocca lo scan della grid) -->
+    <div class="explore-cta-valuta" onclick="navigateTo('submit')">
+      <div class="ecv-text">
+        <div class="ecv-title"><span class="it">Hai un oggetto di valore?</span><span class="en">Have a valuable item?</span></div>
+        <div class="ecv-sub"><span class="it">Fallo valutare da AIROOBI e mettilo in airdrop. Valore minimo €500.</span><span class="en">Get it evaluated by AIROOBI and put it on airdrop. Min value €500.</span></div>
+      </div>
+      <button class="ecv-btn" onclick="navigateTo('submit');event.stopPropagation()"><span class="it">VALUTA</span><span class="en">EVALUATE</span></button>
+    </div>
+    <!-- TODO: AdSense slot — attivare quando approvato per airoobi.app
+    <div style="text-align:center;padding:20px 0">
+      <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-6346998237302066" data-ad-slot="TODO"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    -->
+  </div>
+
+  <!-- ═══ MY AIRDROPS TAB ═══ -->
+  <div id="tab-my" style="display:none">
+
+    <!-- ── Le mie proposte (oggetti inviati per valutazione) ── -->
+    <div style="margin-bottom:32px">
+      <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:16px;border-bottom:1px solid var(--gray-800);padding-bottom:8px">
+        <span class="it">Le mie proposte</span><span class="en">My submissions</span>
+      </h3>
+      <div id="my-submissions"></div>
+      <div id="my-submissions-empty" style="display:none;text-align:center;padding:32px 16px;border:1px dashed var(--gray-800)">
+        <div style="font-size:14px;color:var(--gray-400);margin-bottom:8px"><span class="it">Non hai ancora proposto oggetti.</span><span class="en">You haven't submitted any items yet.</span></div>
+        <button onclick="navigateTo('submit')" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer">VALUTA</button>
+      </div>
+    </div>
+
+    <!-- ── Le mie partecipazioni ── -->
+    <div>
+      <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:16px;border-bottom:1px solid var(--gray-800);padding-bottom:8px">
+        <span class="it">Le mie partecipazioni</span><span class="en">My participations</span>
+      </h3>
+      <div class="my-list" id="my-list"></div>
+      <div class="empty" id="my-empty" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <div class="empty-title"><span class="it">Nessuna partecipazione</span><span class="en">No participations yet</span></div>
+        <p class="empty-sub"><span class="it">Esplora gli airdrop e acquista i tuoi primi blocchi.</span><span class="en">Explore airdrops and buy your first blocks.</span></p>
+      </div>
+    </div>
+
+    <!-- ADS -->
+    <div style="text-align:center;padding:20px 0;margin-top:24px">
+      <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+    </div>
+    <!-- TODO: AdSense slot — attivare quando approvato per airoobi.app
+    <div style="text-align:center;padding:20px 0">
+      <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-6346998237302066" data-ad-slot="TODO"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    -->
+  </div>
+
+  <!-- ═══ SUBMIT TAB ═══ -->
+  <div id="tab-submit" style="display:none">
+    <div class="submit-wrap">
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Titolo oggetto</span><span class="en">Object title</span> *</label>
+        <input class="submit-input" id="sub-title" type="text" placeholder="Es. iPhone 16 Pro Max 256GB">
+      </div>
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Descrizione</span><span class="en">Description</span></label>
+        <textarea class="submit-textarea" id="sub-desc" placeholder="Condizioni, accessori inclusi, dettagli rilevanti..."></textarea>
+      </div>
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Categoria</span><span class="en">Category</span> *</label>
+        <select class="submit-select" id="sub-cat">
+          <option value="">—</option>
+          <option value="smartphone">Smartphone</option>
+          <option value="tablet">Tablet</option>
+          <option value="computer">Computer</option>
+          <option value="gaming">Gaming</option>
+          <option value="audio">Audio</option>
+          <option value="fotografia">Fotografia</option>
+          <option value="orologi">Orologi</option>
+          <option value="gioielli">Gioielli</option>
+          <option value="borse">Borse</option>
+          <option value="moda">Moda</option>
+          <option value="biciclette">Biciclette</option>
+          <option value="arredamento">Arredamento</option>
+          <option value="sport">Sport</option>
+          <option value="strumenti">Strumenti musicali</option>
+          <option value="arte">Arte</option>
+          <option value="vino">Vini</option>
+        </select>
+      </div>
+      <!-- ── FOTO GUIDATE ── -->
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Foto dell'oggetto</span><span class="en">Item photos</span></label>
+        <div class="pw-progress-wrap">
+          <div class="pw-progress-line">
+            <div class="pw-progress-item" id="pw-prog-base"><span class="it">Foto tecniche</span><span class="en">Technical shots</span> <strong id="pw-prog-base-val">0/6</strong></div>
+            <div class="pw-progress-item"><span class="it">Extra (opzionali)</span><span class="en">Extras (optional)</span> <strong id="pw-prog-extra-val">0/6</strong></div>
+          </div>
+          <div class="pw-progress-bar"><div class="pw-progress-bar-fill" id="pw-prog-fill" style="width:0%"></div></div>
+        </div>
+        <div id="pw-slots-grid" class="pw-slots-grid"></div>
+        <div id="sub-photos-grid-legacy" style="display:flex;flex-wrap:wrap;gap:10px;margin-top:12px"></div>
+        <div style="font-size:11px;color:var(--gray-500);margin-top:10px;line-height:1.55"><span class="it">Tocca uno slot per scattare o caricare. Su mobile si apre direttamente la fotocamera. Formati: JPG, PNG, WebP.</span><span class="en">Tap a slot to shoot or upload. On mobile, the camera opens directly. Formats: JPG, PNG, WebP.</span></div>
+        <input type="file" accept="image/*" capture="environment" id="pw-camera-input" style="display:none" onchange="pwHandleSlotFile(this.files)">
+        <input type="file" accept="image/*" id="pw-file-input" style="display:none" onchange="pwHandleSlotFile(this.files)">
+      </div>
+
+      <!-- PHOTO WIZARD MODAL (per slot config) -->
+      <div class="pw-modal" id="pw-modal" onclick="if(event.target===this)pwClose()">
+        <div class="pw-modal-inner">
+          <button class="pw-modal-close" onclick="pwClose()" aria-label="Chiudi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+          <div class="pw-modal-eyebrow" id="pw-modal-eyebrow">—</div>
+          <h3 class="pw-modal-title" id="pw-modal-title">—</h3>
+          <p class="pw-modal-hint" id="pw-modal-hint">—</p>
+          <div class="pw-silhouette" id="pw-silhouette"></div>
+          <div class="pw-preview" id="pw-preview" style="display:none"><img id="pw-preview-img" alt=""></div>
+          <div class="pw-caption-wrap" id="pw-caption-wrap" style="display:none">
+            <label class="submit-label" style="margin-bottom:6px"><span class="it">Descrizione (obbligatoria per ALTRO)</span><span class="en">Description (required for OTHER)</span></label>
+            <input type="text" class="submit-input" id="pw-caption-input" placeholder="Es. Incisione sul retro / Tacca sul bordo" maxlength="80">
+          </div>
+          <div class="pw-modal-actions">
+            <button type="button" class="pw-btn pw-btn-ghost" onclick="pwSkip()" id="pw-btn-skip"><span class="it">Salta</span><span class="en">Skip</span></button>
+            <button type="button" class="pw-btn pw-btn-secondary" onclick="pwPickFile()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg> <span class="it">Carica</span><span class="en">Upload</span></button>
+            <button type="button" class="pw-btn pw-btn-primary" onclick="pwOpenCamera()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg> <span class="it">Scatta</span><span class="en">Take photo</span></button>
+            <button type="button" class="pw-btn pw-btn-primary" id="pw-btn-confirm" onclick="pwConfirmSlot()" style="display:none"><span class="it">Conferma</span><span class="en">Confirm</span></button>
+          </div>
+          <div class="pw-modal-nav">
+            <button type="button" class="pw-nav-btn" onclick="pwPrevSlot()" id="pw-nav-prev"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg> <span class="it">Indietro</span><span class="en">Prev</span></button>
+            <div class="pw-nav-counter" id="pw-nav-counter">—</div>
+            <button type="button" class="pw-nav-btn" onclick="pwNextSlot()" id="pw-nav-next"><span class="it">Avanti</span><span class="en">Next</span> <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:16px">
+        <div class="submit-field" style="flex:1">
+          <label class="submit-label"><span class="it">Prezzo desiderato (&euro;)</span><span class="en">Desired price (&euro;)</span> *</label>
+          <input class="submit-input" id="sub-desired" type="number" min="500" step="0.01" placeholder="1200.00">
+        </div>
+        <div class="submit-field" style="flex:1">
+          <label class="submit-label"><span class="it">Prezzo minimo (&euro;)</span><span class="en">Min price (&euro;)</span> *</label>
+          <input class="submit-input" id="sub-min" type="number" min="500" step="0.01" placeholder="900.00">
+        </div>
+      </div>
+      <div class="submit-hint" style="margin-bottom:20px"><span class="it">Il prezzo minimo accettabile deve essere almeno &euro;500. AIROOBI valuterà il tuo oggetto e ti proporrà una quotazione entro 24-48 ore.</span><span class="en">The minimum acceptable price must be at least &euro;500. AIROOBI will evaluate your object and propose a quote within 24-48 hours.</span></div>
+
+      <!-- DURATA AIRDROP -->
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Tipo di airdrop</span><span class="en">Airdrop type</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px" id="sub-duration-grid">
+          <label class="sub-duration-card" id="sub-dur-flash">
+            <input type="radio" name="sub-duration" value="flash" style="display:none">
+            <div class="sub-dur-icon">&#9889;</div>
+            <div class="sub-dur-name">Flash</div>
+            <div class="sub-dur-time">6h</div>
+            <div class="sub-dur-desc"><span class="it">Veloce e intenso. Soglia presale bassa, tutto si decide in poche ore.</span><span class="en">Fast and intense. Low presale threshold, everything is decided in a few hours.</span></div>
+          </label>
+          <label class="sub-duration-card selected" id="sub-dur-standard">
+            <input type="radio" name="sub-duration" value="standard" checked style="display:none">
+            <div class="sub-dur-icon">&#9201;</div>
+            <div class="sub-dur-name">Standard</div>
+            <div class="sub-dur-time">24h</div>
+            <div class="sub-dur-desc"><span class="it">Equilibrato. Un giorno intero per partecipare. Consigliato.</span><span class="en">Balanced. A full day to participate. Recommended.</span></div>
+          </label>
+          <label class="sub-duration-card" id="sub-dur-extended">
+            <input type="radio" name="sub-duration" value="extended" style="display:none">
+            <div class="sub-dur-icon">&#9203;</div>
+            <div class="sub-dur-name">Extended</div>
+            <div class="sub-dur-time">72h</div>
+            <div class="sub-dur-desc"><span class="it">Pi&ugrave; tempo per raccogliere partecipanti. Ideale per oggetti di alto valore.</span><span class="en">More time to gather participants. Ideal for high-value items.</span></div>
+          </label>
+        </div>
+        <div style="font-size:11px;color:var(--gray-500);margin-top:8px;line-height:1.5"><span class="it">La durata determina la soglia di blocchi presale per passare alla fase Sale e il tempo a disposizione dei partecipanti.</span><span class="en">Duration determines the presale block threshold to move to Sale phase and the time available to participants.</span></div>
+      </div>
+
+      <!-- COSTO VALUTAZIONE -->
+      <div id="sub-cost-box" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;margin-bottom:20px;border:1px solid rgba(74,158,255,.2);background:rgba(74,158,255,.04)">
+        <div>
+          <div style="font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:1px;margin-bottom:4px"><span class="it">Costo valutazione</span><span class="en">Valuation cost</span></div>
+          <div style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--white)"><span id="sub-cost-aria">—</span> ARIA</div>
+          <div style="font-size:12px;color:var(--gray-400)"><span class="it">Il tuo saldo:</span><span class="en">Your balance:</span> <span id="sub-balance" style="color:var(--aria)">—</span> ARIA</div>
+        </div>
+        <button class="submit-btn" id="sub-btn" onclick="submitObject()" style="width:auto;padding:14px 28px"><span class="it">ACQUISTA VALUTAZIONE</span><span class="en">BUY VALUATION</span></button>
+      </div>
+      <div id="sub-insufficient" style="display:none;padding:12px 16px;margin-bottom:16px;border:1px solid rgba(239,68,68,.3);background:rgba(239,68,68,.06);color:#ef4444;font-size:13px">
+        <span class="it">Saldo ARIA insufficiente. Accumula ARIA dal faucet, check-in, referral e video per sbloccare la valutazione.</span>
+        <span class="en">Insufficient ARIA balance. Accumulate ARIA from the faucet, check-ins, referrals and videos to unlock valuation.</span>
+      </div>
+      <div id="sub-msg"></div>
+      <div class="submit-rules">
+        <strong><span class="it">Regole:</span><span class="en">Rules:</span></strong><br>
+        <span class="it">&bull; Valore minimo dell'oggetto: <strong>&euro;500</strong><br>&bull; L'oggetto deve essere reale, verificabile e in tuo possesso<br>&bull; AIROOBI valuterà l'oggetto e fisserà prezzo e numero blocchi<br>&bull; Incasso garantito a prezzo di mercato per il venditore<br>&bull; La valutazione richiede circa 24-48h</span>
+        <span class="en">&bull; Minimum item value: <strong>&euro;500</strong><br>&bull; The item must be real, verifiable and in your possession<br>&bull; AIROOBI will evaluate and set the price and block count<br>&bull; Guaranteed payout at market price for the seller<br>&bull; Evaluation takes approximately 24-48h</span>
+      </div>
+    </div>
+
+    <!-- ADS -->
+    <div style="text-align:center;padding:20px 0;margin-top:24px">
+      <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
+    </div>
+    <!-- TODO: AdSense slot — attivare quando approvato per airoobi.app
+    <div style="text-align:center;padding:20px 0">
+      <ins class="adsbygoogle" style="display:inline-block;width:728px;height:90px" data-ad-client="ca-pub-6346998237302066" data-ad-slot="TODO"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+    -->
+  </div>
+
+  <!-- ═══ REFERRAL TAB ═══ -->
+  <div id="tab-referral" style="display:none">
+    <div class="ref-card">
+      <h3><span class="it">Il tuo link per invitare amici</span><span class="en">Your invite link</span></h3>
+      <div class="ref-link-wrap">
+        <div class="ref-link" id="dapp-ref-link">airoobi.app/signup?ref=...</div>
+        <button class="ref-copy" onclick="dappCopyRef()"><span class="it">COPIA</span><span class="en">COPY</span></button>
+      </div>
+      <div class="ref-share">
+        <button class="ref-share-btn" onclick="dappShareRef('whatsapp')">WhatsApp</button>
+        <button class="ref-share-btn" onclick="dappShareRef('telegram')">Telegram</button>
+        <button class="ref-share-btn" onclick="dappShareRef('x')">X / Twitter</button>
+        <button class="ref-share-btn" onclick="dappShareRef('email')">Email</button>
+      </div>
+    </div>
+
+    <div class="ref-stats">
+      <div class="ref-stat">
+        <div class="ref-stat-val" id="dapp-ref-count">0</div>
+        <div class="ref-stat-label"><span class="it">Invitati</span><span class="en">Invited</span></div>
+      </div>
+      <div class="ref-stat">
+        <div class="ref-stat-val" id="dapp-ref-confirmed">0</div>
+        <div class="ref-stat-label"><span class="it">Confermati</span><span class="en">Confirmed</span></div>
+      </div>
+    </div>
+
+    <div class="ref-card" style="border-color:rgba(74,158,255,.3)">
+      <h3><span class="it">Come funziona</span><span class="en">How it works</span></h3>
+      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login l'invito si conferma automaticamente<br>4. Tu ricevi <strong style="color:var(--gold)">+5 ROBI</strong> e anche il tuo amico riceve <strong style="color:var(--gold)">+5 ROBI</strong></span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. The invite auto-confirms at their first login<br>4. You get <strong style="color:var(--gold)">+5 ROBI</strong> and your friend also gets <strong style="color:var(--gold)">+5 ROBI</strong></span></p>
+    </div>
+
+    <div class="ref-history-section">
+      <h3 class="ref-history-title"><span class="it">Chi hai invitato</span><span class="en">People you invited</span></h3>
+      <div id="dapp-ref-invited-list">
+        <p style="font-size:13px;color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></p>
+      </div>
+    </div>
+
+    <div class="ref-history-section">
+      <h3 class="ref-history-title"><span class="it">Sei stato invitato da</span><span class="en">You were invited by</span></h3>
+      <div id="dapp-ref-inviter-info">
+        <p style="font-size:13px;color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ WALLET TAB ═══ -->
+  <div id="tab-wallet" style="display:none">
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+      <div class="wallet-section-label" style="margin-bottom:0"><span class="it">I tuoi Asset</span><span class="en">Your Assets</span></div>
+      <a href="/explorer" target="_blank" rel="noopener" style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);text-decoration:none;border:1px solid rgba(74,158,255,.3);padding:6px 14px;transition:all .3s;white-space:nowrap;border-radius:var(--radius-sm)" onmouseover="this.style.background='rgba(74,158,255,.1)'" onmouseout="this.style.background='transparent'">ARIA EXPLORER</a>
+    </div>
+
+    <!-- 3 ASSET IN RIGA -->
+    <div class="wallet-row">
+
+      <!-- ARIA -->
+      <div class="wcard-compact wcard-compact-aria" id="dapp-wcard-aria">
+        <div class="wcard-compact-header">
+          <svg width="20" height="20" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700" font-family="var(--font-b)">A</text></svg>
+          <span class="wcard-compact-label" style="color:var(--aria)">ARIA</span>
+          <span class="wcard-compact-tag" style="color:var(--aria);border-color:rgba(74,158,255,.3)">Testnet</span>
+        </div>
+        <div class="wcard-compact-amount" style="color:var(--aria)" id="dapp-wcard-aria-amount">—</div>
+        <div class="wcard-compact-sub"><span class="it">Accumula e partecipa</span><span class="en">Accumulate and participate</span></div>
+        <div class="wcard-compact-footer">
+          <span style="color:rgba(74,158,255,.3)">ALPHA · #<span id="dapp-wcard-aria-serial">—</span></span>
+        </div>
+      </div>
+
+      <!-- ROBI (active) -->
+      <div class="wcard-compact wcard-compact-robi" id="dapp-wcard-rendimento" style="display:none">
+        <div class="wcard-compact-header">
+          <svg width="20" height="20" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700" font-family="var(--font-b)">R</text></svg>
+          <span class="wcard-compact-label" style="color:var(--gold)">ROBI</span>
+          <span class="wcard-compact-tag" style="color:var(--gold);border-color:rgba(184,150,12,.3)">REWARD</span>
+        </div>
+        <div class="wcard-compact-amount" style="color:var(--gold)" id="dapp-wcard-rend-count">—</div>
+        <div class="wcard-compact-sub" id="dapp-wcard-rend-value" style="font-style:normal">—</div>
+        <div class="wcard-compact-footer">
+          <span style="color:rgba(184,150,12,.3)">GENESIS · #<span id="dapp-wcard-rend-serial">—</span></span>
+        </div>
+      </div>
+
+      <!-- ROBI (locked) -->
+      <div class="wcard-compact wcard-compact-robi wcard-compact-locked" id="dapp-wcard-rendimento-locked">
+        <div class="wcard-compact-header">
+          <svg width="20" height="20" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="var(--gray-600)" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="var(--gray-600)" font-size="9" font-weight="700" font-family="var(--font-b)">R</text></svg>
+          <span class="wcard-compact-label" style="color:var(--gray-500)">ROBI</span>
+          <span class="wcard-compact-tag" style="color:var(--gray-600);border-color:rgba(255,255,255,.1)">REWARD</span>
+        </div>
+        <div class="wcard-compact-amount" style="color:var(--gray-600)">—</div>
+        <div class="wcard-compact-sub" style="color:var(--gray-600)"><span class="it">Partecipa per ottenere</span><span class="en">Participate to earn</span></div>
+        <div class="wcard-compact-footer">
+          <span style="color:rgba(255,255,255,.1)">— · —</span>
+        </div>
+      </div>
+
+      <!-- KAS -->
+      <div class="wcard-compact wcard-compact-kas">
+        <div class="wcard-compact-header">
+          <svg width="20" height="20" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#49EACB" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#49EACB" font-size="9" font-weight="700" font-family="var(--font-b)">K</text></svg>
+          <span class="wcard-compact-label" style="color:var(--kas)">KAS</span>
+          <span class="wcard-compact-tag" style="color:var(--kas);border-color:rgba(73,234,203,.3)"><span class="it">Presto</span><span class="en">Soon</span></span>
+        </div>
+        <div class="wcard-compact-amount" style="color:var(--kas)">—</div>
+        <div class="wcard-compact-sub"><span id="dapp-wcard-kas-potential" style="display:none"><span id="dapp-wcard-kas-potential-val" style="color:var(--kas)">—</span></span><span class="it">On-chain · tuo per sempre</span><span class="en">On-chain · yours forever</span></div>
+        <div class="wcard-compact-footer">
+          <span style="color:rgba(73,234,203,.3)">KASPA · <span class="it">Stage 2</span><span class="en">Stage 2</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FLUSSO compatto -->
+    <div class="wallet-flow">
+      <div class="wflow-node">
+        <div class="wflow-icon" style="color:var(--aria)">▸ ARIA</div>
+        <div class="wflow-label" style="color:var(--aria)"><span class="it">Ricevi</span><span class="en">You get</span></div>
+      </div>
+      <div class="wflow-arrow">→</div>
+      <div class="wflow-node">
+        <div class="wflow-icon" style="color:var(--gold)">▸ ROBI</div>
+        <div class="wflow-label" style="color:var(--gold)"><span class="it">Guadagni</span><span class="en">You earn</span></div>
+      </div>
+      <div class="wflow-arrow">→</div>
+      <div class="wflow-node">
+        <div class="wflow-icon" style="color:var(--kas)">▸ KAS</div>
+        <div class="wflow-label" style="color:var(--kas)"><span class="it">Riscuoti</span><span class="en">You redeem</span></div>
+      </div>
+    </div>
+
+    <!-- ROBI SPARKLINE + HISTORY compatto -->
+    <div style="padding:14px 16px;border:1px solid rgba(255,255,255,.07);background:var(--card-bg);border-radius:var(--radius);margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold)"><span class="it">ANDAMENTO ROBI</span><span class="en">ROBI TREND</span></div>
+        <div id="robi-sparkline-val" style="font-family:var(--font-h);font-size:16px;color:var(--gold)">—</div>
+      </div>
+      <canvas id="robi-sparkline" style="width:100%;height:120px"></canvas>
+      <div style="margin-top:10px">
+        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-500);margin-bottom:6px"><span class="it">STORICO</span><span class="en">HISTORY</span></div>
+        <div id="robi-history-list" style="max-height:150px;overflow-y:auto">
+          <div style="color:var(--gray-500);font-size:11px;text-align:center;padding:12px"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BADGE COLLECTION (NFT non-REWARD) -->
+    <div style="margin-top:48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gray-400);text-transform:uppercase;margin-bottom:16px"><span class="it">La tua collezione Badge</span><span class="en">Your Badge collection</span></div>
+      <div id="dapp-badge-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px">
+        <div style="padding:20px;border:1px dashed var(--gray-700);border-radius:var(--radius-sm);text-align:center;color:var(--gray-600);font-size:12px">
+          <span class="it">Nessun badge ancora.<br>Partecipa per ottenerne.</span><span class="en">No badges yet.<br>Participate to earn them.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALUATION BADGES -->
+    <div style="margin-top:32px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gray-400);text-transform:uppercase;margin-bottom:16px"><span class="it">Le tue Valutazioni</span><span class="en">Your Valuations</span></div>
+      <div id="dapp-valuation-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
+        <div style="padding:20px;border:1px dashed var(--gray-700);border-radius:var(--radius-sm);text-align:center;color:var(--gray-600);font-size:12px">
+          <span class="it">Nessuna valutazione.<br><a href="/proponi" onclick="navigateTo('submit',event)" style="color:var(--gold)">Proponi un oggetto</a></span>
+          <span class="en">No valuations yet.<br><a href="/proponi" onclick="navigateTo('submit',event)" style="color:var(--gold)">Submit an object</a></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- VALUATION DETAIL MODAL -->
+    <div class="modal-bg" id="valuation-modal-bg" onclick="closeValuationModal(event)">
+      <div class="modal" id="valuation-modal" style="max-width:500px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+          <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold)">VALUTAZIONE</div>
+          <button onclick="closeValuationModal()" style="background:none;border:none;color:var(--gray-400);font-size:20px;cursor:pointer">&times;</button>
+        </div>
+        <div id="valuation-modal-content"></div>
+      </div>
+    </div>
+
+    <!-- CATEGORY ALERTS -->
+    <div style="margin-top:32px;padding:20px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Alert categorie</span><span class="en">Category alerts</span></div>
+      <p style="font-size:12px;color:var(--gray-400);margin-bottom:12px;line-height:1.5"><span class="it">Ricevi una notifica quando esce un airdrop nelle categorie che ti interessano.</span><span class="en">Get notified when an airdrop drops in categories you care about.</span></p>
+      <div id="category-alerts-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:8px">
+      </div>
+      <button onclick="saveAlertPreferences()" style="margin-top:12px;background:var(--gold);color:var(--black);border:none;padding:8px 20px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">SALVA PREFERENZE</span><span class="en">SAVE PREFERENCES</span></button>
+    </div>
+
+    <!-- WISHLIST AVANZATA -->
+    <div style="margin-top:24px;padding:20px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--aria);text-transform:uppercase;margin-bottom:12px"><span class="it">Wishlist avanzata</span><span class="en">Advanced wishlist</span></div>
+      <p style="font-size:12px;color:var(--gray-400);margin-bottom:12px;line-height:1.5"><span class="it">Ricevi una notifica quando esce un airdrop che matcha i tuoi interessi.</span><span class="en">Get notified when an airdrop matches your interests.</span></p>
+      <div style="display:grid;gap:10px">
+        <div>
+          <label style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);display:block;margin-bottom:4px"><span class="it">PAROLE CHIAVE (titolo oggetto)</span><span class="en">KEYWORDS (item title)</span></label>
+          <input type="text" id="wishlist-keywords" placeholder="es. iPhone, Rolex, PS5..." style="width:100%;padding:10px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:13px;border-radius:var(--radius-sm)">
+        </div>
+        <div>
+          <label style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);display:block;margin-bottom:4px"><span class="it">PREZZO MAX BLOCCO (ARIA)</span><span class="en">MAX BLOCK PRICE (ARIA)</span></label>
+          <input type="number" id="wishlist-max-price" min="1" placeholder="es. 50" style="width:100%;padding:10px 14px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:13px;border-radius:var(--radius-sm)">
+        </div>
+      </div>
+      <button onclick="saveWishlistAlert()" style="margin-top:12px;background:var(--aria);color:var(--white);border:none;padding:8px 20px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">AGGIUNGI ALERT</span><span class="en">ADD ALERT</span></button>
+      <div id="wishlist-alerts-list" style="margin-top:12px"></div>
+    </div>
+
+  </div>
+
+  <!-- ═══ ARCHIVE TAB ═══ -->
+  <div id="tab-archive" style="display:none">
+    <div class="past-grid" id="archive-grid">
+      <div class="past-empty"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ LEARN TAB ═══ -->
+  <div id="tab-learn" style="display:none">
+    <div style="text-align:center;margin-bottom:40px">
+      <h2 style="font-family:var(--font-h);font-size:clamp(24px,5vw,36px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Impara</span><span class="en">Learn</span></h2>
+      <p style="font-size:13px;color:var(--gray-400);margin:0"><span class="it">Scopri come funzionano ARIA, ROBI e il motore airdrop.</span><span class="en">Learn how ARIA, ROBI and the airdrop engine work.</span></p>
+    </div>
+
+    <!-- Tour App -->
+    <div style="max-width:800px;margin:0 auto 48px;text-align:center">
+      <div style="padding:32px;border:1px solid var(--gold);border-radius:var(--radius-sm);background:rgba(74,158,255,.03)">
+        <div style="font-size:36px;margin-bottom:12px">&#9654;</div>
+        <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--gold);margin:0 0 8px"><span class="it">Tour dell'app</span><span class="en">App tour</span></h3>
+        <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">Rivedi come funziona AIROOBI in 30 secondi. ARIA, blocchi, ROBI e KAS spiegati semplice.</span><span class="en">Review how AIROOBI works in 30 seconds. ARIA, blocks, ROBI and KAS explained simply.</span></p>
+        <button onclick="reopenSplash()" style="padding:12px 32px;background:var(--gold);border:none;color:var(--black);font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700"><span class="it">RIVEDI IL TOUR</span><span class="en">REPLAY TOUR</span></button>
+      </div>
+    </div>
+
+    <!-- KEY MESSAGE -->
+    <div style="max-width:800px;margin:0 auto 48px;padding:24px 32px;border:2px solid rgba(74,158,255,.4);background:rgba(74,158,255,.04);text-align:center">
+      <div style="font-family:var(--font-h);font-size:clamp(18px,3vw,24px);font-weight:300;color:var(--gold);margin-bottom:8px"><span class="it">Stai guadagnando ROBI reali. Già adesso.</span><span class="en">You're earning real ROBI. Right now.</span></div>
+      <p style="font-size:13px;color:var(--gray-300);line-height:1.7;margin:0"><span class="it">Guadagni <strong style="color:var(--aria)">ARIA</strong> ogni giorno → compri <strong style="color:var(--white)">blocchi</strong> negli airdrop → guadagni <strong style="color:var(--gold)">ROBI</strong> reali. Anche le frazioni contano — si accumulano nel tuo portafoglio e potrai riscuoterle in <strong style="color:var(--kas)">KAS</strong> quando vorrai. Non è una simulazione: il valore che accumuli oggi è reale.</span><span class="en">Earn <strong style="color:var(--aria)">ARIA</strong> every day → buy <strong style="color:var(--white)">blocks</strong> in airdrops → earn real <strong style="color:var(--gold)">ROBI</strong>. Even fractions count — they accumulate in your wallet and you can redeem them for <strong style="color:var(--kas)">KAS</strong> whenever you want. This is not a simulation: the value you accumulate today is real.</span></p>
+    </div>
+
+    <!-- Lezione 1: Cosa sono ARIA, ROBI e KAS -->
+    <div style="max-width:800px;margin:0 auto 48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 1</span><span class="en">Lesson 1</span></div>
+      <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Cosa sono ARIA, ROBI e KAS</span><span class="en">What are ARIA, ROBI and KAS</span></h3>
+      <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">Le tre monete di AIROOBI: a cosa servono e come si relazionano tra loro.</span><span class="en">The three currencies of AIROOBI: what they do and how they relate to each other.</span></p>
+      <div style="padding:32px;border:1px solid var(--gray-700);border-radius:var(--radius-sm)">
+        <div style="display:grid;gap:28px">
+          <!-- ARIA -->
+          <div style="display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start">
+            <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(74,158,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:14px;color:var(--aria);letter-spacing:1px">A</div>
+            <div>
+              <div style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--aria);margin-bottom:4px">ARIA <span style="font-size:10px;color:rgba(74,158,255,.4);letter-spacing:2px;margin-left:6px">TESTNET</span></div>
+              <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">ARIA è la <strong style="color:var(--white)">valuta di AIROOBI</strong>. Ora siamo in fase testnet: la ricevi gratis ogni giorno dal faucet (100/giorno), check-in, video e referral. Il faucet diminuirà progressivamente. Accumula ARIA e usali per partecipare agli airdrop — più partecipi, più ROBI guadagni.</span><span class="en">ARIA is <strong style="color:var(--white)">AIROOBI's currency</strong>. We're in testnet phase: get it free every day from the faucet (100/day), check-ins, videos and referrals. The faucet will decrease over time. Accumulate ARIA and use them to join airdrops — the more you participate, the more ROBI you earn.</span></p>
+            </div>
+          </div>
+          <!-- ROBI -->
+          <div style="display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start">
+            <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(74,158,255,.4);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:14px;color:var(--gold);letter-spacing:1px">R</div>
+            <div>
+              <div style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gold);margin-bottom:4px">ROBI <span style="font-size:10px;color:rgba(74,158,255,.5);letter-spacing:2px;margin-left:6px">VALORE REALE</span></div>
+              <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">ROBI è il tuo <strong style="color:var(--gold)">vero guadagno</strong>. È un NFT che ottieni partecipando agli airdrop — <strong style="color:var(--white)">non si compra, si guadagna</strong>. Il suo valore cresce nel tempo ed è riscuotibile in KAS. Ogni ROBI è coperto dal fondo di garanzia di AIROOBI. Rimborso garantito al 95%.</span><span class="en">ROBI is your <strong style="color:var(--gold)">real reward</strong>. It's an NFT you get by participating in airdrops — <strong style="color:var(--white)">you can't buy it, you earn it</strong>. Its value grows over time and is redeemable in KAS. Every ROBI is backed by AIROOBI's guarantee fund. 95% guaranteed refund.</span></p>
+            </div>
+          </div>
+          <!-- KAS -->
+          <div style="display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start">
+            <div style="width:48px;height:48px;border-radius:50%;border:1px solid rgba(73,234,203,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:14px;color:var(--kas);letter-spacing:1px">K</div>
+            <div>
+              <div style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--kas);margin-bottom:4px">KAS <span style="font-size:10px;color:rgba(73,234,203,.4);letter-spacing:2px;margin-left:6px">KASPA BLOCKCHAIN</span></div>
+              <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">KAS è la <strong style="color:var(--white)">criptovaluta reale</strong> della blockchain Kaspa su cui è costruito AIROOBI. Quando riscuoti i tuoi ROBI, ricevi KAS reali nel tuo wallet on-chain — tuoi per sempre, trasferibili ovunque.</span><span class="en">KAS is the <strong style="color:var(--white)">real cryptocurrency</strong> of the Kaspa blockchain on which AIROOBI is built. When you redeem your ROBI, you receive real KAS in your on-chain wallet — yours forever, transferable anywhere.</span></p>
+            </div>
+          </div>
+          <!-- Flow -->
+          <div style="text-align:center;padding:20px 0 0;border-top:1px solid var(--gray-700)">
+            <div style="font-family:var(--font-m);font-size:12px;letter-spacing:1px;color:var(--gray-400)">
+              <span style="color:var(--aria)">ARIA</span> <span style="color:var(--gray-600)">→ accumula + partecipa →</span> <span style="color:var(--gold)">ROBI</span> <span style="color:var(--gray-600)">→ riscuoti →</span> <span style="color:var(--kas)">KAS</span>
+            </div>
+            <div style="font-size:11px;color:var(--gray-600);margin-top:6px"><span class="it">Gratis ogni giorno → valore reale già oggi → crypto on-chain domani</span><span class="en">Free every day → real value today → on-chain crypto tomorrow</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lezione 2: Come funzionano adesso -->
+    <div style="max-width:800px;margin:0 auto 48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 2</span><span class="en">Lesson 2</span></div>
+      <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Come funzionano adesso</span><span class="en">How they work right now</span></h3>
+      <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">Siamo in Alpha. Ecco cosa è attivo e cosa arriverà.</span><span class="en">We're in Alpha. Here's what's active and what's coming.</span></p>
+      <div style="padding:32px;border:1px solid var(--gray-700);border-radius:var(--radius-sm)">
+        <div style="display:grid;gap:24px">
+          <!-- ARIA adesso -->
+          <div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:1px">ARIA</span>
+              <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--kas);background:rgba(73,234,203,.1);padding:2px 8px;border-radius:10px"><span class="it">ATTIVO</span><span class="en">ACTIVE</span></span>
+            </div>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Ora siamo in <strong style="color:var(--white)">fase testnet</strong>: ricevi ARIA gratis dal faucet (100/giorno — diminuirà), check-in (+1), video (+1, max 5/gg), sequenza (+1/7gg) e referral (+10/+15). <strong style="color:var(--aria)">Accumula ARIA e partecipa agli airdrop di test:</strong> più partecipi, più ROBI guadagni. I ROBI sono il vero reward di AIROOBI. Non aspettare — il faucet diminuirà progressivamente.</span><span class="en">We're in <strong style="color:var(--white)">testnet phase</strong>: get ARIA free from the faucet (100/day — will decrease), check-in (+1), videos (+1, max 5/day), streak (+1/7days) and referral (+10/+15). <strong style="color:var(--aria)">Accumulate ARIA and join test airdrops:</strong> the more you participate, the more ROBI you earn. ROBI are AIROOBI's real reward. Don't wait — the faucet will decrease over time.</span></p>
+          </div>
+          <!-- ROBI adesso -->
+          <div style="border-top:1px solid var(--gray-700);padding-top:24px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="font-family:var(--font-m);font-size:12px;color:var(--gold);letter-spacing:1px">ROBI</span>
+              <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);background:rgba(74,158,255,.1);padding:2px 8px;border-radius:10px"><span class="it">VALORE REALE</span><span class="en">REAL VALUE</span></span>
+            </div>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">I ROBI sono <strong style="color:var(--gold)">il vero guadagno</strong> di AIROOBI. Si ottengono <strong style="color:var(--white)">solo partecipando</strong> agli airdrop — non si comprano. Ogni ROBI ha un valore reale coperto dal fondo di garanzia. In futuro saranno riscuotibili in KAS sulla blockchain Kaspa. I ROBI che accumuli adesso in Alpha sono veri — il loro valore crescerà con la piattaforma.</span><span class="en">ROBI are AIROOBI's <strong style="color:var(--gold)">real reward</strong>. You get them <strong style="color:var(--white)">only by participating</strong> in airdrops — they can't be bought. Each ROBI has real value backed by the guarantee fund. In the future they'll be redeemable in KAS on the Kaspa blockchain. The ROBI you accumulate now during Alpha are real — their value will grow with the platform.</span></p>
+          </div>
+          <!-- KAS adesso -->
+          <div style="border-top:1px solid var(--gray-700);padding-top:24px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+              <span style="font-family:var(--font-m);font-size:12px;color:var(--kas);letter-spacing:1px">KAS</span>
+              <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:2px 8px;border-radius:10px"><span class="it">CON MAINNET</span><span class="en">AT MAINNET</span></span>
+            </div>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">KAS non è ancora attivo — arriverà con il lancio della mainnet. Quando la piattaforma sarà on-chain, potrai riscuotere i tuoi ROBI in KAS reali. Per ora, concentrati su accumulare ARIA e partecipare agli airdrop per aumentare i ROBI — stai costruendo la tua posizione.</span><span class="en">KAS is not active yet — it will come with the mainnet launch. When the platform goes on-chain, you'll be able to redeem your ROBI into real KAS. For now, focus on accumulating ARIA and joining airdrops to grow your ROBI — you're building your position.</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video 1: Come funziona AIROOBI -->
+    <div style="max-width:800px;margin:0 auto 48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 3</span><span class="en">Lesson 3</span></div>
+      <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Come funziona AIROOBI</span><span class="en">How AIROOBI works</span></h3>
+      <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">ARIA, blocchi, categorie, fairness e ROBI — tutto in 2 minuti.</span><span class="en">ARIA, blocks, categories, fairness and ROBI — all in 2 minutes.</span></p>
+      <div style="width:100%;aspect-ratio:16/9;border:1px solid var(--gray-700);overflow:hidden">
+        <iframe src="/video-intro.html" style="width:100%;height:100%;border:none" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- Video 2: Come funziona un Airdrop -->
+    <div style="max-width:800px;margin:0 auto 48px">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Lezione 4</span><span class="en">Lesson 4</span></div>
+      <h3 style="font-family:var(--font-h);font-size:clamp(20px,3vw,28px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Come funziona un Airdrop</span><span class="en">How an Airdrop works</span></h3>
+      <p style="font-size:13px;color:var(--gray-400);margin:0 0 20px"><span class="it">La storia di Giulia e Giulio — dal primo ARIA al ROBI. Il percorso completo.</span><span class="en">The story of Giulia and Giulio — from the first ARIA to the ROBI. The complete journey.</span></p>
+      <div style="width:100%;aspect-ratio:16/9;border:1px solid var(--gray-700);overflow:hidden">
+        <iframe src="/video-airdrop.html" style="width:100%;height:100%;border:none" loading="lazy"></iframe>
+      </div>
+    </div>
+
+    <!-- Quick reference -->
+    <div style="max-width:800px;margin:0 auto;padding:32px;border:1px solid var(--gray-700)">
+      <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--gold);margin:0 0 20px"><span class="it">Riferimento rapido</span><span class="en">Quick reference</span></h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px">
+        <div>
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--aria);margin-bottom:6px">ARIA</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">La valuta di AIROOBI, in fase testnet. La accumuli gratis ogni giorno. La usi per partecipare agli airdrop. Più accumuli, più ROBI guadagni.</span><span class="en">AIROOBI's currency, currently in testnet phase. Accumulate it free every day. Use it to join airdrops. The more you accumulate, the more ROBI you earn.</span></p>
+        </div>
+        <div>
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:6px">ROBI</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">Il tuo NFT Reward. Lo ottieni partecipando agli airdrop. Il suo valore cresce nel tempo. Riscuotibile in KAS — questo è il tuo vero guadagno.</span><span class="en">Your NFT Reward. Get it by joining airdrops. Its value grows over time. Redeemable in KAS — this is your real reward.</span></p>
+        </div>
+        <div>
+          <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--kas);margin-bottom:6px">KAS</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.6;margin:0"><span class="it">Kaspa — la crypto su cui è costruito AIROOBI. Quando riscuoti i tuoi ROBI, ricevi KAS reali.</span><span class="en">Kaspa — the crypto AIROOBI is built on. When you redeem your ROBI, you receive real KAS.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ MANAGE TAB (backoffice) ═══ -->
+
+</div>
+
+<!-- CONFIRM MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <h3 id="modal-title"><span class="it">Conferma acquisto</span><span class="en">Confirm purchase</span></h3>
+    <p id="modal-desc"></p>
+    <div class="modal-highlight" id="modal-cost"></div>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeModal()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button class="modal-confirm" id="modal-ok" onclick="confirmBuy()"><span class="it">Acquista</span><span class="en">Buy</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RITIRA PARTECIPAZIONE -->
+<div class="modal-bg" id="cancel-modal-bg" onclick="closeCancelModal(event)">
+  <div class="modal" id="cancel-modal">
+    <div style="text-align:center;margin-bottom:20px">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="1.5"><path d="M12 9v4M12 17h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+    </div>
+    <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);text-align:center;margin-bottom:12px">
+      <span class="it">Ritira partecipazione</span><span class="en">Withdraw participation</span>
+    </h3>
+    <p id="cancel-modal-title" style="font-size:14px;color:var(--gold);text-align:center;margin-bottom:20px;font-family:var(--font-h)"></p>
+    <div style="background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);padding:16px;margin-bottom:20px">
+      <div style="font-size:13px;color:var(--gray-300);line-height:1.7">
+        <div style="margin-bottom:8px">
+          <span class="it">Stai per ritirare la tua partecipazione.</span>
+          <span class="en">You are about to withdraw your participation.</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+          <span style="color:#ef4444;font-size:16px">&#10005;</span>
+          <span><span class="it">Gli <strong id="cancel-modal-aria" style="color:var(--aria)"></strong> ARIA spesi per il servizio di airdrop <strong style="color:#ef4444">non saranno restituiti</strong>.</span><span class="en">The <strong id="cancel-modal-aria-en" style="color:var(--aria)"></strong> ARIA spent for the airdrop service <strong style="color:#ef4444">will not be refunded</strong>.</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="color:var(--kas);font-size:16px">&#10003;</span>
+          <span><span class="it"><strong id="cancel-modal-blocks" style="color:var(--white)"></strong> blocchi verranno rilasciati.</span><span class="en"><strong id="cancel-modal-blocks-en" style="color:var(--white)"></strong> blocks will be released.</span></span>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--gray-500);text-align:center;margin-bottom:20px;font-style:italic">
+      <span class="it">Questa azione non e' reversibile.</span>
+      <span class="en">This action cannot be undone.</span>
+    </p>
+    <div class="modal-actions">
+      <button class="modal-cancel" onclick="closeCancelModal()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+      <button class="modal-confirm" id="cancel-modal-ok" style="background:#ef4444" onclick="executeCancelFromModal()">
+        <span class="it">Ritira</span><span class="en">Withdraw</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- CONTROL ROOM MODAL (admin only) -->
+<div class="cr-overlay" id="cr-overlay" onclick="if(event.target===this)closeControlRoom()">
+  <div class="cr-modal" id="cr-modal"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+<div class="notif-toast-container" id="notif-toast-container"></div>
+
+<!-- BEGIN AADS AD UNIT 2429619 -->
+<div id="frame" style="width: 100%;margin: auto;position: relative; z-index: 99998;">
+  <iframe data-aa='2429619' src='//acceptable.a-ads.com/2429619/?size=Adaptive&background_color=000000&title_color=353b17&title_hover_color=fff900&link_color=6079ff&link_hover_color=fff900'
+    style='border:0; padding:0; width:70%; height:auto; overflow:hidden;display: block;margin: auto'></iframe>
+  <div style="width: 70%;margin:auto;position: absolute;left: 0;right: 0">
+    <a target="_blank" style="display:inline-block;font-size: 13px;color: #263238;padding: 4px 10px;background: #F8F8F9;text-decoration: none; border-radius: 0 0 4px 4px;" id="frame-link" href="https://aads.com/campaigns/new/?source_id=2429619&source_type=ad_unit&partner=2429619">Advertise here</a>
+  </div>
+</div>
+<!-- END AADS AD UNIT 2429619 -->
+
+<!-- FOOTER -->
+<div class="dapp-footer">
+  <div class="dapp-footer-brand">AIROOBI <em>APP</em></div>
+  <a href="https://airoobi.com" class="dapp-footer-link">airoobi.com</a> · <a href="https://airoobi.app" class="dapp-footer-link">airoobi.app</a> · <a href="/come-funziona-airdrop" class="dapp-footer-link"><span class="it">Come funziona</span><span class="en">How it works</span></a> · <a href="/faq" class="dapp-footer-link">FAQ</a>
+  <div class="dapp-footer-copy">
+    &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
+  </div>
+  <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
+  <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.21-3.48.3</div>
+</div>
+
+<!-- ═══ SPLASH TOUR ═══ -->
+<div id="splash-tour" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.95);overflow-y:auto;-webkit-overflow-scrolling:touch">
+  <div style="max-width:480px;margin:0 auto;padding:40px 24px 60px;min-height:100vh;display:flex;flex-direction:column;justify-content:center">
+    <!-- Step indicators -->
+    <div id="splash-dots" style="display:flex;justify-content:center;gap:8px;margin-bottom:32px"></div>
+
+    <!-- Slides container -->
+    <div id="splash-slides" style="position:relative;overflow:hidden">
+      <!-- Slide 1: Welcome -->
+      <div class="splash-slide" data-step="0" style="text-align:center">
+        <div style="font-family:var(--font-h);font-size:42px;font-weight:300;letter-spacing:6px;color:var(--white);margin-bottom:8px">AIR<span style="color:var(--gold)">OO</span>BI</div>
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:3px;color:var(--gold);margin-bottom:32px">AIRDROP MARKETPLACE</div>
+        <h2 style="font-family:var(--font-h);font-size:clamp(22px,5vw,32px);font-weight:300;color:var(--white);line-height:1.3;margin-bottom:16px"><span class="it">Oggetti di valore.<br><em style="color:var(--gold)">A un prezzo incredibile.</em></span><span class="en">Valuable items.<br><em style="color:var(--gold)">At an incredible price.</em></span></h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.7"><span class="it">Benvenuto su AIROOBI. Ti spieghiamo tutto in 30 secondi.</span><span class="en">Welcome to AIROOBI. We'll explain everything in 30 seconds.</span></p>
+      </div>
+
+      <!-- Slide 2: ARIA -->
+      <div class="splash-slide" data-step="1" style="display:none;text-align:center">
+        <div style="width:64px;height:64px;border-radius:50%;border:2px solid var(--aria);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:24px;color:var(--aria);margin:0 auto 20px">A</div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--aria);margin-bottom:12px">ARIA</h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.8;margin-bottom:16px"><span class="it">Ogni giorno ricevi <strong style="color:var(--white)">ARIA gratis</strong> dal faucet e dal check-in. Sono la valuta di AIROOBI.</span><span class="en">Every day you get <strong style="color:var(--white)">free ARIA</strong> from the faucet and check-in. They're AIROOBI's currency.</span></p>
+        <div style="font-family:var(--font-m);font-size:12px;color:var(--gray-500);letter-spacing:1px"><span class="it">Faucet: +100/gg · Check-in: +50/gg</span><span class="en">Faucet: +100/day · Check-in: +50/day</span></div>
+      </div>
+
+      <!-- Slide 3: Blocchi -->
+      <div class="splash-slide" data-step="2" style="display:none;text-align:center">
+        <div style="font-size:48px;margin-bottom:20px">&#9638;</div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--white);margin-bottom:12px"><span class="it">Blocchi di opportunità</span><span class="en">Opportunity blocks</span></h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.8"><span class="it">Usi i tuoi ARIA per acquistare <strong style="color:var(--white)">blocchi</strong>. Ogni blocco ti avvicina all'oggetto. Più blocchi hai, più sei in cima.</span><span class="en">Use your ARIA to buy <strong style="color:var(--white)">blocks</strong>. Each block brings you closer to the item. More blocks = higher position.</span></p>
+      </div>
+
+      <!-- Slide 4: ROBI -->
+      <div class="splash-slide" data-step="3" style="display:none;text-align:center">
+        <div style="width:64px;height:64px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:24px;color:var(--gold);margin:0 auto 20px">R</div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--gold);margin-bottom:12px">ROBI</h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.8"><span class="it"><strong style="color:var(--gold)">Il tuo vero guadagno.</strong> Partecipando agli airdrop accumuli ROBI — hanno valore reale e crescono nel tempo. Non si comprano, si guadagnano.</span><span class="en"><strong style="color:var(--gold)">Your real reward.</strong> By joining airdrops you accumulate ROBI — they have real value and grow over time. You can't buy them, you earn them.</span></p>
+      </div>
+
+      <!-- Slide 5: Il flusso -->
+      <div class="splash-slide" data-step="4" style="display:none;text-align:center">
+        <div style="font-family:var(--font-m);font-size:16px;letter-spacing:2px;color:var(--gray-400);margin-bottom:24px">
+          <span style="color:var(--aria)">ARIA</span> → <span style="color:var(--white)">BLOCCHI</span> → <span style="color:var(--gold)">ROBI</span> → <span style="color:var(--kas)">KAS</span>
+        </div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:300;color:var(--white);margin-bottom:12px"><span class="it">Semplice.</span><span class="en">Simple.</span></h2>
+        <p style="font-size:14px;color:var(--gray-400);line-height:1.8"><span class="it">Ricevi ARIA gratis → li usi per comprare blocchi → partecipi agli airdrop → guadagni ROBI → li riscuoti in KAS (crypto reale).</span><span class="en">Get free ARIA → buy blocks → join airdrops → earn ROBI → redeem for KAS (real crypto).</span></p>
+        <div style="margin-top:20px;font-family:var(--font-m);font-size:11px;color:var(--kas);letter-spacing:1px"><span class="it">Più partecipi, più guadagni. Sempre.</span><span class="en">The more you participate, the more you earn. Always.</span></div>
+      </div>
+    </div>
+
+    <!-- Navigation -->
+    <div style="margin-top:32px;display:flex;flex-direction:column;align-items:center;gap:16px">
+      <div style="display:flex;gap:12px">
+        <button id="splash-prev" onclick="splashNav(-1)" style="display:none;padding:10px 24px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer">← <span class="it">INDIETRO</span><span class="en">BACK</span></button>
+        <button id="splash-next" onclick="splashNav(1)" style="padding:10px 32px;background:var(--gold);border:none;color:var(--black);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">AVANTI →</span><span class="en">NEXT →</span></button>
+      </div>
+      <label id="splash-dismiss-wrap" style="display:none;cursor:pointer;font-family:var(--font-m);font-size:11px;color:var(--gray-500);letter-spacing:.5px;display:flex;align-items:center;gap:8px">
+        <input type="checkbox" id="splash-dismiss-check" style="accent-color:var(--gold)">
+        <span class="it">Ho capito, non ricordarmelo più</span><span class="en">Got it, don't remind me again</span>
+      </label>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ INFO TOOLTIP ═══ -->
+<div id="info-tooltip" style="display:none;position:fixed;z-index:9998;max-width:280px;padding:14px 18px;background:var(--black);border:1px solid var(--gold);border-radius:var(--radius-sm);font-size:12px;color:var(--gray-300);line-height:1.6;box-shadow:0 8px 32px rgba(0,0,0,.6)">
+  <div id="info-tooltip-text"></div>
+  <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
+</div>
+
+<script src="/src/dapp.js?v=3.47.0"></script>
+</body>
+</html>

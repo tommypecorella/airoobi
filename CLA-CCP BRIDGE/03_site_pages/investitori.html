@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investitori — AIROOBI</title>
+  <meta name="description" content="AIROOBI per gli investitori. Un nuovo modello di commercio basato su airdrop equi, blockchain Kaspa e ROBI con valore garantito.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:title" content="Investitori — AIROOBI">
+  <meta property="og:description" content="Un nuovo modello di commercio. Fairness, trasparenza, blockchain, accessibilità per tutti.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.airoobi.com/investitori.html">
+  <link rel="canonical" href="https://www.airoobi.com/investitori.html">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --black: #000;
+      --white: #FFF;
+      --gold: #B8960C;
+      --gray-900: #0d0d0d;
+      --gray-800: #1a1a1a;
+      --gray-700: #2a2a2a;
+      --gray-600: #3a3a3a;
+      --gray-400: #888;
+      --gray-300: #aaa;
+      --font-h: 'Cormorant Garamond', serif;
+      --font-b: 'Instrument Sans', sans-serif;
+      --font-m: 'DM Mono', monospace;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-b);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    /* Lang toggle */
+    [data-lang="it"] .en { display: none !important; }
+    [data-lang="en"] .it { display: none !important; }
+
+    .investor-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 48px;
+      border-bottom: 1px solid var(--gray-700);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .investor-nav img { height: 32px; }
+    .investor-nav-right { display: flex; gap: 12px; align-items: center; }
+    .lang-toggle {
+      background: none;
+      border: 1px solid var(--gray-700);
+      color: var(--gray-400);
+      padding: 6px 12px;
+      font-family: var(--font-m);
+      font-size: 11px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .lang-toggle:hover { border-color: var(--gold); color: var(--gold); }
+    .investor-back {
+      background: none;
+      border: 1px solid var(--gray-700);
+      color: var(--gray-400);
+      padding: 8px 20px;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+    }
+    .investor-back:hover { border-color: var(--gold); color: var(--gold); }
+
+    .investor-content {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .investor-content h1 {
+      font-family: var(--font-h);
+      font-size: clamp(32px, 5vw, 48px);
+      font-weight: 300;
+      margin-bottom: 16px;
+      color: var(--white);
+    }
+    .investor-content h1 em { color: var(--gold); font-style: italic; }
+    .investor-content h2 {
+      font-family: var(--font-h);
+      font-size: 24px;
+      font-weight: 400;
+      margin: 48px 0 16px;
+      color: var(--white);
+      border-bottom: 1px solid var(--gray-700);
+      padding-bottom: 8px;
+    }
+    .investor-content p {
+      font-size: 15px;
+      color: var(--gray-300);
+      line-height: 1.8;
+      margin-bottom: 16px;
+    }
+    .investor-content strong { color: var(--white); }
+    .investor-highlight {
+      padding: 24px;
+      background: rgba(184,150,12,.06);
+      border-left: 3px solid var(--gold);
+      margin: 24px 0;
+      font-size: 14px;
+      color: var(--gray-300);
+      line-height: 1.8;
+    }
+    .investor-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 24px 0;
+    }
+    .investor-metric {
+      padding: 24px;
+      border: 1px solid var(--gray-700);
+      background: var(--gray-800);
+    }
+    .investor-metric-val {
+      font-family: var(--font-h);
+      font-size: 32px;
+      font-weight: 300;
+      color: var(--gold);
+    }
+    .investor-metric-label {
+      font-size: 13px;
+      color: var(--gray-400);
+      margin-top: 4px;
+    }
+    .investor-chart {
+      margin: 32px 0;
+      padding: 24px;
+      border: 1px solid var(--gray-700);
+      background: var(--gray-800);
+    }
+    .investor-chart canvas { width: 100% !important; max-height: 280px; }
+    .investor-cta-box {
+      text-align: center;
+      padding: 48px 32px;
+      border: 2px solid var(--gold);
+      margin-top: 48px;
+    }
+    .investor-cta-box h3 {
+      font-family: var(--font-h);
+      font-size: 28px;
+      font-weight: 300;
+      color: var(--gold);
+      margin-bottom: 12px;
+    }
+    .investor-cta-box p {
+      font-size: 14px;
+      color: var(--gray-400);
+      margin-bottom: 24px;
+    }
+    .investor-cta-box a {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      padding: 14px 40px;
+      font-family: var(--font-m);
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.3s;
+    }
+    .investor-cta-box a:hover { background: var(--white); }
+
+    .legal-footer {
+      border-top: 1px solid var(--gray-800);
+      padding: 2rem 1rem;
+      text-align: center;
+      color: var(--gray-400);
+      font-size: 0.85rem;
+    }
+    .legal-footer a { color: var(--gray-400); text-decoration: none; }
+    .legal-footer a:hover { color: var(--gold); }
+
+    @media (max-width: 600px) {
+      .investor-nav { padding: 16px; }
+      .investor-content { padding: 40px 16px; }
+      .investor-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="investor-nav">
+    <a href="https://airoobi.com">
+      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI">
+    </a>
+    <div class="investor-nav-right">
+      <button class="lang-toggle" onclick="toggleLang()" id="inv-lang-btn">EN</button>
+      <a href="https://airoobi.com" class="investor-back"><span class="it">Torna ad AIROOBI</span><span class="en">Back to AIROOBI</span></a>
+    </div>
+  </header>
+
+  <main class="investor-content">
+    <h1><span class="it">AIROOBI<br><em>Un nuovo modello di commercio.</em></span><span class="en">AIROOBI<br><em>A new commerce model.</em></span></h1>
+    <p style="font-size:18px;color:var(--gray-400);margin-bottom:48px"><span class="it">Fairness. Trasparenza. Blockchain. Accessibilità per tutti.</span><span class="en">Fairness. Transparency. Blockchain. Accessible to everyone.</span></p>
+
+    <h2>Vision</h2>
+    <p><span class="it">Diventare il marketplace #1 al mondo per airdrop di oggetti fisici reali. Un ecosistema dove ogni partecipante riceve valore — non promesse.</span><span class="en">Become the world's #1 marketplace for real physical object airdrops. An ecosystem where every participant receives value — not promises.</span></p>
+
+    <h2><span class="it">Il Problema</span><span class="en">The Problem</span></h2>
+    <p><span class="it">Il commercio online favorisce chi ha più risorse. Le aste premiano il portafoglio, non il merito. I marketplace sono saturi e impersonali. Non esiste una piattaforma dove le persone normali possano accedere a oggetti premium con un meccanismo <strong>equo, trasparente e verificabile</strong>.</span><span class="en">Online commerce favors those with more resources. Auctions reward the wallet, not merit. Marketplaces are saturated and impersonal. There is no platform where ordinary people can access premium objects through a <strong>fair, transparent and verifiable</strong> mechanism.</span></p>
+
+    <h2><span class="it">Il Meccanismo</span><span class="en">The Mechanism</span></h2>
+    <p><span class="it">AIROOBI è una piattaforma di <strong>commercio equo</strong> per oggetti fisici reali. Gli utenti partecipano con engagement e acquisti. Chi contribuisce di più realizza il proprio desiderio. <strong>Tutti gli altri ricevono un ROBI certificato con valore garantito</strong>, sostenuto da un fondo di garanzia trasparente on-chain.</span><span class="en">AIROOBI is a <strong>fair commerce platform</strong> for real physical objects. Users participate through engagement and purchases. The top contributor makes their dream real. <strong>Everyone else receives a certified ROBI with guaranteed value</strong>, backed by a transparent on-chain guarantee fund.</span></p>
+    <div class="investor-highlight">
+      <span class="it"><strong>Nessuno perde.</strong> Ogni partecipante riceve valore reale e verificabile. Non è azzardo. Non è un'asta. È un sistema di commercio basato sul merito con protezione del consumatore integrata nella blockchain.</span><span class="en"><strong>Nobody loses.</strong> Every participant receives real, verifiable value. It's not gambling. It's not an auction. It's a merit-based commerce system with consumer protection built into the blockchain.</span>
+    </div>
+
+    <h2><span class="it">Come funziona il motore</span><span class="en">How the engine works</span></h2>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;margin:24px 0 32px;font-family:var(--font-m);font-size:13px;letter-spacing:1px">
+      <span style="color:#4A9EFF">ARIA</span>
+      <span style="color:var(--gray-600)">&rarr;</span>
+      <span style="color:var(--gray-400)"><span class="it">Blocchi</span><span class="en">Blocks</span></span>
+      <span style="color:var(--gray-600)">&rarr;</span>
+      <span style="color:var(--gold)">ROBI</span>
+      <span style="color:var(--gray-600)">&rarr;</span>
+      <span style="color:#49EACB">KAS</span>
+    </div>
+    <p><span class="it">L'utente <strong>riceve ARIA di test</strong> gratis ogni giorno (check-in, referral). Li <strong>spende in blocchi</strong> per partecipare agli airdrop di oggetti reali. Ogni blocco genera <strong>ROBI</strong> — NFT con valore garantito, riscuotibili in <strong>KAS</strong> (Kaspa). Chi ha più blocchi ottiene l'oggetto. Tutti gli altri accumulano ROBI che crescono nel tempo.</span><span class="en">Users <strong>receive test ARIA</strong> free every day (check-in, referral). They <strong>spend it on blocks</strong> to participate in airdrops of real objects. Each block generates <strong>ROBI</strong> — NFTs with guaranteed value, redeemable in <strong>KAS</strong> (Kaspa). The top contributor gets the object. Everyone else accumulates ROBI that grow in value over time.</span></p>
+
+    <h2><span class="it">Revenue Model</span><span class="en">Revenue Model</span></h2>
+    <div class="investor-grid">
+      <div class="investor-metric">
+        <div class="investor-metric-val">22%</div>
+        <div class="investor-metric-label"><span class="it">Commissione piattaforma su ogni airdrop</span><span class="en">Platform fee on each airdrop</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val">2x</div>
+        <div class="investor-metric-label"><span class="it">Boost presale — margine premium</span><span class="en">Presale boost — premium margin</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val">5%</div>
+        <div class="investor-metric-label"><span class="it">Fee conversione ROBI &rarr; KAS</span><span class="en">ROBI &rarr; KAS conversion fee</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val">Ads</div>
+        <div class="investor-metric-label"><span class="it">Revenue pubblicitaria (A-ADS, AdSense)</span><span class="en">Advertising revenue (A-ADS, AdSense)</span></div>
+      </div>
+    </div>
+    <p><span class="it">Il modello è <strong>autosufficiente dal primo airdrop</strong>: il venditore incassa il prezzo di mercato, la piattaforma trattiene il 22% dal totale dei blocchi venduti. Nessun capitale iniziale necessario per la distribuzione.</span><span class="en">The model is <strong>self-sustaining from the first airdrop</strong>: the seller receives market price, the platform retains 22% of total blocks sold. No initial capital needed for distribution.</span></p>
+
+    <h2><span class="it">Trazione Live</span><span class="en">Live Traction</span></h2>
+    <div class="investor-grid">
+      <div class="investor-metric">
+        <div class="investor-metric-val">Alpha 0</div>
+        <div class="investor-metric-label"><span class="it">Fase corrente — App live</span><span class="en">Current phase — App live</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val" id="inv-users">&mdash;</div>
+        <div class="investor-metric-label"><span class="it">Utenti registrati</span><span class="en">Registered users</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val" id="inv-aria">&mdash;</div>
+        <div class="investor-metric-label"><span class="it">ARIA circolanti</span><span class="en">ARIA in circulation</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val">Blue Ocean</div>
+        <div class="investor-metric-label"><span class="it">Zero competitor diretti</span><span class="en">Zero direct competitors</span></div>
+      </div>
+    </div>
+
+    <div class="investor-chart">
+      <h3 style="font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white);margin-bottom:16px">Roadmap</h3>
+      <canvas id="inv-chart-roadmap" height="200"></canvas>
+    </div>
+
+    <h2><span class="it">Vantaggio Competitivo</span><span class="en">Competitive Advantage</span></h2>
+    <div class="investor-grid">
+      <div class="investor-metric">
+        <div class="investor-metric-val" style="font-size:24px">Kaspa</div>
+        <div class="investor-metric-label"><span class="it">Blockchain PoW più veloce al mondo. Conferme &lt;1s, fee trascurabili.</span><span class="en">World's fastest PoW blockchain. &lt;1s confirmations, negligible fees.</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val" style="font-size:24px"><span class="it">Fairness</span><span class="en">Fairness</span></div>
+        <div class="investor-metric-label"><span class="it">One Category Rule: chi ottiene un oggetto, lascia spazio. Nessuno domina.</span><span class="en">One Category Rule: winner steps aside. Nobody dominates.</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val" style="font-size:24px">AI-first</div>
+        <div class="investor-metric-label"><span class="it">Team AI-native. Sviluppo 100x più veloce. Overhead operativo quasi zero.</span><span class="en">AI-native team. 100x faster development. Near-zero operational overhead.</span></div>
+      </div>
+      <div class="investor-metric">
+        <div class="investor-metric-val" style="font-size:24px">ROBI</div>
+        <div class="investor-metric-label"><span class="it">NFT con valore garantito e riscuotibile. Nessun altro marketplace offre questo.</span><span class="en">NFT with guaranteed redeemable value. No other marketplace offers this.</span></div>
+      </div>
+    </div>
+
+    <h2><span class="it">Il Team</span><span class="en">The Team</span></h2>
+
+    <div style="display:flex;flex-direction:column;gap:28px">
+
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold) 0%,#6b4c1e 100%);display:flex;align-items:center;justify-content:center;font-family:var(--font-h);font-size:20px;font-weight:700;color:#fff;flex-shrink:0">TP</div>
+        <div>
+          <div style="font-size:16px;font-weight:600;margin-bottom:2px">Tommaso Pecorella</div>
+          <div style="font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:8px">FOUNDER &amp; CEO</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Innovation Manager (Bologna Business School) e Project Manager con 15+ anni di esperienza in digital transformation, delivery di progetti complessi e leadership di team multidisciplinari. Laurea in Ingegneria Informatica e Gestionale (UniBo). Background in Dynamics 365, IoT, Industry 4.0. Ha guidato progetti per clienti medio-grandi in contesto nazionale e internazionale. Docente seminariale presso l'Universit&agrave; di Bologna. PMP candidate. Con AIROOBI applica un modello AI-first che riduce i costi operativi del 90%.</span><span class="en">Innovation Manager (Bologna Business School) and Project Manager with 15+ years of experience in digital transformation, complex project delivery, and multidisciplinary team leadership. B.Sc. in Computer and Management Engineering (UniBo). Background in Dynamics 365, IoT, Industry 4.0. Led projects for mid-to-large clients in national and international contexts. Guest lecturer at the University of Bologna. PMP candidate. With AIROOBI he applies an AI-first model that cuts operational costs by 90%.</span></p>
+          <a href="https://www.linkedin.com/in/skeezu/" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;margin-top:8px;font-family:var(--font-m);font-size:11px;color:var(--gold);text-decoration:none;letter-spacing:.5px;transition:opacity .3s" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'"><svg width="14" height="14" viewBox="0 0 24 24" fill="var(--gold)"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>LinkedIn</a>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(74,158,255,.15);border:1px solid rgba(74,158,255,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4A9EFF" stroke-width="1.5"><path d="M12 2a7 7 0 017 7c0 3.87-3.13 7-7 7s-7-3.13-7-7a7 7 0 017-7z"/><path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/></svg></div>
+        <div>
+          <div style="font-size:16px;font-weight:600;margin-bottom:2px">Claude <span style="font-size:12px;color:var(--gray-400);font-weight:400">(Anthropic)</span></div>
+          <div style="font-family:var(--font-m);font-size:11px;color:#4A9EFF;letter-spacing:1px;margin-bottom:8px">GENERAL MANAGER</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Intelligenza artificiale di Anthropic. Gestisce strategia operativa, analisi di mercato, documentazione, comunicazione, compliance e decision-making quotidiano. Opera come braccio destro del CEO su tutte le funzioni non-engineering.</span><span class="en">Anthropic's AI. Manages operational strategy, market analysis, documentation, communications, compliance and daily decision-making. Operates as the CEO's right hand on all non-engineering functions.</span></p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(184,150,12,.12);border:1px solid rgba(184,150,12,.3);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:13px;font-weight:700;color:var(--gold);flex-shrink:0">&gt;_</div>
+        <div>
+          <div style="font-size:16px;font-weight:600;margin-bottom:2px">Claude Code Pro <span style="font-size:12px;color:var(--gray-400);font-weight:400">(Anthropic)</span></div>
+          <div style="font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:1px;margin-bottom:8px">CTO</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Agente di sviluppo autonomo. Architettura, frontend, backend, database, deploy, testing, debugging. Scrive e mantiene l'intera codebase di AIROOBI. Sviluppo 100x pi&ugrave; veloce rispetto a un team tradizionale, con qualit&agrave; enterprise e zero overhead.</span><span class="en">Autonomous development agent. Architecture, frontend, backend, database, deploy, testing, debugging. Writes and maintains AIROOBI's entire codebase. 100x faster development compared to a traditional team, with enterprise quality and zero overhead.</span></p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:20px;align-items:flex-start">
+        <div style="width:56px;height:56px;border-radius:50%;background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4A9EFF" stroke-width="1.5"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+        <div>
+          <div style="font-size:16px;font-weight:600;margin-bottom:2px">ARIA <span style="font-size:12px;color:var(--gray-400);font-weight:400">(OpenClaw + Claude)</span></div>
+          <div style="font-family:var(--font-m);font-size:11px;color:#4A9EFF;letter-spacing:1px;margin-bottom:8px">TELEGRAM BOT &middot; COMMUNITY MANAGER</div>
+          <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Bot Telegram alimentato da OpenClaw e collegato a Claude e Claude Code Pro. Gestisce la community, risponde alle domande degli utenti, fornisce supporto in tempo reale e promuove l'engagement. Interfaccia diretta tra AIROOBI e i suoi utenti, 24/7.</span><span class="en">Telegram bot powered by OpenClaw and connected to Claude and Claude Code Pro. Manages the community, answers user questions, provides real-time support and drives engagement. Direct interface between AIROOBI and its users, 24/7.</span></p>
+        </div>
+      </div>
+
+    </div>
+
+    <h2><span class="it">Tecnologia</span><span class="en">Technology</span></h2>
+    <p><span class="it">Costruito su <strong>Kaspa</strong> — la blockchain Proof-of-Work più veloce al mondo. Conferme sotto il secondo, commissioni trascurabili, decentralizzazione reale. ROBI certificati on-chain. Fondo di garanzia pubblico e verificabile in tempo reale.</span><span class="en">Built on <strong>Kaspa</strong> — the world's fastest Proof-of-Work blockchain. Sub-second confirmations, negligible fees, real decentralization. On-chain certified ROBI. Guarantee fund publicly verifiable in real-time.</span></p>
+
+    <div class="investor-cta-box">
+      <h3><span class="it">Vuoi saperne di più?</span><span class="en">Want to know more?</span></h3>
+      <p><span class="it">I dettagli si discutono di persona. Scriveteci per fissare un incontro.</span><span class="en">The details are discussed in person. Contact us to schedule a meeting.</span></p>
+      <a href="mailto:investor@airoobi.com">CONTATTACI</a>
+    </div>
+
+    <p style="font-size:12px;color:var(--gray-400);margin-top:48px;text-align:center">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce</p>
+  </main>
+
+  <footer class="legal-footer">
+    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a></p>
+  </footer>
+
+  <script>
+    var SUPABASE_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+    var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+    function toggleLang(){
+      var root=document.documentElement;
+      var btn=document.getElementById('inv-lang-btn');
+      var current=root.getAttribute('data-lang');
+      var next=current==='it'?'en':'it';
+      root.setAttribute('data-lang',next);
+      btn.textContent=next==='it'?'EN':'IT';
+    }
+
+    // Load live metrics
+    fetch(SUPABASE_URL+'/rest/v1/profiles?select=id,total_points&is_test_user=not.is.true',{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    }).then(function(r){return r.ok?r.json():[]}).then(function(d){
+      var ue=document.getElementById('inv-users');
+      if(ue)ue.textContent=d.length||'\u2014';
+      var ae=document.getElementById('inv-aria');
+      if(ae){var total=d.reduce(function(a,b){return a+(b.total_points||0)},0);ae.textContent=total.toLocaleString();}
+    }).catch(function(){});
+
+    // Charts
+    window.addEventListener('DOMContentLoaded',function(){
+      // Roadmap
+      var roadCtx=document.getElementById('inv-chart-roadmap');
+      if(roadCtx){
+        new Chart(roadCtx,{
+          type:'bar',
+          data:{
+            labels:['Alpha Brave','Alpha Wise','Beta','Pre-Prod','Mainnet'],
+            datasets:[{
+              label:'Target utenti',
+              data:[1000,2500,5000,10000,15000],
+              backgroundColor:['#B8960C','rgba(184,150,12,.7)','rgba(184,150,12,.5)','rgba(184,150,12,.3)','rgba(184,150,12,.15)'],
+              borderColor:'#B8960C',
+              borderWidth:1
+            }]
+          },
+          options:{
+            indexAxis:'y',
+            responsive:true,
+            plugins:{legend:{display:false}},
+            scales:{
+              x:{ticks:{color:'#888',font:{family:'DM Mono',size:10},callback:function(v){return v>=1000?(v/1000)+'K':v}},grid:{color:'rgba(255,255,255,.05)'}},
+              y:{ticks:{color:'#B8960C',font:{family:'DM Mono',size:11,weight:'bold'}},grid:{display:false}}
+            }
+          }
+        });
+      }
+    });
+  </script>
+
+</body>
+</html>

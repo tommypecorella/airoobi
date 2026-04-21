@@ -1,0 +1,21 @@
+# ══════════════════════════════════════════════════
+# AIROOBI — Cron Jobs (Raspberry Pi 5)
+# ══════════════════════════════════════════════════
+#
+# Per attivare, eseguire:
+#   crontab -e
+# e aggiungere le righe sotto.
+#
+# Prima di attivare, assicurarsi che .env esista con:
+#   SUPABASE_URL=https://vuvlmlpuhovipfwtquux.supabase.co
+#   SUPABASE_SERVICE_KEY=<la service_role key da Supabase Settings > API>
+#   POSTMARK_TOKEN=<il server token da Postmark>
+#   REPORT_TO=ceo@airoobi.com
+#
+# ══════════════════════════════════════════════════
+
+# Report email ogni 2 ore (minuto 0, ogni 2 ore)
+0 */2 * * * /usr/bin/node /home/drskeezu/projects/airoobi/scripts/report.js >> /home/drskeezu/projects/airoobi/scripts/report.log 2>&1
+
+# Auto Draw — controlla ogni 15 minuti se ci sono airdrop con auto_draw + deadline scaduta
+*/15 * * * * /usr/bin/node /home/drskeezu/projects/airoobi/scripts/auto_draw.js >> /home/drskeezu/projects/airoobi/scripts/auto_draw.log 2>&1
