@@ -4359,6 +4359,19 @@ async function loadRobiHistory(token){
         cum+=parseFloat(it.shares)||0;
         pts.push({val:cum, at:it.date});
       });
+      // Estendi sempre la linea fino a oggi: il saldo ROBI resta costante
+      // finché non arriva un nuovo evento. Senza questo, con 1 solo evento
+      // la linea resterebbe su 1 punto e l'area sotto diventerebbe diagonale.
+      var todayISO=new Date().toISOString();
+      if(pts.length>0){
+        var lastAt=pts[pts.length-1].at;
+        if(new Date(lastAt).toISOString().slice(0,10)!==todayISO.slice(0,10)){
+          pts.push({val:cum, at:todayISO});
+        }else if(pts.length===1){
+          // L'unico evento è oggi: aggiungi un punto d'inizio a sinistra (anche se coincide)
+          pts.unshift({val:cum, at:lastAt});
+        }
+      }
       var max=Math.max.apply(null,pts.map(function(p){return p.val}))||1;
       // Scala Y arrotondata ai 5/10/50/100 per labels pulite
       function niceScale(v){
