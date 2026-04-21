@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.42.0">
+<link rel="stylesheet" href="/src/dapp.css?v=3.48.2">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -228,6 +228,34 @@
     </div>
   </div>
 </div>
+
+<!-- GUIDA RAPIDA — banner dismissable, stato globale (localStorage) -->
+<div id="guida-banner" class="guida-banner" style="display:none">
+  <div class="guida-banner-icon">
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.663 17h4.673M12 3v1M12 21a8 8 0 006-13.3A8 8 0 006 7.7 8 8 0 0012 21z"/><path d="M10 17h4v2a2 2 0 01-4 0z" fill="currentColor" opacity=".15"/></svg>
+  </div>
+  <div class="guida-banner-body">
+    <div class="guida-banner-title">
+      <span class="it">Valuta. Partecipa. Guadagna.</span>
+      <span class="en">Evaluate. Join. Earn.</span>
+    </div>
+    <div class="guida-banner-text">
+      <span class="it">ARIA è la valuta di test: accumulala ogni giorno con faucet, check-in e referral. I ROBI sono reali — li ricevi partecipando agli airdrop. Più sei attivo, più ROBI porti a casa.</span>
+      <span class="en">ARIA is the test currency: collect it daily via faucet, check-in and referrals. ROBI are real — you get them by joining airdrops. The more active you are, the more ROBI you bring home.</span>
+    </div>
+    <div class="guida-banner-ctas">
+      <a class="guida-banner-cta" onclick="navigateTo('submit',event)"><span class="it">Valuta un oggetto</span><span class="en">Evaluate an item</span></a>
+      <a class="guida-banner-cta" onclick="navigateTo('explore',event)"><span class="it">Vai agli airdrop</span><span class="en">See airdrops</span></a>
+      <a class="guida-banner-cta" onclick="navigateTo('home',event)"><span class="it">Dashboard</span><span class="en">Dashboard</span></a>
+    </div>
+  </div>
+  <button class="guida-banner-close" onclick="toggleGuidaBanner(false)" aria-label="Chiudi guida">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+<button id="guida-banner-toggle" class="guida-banner-toggle" style="display:none" onclick="toggleGuidaBanner(true)" aria-label="Apri guida rapida" title="Guida rapida">
+  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+</button>
 
 <!-- MAIN -->
 <div class="main">
@@ -1146,7 +1174,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.21-3.48.1</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.21-3.48.2</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->

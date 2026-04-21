@@ -281,7 +281,29 @@ function isPublicRoute(){
 }
 
 // ── Init ──
+// ── Guida rapida banner (stato globale in localStorage) ──
+function toggleGuidaBanner(open){
+  var banner=document.getElementById('guida-banner');
+  var toggle=document.getElementById('guida-banner-toggle');
+  if(!banner||!toggle)return;
+  if(open){
+    banner.style.display='';
+    toggle.style.display='none';
+    localStorage.setItem('airoobi_guida_banner_open','1');
+  }else{
+    banner.style.display='none';
+    toggle.style.display='flex';
+    localStorage.setItem('airoobi_guida_banner_open','0');
+  }
+}
+function initGuidaBanner(){
+  var saved=localStorage.getItem('airoobi_guida_banner_open');
+  // Default: aperto al primo accesso
+  toggleGuidaBanner(saved==='0'?false:true);
+}
+
 document.addEventListener('DOMContentLoaded',async function(){
+  initGuidaBanner();
   var pp=location.pathname;
   var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':'home');
   var airdropMatch=pp.match(/^\/airdrops\/([0-9a-f-]{36})$/);
