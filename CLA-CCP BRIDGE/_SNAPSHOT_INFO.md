@@ -44,15 +44,16 @@ Tutti i deliverable chiave aggiornati in questa sessione:
 | `sql/schema_backup.sql` | 21 Apr 2026 | Snapshot completo 28 tabelle post-Engine v2 + earnings v2 |
 | `sql/treasury_stats.sql` | 21 Apr 2026 | RLS via user_roles (non più email hardcoded) |
 
-### Deliverable non aggiornati
+### Deliverable convertiti da .docx in questa sessione (21 Apr 2026)
 
-Rimangono in formato `.docx` (archivio `business/old/`):
-- `AIROOBI_Legal_v1.1_FINAL.docx` (LEG-001)
-- `AIROOBI_Year1_Forecast_v1.2_FINAL.docx` (BUS-003)
+| Deliverable | Prima | Ora |
+|---|---|---|
+| LEG-001 Legal Framework | v1.1 `.docx` | **v2.0 `.md`** — scoring v4, Fairness Guard, KYC, GDPR |
+| BUS-003 Year 1 Forecast | v1.2 `.docx` | **v2.0 `.md`** — roadmap 4-fasi con soglie utenti, sensitivity analysis |
 
-Questi non hanno un equivalente `.md` aggiornato. Candidati per futura conversione.
+I `.docx` originali restano in `01_deliverables_docs/business/old/` come archivio storico.
 
-**Lo stato reale è adesso allineato tra codice, migration, e documentazione .md.**
+**Lo stato reale è adesso completamente allineato tra codice, migration, e documentazione .md.**
 
 ---
 

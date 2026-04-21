@@ -10,7 +10,7 @@ Lista completa dei deliverable AIROOBI con stato reale al 21 Aprile 2026. Tutti 
 |---|---|---|---|---|
 | BUS-001 | Business Foundations | **v3.5** (21 Apr 2026) | ✅ Aggiornato | `01_deliverables_docs/business/AIROOBI_Foundations_v3.md` |
 | BUS-002 | Tokenomics & Economic Model | **v3.5** (21 Apr 2026) | ✅ Aggiornato | `01_deliverables_docs/business/AIROOBI_Tokenomics_v3.md` |
-| BUS-003 | Forecast Finanziario | v1.2 FINAL | 📦 Archivio .docx | `01_deliverables_docs/business/old/AIROOBI_Year1_Forecast_v1.2_FINAL.docx` |
+| BUS-003 | Year 1 Financial Forecast | **v2.0** (21 Apr 2026) | ✅ Aggiornato | `01_deliverables_docs/business/AIROOBI_Year1_Forecast.md` |
 | BUS-004 | Costi & Organizzazione | v2.1 | ✅ Valido | `01_deliverables_docs/business/AIROOBI_Cost_Org_v2.md` |
 | BUS-005 | Struttura Organizzativa | — | ✅ Unificato BUS-004 | stesso file |
 | BUS-006 | Analisi Competitiva | — | ✅ Unificato BUS-004 | stesso file |
@@ -52,9 +52,9 @@ Lista completa dei deliverable AIROOBI con stato reale al 21 Aprile 2026. Tutti 
 
 ## LEGAL
 
-| ID | Titolo | Stato | File |
-|---|---|---|---|
-| LEG-001 | Framework Legale | 📦 Archivio .docx | `01_deliverables_docs/business/old/AIROOBI_Legal_v1.1_FINAL.docx` |
+| ID | Titolo | Versione | Stato | File |
+|---|---|---|---|---|
+| LEG-001 | Legal Framework & Non-Gambling Analysis | **v2.0** (21 Apr 2026) | ✅ Aggiornato | `01_deliverables_docs/business/AIROOBI_Legal_Framework.md` |
 
 ---
 

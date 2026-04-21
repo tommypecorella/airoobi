@@ -24,7 +24,7 @@
 |---|---|---|---|---|---|
 | BUS-001 | Business Foundations | v3.4 (19 Apr 2026) | ✅ Aggiornato | `business/AIROOBI_Foundations_v3.md` | Fasi 4-stadi (Alpha/Beta/Pre-Prod/Mainnet), soglie utenti come criterio CORE |
 | BUS-002 | Tokenomics & Economic Model | v3.4 (19 Apr 2026) | ✅ Aggiornato | `business/AIROOBI_Tokenomics_v3.md` | Include earnings v2, scoring v4, welcome grant Alpha-Net |
-| BUS-003 | Forecast Finanziario | v1.2 FINAL | 📦 Archivio | `business/old/AIROOBI_Year1_Forecast_v1.2_FINAL.docx` | Formato .docx, da riconvertire in .md |
+| BUS-003 | Year 1 Financial Forecast | **v2.0** (21 Apr 2026) | ✅ Aggiornato | `business/AIROOBI_Year1_Forecast.md` | Proiezione 12 mesi post-launch Stage 1 (€780k revenue, €350k EBITDA, 45% margin) |
 | BUS-004 | Costi & Organizzazione | v2.1 | ✅ | `business/AIROOBI_Cost_Org_v2.md` | Unifica costi + struttura org + competitivo |
 | BUS-005 | Struttura Organizzativa | — | ✅ | `business/AIROOBI_Cost_Org_v2.md` | Unificato con BUS-004 |
 | BUS-006 | Analisi Competitiva | — | ✅ | `business/AIROOBI_Cost_Org_v2.md` | Unificato con BUS-004 |
@@ -78,9 +78,9 @@
 
 ## DELIVERABLE — LEGAL
 
-| ID | Titolo | Stato | File |
-|---|---|---|---|
-| LEG-001 | Framework Legale | 📦 Archivio | `business/old/AIROOBI_Legal_v1.1_FINAL.docx` |
+| ID | Titolo | Versione | Stato | File | Note |
+|---|---|---|---|---|---|
+| LEG-001 | Legal Framework & Non-Gambling Analysis | **v2.0** (21 Apr 2026) | ✅ Aggiornato | `business/AIROOBI_Legal_Framework.md` | Scoring v4 anti-gambling, Fairness Guard, KYC pianificato, GDPR |
 
 ---
 
