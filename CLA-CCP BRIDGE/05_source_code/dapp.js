@@ -577,16 +577,31 @@ async function loadPortfolioChart(token,userRobi){
   var canvas=document.getElementById('portfolio-chart');
   if(!canvas)return;
   try{
-  // Double rAF: assicura che il layout della sezione appena renderizzata sia applicato
-  await new Promise(function(r){requestAnimationFrame(function(){requestAnimationFrame(r);});});
-  var ctx=canvas.getContext('2d');
-  // HiDPI
+  // Wait for parent to have positive layout — retry up to ~2s
   var rect=canvas.parentElement.getBoundingClientRect();
-  if(rect.width<=0||rect.height<=0){
-    // Layout non ancora pronto: aspetta e rimisura
-    await new Promise(function(r){setTimeout(r,150);});
+  var tries=0;
+  while((rect.width<=0||rect.height<=0)&&tries<20){
+    await new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,100);});});
     rect=canvas.parentElement.getBoundingClientRect();
+    tries++;
   }
+  if(rect.width<=0||rect.height<=0){
+    // Parent still not visible — use ResizeObserver fallback and exit
+    try{
+      var ro=new ResizeObserver(function(entries){
+        for(var k=0;k<entries.length;k++){
+          if(entries[k].contentRect.width>0&&entries[k].contentRect.height>0){
+            ro.disconnect();
+            loadPortfolioChart(token,userRobi);
+            return;
+          }
+        }
+      });
+      ro.observe(canvas.parentElement);
+    }catch(e){console.warn('[portfolio-chart] ResizeObserver unavailable',e);}
+    return;
+  }
+  var ctx=canvas.getContext('2d');
   canvas.width=rect.width*2;canvas.height=rect.height*2;
   ctx.scale(2,2);
   var W=rect.width,H=rect.height;
@@ -3910,6 +3925,139 @@ function showToast(html){
   setTimeout(function(){t.classList.remove('show')},3000);
 }
 
+// ── Transaction history (ARIA + ROBI) ──
+var _txHistoryAll=[];
+var _txHistoryFilter='all';
+
+function formatTxDate(iso){
+  var d=new Date(iso);
+  return d.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+}
+
+function txReasonLabel(kind,reason){
+  var mapAria={
+    alphanet_welcome:{it:'Welcome grant Alpha-Net',en:'Alpha-Net welcome grant'},
+    faucet:{it:'Faucet giornaliero',en:'Daily faucet'},
+    streak_day:{it:'Sequenza giornaliera',en:'Daily streak'},
+    daily_checkin:{it:'Check-in',en:'Check-in'},
+    video_view:{it:'Video guardato',en:'Video watched'},
+    referral_inviter:{it:'Referral (tu hai invitato)',en:'Referral (you invited)'},
+    referral_welcome:{it:'Benvenuto referral',en:'Referral welcome'},
+    valuation_request:{it:'Richiesta valutazione',en:'Valuation request'},
+    block_purchase:{it:'Acquisto blocchi',en:'Block purchase'},
+    refund:{it:'Rimborso',en:'Refund'},
+    admin_grant:{it:'Assegnazione admin',en:'Admin grant'},
+    admin_adjust:{it:'Admin adjust',en:'Admin adjust'}
+  };
+  var mapRobi={
+    alphanet_welcome:{it:'Welcome grant Alpha-Net',en:'Alpha-Net welcome grant'},
+    streak_week:{it:'Sequenza settimanale completa',en:'Weekly streak complete'},
+    referral_inviter:{it:'Referral (tu hai invitato)',en:'Referral (you invited)'},
+    referral_welcome:{it:'Benvenuto referral',en:'Referral welcome'},
+    submission_accepted:{it:'Valutazione accettata',en:'Submission accepted'},
+    airdrop_won:{it:'Airdrop vinto',en:'Airdrop won'},
+    airdrop_seller:{it:'Airdrop completato (venditore)',en:'Airdrop completed (seller)'},
+    block_purchase:{it:'Blocchi acquistati',en:'Blocks purchased'}
+  };
+  var m=kind==='aria'?mapAria:mapRobi;
+  var r=m[reason];
+  if(!r)return {it:reason||'—',en:reason||'—'};
+  return r;
+}
+
+async function loadTxHistory(){
+  var token=await getValidToken();
+  if(!token||!_session||!_session.user)return;
+  var userId=_session.user.id;
+  var list=document.getElementById('tx-history-list');
+  if(!list)return;
+
+  var items=[];
+  try{
+    var ariaRes=await fetch(SB_URL+'/rest/v1/points_ledger?user_id=eq.'+userId+'&select=id,amount,reason,metadata,created_at&order=created_at.desc&limit=500',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(ariaRes.ok){
+      var arr=await ariaRes.json();
+      arr.forEach(function(r){
+        items.push({kind:'aria',amount:r.amount,reason:r.reason,metadata:r.metadata,created_at:r.created_at,id:r.id});
+      });
+    }
+  }catch(e){}
+  try{
+    var robiRes=await fetch(SB_URL+'/rest/v1/nft_rewards?user_id=eq.'+userId+'&nft_type=eq.ROBI&select=id,shares,source,name,metadata,created_at&order=created_at.desc&limit=500',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(robiRes.ok){
+      var arr2=await robiRes.json();
+      arr2.forEach(function(r){
+        items.push({kind:'robi',amount:parseFloat(r.shares)||1,reason:r.source||'',name:r.name,metadata:r.metadata,created_at:r.created_at,id:r.id});
+      });
+    }
+  }catch(e){}
+
+  items.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+  _txHistoryAll=items;
+  renderTxHistory();
+}
+
+function renderTxHistory(){
+  var list=document.getElementById('tx-history-list');
+  var summary=document.getElementById('tx-history-summary');
+  if(!list)return;
+  var filter=_txHistoryFilter;
+  var items=_txHistoryAll.filter(function(i){return filter==='all'||i.kind===filter});
+  if(items.length===0){
+    list.innerHTML='<div style="color:var(--gray-500);font-size:12px;text-align:center;padding:20px"><span class="it">Nessuna transazione</span><span class="en">No transactions</span></div>';
+    if(summary)summary.textContent='';
+    return;
+  }
+  var ariaSum=0,robiSum=0;
+  _txHistoryAll.forEach(function(i){
+    if(i.kind==='aria')ariaSum+=parseInt(i.amount)||0;
+    else robiSum+=parseFloat(i.amount)||0;
+  });
+  var h='';
+  items.forEach(function(i){
+    var amt=parseFloat(i.amount)||0;
+    var sign=i.kind==='robi'?'+':(amt>=0?'+':'');
+    var color=i.kind==='aria'?'var(--aria)':'var(--gold)';
+    if(i.kind==='aria'&&amt<0)color='#e46';
+    var symbol=i.kind==='aria'?'ARIA':'ROBI';
+    var labels=txReasonLabel(i.kind,i.reason);
+    var amtDisplay=i.kind==='robi'?(amt%1===0?amt:amt.toFixed(4)):amt.toLocaleString();
+    h+='<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 10px;border-bottom:1px solid var(--gray-800);gap:10px">';
+    h+='<div style="flex:1;min-width:0">';
+    h+='<div style="font-family:var(--font-b);font-size:13px;color:var(--white);margin-bottom:2px"><span class="it">'+labels.it+'</span><span class="en">'+labels.en+'</span></div>';
+    h+='<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-500);letter-spacing:.5px">'+formatTxDate(i.created_at)+'</div>';
+    h+='</div>';
+    h+='<div style="text-align:right;white-space:nowrap"><span style="font-family:var(--font-m);font-size:13px;color:'+color+';font-weight:600">'+sign+amtDisplay+'</span> <span style="font-family:var(--font-m);font-size:9px;color:'+color+';letter-spacing:1px">'+symbol+'</span></div>';
+    h+='</div>';
+  });
+  list.innerHTML=h;
+  if(summary){
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    summary.innerHTML=(lang==='it'?'Totale: ':'Total: ')+_txHistoryAll.length+' '+(lang==='it'?'transazioni · ':'transactions · ')+ariaSum.toLocaleString()+' ARIA netti · '+(robiSum%1===0?robiSum:robiSum.toFixed(4))+' ROBI accumulati';
+  }
+}
+
+function filterTxHistory(f){
+  _txHistoryFilter=f;
+  document.querySelectorAll('.txh-filter-btn').forEach(function(b){
+    var active=b.getAttribute('data-filter')===f;
+    b.classList.toggle('txh-active',active);
+    if(active){
+      b.style.background=f==='aria'?'var(--aria)':(f==='robi'?'var(--gold)':'var(--gold)');
+      b.style.color=f==='aria'?'var(--white)':'#000';
+    }else{
+      b.style.background='transparent';
+      var filterType=b.getAttribute('data-filter');
+      b.style.color=filterType==='aria'?'var(--aria)':(filterType==='robi'?'var(--gold)':'var(--gray-300)');
+    }
+  });
+  renderTxHistory();
+}
+
 // ── Wallet tab ──
 async function loadDappWallet(){
   var token=await getValidToken();
@@ -3921,6 +4069,9 @@ async function loadDappWallet(){
   if(el)el.textContent=_balance.toLocaleString();
   var serial=document.getElementById('dapp-wcard-aria-serial');
   if(serial)serial.textContent=userId.substring(0,8).toUpperCase();
+
+  // Transaction history (ARIA + ROBI dal giorno iscrizione)
+  loadTxHistory();
 
   // NFT rewards
   var cards=[];

@@ -266,6 +266,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">Tokenomics</span>
     <div class="admin-sidebar-item" onclick="adminNav('sec-treasury')"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Treasury</div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-platform-aria')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>Conto AIROOBI</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-coin')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg>ARIA Metrics</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-nft-valuation')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>ROBI Valuation</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-nft-types')"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 12h16M12 4v16"/></svg><span class="it">NFT per tipo</span><span class="en">NFT by type</span></div>
@@ -365,6 +366,45 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </div>
 
     <p class="admin-note" style="margin-top:12px"><span class="it">Ogni fondo inserito viene diviso: la % Treasury va al Treasury Balance (copre i ROBI), il resto va al Service Balance (costi operativi AIROOBI).</span><span class="en">Each fund is split: the Treasury % goes to Treasury Balance (backs ROBI), the rest goes to Service Balance (AIROOBI operating costs).</span></p>
+  </div>
+
+  <!-- CONTO AIROOBI (ARIA) -->
+  <div class="admin-section" id="sec-platform-aria">
+    <h2><span class="it">Conto AIROOBI (ARIA)</span><span class="en">AIROOBI Account (ARIA)</span> <span class="info-i" onclick="showAboTip(this,'sec-platform-aria')">i</span></h2>
+    <div class="admin-grid" style="margin-bottom:20px">
+      <div class="admin-card" style="border-color:rgba(74,158,255,.4)">
+        <div class="admin-card-val" id="adm-platform-aria-balance" style="color:var(--aria)">—</div>
+        <div class="admin-card-label"><span class="it">Saldo ARIA</span><span class="en">ARIA Balance</span> <span class="info-i" onclick="showAboTip(this,'pa-balance')">i</span></div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-platform-aria-in">—</div>
+        <div class="admin-card-label"><span class="it">Totale entrate</span><span class="en">Total in</span></div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-platform-aria-out">—</div>
+        <div class="admin-card-label"><span class="it">Totale uscite</span><span class="en">Total out</span></div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-val" id="adm-platform-aria-tx">—</div>
+        <div class="admin-card-label"><span class="it">Transazioni</span><span class="en">Transactions</span></div>
+      </div>
+    </div>
+
+    <h3 style="font-family:var(--font-h);font-size:16px;color:var(--aria);margin:16px 0 12px;letter-spacing:1px"><span class="it">Transazioni</span><span class="en">Transactions</span></h3>
+    <table class="admin-table" id="pa-ledger-table">
+      <thead>
+        <tr>
+          <th><span class="it">Data</span><span class="en">Date</span></th>
+          <th><span class="it">Ammontare</span><span class="en">Amount</span></th>
+          <th><span class="it">Motivo</span><span class="en">Reason</span></th>
+          <th><span class="it">Utente</span><span class="en">User</span></th>
+          <th><span class="it">Airdrop/Oggetto</span><span class="en">Airdrop/Item</span></th>
+        </tr>
+      </thead>
+      <tbody id="pa-ledger-body"><tr><td colspan="5" style="color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></td></tr></tbody>
+    </table>
+
+    <p class="admin-note" style="margin-top:12px"><span class="it">Questo è il conto ARIA della piattaforma AIROOBI. Si alimenta principalmente dalle submission fee (50 ARIA per richiesta valutazione). In futuro includerà anche fee airdrop e altre entrate.</span><span class="en">This is the AIROOBI platform ARIA account. Mainly fed by submission fees (50 ARIA per valuation request). Future: airdrop fees and other inflows.</span></p>
   </div>
 
   <!-- USERS TABLE -->
@@ -1372,6 +1412,7 @@ async function loadAdminData(){
     loadCostTracker();
     await loadAdminTreasury();
     await loadTreasuryFunds(); // authoritative source for treasury + ROBI valuation
+    loadPlatformAriaAccount();
     loadAdminAirdrops();
     loadFairnessAirdrops();
   }catch(e){console.error('Admin load error:',e);}
@@ -2337,6 +2378,62 @@ async function refreshNftCircolante(){
     }
     updateNftMetrics();
   }catch(e){console.error('Refresh NFT error:',e);}
+}
+
+// ── Platform ARIA Account (conto AIROOBI) ──
+async function loadPlatformAriaAccount(){
+  var s=getSession();if(!s)return;
+  try{
+    var balRes=await fetch(SB_URL+'/rest/v1/rpc/get_platform_aria_balance',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    if(balRes.ok){
+      var bal=await balRes.json();
+      if(bal&&bal.ok){
+        var set=function(id,val){var el=document.getElementById(id);if(el)el.textContent=val;};
+        set('adm-platform-aria-balance',(bal.balance||0).toLocaleString()+' ARIA');
+        set('adm-platform-aria-in',(bal.total_in||0).toLocaleString());
+        set('adm-platform-aria-out',(bal.total_out||0).toLocaleString());
+        set('adm-platform-aria-tx',bal.tx_count||0);
+      }
+    }
+    var lgRes=await fetch(SB_URL+'/rest/v1/rpc/get_platform_aria_ledger',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_limit:200,p_offset:0})
+    });
+    var tbody=document.getElementById('pa-ledger-body');
+    if(!tbody)return;
+    if(lgRes.ok){
+      var lg=await lgRes.json();
+      if(lg&&lg.ok&&Array.isArray(lg.rows)&&lg.rows.length>0){
+        var h='';
+        lg.rows.forEach(function(r){
+          var d=new Date(r.created_at);
+          var dateStr=d.toLocaleDateString('it-IT')+' '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+          var amt=parseInt(r.amount)||0;
+          var amtColor=amt>=0?'var(--aria)':'#e46';
+          var amtStr=(amt>=0?'+':'')+amt.toLocaleString()+' ARIA';
+          var reasonMap={valuation_fee:'Submission fee',refund:'Rimborso',admin_adjust:'Admin adjust',airdrop_fee:'Airdrop fee'};
+          var reasonLabel=reasonMap[r.reason]||r.reason;
+          var user=r.related_user_email||'—';
+          var item=r.related_airdrop_title?('<span style="color:var(--gray-300)">'+r.related_airdrop_title+'</span>'):'—';
+          h+='<tr><td style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">'+dateStr+'</td>';
+          h+='<td style="color:'+amtColor+';font-weight:600;font-family:var(--font-m)">'+amtStr+'</td>';
+          h+='<td>'+reasonLabel+'</td>';
+          h+='<td style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">'+user+'</td>';
+          h+='<td>'+item+'</td></tr>';
+        });
+        tbody.innerHTML=h;
+      }else{
+        tbody.innerHTML='<tr><td colspan="5" style="color:var(--gray-400)"><span class="it">Nessuna transazione</span><span class="en">No transactions</span></td></tr>';
+      }
+    }else{
+      tbody.innerHTML='<tr><td colspan="5" style="color:#e46"><span class="it">Errore caricamento</span><span class="en">Load error</span></td></tr>';
+    }
+  }catch(e){console.error('loadPlatformAriaAccount:',e);}
 }
 
 // ── Treasury Funds (manual funding table) ──
@@ -3527,6 +3624,8 @@ var ABO_TIPS={
   'sec-airdrop-stats':{it:'KPI aggregati sugli airdrop: totali venduti, ARIA incassate, ROBI distribuiti, tasso completamento.',en:'Aggregate airdrop KPIs: total sold, ARIA collected, ROBI distributed, completion rate.'},
   'sec-messages':{it:'Messaggi inviati agli utenti (broadcast e per-airdrop) e chat operative. Usa per comunicazioni ufficiali.',en:'Messages sent to users (broadcast and per-airdrop) and ops chats. Use for official communications.'},
   'sec-treasury':{it:'Il cuore economico: Treasury balance, valore nominale ROBI, Service balance, revenue ads. Qui aggiungi fondi e vedi lo split automatico Treasury/Service.',en:'Economic core: Treasury balance, ROBI nominal value, Service balance, ad revenue. Add funds here and see automatic Treasury/Service split.'},
+  'sec-platform-aria':{it:'Conto ARIA della piattaforma AIROOBI. Ogni submission fee (50 ARIA) e future fee airdrop confluiscono qui. Ogni transazione è tracciata e consultabile.',en:'AIROOBI platform ARIA account. Every submission fee (50 ARIA) and future airdrop fees flow here. Every transaction is tracked and auditable.'},
+  'pa-balance':{it:'Saldo ARIA corrente del conto AIROOBI (totale entrate - totale uscite).',en:'Current ARIA balance of the AIROOBI account (total in - total out).'},
   'sec-coin':{it:'Metriche del token ARIA: circolazione totale, emissione giornaliera, distribuzione per fonte (faucet, check-in, referral, video).',en:'ARIA token metrics: total supply, daily emission, distribution by source (faucet, check-in, referral, video).'},
   'sec-nft-valuation':{it:'Valutazione aggregata dei ROBI: quanti in circolazione, valore nominale per unità, proiezione in KAS.',en:'Aggregate ROBI valuation: how many in circulation, nominal value per unit, KAS projection.'},
   'val-treasury':{it:'Capitale in EUR accantonato per garantire il valore dei ROBI. Si alimenta da % sui ricavi degli airdrop (venditori, ads, buyback). Inserito a mano nel campo TREASURY (€) sopra.',en:'EUR reserve backing ROBI value. Fed by revenue cuts from airdrops (sellers, ads, buybacks). Manually entered in the TREASURY (€) field above.'},
