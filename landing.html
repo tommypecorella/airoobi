@@ -319,7 +319,7 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 // ── Alpha Brave counter ──
 (async function(){
   try{
-    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&is_test_user=eq.false',{
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}
     });
     if(res.ok){
@@ -332,8 +332,11 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
         document.getElementById('alpha-enrolled').textContent=total;
         document.getElementById('alpha-bar').style.width=pct+'%';
       }
+    }else{
+      // Fallback se RLS o altri errori bloccano il count
+      document.getElementById('alpha-remaining').textContent='—';
     }
-  }catch(e){document.getElementById('alpha-remaining').textContent='996'}
+  }catch(e){document.getElementById('alpha-remaining').textContent='—'}
 })();
 
 // ── Carousel scroll helper ──

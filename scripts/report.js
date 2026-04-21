@@ -126,10 +126,10 @@ async function main() {
     confirmedReferrals,
     recentEvents
   ] = await Promise.all([
-    sbGet('profiles?select=id&is_test_user=not.is.true'),
-    sbGet('profiles?select=id,email,created_at&created_at=gte.' + twoHoursAgo + '&is_test_user=not.is.true&order=created_at.desc'),
+    sbGet('profiles?select=id&deleted_at=is.null'),
+    sbGet('profiles?select=id,email,created_at&created_at=gte.' + twoHoursAgo + '&deleted_at=is.null&order=created_at.desc'),
     sbGet('waitlist?select=id'),
-    sbGet('profiles?select=total_points&is_test_user=not.is.true'),
+    sbGet('profiles?select=total_points&deleted_at=is.null'),
     sbGet('checkins?select=id&checked_at=gte.' + todayStart.split('T')[0]),
     sbGet('video_views?select=id&viewed_at=gte.' + twoHoursAgo),
     sbGet('referral_confirmations?select=id&status=eq.confirmed'),

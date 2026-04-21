@@ -91,7 +91,7 @@ async function sbPost(table,data){
   return res
 }
 async function sbCount(){
-  const res=await fetch(SUPABASE_URL+'/rest/v1/profiles?select=id&is_test_user=not.is.true',{
+  const res=await fetch(SUPABASE_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
     headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
   });
   if(res.ok){const d=await res.json();return d.length}
@@ -922,9 +922,9 @@ async function loadAdminData(){
   const t=s.access_token;
   
   try{
-    // Users (exclude test users from stats)
+    // Users (test infrastructure droppata il 21 Apr 2026)
     const allProfiles=await sbGet('profiles?select=*&order=created_at.desc',t);
-    const users=allProfiles?allProfiles.filter(function(u){return !u.is_test_user}):[];
+    const users=allProfiles?allProfiles.filter(function(u){return !u.deleted_at}):[];
     var userCount=users.length;
     document.getElementById('adm-users').textContent=userCount;
 
@@ -1519,12 +1519,11 @@ async function toggleAnalysisDetail(row,airdropId){
         var isWinner=sc.rank===1&&d.draw_executed;
         var rowBg=isWinner?'rgba(73,181,131,.1)':'transparent';
         var pDetail=d.participants?d.participants.find(function(p){return p.user_id===sc.user_id}):null;
-        var isTest=pDetail&&pDetail.is_test_user;
         var email=pDetail?pDetail.email:sc.user_id.substring(0,8)+'...';
         var emailTrunc=email.length>25?email.substring(0,25)+'...':email;
         h+='<tr style="background:'+rowBg+';border-bottom:1px solid var(--gray-800)">';
         h+='<td style="padding:5px 6px;color:var(--gray-400)">'+(isWinner?'&#x1F451; ':'')+sc.rank+'</td>';
-        h+='<td style="padding:5px 6px;color:var(--gray-300);font-family:var(--font-mono);font-size:10px" title="'+escHtml(email)+'">'+escHtml(emailTrunc)+' <span style="font-size:8px;color:'+(isTest?'#f59e0b':'#4A9EFF')+'">'+(isTest?'TEST':'REAL')+'</span></td>';
+        h+='<td style="padding:5px 6px;color:var(--gray-300);font-family:var(--font-mono);font-size:10px" title="'+escHtml(email)+'">'+escHtml(emailTrunc)+'</td>';
         h+='<td style="padding:5px 6px;color:'+(isWinner?'#49b583':'var(--white)')+';text-align:right;font-weight:600">'+parseFloat(sc.score).toFixed(4)+'</td>';
         h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f1).toFixed(3)+'</td>';
         h+='<td style="padding:5px 6px;color:var(--gray-400);text-align:right">'+parseFloat(sc.f2).toFixed(3)+'</td>';
@@ -1569,14 +1568,17 @@ async function toggleAnalysisDetail(row,airdropId){
   }
 }
 
-// ── Test Users Table ──
+// ── Test Users Table (deprecato: test infrastructure droppata 21 Apr 2026) ──
 async function loadTestUsersTable(){
   var s=getSession();if(!s)return;
   var tbody=document.getElementById('test-users-body');
   var countEl=document.getElementById('test-users-count');
-  tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-400)">Caricamento...</td></tr>';
+  if(tbody)tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-400)">Test infrastructure rimossa (Alpha-launch 21 Apr 2026)</td></tr>';
+  if(countEl)countEl.textContent='0 utenti';
+  return;
+  // Legacy code — mantenuto per storico, non più eseguito
   try{
-    var profiles=await sbGet('profiles?is_test_user=eq.true&select=id,email,total_points,created_at&order=total_points.desc&limit=200',s.access_token);
+    var profiles=await sbGet('profiles?select=id,email,total_points,created_at&order=total_points.desc&limit=200',s.access_token);
     if(!profiles||!profiles.length){
       tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-400)">Nessun utente test</td></tr>';
       countEl.textContent='0 utenti';

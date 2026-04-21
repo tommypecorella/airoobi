@@ -233,7 +233,7 @@ function showSuccess(id,msg){var e=document.getElementById(id);e.textContent=msg
 var ALPHA_BRAVE_MAX=1000;
 async function checkAlphaBraveFull(){
   try{
-    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&is_test_user=eq.false',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}});
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}});
     if(res.ok){
       var range=res.headers.get('content-range');
       if(range){var total=parseInt(range.split('/')[1],10);return total>=ALPHA_BRAVE_MAX}
