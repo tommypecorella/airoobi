@@ -554,9 +554,17 @@ async function loadHomeDashboard(){
 async function loadPortfolioChart(token,userRobi){
   var canvas=document.getElementById('portfolio-chart');
   if(!canvas)return;
+  try{
+  // Double rAF: assicura che il layout della sezione appena renderizzata sia applicato
+  await new Promise(function(r){requestAnimationFrame(function(){requestAnimationFrame(r);});});
   var ctx=canvas.getContext('2d');
   // HiDPI
   var rect=canvas.parentElement.getBoundingClientRect();
+  if(rect.width<=0||rect.height<=0){
+    // Layout non ancora pronto: aspetta e rimisura
+    await new Promise(function(r){setTimeout(r,150);});
+    rect=canvas.parentElement.getBoundingClientRect();
+  }
   canvas.width=rect.width*2;canvas.height=rect.height*2;
   ctx.scale(2,2);
   var W=rect.width,H=rect.height;
@@ -713,6 +721,11 @@ async function loadPortfolioChart(token,userRobi){
   ctx.textAlign='left';ctx.fillText(labels[0].slice(5),pad.left,ly);
   ctx.textAlign='center';ctx.fillText(labels[Math.floor(labels.length/2)].slice(5),W/2,ly);
   ctx.textAlign='right';ctx.fillText(labels[labels.length-1].slice(5),W-pad.right,ly);
+  }catch(err){
+    console.error('[portfolio-chart]',err);
+    var eurErr=document.getElementById('portfolio-eur-val');
+    if(eurErr&&eurErr.textContent==='—')eurErr.textContent='€ 0,00';
+  }
 }
 
 // ── Check-in ──
