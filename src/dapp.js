@@ -880,7 +880,7 @@ function renderStreakCalendar(daysChecked,today){
     } else if(count>0){
       text='<span class="it"><strong style="color:var(--gold)">'+count+'/7</strong> timbrati &middot; mancano <strong>'+(7-count)+'</strong> per il ROBI</span><span class="en"><strong style="color:var(--gold)">'+count+'/7</strong> checked &middot; <strong>'+(7-count)+'</strong> left for the ROBI</span>';
     } else {
-      text='<span class="it">Inizia la tua streak della settimana</span><span class="en">Start your weekly streak</span>';
+      text='<span class="it">Inizia la tua sequenza della settimana</span><span class="en">Start your weekly streak</span>';
     }
     status.innerHTML=bar+text;
   }

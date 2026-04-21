@@ -310,7 +310,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </div>
     <div class="admin-grid" style="margin-top:8px">
       <div class="admin-card"><div class="admin-card-val" id="adm-avg-points">—</div><div class="admin-card-label">ARIA media/utente <span class="info-i" onclick="showAboTip(this,'ov-avg-points')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-max-streak">—</div><div class="admin-card-label">Streak massima <span class="info-i" onclick="showAboTip(this,'ov-max-streak')">i</span></div></div>
+      <div class="admin-card"><div class="admin-card-val" id="adm-max-streak">—</div><div class="admin-card-label">Sequenza massima <span class="info-i" onclick="showAboTip(this,'ov-max-streak')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-inv-leads">—</div><div class="admin-card-label">Investor leads <span class="info-i" onclick="showAboTip(this,'ov-inv-leads')">i</span></div></div>
     </div>
   </div>
@@ -371,7 +371,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-section" id="sec-users">
     <h2>Ultimi utenti <span id="adm-users-total" style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gray-400);font-weight:400"></span> <span class="info-i" onclick="showAboTip(this,'sec-users')">i</span></h2>
     <table class="admin-table" id="adm-users-table">
-      <thead><tr><th>Email</th><th>ARIA</th><th>ROBI</th><th>Streak</th><th>Referral</th><th>Registrato</th></tr></thead>
+      <thead><tr><th>Email</th><th>ARIA</th><th>ROBI</th><th>Sequenza</th><th>Referral</th><th>Registrato</th></tr></thead>
       <tbody id="adm-users-body"><tr><td colspan="6" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
     </table>
   </div>
@@ -1331,7 +1331,7 @@ async function loadAdminData(){
       var avgPts=users.length>0?totalPts/users.length:0;
       var avgEl=document.getElementById('adm-avg-points');
       if(avgEl)avgEl.textContent=avgPts.toLocaleString('it-IT',{maximumFractionDigits:1,minimumFractionDigits:avgPts%1===0?0:1});
-      // Streak massima v2: max giorni timbrati in una settimana (weekly_checkins.days_checked)
+      // Sequenza massima v2: max giorni timbrati in una settimana (weekly_checkins.days_checked)
       try{
         var weekly=await sbGet('weekly_checkins?select=days_checked',t);
         var maxStreakV2=0;
@@ -3520,7 +3520,7 @@ document.addEventListener('DOMContentLoaded',function(){
 // ── Info tooltip system ──
 var ABO_TIPS={
   'sec-overview':{it:'Panoramica generale: utenti registrati, ARIA in circolo, check-in, referral, valore nominale ROBI.',en:'General overview: registered users, ARIA in circulation, check-ins, referrals, ROBI nominal value.'},
-  'sec-users':{it:'Gli ultimi utenti iscritti con saldo ARIA, streak, ROBI accumulati e stato profilo. Clicca una riga per il dettaglio utente.',en:'Recent signups with ARIA balance, streak, ROBI and profile status. Click a row for user detail.'},
+  'sec-users':{it:'Gli ultimi utenti iscritti con saldo ARIA, sequenza, ROBI accumulati e stato profilo. Clicca una riga per il dettaglio utente.',en:'Recent signups with ARIA balance, streak, ROBI and profile status. Click a row for user detail.'},
   'sec-valutazioni':{it:'Coda delle submission utenti: foto oggetto + dati, da valutare e trasformare in draft airdrop. Solo admin ed evaluator (filtrati per categoria).',en:'User submission queue: photos + data, to review and convert into airdrop drafts. Admin and evaluators only (filtered by category).'},
   'sec-airdrops':{it:'Gestione airdrop in tutti gli stati: draft, accettato, presale, sale, closed, completed. Crea, modifica, blocca/sblocca e promuovi.',en:'Airdrop management across all states: draft, accepted, presale, sale, closed, completed. Create, edit, block/unblock and promote.'},
   'sec-analysis':{it:'Analisi per airdrop: distribuzione blocchi, partecipanti, ROBI minati, fairness. Usa per capire se un airdrop sta funzionando.',en:'Per-airdrop analysis: blocks distribution, participants, mined ROBI, fairness. Use to gauge airdrop health.'},
@@ -3553,7 +3553,7 @@ var ABO_TIPS={
   'ov-nft-circulating':{it:'ROBI totali distribuiti agli utenti (fractional + interi). Somma di tutti i ROBI minati da tutti gli airdrop.',en:'Total ROBI distributed to users (fractional + whole). Sum of all ROBI mined across airdrops.'},
   'ov-robi-nominal':{it:'Valore nominale attuale di 1 ROBI in EUR (Treasury balance / ROBI in circolazione). Indicativo — non è il prezzo di riscossione.',en:'Current nominal value of 1 ROBI in EUR (Treasury balance / ROBI in circulation). Indicative — not the redemption price.'},
   'ov-avg-points':{it:'ARIA media per utente attivo. Utile per capire la distribuzione tra heavy-user e nuovi iscritti.',en:'Average ARIA per active user. Useful to gauge distribution between heavy users and newcomers.'},
-  'ov-max-streak':{it:'Streak settimanale massima: giorni timbrati nella settimana più piena da un utente (max 7 = settimana completa = +1 ROBI).',en:'Max weekly streak: days stamped in the fullest week by any user (max 7 = complete week = +1 ROBI).'},
+  'ov-max-streak':{it:'Sequenza settimanale massima: giorni timbrati nella settimana più piena da un utente (max 7 = settimana completa = +1 ROBI).',en:'Max weekly streak: days stamped in the fullest week by any user (max 7 = complete week = +1 ROBI).'},
   'ov-inv-leads':{it:'Lead investitori raccolti via form dedicato. Processati manualmente dal founder.',en:'Investor leads collected via dedicated form. Handled manually by the founder.'},
   // Treasury cards
   'tr-balance':{it:'Treasury balance: riserva in EUR che garantisce il valore ROBI. Alimentata da % delle entrate (default 20%).',en:'Treasury balance: EUR reserve backing ROBI value. Fed by a share of revenue (default 20%).'},

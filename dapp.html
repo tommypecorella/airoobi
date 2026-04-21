@@ -246,6 +246,8 @@
     <div class="guida-banner-ctas">
       <a class="guida-banner-cta" onclick="navigateTo('submit',event)"><span class="it">Valuta un oggetto</span><span class="en">Evaluate an item</span></a>
       <a class="guida-banner-cta" onclick="navigateTo('explore',event)"><span class="it">Vai agli airdrop</span><span class="en">See airdrops</span></a>
+      <a class="guida-banner-cta" onclick="navigateTo('home',event);setTimeout(function(){var el=document.getElementById('faucet-section');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},120)"><span class="it">ARIA del giorno</span><span class="en">Daily ARIA</span></a>
+      <a class="guida-banner-cta" onclick="navigateTo('home',event);setTimeout(function(){var el=document.getElementById('streak-section');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},120)"><span class="it">Sequenza giornaliera</span><span class="en">Daily streak</span></a>
       <a class="guida-banner-cta" onclick="navigateTo('home',event)"><span class="it">Dashboard</span><span class="en">Dashboard</span></a>
     </div>
   </div>
@@ -311,7 +313,7 @@
         <div style="background:rgba(184,150,12,.04);border:1px solid rgba(184,150,12,.22);border-radius:var(--radius-sm);padding:18px 20px">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px;flex-wrap:wrap;gap:10px">
             <div>
-              <div style="font-family:var(--font-h);font-size:17px;font-weight:400;color:var(--white);margin-bottom:2px"><span class="it">Streak giornaliero</span><span class="en">Daily streak</span></div>
+              <div style="font-family:var(--font-h);font-size:17px;font-weight:400;color:var(--white);margin-bottom:2px"><span class="it">Sequenza giornaliera</span><span class="en">Daily streak</span></div>
               <div style="font-size:12px;color:var(--gray-400);line-height:1.45"><span class="it">+50 <span style="color:var(--aria)">ARIA</span> per ogni giorno timbrato &middot; +1 <span style="color:var(--gold)">ROBI</span> se completi lun&ndash;dom</span><span class="en">+50 <span style="color:var(--aria)">ARIA</span> per day checked &middot; +1 <span style="color:var(--gold)">ROBI</span> if you complete Mon&ndash;Sun</span></div>
             </div>
             <button id="streak-btn" onclick="claimStreakDay()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:10px 22px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm);white-space:nowrap"><span class="it">TIMBRA OGGI</span><span class="en">CHECK IN</span></button>
@@ -1028,7 +1030,7 @@
               <span style="font-family:var(--font-m);font-size:12px;color:var(--aria);letter-spacing:1px">ARIA</span>
               <span style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--kas);background:rgba(73,234,203,.1);padding:2px 8px;border-radius:10px"><span class="it">ATTIVO</span><span class="en">ACTIVE</span></span>
             </div>
-            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Ora siamo in <strong style="color:var(--white)">fase testnet</strong>: ricevi ARIA gratis dal faucet (100/giorno — diminuirà), check-in (+1), video (+1, max 5/gg), streak (+1/7gg) e referral (+10/+15). <strong style="color:var(--aria)">Accumula ARIA e partecipa agli airdrop di test:</strong> più partecipi, più ROBI guadagni. I ROBI sono il vero reward di AIROOBI. Non aspettare — il faucet diminuirà progressivamente.</span><span class="en">We're in <strong style="color:var(--white)">testnet phase</strong>: get ARIA free from the faucet (100/day — will decrease), check-in (+1), videos (+1, max 5/day), streak (+1/7days) and referral (+10/+15). <strong style="color:var(--aria)">Accumulate ARIA and join test airdrops:</strong> the more you participate, the more ROBI you earn. ROBI are AIROOBI's real reward. Don't wait — the faucet will decrease over time.</span></p>
+            <p style="font-size:13px;color:var(--gray-400);line-height:1.7;margin:0"><span class="it">Ora siamo in <strong style="color:var(--white)">fase testnet</strong>: ricevi ARIA gratis dal faucet (100/giorno — diminuirà), check-in (+1), video (+1, max 5/gg), sequenza (+1/7gg) e referral (+10/+15). <strong style="color:var(--aria)">Accumula ARIA e partecipa agli airdrop di test:</strong> più partecipi, più ROBI guadagni. I ROBI sono il vero reward di AIROOBI. Non aspettare — il faucet diminuirà progressivamente.</span><span class="en">We're in <strong style="color:var(--white)">testnet phase</strong>: get ARIA free from the faucet (100/day — will decrease), check-in (+1), videos (+1, max 5/day), streak (+1/7days) and referral (+10/+15). <strong style="color:var(--aria)">Accumulate ARIA and join test airdrops:</strong> the more you participate, the more ROBI you earn. ROBI are AIROOBI's real reward. Don't wait — the faucet will decrease over time.</span></p>
           </div>
           <!-- ROBI adesso -->
           <div style="border-top:1px solid var(--gray-700);padding-top:24px">
@@ -1174,7 +1176,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.21-3.48.2</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.21-3.48.3</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
