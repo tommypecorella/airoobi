@@ -1005,46 +1005,59 @@ async function loadDappReferral(){
   var token=await getValidToken();
   if(!token)return;
   var uid=_session.user.id;
+  var myCode='';
   // Load referral link
   var prof=await sbGet('profiles?id=eq.'+uid+'&select=referral_code,referral_count',token);
   if(prof&&prof[0]){
-    var code=prof[0].referral_code||'';
-    var link=(_isApp?'https://airoobi.app/signup':'https://airoobi.com/signup.html')+'?ref='+code;
+    myCode=prof[0].referral_code||'';
+    var link=(_isApp?'https://airoobi.app/signup':'https://airoobi.com/signup.html')+'?ref='+myCode;
     var el=document.getElementById('dapp-ref-link');
-    if(el){el.textContent=link;el.dataset.link=link;el.dataset.code=code;}
+    if(el){el.textContent=link;el.dataset.link=link;el.dataset.code=myCode;}
     document.getElementById('dapp-ref-count').textContent=prof[0].referral_count||0;
   }
   // Confirmed count
-  var confirmed=await sbGet('referral_confirmations?referrer_id=eq.'+uid+'&status=eq.confirmed&select=id',token);
+  var confirmed=await sbGet('referral_confirmations?referrer_id=eq.'+uid+'&status=eq.confirmed&select=referred_id,confirmed_at',token);
+  var confirmedMap={};
+  if(confirmed&&confirmed.length){
+    confirmed.forEach(function(c){confirmedMap[c.referred_id]=c.confirmed_at;});
+  }
   document.getElementById('dapp-ref-confirmed').textContent=confirmed?confirmed.length:0;
-  // History: who you invited
+
+  // History: who you invited (source: profiles.referred_by)
   var invList=document.getElementById('dapp-ref-invited-list');
   try{
-    var confs=await sbGet('referral_confirmations?referrer_id=eq.'+uid+'&select=*,referred:referred_id(email)',token);
-    if(confs&&confs.length>0){
+    var invited=myCode?(await sbGet('profiles?referred_by=eq.'+myCode+'&deleted_at=is.null&select=id,email,created_at&order=created_at.desc',token)):[];
+    if(invited&&invited.length>0){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
-      invList.innerHTML=confs.map(function(c){
-        var email=c.referred&&c.referred.email?truncEmail(c.referred.email):'***';
-        var date=c.confirmed_at?new Date(c.confirmed_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):(c.created_at?new Date(c.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'—');
-        var ok=c.status==='confirmed';
-        return '<div class="ref-history-row"><span class="ref-history-email">'+email+'</span><span class="ref-history-status '+(ok?'ref-history-confirmed':'ref-history-pending')+'">'+(ok?(lang==='it'?'Confermato':'Confirmed'):(lang==='it'?'In attesa':'Pending'))+'</span><span class="ref-history-aria">'+(ok?'+10 ARIA':'—')+'</span><span style="font-size:11px;color:var(--gray-400)">'+date+'</span></div>';
+      invList.innerHTML=invited.map(function(p){
+        var email=p.email?truncEmail(p.email):'***';
+        var confirmedAt=confirmedMap[p.id];
+        var ok=!!confirmedAt;
+        var date=new Date(confirmedAt||p.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'});
+        var statusLabel=ok?(lang==='it'?'Confermato':'Confirmed'):(lang==='it'?'In attesa':'Pending');
+        var reward=ok?'+5 ROBI':'—';
+        return '<div class="ref-history-row"><span class="ref-history-email">'+email+'</span><span class="ref-history-status '+(ok?'ref-history-confirmed':'ref-history-pending')+'">'+statusLabel+'</span><span class="ref-history-aria" style="color:var(--gold)">'+reward+'</span><span style="font-size:11px;color:var(--gray-400)">'+date+'</span></div>';
       }).join('');
     }else{
       invList.innerHTML='<p style="font-size:13px;color:var(--gray-400)"><span class="it">Nessun invitato ancora.</span><span class="en">No invitees yet.</span></p>';
     }
-  }catch(e){invList.innerHTML='<p style="font-size:13px;color:var(--gray-400)"><span class="it">Nessun invitato ancora.</span><span class="en">No invitees yet.</span></p>';}
+  }catch(e){invList.innerHTML='<p style="font-size:13px;color:var(--gray-400)"><span class="it">Errore caricamento.</span><span class="en">Load error.</span></p>';}
+
   // History: who invited you
   var inviterEl=document.getElementById('dapp-ref-inviter-info');
   try{
-    var myP=await sbGet('profiles?id=eq.'+uid+'&select=referred_by',token);
+    var myP=await sbGet('profiles?id=eq.'+uid+'&select=referred_by,created_at',token);
     if(myP&&myP[0]&&myP[0].referred_by){
       var refCode=myP[0].referred_by;
       var rProf=await sbGet('profiles?referral_code=eq.'+refCode+'&select=email',token);
       var rEmail=rProf&&rProf[0]?truncEmail(rProf[0].email):'***';
       var myConfs=await sbGet('referral_confirmations?referred_id=eq.'+uid+'&status=eq.confirmed&select=confirmed_at',token);
-      var cDate=myConfs&&myConfs[0]&&myConfs[0].confirmed_at?new Date(myConfs[0].confirmed_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'—';
+      var lang2=document.documentElement.getAttribute('data-lang')||'it';
       var isOk=myConfs&&myConfs.length>0;
-      inviterEl.innerHTML='<div class="ref-history-row"><span class="ref-history-email">'+rEmail+'</span><span class="ref-history-status '+(isOk?'ref-history-confirmed':'ref-history-pending')+'">'+(isOk?(document.documentElement.getAttribute('data-lang')==='en'?'Confirmed':'Confermato'):(document.documentElement.getAttribute('data-lang')==='en'?'Pending':'In attesa'))+'</span><span class="ref-history-aria">'+(isOk?'+15 ARIA':'—')+'</span><span style="font-size:11px;color:var(--gray-400)">'+cDate+'</span></div>';
+      var cDate=isOk&&myConfs[0].confirmed_at?new Date(myConfs[0].confirmed_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):(myP[0].created_at?new Date(myP[0].created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short'}):'—');
+      var statusLabel2=isOk?(lang2==='it'?'Confermato':'Confirmed'):(lang2==='it'?'In attesa':'Pending');
+      var reward2=isOk?'+5 ROBI':'—';
+      inviterEl.innerHTML='<div class="ref-history-row"><span class="ref-history-email">'+rEmail+'</span><span class="ref-history-status '+(isOk?'ref-history-confirmed':'ref-history-pending')+'">'+statusLabel2+'</span><span class="ref-history-aria" style="color:var(--gold)">'+reward2+'</span><span style="font-size:11px;color:var(--gray-400)">'+cDate+'</span></div>';
     }else{
       inviterEl.innerHTML='<p style="font-size:13px;color:var(--gray-400)"><span class="it">Non sei stato invitato da nessuno.</span><span class="en">You were not invited by anyone.</span></p>';
     }
