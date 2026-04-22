@@ -3437,8 +3437,14 @@ function renderMySubmissions(subs){
     var st=statusLabels[s.status]||{it:s.status,en:s.status,cls:'status-default'};
     var date=new Date(s.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'});
     var quotation=s.object_value_eur>0?'€'+parseFloat(s.object_value_eur).toFixed(2):'—';
+    var subImgHtml=s.image_url
+      ?'<img class="my-card-img" src="'+s.image_url+'" alt="" loading="lazy">'
+      :'<div class="my-card-img-placeholder"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="currentColor" stroke-width="1.5"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="1.5"/></svg></div>';
     html+='<div style="border:1px solid var(--gray-800);padding:16px 20px;margin-bottom:12px">';
-    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">';
+    html+='<div style="display:flex;gap:16px;align-items:flex-start">';
+    html+=subImgHtml;
+    html+='<div style="flex:1;min-width:0">';
+    html+='<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px">';
     html+='<div style="font-family:var(--font-h);font-size:18px;font-weight:400;color:var(--white)">'+escHtml(s.title)+'</div>';
     html+='<span class="'+st.cls+'" style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;white-space:nowrap"><span class="it">'+st.it+'</span><span class="en">'+st.en+'</span></span>';
     html+='</div>';
@@ -3446,11 +3452,12 @@ function renderMySubmissions(subs){
     html+='<span>'+date+'</span>';
     html+='<span>'+escHtml(s.category)+'</span>';
     html+='</div>';
-    html+='<div style="display:flex;gap:24px;font-size:13px">';
+    html+='<div style="display:flex;gap:24px;font-size:13px;flex-wrap:wrap">';
     html+='<div><span style="color:var(--gray-500)"><span class="it">Desiderato:</span><span class="en">Desired:</span></span> <span style="color:var(--white)">€'+parseFloat(s.seller_desired_price).toFixed(2)+'</span></div>';
     html+='<div><span style="color:var(--gray-500)"><span class="it">Minimo:</span><span class="en">Min:</span></span> <span style="color:var(--white)">€'+parseFloat(s.seller_min_price).toFixed(2)+'</span></div>';
     html+='<div><span style="color:var(--gray-500)"><span class="it">Quotazione:</span><span class="en">Quote:</span></span> <span style="color:var(--gold)">'+quotation+'</span></div>';
     html+='</div>';
+    html+='</div></div>';
     if(s.rejection_reason){
       html+='<div style="margin-top:8px;padding:8px 12px;border-left:3px solid #ef4444;background:rgba(239,68,68,.06);font-size:12px;color:#ef4444">'+escHtml(s.rejection_reason)+'</div>';
     }
