@@ -562,6 +562,23 @@ select option{background:var(--gray-800);color:var(--white)}
 /* ── VALUATION BANNER ── */
 /* val-banner removed — replaced by cat-dashboard */
 
+/* ── CATEGORY DASHBOARD STRIP (horizontal scroll + nav) ── */
+.cat-dash-wrap{position:relative}
+#cat-dashboard-row{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;-webkit-overflow-scrolling:touch;padding:2px 36px 6px 36px;scroll-behavior:smooth;scroll-snap-type:x proximity}
+#cat-dashboard-row::-webkit-scrollbar{display:none}
+#cat-dashboard-row>*{scroll-snap-align:start}
+.cat-nav-btn{position:absolute;top:50%;transform:translateY(-50%);z-index:3;background:var(--card-bg);border:1px solid var(--gray-700);color:var(--gold);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:22px;font-family:var(--font-h);line-height:1;padding:0 0 2px 0;transition:opacity .2s,background .2s,border-color .2s,transform .15s;opacity:0;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.5)}
+.cat-nav-btn.visible{opacity:1;pointer-events:auto}
+.cat-nav-btn:hover{background:rgba(184,150,12,.1);border-color:var(--gold-dim)}
+.cat-nav-btn:active{transform:translateY(-50%) scale(.92)}
+.cat-nav-btn.prev{left:-4px}
+.cat-nav-btn.next{right:-4px}
+.cat-fade{position:absolute;top:0;bottom:6px;width:38px;pointer-events:none;z-index:2;opacity:0;transition:opacity .25s}
+.cat-fade.left{left:0;background:linear-gradient(to right,var(--black) 10%,rgba(0,0,0,0) 100%)}
+.cat-fade.right{right:0;background:linear-gradient(to left,var(--black) 10%,rgba(0,0,0,0) 100%)}
+.cat-fade.visible{opacity:1}
+@media (max-width:600px){.cat-nav-btn{width:26px;height:26px;font-size:18px}#cat-dashboard-row{padding-left:30px;padding-right:30px}}
+
 /* ── STATUS BADGES on cards ── */
 .card-badge.presale{background:var(--aria);color:var(--black)}
 .card-badge.sale{background:var(--accent);color:var(--black)}

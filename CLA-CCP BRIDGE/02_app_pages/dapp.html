@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.53.0">
+<link rel="stylesheet" href="/src/dapp.css?v=3.54.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -496,7 +496,13 @@
 
     <!-- MINI DASHBOARD PER CATEGORIA (mostrato solo quando categoria è filtrata) -->
     <div id="cat-dashboard" style="display:none;margin-bottom:20px">
-      <div style="display:flex;overflow-x:auto;gap:10px;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding-bottom:4px" id="cat-dashboard-row"></div>
+      <div class="cat-dash-wrap">
+        <button type="button" class="cat-nav-btn prev" id="cat-dashboard-prev" aria-label="Scorri a sinistra" onclick="scrollCatDashboard(-1)">&lsaquo;</button>
+        <div class="cat-fade left" aria-hidden="true"></div>
+        <div id="cat-dashboard-row"></div>
+        <div class="cat-fade right" aria-hidden="true"></div>
+        <button type="button" class="cat-nav-btn next" id="cat-dashboard-next" aria-label="Scorri a destra" onclick="scrollCatDashboard(1)">&rsaquo;</button>
+      </div>
     </div>
 
     <!-- LIST VIEW -->
@@ -1195,7 +1201,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.24-3.53.1</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.24-3.54.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1267,6 +1273,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.53.1"></script>
+<script src="/src/dapp.js?v=3.54.0"></script>
 </body>
 </html>

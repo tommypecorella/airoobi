@@ -1444,6 +1444,50 @@ function renderCatDashboard(){
   });
 
   row.innerHTML=html;
+  attachCatDashboardNav();
+  updateCatDashboardNav();
+}
+
+// Scroll + visibility control for category strip
+var _catNavBound=false;
+function scrollCatDashboard(dir){
+  var row=document.getElementById('cat-dashboard-row');
+  if(!row)return;
+  // Scorri del ~70% della larghezza visibile (min 220px) nella direzione
+  var amount=Math.max(220,Math.round(row.clientWidth*0.7))*dir;
+  if(typeof row.scrollBy==='function'){row.scrollBy({left:amount,behavior:'smooth'});}
+  else{row.scrollLeft+=amount;}
+}
+function updateCatDashboardNav(){
+  var row=document.getElementById('cat-dashboard-row');
+  var prev=document.getElementById('cat-dashboard-prev');
+  var next=document.getElementById('cat-dashboard-next');
+  if(!row||!prev||!next)return;
+  var canScroll=row.scrollWidth>row.clientWidth+4;
+  var atStart=row.scrollLeft<=4;
+  var atEnd=row.scrollLeft>=(row.scrollWidth-row.clientWidth-4);
+  prev.classList.toggle('visible',canScroll&&!atStart);
+  next.classList.toggle('visible',canScroll&&!atEnd);
+  var wrap=row.parentElement;
+  var fl=wrap&&wrap.querySelector('.cat-fade.left');
+  var fr=wrap&&wrap.querySelector('.cat-fade.right');
+  if(fl)fl.classList.toggle('visible',canScroll&&!atStart);
+  if(fr)fr.classList.toggle('visible',canScroll&&!atEnd);
+}
+function attachCatDashboardNav(){
+  if(_catNavBound)return;
+  var row=document.getElementById('cat-dashboard-row');
+  if(!row)return;
+  row.addEventListener('scroll',function(){updateCatDashboardNav();},{passive:true});
+  window.addEventListener('resize',function(){updateCatDashboardNav();});
+  // Wheel verticale → scroll orizzontale (desktop senza trackpad orizzontale)
+  row.addEventListener('wheel',function(e){
+    if(Math.abs(e.deltaY)<=Math.abs(e.deltaX))return;
+    if(row.scrollWidth<=row.clientWidth+4)return;
+    e.preventDefault();
+    row.scrollLeft+=e.deltaY;
+  },{passive:false});
+  _catNavBound=true;
 }
 
 // ── Notifications (in-app) ──
