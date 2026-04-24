@@ -577,31 +577,7 @@ async function loadPortfolioChart(token,userRobi){
   var canvas=document.getElementById('portfolio-chart');
   if(!canvas)return;
   try{
-    // Wait for parent to have positive layout — retry up to ~2s
-    var rect=canvas.parentElement.getBoundingClientRect();
-    var tries=0;
-    while((rect.width<=0||rect.height<=0)&&tries<20){
-      await new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,100);});});
-      rect=canvas.parentElement.getBoundingClientRect();
-      tries++;
-    }
-    if(rect.width<=0||rect.height<=0){
-      try{
-        var ro=new ResizeObserver(function(entries){
-          for(var k=0;k<entries.length;k++){
-            if(entries[k].contentRect.width>0&&entries[k].contentRect.height>0){
-              ro.disconnect();
-              loadPortfolioChart(token,userRobi);
-              return;
-            }
-          }
-        });
-        ro.observe(canvas.parentElement);
-      }catch(e){}
-      return;
-    }
-
-    // ROBI value + KAS price
+    // 1. Totale — calcolato e mostrato SEMPRE, indipendente dal layout del canvas
     var robiValEur=0,kasPrice=0;
     try{
       var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
@@ -618,9 +594,35 @@ async function loadPortfolioChart(token,userRobi){
       if(kd&&kd.kaspa&&kd.kaspa.eur>0)kasPrice=kd.kaspa.eur;
     }catch(e){}
 
-    // Summary label
     var eurEl=document.getElementById('portfolio-eur-val');
     if(eurEl)eurEl.innerHTML='&euro; '+robiValEur.toFixed(2)+'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-left:8px;letter-spacing:1px">ROBI</span>';
+
+    // 2. Attesa layout canvas — retry fino a ~3s, poi ResizeObserver come ultima chance
+    var rect=canvas.parentElement.getBoundingClientRect();
+    var tries=0;
+    while((rect.width<=0||rect.height<=0)&&tries<30){
+      await new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,100);});});
+      rect=canvas.parentElement.getBoundingClientRect();
+      tries++;
+    }
+    // Fallback a offsetWidth/offsetHeight se getBoundingClientRect fallisce
+    if(rect.width<=0)rect={width:canvas.parentElement.offsetWidth||canvas.parentElement.clientWidth||0,height:rect.height};
+    if(rect.height<=0)rect={width:rect.width,height:canvas.parentElement.offsetHeight||canvas.parentElement.clientHeight||160};
+    if(rect.width<=0||rect.height<=0){
+      try{
+        var ro=new ResizeObserver(function(entries){
+          for(var k=0;k<entries.length;k++){
+            if(entries[k].contentRect.width>0&&entries[k].contentRect.height>0){
+              ro.disconnect();
+              loadPortfolioChart(token,userRobi);
+              return;
+            }
+          }
+        });
+        ro.observe(canvas.parentElement);
+      }catch(e){}
+      return;
+    }
 
     // Ledger last 30 days
     var days=30;
@@ -1352,6 +1354,48 @@ function renderCategoryFilter(){
     html+='<button class="cat-pill" onclick="filterCat(\''+c+'\')">'+( catLabels[c]||c)+'</button>';
   });
   wrap.innerHTML=html;
+  attachCatFilterNav();
+  updateCatFilterNav();
+}
+
+// Nav per strip filtri categoria (frecce + fade + wheel)
+var _catFilterNavBound=false;
+function scrollCatFilter(dir){
+  var row=document.getElementById('cat-filter');
+  if(!row)return;
+  var amount=Math.max(180,Math.round(row.clientWidth*0.7))*dir;
+  if(typeof row.scrollBy==='function'){row.scrollBy({left:amount,behavior:'smooth'});}
+  else{row.scrollLeft+=amount;}
+}
+function updateCatFilterNav(){
+  var row=document.getElementById('cat-filter');
+  var prev=document.getElementById('cat-filter-prev');
+  var next=document.getElementById('cat-filter-next');
+  if(!row||!prev||!next)return;
+  var canScroll=row.scrollWidth>row.clientWidth+4;
+  var atStart=row.scrollLeft<=4;
+  var atEnd=row.scrollLeft>=(row.scrollWidth-row.clientWidth-4);
+  prev.classList.toggle('visible',canScroll&&!atStart);
+  next.classList.toggle('visible',canScroll&&!atEnd);
+  var wrap=row.parentElement;
+  var fl=wrap&&wrap.querySelector('.cat-fade.left');
+  var fr=wrap&&wrap.querySelector('.cat-fade.right');
+  if(fl)fl.classList.toggle('visible',canScroll&&!atStart);
+  if(fr)fr.classList.toggle('visible',canScroll&&!atEnd);
+}
+function attachCatFilterNav(){
+  if(_catFilterNavBound)return;
+  var row=document.getElementById('cat-filter');
+  if(!row)return;
+  row.addEventListener('scroll',function(){updateCatFilterNav();},{passive:true});
+  window.addEventListener('resize',function(){updateCatFilterNav();});
+  row.addEventListener('wheel',function(e){
+    if(Math.abs(e.deltaY)<=Math.abs(e.deltaX))return;
+    if(row.scrollWidth<=row.clientWidth+4)return;
+    e.preventDefault();
+    row.scrollLeft+=e.deltaY;
+  },{passive:false});
+  _catFilterNavBound=true;
 }
 
 function filterCat(cat){

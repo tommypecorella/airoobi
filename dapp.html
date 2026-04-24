@@ -489,8 +489,14 @@
           </select>
         </div>
       </div>
-      <div class="cat-filter" id="cat-filter">
-        <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
+      <div class="cat-filter-wrap">
+        <button type="button" class="cat-nav-btn prev" id="cat-filter-prev" aria-label="Scorri a sinistra" onclick="scrollCatFilter(-1)">&lsaquo;</button>
+        <div class="cat-fade left" aria-hidden="true"></div>
+        <div class="cat-filter" id="cat-filter">
+          <button class="cat-pill active" onclick="filterCat('all')"><span class="it">Tutti</span><span class="en">All</span></button>
+        </div>
+        <div class="cat-fade right" aria-hidden="true"></div>
+        <button type="button" class="cat-nav-btn next" id="cat-filter-next" aria-label="Scorri a destra" onclick="scrollCatFilter(1)">&rsaquo;</button>
       </div>
     </div>
 
@@ -1201,7 +1207,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.24-3.54.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.24-3.55.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
