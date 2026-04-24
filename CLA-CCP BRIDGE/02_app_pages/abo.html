@@ -2457,10 +2457,16 @@ async function loadPlatformAriaAccount(){
 
 // ── Treasury Funds (manual funding table) ──
 async function loadTreasuryFunds(){
-  var s=getSession();if(!s)return;
+  var s=await ensureFreshToken();if(!s)return;
   try{
-    var rows=await sbGet('treasury_funds?select=*&order=created_at.desc',s.access_token);
-    if(!rows)rows=[];
+    var rRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=id,amount_eur,treasury_pct,description,created_at&order=created_at.desc',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+    });
+    var rows=[];
+    if(rRes.ok){rows=await rRes.json();}
+    else console.warn('[treasury_funds] HTTP',rRes.status);
+    if(!Array.isArray(rows))rows=[];
+    console.log('[treasury_funds] rows',rows.length);
     var treasuryTotal=0,serviceTotal=0;
     for(var i=0;i<rows.length;i++){
       var amt=parseFloat(rows[i].amount_eur)||0;
