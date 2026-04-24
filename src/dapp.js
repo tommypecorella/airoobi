@@ -569,32 +569,50 @@ async function loadHomeDashboard(){
   // Referral auto-confirm (se utente ha referred_by e non ancora confirmed)
   autoConfirmReferral();
   // Portfolio chart
+  console.log('[home-dashboard] chiamo loadPortfolioChart con robiCount',robiCount);
   loadPortfolioChart(token,robiCount);
 }
 
 // ── Portfolio Chart ──
+// fetch con timeout — se la risposta non arriva entro ms, abort + reject
+function fetchWithTimeout(url,opts,ms){
+  opts=opts||{};
+  if(typeof AbortController==='undefined'){return fetch(url,opts);}
+  var ctl=new AbortController();
+  var t=setTimeout(function(){ctl.abort();},ms||3000);
+  opts.signal=ctl.signal;
+  return fetch(url,opts).finally(function(){clearTimeout(t);});
+}
+
 async function loadPortfolioChart(token,userRobi){
+  console.log('[portfolio-chart] start',{userRobi:userRobi,balance:_balance});
   var canvas=document.getElementById('portfolio-chart');
-  if(!canvas)return;
+  var eurEl=document.getElementById('portfolio-eur-val');
+  if(!canvas){console.warn('[portfolio-chart] canvas not found');return;}
+  // Setto subito un valore base così non resta mai "—"
+  if(eurEl&&eurEl.textContent==='—')eurEl.textContent='€ 0,00';
   try{
     // 1. Totale — calcolato e mostrato SEMPRE, indipendente dal layout del canvas
     var robiValEur=0,kasPrice=0;
     try{
-      var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
+      var tfRes=await fetchWithTimeout(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}},3000);
       var tBal=0;
       if(tfRes.ok){var tf=await tfRes.json();tf.forEach(function(r){tBal+=(parseFloat(r.amount_eur)||0)*((r.treasury_pct!=null?parseInt(r.treasury_pct):100)/100);});}
-      var rrRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}});
+      console.log('[portfolio-chart] treasury EUR',tBal);
+      var rrRes=await fetchWithTimeout(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}},3000);
       var tRobi=0;
       if(rrRes.ok){var rrd=await rrRes.json();rrd.forEach(function(r){tRobi+=parseFloat(r.shares)||0;});}
+      else console.warn('[portfolio-chart] admin_get_all_robi HTTP',rrRes.status);
+      console.log('[portfolio-chart] totale ROBI circ',tRobi,'userRobi',userRobi);
       if(tRobi>0)robiValEur=(tBal/tRobi)*userRobi;
-    }catch(e){}
+    }catch(e){console.warn('[portfolio-chart] treasury/rpc error',e);}
     try{
-      var kRes=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur');
+      var kRes=await fetchWithTimeout('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur',{},3000);
       var kd=await kRes.json();
       if(kd&&kd.kaspa&&kd.kaspa.eur>0)kasPrice=kd.kaspa.eur;
-    }catch(e){}
+    }catch(e){console.warn('[portfolio-chart] coingecko error',e);}
+    console.log('[portfolio-chart] robiValEur',robiValEur,'kasPrice',kasPrice);
 
-    var eurEl=document.getElementById('portfolio-eur-val');
     if(eurEl)eurEl.innerHTML='&euro; '+robiValEur.toFixed(2)+'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-left:8px;letter-spacing:1px">ROBI</span>';
 
     // 2. Attesa layout canvas — retry fino a ~3s, poi ResizeObserver come ultima chance

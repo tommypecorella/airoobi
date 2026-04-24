@@ -1,5 +1,5 @@
 // ── AIROOBI Service Worker — Push + Cache + Offline ──
-var CACHE_NAME = 'airoobi-v2';
+var CACHE_NAME = 'airoobi-v3';
 var STATIC_ASSETS = [
   '/offline.html',
   '/src/dapp.css',
