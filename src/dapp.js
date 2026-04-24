@@ -559,7 +559,6 @@ async function loadHomeDashboard(){
   // Participations count + blocks + spent
   var totalBlocks=0,totalSpent=0;
   _myParts.forEach(function(p){totalBlocks+=p.blocks_count||0;totalSpent+=p.aria_spent||0});
-  document.getElementById('home-airdrops').textContent=_myParts.length;
   document.getElementById('home-blocks').textContent=totalBlocks;
   document.getElementById('home-spent').textContent=totalSpent+' ARIA';
   // Streak giornaliero (v2: stato calendario settimanale)
