@@ -457,12 +457,13 @@ $$;
 GRANT EXECUTE ON FUNCTION my_category_score_snapshot(UUID) TO authenticated;
 
 -- ─────────────────────────────────────────────────────────────
--- 5. check_value_threshold_reached (v5 — usa cumulative_aria_cat)
+-- 5. check_value_threshold_reached (v5 — JSONB preservato per compat
+--    con trigger tf_check_early_close_after_buy, usa cumulative_aria_cat)
 -- ─────────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION check_value_threshold_reached(p_airdrop_id UUID)
-RETURNS BOOLEAN
+RETURNS JSONB
 LANGUAGE plpgsql
-SECURITY DEFINER
+STABLE SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
@@ -470,98 +471,107 @@ DECLARE
   v_status           TEXT;
   v_leader_cumul     NUMERIC := 0;
   v_threshold_aria   NUMERIC;
+  v_scores           JSONB;
 BEGIN
-  SELECT object_value_eur, status
-  INTO v_object_value_eur, v_status
+  SELECT object_value_eur, status INTO v_object_value_eur, v_status
   FROM airdrops WHERE id = p_airdrop_id;
 
-  IF v_object_value_eur IS NULL OR v_status NOT IN ('presale', 'sale') THEN
-    RETURN false;
+  IF v_object_value_eur IS NULL OR v_object_value_eur <= 0 THEN
+    RETURN jsonb_build_object('threshold_reached', false, 'reason', 'no_object_value');
   END IF;
 
   -- Threshold: object_value_eur × 10 (ARIA_EUR=0.10 → 1 EUR = 10 ARIA)
   v_threshold_aria := v_object_value_eur * 10;
 
-  -- Leader cumulative ARIA in categoria (storici + corrente)
-  WITH scores_json AS (SELECT calculate_winner_score(p_airdrop_id) AS arr)
-  SELECT
-    COALESCE((elem->>'cumulative_aria_cat')::NUMERIC, 0)
+  v_scores := calculate_winner_score(p_airdrop_id);
+
+  -- v5: usa cumulative_aria_cat (storici + corrente) invece di score
+  SELECT COALESCE((elem->>'cumulative_aria_cat')::NUMERIC, 0)
   INTO v_leader_cumul
-  FROM scores_json, jsonb_array_elements(arr) elem
+  FROM jsonb_array_elements(v_scores) elem
   WHERE (elem->>'rank')::INTEGER = 1
   LIMIT 1;
 
-  RETURN v_leader_cumul >= v_threshold_aria;
+  RETURN jsonb_build_object(
+    'threshold_reached', COALESCE(v_leader_cumul, 0) >= v_threshold_aria,
+    'leader_cumulative_aria_cat', COALESCE(v_leader_cumul, 0),
+    'threshold_aria', v_threshold_aria,
+    'object_value_eur', v_object_value_eur
+  );
 END;
 $$;
 
 GRANT EXECUTE ON FUNCTION check_value_threshold_reached(UUID) TO authenticated;
 
 -- ─────────────────────────────────────────────────────────────
--- 6. check_fairness_lockdown (v5 — usa max_reachable score-based)
+-- 6. check_fairness_lockdown (v5 — JSONB preservato, max_reachable
+--    score-based con pity_bonus non-comprabile)
 -- ─────────────────────────────────────────────────────────────
 CREATE OR REPLACE FUNCTION check_fairness_lockdown(p_airdrop_id UUID)
-RETURNS BOOLEAN
+RETURNS JSONB
 LANGUAGE plpgsql
-SECURITY DEFINER
+STABLE SECURITY DEFINER
 SET search_path = public
 AS $$
 DECLARE
-  v_status       TEXT;
-  v_n_part       INTEGER;
-  v_remaining    INTEGER;
-  v_total_blocks INTEGER;
-  v_blocks_sold  INTEGER;
-  v_leader_score NUMERIC;
-  v_all_impossible BOOLEAN := true;
-  v_k            NUMERIC;
+  v_status         TEXT;
+  v_total_blocks   INTEGER;
+  v_blocks_sold    INTEGER;
+  v_remaining      INTEGER;
+  v_scores         JSONB;
+  v_leader_score   NUMERIC;
+  v_participants   INTEGER;
+  v_all_blocked    BOOLEAN;
 BEGIN
   SELECT status, total_blocks, blocks_sold
   INTO v_status, v_total_blocks, v_blocks_sold
   FROM airdrops WHERE id = p_airdrop_id;
 
-  IF v_status NOT IN ('presale', 'sale') THEN
-    RETURN false;
+  IF v_total_blocks IS NULL THEN
+    RETURN jsonb_build_object('lockdown', false, 'reason', 'airdrop_not_found');
+  END IF;
+
+  IF v_status NOT IN ('presale','sale') THEN
+    RETURN jsonb_build_object('lockdown', false, 'reason', 'status_not_open', 'status', v_status);
   END IF;
 
   v_remaining := GREATEST(0, v_total_blocks - v_blocks_sold);
 
-  SELECT COUNT(DISTINCT user_id) INTO v_n_part
-  FROM airdrop_participations
-  WHERE airdrop_id = p_airdrop_id AND cancelled_at IS NULL;
+  v_scores := calculate_winner_score(p_airdrop_id);
+  v_participants := jsonb_array_length(v_scores);
 
   -- Richiede ≥3 partecipanti per scattare lockdown
-  IF v_n_part < 3 THEN
-    RETURN false;
+  IF v_participants < 3 THEN
+    RETURN jsonb_build_object('lockdown', false, 'reason', 'below_min_participants', 'participants', v_participants);
   END IF;
 
-  SELECT k_starter INTO v_k FROM _get_pity_config();
-
-  -- Leader score
-  WITH scores_json AS (SELECT calculate_winner_score(p_airdrop_id) AS arr)
   SELECT (elem->>'score')::NUMERIC INTO v_leader_score
-  FROM scores_json, jsonb_array_elements(arr) elem
+  FROM jsonb_array_elements(v_scores) elem
   WHERE (elem->>'rank')::INTEGER = 1
   LIMIT 1;
 
   IF v_leader_score IS NULL THEN
-    RETURN false;
+    RETURN jsonb_build_object('lockdown', false, 'reason', 'no_leader');
   END IF;
 
-  -- Tutti i non-primi hanno max_reachable < leader_score?
-  WITH scores_json AS (SELECT calculate_winner_score(p_airdrop_id) AS arr)
-  SELECT bool_and(
-    (elem->>'rank')::INTEGER = 1
-    OR (
-      (SQRT(GREATEST((elem->>'blocks')::INTEGER + v_remaining, 0)::NUMERIC)
+  -- v5: max_reachable score-based (√(blocks+remaining) × loyalty_mult) + pity_bonus
+  -- pity_bonus è fisso (non comprabile) — dipende da L_u, non dai blocchi futuri
+  SELECT COALESCE(bool_and(
+    (
+      SQRT(GREATEST((elem->>'blocks')::INTEGER + v_remaining, 0)::NUMERIC)
         * (elem->>'loyalty_mult')::NUMERIC
-      ) + (elem->>'pity_bonus')::NUMERIC
-      < v_leader_score
-    )
-  ) INTO v_all_impossible
-  FROM scores_json, jsonb_array_elements(arr) elem;
+    ) + (elem->>'pity_bonus')::NUMERIC < v_leader_score
+  ), false)
+  INTO v_all_blocked
+  FROM jsonb_array_elements(v_scores) elem
+  WHERE (elem->>'rank')::INTEGER > 1;
 
-  RETURN COALESCE(v_all_impossible, false);
+  RETURN jsonb_build_object(
+    'lockdown', v_all_blocked,
+    'leader_score', v_leader_score,
+    'remaining_blocks', v_remaining,
+    'participants', v_participants
+  );
 END;
 $$;
 
