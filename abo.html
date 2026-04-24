@@ -374,14 +374,17 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-grid" style="margin-bottom:20px">
       <div class="admin-card" style="border-color:rgba(74,158,255,.4)">
         <div class="admin-card-val" id="adm-platform-aria-balance" style="color:var(--aria)">—</div>
+        <div id="adm-platform-aria-balance-eur" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-400);margin-top:4px">&asymp; &euro; —</div>
         <div class="admin-card-label"><span class="it">Saldo ARIA</span><span class="en">ARIA Balance</span> <span class="info-i" onclick="showAboTip(this,'pa-balance')">i</span></div>
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-platform-aria-in">—</div>
+        <div id="adm-platform-aria-in-eur" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-400);margin-top:4px">&asymp; &euro; —</div>
         <div class="admin-card-label"><span class="it">Totale entrate</span><span class="en">Total in</span></div>
       </div>
       <div class="admin-card">
         <div class="admin-card-val" id="adm-platform-aria-out">—</div>
+        <div id="adm-platform-aria-out-eur" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-400);margin-top:4px">&asymp; &euro; —</div>
         <div class="admin-card-label"><span class="it">Totale uscite</span><span class="en">Total out</span></div>
       </div>
       <div class="admin-card">
@@ -2402,9 +2405,16 @@ async function loadPlatformAriaAccount(){
       var bal=await balRes.json();
       if(bal&&bal.ok){
         var set=function(id,val){var el=document.getElementById(id);if(el)el.textContent=val;};
+        // Tasso fisso backend: 10 ARIA = 1 EUR (v_aria_eur in early_close_lockdown.sql)
+        var ARIA_EUR=0.10;
+        var eur=function(aria){return '&asymp; &euro; '+(Number(aria||0)*ARIA_EUR).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});};
+        var setHtml=function(id,html){var el=document.getElementById(id);if(el)el.innerHTML=html;};
         set('adm-platform-aria-balance',(bal.balance||0).toLocaleString()+' ARIA');
+        setHtml('adm-platform-aria-balance-eur',eur(bal.balance));
         set('adm-platform-aria-in',(bal.total_in||0).toLocaleString());
+        setHtml('adm-platform-aria-in-eur',eur(bal.total_in));
         set('adm-platform-aria-out',(bal.total_out||0).toLocaleString());
+        setHtml('adm-platform-aria-out-eur',eur(bal.total_out));
         set('adm-platform-aria-tx',bal.tx_count||0);
       }
     }
