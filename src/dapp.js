@@ -5066,11 +5066,20 @@ async function doChangePw(){
 function shareFromBtn(btn,event){
   shareAirdrop(btn.dataset.id,btn.dataset.title||'',btn.dataset.img||'',event);
 }
+function buildShareText(title,lang){
+  var t=title||'';
+  if(lang==='en'){
+    return 'Look at this airdrop on AIROOBI: '+t+'\n\n'
+      +'Stack ARIA every day, buy blocks and earn real ROBI rewards (redeemable in KAS on-chain).';
+  }
+  return 'Guarda questo airdrop su AIROOBI: '+t+'\n\n'
+    +'Accumula ARIA ogni giorno, compra blocchi e guadagna ROBI — il reward reale riscuotibile on-chain in KAS.';
+}
 async function shareAirdrop(id,title,imgUrl,event){
   if(event){event.stopPropagation();event.preventDefault();}
   var url=location.origin+'/airdrops/'+id;
   var lang=document.documentElement.getAttribute('data-lang')||'it';
-  var text=(lang==='en'?'Join this airdrop on AIROOBI: ':'Partecipa a questo airdrop su AIROOBI: ')+(title||'');
+  var text=buildShareText(title,lang);
   if(navigator.share){
     var payload={title:title||'AIROOBI',text:text,url:url};
     if(imgUrl&&navigator.canShare){
