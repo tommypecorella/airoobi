@@ -1,9 +1,23 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 2.7 · 19 Aprile 2026 · DOCUMENTO FONDATIVO**
+**Version 2.8 · 24 Aprile 2026 · DOCUMENTO FONDATIVO**
 
 > Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
 > del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
 > Aggiornare questo documento prima di modificare qualsiasi logica di business.
+>
+> **Changelog 24 Apr 2026 (v2.8) — Scoring v5: pity system + engagement concavo:**
+> - REWRITE: `calculate_winner_score` passa da mono-fattoriale a formula a due componenti additive: `score = f_base + pity_bonus`.
+> - ADD: `f_base = √blocks_in_a × (1 + log₁₀(1 + storici_cat / K))` — engagement concavo. `√blocks` penalizza il "colpo grosso" in un singolo airdrop (anti-whale in-airdrop). `log₁₀(storici)` premia la fedeltà di categoria con saturazione naturale (no oligarchia). K starter = 100, adattivo: `K = max(100, median(storici))` ricalcolato settimanalmente.
+> - ADD: **Pity system** — `pity_bonus(L_u, N_pity)` è uno **score boost deterministico** (non probabilistico) che garantisce matematicamente la vittoria entro `N_pity = clamp(floor(α × V̄_cat / c_u_avg), 5, 30)` partecipazioni senza vittoria nella categoria. `α = 0.30` (willingness-to-spend), `V̄_cat` media all-time object_value ARIA-equivalente categoria, `c_u_avg` media ARIA per airdrop dell'utente in categoria. Pity a tre fasi: 0 sotto 0.6·N_pity, ramp lineare fino a M (max f_base dinamico) a N_pity, hard pity 10M+ oltre.
+> - RATIONALE (Skeezu, 2026-04-24): *"l'utente non deve arrivare a spendere la cifra media dell'oggetto prima di vincerlo. Se devo pagare più di €500 per prenderne uno da €500, siamo peggio del gambling."* Il v4 mono-fattoriale non garantiva questo — un utente in competizione con un whale poteva accumulare spesa oltre V_cat senza mai vincere. Il pity dà una **garanzia matematica** (bounded max cost) preservando determinismo.
+> - DECISIONE B (deterministico) vs A (probabilistico): Scelto B per preservare la decisione v1 "no lotteria" (vedi §12.1). Bivio esplicito tra weighted random draw e pity deterministico. B preserva narrativa anti-gambling e semplifica la recommendation UI ("ti mancano X partecipazioni al boost").
+> - CHANGE: Tiebreaker invariato (score DESC → blocchi correnti → lifetime ARIA → primo blocco → seniority).
+> - CHANGE: Fairness lockdown adattato — `my_max_reachable = f_base_max_potential + my_pity_bonus_current`. Il pity bonus **non è comprabile** — un utente può compensare score solo se è nella propria fase pity. I non-in-pity scattano math_impossible prima contro utenti in hard pity.
+> - CHANGE: Value threshold **ri-ancorato** alla metrica ARIA diretta (non allo score v5, che ha unità diverse). Trigger: `leader_cumulative_aria_cat (= storici_cat + current_aria) ≥ object_value_eur × 10`. Stessa semantica di v4 ("protezione anti-gambling se qualcuno ha già speso ≥ valore oggetto in categoria"), ora esplicitamente separata dallo `score` calcolato.
+> - UI: Card "Come arrivare 1°" mostra: punteggio corrente, gap dal primo, moltiplicatore fedeltà, progress pity ("partecipazioni al prossimo boost: X di Y"). Frasi costruite per evitare "aspetta il pity" — sempre accompagnate da CTA partecipativo e menzione ROBI mining nel rullo.
+> - UI: Dettaglio posizione aggiunge riga "Boost fedeltà: +X" (quando attivo) e "Pity progress: X/Y" (sempre, una volta che il motore conosce L_u).
+> - EDU `/come-funziona-airdrop` §4 + §6 riscritte con formula v5, sezione pity dedicata, FAQ su "come si calcola N_pity".
+> - Migration: `20260424120000_scoring_v5_pity.sql`.
 >
 > **Changelog da v1.0:**
 > - FIX: Success check confronta la quota venditore (non il totale) con seller_min_price
@@ -365,28 +379,46 @@ effetto immediato su tutti i futuri acquisti blocchi.
 - Invio: Edge Function `send-push` (Supabase, VAPID)
 - Trigger: DB trigger su `airdrops` UPDATE + cron `check-deadlines` ogni 15 min
 
-## 4C. Fairness Guard (v2.4 — 19 Aprile 2026)
+## 4C. Fairness Guard (v2.8 — 24 Aprile 2026, adattato a Scoring v5)
 
 ### 4C.1 Principio
-Non devi poter spendere ARIA per un airdrop che non puoi più vincere. Se il
-distacco dal primo in classifica è superiore al numero di blocchi rimanenti,
-raggiungere il 1° posto è **matematicamente impossibile** — la guard blocca
-l'acquisto per non far sprecare ARIA all'utente.
+Non devi poter spendere ARIA per un airdrop che non puoi più vincere. Se anche
+comprando tutti i blocchi rimanenti il tuo `score` massimo raggiungibile resta
+sotto quello del leader, arrivare 1° è **matematicamente impossibile** — la guard
+blocca l'acquisto per non far sprecare ARIA all'utente.
 
-### 4C.2 Condizione
+### 4C.2 Condizione (Scoring v5)
+
 ```
-blocksToFirst = leaderBlocks − myBlocks + 1   (minimo superare il leader)
-remainingBlocks = total_blocks − blocks_sold
-mathImpossible = pos > 1 AND blocksToFirst > remainingBlocks
+remaining_blocks = total_blocks − blocks_sold
+
+my_max_f_base = √(my_blocks + remaining_blocks)
+              × (1 + log₁₀(1 + storici_cat_u / K))
+
+my_max_score  = my_max_f_base + my_current_pity_bonus
+                // Il pity_bonus NON è comprabile — dipende da L_u, fisso
+
+mathImpossible = pos > 1 AND my_max_score < leader_current_score
 ```
+
+**Differenze chiave rispetto a v4:**
+- v4 confrontava `my_blocks + remaining_blocks` con `leaderBlocks + 1` (lineare nei blocchi)
+- v5 confronta lo **score completo** tenendo conto della concavità (√blocks × log) e del pity bonus
+- Un utente in **hard pity** con pity_bonus alto può continuare a comprare anche se il leader è in vantaggio di `f_base` — il pity lo tiene in gara
+- Viceversa, un utente non-in-pity contro un leader in hard pity scatta math_impossible **molto prima**: il pity bonus del leader (10M+) non è raggiungibile tramite acquisto blocchi
 
 Nota: `pos > 1` è necessario. Chi è già 1° non è mai bloccato (sta vincendo).
 
 ### 4C.3 Monotonicità
-La condizione `mathImpossible` è **monotona**: una volta vera, resta vera fino
-a chiusura airdrop. Questo perché `blocksToFirst` non decresce (il leader può
-solo acquistare più blocchi) e `remainingBlocks` decresce. Quindi una volta
-bloccato, l'utente NON viene mai ri-abilitato in questo airdrop.
+La condizione `mathImpossible` **non è più strettamente monotona** in v5 per via
+del pity dinamico: se nel corso dell'airdrop un altro utente scala di più, L_u
+cresce in **nuovi** airdrop (non in questo). Dentro un singolo airdrop, tuttavia,
+- `my_max_f_base` è non-decrescente (posso solo comprare più blocchi)
+- `leader_current_score` è non-decrescente (leader può solo aumentare)
+- `my_pity_bonus` è fisso (dipende da L_u al momento di apertura)
+
+Quindi entro un singolo airdrop la condizione mantiene la monotonicità pratica:
+una volta bloccati, non si rientra in gioco.
 
 ### 4C.4 Effetti UI (client-side)
 Quando `mathImpossible` scatta in `applyFairnessBlock()`:
@@ -418,6 +450,27 @@ La guard è attualmente **client-side only**. Per chiusura loop: la RPC
 `process_auto_buys` (cron) deve validare fairness prima di eseguire ogni
 acquisto programmato, altrimenti un attaccante con ARIA sufficiente potrebbe
 aggirare la guard via API diretta. Tracciata come follow-up Stage 1.
+
+### 4C.8 Value Threshold — early close anti-gambling (v2.8)
+
+Parallelo al fairness lockdown, un **secondo trigger** di chiusura anticipata
+protegge contro il caso "leader ha speso ≥ valore oggetto in categoria".
+
+**Condizione:**
+```
+leader_cumulative_aria_cat = storici_cat_leader + current_aria_leader
+if leader_cumulative_aria_cat >= object_value_eur × 10:
+    early_close(reason = 'value_threshold')
+```
+
+Il fattore `× 10` deriva da `ARIA_EUR = 0.10` (10 ARIA = 1 EUR). La soglia
+scatta quando il leader ha impegnato ARIA per un valore equivalente in euro
+superiore al valore dell'oggetto stesso.
+
+> In v5 questa condizione è ancorata alla **metrica ARIA diretta**, non allo
+> `score` (che in v5 ha unità diverse per via del `√blocks × log(storici)`).
+> Semanticamente identica a v4, tecnicamente esposta come campo dedicato
+> nella RPC `my_category_score_snapshot` (`cumulative_aria_cat`).
 
 ## 4D. Auto-Buy (v2.1)
 
@@ -462,105 +515,122 @@ Prima di eseguire il draw il sistema verifica:
 
 ---
 
-## 5. Algoritmo Selezione Vincitore
+## 5. Algoritmo Selezione Vincitore (v5 · 24 Aprile 2026)
+
+> **La v5 è ATTIVA nel DB.** La v4 mono-fattoriale (`score = storici_cat + current_aria`)
+> è deprecata — non garantiva il bounded cost, lasciando utenti in lotta con whale
+> veterani a spendere > V_cat senza garanzia di vittoria.
+>
+> La v5 mantiene il **determinismo puro** (vince chi ha lo score più alto, nessuna
+> estrazione casuale — coerente con decisione v1.0, vedi §12.1) e aggiunge un
+> **pity system** che garantisce matematicamente la vittoria entro N_pity partecipazioni
+> nella stessa categoria, con cap sulla spesa totale ≤ 30% del valore oggetto.
 
 ### 5.1 Principio
-Determinismo puro. Il vincitore è chi ha lo score più alto.
-Nessuna estrazione casuale — il risultato è verificabile e riproducibile.
 
-### 5.2 Formula Score (v3 — deployata 16 Aprile 2026)
+Determinismo + garanzia di vittoria bounded. Il vincitore è chi ha lo score più alto,
+dove lo score combina **engagement concavo** (f_base) e **anti-frustration bonus** (pity).
 
-> Formula v3 ATTIVA nel DB. La v2 con 3 fattori (F1/F2/F3) è deprecata.
-> Semplificato a 2 fattori con pesi 70/30, rimuovendo la seniority (F3).
-> La seniority resta come tiebreaker finale, non influisce sullo score.
->
-> **Naming (v2.4 · 19 Apr 2026):** In UI user-facing i fattori sono chiamati
-> **Vantaggio** (F1) e **Impegno** (F2), e lo score è **Punteggio**.
-> In Control Room, ABO e in questo documento tecnico continuiamo a usare
-> F1/F2/S per compattezza.
+Il risultato è verificabile e riproducibile (nessuna aleatorietà, nessuna lotteria).
+
+### 5.2 Formula Score
 
 ```
-score(utente) = (F1 × 0.70) + (F2 × 0.30)
+score(u, a) = f_base(u, a) + pity_bonus(L_u, N_pity_u)
 ```
 
-**F1 — Blocchi nell'airdrop corrente · user-facing "Vantaggio" (70%):**
-```
-F1 = blocchi_utente_corrente / max_blocchi_singolo_utente_in_airdrop
-```
-Normalizzato 0→1. Chi ha il massimo dei blocchi ottiene F1=1.
-Intuizione per l'utente: quanto sei vicino al primo in classifica.
-
-**F2 — ARIA spesi nella categoria · user-facing "Impegno" (30%):**
-```
-F2 = log(1 + aria_spesi_utente_post_vittoria) /
-     log(1 + totale_aria_spesi_nella_categoria_da_tutti)
-```
-- **Numeratore**: ARIA spesi dall'utente nella stessa categoria, ESCLUSO l'airdrop corrente
-- **Denominatore**: somma di TUTTI gli ARIA spesi da TUTTI gli utenti nella categoria
-  (globale, non solo tra i partecipanti correnti)
-- **Solo partecipazioni NON cancellate** (`cancelled_at IS NULL`)
-- **Reset su vittoria**: il numeratore conta SOLO gli ARIA spesi DOPO l'ultima vittoria
-  nella stessa categoria. Se hai vinto un airdrop "Tech", il tuo storico Tech riparte
-  da zero. Questo è la **One Category Rule** applicata allo scoring.
-- Il denominatore globale NON si resetta — resta stabile. Quando un singolo utente
-  si azzera dopo una vittoria, il denominatore non cambia e il peso relativo degli
-  altri partecipanti resta corretto.
-- Se l'utente non ha mai vinto nella categoria, conta tutto lo storico
-- Usa logaritmo per smorzare i gap estremi
-- Normalizzato 0→1
-
-### 5.3 Pesi — v3 (fairness by category)
+#### 5.2.1 `f_base` — engagement concavo
 
 ```
-w1 = 0,70  (partecipazione diretta)
-w2 = 0,30  (fedeltà categoria)
+f_base(u, a) = √blocks_in_a × ( 1 + log₁₀(1 + storici_cat_u / K) )
 ```
 
-> I pesi sono configurabili in `airdrop_config` (chiavi `score_w1`, `score_w2`).
-> Il fondatore può aggiustarli senza deploy.
+**Componente blocchi (`√blocks_in_a`):**
+- Blocchi acquistati dall'utente u nell'airdrop corrente a
+- **Concavità** (radice): comprare 100 blocchi vale 10, non 100. Scoraggia il whale-bomb in single airdrop, premia la partecipazione distribuita
+- Intuizione user-facing: *"ogni blocco conta, ma i primi contano di più"*
 
-**Perché 70/30:**
-- Il 70% assicura che chi compra più blocchi in QUESTO airdrop è favorito
-- Il 30% premia chi ha investito storicamente nella categoria — fairness
-- La seniority NON entra nello score — conta solo quanto hai speso. Usata solo come tiebreaker finale (§5.4)
+**Componente fedeltà (`1 + log₁₀(1 + storici/K)`):**
+- `storici_cat_u`: ARIA cumulativi in categoria post-last-win, escluso airdrop corrente/cancellati/annullati (identico alla definizione v4)
+- `K`: costante di normalizzazione. **Starter: K = 100**. **Adattiva**: ricalcolata settimanalmente come `K = max(100, median(storici_cat))` sugli utenti attivi della categoria
+- **Logaritmo base 10**: saturazione naturale. Da 100 ARIA a 1.000.000 ARIA il moltiplicatore passa da ~2.04 a ~5.00 → rewarding fedeltà senza oligarchia
 
-**Scenari di esempio:**
+**Reset su vittoria (One Category Rule):** post-vittoria nella categoria, `storici_cat` reparte da 0. Il DB esclude via `ap.created_at > lw.last_win_at`.
 
-| Scenario | Utente A (nuovo) | Utente B (veterano) | Vincitore |
-|---|---|---|---|
-| A: 100 bl, 0 ARIA storici / B: 80 bl, 500 ARIA storici | 0.70 | 0.56 + 0.30 = 0.86 | **B** |
-| A: 100 bl, 0 ARIA storici / B: 60 bl, 500 ARIA storici | 0.70 | 0.42 + 0.30 = 0.72 | **B** (di poco) |
-| A: 100 bl, 0 ARIA storici / B: 50 bl, 500 ARIA storici | 0.70 | 0.35 + 0.30 = 0.65 | **A** |
-| A: 100 bl, 200 ARIA / B: 100 bl, 500 ARIA storici | 0.70+0.19 | 0.70+0.30 = 1.00 | **B** |
+#### 5.2.2 `pity_bonus` — garanzia bounded cost
 
-Il veterano con massimo F2 (0.30) deve avere almeno il **57%** dei blocchi del nuovo
-utente per batterlo (0.57×0.70 + 0.30 = 0.70). Questo è un bonus significativo ma non
-permette di vincere con metà dei blocchi.
+```
+L_u       = # airdrop in categoria partecipati SENZA vittoria post-last-win
+N_pity_u  = clamp( floor(α × V̄_cat_aria / c_u_avg), 5, 30 )
 
-**Regola ARIA spesi:**
-Contano SOLO gli ARIA che sono stati effettivamente transati — cioè spesi in
-partecipazioni non cancellate. Se un utente ritira la partecipazione, quegli ARIA
-non contano più nello storico.
+α              = 0.30    (willingness-to-spend ratio)
+V̄_cat_aria     = media all-time object_value_eur categoria × 10   (ARIA_EUR = 0.10)
+c_u_avg        = media ARIA spesi per airdrop categoria (escluso corrente)
+                 Fallback per nuovi: c_cat_avg globale della categoria
 
-### 5.4 Gestione parità (tiebreaker v3.1)
-In caso di score identico (raro ma possibile), l'ordinamento è deterministico:
-1. **Score DESC** — chi ha lo score più alto
-2. **ARIA spesi DESC** — chi ha speso di più in questo airdrop
-3. **Data iscrizione ASC** — chi si è iscritto prima (seniority come spareggio finale)
+M              = max(f_base) tra i partecipanti correnti   (calcolato dinamicamente per ogni airdrop)
 
-> La seniority NON è un fattore di scoring (non alza il tuo score), ma serve
-> come spareggio deterministico per evitare ambiguità. Non è possibile un pareggio.
+if L_u < 0.6 · N_pity_u:  pity_bonus = 0                                              (fase normale)
+elif L_u < N_pity_u:      pity_bonus = M × (L_u - 0.6·N_pity_u) / (0.4·N_pity_u)      (soft pity, ramp 0 → M)
+else:                     pity_bonus = M × (10 + (L_u - N_pity_u))                    (hard pity: 10M baseline + M per loss extra)
+```
 
-### 5.5 Esempio pratico (con pesi v2)
+**Proprietà matematiche:**
+- **Bounded cost**: `spesa_max_to_win ≤ N_pity_u × c_u_avg ≤ α × V̄_cat`. Per default α=0.30 → **un utente non spenderà mai più del 30% del valore oggetto prima di vincere**.
+- **Monotonicità pity**: a parità di `f_base`, più perdite → più bonus. Tiebreaker naturale tra utenti in hard pity (chi ha perso di più vince prima).
+- **Trasparenza**: L_u, N_pity, pity_bonus sono tutti esposti nella UI. L'utente vede esattamente quanto gli manca al soft/hard pity.
+- **Nessuna aleatorietà**: il risultato del draw è calcolabile a priori dato lo stato finale dell'airdrop.
 
-| Utente | Blocchi | Storico cat. | Registrato | Primo blocco | Score |
-|---|---|---|---|---|---|
-| Alice (nuova) | 500/2000 | 0 ARIA | #10 | #1 | 0,65×1,0 + 0,20×0 + 0,15×0,6 = **0,74** |
-| Bob (veterano) | 375/2000 | 5.000 ARIA | #1 | #2 | 0,65×0,75 + 0,20×1,0 + 0,15×0,4 = **0,75** |
-| Carlo (veterano) | 250/2000 | 1.000 ARIA | #2 | #8 | 0,65×0,50 + 0,20×0,8 + 0,15×0,2 = **0,52** |
+#### 5.2.3 Esempio didattico
 
-**Vincitore: Bob** — ma ha dovuto comprare il 75% dei blocchi di Alice.
-Con pesi v1 gli sarebbero bastati il 50%.
+Airdrop **Elettronica** (V̄_cat = €500 = 5.000 ARIA, block_price = 5 ARIA):
+- **Alice** (nuova): 20 blocchi, storici_cat = 0, L_Alice = 0
+  - `f_base = √20 × (1 + log₁₀(1)) = 4.47 × 1.00 = 4.47`
+  - `pity_bonus = 0` → **score = 4.47**
+- **Bob** (veterano fedele): 20 blocchi, storici_cat = 2.000, L_Bob = 15, N_pity_Bob = 30
+  - `f_base = √20 × (1 + log₁₀(1 + 20)) = 4.47 × 2.32 = 10.38`
+  - L_Bob = 15 ≥ 0.6·30 = 18? No → `pity_bonus = 0` → **score = 10.38**
+- **Carla** (persistente sfortunata): 10 blocchi, storici_cat = 800, L_Carla = 22, N_pity_Carla = 25
+  - `f_base = √10 × (1 + log₁₀(1 + 8)) = 3.16 × 1.95 = 6.17`
+  - L_Carla = 22 ∈ [15, 25) → soft pity attivo
+  - M = 10.38 (Bob)
+  - `pity_bonus = 10.38 × (22 - 15) / (25 - 15) = 10.38 × 0.7 = 7.27`
+  - **score = 6.17 + 7.27 = 13.44**
+- **Dave** (hardcore unlucky): 5 blocchi, storici_cat = 500, L_Dave = 30, N_pity_Dave = 28 → hard pity
+  - `f_base = √5 × (1 + log₁₀(1 + 5)) = 2.24 × 1.85 = 4.14`
+  - L_Dave = 30 ≥ 28 → hard pity
+  - `pity_bonus = 10.38 × (10 + 30 - 28) = 10.38 × 12 = 124.56`
+  - **score = 4.14 + 124.56 = 128.70** ← VINCE
+
+**Ranking:** Dave > Carla > Bob > Alice
+
+Dave vince con soli 5 blocchi perché ha accumulato abbastanza perdite da far scattare hard pity. La sua spesa cumulativa in categoria (500 + 25 ARIA dall'airdrop corrente) ≈ 525 ARIA < 30% × 5.000 = 1.500 ARIA.
+
+### 5.3 Parametri configurabili (`airdrop_config`)
+
+```
+score_k_starter        = 100      (K iniziale per log moltiplicatore)
+score_k_recompute_days = 7        (frequenza ricalcolo K adattivo)
+pity_alpha             = 0.30     (willingness-to-spend ratio)
+pity_N_min             = 5        (clamp inferiore N_pity)
+pity_N_max             = 30       (clamp superiore N_pity)
+pity_soft_frac         = 0.6      (soft pity kicks in a questa frazione di N)
+pity_hard_mult         = 10       (moltiplicatore di M a hard pity base)
+```
+
+Tutti modificabili da admin senza deploy.
+
+### 5.4 Gestione parità — tiebreaker (invariato da v4.1)
+
+In caso di `score` identico (raro con pity in gioco), ordinamento deterministico:
+
+1. **Score DESC** — include pity_bonus
+2. **Più blocchi nell'airdrop corrente**
+3. **Più ARIA lifetime cross-categoria** (power-user) — non entra nello score, solo tiebreaker
+4. **Primo blocco prima** (timestamp)
+5. **Seniority** — data registrazione (estrema ratio)
+
+> Il pity_bonus è **monotono in L_u**: due utenti in hard pity con stesso f_base sono discriminati dal numero di perdite. Combinato con i tiebreaker sopra, **non è possibile un pareggio vero**.
 
 ---
 
@@ -1140,6 +1210,72 @@ Con il mining basato sul prezzo, le fasi diventano ridondanti:
 - Proiezione 50K utenti: prezzo quota €5.49 (+110%)
 
 Il modello è progettato per scalare: chi mina presto mina facile.
+
+### 12.6 v5 — Pity System + Engagement Concavo (24 Aprile 2026)
+
+**Contesto:** il v4 mono-fattoriale (score = cumulative ARIA in categoria) aveva una
+debolezza strutturale. Un utente competitivo con un whale veterano poteva accumulare
+ARIA in categoria oltre il valore dell'oggetto stesso senza mai vincere. Skeezu:
+*"Se per prendere un oggetto da €500 ne spendo €600, siamo peggio del gambling."*
+
+**Osservazione Founder (24 Apr 2026):** il requisito non è "probabilità di vittoria
+equa" — è **"garanzia di vittoria entro una spesa cumulativa bounded"**. Questa è
+una richiesta di **vincolo matematico**, non statistico. Un sistema probabilistico
+può soddisfarlo solo in expectation; uno deterministico può soddisfarlo rigorosamente.
+
+**Bivio presentato a Skeezu:**
+
+- **Opzione A — Probabilistic Weighted Draw**: score come peso per estrazione casuale,
+  pity come boost moltiplicativo della probabilità. Pro: elegante, narrativa
+  "bounded cost in expectation", game-theory moderna (gacha). Contro: **ribalta
+  la decisione v1.0 "no lotteria"** (§12.1), espone a rischio percezione gambling.
+
+- **Opzione B — Deterministic + Pity**: formula score include un pity_bonus additivo
+  che garantisce matematicamente la vittoria entro N_pity airdrop. Pro: preserva
+  anti-gambling v1.0, bounded cost garantito (non solo in expectation), UI semplice
+  ("ti mancano X partecipazioni al boost", non "la tua probabilità è Y%"). Contro:
+  meno game-y dal punto di vista UX design.
+
+**Scelta: Opzione B.** Ragioni:
+1. Il decision log v1.0 (§12.1) ha già esplicitamente scartato la lotteria per
+   ragioni di incentive e rischio regulatory. Cambiare questa scelta per un'iterazione
+   algoritmica è sproporzionato.
+2. Il "bounded cost matematicamente garantito" è **più forte** della versione
+   probabilistica ("in expectation") — meglio da un punto di vista di pitch e legal.
+3. La recommendation UI con pity deterministico è **più semplice** e meno ambigua
+   della versione probabilistica (niente percentuali su cui l'utente può fraintendere).
+
+**Formula scelta** (vedi §5 per dettagli completi):
+```
+score = f_base + pity_bonus
+f_base = √blocks × (1 + log₁₀(1 + storici_cat/K))
+pity_bonus = 0 / ramp / 10M+ in funzione di L_u vs N_pity_u
+```
+
+**Altre scelte di design:**
+
+- **√blocks (concavo)**: invece che `blocks` lineare. Scoraggia whale-bomb single-airdrop,
+  premia distribuzione nel tempo. 100 blocchi valgono 10, non 100.
+- **log₁₀ per fedeltà**: saturazione naturale. Da 100 ARIA a 1.000.000 ARIA storici il
+  moltiplicatore cresce da 2.04 a 5.00. Evita oligarchia veterana.
+- **K = 100 starter + adattivo median**: la curva log si ri-centra sulla popolazione reale
+  senza intervento manuale.
+- **α = 0.30**: willingness-to-spend ratio. Sweet spot tra (a) dare all'utente una
+  garanzia di non spendere troppo e (b) dare al treasury margine operativo per fondo
+  comune e revenue. Alzando a 0.5 si erodono i margini; abbassando a 0.2 si aumenta
+  pressione sul pity frequente.
+- **N_pity clamp [5, 30]**: un whale non deve avere pity istantaneo (N_min = 5),
+  un micro-spender non deve aspettare 100 airdrop (N_max = 30).
+- **V̄_cat totale (non rolling)**: stabilità statistica. L'utente che vince è soggetto
+  a One-Category Rule — "riparte da zero" in un'altra categoria, dove V̄_cat di
+  quella categoria è la metrica rilevante.
+
+**Comunicazione al utente (vincolo founder):** la UI deve evitare il framing "aspetta
+il pity" che scoraggia partecipazione. Ogni riferimento a pity progress deve essere
+accompagnato da:
+1. Reminder che il moltiplicatore fedeltà cresce solo partecipando
+2. Menzione che ROBI si scoprono nel rullo ad ogni airdrop, anche senza vincere
+3. CTA primario sempre sul blocco partecipativo (acquista blocchi), non su attesa
 
 ---
 

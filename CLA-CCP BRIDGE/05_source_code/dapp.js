@@ -2169,13 +2169,20 @@ function updateDetailPosition(airdropId,scores){
   var myScore=scores.find(function(s){return s.user_id===_session.user.id});
   var leaderScoreV=scores[0]?parseFloat(scores[0].score)||0:0;
   var myScoreV=myScore?parseFloat(myScore.score)||0:0;
-  var ariaNeeded=pos>1?Math.max(0,leaderScoreV-myScoreV+1):0;
+  var scoreGap=pos>1?Math.max(0,leaderScoreV-myScoreV):0;
+  var myPityPhase=myScore&&myScore.pity_phase?myScore.pity_phase:'normal';
+  var pityBadge='';
+  if(myPityPhase==='hard'){
+    pityBadge=' <span class="pity-badge hard" title="Sei nel Boost di garanzia hard — vincerai quasi sicuramente">'+UI_ICONS.zap+' <span class="it">Boost HARD</span><span class="en">HARD Boost</span></span>';
+  } else if(myPityPhase==='soft'){
+    pityBadge=' <span class="pity-badge soft" title="Boost di garanzia soft attivo">'+UI_ICONS.zap+' <span class="it">Boost soft</span><span class="en">Soft Boost</span></span>';
+  }
   el.innerHTML='<div class="pos-main"><span class="it">Sei <strong>'+pos+'°</strong> su '+total+' partecipanti</span>'
-    +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span></div>'
+    +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span>'+pityBadge+'</div>'
     +'<div class="pos-breakdown">'
-    +'<span title="ARIA totali che hai impegnato in questa categoria (storico + airdrop corrente)"><span class="pos-label"><span class="it">Tuoi ARIA cat.</span><span class="en">Your category ARIA</span></span> '+Math.round(myScoreV).toLocaleString('it-IT')+'</span>'
-    +'<span title="ARIA del primo in classifica"><span class="pos-label"><span class="it">Primo</span><span class="en">Leader</span></span> '+Math.round(leaderScoreV).toLocaleString('it-IT')+'</span>'
-    +(ariaNeeded>0?'<span title="ARIA necessari per superare il primo"><span class="pos-label"><span class="it">Ti servono</span><span class="en">You need</span></span> +'+Math.round(ariaNeeded).toLocaleString('it-IT')+'</span>':'')
+    +'<span title="Tuo Punteggio (blocchi × fedeltà + boost)"><span class="pos-label"><span class="it">Punteggio</span><span class="en">Score</span></span> '+myScoreV.toFixed(2)+'</span>'
+    +'<span title="Punteggio del primo in classifica"><span class="pos-label"><span class="it">Primo</span><span class="en">Leader</span></span> '+leaderScoreV.toFixed(2)+'</span>'
+    +(scoreGap>0?'<span title="Distacco di Punteggio dal primo"><span class="pos-label"><span class="it">Gap</span><span class="en">Gap</span></span> '+scoreGap.toFixed(2)+'</span>':'')
     +'</div>';
   el.className='detail-position in';
   // Check if position worsened
@@ -2193,7 +2200,7 @@ function updateDetailPosition(airdropId,scores){
   updateStrategyGuide(scores,pos,total,myScore);
 }
 
-// ── Strategy Guide (engagement) ──
+// ── Strategy Guide (engagement · Scoring v5) ──
 function updateStrategyGuide(scores,pos,total,myScore){
   var el=document.getElementById('detail-strategy');if(!el)return;
   var a=_currentDetail;if(!a)return;
@@ -2204,83 +2211,155 @@ function updateStrategyGuide(scores,pos,total,myScore){
       +'<div class="strategy-box">'
       +'<div class="strategy-title"><span class="it">Come si vince?</span><span class="en">How do you win?</span></div>'
       +'<div style="padding:14px 16px;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
-      +'<span class="it">Un unico criterio: chi ha impegnato <strong style="color:var(--gold)">pi&ugrave; ARIA in questa categoria</strong> dal giorno dell\'iscrizione vince. Storico + airdrop corrente si sommano. Nessun peso, nessuna formula astratta.</span>'
-      +'<span class="en">One criterion: whoever committed <strong style="color:var(--gold)">more ARIA in this category</strong> since signup wins. History + current airdrop sum up. No weights.</span>'
+      +'<span class="it">Il Punteggio combina tre cose: i <strong style="color:var(--gold)">blocchi</strong> che compri (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora vincere. Nessuna lotteria.</span>'
+      +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> you buy (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without winning yet. No lottery.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
-      +'<span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti gli altri guadagnano ROBI.</span>'
-      +'<span class="en">Whoever is #1 at close gets the item. Everyone else earns ROBI.</span>'
+      +'<span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti scoprono ROBI nel rullo e minano ROBI frazionari.</span>'
+      +'<span class="en">Whoever is #1 at close gets the item. Everyone discovers ROBI in the reel and mines fractional ROBI.</span>'
       +'</div>'
       +'</div>';
     return;
   }
 
-  // ── PARTICIPATING (scoring v4: ARIA cumulative in categoria) ──
+  // ── PARTICIPATING (Scoring v5) ──
   var myScoreV=parseFloat(myScore.score)||0;
-  var myBlocks=myScore.blocks||0;
-  var myCurrentAria=parseFloat(myScore.current_aria||myScore.aria_spent)||0;
+  var myFBase=parseFloat(myScore.f_base||0);
+  var myPityBonus=parseFloat(myScore.pity_bonus||0);
+  var myPityPhase=myScore.pity_phase||'normal';
+  var myLosses=parseInt(myScore.losses_count||0,10);
+  var myPityThreshold=parseInt(myScore.pity_threshold||0,10)||30;
+  var myLoyaltyMult=parseFloat(myScore.loyalty_mult||1);
   var myHistoricAria=parseFloat(myScore.historic_aria||0);
+  var myCurrentAria=parseFloat(myScore.current_aria||myScore.aria_spent)||0;
+  var myBlocks=myScore.blocks||0;
 
   var leader=scores[0];
   var leaderScoreV=leader?parseFloat(leader.score)||0:0;
-  var blockPrice=a.block_price_aria||1;
-  var ariaNeeded=pos>1?Math.max(0,leaderScoreV-myScoreV+1):0;
-  var blocksNeeded=ariaNeeded>0?Math.ceil(ariaNeeded/blockPrice):0;
-
   var isFirst=pos===1;
-  var tipsIt=[], tipsEn=[];
 
+  // Loyalty tier next milestone
+  var loyaltyNext=null;
+  if(myHistoricAria<100)loyaltyNext=100;
+  else if(myHistoricAria<1000)loyaltyNext=1000;
+  else if(myHistoricAria<10000)loyaltyNext=10000;
+  else if(myHistoricAria<100000)loyaltyNext=100000;
+
+  // Pity UI values
+  var pityPct=myPityThreshold>0?Math.min(100,Math.round(myLosses/myPityThreshold*100)):0;
+  var softPitySoglia=Math.ceil(myPityThreshold*0.6);
+  var pityStatusIt, pityStatusEn;
+  if(myPityPhase==='hard'){
+    pityStatusIt='Boost HARD attivo — vinci quasi sicuramente, salvo altri utenti con pi&ugrave; partecipazioni di te in Hard';
+    pityStatusEn='HARD Boost active — you\'ll win almost certainly, unless others have more participations in Hard';
+  } else if(myPityPhase==='soft'){
+    var softProg=Math.max(1,Math.round((myLosses-softPitySoglia)/Math.max(1,myPityThreshold-softPitySoglia)*100));
+    pityStatusIt='Boost soft attivo ('+softProg+'%) — sei molto competitivo';
+    pityStatusEn='Soft Boost active ('+softProg+'%) — you\'re very competitive';
+  } else {
+    var toSoft=Math.max(0,softPitySoglia-myLosses);
+    pityStatusIt=toSoft>0?toSoft+' partecipazioni in categoria al prossimo Boost':'Boost in arrivo al prossimo airdrop!';
+    pityStatusEn=toSoft>0?toSoft+' category participations to next Boost':'Boost at next airdrop!';
+  }
+
+  // Tips (sempre CTA partecipativo, mai "aspetta il pity")
+  var tipsIt=[], tipsEn=[];
   if(isFirst){
-    tipsIt.push('Sei in testa! Continua a impegnare ARIA in categoria per difendere il primato.');
-    tipsEn.push('You\'re in the lead! Keep committing ARIA in category to defend #1.');
-    if(a.status==='presale'){
-      tipsIt.push('Approfitta della presale: prezzo ridotto e doppi ROBI.');
-      tipsEn.push('Take advantage of presale: lower price and double ROBI.');
-    }
+    tipsIt.push('Sei in testa! Compra altri blocchi e continua a partecipare in categoria per difendere il primato.');
+    tipsEn.push('You\'re leading! Buy more blocks and keep participating in category to defend #1.');
     if(total>1){
       var second=scores[1];
       var gap=second?myScoreV-(parseFloat(second.score)||0):0;
-      if(gap>0 && gap<=blockPrice*5){
-        tipsIt.push('Attenzione: il 2&deg; &egrave; a soli <strong>'+Math.round(gap)+' ARIA</strong>!');
-        tipsEn.push('Watch out: #2 is only <strong>'+Math.round(gap)+' ARIA</strong> behind!');
+      if(gap>0 && gap<myScoreV*0.15){
+        tipsIt.push('Attenzione: il 2&deg; &egrave; a <strong>'+gap.toFixed(2)+'</strong> dal tuo Punteggio. Non mollare.');
+        tipsEn.push('Watch out: #2 is <strong>'+gap.toFixed(2)+'</strong> behind you. Don\'t let up.');
       }
     }
   } else {
-    tipsIt.push('Ti servono <strong>'+ariaNeeded.toLocaleString('it-IT')+' ARIA</strong> in pi&ugrave; (circa <strong>'+blocksNeeded+' blocchi</strong>) per superare il 1&deg;.');
-    tipsEn.push('You need <strong>'+ariaNeeded.toLocaleString('it-IT')+' more ARIA</strong> (about <strong>'+blocksNeeded+' blocks</strong>) to pass #1.');
-    if(myHistoricAria>0){
-      tipsIt.push('Gi&agrave; impegnati in categoria: <strong>'+Math.round(myHistoricAria).toLocaleString('it-IT')+' storici</strong> + '+Math.round(myCurrentAria).toLocaleString('it-IT')+' in questo airdrop.');
-      tipsEn.push('Already committed: <strong>'+Math.round(myHistoricAria).toLocaleString('it-IT')+' historic</strong> + '+Math.round(myCurrentAria).toLocaleString('it-IT')+' in this airdrop.');
+    if(myPityPhase==='hard'){
+      tipsIt.push('Il tuo <strong>Boost HARD</strong> &egrave; attivo: continua a comprare blocchi — vinci quasi sicuramente.');
+      tipsEn.push('Your <strong>HARD Boost</strong> is active: keep buying blocks — you\'ll win almost certainly.');
+    } else if(myPityPhase==='soft'){
+      tipsIt.push('Sei nel <strong>Boost soft</strong>: molto competitivo. Compra altri blocchi per capitalizzare.');
+      tipsEn.push('You\'re in <strong>soft Boost</strong>: very competitive. Buy more blocks to capitalize.');
+    } else {
+      // stima blocchi per superare (approssimata; ignora crescita leader)
+      var targetFBase=Math.max(0,leaderScoreV-myPityBonus);
+      var targetBlocks=myLoyaltyMult>0.01?Math.ceil(Math.pow(targetFBase/myLoyaltyMult,2)):0;
+      var blocksNeeded=Math.max(0,targetBlocks-myBlocks);
+      if(blocksNeeded>0 && blocksNeeded<=300){
+        tipsIt.push('Stima: circa <strong>'+blocksNeeded+' blocchi</strong> in pi&ugrave; per raggiungere il 1&deg;.');
+        tipsEn.push('Estimate: about <strong>'+blocksNeeded+' more blocks</strong> to reach #1.');
+      } else if(blocksNeeded>300){
+        tipsIt.push('Il distacco dal 1&deg; &egrave; ampio. Partecipa comunque: <strong>scopri ROBI nel rullo</strong>, fai crescere il moltiplicatore fedelt&agrave;, e avvicinati al Boost.');
+        tipsEn.push('Gap to #1 is wide. Participate anyway: <strong>discover ROBI in the reel</strong>, grow your Loyalty Multiplier, and approach the Boost.');
+      }
+    }
+    if(myHistoricAria>0 && loyaltyNext){
+      var toNext=loyaltyNext-myHistoricAria;
+      tipsIt.push('Il tuo Moltiplicatore &egrave; <strong>&times;'+myLoyaltyMult.toFixed(2)+'</strong>. A '+loyaltyNext.toLocaleString('it-IT')+' ARIA (mancano '+Math.round(toNext).toLocaleString('it-IT')+') sale al prossimo tier.');
+      tipsEn.push('Your Multiplier is <strong>&times;'+myLoyaltyMult.toFixed(2)+'</strong>. At '+loyaltyNext.toLocaleString('en-US')+' ARIA ('+Math.round(toNext).toLocaleString('en-US')+' to go) it moves to the next tier.');
     }
     if(a.status==='presale'){
-      tipsIt.push('La presale &egrave; il momento migliore: prezzo ridotto e doppi ROBI.');
-      tipsEn.push('Presale is the best time: lower price and double ROBI.');
+      tipsIt.push('Presale: prezzo ridotto e doppi ROBI dal mining.');
+      tipsEn.push('Presale: lower price and double mining ROBI.');
     }
+    tipsIt.push('Anche senza vincere, <strong>scopri ROBI nel rullo</strong> e mini ROBI frazionari alla chiusura.');
+    tipsEn.push('Even without winning, <strong>you discover ROBI in the reel</strong> and mine fractional ROBI at close.');
   }
 
-  var progressPct=leaderScoreV>0?Math.min(100,Math.round(myScoreV/leaderScoreV*100)):100;
+  // Loyalty bar progress (visual, log10 scaled)
+  var loyaltyPctBar=Math.min(100,Math.round(Math.log10(1+myHistoricAria/100)*25));
+  var pityFillColor=myPityPhase==='hard'?'var(--gold)':myPityPhase==='soft'?'var(--accent)':'';
 
   el.innerHTML=''
     +'<div class="strategy-box'+(isFirst?' first':'')+'">'
     +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Stai vincendo!':'Come arrivare 1&deg;')+'</span>'
     +'<span class="en">'+(isFirst?'You\'re winning!':'How to reach #1')+'</span></div>'
     +'<div class="strategy-score-top">'
-    +'<span class="it">ARIA in categoria: <strong>'+Math.round(myScoreV).toLocaleString('it-IT')+'</strong>'+(pos>1?' &middot; primo: <strong>'+Math.round(leaderScoreV).toLocaleString('it-IT')+'</strong>':'')+'</span>'
-    +'<span class="en">Category ARIA: <strong>'+Math.round(myScoreV).toLocaleString('it-IT')+'</strong>'+(pos>1?' &middot; leader: <strong>'+Math.round(leaderScoreV).toLocaleString('it-IT')+'</strong>':'')+'</span>'
+    +'<span class="it">Tuo Punteggio: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; primo: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
+    +'<span class="en">Your Score: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; leader: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
     +'</div>'
     +'<div class="strategy-factors">'
+    // 1. Blocchi (radice quadrata)
     +'<div class="strategy-factor-block van">'
     +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Impegno in categoria</span><span class="en">Category commitment</span></span>'
-    +'<span class="strategy-factor-weight-badge">'+progressPct+'%</span>'
-    +'</div>'
-    +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+progressPct+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+Math.round(myScoreV).toLocaleString('it-IT')+'</div>'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Blocchi correnti</span><span class="en">Current blocks</span></span>'
+    +'<span class="strategy-factor-weight-badge">'+myBlocks+' &middot; &radic;='+Math.sqrt(Math.max(myBlocks,0)).toFixed(2)+'</span>'
     +'</div>'
     +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Il Punteggio &egrave; la somma degli ARIA spesi in categoria. Vince chi ne ha impegnati di pi&ugrave;.</span>'
-    +'<span class="en">Score = total ARIA spent in category. Highest wins.</span>'
+    +' <span class="it">Contributo a radice quadrata: 100 blocchi valgono 10, non 100.</span>'
+    +'<span class="en">Square-root contribution: 100 blocks count as 10, not 100.</span>'
+    +'</div>'
+    +'</div>'
+    // 2. Moltiplicatore Fedeltà
+    +'<div class="strategy-factor-block van">'
+    +'<div class="strategy-factor-head">'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.gem+' <span class="it">Moltiplicatore Fedelt&agrave;</span><span class="en">Loyalty Multiplier</span></span>'
+    +'<span class="strategy-factor-weight-badge">&times;'+myLoyaltyMult.toFixed(2)+'</span>'
+    +'</div>'
+    +'<div class="strategy-factor-bar">'
+    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+loyaltyPctBar+'%"></div></div>'
+    +'<div class="strategy-bar-val">'+Math.round(myHistoricAria).toLocaleString('it-IT')+' ARIA</div>'
+    +'</div>'
+    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
+    +' <span class="it">Cresce con gli ARIA spesi in categoria (curva logaritmica, saturante).</span>'
+    +'<span class="en">Grows with ARIA spent in category (log curve, saturating).</span>'
+    +'</div>'
+    +'</div>'
+    // 3. Boost di garanzia (pity)
+    +'<div class="strategy-factor-block van'+(myPityPhase==='hard'?' pity-hard':myPityPhase==='soft'?' pity-soft':'')+'">'
+    +'<div class="strategy-factor-head">'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.zap+' <span class="it">Boost di garanzia</span><span class="en">Guarantee Boost</span></span>'
+    +'<span class="strategy-factor-weight-badge">'+myLosses+'/'+myPityThreshold+'</span>'
+    +'</div>'
+    +'<div class="strategy-factor-bar">'
+    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+pityPct+'%'+(pityFillColor?';background:'+pityFillColor:'')+'"></div></div>'
+    +'<div class="strategy-bar-val">+'+myPityBonus.toFixed(2)+'</div>'
+    +'</div>'
+    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
+    +' <span class="it">'+pityStatusIt+'.</span>'
+    +'<span class="en">'+pityStatusEn+'.</span>'
     +'</div>'
     +'</div>'
     +'</div>'

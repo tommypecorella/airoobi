@@ -395,6 +395,20 @@ html:not([data-lang]) .it{display:inline}
 .strategy-factor-block.van .strategy-factor-heading .ico{color:var(--aria)}
 .strategy-factor-block.imp .strategy-factor-heading .ico{color:var(--gold)}
 .strategy-factor-hint .ico{color:var(--gray-500);margin-right:2px}
+/* Pity v5 — Boost di garanzia states */
+.strategy-factor-block.pity-soft{border-left:2px solid var(--aria);padding-left:10px;background:rgba(74,158,255,.04)}
+.strategy-factor-block.pity-soft .strategy-factor-heading .ico{color:var(--aria)}
+.strategy-factor-block.pity-soft .strategy-factor-hint{border-left-color:var(--aria);color:var(--gray-300)}
+.strategy-factor-block.pity-hard{border-left:2px solid var(--gold);padding-left:10px;background:rgba(184,150,12,.08);animation:pityPulse 2.2s ease-in-out infinite}
+.strategy-factor-block.pity-hard .strategy-factor-heading{color:var(--gold)}
+.strategy-factor-block.pity-hard .strategy-factor-heading .ico{color:var(--gold)}
+.strategy-factor-block.pity-hard .strategy-factor-hint{border-left-color:var(--gold);color:var(--white)}
+.strategy-factor-block.pity-hard .strategy-factor-weight-badge{color:var(--gold);font-weight:600}
+@keyframes pityPulse{0%,100%{box-shadow:0 0 0 0 rgba(184,150,12,0)}50%{box-shadow:0 0 0 3px rgba(184,150,12,.12)}}
+.pity-badge{display:inline-flex;align-items:center;gap:4px;font-family:var(--font-m);font-size:9px;letter-spacing:.5px;text-transform:uppercase;padding:2px 7px;border-radius:999px;vertical-align:middle;margin-left:6px}
+.pity-badge.soft{background:rgba(74,158,255,.12);color:var(--aria);border:1px solid rgba(74,158,255,.3)}
+.pity-badge.hard{background:rgba(184,150,12,.15);color:var(--gold);border:1px solid rgba(184,150,12,.4);font-weight:600}
+.pity-badge .ico{width:.9em;height:.9em}
 
 /* ── My Stats panel ── */
 .detail-mystats{border:1px solid var(--gray-700);background:var(--card-bg);border-radius:var(--radius);padding:18px;margin:12px 0 20px}
