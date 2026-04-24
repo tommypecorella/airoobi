@@ -1260,7 +1260,10 @@ async function renderDetail(){
     +playerHtml
     +'<div class="product-badge" style="position:absolute;top:14px;left:14px;z-index:2">Airdrop</div>'
     +'</div>'
-    +'<div class="detail-below-gallery"><button class="'+(isInWatchlist(a.id)?'heart-btn detail active':'heart-btn detail')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')">&#9825;</button></div>'
+    +'<div class="detail-below-gallery" style="display:flex;align-items:center">'
+    +'<button class="'+(isInWatchlist(a.id)?'heart-btn detail active':'heart-btn detail')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')">&#9825;</button>'
+    +'<button class="share-btn detail" data-id="'+a.id+'" data-title="'+escHtml(a.title||'').replace(/"/g,'&quot;')+'" data-img="'+escHtml(a.image_url||'').replace(/"/g,'&quot;')+'" onclick="shareFromBtn(this,event)" title="Condividi"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>'
+    +'</div>'
 
     // ══════════════════════════════════════════════════
     // ── RIGHT: CONTENT ──
@@ -1671,3 +1674,82 @@ var _airdropId=(function(){
     showError();
   }
 })();
+
+// ── Share airdrop (native + fallback menu) ──
+function shareFromBtn(btn,event){
+  shareAirdrop(btn.dataset.id,btn.dataset.title||'',btn.dataset.img||'',event);
+}
+async function shareAirdrop(id,title,imgUrl,event){
+  if(event){event.stopPropagation();event.preventDefault();}
+  var url=location.origin+'/airdrops/'+id;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var text=(lang==='en'?'Join this airdrop on AIROOBI: ':'Partecipa a questo airdrop su AIROOBI: ')+(title||'');
+  if(navigator.share){
+    var payload={title:title||'AIROOBI',text:text,url:url};
+    if(imgUrl&&navigator.canShare){
+      try{
+        var r=await fetch(imgUrl,{mode:'cors'});
+        if(r.ok){
+          var blob=await r.blob();
+          var file=new File([blob],'airdrop.jpg',{type:blob.type||'image/jpeg'});
+          if(navigator.canShare({files:[file]}))payload.files=[file];
+        }
+      }catch(e){}
+    }
+    try{await navigator.share(payload);return;}catch(e){if(e&&e.name==='AbortError')return;}
+  }
+  openShareMenu(url,text,title,imgUrl);
+}
+function openShareMenu(url,text,title,imgUrl){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var old=document.getElementById('share-overlay');if(old)old.remove();
+  var wa='https://wa.me/?text='+encodeURIComponent(text+' '+url);
+  var tg='https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(text);
+  var tw='https://twitter.com/intent/tweet?text='+encodeURIComponent(text)+'&url='+encodeURIComponent(url);
+  var fb='https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(url);
+  var copyLbl=lang==='en'?'Copy link':'Copia link';
+  var titleLbl=lang==='en'?'Share':'Condividi';
+  var ov=document.createElement('div');
+  ov.id='share-overlay';
+  ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
+  ov.onclick=function(e){if(e.target===ov)ov.remove();};
+  var thumbHtml=imgUrl?'<img src="'+imgUrl.replace(/"/g,'&quot;')+'" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:12px">':'';
+  var titleHtml=title?'<div style="font-family:var(--font-h);font-size:15px;color:var(--white);line-height:1.3;margin-bottom:14px">'+escHtml(title)+'</div>':'';
+  ov.innerHTML='<div style="background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:20px;max-width:360px;width:100%">'
+    +thumbHtml+titleHtml
+    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gray-400);margin-bottom:12px;text-transform:uppercase">'+titleLbl+'</div>'
+    +'<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">'
+    +shareBtnHtml(copyLbl,'copy','copyAirdropLink(this.dataset.url)',url)
+    +shareBtnHtml('WhatsApp','wa','openShareUrl(this.dataset.url)',wa)
+    +shareBtnHtml('Telegram','tg','openShareUrl(this.dataset.url)',tg)
+    +shareBtnHtml('X','x','openShareUrl(this.dataset.url)',tw)
+    +shareBtnHtml('Facebook','fb','openShareUrl(this.dataset.url)',fb)
+    +shareBtnHtml(lang==='en'?'Close':'Chiudi','close','document.getElementById(\'share-overlay\').remove()','')
+    +'</div></div>';
+  document.body.appendChild(ov);
+}
+function shareBtnHtml(label,kind,handler,url){
+  var icons={
+    copy:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>',
+    wa:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M3 21l1.5-5A9 9 0 1120 12a9 9 0 01-13 7.7L3 21z"/><path d="M8.5 10c.2 1 .7 1.9 1.5 2.5.8.7 1.7 1.2 2.7 1.3l1-1c.2-.2.5-.3.8-.2l1.8.7c.3.1.4.4.3.6l-.3 1c-.3.7-1 1.2-1.8 1.1-1.5-.2-3-.9-4.2-2.2-1.2-1.3-1.9-2.8-2-4.2 0-.8.4-1.5 1.1-1.8l1-.3c.2 0 .5.1.6.3l.7 1.8c.1.3 0 .6-.2.8l-1 1z" fill="currentColor" stroke="none"/></svg>',
+    tg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M22 3L2 11l5 2 2 6 3-3 5 4 5-17z"/><path d="M7 13l10-5-8 7"/></svg>',
+    x:'<svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M18.9 2H22l-7.5 8.6L23 22h-6.9l-5.4-7-6.2 7H1.4l8-9.2L1 2h7l4.9 6.5L18.9 2zm-2.4 18h2L7.6 4H5.5l11 16z"/></svg>',
+    fb:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3V2z"/></svg>',
+    close:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" width="16" height="16"><path d="M6 6l12 12M18 6L6 18"/></svg>'
+  };
+  return '<button data-url="'+(url||'').replace(/"/g,'&quot;')+'" onclick="'+handler+'" style="background:none;border:1px solid var(--gray-700);color:var(--gray-300);padding:12px 10px;border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font-m);font-size:11px;letter-spacing:1px;text-transform:uppercase;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-300)\'">'+icons[kind]+'<span>'+label+'</span></button>';
+}
+function openShareUrl(u){if(u)window.open(u,'_blank','noopener');var ov=document.getElementById('share-overlay');if(ov)ov.remove();}
+function copyAirdropLink(url){
+  var done=function(){
+    if(typeof showToast==='function')showToast('<span class="it">Link copiato</span><span class="en">Link copied</span>');
+    else{var a=document.createElement('div');a.textContent='Link copiato';a.style.cssText='position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);padding:10px 18px;z-index:999999;font-family:var(--font-m);letter-spacing:1px;font-size:11px;border-radius:var(--radius-sm)';document.body.appendChild(a);setTimeout(function(){a.remove();},2500);}
+    var ov=document.getElementById('share-overlay');if(ov)ov.remove();
+  };
+  var legacy=function(){
+    var ta=document.createElement('textarea');ta.value=url;ta.style.position='fixed';ta.style.left='-9999px';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);done();
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(done).catch(legacy);
+  }else legacy();
+}
