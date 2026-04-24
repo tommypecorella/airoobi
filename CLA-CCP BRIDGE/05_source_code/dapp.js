@@ -577,187 +577,193 @@ async function loadPortfolioChart(token,userRobi){
   var canvas=document.getElementById('portfolio-chart');
   if(!canvas)return;
   try{
-  // Wait for parent to have positive layout — retry up to ~2s
-  var rect=canvas.parentElement.getBoundingClientRect();
-  var tries=0;
-  while((rect.width<=0||rect.height<=0)&&tries<20){
-    await new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,100);});});
-    rect=canvas.parentElement.getBoundingClientRect();
-    tries++;
-  }
-  if(rect.width<=0||rect.height<=0){
-    // Parent still not visible — use ResizeObserver fallback and exit
-    try{
-      var ro=new ResizeObserver(function(entries){
-        for(var k=0;k<entries.length;k++){
-          if(entries[k].contentRect.width>0&&entries[k].contentRect.height>0){
-            ro.disconnect();
-            loadPortfolioChart(token,userRobi);
-            return;
+    // Wait for parent to have positive layout — retry up to ~2s
+    var rect=canvas.parentElement.getBoundingClientRect();
+    var tries=0;
+    while((rect.width<=0||rect.height<=0)&&tries<20){
+      await new Promise(function(r){requestAnimationFrame(function(){setTimeout(r,100);});});
+      rect=canvas.parentElement.getBoundingClientRect();
+      tries++;
+    }
+    if(rect.width<=0||rect.height<=0){
+      try{
+        var ro=new ResizeObserver(function(entries){
+          for(var k=0;k<entries.length;k++){
+            if(entries[k].contentRect.width>0&&entries[k].contentRect.height>0){
+              ro.disconnect();
+              loadPortfolioChart(token,userRobi);
+              return;
+            }
           }
-        }
-      });
-      ro.observe(canvas.parentElement);
-    }catch(e){console.warn('[portfolio-chart] ResizeObserver unavailable',e);}
-    return;
-  }
-  var ctx=canvas.getContext('2d');
-  canvas.width=rect.width*2;canvas.height=rect.height*2;
-  ctx.scale(2,2);
-  var W=rect.width,H=rect.height;
-
-  // Fetch last 30 days of points_ledger
-  var days=30;
-  var since=new Date();since.setDate(since.getDate()-days);
-  var sinceStr=since.toISOString().slice(0,10);
-  var ledger=[];
-  try{
-    ledger=await sbGet('points_ledger?user_id=eq.'+_session.user.id+'&created_at=gte.'+sinceStr+'T00:00:00&select=amount,created_at&order=created_at.asc',token)||[];
-  }catch(e){}
-
-  // Build daily ARIA cumulative from current balance backwards
-  var dailyMap={};
-  ledger.forEach(function(e){
-    var d=e.created_at.slice(0,10);
-    dailyMap[d]=(dailyMap[d]||0)+(e.amount||0);
-  });
-  // Generate date labels
-  var labels=[];
-  for(var i=days;i>=0;i--){
-    var d=new Date();d.setDate(d.getDate()-i);
-    labels.push(d.toISOString().slice(0,10));
-  }
-  // Build ARIA running balance (work backwards from current)
-  var ariaData=[];
-  var runningBack=_balance;
-  for(var i=labels.length-1;i>=0;i--){
-    ariaData[i]=runningBack;
-    if(i>0)runningBack-=(dailyMap[labels[i]]||0);
-  }
-  // Clamp negatives
-  ariaData=ariaData.map(function(v){return Math.max(0,v)});
-
-  // Get ROBI value + KAS price
-  var robiValEur=0,kasPrice=0;
-  try{
-    var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
-    var tBal=0;
-    if(tfRes.ok){var tf=await tfRes.json();tf.forEach(function(r){tBal+=(parseFloat(r.amount_eur)||0)*((r.treasury_pct!=null?parseInt(r.treasury_pct):100)/100);});}
-    var rrRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}});
-    var tRobi=0;
-    if(rrRes.ok){var rrd=await rrRes.json();rrd.forEach(function(r){tRobi+=parseFloat(r.shares)||0;});}
-    if(tRobi>0)robiValEur=(tBal/tRobi)*userRobi;
-  }catch(e){}
-  try{
-    var kRes=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur');
-    var kd=await kRes.json();
-    if(kd&&kd.kaspa&&kd.kaspa.eur>0)kasPrice=kd.kaspa.eur;
-  }catch(e){}
-
-  // ROBI line (flat — same value across all days for now)
-  var robiData=labels.map(function(){return robiValEur});
-  // KAS potential line
-  var kasData=kasPrice>0?labels.map(function(){return robiValEur/kasPrice}):[];
-
-  // Portfolio summary — mostra solo valore ROBI in EUR (no ARIA EUR)
-  var eurEl=document.getElementById('portfolio-eur-val');
-  if(eurEl)eurEl.innerHTML='&euro; '+robiValEur.toFixed(2)+'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-left:8px;letter-spacing:1px">ROBI</span>';
-
-  // Check if there's any data to show
-  var hasData=ariaData.some(function(v){return v>0})||robiValEur>0;
-  if(!hasData){
-    // No data — show empty state message instead of blank chart
-    canvas.parentElement.style.display='flex';
-    canvas.parentElement.style.alignItems='center';
-    canvas.parentElement.style.justifyContent='center';
-    canvas.style.display='none';
-    var emptyMsg=document.createElement('div');
-    emptyMsg.style.cssText='text-align:center;padding:16px;font-size:12px;color:var(--gray-500);line-height:1.5';
-    var lang=document.documentElement.getAttribute('data-lang')||'it';
-    emptyMsg.innerHTML=lang==='it'
-      ?'Nessun dato ancora.<br>Usa il <strong style="color:var(--aria)">faucet</strong> e il <strong style="color:var(--gold)">check-in</strong> per accumulare ARIA,<br>poi partecipa agli airdrop per guadagnare ROBI.'
-      :'No data yet.<br>Use the <strong style="color:var(--aria)">faucet</strong> and <strong style="color:var(--gold)">check-in</strong> to accumulate ARIA,<br>then join airdrops to earn ROBI.';
-    if(!canvas.parentElement.querySelector('.portfolio-empty')){
-      emptyMsg.className='portfolio-empty';
-      canvas.parentElement.appendChild(emptyMsg);
+        });
+        ro.observe(canvas.parentElement);
+      }catch(e){}
+      return;
     }
-    if(eurEl)eurEl.textContent='€ 0,00';
-    return;
-  }
-  // Ensure canvas is visible if we have data — reset parent layout from any previous empty-state render
-  canvas.parentElement.style.display='';
-  canvas.parentElement.style.alignItems='';
-  canvas.parentElement.style.justifyContent='';
-  canvas.style.display='';
-  var existingEmpty=canvas.parentElement.querySelector('.portfolio-empty');
-  if(existingEmpty)existingEmpty.remove();
-  // Re-measure dopo reset layout (raf per assicurare reflow)
-  await new Promise(function(r){requestAnimationFrame(r);});
-  rect=canvas.parentElement.getBoundingClientRect();
-  canvas.width=rect.width*2;canvas.height=rect.height*2;
-  ctx=canvas.getContext('2d');
-  ctx.scale(2,2);
-  W=rect.width;H=rect.height;
 
-  // Draw
-  var pad={top:14,right:10,bottom:20,left:10};
-  var cW=W-pad.left-pad.right;
-  var cH=H-pad.top-pad.bottom;
+    // ROBI value + KAS price
+    var robiValEur=0,kasPrice=0;
+    try{
+      var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
+      var tBal=0;
+      if(tfRes.ok){var tf=await tfRes.json();tf.forEach(function(r){tBal+=(parseFloat(r.amount_eur)||0)*((r.treasury_pct!=null?parseInt(r.treasury_pct):100)/100);});}
+      var rrRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}});
+      var tRobi=0;
+      if(rrRes.ok){var rrd=await rrRes.json();rrd.forEach(function(r){tRobi+=parseFloat(r.shares)||0;});}
+      if(tRobi>0)robiValEur=(tBal/tRobi)*userRobi;
+    }catch(e){}
+    try{
+      var kRes=await fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur');
+      var kd=await kRes.json();
+      if(kd&&kd.kaspa&&kd.kaspa.eur>0)kasPrice=kd.kaspa.eur;
+    }catch(e){}
 
-  // drawLine: normalizza con min-max + padding verticale; se flat disegna a flatPct (distribuiti)
-  function drawLine(data,color,alpha,flatPct){
-    if(!data.length)return;
-    var mn=Math.min.apply(null,data);
-    var mx=Math.max.apply(null,data);
-    var flat=mx-mn<1e-9;
-    if(flat&&mx<=0)return; // non disegnare serie completamente zero
-    var step=cW/(data.length-1||1);
-    var yFor=function(v){
-      if(flat)return pad.top+cH*(flatPct||0.5);
-      return pad.top+cH-((v-mn)/(mx-mn))*cH*0.92-cH*0.04;
-    };
-    ctx.beginPath();
-    ctx.strokeStyle=color;
-    ctx.lineWidth=1.5;
-    ctx.globalAlpha=1;
-    for(var i=0;i<data.length;i++){
-      var x=pad.left+i*step;
-      var y=yFor(data[i]);
-      if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+    // Summary label
+    var eurEl=document.getElementById('portfolio-eur-val');
+    if(eurEl)eurEl.innerHTML='&euro; '+robiValEur.toFixed(2)+'<span style="font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-left:8px;letter-spacing:1px">ROBI</span>';
+
+    // Ledger last 30 days
+    var days=30;
+    var since=new Date();since.setDate(since.getDate()-days);
+    var sinceStr=since.toISOString().slice(0,10);
+    var ledger=[];
+    try{
+      ledger=await sbGet('points_ledger?user_id=eq.'+_session.user.id+'&created_at=gte.'+sinceStr+'T00:00:00&select=amount,created_at&order=created_at.asc',token)||[];
+    }catch(e){}
+
+    // Labels
+    var labels=[];
+    for(var i=days;i>=0;i--){
+      var d=new Date();d.setDate(d.getDate()-i);
+      labels.push(d.toISOString().slice(0,10));
     }
-    ctx.stroke();
-    // Fill
-    ctx.lineTo(pad.left+(data.length-1)*step,pad.top+cH);
-    ctx.lineTo(pad.left,pad.top+cH);
-    ctx.closePath();
-    ctx.globalAlpha=alpha;
-    ctx.fillStyle=color;
-    ctx.fill();
-    ctx.globalAlpha=1;
-  }
 
-  // Clear
-  ctx.clearRect(0,0,W,H);
+    // Daily aggregate
+    var dailyMap={};
+    ledger.forEach(function(e){
+      var d=e.created_at.slice(0,10);
+      dailyMap[d]=(dailyMap[d]||0)+(e.amount||0);
+    });
 
-  // Grid lines
-  ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=0.5;
-  for(var g=0;g<4;g++){
-    var gy=pad.top+(cH/3)*g;
-    ctx.beginPath();ctx.moveTo(pad.left,gy);ctx.lineTo(W-pad.right,gy);ctx.stroke();
-  }
+    // Reconstruct historical ARIA backwards from current _balance
+    var ariaData=[];
+    var runningBack=_balance;
+    for(var i=labels.length-1;i>=0;i--){
+      ariaData[i]=runningBack;
+      if(i>0)runningBack-=(dailyMap[labels[i]]||0);
+    }
+    ariaData=ariaData.map(function(v){return Math.max(0,v)});
 
-  // Draw lines — se flat distribuisci a 25/50/75% per visibilità
-  drawLine(ariaData,'#4A9EFF',0.06,0.25);
-  drawLine(robiData,'#B8960C',0.08,0.5);
-  if(kasData.length)drawLine(kasData,'#49EACB',0.05,0.75);
+    // Detect corrupted history (admin grants, outliers) → use flat line at current balance.
+    // Matches when: extreme min/max ratio, huge spikes vs median, or non-finite values.
+    var arMax=Math.max.apply(null,ariaData);
+    var sorted=ariaData.slice().sort(function(a,b){return a-b});
+    var median=sorted[Math.floor(sorted.length/2)];
+    var isCorrupted=
+      ariaData.some(function(v){return !isFinite(v)}) ||
+      (arMax>0 && median>=0 && (median===0 ? _balance>0 : arMax/median>10)) ||
+      (_balance>0 && median<_balance*0.05);
+    if(isCorrupted){
+      ariaData=labels.map(function(){return _balance});
+    }
 
+    var robiData=labels.map(function(){return robiValEur});
+    var kasData=kasPrice>0?labels.map(function(){return robiValEur/kasPrice}):[];
 
-  // Date labels (first, mid, last)
-  ctx.font='9px monospace';ctx.fillStyle='rgba(255,255,255,.2)';ctx.textBaseline='top';
-  var ly=H-pad.bottom+4;
-  ctx.textAlign='left';ctx.fillText(labels[0].slice(5),pad.left,ly);
-  ctx.textAlign='center';ctx.fillText(labels[Math.floor(labels.length/2)].slice(5),W/2,ly);
-  ctx.textAlign='right';ctx.fillText(labels[labels.length-1].slice(5),W-pad.right,ly);
+    // hasData check basato su balance reali, non sulla serie ricostruita
+    var hasData=_balance>0||robiValEur>0;
+    if(!hasData){
+      canvas.parentElement.style.display='flex';
+      canvas.parentElement.style.alignItems='center';
+      canvas.parentElement.style.justifyContent='center';
+      canvas.style.display='none';
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      if(!canvas.parentElement.querySelector('.portfolio-empty')){
+        var emptyMsg=document.createElement('div');
+        emptyMsg.className='portfolio-empty';
+        emptyMsg.style.cssText='text-align:center;padding:16px;font-size:12px;color:var(--gray-500);line-height:1.5';
+        emptyMsg.innerHTML=lang==='it'
+          ?'Nessun dato ancora.<br>Usa il <strong style="color:var(--aria)">faucet</strong> e il <strong style="color:var(--gold)">check-in</strong> per accumulare ARIA,<br>poi partecipa agli airdrop per guadagnare ROBI.'
+          :'No data yet.<br>Use the <strong style="color:var(--aria)">faucet</strong> and <strong style="color:var(--gold)">check-in</strong> to accumulate ARIA,<br>then join airdrops to earn ROBI.';
+        canvas.parentElement.appendChild(emptyMsg);
+      }
+      if(eurEl)eurEl.textContent='€ 0,00';
+      return;
+    }
+
+    // Reset parent layout da eventuale precedente empty state
+    canvas.parentElement.style.display='';
+    canvas.parentElement.style.alignItems='';
+    canvas.parentElement.style.justifyContent='';
+    canvas.style.display='';
+    var existingEmpty=canvas.parentElement.querySelector('.portfolio-empty');
+    if(existingEmpty)existingEmpty.remove();
+
+    // Re-measure dopo reset layout
+    await new Promise(function(r){requestAnimationFrame(r);});
+    rect=canvas.parentElement.getBoundingClientRect();
+
+    // Canvas init con DPR (setTransform pulito, no accumulazione scale)
+    var dpr=Math.min(window.devicePixelRatio||1,2);
+    canvas.width=Math.max(1,Math.floor(rect.width*dpr));
+    canvas.height=Math.max(1,Math.floor(rect.height*dpr));
+    var ctx=canvas.getContext('2d');
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    var W=rect.width,H=rect.height;
+
+    var pad={top:14,right:10,bottom:20,left:10};
+    var cW=W-pad.left-pad.right;
+    var cH=H-pad.top-pad.bottom;
+
+    function drawLine(data,color,alpha,flatPct){
+      if(!data.length)return;
+      var mn=Math.min.apply(null,data);
+      var mx=Math.max.apply(null,data);
+      var flat=mx-mn<1e-6;
+      if(flat&&mx<=0)return;
+      var step=cW/(data.length-1||1);
+      var yFor=function(v){
+        if(flat)return pad.top+cH*(flatPct||0.5);
+        return pad.top+cH-((v-mn)/(mx-mn))*cH*0.92-cH*0.04;
+      };
+      ctx.beginPath();
+      ctx.strokeStyle=color;
+      ctx.lineWidth=1.5;
+      ctx.globalAlpha=1;
+      for(var i=0;i<data.length;i++){
+        var x=pad.left+i*step;
+        var y=yFor(data[i]);
+        if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+      }
+      ctx.stroke();
+      ctx.lineTo(pad.left+(data.length-1)*step,pad.top+cH);
+      ctx.lineTo(pad.left,pad.top+cH);
+      ctx.closePath();
+      ctx.globalAlpha=alpha;
+      ctx.fillStyle=color;
+      ctx.fill();
+      ctx.globalAlpha=1;
+    }
+
+    ctx.clearRect(0,0,W,H);
+
+    // Grid
+    ctx.strokeStyle='rgba(255,255,255,.04)';ctx.lineWidth=0.5;
+    for(var g=0;g<4;g++){
+      var gy=pad.top+(cH/3)*g;
+      ctx.beginPath();ctx.moveTo(pad.left,gy);ctx.lineTo(W-pad.right,gy);ctx.stroke();
+    }
+
+    drawLine(ariaData,'#4A9EFF',0.06,0.25);
+    drawLine(robiData,'#B8960C',0.08,0.5);
+    if(kasData.length)drawLine(kasData,'#49EACB',0.05,0.75);
+
+    // Date labels
+    ctx.font='9px monospace';ctx.fillStyle='rgba(255,255,255,.2)';ctx.textBaseline='top';
+    var ly=H-pad.bottom+4;
+    ctx.textAlign='left';ctx.fillText(labels[0].slice(5),pad.left,ly);
+    ctx.textAlign='center';ctx.fillText(labels[Math.floor(labels.length/2)].slice(5),W/2,ly);
+    ctx.textAlign='right';ctx.fillText(labels[labels.length-1].slice(5),W-pad.right,ly);
   }catch(err){
     console.error('[portfolio-chart]',err);
     var eurErr=document.getElementById('portfolio-eur-val');
