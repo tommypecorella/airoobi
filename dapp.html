@@ -23,7 +23,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/dapp.css?v=3.54.0">
+<link rel="stylesheet" href="/src/dapp.css?v=3.57.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -561,29 +561,90 @@
   <!-- ═══ MY AIRDROPS TAB ═══ -->
   <div id="tab-my" style="display:none">
 
-    <!-- ── Le mie proposte (oggetti inviati per valutazione) ── -->
-    <div style="margin-bottom:32px">
-      <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:16px;border-bottom:1px solid var(--gray-800);padding-bottom:8px">
-        <span class="it">Le mie proposte</span><span class="en">My submissions</span>
-      </h3>
-      <div id="my-submissions"></div>
-      <div id="my-submissions-empty" style="display:none;text-align:center;padding:32px 16px;border:1px dashed var(--gray-800)">
-        <div style="font-size:14px;color:var(--gray-400);margin-bottom:8px"><span class="it">Non hai ancora proposto oggetti.</span><span class="en">You haven't submitted any items yet.</span></div>
-        <button onclick="navigateTo('submit')" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer">VALUTA</button>
-      </div>
+    <!-- ── Tab pills: ATTIVI / ARCHIVIO ── -->
+    <div class="my-tabs" role="tablist" style="display:flex;gap:8px;margin-bottom:24px;border-bottom:1px solid var(--gray-800);padding-bottom:0">
+      <button id="my-tab-active" role="tab" aria-selected="true" onclick="switchMyTab('active')" class="my-tab my-tab-on" style="background:none;border:none;border-bottom:2px solid var(--gold);color:var(--white);padding:10px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:8px">
+        <span class="it">Attivi</span><span class="en">Active</span>
+        <span id="my-tab-active-count" style="display:none;background:var(--gold);color:#000;border-radius:10px;padding:1px 8px;font-size:10px;font-weight:700;letter-spacing:0">0</span>
+      </button>
+      <button id="my-tab-archive" role="tab" aria-selected="false" onclick="switchMyTab('archive')" class="my-tab" style="background:none;border:none;border-bottom:2px solid transparent;color:var(--gray-500);padding:10px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:500;cursor:pointer;text-transform:uppercase;display:flex;align-items:center;gap:8px">
+        <span class="it">Archivio</span><span class="en">Archive</span>
+        <span id="my-tab-archive-count" style="display:none;background:var(--gray-700);color:var(--gray-300);border-radius:10px;padding:1px 8px;font-size:10px;font-weight:700;letter-spacing:0">0</span>
+      </button>
     </div>
 
-    <!-- ── Le mie partecipazioni ── -->
-    <div>
-      <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:16px;border-bottom:1px solid var(--gray-800);padding-bottom:8px">
-        <span class="it">Le mie partecipazioni</span><span class="en">My participations</span>
-      </h3>
-      <div class="my-list" id="my-list"></div>
-      <div class="empty" id="my-empty" style="display:none">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        <div class="empty-title"><span class="it">Nessuna partecipazione</span><span class="en">No participations yet</span></div>
-        <p class="empty-sub"><span class="it">Esplora gli airdrop e acquista i tuoi primi blocchi.</span><span class="en">Explore airdrops and buy your first blocks.</span></p>
+    <!-- ═══ PANE: ATTIVI ═══ -->
+    <div id="my-pane-active">
+
+      <!-- Banner azioni richieste -->
+      <div id="my-actions-banner" style="display:none;margin-bottom:24px;padding:14px 16px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.4);border-radius:var(--radius-sm)">
+        <div style="display:flex;align-items:center;gap:10px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;font-weight:700">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+          <span class="it">Richiedono la tua azione</span><span class="en">Require your action</span>
+          <span id="my-actions-count" style="background:var(--gold);color:#000;border-radius:10px;padding:1px 8px;font-size:10px;font-weight:700;letter-spacing:0">0</span>
+        </div>
       </div>
+
+      <!-- Le mie proposte (attive) -->
+      <div style="margin-bottom:32px">
+        <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:6px;display:flex;align-items:baseline;gap:10px">
+          <span class="it">Le mie proposte</span><span class="en">My submissions</span>
+          <span id="my-subs-active-count" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);font-weight:500">0</span>
+        </h3>
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase;margin-bottom:14px;border-bottom:1px solid var(--gray-800);padding-bottom:10px"><span class="it">Vendo</span><span class="en">Selling</span></div>
+        <div id="my-submissions"></div>
+        <div id="my-submissions-empty" style="display:none;text-align:center;padding:28px 16px;border:1px dashed var(--gray-800)">
+          <div style="font-size:13px;color:var(--gray-400);margin-bottom:10px"><span class="it">Nessuna proposta attiva.</span><span class="en">No active submissions.</span></div>
+          <button onclick="navigateTo('submit')" style="background:var(--gold);color:var(--black);border:none;padding:10px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer">VALUTA</button>
+        </div>
+      </div>
+
+      <!-- Le mie partecipazioni (attive) -->
+      <div>
+        <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:6px;display:flex;align-items:baseline;gap:10px">
+          <span class="it">Le mie partecipazioni</span><span class="en">My participations</span>
+          <span id="my-parts-active-count" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);font-weight:500">0</span>
+        </h3>
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase;margin-bottom:14px;border-bottom:1px solid var(--gray-800);padding-bottom:10px"><span class="it">Compro</span><span class="en">Buying</span></div>
+        <div class="my-list" id="my-list"></div>
+        <div class="empty" id="my-empty" style="display:none">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div class="empty-title"><span class="it">Nessuna partecipazione attiva</span><span class="en">No active participations</span></div>
+          <p class="empty-sub"><span class="it">Esplora gli airdrop e acquista i tuoi primi blocchi.</span><span class="en">Explore airdrops and buy your first blocks.</span></p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ PANE: ARCHIVIO ═══ -->
+    <div id="my-pane-archive" style="display:none">
+
+      <!-- Proposte concluse -->
+      <div style="margin-bottom:32px">
+        <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:6px;display:flex;align-items:baseline;gap:10px">
+          <span class="it">Proposte concluse</span><span class="en">Closed submissions</span>
+          <span id="my-subs-archive-count" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);font-weight:500">0</span>
+        </h3>
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase;margin-bottom:14px;border-bottom:1px solid var(--gray-800);padding-bottom:10px"><span class="it">Storico vendite</span><span class="en">Selling history</span></div>
+        <div id="my-submissions-archive"></div>
+        <div id="my-submissions-archive-empty" style="display:none;text-align:center;padding:28px 16px;border:1px dashed var(--gray-800);font-size:13px;color:var(--gray-500)">
+          <span class="it">Nessuna proposta archiviata.</span><span class="en">No archived submissions.</span>
+        </div>
+      </div>
+
+      <!-- Partecipazioni concluse -->
+      <div>
+        <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:6px;display:flex;align-items:baseline;gap:10px">
+          <span class="it">Partecipazioni concluse</span><span class="en">Closed participations</span>
+          <span id="my-parts-archive-count" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);font-weight:500">0</span>
+        </h3>
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase;margin-bottom:14px;border-bottom:1px solid var(--gray-800);padding-bottom:10px"><span class="it">Storico acquisti</span><span class="en">Buying history</span></div>
+        <div class="my-list" id="my-list-archive"></div>
+        <div id="my-list-archive-empty" style="display:none;text-align:center;padding:28px 16px;border:1px dashed var(--gray-800);font-size:13px;color:var(--gray-500)">
+          <span class="it">Nessuna partecipazione archiviata.</span><span class="en">No archived participations.</span>
+        </div>
+      </div>
+
     </div>
 
     <!-- ADS -->
@@ -1207,7 +1268,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.24-3.56.4</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.26-3.57.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1279,6 +1340,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.56.4"></script>
+<script src="/src/dapp.js?v=3.57.0"></script>
 </body>
 </html>

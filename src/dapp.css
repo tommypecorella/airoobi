@@ -1015,3 +1015,7 @@ select option{background:var(--gray-800);color:var(--white)}
   .guida-banner-cta{font-size:9px;padding:6px 10px}
   .guida-banner-toggle{top:68px;left:8px;width:28px;height:28px}
 }
+
+/* ── My Airdrops dashboard ── */
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+.my-tab:hover{color:var(--white) !important}

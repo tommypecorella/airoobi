@@ -2836,9 +2836,39 @@ async function confirmBuy(){
 }
 
 // ── My airdrops ──
+// ── Stati airdrop ──
+// Attivi (partecipazione): presale, sale, pending_seller_decision
+// Archivio (partecipazione): completed, dropped, closed, annullato, rifiutato_*
+function _isPartActive(status){
+  return status==='presale'||status==='sale'||status==='pending_seller_decision';
+}
+
+function switchMyTab(which){
+  var pa=document.getElementById('my-pane-active');
+  var pr=document.getElementById('my-pane-archive');
+  var ta=document.getElementById('my-tab-active');
+  var tr=document.getElementById('my-tab-archive');
+  if(!pa||!pr||!ta||!tr)return;
+  var on=which==='archive'?'archive':'active';
+  pa.style.display=on==='active'?'':'none';
+  pr.style.display=on==='archive'?'':'none';
+  ta.classList.toggle('my-tab-on',on==='active');
+  tr.classList.toggle('my-tab-on',on==='archive');
+  ta.setAttribute('aria-selected',on==='active'?'true':'false');
+  tr.setAttribute('aria-selected',on==='archive'?'true':'false');
+  ta.style.borderBottomColor=on==='active'?'var(--gold)':'transparent';
+  tr.style.borderBottomColor=on==='archive'?'var(--gold)':'transparent';
+  ta.style.color=on==='active'?'var(--white)':'var(--gray-500)';
+  tr.style.color=on==='archive'?'var(--white)':'var(--gray-500)';
+  ta.style.fontWeight=on==='active'?'700':'500';
+  tr.style.fontWeight=on==='archive'?'700':'500';
+}
+
 function renderMyAirdrops(){
   var list=document.getElementById('my-list');
   var empty=document.getElementById('my-empty');
+  var listArc=document.getElementById('my-list-archive');
+  var emptyArc=document.getElementById('my-list-archive-empty');
   // Aggregate by airdrop
   var map={};
   _myParts.forEach(function(p){
@@ -2849,41 +2879,96 @@ function renderMyAirdrops(){
     map[aid].spent+=p.aria_spent;
   });
   var items=Object.values(map);
-  if(!items.length){
+  var active=[],archive=[];
+  items.forEach(function(it){
+    var st=it.airdrop&&it.airdrop.status;
+    if(_isPartActive(st))active.push(it); else archive.push(it);
+  });
+  // Counts
+  var cntA=document.getElementById('my-parts-active-count');
+  var cntR=document.getElementById('my-parts-archive-count');
+  if(cntA)cntA.textContent=active.length;
+  if(cntR)cntR.textContent=archive.length;
+  // Active pane
+  if(!active.length){
     list.innerHTML='';
     empty.style.display='block';
-    return;
+  }else{
+    empty.style.display='none';
+    list.innerHTML=active.map(function(it){return _renderPartCard(it,false);}).join('');
   }
-  empty.style.display='none';
+  // Archive pane
+  if(listArc){
+    if(!archive.length){
+      listArc.innerHTML='';
+      if(emptyArc)emptyArc.style.display='block';
+    }else{
+      if(emptyArc)emptyArc.style.display='none';
+      listArc.innerHTML=archive.map(function(it){return _renderPartCard(it,true);}).join('');
+    }
+  }
+  _updateMyTabCounts();
+}
+
+function _renderPartCard(item,isArchive){
   var placeholderSvg='<svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>';
-  list.innerHTML=items.map(function(item){
-    var a=item.airdrop;
-    if(!a)return '';
-    var imgHtml=a.image_url
-      ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy">'
-      :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
-    var canCancel=true;
-    return '<div class="my-card">'
-      +'<div style="display:flex;gap:16px;padding:18px;align-items:center;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
-      +imgHtml
-      +'<div class="my-card-info">'
-      +'<div class="my-card-title">'+a.title+'</div>'
-      +'<div class="my-card-meta">'+a.category+' &middot; '+(a.status==='presale'?'<span style="color:var(--aria)">Presale</span>':a.status==='sale'?'<span style="color:var(--kas)">Live</span>':'<span>'+a.status+'</span>')+'</div>'
-      +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
-      +'</div></div>'
-      +'<div style="display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--gray-800);align-items:center">'
-      +'<button style="display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:7px 14px;font-family:var(--font-b);font-size:11px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:all .25s;border-radius:var(--radius-sm)" onclick="toggleMyChat(\''+a.id+'\')" onmouseover="this.style.borderColor=\'var(--accent)\';this.style.color=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">'
-      +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>'
-      +'<span class="it">Messaggi</span><span class="en">Messages</span></button>'
-      +'</div>'
-      +'<div id="my-chat-'+a.id+'" style="display:none;padding:0 16px 16px">'
-      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
-      +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500)"><span class="it">Risposte entro 24/48 ore</span><span class="en">Replies within 24/48 hours</span></div>'
-      +'<button onclick="toggleMyChat(\''+a.id+'\')" style="background:none;border:none;color:var(--gray-500);cursor:pointer;font-family:var(--font-m);font-size:10px;letter-spacing:1px;padding:4px 8px;transition:color .2s" onmouseover="this.style.color=\'var(--white)\'" onmouseout="this.style.color=\'var(--gray-500)\'">✕ <span class="it">CHIUDI</span><span class="en">CLOSE</span></button>'
-      +'</div>'
-      +'</div>'
-      +'</div>';
-  }).join('');
+  var a=item.airdrop;
+  if(!a)return '';
+  var imgHtml=a.image_url
+    ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy">'
+    :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
+  // Status badge
+  var st=a.status;
+  var badge='';
+  var deadlineHtml='';
+  if(st==='presale')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);background:rgba(74,158,255,.1);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Pre-vendita</span><span class="en">Pre-sale</span></span>';
+  else if(st==='sale')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--kas);background:rgba(73,234,203,.1);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Live</span><span class="en">Live</span></span>';
+  else if(st==='pending_seller_decision')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);background:rgba(184,150,12,.12);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">In attesa</span><span class="en">Pending</span></span>';
+  else if(st==='completed'||st==='dropped')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#22c55e;background:rgba(34,197,94,.1);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Completato</span><span class="en">Completed</span></span>';
+  else if(st==='annullato')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ef4444;background:rgba(239,68,68,.1);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Annullato</span><span class="en">Cancelled</span></span>';
+  else if(st==='closed')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Chiuso</span><span class="en">Closed</span></span>';
+  else badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:3px 10px;border-radius:10px;text-transform:uppercase">'+st+'</span>';
+  // In scadenza?
+  if(!isArchive&&a.deadline&&(st==='presale'||st==='sale')){
+    var diff=new Date(a.deadline)-Date.now();
+    if(diff>0&&diff<24*60*60*1000){
+      deadlineHtml='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ef4444;background:rgba(239,68,68,.12);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700;animation:pulse 2s ease-in-out infinite;margin-left:6px"><span class="it">In scadenza</span><span class="en">Expiring</span></span>';
+    }
+  }
+  var cardOpacity=isArchive?'opacity:.72;':'';
+  return '<div class="my-card" style="'+cardOpacity+'">'
+    +'<div style="display:flex;gap:16px;padding:18px;align-items:center;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
+    +imgHtml
+    +'<div class="my-card-info">'
+    +'<div class="my-card-title">'+a.title+'</div>'
+    +'<div class="my-card-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+a.category+' &middot; '+badge+deadlineHtml+'</div>'
+    +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
+    +'</div></div>'
+    +'<div style="display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--gray-800);align-items:center">'
+    +'<button style="display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:7px 14px;font-family:var(--font-b);font-size:11px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:all .25s;border-radius:var(--radius-sm)" onclick="toggleMyChat(\''+a.id+'\')" onmouseover="this.style.borderColor=\'var(--accent)\';this.style.color=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">'
+    +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>'
+    +'<span class="it">Messaggi</span><span class="en">Messages</span></button>'
+    +'</div>'
+    +'<div id="my-chat-'+a.id+'" style="display:none;padding:0 16px 16px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500)"><span class="it">Risposte entro 24/48 ore</span><span class="en">Replies within 24/48 hours</span></div>'
+    +'<button onclick="toggleMyChat(\''+a.id+'\')" style="background:none;border:none;color:var(--gray-500);cursor:pointer;font-family:var(--font-m);font-size:10px;letter-spacing:1px;padding:4px 8px;transition:color .2s" onmouseover="this.style.color=\'var(--white)\'" onmouseout="this.style.color=\'var(--gray-500)\'">✕ <span class="it">CHIUDI</span><span class="en">CLOSE</span></button>'
+    +'</div>'
+    +'</div>'
+    +'</div>';
+}
+
+function _updateMyTabCounts(){
+  var subsActive=parseInt(document.getElementById('my-subs-active-count')?.textContent||'0',10);
+  var subsArc=parseInt(document.getElementById('my-subs-archive-count')?.textContent||'0',10);
+  var partsActive=parseInt(document.getElementById('my-parts-active-count')?.textContent||'0',10);
+  var partsArc=parseInt(document.getElementById('my-parts-archive-count')?.textContent||'0',10);
+  var totA=subsActive+partsActive;
+  var totR=subsArc+partsArc;
+  var ca=document.getElementById('my-tab-active-count');
+  var cr=document.getElementById('my-tab-archive-count');
+  if(ca){ca.textContent=totA;ca.style.display=totA>0?'':'none';}
+  if(cr){cr.textContent=totR;cr.style.display=totR>0?'':'none';}
 }
 
 // ── Cancel participation ──
@@ -3602,16 +3687,74 @@ async function loadMySubmissions(){
   }catch(e){console.error('loadMySubmissions error:',e);}
 }
 
+// Stati submissions:
+// Attivi: in_valutazione, valutazione_completata, presale, sale, pending_seller_decision
+// Archivio: dropped, completed, annullato, rifiutato_min500, rifiutato_generico
+function _isSubActive(status){
+  return status==='in_valutazione'||status==='valutazione_completata'
+       ||status==='presale'||status==='sale'
+       ||status==='pending_seller_decision';
+}
+function _needsAction(status){
+  return status==='valutazione_completata'||status==='pending_seller_decision';
+}
+
 function renderMySubmissions(subs){
   var container=document.getElementById('my-submissions');
   var emptyEl=document.getElementById('my-submissions-empty');
+  var containerArc=document.getElementById('my-submissions-archive');
+  var emptyArcEl=document.getElementById('my-submissions-archive-empty');
   if(!container)return;
-  if(!subs||subs.length===0){
+  subs=subs||[];
+  // Split attivi/archivio
+  var active=[],archive=[];
+  for(var k=0;k<subs.length;k++){
+    if(_isSubActive(subs[k].status))active.push(subs[k]); else archive.push(subs[k]);
+  }
+  // Ordina attivi: prima quelli che richiedono azione, poi per data desc
+  active.sort(function(a,b){
+    var aa=_needsAction(a.status)?0:1;
+    var bb=_needsAction(b.status)?0:1;
+    if(aa!==bb)return aa-bb;
+    return new Date(b.created_at)-new Date(a.created_at);
+  });
+  // Archivio: data desc
+  archive.sort(function(a,b){return new Date(b.created_at)-new Date(a.created_at);});
+  // Counts + banner azioni
+  var actionCount=0;
+  for(var n=0;n<active.length;n++)if(_needsAction(active[n].status))actionCount++;
+  var cntA=document.getElementById('my-subs-active-count');
+  var cntR=document.getElementById('my-subs-archive-count');
+  if(cntA)cntA.textContent=active.length;
+  if(cntR)cntR.textContent=archive.length;
+  var banner=document.getElementById('my-actions-banner');
+  var bcnt=document.getElementById('my-actions-count');
+  if(banner&&bcnt){
+    bcnt.textContent=actionCount;
+    banner.style.display=actionCount>0?'':'none';
+  }
+  // Empty states
+  if(active.length===0){
     container.innerHTML='';
     if(emptyEl)emptyEl.style.display='block';
-    return;
+  }else{
+    if(emptyEl)emptyEl.style.display='none';
+    container.innerHTML=_renderSubsHtml(active,false);
   }
-  if(emptyEl)emptyEl.style.display='none';
+  if(containerArc){
+    if(archive.length===0){
+      containerArc.innerHTML='';
+      if(emptyArcEl)emptyArcEl.style.display='block';
+    }else{
+      if(emptyArcEl)emptyArcEl.style.display='none';
+      containerArc.innerHTML=_renderSubsHtml(archive,true);
+    }
+  }
+  _updateMyTabCounts();
+}
+
+function _renderSubsHtml(subs,isArchive){
+  if(!subs||!subs.length)return '';
   var statusLabels={
     'in_valutazione':{it:'In valutazione',en:'Under evaluation',cls:'status-pending'},
     'valutazione_completata':{it:'Valutazione completata',en:'Evaluation complete',cls:'status-ready'},
@@ -3633,7 +3776,8 @@ function renderMySubmissions(subs){
     var subImgHtml=s.image_url
       ?'<img class="my-card-img" src="'+s.image_url+'" alt="" loading="lazy">'
       :'<div class="my-card-img-placeholder"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="currentColor" stroke-width="1.5"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="1.5"/></svg></div>';
-    html+='<div style="border:1px solid var(--gray-800);padding:16px 20px;margin-bottom:12px">';
+    var cardStyle='border:1px solid var(--gray-800);padding:16px 20px;margin-bottom:12px'+(isArchive?';opacity:.72':'');
+    html+='<div style="'+cardStyle+'">';
     html+='<div style="display:flex;gap:16px;align-items:flex-start">';
     html+=subImgHtml;
     html+='<div style="flex:1;min-width:0">';
@@ -3660,17 +3804,19 @@ function renderMySubmissions(subs){
     html+='<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">';
     html+='<button onclick="goToAirdrop(\''+s.id+'\')" style="background:var(--gold);color:#000;border:none;padding:7px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:700;cursor:pointer;transition:all .15s;border-radius:var(--radius-sm)" onmouseover="this.style.opacity=\'.85\'" onmouseout="this.style.opacity=\'1\'"><span class="it">ENTRA</span><span class="en">ENTER</span></button>';
     html+='<button onclick="this.style.display=\'none\';loadAirdropChat(\''+s.id+'\',\'sub-chat-'+s.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'"><span class="it">MESSAGGI</span><span class="en">MESSAGES</span></button>';
-    if(isValutazioneCompletata){
-      html+='<button onclick="acceptValuation(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);color:#22c55e;padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.background=\'rgba(34,197,94,.2)\';this.style.borderColor=\'#22c55e\'" onmouseout="this.style.background=\'rgba(34,197,94,.1)\';this.style.borderColor=\'rgba(34,197,94,.4)\'"><span class="it">ACCETTA</span><span class="en">ACCEPT</span></button>';
-      html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RIFIUTA</span><span class="en">REJECT</span></button>';
-    } else if(isPendingSellerDecision){
-      html+='<button onclick="openCompleteEarlyClose(\''+s.id+'\')" style="background:var(--gold);color:#000;border:none;padding:7px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:700;cursor:pointer;transition:all .15s;border-radius:var(--radius-sm)"><span class="it">COMPLETA</span><span class="en">COMPLETE</span></button>';
-      html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">ANNULLA</span><span class="en">CANCEL</span></button>';
-    } else if(canWithdraw){
-      html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RITIRA</span><span class="en">WITHDRAW</span></button>';
+    if(!isArchive){
+      if(isValutazioneCompletata){
+        html+='<button onclick="acceptValuation(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);color:#22c55e;padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:600;cursor:pointer;transition:all .2s" onmouseover="this.style.background=\'rgba(34,197,94,.2)\';this.style.borderColor=\'#22c55e\'" onmouseout="this.style.background=\'rgba(34,197,94,.1)\';this.style.borderColor=\'rgba(34,197,94,.4)\'"><span class="it">ACCETTA</span><span class="en">ACCEPT</span></button>';
+        html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RIFIUTA</span><span class="en">REJECT</span></button>';
+      } else if(isPendingSellerDecision){
+        html+='<button onclick="openCompleteEarlyClose(\''+s.id+'\')" style="background:var(--gold);color:#000;border:none;padding:7px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:700;cursor:pointer;transition:all .15s;border-radius:var(--radius-sm)"><span class="it">COMPLETA</span><span class="en">COMPLETE</span></button>';
+        html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">ANNULLA</span><span class="en">CANCEL</span></button>';
+      } else if(canWithdraw){
+        html+='<button onclick="withdrawSubmission(\''+s.id+'\',\''+escHtml(s.title).replace(/'/g,"\\'")+'\')" style="background:none;border:1px solid rgba(239,68,68,.3);color:rgba(239,68,68,.7);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'#ef4444\';this.style.color=\'#ef4444\'" onmouseout="this.style.borderColor=\'rgba(239,68,68,.3)\';this.style.color=\'rgba(239,68,68,.7)\'"><span class="it">RITIRA</span><span class="en">WITHDRAW</span></button>';
+      }
     }
     html+='</div>';
-    if(isPendingSellerDecision){
+    if(!isArchive&&isPendingSellerDecision){
       var reason=s.early_close_reason==='value_threshold'?'soglia valore raggiunta dal primo':'fairness lockdown (tutti i non-primi bloccati)';
       var reasonEn=s.early_close_reason==='value_threshold'?'value threshold reached by leader':'fairness lockdown (all non-leaders blocked)';
       html+='<div style="margin-top:10px;padding:12px 14px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.25);border-radius:var(--radius-sm);font-size:12px;line-height:1.55;color:var(--gray-300)"><span class="it">&#9888; Airdrop chiuso anticipatamente ('+reason+'). Blocchi venduti: <strong>'+(s.blocks_sold||0)+'</strong>/<strong>'+(s.original_total_blocks||s.total_blocks||0)+'</strong>. Clicca COMPLETA per vedere il riepilogo e accettare il payout ridotto, o ANNULLA per ritirare (fee di valutazione NON rimborsata).</span><span class="en">&#9888; Airdrop closed early ('+reasonEn+'). Blocks sold: <strong>'+(s.blocks_sold||0)+'</strong>/<strong>'+(s.original_total_blocks||s.total_blocks||0)+'</strong>. Click COMPLETE to review the reduced payout, or CANCEL to withdraw (valuation fee NOT refunded).</span></div>';
@@ -3678,7 +3824,7 @@ function renderMySubmissions(subs){
     html+='<div id="sub-chat-'+s.id+'" style="margin-top:8px"></div>';
     html+='</div>';
   }
-  container.innerHTML=html;
+  return html;
 }
 
 // ── Early-close completion (seller decide COMPLETA post-lockdown) ──
