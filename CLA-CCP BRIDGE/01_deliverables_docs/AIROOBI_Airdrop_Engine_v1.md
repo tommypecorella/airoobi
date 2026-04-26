@@ -1,9 +1,10 @@
 # AIROOBI — Airdrop Engine Specification
-**Version 1.0 · 19 Marzo 2026 · DOCUMENTO FONDATIVO**
+**Version 1.0 · 19 Marzo 2026 · DEPRECATO**
 
-> Questo documento definisce le regole, gli algoritmi e l'architettura tecnica
-> del motore di airdrop di AIROOBI. È la fonte di verità per ogni implementazione.
-> Aggiornare questo documento prima di modificare qualsiasi logica di business.
+> **DEPRECATO** — Sostituito da `AIROOBI_Airdrop_Engine_v2.md` (28 Mar 2026). Non usare come riferimento.
+>
+> Questo documento resta come archivio storico della v1. Per la versione corrente
+> delle regole e degli algoritmi, consultare sempre la v2.
 
 ---
 
@@ -182,7 +183,7 @@ Per ogni perdente (ordinati per ARIA spesi DESC):
   2. Applica minimo della fase
   3. Applica cap anti-inflazione proporzionale
   4. Inserisci in nft_rewards: nft_teorici record con
-     nft_type = 'NFT_REWARD'
+     nft_type = 'NFT_REWARD'  -- DB key per ROBI (NFT Reward = ROBI; non-Reward = Badge)
      source = 'airdrop_draw'
      airdrop_id = [id airdrop]
      metadata = {airdrop_title, draw_date, blocks_owned, score}
