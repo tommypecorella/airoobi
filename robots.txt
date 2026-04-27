@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /abo
+Disallow: /admin
+Disallow: /api/
+Disallow: /supabase/
+
+Sitemap: https://www.airoobi.com/sitemap.xml
+Sitemap: https://www.airoobi.app/sitemap.xml
