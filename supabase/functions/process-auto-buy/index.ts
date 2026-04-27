@@ -78,6 +78,29 @@ serve(async (req: Request) => {
       const blocksToBuy = Math.min(rule.blocks_per_interval, remaining, blocksAvailable);
       if (blocksToBuy <= 0) continue;
 
+      // ══ FAIRNESS GUARD SERVER-SIDE (Hole #2) ══
+      // Se l'utente non può più raggiungere il leader-score nemmeno comprando
+      // tutti i blocchi residui, disabilita la regola e logga in events.
+      const { data: fairCheck } = await sb.rpc("check_fairness_can_buy", {
+        p_airdrop_id: airdrop.id,
+        p_user_id: rule.user_id,
+        p_extra_blocks: blocksToBuy,
+      });
+      if (fairCheck && fairCheck.can_buy === false) {
+        await sb.from("auto_buy_rules").update({ active: false }).eq("id", rule.id);
+        await sb.from("events").insert({
+          event: "auto_buy_disabled_fairness",
+          user_id: rule.user_id,
+          props: {
+            airdrop_id: airdrop.id,
+            reason: fairCheck.reason ?? "math_impossible",
+            my_max_score: fairCheck.my_max_score ?? null,
+            leader_score: fairCheck.leader_score ?? null,
+          },
+        });
+        continue;
+      }
+
       // Trova blocchi disponibili
       const { data: takenBlocks } = await sb
         .from("airdrop_blocks")

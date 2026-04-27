@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<title>AIROOBI · Diventa Alpha Brave — fair-airdrop su Kaspa</title>
+<meta name="description" content="AIROOBI cerca i primi 1.000 utenti per chiudere la fase Alpha Brave. Fair-airdrop deterministico, asset-backed, su blockchain Kaspa." />
+
+<!-- OpenGraph for sharing -->
+<meta property="og:title" content="Diventa Alpha Brave · AIROOBI" />
+<meta property="og:description" content="Fair-airdrop marketplace su Kaspa. ROBI come buono fruttifero ≥95% PEG. Determinismo, non lotteria." />
+<meta property="og:image" content="https://airoobi.com/og-image.png" />
+<meta property="og:url" content="https://airoobi.com/diventa-alpha-brave" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+
+<style>
+  :root {
+    --black: #000000;
+    --gray-900: #0a0a0a;
+    --gray-800: #161616;
+    --gray-700: #2a2a2a;
+    --gold:  #B8960C;
+    --gold-dim: #8C7000;
+    --gold-glow: rgba(184,150,12,0.18);
+    --white: #FFFFFF;
+    --aria:  #4A9EFF;
+    --kas:   #49EACB;
+    --gray-200: #cfcfcf;
+    --gray-400: #888888;
+
+    --font-h: "Cormorant Garamond", Georgia, serif;
+    --font-b: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    --font-m: "DM Mono", "Consolas", "Courier New", monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--black); color: var(--white);
+    font-family: var(--font-b);
+    line-height: 1.55; font-size: 16px;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--gold); color: var(--black); }
+
+  /* === SHARED === */
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+  .gold-rule { height: 2px; background: var(--gold); width: 80px; margin: 0 0 20px; }
+  .eyebrow { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 4px; text-transform: uppercase; }
+
+  h1, h2, h3 { font-family: var(--font-h); font-weight: 500; color: var(--white); line-height: 1.05; }
+  h1 { font-size: clamp(46px, 7vw, 88px); letter-spacing: -1px; }
+  h2 { font-size: clamp(34px, 4.5vw, 52px); letter-spacing: -0.5px; }
+  h3 { font-size: 22px; }
+  p { font-size: 16px; color: var(--gray-200); line-height: 1.6; }
+
+  /* === TOP BAR === */
+  .topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--gray-700);
+  }
+  .topbar-inner {
+    max-width: 1080px; margin: 0 auto; padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .brand-mini { font-size: 14px; font-weight: 700; letter-spacing: 4px; color: var(--gold); }
+  .topbar nav a { color: var(--gray-200); font-size: 13px; margin-left: 22px; text-decoration: none; letter-spacing: 1px; }
+  .topbar nav a:hover { color: var(--gold); }
+  .topbar .cta-mini {
+    background: var(--gold); color: var(--black); padding: 8px 18px;
+    font-weight: 700; font-size: 12px; letter-spacing: 2px; text-decoration: none;
+    text-transform: uppercase;
+  }
+
+  /* === HERO === */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+    padding: 120px 0 60px; position: relative;
+    background:
+      radial-gradient(circle at 10% 30%, rgba(184,150,12,0.08), transparent 50%),
+      radial-gradient(circle at 90% 70%, rgba(74,158,255,0.05), transparent 50%),
+      var(--black);
+  }
+  .hero h1 { margin: 14px 0 26px; }
+  .hero h1 .em { color: var(--gold); font-style: italic; }
+  .hero .lede { font-family: var(--font-h); font-style: italic; font-size: clamp(20px, 2.4vw, 28px); color: var(--gray-200); max-width: 720px; margin-bottom: 36px; line-height: 1.4; }
+  .hero .cta-row { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 18px; }
+  .btn {
+    display: inline-block; padding: 16px 32px;
+    font-family: var(--font-b); font-weight: 700; font-size: 14px; letter-spacing: 2.5px; text-transform: uppercase;
+    text-decoration: none; cursor: pointer; transition: 0.2s;
+  }
+  .btn-primary { background: var(--gold); color: var(--black); border: 1px solid var(--gold); }
+  .btn-primary:hover { background: var(--white); border-color: var(--white); }
+  .btn-ghost { background: transparent; color: var(--white); border: 1px solid var(--gray-400); }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-meta { margin-top: 42px; display: flex; gap: 30px; flex-wrap: wrap; font-size: 13px; color: var(--gray-400); letter-spacing: 0.5px; }
+  .hero-meta b { color: var(--gold); font-family: var(--font-m); font-weight: 500; margin-right: 6px; }
+
+  /* === COUNTER === */
+  .counter-box {
+    display: inline-block;
+    padding: 18px 28px;
+    border: 1px solid var(--gold-dim);
+    background: linear-gradient(180deg, rgba(184,150,12,0.06), rgba(0,0,0,0.4));
+    margin-bottom: 28px;
+  }
+  .counter-box .label { font-size: 10px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 6px; }
+  .counter-box .num { font-family: var(--font-m); font-size: 36px; color: var(--white); font-weight: 700; }
+  .counter-box .num .total { color: var(--gray-400); font-weight: 400; }
+  .counter-box .progress { width: 280px; height: 4px; background: var(--gray-700); margin-top: 10px; position: relative; overflow: hidden; }
+  .counter-box .progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--gold); transition: width 1.2s cubic-bezier(.2,.7,.2,1); }
+
+  /* === SECTIONS === */
+  section { padding: 100px 0; border-top: 1px solid var(--gray-800); }
+  section.dark2 { background: var(--gray-900); }
+
+  /* === HOW IT WORKS === */
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; margin-top: 50px; }
+  .step {
+    background: var(--gray-900); border: 1px solid var(--gray-700); border-top: 2px solid var(--gold);
+    padding: 22px 18px; min-height: 220px;
+  }
+  .step .n { font-family: var(--font-m); font-size: 22px; color: var(--gold); font-weight: 700; margin-bottom: 10px; }
+  .step .t { font-family: var(--font-h); font-size: 19px; color: var(--white); margin-bottom: 8px; line-height: 1.2; }
+  .step .d { font-size: 13px; color: var(--gray-200); line-height: 1.45; }
+  @media (max-width: 920px) { .steps { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 520px) { .steps { grid-template-columns: 1fr; } }
+
+  /* === DIFFERENTIATORS === */
+  .diff-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 50px; }
+  .diff {
+    background: var(--gray-900); border: 1px solid var(--gold-dim); padding: 30px 26px;
+    position: relative;
+  }
+  .diff .tag {
+    display: inline-block; padding: 5px 12px; background: var(--gold); color: var(--black);
+    font-size: 10px; font-weight: 700; letter-spacing: 2px; margin-bottom: 16px; text-transform: uppercase;
+  }
+  .diff h3 { font-family: var(--font-h); font-size: 22px; margin-bottom: 10px; line-height: 1.2; }
+  .diff p { font-size: 14px; line-height: 1.5; }
+  @media (max-width: 920px) { .diff-grid { grid-template-columns: 1fr; } }
+
+  /* === FAIRNESS === */
+  .fairness {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; margin-top: 40px;
+  }
+  .fairness .formula {
+    background: linear-gradient(135deg, rgba(184,150,12,0.05), rgba(74,158,255,0.03));
+    border: 1px solid var(--gold-dim); padding: 36px 32px;
+  }
+  .fairness .formula .eq { font-family: var(--font-m); font-size: 22px; font-weight: 700; color: var(--white); margin-bottom: 16px; }
+  .fairness .formula .sub { font-family: var(--font-m); font-size: 13px; color: var(--gold); line-height: 1.6; margin-bottom: 6px; }
+  .fairness .formula .note { font-family: var(--font-h); font-style: italic; font-size: 17px; color: var(--gray-200); margin-top: 22px; line-height: 1.4; }
+  .fairness .stats .stat-row { display: flex; align-items: baseline; gap: 18px; padding: 22px 0; border-bottom: 1px solid var(--gray-800); }
+  .fairness .stats .stat-row:last-child { border-bottom: 0; }
+  .fairness .stats .big { font-family: var(--font-m); font-size: 44px; color: var(--gold); font-weight: 700; min-width: 130px; line-height: 1; }
+  .fairness .stats .lab { font-size: 14px; color: var(--gray-200); line-height: 1.5; }
+  @media (max-width: 920px) { .fairness { grid-template-columns: 1fr; } }
+
+  /* === SIGNUP === */
+  .signup {
+    text-align: center; padding: 120px 0;
+    background:
+      radial-gradient(circle at 50% 50%, rgba(184,150,12,0.08), transparent 60%),
+      var(--black);
+  }
+  .signup h2 { margin-bottom: 16px; }
+  .signup .lede { font-family: var(--font-h); font-style: italic; font-size: 22px; color: var(--gray-200); max-width: 640px; margin: 0 auto 38px; }
+  .form-row {
+    display: flex; gap: 0; max-width: 540px; margin: 0 auto;
+    border: 1px solid var(--gold-dim);
+  }
+  .form-row input[type="email"] {
+    flex: 1; padding: 18px 20px; background: transparent; border: 0;
+    color: var(--white); font-family: var(--font-b); font-size: 15px; outline: none;
+  }
+  .form-row input[type="email"]::placeholder { color: var(--gray-400); }
+  .form-row button {
+    background: var(--gold); border: 0; color: var(--black);
+    font-family: var(--font-b); font-weight: 700; font-size: 13px; letter-spacing: 2.5px;
+    padding: 0 28px; cursor: pointer; text-transform: uppercase;
+  }
+  .form-row button:hover { background: var(--white); }
+  .form-note { margin-top: 18px; font-size: 12px; color: var(--gray-400); }
+
+  .reward-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    max-width: 720px; margin: 50px auto 0;
+  }
+  .reward {
+    background: var(--gray-900); border: 1px solid var(--gray-700);
+    padding: 22px 18px;
+  }
+  .reward .num { font-family: var(--font-m); font-size: 28px; color: var(--gold); font-weight: 700; }
+  .reward .lab { font-size: 12px; color: var(--gray-200); margin-top: 6px; line-height: 1.4; }
+  @media (max-width: 720px) { .reward-grid { grid-template-columns: 1fr; } }
+
+  /* === FAQ === */
+  .faq-list { margin-top: 30px; }
+  .faq-item { border-bottom: 1px solid var(--gray-700); padding: 22px 0; }
+  .faq-q { font-family: var(--font-h); font-size: 22px; color: var(--white); margin-bottom: 8px; cursor: pointer; }
+  .faq-a { font-size: 15px; color: var(--gray-200); line-height: 1.6; }
+
+  /* === FOOTER === */
+  footer {
+    padding: 60px 0 40px; border-top: 1px solid var(--gray-700); background: var(--gray-900);
+  }
+  .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  .footer-inner .left .brand-mini { font-size: 16px; }
+  .footer-inner .left p { font-size: 12px; color: var(--gray-400); margin-top: 6px; }
+  .footer-inner .right a { color: var(--gray-200); font-size: 13px; margin-left: 22px; text-decoration: none; }
+  .footer-inner .right a:hover { color: var(--gold); }
+
+  .pulse {
+    display: inline-block; width: 8px; height: 8px; background: var(--gold);
+    border-radius: 50%; margin-right: 8px; animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--gold-glow); }
+    50% { opacity: 0.5; box-shadow: 0 0 0 8px transparent; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-inner">
+    <span class="brand-mini">AIROOBI</span>
+    <nav>
+      <a href="#how">Come funziona</a>
+      <a href="#fairness">Math</a>
+      <a href="#faq">FAQ</a>
+      <a class="cta-mini" href="#signup">Apri account</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="counter-box">
+      <div class="label"><span class="pulse"></span>Alpha Brave · in corso</div>
+      <div class="num"><span id="ab-count">…</span> <span class="total">/ 1.000</span></div>
+      <div class="progress"><div class="progress-fill" id="ab-progress"></div></div>
+    </div>
+
+    <div class="eyebrow">Fair-airdrop marketplace · su blockchain Kaspa</div>
+    <div class="gold-rule"></div>
+    <h1>Realizza il tuo<br/><span class="em">desiderio.</span></h1>
+    <p class="lede">
+      AIROOBI è il primo marketplace al mondo dove ottieni oggetti reali a una frazione del prezzo, con un asset garantito (ROBI ≥95% PEG) anche se non sei tra i vincitori.
+      <strong style="color:var(--white);">Determinismo, non lotteria. Mai gioco d'azzardo.</strong>
+    </p>
+
+    <div class="cta-row">
+      <a href="#signup" class="btn btn-primary">Diventa Alpha Brave</a>
+      <a href="#how" class="btn btn-ghost">Come funziona</a>
+    </div>
+
+    <div class="hero-meta">
+      <span><b>1.000</b> ARIA + <b>5</b> ROBI welcome bonus al sign-up</span>
+      <span><b>0%</b> fee per gli early-adopter Alpha</span>
+      <span><b>BADGE</b> Fondatore esclusivo per i primi 1.000</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how">
+  <div class="wrap">
+    <div class="eyebrow">Come funziona</div>
+    <div class="gold-rule"></div>
+    <h2>Il loop in 5 passi.</h2>
+
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <div class="t">Guadagni ARIA</div>
+        <div class="d">Welcome 1.000 + 5 ROBI · faucet 100/gg · sequenza 50 ARIA + 1 ROBI/sett · referral 5+5.</div>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <div class="t">Scegli un airdrop</div>
+        <div class="d">Oggetti reali ≥ €500 valutati e quotati. Smartphone, tech, lusso, moda — categorie diverse.</div>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <div class="t">Compri blocchi</div>
+        <div class="d">Da 5 a 25 ARIA per blocco. Più blocchi nella categoria = più engagement = più chance.</div>
+      </div>
+      <div class="step">
+        <div class="n">04</div>
+        <div class="t">Draw deterministico</div>
+        <div class="d">Vince chi ha lo score più alto (impegno categoria + pity bonus). Auditabile, riproducibile.</div>
+      </div>
+      <div class="step">
+        <div class="n">05</div>
+        <div class="t">Riscuoti</div>
+        <div class="d">Vincitore: ottiene l'oggetto. Tutti: ROBI sempre, riscuotibile in KAS al ≥95% (24-48h).</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENTIATORS -->
+<section class="dark2">
+  <div class="wrap">
+    <div class="eyebrow">Perché AIROOBI è diverso</div>
+    <div class="gold-rule"></div>
+    <h2>Tre cose che nessuno offre.</h2>
+
+    <div class="diff-grid">
+      <div class="diff">
+        <span class="tag">FAIR</span>
+        <h3>Determinismo, non lotteria.</h3>
+        <p>Algoritmo pubblico (scoring v5) che premia chi ha realmente impegnato di più nella categoria. No alea pura. No gambling. Verificabile su pubblico ledger.</p>
+      </div>
+      <div class="diff">
+        <span class="tag">ASSET</span>
+        <h3>Acquisti, non scommetti.</h3>
+        <p>Ogni blocco genera un ROBI: NFT con ≥95% del valore garantito in KAS via Fondo Comune. Mai zero in mano, mai perdita totale.</p>
+      </div>
+      <div class="diff">
+        <span class="tag">BOUNDED</span>
+        <h3>Spesa massima cappata.</h3>
+        <p>Il pity system garantisce vittoria entro un cap del 30% del valore oggetto. Non puoi spendere €500 per un bene da €500. Mai.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAIRNESS -->
+<section id="fairness">
+  <div class="wrap">
+    <div class="eyebrow">Il cuore matematico</div>
+    <div class="gold-rule"></div>
+    <h2>Trasparenza per chi vuole capire.</h2>
+
+    <div class="fairness">
+      <div class="formula">
+        <div class="eq">score = f_base + pity_bonus</div>
+        <div class="sub">f_base = √blocchi × ( 1 + log₁₀( 1 + storici_cat / K ) )</div>
+        <div class="sub">pity_bonus(L_u, N_pity) → garanzia matematica</div>
+        <p class="note">"L'utente non deve arrivare a spendere la cifra media dell'oggetto prima di ottenerlo. Altrimenti saremmo peggio del gambling."<br/>— Skeezu, founder AIROOBI</p>
+      </div>
+      <div class="stats">
+        <div class="stat-row">
+          <div class="big">≤ 30%</div>
+          <div class="lab">spesa massima prima della vittoria garantita — bounded cost via pity (α = 0.30 sul valore oggetto)</div>
+        </div>
+        <div class="stat-row">
+          <div class="big">0</div>
+          <div class="lab">elementi di alea nel draw — il risultato è una funzione pura, ricalcolabile a posteriori</div>
+        </div>
+        <div class="stat-row">
+          <div class="big">≥95%</div>
+          <div class="lab">valore garantito di ogni ROBI in KAS via Fondo Comune (treasury-backed PEG)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SIGNUP -->
+<section id="signup" class="signup">
+  <div class="wrap">
+    <div class="eyebrow">Diventa Alpha Brave</div>
+    <div style="height: 2px; background: var(--gold); width: 80px; margin: 0 auto 30px;"></div>
+    <h2>Sei tra i prossimi 993.</h2>
+    <p class="lede">Apri account oggi. Welcome 1.000 ARIA + 5 ROBI. Niente fee in fase Alpha. Badge Fondatore esclusivo.</p>
+
+    <form class="form-row" action="https://airoobi.app/signup" method="get" onsubmit="event.preventDefault(); window.location='https://airoobi.app/signup?source=alpha-brave&email=' + encodeURIComponent(this.email.value);">
+      <input type="email" name="email" placeholder="la-tua-email@esempio.com" required />
+      <button type="submit">Apri account</button>
+    </form>
+    <div class="form-note">Riceverai welcome 1.000 ARIA + 5 ROBI al primo login. Nessun pagamento richiesto.</div>
+
+    <div class="reward-grid">
+      <div class="reward">
+        <div class="num">1.000 ARIA</div>
+        <div class="lab">welcome grant Alpha-Net — usabile subito per partecipare</div>
+      </div>
+      <div class="reward">
+        <div class="num">5 ROBI</div>
+        <div class="lab">NFT con ≥95% valore garantito in KAS — riscuotibili 24-48h</div>
+      </div>
+      <div class="reward">
+        <div class="num">BADGE</div>
+        <div class="lab">Fondatore Alpha Brave — non trasferibile, riconoscimento permanente</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="dark2">
+  <div class="wrap">
+    <div class="eyebrow">FAQ</div>
+    <div class="gold-rule"></div>
+    <h2>Le domande che ci fanno tutti.</h2>
+
+    <div class="faq-list">
+      <div class="faq-item">
+        <div class="faq-q">È gioco d'azzardo?</div>
+        <div class="faq-a">No, e non lo è strutturalmente. Il draw è deterministico (no RNG), ogni partecipazione genera un asset reale (ROBI) con valore garantito ≥95% in KAS, e il sistema blocca matematicamente l'utente quando l'acquisto non può più portare a vittoria. Tre criteri legali del gambling sono cumulativi: noi ne interrompiamo strutturalmente due.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Quanto costa partecipare?</div>
+        <div class="faq-a">Niente. Apri account → ricevi 1.000 ARIA + 5 ROBI gratis come welcome. Da quel momento usi ARIA per partecipare agli airdrop. ARIA si guadagna anche con check-in giornaliero (50/gg), faucet (100/gg), referral (5+5 ROBI). Mai pagamenti reali in fase Alpha.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Cos'è ROBI esattamente?</div>
+        <div class="faq-a">ROBI è un NFT che certifica il diritto a riscuotere KAS dal Fondo Comune di AIROOBI. Ogni ROBI vale almeno il 95% del suo valore PEG (Treasury / ROBI circolanti). Lo riscuoti quando vuoi: 24-48h di processing, ti arriva sul wallet Kaspa. Mai acquistabile direttamente — solo ottenibile partecipando.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Cosa succede se non vinco?</div>
+        <div class="faq-a">Niente di brutto. Se non vinci, hai comunque accumulato ROBI proporzionali alla tua partecipazione (1 blocco ≈ 1 ROBI mining). Il pity system garantisce inoltre che nella stessa categoria vincerai entro un numero limitato di partecipazioni — la matematica garantisce che non spenderai mai più del 30% del valore oggetto prima di vincere.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Perché su Kaspa?</div>
+        <div class="faq-a">BlockDAG con conferme in 1-2 secondi, throughput 100+ TPS, PoW puro Bitcoin-grade, fair launch (no premine, no VC pre-allocato). I valori della community Kaspa sono allineati con la fairness — il nostro stesso valore fondante. Smart contract KRC-20 nativi per ARIA e ROBI in arrivo Stage 2.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Quando posso partecipare al primo airdrop reale?</div>
+        <div class="faq-a">Stiamo chiudendo Alpha Brave (1.000 utenti). Il primo airdrop reale parte alla fine di questa fase — Q2 2026. Nel frattempo testiamo l'engine con airdrop seed AIROOBI (oggetti messi in palio direttamente da noi). Iscriviti adesso per essere tra i primi 1.000.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="footer-inner">
+      <div class="left">
+        <div class="brand-mini">AIROOBI</div>
+        <p>Dream Robe E-Commerce · Fair-airdrop marketplace · Built on Kaspa · © 2026</p>
+      </div>
+      <div class="right">
+        <a href="https://airoobi.com">Site</a>
+        <a href="https://airoobi.app">App</a>
+        <a href="https://airoobi.com/come-funziona-airdrop">EDU</a>
+        <a href="https://airoobi.com/privacy">Privacy</a>
+        <a href="https://airoobi.com/termini">T&amp;C</a>
+        <a href="mailto:ceo@airoobi.com">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Alpha Brave counter — live count(profiles) — Option A ──
+  // (vedi ROBY_Reply_to_CCP_W1 §Q4 — onestà sopra ogni cosa, niente offset)
+  (function(){
+    var SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+    var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+    var MAX=1000;
+    var elNum=document.getElementById('ab-count');
+    var elBar=document.getElementById('ab-progress');
+    function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
+    async function refresh(){
+      try{
+        var r=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
+          headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}
+        });
+        if(!r.ok)return;
+        var range=r.headers.get('content-range');
+        if(!range)return;
+        var total=parseInt(range.split('/')[1],10);
+        if(isNaN(total))return;
+        if(elNum)elNum.textContent=fmt(total);
+        if(elBar)elBar.style.width=Math.min(100,(total/MAX)*100).toFixed(2)+'%';
+      }catch(e){}
+    }
+    refresh();
+    setInterval(refresh,60000);
+  })();
+</script>
+
+</body>
+</html>

@@ -698,8 +698,15 @@ async function confirmBuy(){
       if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';}
     }
   }catch(e){
-    showMsg('err','<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>');
-    if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';}
+    var emsg=String((e&&e.message)||e||'');
+    if(emsg.indexOf('fairness_block:')!==-1){
+      showMsg('err',UI_ICONS.ban+' <span class="it">Acquisto bloccato per fairness: non potresti arrivare 1&deg;.</span><span class="en">Purchase blocked for fairness: you can\'t reach #1.</span>');
+      if(!_fairnessBlocked&&_currentDetail){_fairnessBlocked=true;applyFairnessBlock&&applyFairnessBlock();}
+      if(btn){btn.disabled=true;btn.classList.add('loading');btn.innerHTML='<span class="it">Bloccato</span><span class="en">Blocked</span>';}
+    } else {
+      showMsg('err','<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>');
+      if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';}
+    }
   }
   _pendingBuy=null;
 }
