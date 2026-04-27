@@ -96,7 +96,10 @@ GRANT EXECUTE ON FUNCTION public.check_fairness_can_buy(UUID, UUID, INT) TO serv
 -- ── 2. Wrapper SECURITY DEFINER per snapshot impersonato ────────────
 -- my_category_score_snapshot() usa auth.uid() — qui ne creiamo una
 -- variante che accetta p_user_id esplicito, riusabile da check_fairness
--- e da edge function (service_role). Riproduce la logica della v5 pity.
+-- e da edge function (service_role). NOTA: la versione FINALE (con
+-- calculate_winner_score JSONB output + category TEXT) viene da
+-- 20260427110000_k_stability_4w_median.sql che la riscrive completamente.
+-- Questa versione è quella applicata inizialmente al deploy Day 1.
 CREATE OR REPLACE FUNCTION public.my_category_score_snapshot_for(
   p_airdrop_id UUID,
   p_user_id    UUID
@@ -111,41 +114,43 @@ CREATE OR REPLACE FUNCTION public.my_category_score_snapshot_for(
 )
 LANGUAGE plpgsql STABLE SECURITY DEFINER AS $$
 DECLARE
-  v_category_id UUID;
+  v_category TEXT;
 BEGIN
-  SELECT category_id INTO v_category_id FROM public.airdrops WHERE id = p_airdrop_id;
-  IF v_category_id IS NULL THEN RETURN; END IF;
+  SELECT category INTO v_category FROM public.airdrops WHERE id = p_airdrop_id;
+  IF v_category IS NULL THEN RETURN; END IF;
 
   RETURN QUERY
   WITH scored AS (
-    SELECT * FROM public.calculate_winner_score(p_airdrop_id)
+    SELECT * FROM jsonb_array_elements(public.calculate_winner_score(p_airdrop_id))
   ),
-  ranked AS (
-    SELECT s.*, ROW_NUMBER() OVER (ORDER BY s.score DESC) AS pos
+  parsed AS (
+    SELECT
+      (s.value->>'user_id')::UUID AS user_id,
+      (s.value->>'score')::NUMERIC AS score,
+      COALESCE((s.value->>'pity_bonus')::NUMERIC, 0) AS pity_bonus
     FROM scored s
   ),
-  me AS (
-    SELECT * FROM ranked WHERE user_id = p_user_id
+  ranked AS (
+    SELECT p.*, ROW_NUMBER() OVER (ORDER BY p.score DESC) AS pos FROM parsed p
   ),
-  leader AS (
-    SELECT score AS leader_score FROM ranked WHERE pos = 1
-  )
+  me AS (SELECT * FROM ranked WHERE user_id = p_user_id),
+  leader AS (SELECT score AS leader_score FROM ranked WHERE pos = 1)
   SELECT
-    COALESCE(me.score, 0)                 AS my_score,
-    COALESCE(leader.leader_score, 0)      AS leader_score,
-    COALESCE(me.pos, 1)::INT              AS my_position,
-    COALESCE(me.pity_bonus, 0)            AS my_pity_bonus_current,
-    COALESCE((SELECT SUM(ap.aria_spent)
+    COALESCE(me.score, 0)::NUMERIC                 AS my_score,
+    COALESCE(leader.leader_score, 0)::NUMERIC      AS leader_score,
+    COALESCE(me.pos, 1)::INT                       AS my_position,
+    COALESCE(me.pity_bonus, 0)::NUMERIC            AS my_pity_bonus_current,
+    COALESCE((SELECT SUM(ap.aria_spent)::NUMERIC
                 FROM public.airdrop_participations ap
                 JOIN public.airdrops a ON a.id = ap.airdrop_id
                WHERE ap.user_id = p_user_id
-                 AND a.category_id = v_category_id
+                 AND a.category = v_category
                  AND ap.cancelled_at IS NULL
-                 AND a.id <> p_airdrop_id), 0) AS storici_cat,
-    GREATEST(COALESCE(public.get_category_k(v_category_id), 100), 100) AS k_current,
+                 AND a.id <> p_airdrop_id), 0)::NUMERIC AS storici_cat,
+    100::NUMERIC AS k_current,  -- post Hole #4 sostituito con get_category_k(v_category)
     COALESCE((SELECT COUNT(*) FROM public.airdrop_blocks
                WHERE airdrop_id = p_airdrop_id AND owner_id = p_user_id), 0)::INT
-                                          AS my_blocks_current
+                                                   AS my_blocks_current
   FROM (SELECT 1) dummy
   LEFT JOIN me ON true
   LEFT JOIN leader ON true;
