@@ -10,6 +10,8 @@
   --gray-900:#0c1224;--gray-800:#151d33;--gray-700:#1f2942;--gray-600:#2d3a56;
   --gray-500:#5a6380;--gray-400:#8892ae;--gray-300:#b4bdd4;
   --aria:#4A9EFF;--kas:#49EACB;--red:#ff6b6b;
+  /* Functional palette extension (ROBY approved 27 Apr 2026) — subordinata a identity, max 5% surface */
+  --red-error:#B91C1C;--red-alert:#ef4444;--red-soft:#f87171;
   --font-h:'Cormorant Garamond',Georgia,serif;
   --font-b:'Instrument Sans',system-ui,sans-serif;
   --font-m:'DM Mono',monospace;
