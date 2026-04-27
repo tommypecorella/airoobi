@@ -36,7 +36,7 @@ BEGIN
   SELECT jsonb_build_object(
     'my_score', m.my_score,
     'leader_score', m.leader_score,
-    'position', m.position,
+    'my_position', m.my_position,
     'my_pity_bonus_current', m.my_pity_bonus_current,
     'storici_cat', m.storici_cat,
     'k_current', m.k_current,
@@ -52,7 +52,7 @@ BEGIN
 
   v_my_score     := COALESCE((v_snapshot->>'my_score')::NUMERIC, 0);
   v_leader_score := COALESCE((v_snapshot->>'leader_score')::NUMERIC, 0);
-  v_pos          := COALESCE((v_snapshot->>'position')::INT, 1);
+  v_pos          := COALESCE((v_snapshot->>'my_position')::INT, 1);
   v_my_pity      := COALESCE((v_snapshot->>'my_pity_bonus_current')::NUMERIC, 0);
   v_storici      := COALESCE((v_snapshot->>'storici_cat')::NUMERIC, 0);
   v_K            := GREATEST(COALESCE((v_snapshot->>'k_current')::NUMERIC, 100), 1);
@@ -103,7 +103,7 @@ CREATE OR REPLACE FUNCTION public.my_category_score_snapshot_for(
 ) RETURNS TABLE(
   my_score              NUMERIC,
   leader_score          NUMERIC,
-  position              INT,
+  my_position           INT,
   my_pity_bonus_current NUMERIC,
   storici_cat           NUMERIC,
   k_current             NUMERIC,
@@ -133,7 +133,7 @@ BEGIN
   SELECT
     COALESCE(me.score, 0)                 AS my_score,
     COALESCE(leader.leader_score, 0)      AS leader_score,
-    COALESCE(me.pos, 1)::INT              AS position,
+    COALESCE(me.pos, 1)::INT              AS my_position,
     COALESCE(me.pity_bonus, 0)            AS my_pity_bonus_current,
     COALESCE((SELECT SUM(ap.aria_spent)
                 FROM public.airdrop_participations ap
