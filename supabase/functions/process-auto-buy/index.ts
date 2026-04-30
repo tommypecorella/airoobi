@@ -43,13 +43,13 @@ serve(async (req: Request) => {
 
       // Skip se airdrop non più aperto
       if (!["presale", "sale"].includes(airdrop.status)) {
-        await sb.from("auto_buy_rules").update({ active: false }).eq("id", rule.id);
+        await sb.rpc("disable_auto_buy_admin", { p_user_id: rule.user_id, p_airdrop_id: airdrop.id });
         continue;
       }
 
       // Skip se max blocchi raggiunto
       if (rule.total_bought >= rule.max_blocks) {
-        await sb.from("auto_buy_rules").update({ active: false }).eq("id", rule.id);
+        await sb.rpc("disable_auto_buy_admin", { p_user_id: rule.user_id, p_airdrop_id: airdrop.id });
         continue;
       }
 
@@ -87,7 +87,7 @@ serve(async (req: Request) => {
         p_extra_blocks: blocksToBuy,
       });
       if (fairCheck && fairCheck.can_buy === false) {
-        await sb.from("auto_buy_rules").update({ active: false }).eq("id", rule.id);
+        await sb.rpc("disable_auto_buy_admin", { p_user_id: rule.user_id, p_airdrop_id: airdrop.id });
         await sb.from("events").insert({
           event: "auto_buy_disabled_fairness",
           user_id: rule.user_id,

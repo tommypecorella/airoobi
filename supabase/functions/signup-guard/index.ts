@@ -160,13 +160,17 @@ serve(async (req: Request) => {
         p_email_hash: email_hash, p_email_local: email_local,
         p_ua_hash: ua_hash, p_status: "rejected",
       });
+      // Event log specifico per ROBY captcha monitoring (M1·W1)
+      await sb.from("events").insert({
+        event: "signup_rejected_captcha_failed",
+        props: { ip_hash, ua_hash, email_local, email_hash },
+      });
       return reject("captcha_failed");
     }
-  } else if (TURNSTILE_SECRET && body.turnstile_token) {
-    // Optional: verify token even on soft path if FE sent it.
-    // Don't fail if missing (UX clean for 99% of honest users).
-    await verifyTurnstile(body.turnstile_token, ip);
   }
+  // C2 (ROBY review): rimosso branch else-if che chiamava verifyTurnstile
+  // anche quando captcha non required. Saving 1 fetch HTTP a Cloudflare per
+  // ogni signup non-suspicious (99% degli utenti honest).
 
   // OK → log attempt and let client proceed with signUp
   await sb.rpc("log_signup_attempt", {
