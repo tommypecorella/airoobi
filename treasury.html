@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Treasury Methodology · AIROOBI</title>
+<meta name="description" content="Come AIROOBI garantisce il valore dei ROBI: una proprietà matematica, non un'affermazione commerciale. PEG ratio in tempo reale, soglie verificabili, scarsità dinamica senza halving artificiali. LEG-002 Treasury Backing Methodology v1.">
+<link rel="canonical" href="https://www.airoobi.com/treasury">
+<meta name="theme-color" content="#000000">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.airoobi.com/treasury">
+<meta property="og:title" content="Treasury Methodology · AIROOBI">
+<meta property="og:description" content="Ogni ROBI corrisponde a una frazione del treasury KAS, calcolabile in tempo reale e pubblicamente verificabile. PEG ratio live + 3 bande operative + bridge financing isolato.">
+<meta property="og:image" content="https://www.airoobi.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AIROOBI Treasury Methodology v1 — sintesi visiva del PEG ratio e delle 3 bande operative">
+<meta property="og:site_name" content="AIROOBI">
+<meta property="og:locale" content="it_IT">
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Treasury Methodology · AIROOBI">
+<meta name="twitter:description" content="Una proprietà matematica, non un'affermazione commerciale. PEG ratio live + 3 bande operative.">
+<meta name="twitter:image" content="https://www.airoobi.com/og-image.png">
+<meta name="twitter:image:alt" content="AIROOBI Treasury Methodology v1 — sintesi visiva">
+
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="apple-touch-icon" href="/favicon.png">
+
+<style>
+  :root {
+    --black: #000000;
+    --gray-900: #0a0a0a;
+    --gray-800: #161616;
+    --gray-700: #2a2a2a;
+    --gray-500: #555;
+    --gray-400: #888;
+    --gray-300: #b8b8b8;
+    --gray-200: #cfcfcf;
+    --gold: #B8960C;
+    --gold-dim: #8C7000;
+    --gold-glow: rgba(184,150,12,0.18);
+    --white: #FFFFFF;
+    --aria: #4A9EFF;
+    --kas: #49EACB;
+    --red-error: #B91C1C;
+    --red-alert: #ef4444;
+    --green-success: #49b583;
+
+    --font-h: "Cormorant Garamond", Georgia, serif;
+    --font-b: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
+    --font-m: "DM Mono", "Consolas", "Courier New", monospace;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--black); color: var(--white);
+    font-family: var(--font-b); line-height: 1.6;
+    font-size: 16px;
+  }
+  ::selection { background: var(--gold); color: var(--black); }
+
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+
+  /* TOP BAR */
+  .topbar {
+    border-bottom: 1px solid var(--gray-700);
+    padding: 18px 0;
+    background: rgba(0,0,0,0.96);
+  }
+  .topbar-inner { display: flex; justify-content: space-between; align-items: center; }
+  .brand { font-size: 14px; font-weight: 700; letter-spacing: 4px; color: var(--gold); }
+  .doc-id { font-family: var(--font-m); font-size: 11px; color: var(--gray-400); letter-spacing: 1px; }
+
+  /* HERO */
+  .hero {
+    padding: 80px 0 60px;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(184,150,12,0.12), transparent 50%),
+      radial-gradient(circle at 80% 70%, rgba(74,158,255,0.06), transparent 50%),
+      var(--black);
+    border-bottom: 1px solid var(--gray-800);
+  }
+  .eyebrow { font-size: 11px; color: var(--gold); font-weight: 700; letter-spacing: 4px; text-transform: uppercase; }
+  .gold-rule { height: 2px; background: var(--gold); width: 60px; margin: 14px 0 24px; }
+  .hero h1 {
+    font-family: var(--font-h); font-weight: 500;
+    font-size: clamp(38px, 5.5vw, 60px); line-height: 1.05;
+    color: var(--white); letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+  .hero h1 .em { color: var(--gold); font-style: italic; }
+  .hero .lede {
+    font-family: var(--font-h); font-style: italic;
+    font-size: clamp(18px, 2.2vw, 24px);
+    color: var(--gray-200); max-width: 780px; line-height: 1.4;
+  }
+  .hero .lede strong { color: var(--white); font-style: normal; font-weight: 500; }
+
+  /* SECTION */
+  section { padding: 70px 0; border-top: 1px solid var(--gray-800); }
+  section.alt { background: var(--gray-900); }
+
+  h2 {
+    font-family: var(--font-h); font-weight: 500;
+    font-size: clamp(28px, 3.8vw, 42px); line-height: 1.1;
+    color: var(--white); margin-bottom: 14px;
+    letter-spacing: -0.5px;
+  }
+  h3 {
+    font-family: var(--font-h); font-weight: 500;
+    font-size: 22px; color: var(--white);
+    margin-bottom: 8px; line-height: 1.2;
+  }
+  section .lead { font-size: 17px; color: var(--gray-200); max-width: 760px; margin-bottom: 30px; }
+
+  /* FORMULA BOX */
+  .formula-box {
+    background: linear-gradient(135deg, rgba(184,150,12,0.06), rgba(74,158,255,0.03));
+    border: 1px solid var(--gold-dim);
+    padding: 30px 32px;
+    margin: 24px 0;
+    border-radius: 0;
+  }
+  .formula-box .label {
+    font-size: 10px; color: var(--gold); font-weight: 700;
+    letter-spacing: 4px; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .formula-box .eq {
+    font-family: var(--font-m); font-size: clamp(15px, 1.7vw, 20px); font-weight: 600;
+    color: var(--white); line-height: 1.5; word-break: break-word;
+  }
+  .formula-box .eq .gold { color: var(--gold); }
+  .formula-box .eq .blue { color: var(--aria); }
+  .formula-box .note {
+    font-family: var(--font-h); font-style: italic;
+    font-size: 16px; color: var(--gray-200); margin-top: 18px; line-height: 1.5;
+  }
+
+  /* THREE BANDS */
+  .bands { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 30px; }
+  .band {
+    background: var(--gray-900); border: 1px solid var(--gray-700);
+    padding: 22px 20px; position: relative;
+  }
+  .band::before {
+    content: ""; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: var(--green-success);
+  }
+  .band.yellow::before { background: var(--gold); }
+  .band.red::before { background: var(--red-alert); }
+  .band-status {
+    display: inline-block; padding: 4px 12px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .band.green .band-status { background: rgba(73,181,131,0.15); color: var(--green-success); }
+  .band.yellow .band-status { background: rgba(184,150,12,0.15); color: var(--gold); }
+  .band.red .band-status { background: rgba(239,68,68,0.15); color: var(--red-alert); }
+  .band .ratio {
+    font-family: var(--font-m); font-size: 22px; font-weight: 700;
+    color: var(--white); margin-bottom: 10px;
+  }
+  .band .name { font-family: var(--font-h); font-size: 19px; margin-bottom: 8px; color: var(--white); }
+  .band .action { font-size: 13px; color: var(--gray-200); line-height: 1.5; }
+  @media (max-width: 720px) { .bands { grid-template-columns: 1fr; } }
+
+  /* TWO COLS */
+  .twocols { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 30px; }
+  @media (max-width: 720px) { .twocols { grid-template-columns: 1fr; } }
+  .col {
+    background: var(--gray-900); border: 1px solid var(--gray-700);
+    border-left: 3px solid var(--gold); padding: 24px 22px;
+  }
+  .col.kas { border-left-color: var(--kas); }
+  .col.aria { border-left-color: var(--aria); }
+  .col h3 { color: var(--white); font-size: 20px; margin-bottom: 12px; }
+  .col p { font-size: 14px; color: var(--gray-200); line-height: 1.55; margin-bottom: 8px; }
+  .col code { font-family: var(--font-m); font-size: 12px; color: var(--gold); background: rgba(184,150,12,0.08); padding: 2px 6px; }
+
+  /* COMPARISON TABLE */
+  .compare {
+    width: 100%; border-collapse: collapse; margin-top: 24px;
+    background: var(--gray-900); border: 1px solid var(--gray-700);
+  }
+  .compare th, .compare td {
+    padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--gray-700);
+    font-size: 14px; vertical-align: top;
+  }
+  .compare th {
+    background: var(--gray-800); color: var(--gold);
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; font-weight: 700;
+  }
+  .compare th:first-child { width: 26%; }
+  .compare tr:last-child td { border-bottom: 0; }
+  .compare td.airoobi { color: var(--white); font-weight: 500; }
+  .compare td.gambling { color: var(--gray-400); font-style: italic; }
+
+  /* KEY NUMBERS */
+  .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
+  @media (max-width: 720px) { .nums { grid-template-columns: 1fr; } }
+  .num-box {
+    background: var(--gray-900); border: 1px solid var(--gold-dim);
+    padding: 26px 22px; text-align: center;
+  }
+  .num-box .big {
+    font-family: var(--font-m); font-size: 38px; font-weight: 700;
+    color: var(--gold); line-height: 1;
+  }
+  .num-box .lab {
+    font-size: 11px; color: var(--gray-300); margin-top: 10px;
+    letter-spacing: 2px; text-transform: uppercase; line-height: 1.4;
+  }
+
+  /* TIMELINE */
+  .timeline { margin-top: 28px; }
+  .step {
+    display: flex; gap: 18px; padding: 18px 0;
+    border-bottom: 1px dashed var(--gray-700);
+  }
+  .step:last-child { border-bottom: 0; }
+  .step .when {
+    font-family: var(--font-m); font-size: 12px; color: var(--gold);
+    font-weight: 700; min-width: 130px; flex-shrink: 0;
+    letter-spacing: 1px; text-transform: uppercase; padding-top: 3px;
+  }
+  .step .what h4 {
+    font-family: var(--font-h); font-size: 18px; color: var(--white);
+    margin-bottom: 4px; font-weight: 500;
+  }
+  .step .what p { font-size: 14px; color: var(--gray-200); line-height: 1.5; }
+
+  /* CALLOUT */
+  .callout {
+    background: linear-gradient(180deg, rgba(184,150,12,0.04), rgba(0,0,0,0.4));
+    border: 1px solid var(--gold-dim);
+    padding: 26px 28px;
+    margin: 28px 0;
+  }
+  .callout .label {
+    font-size: 10px; color: var(--gold); font-weight: 700;
+    letter-spacing: 4px; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .callout p { font-family: var(--font-h); font-style: italic; font-size: 19px; color: var(--white); line-height: 1.4; }
+
+  /* FOOTER */
+  footer {
+    padding: 50px 0 40px; border-top: 1px solid var(--gray-700);
+    background: var(--gray-900);
+    font-size: 12px; color: var(--gray-400); letter-spacing: 1px;
+  }
+  footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <span class="brand">AIROOBI</span>
+    <span class="doc-id">LEG-002 · Treasury Methodology v1 · summary</span>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">LEG-002 · Treasury Methodology v1 · sintesi visiva 5 min</div>
+    <div class="gold-rule"></div>
+    <h1>Come AIROOBI garantisce<br/>il valore dei <span class="em">ROBI</span>.</h1>
+    <p class="lede">
+      <strong>Non con un'affermazione commerciale.</strong> Con una proprietà matematica: ogni ROBI corrisponde a una frazione del treasury KAS detenuto dalla piattaforma, calcolabile in tempo reale e pubblicamente verificabile.
+    </p>
+  </div>
+</section>
+
+<!-- LIVE PEG WIDGET -->
+<section class="alt" style="padding:40px 0;">
+  <div class="wrap">
+    <div class="eyebrow">Stato sistema · live</div>
+    <div class="gold-rule"></div>
+    <div id="peg-widget" style="background:var(--gray-900);border:1px solid var(--gold-dim);padding:30px 32px;display:grid;grid-template-columns:auto 1fr auto;gap:30px;align-items:center;">
+      <div>
+        <div style="font-size:11px;color:var(--gray-300);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">PEG ratio corrente</div>
+        <div id="peg-value" style="font-family:var(--font-m);font-size:48px;font-weight:700;color:var(--gold);line-height:1;">…</div>
+      </div>
+      <div>
+        <div style="font-size:11px;color:var(--gray-300);letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">Banda operativa</div>
+        <div id="peg-band" style="display:inline-block;padding:6px 16px;border-radius:999px;font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;background:var(--gray-700);color:var(--gray-300);">caricamento</div>
+        <div id="peg-target" style="font-size:13px;color:var(--gray-200);margin-top:12px;">Redemption target: <span style="color:var(--white);font-weight:600;">—</span></div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:10px;color:var(--gray-400);margin-bottom:6px;">Treasury balance</div>
+        <div id="peg-balance" style="font-family:var(--font-m);font-size:18px;font-weight:600;color:var(--white);">—</div>
+        <div style="font-size:10px;color:var(--gray-400);margin:10px 0 6px;">ROBI in circolazione</div>
+        <div id="peg-circulating" style="font-family:var(--font-m);font-size:18px;font-weight:600;color:var(--aria);">—</div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--gray-400);margin-top:14px;line-height:1.5;">
+      Endpoint pubblico no-auth · ricalcolato real-time da <code style="font-family:var(--font-m);font-size:11px;color:var(--gold);background:rgba(184,150,12,0.08);padding:1px 5px;">public.get_treasury_health()</code> · refresh ogni 60s · <span id="peg-ts" style="color:var(--gray-300);">—</span>
+    </p>
+  </div>
+</section>
+
+<!-- 1. PEG FORMULA -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">1. Il PEG ratio</div>
+    <div class="gold-rule"></div>
+    <h2>Una formula, tre numeri, zero opacità.</h2>
+    <p class="lead">Il "PEG ratio" è il numero che dice se il sistema è sano. Si calcola così, sempre, in modo deterministico e verificabile da chiunque.</p>
+
+    <div class="formula-box">
+      <div class="label">Formula PEG</div>
+      <div class="eq">peg_ratio = <span class="gold">treasury_balance_eur</span> / ( <span class="blue">robi_circulating</span> × eur_per_robi_target )</div>
+      <p class="note">Treasury KAS al numeratore. ROBI in circolazione al denominatore. Più cresce il treasury, più sale il PEG. Più ROBI in circolazione senza treasury, più scende. Aggiornato real-time + snapshot daily salvato per audit.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. THREE BANDS -->
+<section class="alt">
+  <div class="wrap">
+    <div class="eyebrow">2. Le tre bande</div>
+    <div class="gold-rule"></div>
+    <h2>Cosa succede a ogni livello di salute.</h2>
+    <p class="lead">Il sistema non aspetta che la situazione peggiori. A soglie precise, scattano azioni differenziate — operative, automatiche, audit-able.</p>
+
+    <div class="bands">
+      <div class="band green">
+        <span class="band-status">Green</span>
+        <div class="ratio">PEG ≥ 1.05</div>
+        <div class="name">Operatività normale</div>
+        <p class="action">Redemption immediate, target 24h, max 48h. Bridge financing dormiente. Tutto come da prospetto pubblico.</p>
+      </div>
+      <div class="band yellow">
+        <span class="band-status">Yellow</span>
+        <div class="ratio">1.00 ≤ PEG &lt; 1.05</div>
+        <div class="name">Allerta</div>
+        <p class="action">Slowdown redemption (target 48h). Alert founder via canale dev. Community ancora operativa, ma fascia di buffer cala.</p>
+      </div>
+      <div class="band red">
+        <span class="band-status">Red</span>
+        <div class="ratio">PEG &lt; 1.00</div>
+        <div class="name">Halt</div>
+        <p class="action">Halt redemption immediato. Bridge financing trigger. Community broadcast scripted. Founder + accountant notificati.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <div class="label">Bridge financing</div>
+      <p>"€2.500 cash isolato in conto dedicato, dichiarato in bilancio come riserva non disponibile per le operazioni correnti. Coperto al 100% dal commitment personale del founder fino a Series Seed, audit trail su ogni movimento."</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. SCARCITY BY CONSTRUCTION -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">3. La regola di emissione ROBI</div>
+    <div class="gold-rule"></div>
+    <h2>Scarsità dinamica, senza halving.</h2>
+    <p class="lead">La regola di emissione di nuovi ROBI è essa stessa funzione del treasury. Quando il treasury cresce, vengono emessi meno ROBI per blocco di airdrop. Quando il treasury è basso, ne vengono emessi di più. Il modello produce scarsità automatica, senza schedule artificiali.</p>
+
+    <div class="formula-box">
+      <div class="label">Formula rate</div>
+      <div class="eq">rate = ⌈ <span class="gold">ROBI_price</span> / ( block_price × 0,022 ) ⌉</div>
+      <p class="note">ROBI_price corrente al numeratore. Block price configurato per quell'airdrop al denominatore. Il numero <code style="font-family:var(--font-m);font-size:14px;color:var(--gold);">0,022</code> = 0,10 (ARIA→EUR) × 0,22 (split fondo treasury) = contributo treasury per ARIA spesa.</p>
+    </div>
+
+    <h3 style="margin-top:32px;">Esempio numerico</h3>
+    <div class="formula-box">
+      <div class="label">Stato sistema oggi</div>
+      <div class="eq" style="font-size:15px;">
+        Treasury balance: <span class="gold">€5.000</span><br/>
+        ROBI circolanti: <span class="blue">1.000</span><br/>
+        ROBI price corrente: <span class="gold">€5,00</span> (5.000 / 1.000)<br/>
+        Block price airdrop: <span class="blue">10 ARIA</span><br/>
+        <br/>
+        rate = ⌈ 5,00 / ( 10 × 0,022 ) ⌉ = ⌈ 22,73 ⌉ = <span class="gold">23 blocchi</span>
+      </div>
+      <p class="note"><strong style="color:var(--white);font-style:normal;">Significato:</strong> serve un utente che acquisti 23 blocchi per minare 1 ROBI. Più il treasury cresce, più aumenta il numero di blocchi necessari per minarne uno nuovo. <strong style="color:var(--white);font-style:normal;">La scarsità è automatica.</strong></p>
+    </div>
+
+    <div class="callout">
+      <div class="label">Bitcoin vs AIROOBI</div>
+      <p>Bitcoin: scarsità artificiale schedulata (halving ogni 4 anni). AIROOBI: scarsità dinamica che emerge automaticamente dal modello economico stesso, l'emissione rallenta in proporzione alla crescita del treasury, senza schedule artificiali. Stesso outcome (scarsità), filosofia diversa: deterministica + transparent vs scheduled.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. PRE VS POST MAINNET -->
+<section class="alt">
+  <div class="wrap">
+    <div class="eyebrow">4. Pre vs post-mainnet</div>
+    <div class="gold-rule"></div>
+    <h2>Il ledger di oggi diventa la chain di domani.</h2>
+    <p class="lead">I ROBI accumulati pre-mainnet (Alpha + Beta) sono economicamente equivalenti ai ROBI on-chain post-mainnet. Stesso valore, stessa logica, stessa formula. Solo il substrate cambia.</p>
+
+    <div class="twocols">
+      <div class="col aria">
+        <h3>Pre-mainnet (oggi)</h3>
+        <p><strong style="color:var(--white)">Substrate:</strong> ledger Supabase. Tabella <code>nft_rewards</code> con <code>nft_type='ROBI'</code>.</p>
+        <p><strong style="color:var(--white)">Treasury price:</strong> <code>treasury_stats.balance_eur / treasury_stats.nft_circulating</code>.</p>
+        <p><strong style="color:var(--white)">Trasferibilità:</strong> soulbound (Decision A · Hole #5).</p>
+        <p><strong style="color:var(--white)">Riscossione:</strong> <code>request_robi_redemption()</code> RPC, weekly Monday window, conversione EUR → KAS, processing 24-48h.</p>
+      </div>
+      <div class="col kas">
+        <h3>Post-mainnet (Stage 2 · giugno 2026)</h3>
+        <p><strong style="color:var(--white)">Substrate:</strong> Kaspa KRC-721 on-chain, smart contract live.</p>
+        <p><strong style="color:var(--white)">Treasury price:</strong> oracleato on-chain via RPC view-only, oppure off-chain con audit pubblico.</p>
+        <p><strong style="color:var(--white)">Trasferibilità:</strong> riapertura condizionata a parere legale + stato PEG (target Q1 2027).</p>
+        <p><strong style="color:var(--white)">Mint mapping:</strong> 1-to-1 dal ledger Supabase pre-mainnet vs IOU contrattuale — TBD by founder, target fine Maggio.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. ANTI-GAMBLING -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">5. Perché non è gioco d'azzardo</div>
+    <div class="gold-rule"></div>
+    <h2>La pre-condizione legale del posizionamento.</h2>
+    <p class="lead">Lo studio gaming-law italiano e gli organismi competenti (TULPS, ADM) valutano l'attività attraverso un test cumulativo. AIROOBI rompe strutturalmente più di un criterio. La methodology stessa è la documentazione del perché.</p>
+
+    <table class="compare">
+      <thead>
+        <tr>
+          <th>Caratteristica</th>
+          <th>Gambling tradizionale</th>
+          <th>AIROOBI</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Output dipende da chance</td>
+          <td class="gambling">Sì (RNG, dealer choice)</td>
+          <td class="airoobi">No — punteggio calcolato da funzione pubblica <code style="font-family:var(--font-m);font-size:12px;color:var(--gold);">calculate_winner_score</code>, riproducibile</td>
+        </tr>
+        <tr>
+          <td>Bound rimborso minimo</td>
+          <td class="gambling">Nessuno</td>
+          <td class="airoobi">≥95% PEG dichiarato + verificabile</td>
+        </tr>
+        <tr>
+          <td>Trasparenza algoritmo</td>
+          <td class="gambling">Closed-source / regulated black box</td>
+          <td class="airoobi">Open-source, RPC pubblica, audit trail</td>
+        </tr>
+        <tr>
+          <td>Asset-backing</td>
+          <td class="gambling">No (banca della casa)</td>
+          <td class="airoobi">Sì (treasury KAS riscuotibile, weekly window)</td>
+        </tr>
+        <tr>
+          <td>Spesa massima cap</td>
+          <td class="gambling">No (illimitata, può ruinare)</td>
+          <td class="airoobi">Cap matematico ≤30% valore oggetto via pity bonus</td>
+        </tr>
+        <tr>
+          <td>Riscossione fissa</td>
+          <td class="gambling">No</td>
+          <td class="airoobi">Sì — weekly Monday window, target 24-48h post-batch</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 6. THREE NUMBERS -->
+<section class="alt">
+  <div class="wrap">
+    <div class="eyebrow">6. Tre numeri da ricordare</div>
+    <div class="gold-rule"></div>
+    <h2>Quando un investor o legal counsel ti chiede.</h2>
+
+    <div class="nums">
+      <div class="num-box">
+        <div class="big">≥ 95%</div>
+        <div class="lab">PEG ratio garantito · proprietà matematica</div>
+      </div>
+      <div class="num-box">
+        <div class="big">≤ 30%</div>
+        <div class="lab">Spesa massima utente prima di vincita garantita · pity bound</div>
+      </div>
+      <div class="num-box">
+        <div class="big">€ 2.500</div>
+        <div class="lab">Bridge financing isolato · skin in the game founder</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. ROADMAP -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">7. Cosa succede da qui in avanti</div>
+    <div class="gold-rule"></div>
+    <h2>Versioning + governance.</h2>
+
+    <div class="timeline">
+      <div class="step">
+        <div class="when">v1.0 · 30 Apr 2026</div>
+        <div class="what">
+          <h4>FINAL consegnata da CCP</h4>
+          <p>8 fix recepiti integralmente dalla review ROBY. Acceptance criteria 100% chiusi. In attesa di sign-off founder per promozione.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="when">v1.0 · Day 5 (1 Mag)</div>
+        <div class="what">
+          <h4>Promozione + landing /treasury</h4>
+          <p>Pubblicazione in <code>01_deliverables_docs/business/AIROOBI_Treasury_Backing_Methodology_v1.md</code>. Endpoint pubblico <code>get_treasury_health()</code> live + landing <code>airoobi.com/treasury</code>.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="when">v1.1, v1.2</div>
+        <div class="what">
+          <h4>Fix tipografici / rephrase</h4>
+          <p>Senza cambio di sostanza. Versioning incrementale per pulizia narrativa.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="when">v2.0 · fine Maggio 2026</div>
+        <div class="what">
+          <h4>Decisione "1-to-1 mint vs IOU"</h4>
+          <p>Skeezu firma il design pre-mainnet → on-chain semantics. Bump di versione documentato.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="when">v3.0 · Q1 2027</div>
+        <div class="what">
+          <h4>Eventuale apertura trasferibilità ROBI</h4>
+          <p>Al passaggio Pre-Prod, condizionata a parere legale specialistico + stato PEG. Decisione finale aperta.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOWNLOAD PDF + RESOURCES -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Risorse</div>
+    <div class="gold-rule"></div>
+    <h2>Approfondimenti tecnici e legali.</h2>
+    <p class="lead">Questa pagina è una sintesi visiva. Il documento ufficiale completo (32 pagine, frame investor-grade) è disponibile in PDF.</p>
+    <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:24px;">
+      <a href="/AIROOBI_Treasury_Methodology_v1.pdf" style="display:inline-block;padding:14px 22px;background:var(--gold);color:var(--black);text-decoration:none;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;">📄 Download PDF · Methodology v1</a>
+      <a href="/come-funziona-airdrop" style="display:inline-block;padding:14px 22px;background:transparent;color:var(--gold);border:1px solid var(--gold);text-decoration:none;font-weight:700;font-size:14px;letter-spacing:2px;text-transform:uppercase;">Come funzionano gli airdrop</a>
+      <a href="/investitori" style="display:inline-block;padding:14px 22px;background:transparent;color:var(--white);border:1px solid var(--gray-700);text-decoration:none;font-weight:600;font-size:14px;letter-spacing:1px;">Per investitori</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap row">
+    <span><strong style="color:var(--gold)">AIROOBI</strong> · LEG-002 Treasury Backing Methodology v1.0 · sintesi visiva</span>
+    <span><a href="/" style="color:var(--gray-300);text-decoration:none;">← Torna a airoobi.com</a> · firmato Skeezu 2026-05-01</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co/rest/v1/rpc/get_treasury_health';
+  const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+  const elVal=document.getElementById('peg-value');
+  const elBand=document.getElementById('peg-band');
+  const elTarget=document.getElementById('peg-target');
+  const elBalance=document.getElementById('peg-balance');
+  const elCirc=document.getElementById('peg-circulating');
+  const elTs=document.getElementById('peg-ts');
+
+  const BAND_COLORS={
+    green:{bg:'rgba(73,181,131,0.15)',color:'#49b583'},
+    yellow:{bg:'rgba(184,150,12,0.15)',color:'#B8960C'},
+    red:{bg:'rgba(239,68,68,0.15)',color:'#ef4444'},
+    unknown:{bg:'#2a2a2a',color:'#888'}
+  };
+
+  function fmtEUR(n){return n==null?'—':'€'+Number(n).toLocaleString('it-IT',{minimumFractionDigits:2,maximumFractionDigits:2});}
+  function fmtNum(n){return n==null?'—':Number(n).toLocaleString('it-IT',{maximumFractionDigits:2});}
+  function fmtTime(iso){if(!iso)return '—';const d=new Date(iso);return d.toLocaleString('it-IT');}
+
+  async function refresh(){
+    try{
+      const res=await fetch(SB_URL,{method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:'{}'});
+      if(!res.ok)throw new Error('HTTP '+res.status);
+      const d=await res.json();
+      elVal.textContent=d.peg_ratio==null?'n/d':Number(d.peg_ratio).toFixed(2);
+      const c=BAND_COLORS[d.band]||BAND_COLORS.unknown;
+      elBand.textContent=d.band||'unknown';
+      elBand.style.background=c.bg;
+      elBand.style.color=c.color;
+      elTarget.innerHTML='Redemption target: <span style="color:var(--white);font-weight:600;">'+(d.redemption_target_hours?d.redemption_target_hours+'h':'halt — bridge financing trigger')+'</span>';
+      elBalance.textContent=fmtEUR(d.treasury_balance_eur);
+      elCirc.textContent=fmtNum(d.robi_circulating);
+      elTs.textContent='aggiornato '+fmtTime(d.ts);
+    }catch(e){
+      elVal.textContent='offline';
+      elTs.textContent='errore fetch · ricarica la pagina';
+    }
+  }
+
+  refresh();
+  setInterval(refresh,60000);
+})();
+</script>
+
+</body>
+</html>
