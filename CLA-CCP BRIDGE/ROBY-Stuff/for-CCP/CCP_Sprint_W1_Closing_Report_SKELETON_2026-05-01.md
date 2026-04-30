@@ -14,13 +14,19 @@ status: SKELETON · placeholders [TBD-Day7] da finalizzare post-merge harden-w1 
 
 Sprint TECH-HARDEN-001 chiuso in **7 giorni** (27 Apr - 3 Mag 2026) con **6/6 hole architetturali risolti**, **4/4 quick wins shipped**, **LEG-002 Treasury Methodology pubblicato**, **scoring v5.1 atomic cutover** in produzione, **Hole #1 sybil resistance** completa Layer A+B+D (+ Layer C bypass scaffold pending Twilio reactivation), **Hole #6 weekly redemption** live. Confidence Stage 1 readiness: **alta**.
 
-Numbers headline:
-- Migration applicate live: **[TBD-Day7 : conta finale]**
-- RPC nuove o modificate: **[TBD-Day7]**
-- Edge functions deployed: **[TBD-Day7]**
-- Cron jobs attivi: **[TBD-Day7]**
-- Bug catturati pre-prod via smoke test: **3** (`position` keyword, `v_category_id` NULL, `points_ledger.points` → `amount`)
-- Tempo sprint reale: ~**[TBD-Day7]** ore CCP cumulative (vs ~70h human-pace stimate originariamente)
+Numbers headline (Day 6 self-review, finalize Day 7 post-merge):
+- Migration applicate live: **15** (sprint W1 strict, dal 27 Apr al 1 Mag)
+- RPC nuove o modificate W1: **21**
+- Edge functions: **7 totali** · 4 nuove (signup-guard, phone-verify-init, phone-verify-confirm, process-redemption-queue) · 1 modified (process-auto-buy C1)
+- Cron jobs attivi: **3** (refresh_category_k Sun 00:05, cleanup_signup_attempts Sun 03:00, process_redemption_queue Mon 00:05)
+- Materialized views: **1** (category_k_history)
+- Tabelle nuove: **3** (signup_attempts, phone_verification_attempts, robi_redemptions)
+- Config keys nuove (airdrop_config): **20+** (10 Hole #6 + 5 Hole #1 + 4 ROBI policy + 3 functional palette)
+- Bug catturati pre-prod via smoke test: **3** (`position` keyword reserved, `v_category_id` always NULL, `points_ledger.points` → `amount`)
+- Bug arrivati in prod: **0**
+- Branch separati creati e merged: **1** (harden-w1-b1-storici-fix)
+- Commit total su harden-w1: **18 ahead of main** (95 file changed, 11.755 insertions, 7 deletions)
+- Tempo sprint CCP cumulative: ~**8-10 ore effettive AI-pace** (vs ~70h human-pace stimate originariamente, ratio ~12-14%)
 
 ---
 
@@ -163,22 +169,22 @@ Numbers headline:
 | Sprint duration | 7 giorni (27 Apr - 3 Mag 2026) |
 | Hole risolti | 6/6 |
 | Quick Wins shipped | 4/4 |
-| Issue code review chiuse | 5 HIGH/MED + 2 LOW promosse |
-| Migration applicate live | **[TBD-Day7]** |
-| RPC nuove o modificate | **[TBD-Day7]** |
-| Edge functions deployed | **[TBD-Day7]** (signup-guard, process-redemption-queue, process-auto-buy redeployed) |
-| Cron jobs attivi | **[TBD-Day7]** |
-| Materialized views | **[TBD-Day7]** |
-| Tabelle nuove | **[TBD-Day7]** |
-| Smoke test verde cumulative | **[TBD-Day7]** |
+| Issue code review chiuse | 5 HIGH/MED + 2 LOW promosse + 1 LOW deferred (C3) |
+| Migration applicate live W1 strict | **15** |
+| RPC nuove o modificate | **21** |
+| Edge functions deployed | **4 nuove** (signup-guard, phone-verify-init, phone-verify-confirm, process-redemption-queue) + 1 modified (process-auto-buy) |
+| Cron jobs attivi | **3** (refresh_category_k, cleanup_signup_attempts, process_redemption_queue) |
+| Materialized views | **1** (category_k_history) |
+| Tabelle nuove | **3** (signup_attempts, phone_verification_attempts, robi_redemptions) |
+| Smoke test verde cumulative | **8/8 RPC sanity Day 6** + 4/4 signup-guard + 5/5 Hole #6 + 9/9 Layer C scaffold + 4/4 Treasury + parity audit Hole #3 |
 | Bug catturati pre-prod | 3 (`position`, `v_category_id`, `points_ledger.points→amount`) |
 | Bug arrivati in prod | **0** |
 | Branch separati creati e merged | 1 (harden-w1-b1-storici-fix → harden-w1) |
-| Commit total su harden-w1 | **[TBD-Day7]** |
-| Linee SQL aggiunte | **[TBD-Day7]** |
-| Linee TS edge functions aggiunte | **[TBD-Day7]** |
-| File MD bridge prodotti | **[TBD-Day7]** |
-| Tempo CCP effettivo | **[TBD-Day7]** ore (~30-40% del budget human-pace) |
+| Commit total su harden-w1 | **18 ahead of main** |
+| File totali modificati | 95 |
+| Insertions / Deletions | 11.755 / 7 |
+| File MD bridge prodotti | **15+** (3 ROBY review + 9 CCP report/ack/recap + Treasury DRAFT + FINAL + Summary) |
+| Tempo CCP effettivo | ~**8-10 ore AI-pace** (vs ~70h human-pace, ratio ~12-14%) |
 
 ---
 
