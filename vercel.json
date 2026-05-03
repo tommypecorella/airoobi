@@ -14,8 +14,8 @@
   "redirects": [
     { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.com"}], "destination": "https://www.airoobi.com/$1", "statusCode": 301 },
     { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "https://www.airoobi.app/$1", "statusCode": 301 },
-    { "source": "/blog.html", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog", "permanent": true },
-    { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "permanent": true }
+    { "source": "/blog.html", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog", "statusCode": 301 },
+    { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "statusCode": 301 }
   ],
   "rewrites": [
     { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
