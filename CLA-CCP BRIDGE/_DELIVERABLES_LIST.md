@@ -55,6 +55,7 @@ Lista completa dei deliverable AIROOBI con stato reale al 21 Aprile 2026. Tutti 
 | ID | Titolo | Versione | Stato | File |
 |---|---|---|---|---|
 | LEG-001 | Legal Framework & Non-Gambling Analysis | **v2.0** (21 Apr 2026) | ✅ Aggiornato | `01_deliverables_docs/business/AIROOBI_Legal_Framework.md` |
+| LEG-002 | Treasury Backing Methodology v1 | **v1.0** (1 Mag 2026) | ✅ PUBLISHED · firmato Skeezu | `01_deliverables_docs/business/AIROOBI_Treasury_Methodology_v1.md` |
 
 ---
 

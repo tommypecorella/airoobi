@@ -17,6 +17,9 @@
     { "source": "/ads.txt", "destination": "/ads-com.txt" },
     { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/sitemap-com.xml" },
 
+    { "source": "/diventa-alpha-brave", "destination": "/diventa-alpha-brave.html" },
+    { "source": "/treasury", "destination": "/treasury.html" },
+
     { "source": "/", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/landing.html" },
     { "source": "/dashboard", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/blog", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/blog.html" },

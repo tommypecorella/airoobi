@@ -1,0 +1,190 @@
+-- ════════════════════════════════════════════════════════════════════
+-- DRAFT/SKELETON · compare_score_v5_vs_v5_1(p_airdrop_id UUID)
+-- Sprint W1 · Hole #3 PARITY AUDIT RPC
+-- 30 Apr 2026 (skeleton — implementazione Day 4 post Day 3 checkpoint)
+--
+-- SCOPO:
+--   RPC read-only che esegue ENTRAMBI gli scoring (v5 e v5.1) sullo
+--   stesso airdrop e ritorna un confronto user-by-user del:
+--   - score totale
+--   - rank
+--   - delta % rispetto al leader
+--   - cambio winner (se v5 vs v5.1 picks differiscono)
+--
+-- USO STRATEGICO:
+--   Esegui PRIMA del cutover Hole #3 (CREATE OR REPLACE FUNCTION
+--   calculate_winner_score per v5.1) su ≥1 airdrop di test reale.
+--   Verifica:
+--   - Parity dei winner (no surprise rank shift > 1 posizione)
+--   - Parity dei punteggi assoluti (drift max accettabile <20%)
+--   - Edge case: utenti con last_win in categoria → score deve cambiare
+--     da v5 (storici_cat lifetime) a v5.1 (storici_cat post-last-win)
+--
+-- DESIGN:
+--   - SECURITY DEFINER read-only (non scrive nulla)
+--   - Pattern dual-execution: snapshot v5 (current) + run v5.1 (new
+--     function temporanea calculate_winner_score_v51)
+--   - v5.1 NON viene CREATE OR REPLACE su calculate_winner_score finché
+--     il compare non è verde
+--
+-- DEPENDENCY:
+--   Richiede esistenza di public.calculate_winner_score_v51(UUID) come
+--   funzione SEPARATA (non rimpiazza v5 finché non firmata).
+--   Solo dopo audit OK → CREATE OR REPLACE calculate_winner_score
+--   con il body di v5.1 → drop calculate_winner_score_v51.
+-- ════════════════════════════════════════════════════════════════════
+
+-- ── 1. Skeleton: compare_score_v5_vs_v5_1 ───────────────────────────
+CREATE OR REPLACE FUNCTION public.compare_score_v5_vs_v5_1(p_airdrop_id UUID)
+RETURNS JSONB
+LANGUAGE plpgsql
+STABLE SECURITY DEFINER
+SET search_path = public
+AS $$
+DECLARE
+  v_v5_scores    JSONB;
+  v_v51_scores   JSONB;
+  v_v5_winner    UUID;
+  v_v51_winner   UUID;
+  v_winner_match BOOLEAN;
+  v_compare      JSONB;
+BEGIN
+  -- Guard: airdrop esiste
+  IF NOT EXISTS (SELECT 1 FROM public.airdrops WHERE id = p_airdrop_id) THEN
+    RETURN jsonb_build_object('ok', false, 'error', 'airdrop_not_found');
+  END IF;
+
+  -- Guard: v5.1 deve esistere come funzione separata
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_proc
+     WHERE proname = 'calculate_winner_score_v51'
+       AND pronamespace = 'public'::regnamespace
+  ) THEN
+    RETURN jsonb_build_object('ok', false, 'error', 'v51_function_missing',
+      'hint', 'CREATE FUNCTION public.calculate_winner_score_v51(UUID) BEFORE running compare');
+  END IF;
+
+  -- Esegui entrambi
+  v_v5_scores  := public.calculate_winner_score(p_airdrop_id);
+  v_v51_scores := public.calculate_winner_score_v51(p_airdrop_id);
+
+  -- Winner v5
+  SELECT (elem->>'user_id')::UUID INTO v_v5_winner
+    FROM jsonb_array_elements(v_v5_scores) elem
+   WHERE (elem->>'rank')::INTEGER = 1
+   LIMIT 1;
+
+  -- Winner v5.1
+  SELECT (elem->>'user_id')::UUID INTO v_v51_winner
+    FROM jsonb_array_elements(v_v51_scores) elem
+   WHERE (elem->>'rank')::INTEGER = 1
+   LIMIT 1;
+
+  v_winner_match := (v_v5_winner IS NOT DISTINCT FROM v_v51_winner);
+
+  -- Per-user diff: join su user_id, calcola delta
+  WITH v5_flat AS (
+    SELECT
+      (elem->>'user_id')::UUID AS user_id,
+      (elem->>'score')::NUMERIC AS score_v5,
+      (elem->>'rank')::INT      AS rank_v5,
+      (elem->>'historic_aria')::NUMERIC AS historic_aria_v5
+    FROM jsonb_array_elements(v_v5_scores) elem
+  ),
+  v51_flat AS (
+    SELECT
+      (elem->>'user_id')::UUID AS user_id,
+      (elem->>'score')::NUMERIC AS score_v51,
+      (elem->>'rank')::INT      AS rank_v51,
+      (elem->>'historic_aria')::NUMERIC AS historic_aria_v51
+    FROM jsonb_array_elements(v_v51_scores) elem
+  ),
+  joined AS (
+    SELECT
+      COALESCE(v5.user_id, v51.user_id) AS user_id,
+      v5.score_v5,
+      v51.score_v51,
+      v5.rank_v5,
+      v51.rank_v51,
+      v5.historic_aria_v5,
+      v51.historic_aria_v51,
+      -- delta score (positivo = v5.1 > v5)
+      CASE
+        WHEN v5.score_v5 IS NULL THEN NULL
+        WHEN v5.score_v5 = 0 THEN NULL
+        ELSE ROUND(((v51.score_v51 - v5.score_v5) / v5.score_v5 * 100)::NUMERIC, 2)
+      END AS score_delta_pct,
+      -- rank shift (positivo = peggiorato in v5.1, negativo = migliorato)
+      (COALESCE(v51.rank_v51, 0) - COALESCE(v5.rank_v5, 0)) AS rank_shift,
+      -- historic_aria shift (questo è il vero indicatore One Category Rule
+      -- in azione: se v51 < v5 significa che il filter post-last-win ha tagliato)
+      CASE
+        WHEN v5.historic_aria_v5 IS NULL OR v5.historic_aria_v5 = 0 THEN NULL
+        ELSE ROUND(((v51.historic_aria_v51 - v5.historic_aria_v5) / v5.historic_aria_v5 * 100)::NUMERIC, 2)
+      END AS historic_aria_delta_pct
+    FROM v5_flat v5
+    FULL OUTER JOIN v51_flat v51 ON v5.user_id = v51.user_id
+  )
+  SELECT jsonb_agg(
+    jsonb_build_object(
+      'user_id',                  user_id,
+      'score_v5',                 score_v5,
+      'score_v51',                score_v51,
+      'score_delta_pct',          score_delta_pct,
+      'rank_v5',                  rank_v5,
+      'rank_v51',                 rank_v51,
+      'rank_shift',               rank_shift,
+      'historic_aria_v5',         historic_aria_v5,
+      'historic_aria_v51',        historic_aria_v51,
+      'historic_aria_delta_pct',  historic_aria_delta_pct
+    )
+    ORDER BY rank_v51 NULLS LAST, rank_v5 NULLS LAST
+  ) INTO v_compare
+  FROM joined;
+
+  RETURN jsonb_build_object(
+    'ok',                  true,
+    'airdrop_id',          p_airdrop_id,
+    'winner_v5',           v_v5_winner,
+    'winner_v51',          v_v51_winner,
+    'winner_match',        v_winner_match,
+    'participants',        jsonb_array_length(COALESCE(v_compare, '[]'::JSONB)),
+    -- Soglie verdict (tunable da Hole #3 finale):
+    --   winner_match=true → cutover OK
+    --   winner_match=false → STOP cutover, reissue compare con UI manuale
+    --   max(abs(rank_shift)) ≤ 1 → drift accettabile
+    --   max(abs(score_delta_pct)) ≤ 20 → drift accettabile
+    --   max(abs(historic_aria_delta_pct)) variabile ma se = 0 ovunque
+    --   significa che ZERO utenti hanno last_win → fix not exercised
+    'compare',             COALESCE(v_compare, '[]'::JSONB)
+  );
+END;
+$$;
+
+GRANT EXECUTE ON FUNCTION public.compare_score_v5_vs_v5_1(UUID) TO service_role;
+-- NOTA: NON grant authenticated → admin-only audit (no UI exposure)
+
+-- ════════════════════════════════════════════════════════════════════
+-- TODO Hole #3 Day 4 (cosa manca per migrare lo skeleton in migration):
+--
+-- (a) CREATE FUNCTION public.calculate_winner_score_v51(UUID) come
+--     copia di calculate_winner_score con la formula v5.1:
+--       score = f_base + pity_bonus(S_u, N_pity_aria)
+--     dove S_u = storici_cat post-last-win in ARIA (non più L_u count
+--     airdrop). N_pity_aria = ⌊α × V̄_cat / c_u_avg⌋ in ARIA continui.
+--
+-- (b) Mini integration test inline:
+--       SELECT public.compare_score_v5_vs_v5_1('<test_airdrop_id>');
+--     Verifica winner_match=true sui ≥3 airdrop di test esistenti.
+--
+-- (c) Solo se compare verde su tutti i test → CREATE OR REPLACE
+--     calculate_winner_score con body v5.1 → DROP calculate_winner_score_v51.
+--     Atomic: tutto in una sola transaction.
+--
+-- (d) UPDATE airdrop_config SET key='scoring_version' value='v5.1'
+--     (se la chiave esiste; altrimenti INSERT).
+--
+-- (e) Closing log: INSERT INTO events (event, props) VALUES
+--     ('scoring_version_cutover', jsonb_build_object('from','v5','to','v5.1',
+--      'compared_airdrops', ARRAY[...], 'all_winners_match', true))
+-- ════════════════════════════════════════════════════════════════════

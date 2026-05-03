@@ -15,6 +15,10 @@
   --gray-300:#aaa;
   --aria:#4A9EFF;
   --kas:#49EACB;
+  /* Functional palette extension (ROBY approved 27 Apr 2026) — subordinata a identity, max 5% surface */
+  --red-error:#B91C1C; /* errors critical, destructive, halt states (es. treasury Red band) */
+  --red-alert:#ef4444; /* warning urgenti, alert non-critical, badge errore secondario */
+  --red-soft:#f87171;  /* soft warnings, hover states su elementi error */
   --font-h:'Cormorant Garamond',Georgia,serif;
   --font-b:'Instrument Sans',system-ui,sans-serif;
   --font-m:'DM Mono',monospace;
