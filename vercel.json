@@ -11,10 +11,17 @@
       ]
     }
   ],
+  "redirects": [
+    { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.com"}], "destination": "https://www.airoobi.com/$1", "statusCode": 301 },
+    { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "https://www.airoobi.app/$1", "statusCode": 301 },
+    { "source": "/blog.html", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog", "permanent": true },
+    { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
     { "source": "/ads.txt", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/ads-app.txt" },
     { "source": "/ads.txt", "destination": "/ads-com.txt" },
+    { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/sitemap-app.xml" },
     { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/sitemap-com.xml" },
 
     { "source": "/diventa-alpha-brave", "destination": "/diventa-alpha-brave.html" },
