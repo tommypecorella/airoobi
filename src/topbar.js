@@ -11,7 +11,7 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 /* ── Token icon helper (cerchiate ARIA/ROBI/KAS) ── */
 window.tokIcon=function(t,sz){
   sz=sz||14;
-  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#B8960C':t==='KAS'?'#49EACB':'var(--gray-500)';
+  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#B8893D':t==='KAS'?'#49EACB':'var(--gray-500)';
   var l=t==='ARIA'?'A':t==='ROBI'?'R':t==='KAS'?'K':'?';
   return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 16 16" style="vertical-align:-2px;flex-shrink:0"><circle cx="8" cy="8" r="7" fill="none" stroke="'+c+'" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="'+c+'" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">'+l+'</text></svg>';
 };
@@ -229,7 +229,7 @@ function upgradeToLoggedIn(session){
     var lang=(document.documentElement.getAttribute('data-lang')||'it')==='it'?'EN':'IT';
     topRight.innerHTML=
       '<span class="topbar-bal" id="tb-aria"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700">A</text></svg><span id="tb-aria-val">\u2014</span></span>'
-      +'<span class="topbar-bal topbar-bal-robi" id="tb-robi"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700">R</text></svg><span id="tb-robi-val">\u2014</span></span>'
+      +'<span class="topbar-bal topbar-bal-robi" id="tb-robi"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8893D" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8893D" font-size="9" font-weight="700">R</text></svg><span id="tb-robi-val">\u2014</span></span>'
       +'<button class="lang-toggle" id="lang-btn" onclick="window._topbarLang()">'+lang+'</button>'
       +'<button class="topbar-avatar" id="tb-avatar-btn" onclick="window._topbarToggleUserMenu(event)" aria-label="Menu utente"><span id="tb-avatar-letter">'+letter+'</span></button>';
   }
