@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIROOBI · Brand Kit v2.0 · Italian Editorial Manifesto</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #FFFFFF;
+  --bg-alt: #FAFAF7;
+  --ink: #0F1417;
+  --ink-soft: rgba(15,20,23,0.55);
+  --ink-faint: rgba(15,20,23,0.4);
+  --gold: #B8893D;
+  --gold-light: #D4A04C;
+  --gold-deep: #9F7820;
+  --coral: #F73659;
+  --espresso: #1B1814;
+  --line: rgba(15,20,23,0.12);
+  --line-soft: rgba(15,20,23,0.08);
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'DM Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.container { max-width: 1080px; margin: 0 auto; padding: 64px 40px; }
+
+/* HEADER */
+.header { padding-bottom: 48px; border-bottom: 0.5px solid var(--line); margin-bottom: 64px; display: flex; align-items: flex-start; justify-content: space-between; }
+.header .lockup { display: flex; align-items: center; gap: 12px; }
+.header .dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; }
+.header .name { font-family: var(--font-mono); font-size: 13px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); font-weight: 600; }
+.header .meta { text-align: right; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; color: var(--ink-faint); text-transform: uppercase; line-height: 1.7; }
+
+/* HERO */
+.hero { padding: 32px 0 64px; border-bottom: 0.5px solid var(--line); margin-bottom: 64px; }
+.hero h1 { font-family: var(--font-display); font-size: clamp(40px, 7vw, 68px); font-weight: 500; line-height: 1; letter-spacing: -0.045em; color: var(--ink); margin-bottom: 4px; }
+.hero h1 .gold { color: var(--gold); font-weight: 700; }
+.hero .label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 18px; }
+
+/* SECTION */
+section { padding: 56px 0; border-bottom: 0.5px solid var(--line); }
+section:last-of-type { border-bottom: none; }
+.section-label { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; color: var(--gold); text-transform: uppercase; margin-bottom: 14px; font-weight: 600; }
+.section-title { font-family: var(--font-display); font-size: 36px; font-weight: 500; line-height: 1.05; letter-spacing: -0.03em; color: var(--ink); margin-bottom: 32px; }
+.section-intro { font-size: 16px; color: var(--ink-soft); max-width: 640px; margin-bottom: 40px; line-height: 1.7; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (max-width: 720px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } .container { padding: 40px 24px; } }
+
+/* PALETTE SWATCHES */
+.swatch { border-radius: 4px; padding: 22px 20px; min-height: 160px; display: flex; flex-direction: column; justify-content: space-between; border: 0.5px solid var(--line); }
+.swatch.dark { color: #fff; border-color: rgba(255,255,255,0.15); }
+.swatch .role { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; opacity: 0.75; }
+.swatch .name { font-family: var(--font-display); font-size: 22px; font-weight: 500; letter-spacing: -0.01em; margin-top: 8px; }
+.swatch .hex { font-family: var(--font-mono); font-size: 12px; opacity: 0.85; margin-top: 6px; }
+.swatch .role-info { font-family: var(--font-mono); font-size: 9.5px; opacity: 0.7; line-height: 1.6; margin-top: 8px; letter-spacing: 0.04em; }
+
+/* TYPE SPECIMEN */
+.type-row { display: flex; align-items: baseline; gap: 24px; padding: 22px 0; border-bottom: 0.5px solid var(--line-soft); }
+.type-row .label { font-family: var(--font-mono); font-size: 10px; color: var(--ink-faint); letter-spacing: 0.1em; text-transform: uppercase; min-width: 120px; }
+.type-row .specimen { flex: 1; line-height: 1.05; letter-spacing: -0.02em; color: var(--ink); }
+
+/* LOGO ASSETS */
+.logo-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+.logo-card { border: 0.5px solid var(--line); border-radius: 4px; padding: 32px 28px; min-height: 180px; display: flex; flex-direction: column; }
+.logo-card.dark { background: var(--espresso); color: #fff; border-color: rgba(255,255,255,0.15); }
+.logo-card .meta { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--ink-faint); text-transform: uppercase; margin-bottom: 24px; }
+.logo-card.dark .meta { color: rgba(255,255,255,0.5); }
+.logo-card .display-area { flex: 1; display: flex; align-items: center; justify-content: center; gap: 14px; }
+.logo-card svg { display: block; }
+.logo-name { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; color: var(--ink-faint); text-transform: uppercase; margin-top: 14px; padding-top: 14px; border-top: 0.5px solid var(--line-soft); }
+.logo-card.dark .logo-name { color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.1); }
+
+/* VOICE / PRINCIPLES */
+.principle { display: grid; grid-template-columns: 60px 1fr; gap: 24px; padding: 24px 0; border-bottom: 0.5px solid var(--line-soft); }
+.principle .num { font-family: var(--font-mono); font-size: 14px; color: var(--gold); font-weight: 600; letter-spacing: 0.08em; }
+.principle h3 { font-family: var(--font-display); font-size: 20px; font-weight: 600; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.01em; }
+.principle p { font-size: 14px; color: var(--ink-soft); line-height: 1.7; }
+.principle p code { background: var(--bg-alt); border: 0.5px solid var(--line); padding: 1px 6px; border-radius: 3px; font-family: var(--font-mono); font-size: 12px; color: var(--ink); }
+
+/* DO / DONT */
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+.do-dont .col { padding: 18px 20px; border-radius: 4px; }
+.do-dont .col.do { background: rgba(184,137,61,0.08); border: 0.5px solid rgba(184,137,61,0.25); }
+.do-dont .col.dont { background: rgba(247,54,89,0.05); border: 0.5px solid rgba(247,54,89,0.25); }
+.do-dont .header-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 600; margin-bottom: 8px; }
+.do-dont .col.do .header-tag { color: var(--gold-deep); }
+.do-dont .col.dont .header-tag { color: var(--coral); }
+.do-dont ul { list-style: none; padding: 0; }
+.do-dont li { font-size: 13px; line-height: 1.7; color: var(--ink); padding: 4px 0; }
+.do-dont li::before { content: ""; display: inline-block; width: 4px; height: 4px; background: currentColor; border-radius: 50%; margin-right: 10px; vertical-align: middle; opacity: 0.5; }
+
+/* BUTTONS PREVIEW */
+.button-row { display: flex; gap: 10px; flex-wrap: wrap; padding: 24px 0; }
+.btn { padding: 11px 24px; font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px; font-family: var(--font-body); cursor: default; }
+.btn-primary { background: var(--ink); color: #fff; }
+.btn-secondary { background: transparent; border: 0.5px solid var(--ink); color: var(--ink); }
+.btn-coral { background: var(--coral); color: #fff; }
+.btn-gold { background: var(--gold); color: #fff; }
+
+/* DARK MODE PREVIEW */
+.dark-preview { background: var(--espresso); color: #fff; padding: 40px; border-radius: 4px; margin-top: 24px; border: 0.5px solid rgba(255,255,255,0.15); }
+.dark-preview h2 { font-family: var(--font-display); font-size: 32px; font-weight: 500; line-height: 1.05; letter-spacing: -0.03em; margin-bottom: 8px; }
+.dark-preview h2 .gold { color: var(--gold); font-weight: 700; }
+.dark-preview p { color: rgba(255,255,255,0.65); font-size: 14px; margin-top: 8px; }
+.dark-preview .meta-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); margin-bottom: 20px; }
+
+/* TOKEN TABLE */
+.token-row { display: grid; grid-template-columns: 200px 120px 1fr; gap: 16px; padding: 12px 0; border-bottom: 0.5px solid var(--line-soft); align-items: center; }
+.token-row .key { font-family: var(--font-mono); font-size: 12px; color: var(--ink); }
+.token-row .val { font-family: var(--font-mono); font-size: 12px; color: var(--gold); }
+.token-row .desc { font-size: 13px; color: var(--ink-soft); }
+
+/* FOOTER */
+footer { margin-top: 80px; padding-top: 40px; border-top: 0.5px solid var(--line); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-faint); letter-spacing: 0.08em; text-transform: uppercase; }
+footer a { color: var(--gold); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HEADER -->
+<header class="header">
+  <div class="lockup">
+    <div class="dot"></div>
+    <div class="name">AIROOBI · Brand Kit v2.0</div>
+  </div>
+  <div class="meta">
+    Italian Editorial Manifesto<br>
+    2 Maggio 2026<br>
+    by ROBY · for Skeezu
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" style="border-bottom: 0.5px solid var(--line);">
+  <div class="label">— Manifesto N° 01 / 2026</div>
+  <h1>Il primo marketplace</h1>
+  <h1>dove pagare e vendere</h1>
+  <h1 style="color: var(--ink-soft);">quello che desideri</h1>
+  <h1 style="color: var(--ink-soft);">non è uno sconto.</h1>
+  <h1 class="gold" style="margin-top: 8px;">È una skill.</h1>
+</section>
+
+<!-- 1. PALETTE -->
+<section style="border-bottom: none; padding-top: 0;">
+  <div class="section-label">01 — Palette</div>
+  <h2 class="section-title">Cromatic system</h2>
+  <p class="section-intro">Light-mode primary (cool, eleganza editoriale italiana). Dark-mode complementare (espresso warm). Gold come signature. Coral come accent vendita.</p>
+
+  <h3 style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px;">Primary · Day-mode</h3>
+  <div class="grid-3" style="margin-bottom: 32px;">
+    <div class="swatch" style="background: #FFFFFF;">
+      <div class="role">— Background</div>
+      <div>
+        <div class="name">Pure White</div>
+        <div class="hex">#FFFFFF</div>
+        <div class="role-info">Base · landing · dApp surfaces · 100% canvas</div>
+      </div>
+    </div>
+    <div class="swatch" style="background: #FAFAF7;">
+      <div class="role">— Surface alt</div>
+      <div>
+        <div class="name">Off-white</div>
+        <div class="hex">#FAFAF7</div>
+        <div class="role-info">Cards · sub-sections · subtle elevation</div>
+      </div>
+    </div>
+    <div class="swatch" style="background: #0F1417; color: #fff;">
+      <div class="role" style="opacity: 0.6;">— Ink</div>
+      <div>
+        <div class="name">Deep Ink</div>
+        <div class="hex">#0F1417</div>
+        <div class="role-info" style="opacity: 0.7;">Primary text · CTA "Compra" buttons</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px;">Signature · Renaissance gold</h3>
+  <div class="grid-3" style="margin-bottom: 32px;">
+    <div class="swatch" style="background: #B8893D; color: #fff;">
+      <div class="role" style="opacity: 0.85;">— Gold · primary</div>
+      <div>
+        <div class="name">Renaissance</div>
+        <div class="hex">#B8893D</div>
+        <div class="role-info" style="opacity: 0.85;">"È una skill." · signature dot · accent metallico</div>
+      </div>
+    </div>
+    <div class="swatch" style="background: #D4A04C; color: #fff;">
+      <div class="role" style="opacity: 0.85;">— Gold · light</div>
+      <div>
+        <div class="name">Bright</div>
+        <div class="hex">#D4A04C</div>
+        <div class="role-info" style="opacity: 0.85;">Hover · glow · highlight ricorrente</div>
+      </div>
+    </div>
+    <div class="swatch" style="background: #9F7820; color: #fff;">
+      <div class="role" style="opacity: 0.85;">— Gold · deep</div>
+      <div>
+        <div class="name">Antique</div>
+        <div class="hex">#9F7820</div>
+        <div class="role-info" style="opacity: 0.85;">Active · pressed · accent rinascimentale</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px;">Action · Coral</h3>
+  <div class="grid-3" style="margin-bottom: 32px;">
+    <div class="swatch" style="background: #F73659; color: #fff;">
+      <div class="role" style="opacity: 0.85;">— Coral primary</div>
+      <div>
+        <div class="name">Coral</div>
+        <div class="hex">#F73659</div>
+        <div class="role-info" style="opacity: 0.85;">CTA "Vendi" · seller-side action · attention</div>
+      </div>
+    </div>
+    <div class="swatch" style="background: #FF5470; color: #fff;">
+      <div class="role" style="opacity: 0.85;">— Coral light</div>
+      <div>
+        <div class="name">Coral · night</div>
+        <div class="hex">#FF5470</div>
+        <div class="role-info" style="opacity: 0.85;">Dark-mode bumped · contrast booster</div>
+      </div>
+    </div>
+    <div class="swatch" style="background: #1B1814; color: #fff;">
+      <div class="role" style="opacity: 0.85;">— Espresso</div>
+      <div>
+        <div class="name">Espresso</div>
+        <div class="hex">#1B1814</div>
+        <div class="role-info" style="opacity: 0.85;">Dark-mode background · italianate dark</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. TYPOGRAPHY -->
+<section>
+  <div class="section-label">02 — Typography</div>
+  <h2 class="section-title">Editoriale tech-aware</h2>
+  <p class="section-intro">Inter come unico sans (display + body) con weight contrast forte. JetBrains Mono per labels e numerali. Niente serif retrò: contemporary editorial sharp.</p>
+
+  <div class="type-row">
+    <div class="label">Display 60</div>
+    <div class="specimen" style="font-family: var(--font-display); font-size: 60px; font-weight: 500;">Il tempo è skill</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Display 48 italic gold</div>
+    <div class="specimen" style="font-family: var(--font-display); font-size: 48px; font-weight: 700; font-style: italic; color: var(--gold);">È una skill.</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Heading 32</div>
+    <div class="specimen" style="font-family: var(--font-display); font-size: 32px; font-weight: 500;">Marketplace bidirezionale</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Heading 22</div>
+    <div class="specimen" style="font-family: var(--font-display); font-size: 22px; font-weight: 600;">Ottieni il bene partecipando</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Body 16</div>
+    <div class="specimen" style="font-family: var(--font-body); font-size: 16px; font-weight: 400; line-height: 1.65;">Non è una lotteria. È skill: chi acquista più blocchi nella categoria si aggiudica l'oggetto.</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Mono caps 11</div>
+    <div class="specimen" style="font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;">Manifesto N° 01 / 2026</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Mono numerals</div>
+    <div class="specimen" style="font-family: var(--font-mono); font-size: 14px; font-weight: 400;">847 / 1.000 utenti — primo airdrop ufficiale</div>
+  </div>
+</section>
+
+<!-- 3. LOGO SVG VARIANTS -->
+<section>
+  <div class="section-label">03 — Logo & Symbol</div>
+  <h2 class="section-title">5 SVG variants del simbolo "oO"</h2>
+  <p class="section-intro">Versioni vettoriali pure SVG (mai più Gemini AI con il suo no). Mantengono l'asimmetria oO grande + oO piccolo come signature. Scalano da favicon 16px a billboard 4m.</p>
+
+  <div class="logo-grid">
+
+    <!-- V1: Classic recreation -->
+    <div class="logo-card">
+      <div class="meta">V1 · Classic geometric</div>
+      <div class="display-area">
+        <svg width="160" height="100" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <!-- Big oO -->
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#0F1417" stroke-width="6"/>
+          <circle cx="50" cy="50" r="22" fill="#0F1417"/>
+          <path d="M 18 70 Q 50 92, 82 70" fill="none" stroke="#0F1417" stroke-width="6" stroke-linecap="round"/>
+          <!-- Small oO -->
+          <circle cx="125" cy="55" r="22" fill="none" stroke="#0F1417" stroke-width="4"/>
+          <circle cx="125" cy="55" r="10" fill="#0F1417"/>
+          <path d="M 109 64 Q 125 75, 141 64" fill="none" stroke="#0F1417" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-name">Classico · ricreazione canonica</div>
+    </div>
+
+    <!-- V2: Gold accent -->
+    <div class="logo-card">
+      <div class="meta">V2 · Gold accent · brand signature</div>
+      <div class="display-area">
+        <svg width="160" height="100" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#0F1417" stroke-width="6"/>
+          <circle cx="50" cy="50" r="22" fill="#0F1417"/>
+          <path d="M 18 70 Q 50 92, 82 70" fill="none" stroke="#0F1417" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="125" cy="55" r="22" fill="none" stroke="#B8893D" stroke-width="4"/>
+          <circle cx="125" cy="55" r="10" fill="#B8893D"/>
+          <path d="M 109 64 Q 125 75, 141 64" fill="none" stroke="#B8893D" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-name">Big oO nero + small oO gold · use signature</div>
+    </div>
+
+    <!-- V3: Monoline -->
+    <div class="logo-card">
+      <div class="meta">V3 · Monoline · single stroke modern</div>
+      <div class="display-area">
+        <svg width="160" height="100" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#0F1417" stroke-width="3"/>
+          <circle cx="50" cy="50" r="22" fill="none" stroke="#0F1417" stroke-width="3"/>
+          <circle cx="125" cy="55" r="22" fill="none" stroke="#0F1417" stroke-width="3"/>
+          <circle cx="125" cy="55" r="10" fill="none" stroke="#0F1417" stroke-width="3"/>
+        </svg>
+      </div>
+      <div class="logo-name">Monoline · light · dApp UI scale</div>
+    </div>
+
+    <!-- V4: Solid filled -->
+    <div class="logo-card">
+      <div class="meta">V4 · Solid filled · maximum impact</div>
+      <div class="display-area">
+        <svg width="160" height="100" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="44" fill="#0F1417"/>
+          <circle cx="50" cy="50" r="22" fill="#FFFFFF"/>
+          <circle cx="50" cy="50" r="10" fill="#0F1417"/>
+          <circle cx="125" cy="55" r="22" fill="#0F1417"/>
+          <circle cx="125" cy="55" r="10" fill="#FFFFFF"/>
+        </svg>
+      </div>
+      <div class="logo-name">Solid · cover · poster · billboard</div>
+    </div>
+
+    <!-- V5: Minimal dots -->
+    <div class="logo-card">
+      <div class="meta">V5 · Minimal · favicon · 16px scale</div>
+      <div class="display-area">
+        <svg width="160" height="100" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="32" fill="none" stroke="#0F1417" stroke-width="8"/>
+          <circle cx="125" cy="55" r="14" fill="#B8893D"/>
+        </svg>
+      </div>
+      <div class="logo-name">Minimal · favicon · social profile · meta</div>
+    </div>
+
+    <!-- V6: Dark mode -->
+    <div class="logo-card dark">
+      <div class="meta">V2 · Dark-mode invert</div>
+      <div class="display-area">
+        <svg width="160" height="100" viewBox="0 0 160 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="44" fill="none" stroke="#FFFFFF" stroke-width="6"/>
+          <circle cx="50" cy="50" r="22" fill="#FFFFFF"/>
+          <path d="M 18 70 Q 50 92, 82 70" fill="none" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+          <circle cx="125" cy="55" r="22" fill="none" stroke="#B8893D" stroke-width="4"/>
+          <circle cx="125" cy="55" r="10" fill="#B8893D"/>
+          <path d="M 109 64 Q 125 75, 141 64" fill="none" stroke="#B8893D" stroke-width="4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="logo-name" style="color: rgba(255,255,255,0.5);">V2 invertito · uso su espresso BG</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. VOICE & PRINCIPLES -->
+<section>
+  <div class="section-label">04 — Voice & language</div>
+  <h2 class="section-title">Anti-gambling · anti-crypto-jargon · italianate</h2>
+  <p class="section-intro">AIROOBI parla a chi NON vuole essere crypto-savvy per partecipare. Ogni copy è verificabile contro 4 principi.</p>
+
+  <div class="principle">
+    <div class="num">01.</div>
+    <div>
+      <h3>Vietato il vocabolario gambling</h3>
+      <p>Mai usare <code>vinci</code>, <code>vinto</code>, <code>estrazione</code>, <code>draw</code>, <code>lotteria</code>, <code>fortuna</code>, <code>scommessa</code>, <code>azzardo</code>, <code>jackpot</code>. Sostituire con: <code>aggiudicarsi</code>, <code>ottenere</code>, <code>conquistare</code>, <code>selezione</code>, <code>assegnazione</code>, <code>partecipare</code>, <code>impegnarsi</code>.</p>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="num">02.</div>
+    <div>
+      <h3>Vietato il vocabolario crypto-savvy</h3>
+      <p>Mai usare in copy consumer-facing <code>BlockDAG</code>, <code>GHOSTDAG</code>, <code>tokenomics</code>, <code>decentralized</code>, <code>DeFi</code>, <code>HODL</code>. La nonna deve capire al primo colpo. Tecnicismi solo nei whitepaper investor.</p>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="num">03.</div>
+    <div>
+      <h3>Bidirezionale sempre</h3>
+      <p>Comunicare sempre <strong>compra</strong> + <strong>vendi</strong>. Niente solo "vendi qui" o solo "compra qui" come hero. Due CTA distinti, sempre. AIROOBI è marketplace bidirezionale by design.</p>
+    </div>
+  </div>
+  <div class="principle">
+    <div class="num">04.</div>
+    <div>
+      <h3>Manifesto, non promessa</h3>
+      <p>Niente <code>realizza il tuo desiderio</code>, <code>diventa ricco</code>, <code>il futuro è qui</code>. Scrivere affermazioni: "Il primo marketplace dove …" / "Non è uno sconto." / "È una skill." Tono: italianate manifesto contemporary, non aspirational vacuo.</p>
+    </div>
+  </div>
+
+  <div class="do-dont" style="margin-top: 32px;">
+    <div class="col do">
+      <div class="header-tag">— Do</div>
+      <ul>
+        <li>"Aggiudicati il bene partecipando."</li>
+        <li>"Più ti giochi i tuoi blocchi, meno paghi."</li>
+        <li>"Selezione deterministica + audit-able."</li>
+        <li>"Marketplace bidirezionale: compra · vendi."</li>
+        <li>"Skill-based, non lottery."</li>
+      </ul>
+    </div>
+    <div class="col dont">
+      <div class="header-tag">— Don't</div>
+      <ul>
+        <li>"Vinci subito al primo airdrop."</li>
+        <li>"Gioca e ottieni la fortuna."</li>
+        <li>"Estrazione automatica deterministica."</li>
+        <li>"Realizza il tuo desiderio."</li>
+        <li>"Scommetti su Kaspa BlockDAG."</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 5. UI ELEMENTS -->
+<section>
+  <div class="section-label">05 — UI elements</div>
+  <h2 class="section-title">Buttons + accents</h2>
+  <p class="section-intro">Pattern consistente: nero solido per "Compra" (primario), coral per "Vendi" (secondario but distinto), gold per highlight. Radius 4px architectural.</p>
+
+  <div class="button-row">
+    <div class="btn btn-primary">Compra ↗</div>
+    <div class="btn btn-coral">Vendi ↗</div>
+    <div class="btn btn-secondary">Come funziona</div>
+    <div class="btn btn-gold">Skill bonus</div>
+  </div>
+
+  <h3 style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin: 32px 0 14px;">Hero preview · Day-mode</h3>
+  <div style="background: var(--bg); border: 0.5px solid var(--line); border-radius: 4px; padding: 32px 28px;">
+    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 18px;">
+      <div style="width: 6px; height: 6px; background: var(--gold); border-radius: 50%;"></div>
+      <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); font-weight: 600;">AIROOBI</div>
+    </div>
+    <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 500; line-height: 1.05; letter-spacing: -0.04em; color: var(--ink); margin: 0 0 4px;">Il primo marketplace dove pagare e vendere</h2>
+    <h2 style="font-family: var(--font-display); font-size: 28px; font-weight: 500; line-height: 1.05; letter-spacing: -0.04em; color: var(--ink-soft); margin: 0 0 8px;">quello che desideri non è uno sconto.</h2>
+    <h2 style="font-family: var(--font-display); font-size: 36px; font-weight: 700; line-height: 1; letter-spacing: -0.05em; color: var(--gold); margin: 8px 0 16px; font-style: italic;">È una skill.</h2>
+    <div style="display: flex; gap: 10px;">
+      <div class="btn btn-primary">Compra ↗</div>
+      <div class="btn btn-coral">Vendi ↗</div>
+    </div>
+  </div>
+
+  <h3 style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-faint); margin: 32px 0 14px;">Hero preview · Dark-mode</h3>
+  <div class="dark-preview">
+    <div class="meta-tag">— Manifesto N° 01 / 2026</div>
+    <h2>Il primo marketplace dove pagare e vendere</h2>
+    <h2 style="color: rgba(255,255,255,0.55);">quello che desideri non è uno sconto.</h2>
+    <h2 class="gold" style="margin-top: 8px; font-size: 36px; font-weight: 700; font-style: italic;">È una skill.</h2>
+    <div style="display: flex; gap: 10px; margin-top: 18px;">
+      <div style="background: var(--gold); color: var(--espresso); padding: 11px 22px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px;">Compra ↗</div>
+      <div style="background: #FF5470; color: #fff; padding: 11px 22px; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px;">Vendi ↗</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. DESIGN TOKENS -->
+<section>
+  <div class="section-label">06 — Design tokens</div>
+  <h2 class="section-title">Per il dev (CCP scope)</h2>
+  <p class="section-intro">Variabili CSS canoniche da copy-paste in un nuovo file <code style="font-family: var(--font-mono); font-size: 13px; background: var(--bg-alt); padding: 1px 6px; border-radius: 3px;">/src/tokens.css</code> e includere in tutto il sito.</p>
+
+  <div class="token-row" style="border-top: 0.5px solid var(--line); padding-top: 12px;">
+    <div class="key">--bg-primary</div>
+    <div class="val">#FFFFFF</div>
+    <div class="desc">Day-mode background canvas</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--bg-alt</div>
+    <div class="val">#FAFAF7</div>
+    <div class="desc">Surface alt (cards, sub-section)</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--ink</div>
+    <div class="val">#0F1417</div>
+    <div class="desc">Primary text · CTA "Compra" buttons</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--ink-soft</div>
+    <div class="val">rgba(15,20,23,0.55)</div>
+    <div class="desc">Secondary text (subtitle, body weak)</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--gold</div>
+    <div class="val">#B8893D</div>
+    <div class="desc">Renaissance signature · "È una skill" + dot</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--gold-light</div>
+    <div class="val">#D4A04C</div>
+    <div class="desc">Hover states, glow</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--gold-deep</div>
+    <div class="val">#9F7820</div>
+    <div class="desc">Active/pressed states</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--coral</div>
+    <div class="val">#F73659</div>
+    <div class="desc">CTA "Vendi" · seller-side action</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--coral-night</div>
+    <div class="val">#FF5470</div>
+    <div class="desc">Dark-mode coral (boosted)</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--espresso</div>
+    <div class="val">#1B1814</div>
+    <div class="desc">Dark-mode background (italianate warm)</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--font-display</div>
+    <div class="val">'Inter', sans-serif</div>
+    <div class="desc">Headings, hero, manifesto type</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--font-body</div>
+    <div class="val">'Inter', sans-serif</div>
+    <div class="desc">Body text, paragraphs</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--font-mono</div>
+    <div class="val">'JetBrains Mono'</div>
+    <div class="desc">Labels, numerals, meta-info</div>
+  </div>
+  <div class="token-row">
+    <div class="key">--radius</div>
+    <div class="val">4px</div>
+    <div class="desc">Architectural sharp · all elements</div>
+  </div>
+</section>
+
+<!-- 7. CHANGELOG -->
+<section>
+  <div class="section-label">07 — Changelog</div>
+  <h2 class="section-title">Da v1.1 → v2.0</h2>
+
+  <div style="font-size: 14px; color: var(--ink-soft); line-height: 1.8; max-width: 720px;">
+    <p style="margin-bottom: 16px;"><strong style="color: var(--ink); font-weight: 600;">v2.0 · 2 May 2026</strong> — Pivot completo design system. Drop palette BLACK/GOLD/WHITE crypto-tech precedente. Adozione: white BG primary + Renaissance gold #B8893D + coral CTA + espresso dark-mode. Slogan locked dopo 3 round iterazione: "Il primo marketplace dove pagare e vendere quello che desideri non è uno sconto. È una skill." Insight: marketplace bidirezionale (compra + vendi entrambi skill). Tipografia: drop Cormorant Garamond serif (vintage), adopt Inter unica + JetBrains Mono. 5 logo SVG variants generati da scratch (oO mantenuto). Voice principles: anti-gambling + anti-crypto-jargon + bidirezionale + manifesto.</p>
+    <p style="margin-bottom: 16px;"><strong style="color: var(--ink); font-weight: 600;">v1.1 · 1 May 2026</strong> — Aggiunta functional palette (3 red token + green-success). Mantenimento BLACK/GOLD/WHITE.</p>
+    <p><strong style="color: var(--ink); font-weight: 600;">v1.0 · April 2026</strong> — Brand Kit one-pager iniziale. BLACK + GOLD + WHITE + ARIA blue + KAS green.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>— ROBY · Strategy &amp; comms · Claude Desktop</div>
+  <div>Brand Kit v2.0 · 2 Maggio 2026 · for <a>Skeezu</a></div>
+</footer>
+
+</div>
+</body>
+</html>

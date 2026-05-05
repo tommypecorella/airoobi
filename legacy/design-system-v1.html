@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>AIROOBI · Design System v1 (Apr 2026 — May 2026) · Archive</title>
+<meta name="description" content="Archive permanente del primo design system AIROOBI. In uso durante Stage 0 → mid-Alpha 0. Sostituito 2 May 2026 dal v2.0 Italian Editorial Manifesto.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #060b18;
+  --white: #f0f2f8;
+  --gold: #4A9EFF;
+  --kas: #49EACB;
+  --gray-900: #0c1224;
+  --gray-800: #151d33;
+  --gray-700: #1f2942;
+  --gray-600: #2d3a56;
+  --gray-400: #8892ae;
+  --gray-300: #b4bdd4;
+  --font-h: 'Cormorant Garamond', serif;
+  --font-b: 'Instrument Sans', system-ui, sans-serif;
+  --font-m: 'DM Mono', monospace;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { background: var(--black); color-scheme: dark; }
+body { background: var(--black); color: var(--white); font-family: var(--font-b); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+.container { max-width: 1080px; margin: 0 auto; padding: 64px 32px 80px; }
+
+/* Banner archive */
+.archive-banner {
+  background: linear-gradient(135deg, rgba(74,158,255,.05) 0%, rgba(73,234,203,.04) 100%);
+  border: 1px solid rgba(74,158,255,.18);
+  border-radius: 14px;
+  padding: 18px 24px;
+  margin-bottom: 48px;
+  display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap;
+}
+.archive-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 12px var(--gold); margin-top: 6px; flex: 0 0 auto; }
+.archive-banner .text { flex: 1; min-width: 280px; }
+.archive-banner .tag { font-family: var(--font-m); font-size: 10px; letter-spacing: 2.5px; text-transform: uppercase; color: var(--gold); margin-bottom: 6px; }
+.archive-banner .copy { font-size: 14px; color: var(--gray-300); line-height: 1.7; }
+
+/* Header */
+header.head { padding-bottom: 36px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 56px; }
+header.head h1 { font-family: var(--font-h); font-size: clamp(38px, 6vw, 60px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.05; color: var(--white); font-style: italic; margin-bottom: 12px; }
+header.head .sub { font-size: 16px; color: var(--gray-300); max-width: 720px; line-height: 1.7; margin-bottom: 18px; }
+header.head .meta { font-family: var(--font-m); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-400); }
+header.head .meta span + span::before { content: " · "; color: var(--gray-600); }
+
+/* Section */
+section { padding: 56px 0; border-bottom: 1px solid rgba(255,255,255,.06); }
+section:last-of-type { border-bottom: none; }
+.section-label { font-family: var(--font-m); font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; font-weight: 500; }
+.section-title { font-family: var(--font-h); font-size: 32px; font-weight: 600; letter-spacing: -0.02em; color: var(--white); margin-bottom: 28px; }
+.section-intro { font-size: 15px; color: var(--gray-300); max-width: 680px; line-height: 1.8; margin-bottom: 36px; }
+
+/* Slogan v1 — recreation */
+.slogan-v1 {
+  background: linear-gradient(180deg, var(--gray-900) 0%, var(--black) 100%);
+  border: 1px solid var(--gray-700);
+  border-radius: 14px;
+  padding: 64px 40px;
+  text-align: center;
+}
+.slogan-v1 h2 { font-family: var(--font-h); font-size: clamp(34px, 6vw, 56px); font-weight: 600; line-height: 1.1; letter-spacing: -0.025em; font-style: italic; }
+.slogan-v1 h2 .gradient { background: linear-gradient(135deg, #fff 0%, #4A9EFF 50%, #49EACB 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.slogan-v1 .em { display: block; font-style: italic; opacity: .85; }
+.slogan-v1 .sub { margin-top: 22px; font-size: 15px; color: var(--gray-400); max-width: 540px; margin-left: auto; margin-right: auto; line-height: 1.7; }
+.slogan-v1 .alt-en { margin-top: 12px; font-family: var(--font-m); font-size: 11px; letter-spacing: 2px; color: var(--gray-600); text-transform: uppercase; }
+
+/* Palette grid */
+.palette { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.swatch { padding: 22px 20px; border-radius: 10px; min-height: 150px; display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(255,255,255,.06); }
+.swatch.light-text { color: var(--white); }
+.swatch.dark-text { color: var(--gray-900); }
+.swatch .role { font-family: var(--font-m); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; opacity: .75; margin-bottom: 8px; }
+.swatch .name { font-family: var(--font-h); font-size: 22px; font-weight: 600; letter-spacing: -0.01em; font-style: italic; }
+.swatch .hex { font-family: var(--font-m); font-size: 12px; opacity: .85; margin-top: 6px; }
+.swatch .role-info { font-family: var(--font-m); font-size: 9.5px; opacity: .65; line-height: 1.6; margin-top: 8px; letter-spacing: .5px; }
+.palette-note { font-family: var(--font-m); font-size: 11px; color: var(--gray-400); letter-spacing: 1px; margin-top: 18px; padding: 12px 16px; background: rgba(255,255,255,.03); border-left: 2px solid var(--gold); border-radius: 0 8px 8px 0; }
+
+/* Typography specimens */
+.type-row { display: grid; grid-template-columns: 140px 1fr; gap: 24px; padding: 22px 0; border-bottom: 1px solid rgba(255,255,255,.05); align-items: baseline; }
+.type-row .label { font-family: var(--font-m); font-size: 10px; color: var(--gray-400); letter-spacing: 2px; text-transform: uppercase; }
+.type-row .specimen { color: var(--white); line-height: 1.1; letter-spacing: -0.02em; }
+
+/* Logo block */
+.logo-block { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+.logo-card { background: var(--gray-900); border: 1px solid var(--gray-700); border-radius: 12px; padding: 32px 24px; text-align: center; }
+.logo-card .img-wrap { padding: 28px 0; }
+.logo-card .img-wrap img { max-width: 200px; max-height: 80px; opacity: .95; }
+.logo-card .meta { font-family: var(--font-m); font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--gray-400); margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.06); }
+.raster-note { background: rgba(247,54,89,.04); border: 1px solid rgba(247,54,89,.18); border-radius: 8px; padding: 14px 18px; margin-top: 18px; font-size: 13px; color: var(--gray-300); line-height: 1.7; }
+.raster-note strong { color: #FF7A8E; font-weight: 600; }
+
+/* Hero snapshot */
+.hero-snapshot { background: linear-gradient(180deg, var(--gray-900) 0%, var(--black) 100%); border: 1px solid var(--gray-700); border-radius: 14px; padding: 56px 32px; text-align: center; position: relative; overflow: hidden; }
+.hero-snapshot::before { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(74,158,255,.06) 0%, transparent 65%); pointer-events: none; border-radius: 50%; }
+.hero-snapshot > * { position: relative; }
+.hero-snapshot .badge { display: inline-block; font-family: var(--font-m); font-size: 10px; letter-spacing: 2.5px; color: var(--gold); border: 1px solid rgba(74,158,255,.25); padding: 7px 18px; border-radius: 24px; margin-bottom: 28px; background: rgba(74,158,255,.04); text-transform: uppercase; }
+.hero-snapshot h2 { font-family: var(--font-h); font-size: clamp(34px, 6vw, 54px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.1; font-style: italic; margin-bottom: 16px; background: linear-gradient(135deg, #fff 0%, #4A9EFF 50%, #49EACB 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-snapshot p { color: var(--gray-300); font-size: 15px; line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
+.hero-snapshot .ctas { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.hero-snapshot .btn-p { background: var(--gold); color: var(--black); padding: 13px 32px; font-family: var(--font-b); font-size: 12px; letter-spacing: 1.5px; font-weight: 700; text-transform: uppercase; border-radius: 10px; cursor: default; }
+.hero-snapshot .btn-s { background: transparent; border: 1px solid var(--gray-700); color: var(--gray-300); padding: 13px 32px; font-family: var(--font-b); font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; border-radius: 10px; cursor: default; }
+.hero-snapshot .grant { margin: 32px auto 0; max-width: 480px; padding: 18px 24px; border: 1px solid rgba(184,150,12,.22); border-radius: 12px; background: linear-gradient(135deg, rgba(74,158,255,.04) 0%, rgba(184,150,12,.05) 100%); }
+.hero-snapshot .grant-label { font-family: var(--font-m); font-size: 10px; letter-spacing: 2.5px; color: var(--gold); margin-bottom: 12px; text-transform: uppercase; }
+.hero-snapshot .grant-row { display: flex; align-items: center; justify-content: center; gap: 28px; }
+.hero-snapshot .grant-amt { font-family: var(--font-h); font-size: 32px; font-style: italic; }
+.hero-snapshot .grant-tok { font-family: var(--font-m); font-size: 10px; letter-spacing: 2px; color: var(--gray-300); margin-top: 4px; }
+.hero-snapshot .grant-plus { font-family: var(--font-h); font-size: 26px; color: var(--gray-600); }
+
+/* Footer */
+footer.foot { margin-top: 80px; padding: 32px 0 0; border-top: 1px solid rgba(255,255,255,.08); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+footer.foot .signature { font-family: var(--font-m); font-size: 11px; letter-spacing: 2px; color: var(--gray-400); text-transform: uppercase; }
+footer.foot a { color: var(--gold); text-decoration: none; font-family: var(--font-m); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+footer.foot a:hover { color: var(--kas); }
+footer.foot .links { display: flex; gap: 18px; flex-wrap: wrap; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="archive-banner">
+  <div class="archive-dot"></div>
+  <div class="text">
+    <div class="tag">— Archive · read only · no index</div>
+    <div class="copy">Questa pagina è un archivio permanente del primo design system AIROOBI. Pattern di governance interno: <strong>"Brand-evolution archive before refactor"</strong> — d'ora in poi ogni brand pivot freezerà il design system uscente in una pagina memoriale prima del refactor.</div>
+  </div>
+</div>
+
+<header class="head">
+  <h1>AIROOBI · Design System v1</h1>
+  <div class="sub">Il primo design system di AIROOBI. In uso durante Stage 0 → mid-Alpha 0. Sostituito 2 May 2026 dal v2.0 Italian Editorial Manifesto. Estetica crypto-tech notturna: BLACK profondo + GOLD blu (#4A9EFF nominato "gold" per legacy ma di fatto blu) + KAS green come contrast accent. Cormorant Garamond italic come voce display, Instrument Sans body, DM Mono per labels e numerali.</div>
+  <div class="meta"><span>Periodo · Apr 2026 — May 2026</span><span>Versioni · v1.0 → v1.1</span><span>Sostituito · 2 May 2026</span></div>
+</header>
+
+<!-- 01 — SLOGAN V1 -->
+<section>
+  <div class="section-label">01 — Slogan v1</div>
+  <h2 class="section-title">Realizza il tuo desiderio.</h2>
+  <p class="section-intro">Lo slogan-pilastro del brand v1. Bilingual IT/EN, gradient sky-to-gold-to-kas applicato come signature visiva ricorrente. Ritirato il 2 May 2026 perché classificato "promessa" anziché "manifesto" (vedi v2.0 voice principle 04: niente "realizza il tuo desiderio").</p>
+  <div class="slogan-v1">
+    <h2><span class="gradient">Realizza il tuo desiderio.</span><br><span class="em gradient">A un prezzo ridicolo.</span></h2>
+    <div class="sub">Guadagna ARIA ogni giorno. Partecipa agli airdrop. Chi ha il punteggio più alto vince l'oggetto. Tutti gli altri guadagnano ROBI reali.</div>
+    <div class="alt-en">— EN: Make your wish come true.</div>
+  </div>
+</section>
+
+<!-- 02 — PALETTE V1 -->
+<section>
+  <div class="section-label">02 — Palette v1</div>
+  <h2 class="section-title">BLACK · GOLD · WHITE · ARIA blue · KAS green</h2>
+  <p class="section-intro">Crypto-tech dark canvas. Background nero profondo (#060b18, non vero nero — leggermente blu-saturo), bianco off-white per testo (#f0f2f8). Token <code style="font-family:var(--font-m);font-size:12px;background:rgba(255,255,255,.05);padding:1px 6px;border-radius:3px">--gold</code> nominato per legacy ma in realtà azzurro #4A9EFF (mismatch noto rispetto al brand kit v1.1 che indicava #B8960C). KAS green #49EACB come contrast secondario.</p>
+  <div class="palette">
+    <div class="swatch light-text" style="background:#060b18">
+      <div class="role">— BG primary</div>
+      <div>
+        <div class="name">Black deep</div>
+        <div class="hex">#060b18</div>
+        <div class="role-info">Canvas dark · landing · dApp</div>
+      </div>
+    </div>
+    <div class="swatch dark-text" style="background:#f0f2f8">
+      <div class="role">— Text primary</div>
+      <div>
+        <div class="name">Off-white</div>
+        <div class="hex">#f0f2f8</div>
+        <div class="role-info">Body text · headings · su BG dark</div>
+      </div>
+    </div>
+    <div class="swatch light-text" style="background:#4A9EFF">
+      <div class="role">— --gold (de facto blu)</div>
+      <div>
+        <div class="name">ARIA blue</div>
+        <div class="hex">#4A9EFF</div>
+        <div class="role-info">Accent primario · CTA · signature blue</div>
+      </div>
+    </div>
+    <div class="swatch dark-text" style="background:#49EACB">
+      <div class="role">— --kas</div>
+      <div>
+        <div class="name">KAS green</div>
+        <div class="hex">#49EACB</div>
+        <div class="role-info">Wallet KAS · presale badge · accent</div>
+      </div>
+    </div>
+    <div class="swatch light-text" style="background:#0c1224">
+      <div class="role">— Gray 900</div>
+      <div>
+        <div class="name">Gray-900</div>
+        <div class="hex">#0c1224</div>
+        <div class="role-info">Card BG · gradient anchor</div>
+      </div>
+    </div>
+    <div class="swatch light-text" style="background:#151d33">
+      <div class="role">— Gray 800</div>
+      <div>
+        <div class="name">Gray-800</div>
+        <div class="hex">#151d33</div>
+        <div class="role-info">Surface alt · panels</div>
+      </div>
+    </div>
+    <div class="swatch light-text" style="background:#1f2942">
+      <div class="role">— Gray 700</div>
+      <div>
+        <div class="name">Gray-700</div>
+        <div class="hex">#1f2942</div>
+        <div class="role-info">Border · button-secondary</div>
+      </div>
+    </div>
+    <div class="swatch light-text" style="background:#8892ae">
+      <div class="role">— Gray 400</div>
+      <div>
+        <div class="name">Gray-400</div>
+        <div class="hex">#8892ae</div>
+        <div class="role-info">Body text muted · hint copy</div>
+      </div>
+    </div>
+  </div>
+  <div class="palette-note"><strong style="color:var(--white)">Mismatch noto:</strong> il token <code style="font-family:var(--font-m)">--gold</code> aveva nome "gold" ma valore #4A9EFF (blu). Il Brand Kit v1.1 indicava #B8960C come gold ufficiale, ma il codice CSS in produzione ha sempre usato il blu. Risolto in v2.0 con Renaissance gold #B8893D.</div>
+</section>
+
+<!-- 03 — TYPOGRAPHY V1 -->
+<section>
+  <div class="section-label">03 — Typography v1</div>
+  <h2 class="section-title">Cormorant + Instrument + DM Mono</h2>
+  <p class="section-intro">Cormorant Garamond italic come display voice (eleganza serif vintage), Instrument Sans body (sans neutro tech-aware), DM Mono per labels e numerali. Combinazione "italianate elegance + crypto restrain" tipica di Stage 0. Sostituita in v2.0 da Inter unica (sans contemporary editorial) + JetBrains Mono.</p>
+  <div class="type-row">
+    <div class="label">Display 60 italic</div>
+    <div class="specimen" style="font-family:var(--font-h);font-size:60px;font-weight:600;font-style:italic">Realizza il tuo desiderio.</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Display 48 italic</div>
+    <div class="specimen" style="font-family:var(--font-h);font-size:48px;font-weight:600;font-style:italic">A un prezzo ridicolo.</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Heading 32</div>
+    <div class="specimen" style="font-family:var(--font-h);font-size:32px;font-weight:600">Marketplace Airdrop su Kaspa</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Body 16</div>
+    <div class="specimen" style="font-family:var(--font-b);font-size:16px;font-weight:400;line-height:1.7">Guadagna ARIA ogni giorno. Partecipa agli airdrop. Chi ha il punteggio più alto vince l'oggetto.</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Mono caps 11</div>
+    <div class="specimen" style="font-family:var(--font-m);font-size:11px;font-weight:400;letter-spacing:2.5px;text-transform:uppercase">— Welcome grant alpha-net</div>
+  </div>
+  <div class="type-row">
+    <div class="label">Mono numerals</div>
+    <div class="specimen" style="font-family:var(--font-m);font-size:14px;font-weight:400">847 / 1.000 utenti — alfa-2026.04.24</div>
+  </div>
+</section>
+
+<!-- 04 — LOGO V1 -->
+<section>
+  <div class="section-label">04 — Logo v1</div>
+  <h2 class="section-title">PNG raster only · "oO" symbol</h2>
+  <p class="section-intro">Marchio "oO" (asimmetria oO grande + oO piccolo) consegnato come PNG raster. Versioni white-on-dark per uso primario. SVG vectorials non disponibili in v1 (Gemini AI rifiutò il task di vettorializzazione). Risolto in v2.0 con 5 variants SVG generati da scratch.</p>
+  <div class="logo-block">
+    <div class="logo-card">
+      <div class="img-wrap"><img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI Logo White v1"></div>
+      <div class="meta">AIROOBI_Logo_White.png · raster</div>
+    </div>
+    <div class="logo-card">
+      <div class="img-wrap"><img src="/public/images/AIROOBI_Symbol_White.png" alt="AIROOBI Symbol White v1"></div>
+      <div class="meta">AIROOBI_Symbol_White.png · raster</div>
+    </div>
+  </div>
+  <div class="raster-note"><strong>Limitazione v1:</strong> raster only. Nessun SVG vectoriale. Scaling oltre 400px → degradazione visibile. Favicon era data-URI base64 16x16 inline. Risolto in v2.0 con 5 variants SVG (<code style="font-family:var(--font-m)">/public/svg/airoobi-logo-*.svg</code>).</div>
+</section>
+
+<!-- 05 — HERO SNAPSHOT V1 -->
+<section>
+  <div class="section-label">05 — Hero snapshot v1</div>
+  <h2 class="section-title">landing.html — recreation</h2>
+  <p class="section-intro">Recreation pixel-by-pixel della landing v1 (airoobi.app). Hero center-aligned, gradient text full-width, badge mono caps con border blu, dual CTA "Inizia ora" + "Come funziona", welcome grant box ARIA + ROBI. Pattern dominante v1: dark canvas + radial gradient blu/kas in background.</p>
+  <div class="hero-snapshot">
+    <div class="badge">— Welcome grant alpha-net</div>
+    <h2>Realizza il tuo desiderio.</h2>
+    <p>Guadagna ARIA ogni giorno. Partecipa agli airdrop. Chi ha il punteggio più alto vince l'oggetto. Tutti gli altri guadagnano ROBI reali.</p>
+    <div class="ctas">
+      <span class="btn-p">Inizia ora</span>
+      <span class="btn-s">Come funziona</span>
+    </div>
+    <div class="grant">
+      <div class="grant-label">— Welcome grant alpha-net</div>
+      <div class="grant-row">
+        <div>
+          <div class="grant-amt" style="color:var(--gold)">1.000</div>
+          <div class="grant-tok">ARIA</div>
+        </div>
+        <div class="grant-plus">+</div>
+        <div>
+          <div class="grant-amt" style="color:var(--gold)">5</div>
+          <div class="grant-tok">ROBI</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 06 — PRINCIPLES V1 -->
+<section>
+  <div class="section-label">06 — Voice v1 (rules ritirate)</div>
+  <h2 class="section-title">Anti-gambling già presente, ma...</h2>
+  <p class="section-intro">Il design system v1 aveva già regole anti-gambling (no "vinci/perdi/lotteria/scommessa") e framing positivo "realizza il tuo desiderio + a un prezzo ridicolo". In v2.0 il principio sale di livello: "manifesto, non promessa" — bandito anche "realizza il tuo desiderio" perché classificato come promessa aspirational vacua. Sostituito da affermazione manifesto: "Il primo marketplace dove pagare e vendere quello che desideri non è uno sconto. È una skill."</p>
+  <div style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:24px 28px">
+    <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:14px">— Vocabolario v1 ritirato in v2.0</div>
+    <ul style="list-style:none;padding:0;font-size:14px;color:var(--gray-300);line-height:2">
+      <li>· "Realizza il tuo desiderio" → ritirato (promessa, non manifesto)</li>
+      <li>· "A un prezzo ridicolo" → ritirato (gambling-coded "ridicolo")</li>
+      <li>· "Vinci l'oggetto" → ritirato (gambling vocabulary)</li>
+      <li>· "Make your wish come true" (EN) → ritirato</li>
+      <li>· Framing "guadagna ogni giorno" → riformulato in "partecipa, ottieni, conquisti"</li>
+    </ul>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="signature">Design system v1 sostituito da v2.0 Italian Editorial Manifesto · 2 May 2026</div>
+  <div class="links">
+    <a href="/legacy/design-system-v1.html">v1 (questa pagina)</a>
+    <a href="/">v2.0 live →</a>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>
