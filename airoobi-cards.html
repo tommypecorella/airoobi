@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>AIROOBI — Card Wallet</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght;500;600;700;800&family=JetBrains+Mono:wght;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --black:#000000;--white:#FFFFFF;--gold:#B8960C;
-  --gold-dim:rgba(184,150,12,.15);--gold-glow:rgba(184,150,12,.06);
-  --gray-900:#111111;--gray-800:#1a1a1a;--gray-700:#2a2a2a;
-  --gray-500:#555555;--gray-400:#888888;--gray-300:#aaaaaa;
-  --font-h:'Cormorant Garamond',serif;--font-b:'Instrument Sans',sans-serif;--font-m:'DM Mono',monospace;
+  --black: #FFFFFF;--white: #0F1417;--gold: #B8893D;
+  --gold-dim:rgba(184,137,61,.15);--gold-glow:rgba(184,137,61,.06);
+  --gray-900:#111111;--gray-800: #F2EFE9;--gray-700: #E5E1D6;
+  --gray-500:#555555;--gray-400: #8B8B8B;--gray-300: #3F3F3Faaa;
+  --font-h: 'Inter', system-ui, sans-serif;--font-b: 'Inter', system-ui, sans-serif;--font-m: 'JetBrains Mono', monospace;
   --aria:#4A9EFF;--kas:#49EACB;--special:#C084FC;
 }
 body{background:var(--black);color:var(--white);font-family:var(--font-b);min-height:100vh;padding:48px 24px 80px;}
@@ -36,9 +36,9 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
 .card-aria:hover{box-shadow:0 32px 80px rgba(74,158,255,.2),0 0 0 1px rgba(74,158,255,.5);}
 
 /* ROBI — oro (NFT chiave) */
-.card-rendimento{background:linear-gradient(135deg,#0c0900,#1c1400 50%,#0a0800);box-shadow:0 20px 60px rgba(184,150,12,.12),0 0 0 1px rgba(184,150,12,.3);}
-.card-rendimento:hover{box-shadow:0 32px 80px rgba(184,150,12,.22),0 0 0 1px rgba(184,150,12,.55);}
-.shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(184,150,12,.05) 50%,transparent 60%);animation:shimmer 4s ease-in-out infinite;}
+.card-rendimento{background:linear-gradient(135deg,#0c0900,#1c1400 50%,#0a0800);box-shadow:0 20px 60px rgba(184,137,61,.12),0 0 0 1px rgba(184,137,61,.3);}
+.card-rendimento:hover{box-shadow:0 32px 80px rgba(184,137,61,.22),0 0 0 1px rgba(184,137,61,.55);}
+.shimmer{position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(184,137,61,.05) 50%,transparent 60%);animation:shimmer 4s ease-in-out infinite;}
 @keyframes shimmer{0%,100%{transform:translateX(-100%)}50%{transform:translateX(100%)}}
 
 /* KAS — verde */
@@ -94,7 +94,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
 .swap-flow{display:flex;align-items:stretch;gap:12px;margin-bottom:22px;}
 .swap-box{flex:1;background:var(--black);border:1px solid var(--gray-700);padding:18px 20px;}
 .swap-box.output{border-color:rgba(73,234,203,.2);background:rgba(1,21,18,.6);}
-.swap-box.nft-req{border-color:rgba(184,150,12,.18);background:rgba(12,9,0,.6);flex:0 0 160px;}
+.swap-box.nft-req{border-color:rgba(184,137,61,.18);background:rgba(12,9,0,.6);flex:0 0 160px;}
 .sbox-label{font-family:var(--font-m);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-500);margin-bottom:10px;}
 .sbox-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
 .s-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
@@ -105,7 +105,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
 .swap-connector span{font-size:18px;}
 .swap-connector small{font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-700);}
 .nft-count{font-family:var(--font-m);font-size:28px;font-weight:300;color:var(--gold);letter-spacing:-1px;margin:8px 0 4px;}
-.nft-label{font-family:var(--font-m);font-size:9px;color:rgba(184,150,12,.4);letter-spacing:1px;}
+.nft-label{font-family:var(--font-m);font-size:9px;color:rgba(184,137,61,.4);letter-spacing:1px;}
 .nft-avail{font-family:var(--font-m);font-size:9px;color:var(--gray-500);letter-spacing:.5px;margin-top:6px;}
 .swap-footer{display:flex;align-items:center;justify-content:space-between;margin-top:18px;padding-top:18px;border-top:1px solid var(--gray-800);flex-wrap:wrap;gap:12px;}
 .swap-info{font-family:var(--font-m);font-size:10px;color:var(--gray-500);letter-spacing:.5px;margin-bottom:4px;}
@@ -158,29 +158,29 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
     <!-- ROBI — oro (NFT chiave di riscossione) -->
     <div class="card card-rendimento">
       <div class="shimmer"></div>
-      <div class="ring" style="width:190px;height:190px;right:-55px;top:-55px;border-color:rgba(184,150,12,.07)"></div>
-      <div class="ring" style="width:100px;height:100px;right:-15px;top:-15px;border-color:rgba(184,150,12,.05)"></div>
-      <div class="card-badge" style="color:var(--gold);border-color:rgba(184,150,12,.5)">NFT</div>
+      <div class="ring" style="width:190px;height:190px;right:-55px;top:-55px;border-color:rgba(184,137,61,.07)"></div>
+      <div class="ring" style="width:100px;height:100px;right:-15px;top:-15px;border-color:rgba(184,137,61,.05)"></div>
+      <div class="card-badge" style="color:var(--gold);border-color:rgba(184,137,61,.5)">NFT</div>
       <div class="card-top">
         <div>
           <div class="card-label" style="color:var(--gold)">ROBI</div>
-          <div class="card-sublabel" style="color:rgba(184,150,12,.4)">Chiave di riscossione</div>
+          <div class="card-sublabel" style="color:rgba(184,137,61,.4)">Chiave di riscossione</div>
         </div>
-        <div class="chip" style="border-color:rgba(184,150,12,.18)">
+        <div class="chip" style="border-color:rgba(184,137,61,.18)">
           <div class="chip-dot" style="color:var(--gold)"></div><div class="chip-dot" style="color:var(--gold)"></div>
           <div class="chip-dot" style="color:var(--gold)"></div><div class="chip-dot" style="color:var(--gold)"></div>
         </div>
       </div>
       <div class="card-balance">
         <div class="card-amount" style="color:var(--gold)">2</div>
-        <div class="card-unit" style="color:rgba(184,150,12,.35)">NFT IN PORTAFOGLIO</div>
+        <div class="card-unit" style="color:rgba(184,137,61,.35)">NFT IN PORTAFOGLIO</div>
       </div>
       <div class="card-bottom">
         <div>
-          <div class="card-serial" style="color:rgba(184,150,12,.3)">GENESIS · #00042</div>
+          <div class="card-serial" style="color:rgba(184,137,61,.3)">GENESIS · #00042</div>
           <div class="card-holder">Usa per convertire ARIA → KAS</div>
         </div>
-        <div style="font-family:var(--font-h);font-size:20px;color:rgba(184,150,12,.2);letter-spacing:-1px">Oo</div>
+        <div style="font-family:var(--font-h);font-size:20px;color:rgba(184,137,61,.2);letter-spacing:-1px">Oo</div>
       </div>
     </div>
 
@@ -317,7 +317,7 @@ body{background:var(--black);color:var(--white);font-family:var(--font-b);min-he
         <div class="sbox-label">Richiede</div>
         <div class="sbox-row">
           <div class="s-dot" style="background:var(--gold)"></div>
-          <div class="s-name" style="color:rgba(184,150,12,.7)">ROBI</div>
+          <div class="s-name" style="color:rgba(184,137,61,.7)">ROBI</div>
         </div>
         <div class="nft-count">1</div>
         <div class="nft-label">NFT · CHIAVE</div>
