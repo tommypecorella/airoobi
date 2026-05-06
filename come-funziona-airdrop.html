@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it" data-lang="it">
+<html lang="it" data-lang="it" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#FFFFFF">
 <title>Come funziona un airdrop — AIROOBI</title>
 <meta name="description" content="Il regolamento e le meccaniche di un airdrop AIROOBI spiegati in linguaggio semplice: blocchi, ROBI, rullo, posizione, fasi, fairness.">
 <meta name="robots" content="index, follow">
@@ -24,14 +24,14 @@
 <link rel="stylesheet" href="/src/topbar.css">
 <style>
 :root{
-  --black:#060b18;--white:#f0f2f8;--gold:#B8960C;
+  --black: #FFFFFF;--white: #0F1417;--gold: #B8893D;
   --accent:#4A9EFF;--kas:#49EACB;
-  --gray-900:#0c1224;--gray-800:#151d33;--gray-700:#1f2942;
-  --gray-600:#2d3a56;--gray-500:#44547a;--gray-400:#8892ae;--gray-300:#b4bdd4;
+  --gray-900: #FAFAF7;--gray-800: #F2EFE9;--gray-700: #E5E1D6;
+  --gray-600: #9F7820;--gray-500:#44547a;--gray-400: #8B8B8B;--gray-300: #3F3F3F;
   --red:#ef4444;
-  --font-h:'Cormorant Garamond',serif;
-  --font-b:'Instrument Sans',system-ui,sans-serif;
-  --font-m:'DM Mono',monospace;
+  --font-h: 'Inter', system-ui, sans-serif;
+  --font-b: 'Inter', system-ui, sans-serif;
+  --font-m: 'JetBrains Mono', monospace;
   --radius:14px;--radius-sm:10px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -67,14 +67,14 @@ a:hover{text-decoration:underline}
 .cf-kas{color:var(--kas);font-weight:600}
 
 .cf-callout{padding:18px 22px;border:1px solid var(--gray-800);border-left:3px solid var(--accent);background:rgba(74,158,255,.03);border-radius:var(--radius-sm);margin:18px 0}
-.cf-callout.gold{border-left-color:var(--gold);background:rgba(184,150,12,.04)}
+.cf-callout.gold{border-left-color:var(--gold);background:rgba(184,137,61,.04)}
 .cf-callout.red{border-left-color:var(--red);background:rgba(239,68,68,.03)}
 .cf-callout .cf-co-title{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
 .cf-callout.gold .cf-co-title{color:var(--gold)}
 .cf-callout.red .cf-co-title{color:var(--red)}
 .cf-callout p{margin-bottom:0;font-size:14px}
 
-.cf-stage-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(184,150,12,.08);border:1px solid rgba(184,150,12,.3);border-radius:20px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin:0 4px;vertical-align:middle}
+.cf-stage-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(184,137,61,.08);border:1px solid rgba(184,137,61,.3);border-radius:20px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin:0 4px;vertical-align:middle}
 
 .cf-steps{display:flex;flex-direction:column;gap:12px;margin:20px 0}
 .cf-step{display:flex;gap:14px;padding:14px 16px;background:rgba(255,255,255,.02);border:1px solid var(--gray-800);border-radius:var(--radius-sm)}
@@ -184,7 +184,7 @@ a:hover{text-decoration:underline}
 <!-- 4. POSIZIONE -->
 <section id="posizione" class="cf-section">
   <h2><span class="cf-num">04</span><span class="it">Come arrivare 1° in classifica</span><span class="en">How to reach #1</span></h2>
-  <p><span class="it">La classifica è <strong>deterministica</strong>: si aggiudica chi ha il Punteggio più alto alla chiusura. Nessuna lotteria, nessun elemento casuale. Il Punteggio combina tre ingredienti: <strong>i blocchi che hai comprato</strong>, <strong>la tua fedeltà alla categoria</strong>, e un <strong>boost di garanzia</strong> che cresce quando partecipi spesso senza ancora vincere.</span><span class="en">The leaderboard is <strong>deterministic</strong>: the highest Score at close wins. No lottery, no randomness. The Score combines three ingredients: <strong>blocks you bought</strong>, <strong>your category loyalty</strong>, and a <strong>guarantee boost</strong> that grows when you participate often without winning yet.</span></p>
+  <p><span class="it">La classifica è <strong>deterministica</strong>: si aggiudica chi ha il Punteggio più alto alla chiusura. Nessuna componente aleatoria, nessun elemento casuale. Il Punteggio combina tre ingredienti: <strong>i blocchi che hai comprato</strong>, <strong>la tua fedeltà alla categoria</strong>, e un <strong>boost di garanzia</strong> che cresce quando partecipi spesso senza ancora vincere.</span><span class="en">The leaderboard is <strong>deterministic</strong>: the highest Score at close wins. No randomness, no aleatory component. The Score combines three ingredients: <strong>blocks you bought</strong>, <strong>your category loyalty</strong>, and a <strong>guarantee boost</strong> that grows when you participate often without winning yet.</span></p>
 
   <div class="cf-callout gold">
     <div class="cf-co-title"><span class="it">Formula Punteggio</span><span class="en">Score Formula</span></div>
@@ -212,7 +212,7 @@ a:hover{text-decoration:underline}
   <div class="cf-callout gold">
     <div class="cf-co-title"><span class="it">Come si calcola la tua soglia personale</span><span class="en">How your personal threshold is computed</span></div>
     <p><code style="font-family:var(--font-m);color:var(--white);font-size:12px">Soglia = 30% × (valore medio categoria in ARIA) ÷ (tua spesa media per airdrop)</code></p>
-    <p><span class="it">Limiti: <strong>minimo 5 partecipazioni, massimo 30</strong>. Più spendi per airdrop, più velocemente ci arrivi. Questo garantisce che <strong>nessun utente spenderà mai più del 30% del valore dell'oggetto per aggiudicarselo</strong> — è la nostra protezione anti-gambling più forte.</span><span class="en">Bounds: <strong>minimum 5 participations, maximum 30</strong>. The more you spend per airdrop, the faster you reach it. This guarantees that <strong>no user will ever spend more than 30% of the object's value to take it</strong> — our strongest anti-gambling protection.</span></p>
+    <p><span class="it">Limiti: <strong>minimo 5 partecipazioni, massimo 30</strong>. Più spendi per airdrop, più velocemente ci arrivi. Questo garantisce che <strong>nessun utente spenderà mai più del 30% del valore dell'oggetto per aggiudicarselo</strong> — è la nostra protezione fairness più forte.</span><span class="en">Bounds: <strong>minimum 5 participations, maximum 30</strong>. The more you spend per airdrop, the faster you reach it. This guarantees that <strong>no user will ever spend more than 30% of the object's value to take it</strong> — our strongest fairness protection.</span></p>
   </div>
 
   <p><span class="it">Il Boost funziona a tre fasi:</span><span class="en">The Boost works in three phases:</span></p>
@@ -290,7 +290,7 @@ a:hover{text-decoration:underline}
   <p><span class="it">Due casi speciali fermano l'airdrop <strong>prima</strong> della scadenza naturale:</span><span class="en">Two special cases stop the airdrop <strong>before</strong> the natural deadline:</span></p>
 
   <div class="cf-callout">
-    <div class="cf-co-title"><span class="it">1. Soglia valore raggiunta (anti-gambling)</span><span class="en">1. Value threshold reached (anti-gambling)</span></div>
+    <div class="cf-co-title"><span class="it">1. Soglia valore raggiunta (fairness)</span><span class="en">1. Value threshold reached (fairness)</span></div>
     <p><span class="it">Se il primo classificato raggiunge in <span class="cf-aria">ARIA</span> l'equivalente del valore €-dell'oggetto, l'airdrop si chiude <strong>immediatamente</strong>. È la protezione definitiva: nessuno spende più del valore dell'oggetto per ottenerlo.</span><span class="en">If the leader reaches in <span class="cf-aria">ARIA</span> the equivalent of the object's €-value, the airdrop closes <strong>immediately</strong>. Definitive protection: no one spends more than the item's value to get it.</span></p>
   </div>
 

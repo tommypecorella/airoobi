@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -8,34 +8,34 @@
 
 <!-- OpenGraph for sharing -->
 <meta property="og:title" content="Diventa Alpha Brave · AIROOBI" />
-<meta property="og:description" content="Fair-airdrop marketplace su Kaspa. ROBI come buono fruttifero ≥95% PEG. Determinismo, non lotteria." />
+<meta property="og:description" content="Fair-airdrop marketplace su Kaspa. ROBI come buono fruttifero ≥95% PEG. Determinismo, calcolo verificabile." />
 <meta property="og:image" content="https://airoobi.com/og-image.png" />
 <meta property="og:url" content="https://airoobi.com/diventa-alpha-brave" />
 <meta property="og:type" content="website" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@airoobi_com" />
 <meta name="twitter:title" content="Diventa Alpha Brave · AIROOBI" />
-<meta name="twitter:description" content="Fair-airdrop marketplace su Kaspa. ROBI come buono fruttifero ≥95% PEG. Determinismo, non lotteria." />
+<meta name="twitter:description" content="Fair-airdrop marketplace su Kaspa. ROBI come buono fruttifero ≥95% PEG. Determinismo, calcolo verificabile." />
 <meta name="twitter:image" content="https://airoobi.com/og-image.png" />
 
 <style>
   :root {
-    --black: #000000;
-    --gray-900: #0a0a0a;
-    --gray-800: #161616;
-    --gray-700: #2a2a2a;
-    --gold:  #B8960C;
-    --gold-dim: #8C7000;
-    --gold-glow: rgba(184,150,12,0.18);
-    --white: #FFFFFF;
+    --black: #FFFFFF;
+    --gray-900: #FAFAF7;
+    --gray-800: #F2EFE9;
+    --gray-700: #E5E1D6;
+    --gold: #B8893D;
+    --gold-dim: rgba(184,137,61,0.3);
+    --gold-glow: rgba(184,137,61,0.18);
+    --white: #0F1417;
     --aria:  #4A9EFF;
     --kas:   #49EACB;
-    --gray-200: #cfcfcf;
-    --gray-400: #888888;
+    --gray-200: #6B6B6B;
+    --gray-400: #8B8B8B;
 
-    --font-h: "Cormorant Garamond", Georgia, serif;
-    --font-b: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
-    --font-m: "DM Mono", "Consolas", "Courier New", monospace;
+    --font-h: "Inter", system-ui, sans-serif;
+    --font-b: "Inter", system-ui, sans-serif;
+    --font-m: "JetBrains Mono", monospace;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
@@ -61,7 +61,7 @@
   /* === TOP BAR === */
   .topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+    background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--gray-700);
   }
   .topbar-inner {
@@ -82,7 +82,7 @@
     min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
     padding: 120px 0 60px; position: relative;
     background:
-      radial-gradient(circle at 10% 30%, rgba(184,150,12,0.08), transparent 50%),
+      radial-gradient(circle at 10% 30%, rgba(184,137,61,0.08), transparent 50%),
       radial-gradient(circle at 90% 70%, rgba(74,158,255,0.05), transparent 50%),
       var(--black);
   }
@@ -108,7 +108,7 @@
     display: inline-block;
     padding: 18px 28px;
     border: 1px solid var(--gold-dim);
-    background: linear-gradient(180deg, rgba(184,150,12,0.06), rgba(0,0,0,0.4));
+    background: linear-gradient(180deg, rgba(184,137,61,0.06), rgba(0,0,0,0.4));
     margin-bottom: 28px;
   }
   .counter-box .label { font-size: 10px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 6px; }
@@ -152,7 +152,7 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; margin-top: 40px;
   }
   .fairness .formula {
-    background: linear-gradient(135deg, rgba(184,150,12,0.05), rgba(74,158,255,0.03));
+    background: linear-gradient(135deg, rgba(184,137,61,0.05), rgba(74,158,255,0.03));
     border: 1px solid var(--gold-dim); padding: 36px 32px;
   }
   .fairness .formula .eq { font-family: var(--font-m); font-size: 22px; font-weight: 700; color: var(--white); margin-bottom: 16px; }
@@ -168,7 +168,7 @@
   .signup {
     text-align: center; padding: 120px 0;
     background:
-      radial-gradient(circle at 50% 50%, rgba(184,150,12,0.08), transparent 60%),
+      radial-gradient(circle at 50% 50%, rgba(184,137,61,0.08), transparent 60%),
       var(--black);
   }
   .signup h2 { margin-bottom: 16px; }
@@ -257,7 +257,7 @@
     <h1>Realizza il tuo<br/><span class="em">desiderio.</span></h1>
     <p class="lede">
       AIROOBI è il primo marketplace al mondo dove ottieni oggetti reali a una frazione del prezzo, con un asset garantito (ROBI ≥95% PEG) anche se non sei tra i vincitori.
-      <strong style="color:var(--white);">Determinismo, non lotteria. Mai gioco d'azzardo.</strong>
+      <strong style="color:var(--white);">Determinismo, calcolo verificabile. Algoritmo trasparente.</strong>
     </p>
 
     <div class="cta-row">
@@ -320,8 +320,8 @@
     <div class="diff-grid">
       <div class="diff">
         <span class="tag">FAIR</span>
-        <h3>Determinismo, non lotteria.</h3>
-        <p>Algoritmo pubblico (scoring v5) che premia chi ha realmente impegnato di più nella categoria. No alea pura. No gambling. Verificabile su pubblico ledger.</p>
+        <h3>Determinismo, calcolo verificabile.</h3>
+        <p>Algoritmo pubblico (scoring v5) che premia chi ha realmente partecipato di più nella categoria. Calcolo deterministico. Verificabile su pubblico ledger.</p>
       </div>
       <div class="diff">
         <span class="tag">ASSET</span>
@@ -349,7 +349,7 @@
         <div class="eq">score = f_base + pity_bonus</div>
         <div class="sub">f_base = √blocchi × ( 1 + log₁₀( 1 + storici_cat / K ) )</div>
         <div class="sub">pity_bonus(L_u, N_pity) → garanzia matematica</div>
-        <p class="note">"L'utente non deve arrivare a spendere la cifra media dell'oggetto prima di ottenerlo. Altrimenti saremmo peggio del gambling."<br/>— Skeezu, founder AIROOBI</p>
+        <p class="note">"L'utente non deve mai arrivare a spendere la cifra media dell'oggetto prima di ottenerlo. Altrimenti la fairness della piattaforma sarebbe compromessa."<br/>— Skeezu, founder AIROOBI</p>
       </div>
       <div class="stats">
         <div class="stat-row">
@@ -409,8 +409,8 @@
 
     <div class="faq-list">
       <div class="faq-item">
-        <div class="faq-q">È gioco d'azzardo?</div>
-        <div class="faq-a">No, e non lo è strutturalmente. La selezione è deterministica (no RNG), ogni partecipazione genera un asset reale (ROBI) con valore garantito ≥95% in KAS, e il sistema blocca matematicamente l'utente quando l'acquisto non può più portare ad aggiudicazione. Tre criteri legali del gambling sono cumulativi: noi ne interrompiamo strutturalmente due.</div>
+        <div class="faq-q">Come funziona la selezione?</div>
+        <div class="faq-a">È strutturalmente deterministica: la selezione usa un algoritmo pubblico (no RNG), ogni partecipazione genera un asset reale (ROBI) con valore garantito ≥95% in KAS, e il sistema blocca matematicamente l'utente quando l'acquisto non può più portare ad aggiudicazione. AIROOBI è un marketplace e-commerce con un modello basato su skill e merito.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">Quanto costa partecipare?</div>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Treasury Methodology · AIROOBI</title>
 <meta name="description" content="Come AIROOBI garantisce il valore dei ROBI: una proprietà matematica, non un'affermazione commerciale. PEG ratio in tempo reale, soglie verificabili, scarsità dinamica senza halving artificiali. LEG-002 Treasury Backing Methodology v1.">
 <link rel="canonical" href="https://www.airoobi.com/treasury">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#FFFFFF">
 
 <!-- Open Graph -->
 <meta property="og:type" content="website">
@@ -32,27 +32,27 @@
 
 <style>
   :root {
-    --black: #000000;
-    --gray-900: #0a0a0a;
-    --gray-800: #161616;
-    --gray-700: #2a2a2a;
+    --black: #FFFFFF;
+    --gray-900: #FAFAF7;
+    --gray-800: #F2EFE9;
+    --gray-700: #E5E1D6;
     --gray-500: #555;
-    --gray-400: #888;
+    --gray-400: #8B8B8B;
     --gray-300: #b8b8b8;
-    --gray-200: #cfcfcf;
-    --gold: #B8960C;
-    --gold-dim: #8C7000;
-    --gold-glow: rgba(184,150,12,0.18);
-    --white: #FFFFFF;
+    --gray-200: #6B6B6B;
+    --gold: #B8893D;
+    --gold-dim: rgba(184,137,61,0.3);
+    --gold-glow: rgba(184,137,61,0.18);
+    --white: #0F1417;
     --aria: #4A9EFF;
     --kas: #49EACB;
     --red-error: #B91C1C;
     --red-alert: #ef4444;
     --green-success: #49b583;
 
-    --font-h: "Cormorant Garamond", Georgia, serif;
-    --font-b: "Instrument Sans", "Helvetica Neue", Arial, sans-serif;
-    --font-m: "DM Mono", "Consolas", "Courier New", monospace;
+    --font-h: "Inter", system-ui, sans-serif;
+    --font-b: "Inter", system-ui, sans-serif;
+    --font-m: "JetBrains Mono", monospace;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -78,7 +78,7 @@
   .hero {
     padding: 80px 0 60px;
     background:
-      radial-gradient(circle at 20% 30%, rgba(184,150,12,0.12), transparent 50%),
+      radial-gradient(circle at 20% 30%, rgba(184,137,61,0.12), transparent 50%),
       radial-gradient(circle at 80% 70%, rgba(74,158,255,0.06), transparent 50%),
       var(--black);
     border-bottom: 1px solid var(--gray-800);
@@ -118,7 +118,7 @@
 
   /* FORMULA BOX */
   .formula-box {
-    background: linear-gradient(135deg, rgba(184,150,12,0.06), rgba(74,158,255,0.03));
+    background: linear-gradient(135deg, rgba(184,137,61,0.06), rgba(74,158,255,0.03));
     border: 1px solid var(--gold-dim);
     padding: 30px 32px;
     margin: 24px 0;
@@ -157,7 +157,7 @@
     margin-bottom: 12px;
   }
   .band.green .band-status { background: rgba(73,181,131,0.15); color: var(--green-success); }
-  .band.yellow .band-status { background: rgba(184,150,12,0.15); color: var(--gold); }
+  .band.yellow .band-status { background: rgba(184,137,61,0.15); color: var(--gold); }
   .band.red .band-status { background: rgba(239,68,68,0.15); color: var(--red-alert); }
   .band .ratio {
     font-family: var(--font-m); font-size: 22px; font-weight: 700;
@@ -178,7 +178,7 @@
   .col.aria { border-left-color: var(--aria); }
   .col h3 { color: var(--white); font-size: 20px; margin-bottom: 12px; }
   .col p { font-size: 14px; color: var(--gray-200); line-height: 1.55; margin-bottom: 8px; }
-  .col code { font-family: var(--font-m); font-size: 12px; color: var(--gold); background: rgba(184,150,12,0.08); padding: 2px 6px; }
+  .col code { font-family: var(--font-m); font-size: 12px; color: var(--gold); background: rgba(184,137,61,0.08); padding: 2px 6px; }
 
   /* COMPARISON TABLE */
   .compare {
@@ -196,7 +196,7 @@
   .compare th:first-child { width: 26%; }
   .compare tr:last-child td { border-bottom: 0; }
   .compare td.airoobi { color: var(--white); font-weight: 500; }
-  .compare td.gambling { color: var(--gray-400); font-style: italic; }
+  .compare td.aleatory { color: var(--gray-400); font-style: italic; }
 
   /* KEY NUMBERS */
   .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
@@ -234,7 +234,7 @@
 
   /* CALLOUT */
   .callout {
-    background: linear-gradient(180deg, rgba(184,150,12,0.04), rgba(0,0,0,0.4));
+    background: linear-gradient(180deg, rgba(184,137,61,0.04), rgba(0,0,0,0.4));
     border: 1px solid var(--gold-dim);
     padding: 26px 28px;
     margin: 28px 0;
@@ -299,7 +299,7 @@
       </div>
     </div>
     <p style="font-size:12px;color:var(--gray-400);margin-top:14px;line-height:1.5;">
-      Endpoint pubblico no-auth · ricalcolato real-time da <code style="font-family:var(--font-m);font-size:11px;color:var(--gold);background:rgba(184,150,12,0.08);padding:1px 5px;">public.get_treasury_health()</code> · refresh ogni 60s · <span id="peg-ts" style="color:var(--gray-300);">—</span>
+      Endpoint pubblico no-auth · ricalcolato real-time da <code style="font-family:var(--font-m);font-size:11px;color:var(--gold);background:rgba(184,137,61,0.08);padding:1px 5px;">public.get_treasury_health()</code> · refresh ogni 60s · <span id="peg-ts" style="color:var(--gray-300);">—</span>
     </p>
     <p style="margin-top:10px;"><a href="/AIROOBI_Treasury_Methodology_v1.pdf" style="font-size:13px;color:var(--gold);text-decoration:none;font-weight:600;letter-spacing:1px;">Metodologia completa →</a></p>
   </div>
@@ -419,10 +419,10 @@
   </div>
 </section>
 
-<!-- 5. ANTI-GAMBLING -->
+<!-- 5. WHY DIFFERENT FROM ALEATORY MODELS -->
 <section>
   <div class="wrap">
-    <div class="eyebrow">5. Perché non è gioco d'azzardo</div>
+    <div class="eyebrow">5. Perché AIROOBI è diverso dai modelli aleatori</div>
     <div class="gold-rule"></div>
     <h2>La pre-condizione legale del posizionamento.</h2>
     <p class="lead">Lo studio gaming-law italiano e gli organismi competenti (TULPS, ADM) valutano l'attività attraverso un test cumulativo. AIROOBI rompe strutturalmente più di un criterio. La methodology stessa è la documentazione del perché.</p>
@@ -431,39 +431,39 @@
       <thead>
         <tr>
           <th>Caratteristica</th>
-          <th>Gambling tradizionale</th>
+          <th>Modelli aleatori tradizionali</th>
           <th>AIROOBI</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Output dipende da chance</td>
-          <td class="gambling">Sì (RNG, dealer choice)</td>
+          <td class="aleatory">Sì (RNG, dealer choice)</td>
           <td class="airoobi">No — punteggio calcolato da funzione pubblica <code style="font-family:var(--font-m);font-size:12px;color:var(--gold);">calculate_winner_score</code>, riproducibile</td>
         </tr>
         <tr>
           <td>Bound rimborso minimo</td>
-          <td class="gambling">Nessuno</td>
+          <td class="aleatory">Nessuno</td>
           <td class="airoobi">≥95% PEG dichiarato + verificabile</td>
         </tr>
         <tr>
           <td>Trasparenza algoritmo</td>
-          <td class="gambling">Closed-source / regulated black box</td>
+          <td class="aleatory">Closed-source / regulated black box</td>
           <td class="airoobi">Open-source, RPC pubblica, audit trail</td>
         </tr>
         <tr>
           <td>Asset-backing</td>
-          <td class="gambling">No (banca della casa)</td>
+          <td class="aleatory">No (banca della casa)</td>
           <td class="airoobi">Sì (treasury KAS riscuotibile, weekly window)</td>
         </tr>
         <tr>
           <td>Spesa massima cap</td>
-          <td class="gambling">No (illimitata, può ruinare)</td>
+          <td class="aleatory">No (illimitata, può ruinare)</td>
           <td class="airoobi">Cap matematico ≤30% valore oggetto via pity bonus</td>
         </tr>
         <tr>
           <td>Riscossione fissa</td>
-          <td class="gambling">No</td>
+          <td class="aleatory">No</td>
           <td class="airoobi">Sì — weekly Monday window, target 24-48h post-batch</td>
         </tr>
       </tbody>
@@ -579,7 +579,7 @@
 
   const BAND_COLORS={
     green:{bg:'rgba(73,181,131,0.15)',color:'#49b583'},
-    yellow:{bg:'rgba(184,150,12,0.15)',color:'#B8960C'},
+    yellow:{bg:'rgba(184,137,61,0.15)',color:'#B8893D'},
     red:{bg:'rgba(239,68,68,0.15)',color:'#ef4444'},
     unknown:{bg:'#2a2a2a',color:'#888'}
   };

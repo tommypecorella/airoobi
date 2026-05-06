@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="it" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>AIROOBI — Come funziona un Airdrop</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght;500;600;700;800&family=JetBrains+Mono:wght;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --black:#000000;--white:#FFFFFF;--gold:#B8960C;
-  --gold-dim:rgba(184,150,12,.3);--gold-glow:rgba(184,150,12,.12);
-  --gray-300:#bbb;--gray-400:#888;--gray-600:#444;--gray-700:#333;--gray-800:#222;
+  --black: #FFFFFF;--white: #0F1417;--gold: #B8893D;
+  --gold-dim:rgba(184,137,61,.3);--gold-glow:rgba(184,137,61,.12);
+  --gray-300:#bbb;--gray-400: #8B8B8B;--gray-600: #9F7820;--gray-700:#333;--gray-800:#222;
   --aria:#4A9EFF;--kas:#49EACB;
-  --font-h:'Cormorant Garamond',Georgia,serif;
-  --font-b:'Instrument Sans',system-ui,sans-serif;
-  --font-m:'DM Mono',monospace;
+  --font-h: 'Inter', system-ui, sans-serif;
+  --font-b: 'Inter', system-ui, sans-serif;
+  --font-m: 'JetBrains Mono', monospace;
 }
 html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden;font-family:var(--font-b)}
 
@@ -75,7 +75,7 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
 .obj-card{
   margin-top:36px;border:1px solid var(--gold-dim);
   padding:40px 48px;max-width:420px;width:100%;
-  background:rgba(184,150,12,.03);position:relative;
+  background:rgba(184,137,61,.03);position:relative;
 }
 .obj-emoji{font-size:56px;margin-bottom:16px}
 .obj-name{font-family:var(--font-h);font-size:28px;font-weight:400;color:var(--white)}
@@ -98,7 +98,7 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
   border:2px solid var(--gold);display:flex;
   align-items:center;justify-content:center;
   font-size:36px;margin:0 auto 16px;
-  background:rgba(184,150,12,.06);
+  background:rgba(184,137,61,.06);
 }
 .user-name{font-family:var(--font-h);font-size:24px;color:var(--white)}
 .user-label{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:2px;margin-top:4px}
@@ -174,7 +174,7 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
 .nft-card{
   margin-top:32px;border:1px solid var(--gold);
   padding:32px;max-width:320px;width:100%;
-  background:linear-gradient(135deg,rgba(184,150,12,.08),rgba(184,150,12,.02));
+  background:linear-gradient(135deg,rgba(184,137,61,.08),rgba(184,137,61,.02));
   position:relative;
 }
 .nft-type{font-family:var(--font-m);font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase}
@@ -199,7 +199,7 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
 .priority-text strong{color:var(--white)}
 .priority-exception{
   margin-top:20px;padding:16px 24px;
-  border:1px solid var(--gold-dim);background:rgba(184,150,12,.04);
+  border:1px solid var(--gold-dim);background:rgba(184,137,61,.04);
   display:flex;align-items:center;gap:12px;
 }
 .priority-exception .badge-icon{font-size:28px}
@@ -209,8 +209,8 @@ html,body{height:100%;background:var(--black);color:var(--white);overflow:hidden
 .phase-visual{margin-top:32px;max-width:500px;width:100%}
 .phase-bar{display:flex;height:40px;overflow:hidden;border:1px solid var(--gray-700)}
 .phase-seg{display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:10px;letter-spacing:1px}
-.phase-alpha{flex:1;background:rgba(184,150,12,.2);color:var(--gold);border-right:1px solid var(--gold)}
-.phase-beta{flex:1;background:rgba(184,150,12,.1);color:var(--gold);opacity:.7;border-right:1px solid var(--gray-700)}
+.phase-alpha{flex:1;background:rgba(184,137,61,.2);color:var(--gold);border-right:1px solid var(--gold)}
+.phase-beta{flex:1;background:rgba(184,137,61,.1);color:var(--gold);opacity:.7;border-right:1px solid var(--gray-700)}
 .phase-main{flex:1;background:rgba(255,255,255,.03);color:var(--gray-400)}
 .phase-marker{position:relative;margin-top:-2px}
 .phase-arrow{position:absolute;left:10%;top:0;font-size:14px;color:var(--gold);animation:pulse 2s infinite}
