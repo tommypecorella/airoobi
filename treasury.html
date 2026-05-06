@@ -196,7 +196,7 @@
   .compare th:first-child { width: 26%; }
   .compare tr:last-child td { border-bottom: 0; }
   .compare td.airoobi { color: var(--white); font-weight: 500; }
-  .compare td.gambling { color: var(--gray-400); font-style: italic; }
+  .compare td.aleatory { color: var(--gray-400); font-style: italic; }
 
   /* KEY NUMBERS */
   .nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 26px; }
@@ -419,10 +419,10 @@
   </div>
 </section>
 
-<!-- 5. ANTI-GAMBLING -->
+<!-- 5. WHY DIFFERENT FROM ALEATORY MODELS -->
 <section>
   <div class="wrap">
-    <div class="eyebrow">5. Perché non è gioco d'azzardo</div>
+    <div class="eyebrow">5. Perché AIROOBI è diverso dai modelli aleatori</div>
     <div class="gold-rule"></div>
     <h2>La pre-condizione legale del posizionamento.</h2>
     <p class="lead">Lo studio gaming-law italiano e gli organismi competenti (TULPS, ADM) valutano l'attività attraverso un test cumulativo. AIROOBI rompe strutturalmente più di un criterio. La methodology stessa è la documentazione del perché.</p>
@@ -431,39 +431,39 @@
       <thead>
         <tr>
           <th>Caratteristica</th>
-          <th>Gambling tradizionale</th>
+          <th>Modelli aleatori tradizionali</th>
           <th>AIROOBI</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Output dipende da chance</td>
-          <td class="gambling">Sì (RNG, dealer choice)</td>
+          <td class="aleatory">Sì (RNG, dealer choice)</td>
           <td class="airoobi">No — punteggio calcolato da funzione pubblica <code style="font-family:var(--font-m);font-size:12px;color:var(--gold);">calculate_winner_score</code>, riproducibile</td>
         </tr>
         <tr>
           <td>Bound rimborso minimo</td>
-          <td class="gambling">Nessuno</td>
+          <td class="aleatory">Nessuno</td>
           <td class="airoobi">≥95% PEG dichiarato + verificabile</td>
         </tr>
         <tr>
           <td>Trasparenza algoritmo</td>
-          <td class="gambling">Closed-source / regulated black box</td>
+          <td class="aleatory">Closed-source / regulated black box</td>
           <td class="airoobi">Open-source, RPC pubblica, audit trail</td>
         </tr>
         <tr>
           <td>Asset-backing</td>
-          <td class="gambling">No (banca della casa)</td>
+          <td class="aleatory">No (banca della casa)</td>
           <td class="airoobi">Sì (treasury KAS riscuotibile, weekly window)</td>
         </tr>
         <tr>
           <td>Spesa massima cap</td>
-          <td class="gambling">No (illimitata, può ruinare)</td>
+          <td class="aleatory">No (illimitata, può ruinare)</td>
           <td class="airoobi">Cap matematico ≤30% valore oggetto via pity bonus</td>
         </tr>
         <tr>
           <td>Riscossione fissa</td>
-          <td class="gambling">No</td>
+          <td class="aleatory">No</td>
           <td class="airoobi">Sì — weekly Monday window, target 24-48h post-batch</td>
         </tr>
       </tbody>

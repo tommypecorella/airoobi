@@ -1,0 +1,203 @@
+/*
+ * AIROOBI dApp v2 G3 Override (6 May 2026)
+ * Wires institutional v2 design system (Italian Editorial Manifesto · G3 Architectural)
+ * onto legacy dapp.css / airdrop.css. Minimum-viable swap for harden-w2 deploy;
+ * full CSS rewrite scheduled W3 fine-tuning post-publication via Chrome ext.
+ *
+ * Override priority: :root tokens flipped first (cascade does the work).
+ * Asset-specific colors PRESERVED: --aria-blue (#4A9EFF) for ARIA badge,
+ * --kas (#49EACB) for KAS wallet — never touch these.
+ */
+
+:root[data-theme="light"],
+html[data-theme="light"],
+html:not([data-theme="dark"]) {
+  /* v2 token values mapped onto legacy names — minimum-viable cascade */
+  --black: #FFFFFF !important;          /* was BG dark, now BG light */
+  --bg-primary: #FFFFFF !important;
+  --bg-alt: #FAFAF7 !important;
+  --white: #0F1417 !important;          /* was text light, now text dark (Deep Ink) */
+  --ink: #0F1417 !important;
+  --ink-soft: rgba(15,20,23,0.55) !important;
+  --ink-faint: rgba(15,20,23,0.4) !important;
+  --gold: #B8893D !important;           /* Renaissance gold */
+  --gold-light: #D4A04C !important;
+  --gold-deep: #9F7820 !important;
+  --gold-dim: rgba(184,137,61,0.25) !important;
+  --gold-glow: rgba(184,137,61,0.08) !important;
+  --accent: #B8893D !important;         /* was #4A9EFF blu legacy → gold v2 */
+  --accent-dim: rgba(184,137,61,0.25) !important;
+  --accent-glow: rgba(184,137,61,0.08) !important;
+  --accent-soft: rgba(184,137,61,0.10) !important;
+  --coral: #F73659 !important;          /* CTA Vendi seller-side */
+  --espresso: #1B1814 !important;
+  /* Asset-specific PRESERVED — do not touch */
+  --aria: #4A9EFF !important;           /* ARIA badge color (saldo) */
+  --aria-blue: #4A9EFF !important;
+  --kas: #49EACB !important;            /* KAS wallet color */
+  --red: #ff6b6b !important;
+  /* Surface grays remapped to light-mode equivalents */
+  --gray-900: #FAFAF7 !important;
+  --gray-800: #F2EFE9 !important;
+  --gray-700: #E5E1D6 !important;
+  --gray-600: #9F7820 !important;
+  --gray-400: #6B6B6B !important;
+  --gray-300: #3F3F3F !important;
+  --line: rgba(15,20,23,0.12) !important;
+  --line-soft: rgba(15,20,23,0.08) !important;
+  /* Typography v2 — Inter unico + JetBrains Mono per labels */
+  --font-h: 'Inter', system-ui, sans-serif !important;
+  --font-b: 'Inter', system-ui, sans-serif !important;
+  --font-m: 'JetBrains Mono', 'DM Mono', monospace !important;
+  --radius: 4px !important;
+  --radius-sm: 4px !important;
+  --radius-lg: 8px !important;
+}
+
+/* Body force light theme */
+html[data-theme="light"] body,
+html:not([data-theme="dark"]) body {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+  color-scheme: light !important;
+}
+
+/* Drop Cormorant from any specific style */
+html[data-theme="light"] h1,
+html[data-theme="light"] h2,
+html[data-theme="light"] h3,
+html[data-theme="light"] h4,
+html[data-theme="light"] .topbar-logo,
+html[data-theme="light"] .ap-price-main,
+html[data-theme="light"] .product-price,
+html[data-theme="light"] .detail-stat-val {
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+
+/* Preserve mono labels with JetBrains */
+html[data-theme="light"] .label,
+html[data-theme="light"] .topbar-bal,
+html[data-theme="light"] [class*="-label"],
+html[data-theme="light"] [class*="-mono"] {
+  font-family: 'JetBrains Mono', 'DM Mono', monospace !important;
+}
+
+/* Topbar light theme override */
+html[data-theme="light"] .topbar {
+  background: rgba(255,255,255,0.92) !important;
+  border-bottom: 1px solid rgba(15,20,23,0.08) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+html[data-theme="light"] .topbar-logo {
+  color: #0F1417 !important;
+  opacity: 1 !important;
+}
+
+html[data-theme="light"] .topbar-btn {
+  color: #0F1417 !important;
+  border-color: rgba(15,20,23,0.18) !important;
+  background: transparent !important;
+}
+
+html[data-theme="light"] .topbar-btn:hover {
+  border-color: #B8893D !important;
+  color: #B8893D !important;
+  background: rgba(184,137,61,0.04) !important;
+}
+
+html[data-theme="light"] .topbar-btn-gold {
+  background: #B8893D !important;
+  color: #fff !important;
+  border-color: #B8893D !important;
+}
+
+html[data-theme="light"] .topbar-btn-gold:hover {
+  background: #9F7820 !important;
+  color: #fff !important;
+}
+
+/* CTA primary buttons → ink solid (v2 pattern) */
+html[data-theme="light"] .buy-btn,
+html[data-theme="light"] .product-cta,
+html[data-theme="light"] .cta-btn,
+html[data-theme="light"] .btn-primary {
+  background: #0F1417 !important;
+  color: #fff !important;
+  border-radius: 4px !important;
+  border: none !important;
+}
+
+html[data-theme="light"] .buy-btn:hover,
+html[data-theme="light"] .product-cta:hover,
+html[data-theme="light"] .cta-btn:hover,
+html[data-theme="light"] .btn-primary:hover {
+  background: #000 !important;
+  transform: translateY(-1px);
+}
+
+/* Cards and surfaces flipped to light bg */
+html[data-theme="light"] .product-card,
+html[data-theme="light"] .ap-card,
+html[data-theme="light"] .detail-card,
+html[data-theme="light"] .info-card {
+  background: #FAFAF7 !important;
+  border: 1px solid rgba(15,20,23,0.08) !important;
+  border-radius: 4px !important;
+}
+
+/* Score / price highlights → gold (v2 accent) */
+html[data-theme="light"] .ap-price-main,
+html[data-theme="light"] .product-price,
+html[data-theme="light"] .product-badge,
+html[data-theme="light"] .detail-stat-val,
+html[data-theme="light"] .detail-cat,
+html[data-theme="light"] .product-back:hover,
+html[data-theme="light"] .ap-myblocks-badge,
+html[data-theme="light"] .detail-myblocks {
+  color: #B8893D !important;
+}
+
+html[data-theme="light"] .product-badge {
+  background: #B8893D !important;
+  color: #fff !important;
+}
+
+/* Slider thumb gold */
+html[data-theme="light"] .buy-slider::-webkit-slider-thumb,
+html[data-theme="light"] .buy-slider::-moz-range-thumb {
+  background: #B8893D !important;
+  border-color: #fff !important;
+}
+
+/* ARIA + KAS asset displays — preserve original color, just adjust bg */
+html[data-theme="light"] .topbar-bal {
+  color: #0F1417 !important;
+  background: rgba(15,20,23,0.04) !important;
+  border: 1px solid rgba(15,20,23,0.08) !important;
+}
+
+/* Modal / overlay surfaces */
+html[data-theme="light"] .modal,
+html[data-theme="light"] .dialog,
+html[data-theme="light"] .dropdown {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  border: 1px solid rgba(15,20,23,0.12) !important;
+  box-shadow: 0 12px 40px rgba(15,20,23,0.12) !important;
+}
+
+/* Footer */
+html[data-theme="light"] footer {
+  background: #FAFAF7 !important;
+  color: #6B6B6B !important;
+  border-top: 1px solid rgba(15,20,23,0.08) !important;
+}
+
+/* Accent fill backgrounds (legacy blue) → subtle gold tint */
+html[data-theme="light"] .ap-progress-fill,
+html[data-theme="light"] .counter-bar {
+  background: linear-gradient(90deg, #B8893D, #9F7820) !important;
+}
