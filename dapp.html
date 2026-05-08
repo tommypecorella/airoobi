@@ -2,7 +2,7 @@
 <html lang="it" data-lang="it" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#FFFFFF">
 <meta name="robots" content="index, follow">
 <title>AIROOBI APP — Airdrop Marketplace</title>
@@ -23,9 +23,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/tokens.css?v=4.0.0">
-<link rel="stylesheet" href="/src/dapp.css?v=3.57.0">
-<link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.0.0">
+<style>[data-lang="it"] .en,[data-lang="en"] .it{display:none!important}</style>
+<link rel="stylesheet" href="/src/tokens.css?v=4.1.0">
+<link rel="stylesheet" href="/src/dapp.css?v=4.1.0">
+<link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.1.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -96,8 +97,8 @@
     </a>
   </nav>
   <div class="topbar-right">
-    <span class="topbar-bal" id="topbar-bal"><svg class="topbar-bal-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700" font-family="var(--font-b)">A</text></svg><span id="topbar-aria-val">—</span></span>
-    <span class="topbar-bal topbar-bal-robi" id="topbar-bal-robi"><svg class="topbar-bal-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700" font-family="var(--font-b)">R</text></svg><span id="topbar-robi-val">—</span></span>
+    <span class="topbar-bal topbar-bal-clickable" id="topbar-bal" onclick="navigateTo('wallet')" role="button" tabindex="0" aria-label="Vai al portafoglio · saldo ARIA" title="Vai al portafoglio"><svg class="topbar-bal-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700" font-family="var(--font-b)">A</text></svg><span id="topbar-aria-val">—</span></span>
+    <span class="topbar-bal topbar-bal-robi topbar-bal-clickable" id="topbar-bal-robi" onclick="navigateTo('wallet')" role="button" tabindex="0" aria-label="Vai al portafoglio · saldo ROBI" title="Vai al portafoglio"><svg class="topbar-bal-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8960C" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8960C" font-size="9" font-weight="700" font-family="var(--font-b)">R</text></svg><span id="topbar-robi-val">—</span></span>
     <button class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notifiche">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" class="bell-icon"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
       <span class="notif-badge" id="notif-badge" style="display:none">0</span>
@@ -171,7 +172,10 @@
   <button class="user-menu-item" onclick="navigateTo('home');toggleUserMenu()">
     <span class="it">Home</span><span class="en">Home</span>
   </button>
-  <button class="user-menu-item" onclick="window.location.href='/portafoglio'">
+  <button class="user-menu-item" onclick="navigateTo('profilo');toggleUserMenu()">
+    <span class="it">Profilo</span><span class="en">Profile</span>
+  </button>
+  <button class="user-menu-item" onclick="navigateTo('wallet');toggleUserMenu()">
     <span class="it">Portafoglio</span><span class="en">Wallet</span>
   </button>
   <button class="user-menu-item" onclick="navigateTo('referral');toggleUserMenu()">
@@ -268,7 +272,7 @@
 
     <!-- WELCOME — friendly, caldo -->
     <div style="padding:32px 0 8px;text-align:center">
-      <div style="font-family:var(--font-h);font-size:clamp(26px,5vw,36px);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:6px"><span class="it">Bentornato, <em id="home-user-name" style="color:var(--gold)">—</em></span><span class="en">Welcome back, <em id="home-user-name-en" style="color:var(--gold)">—</em></span></div>
+      <div style="font-family:var(--font-h);font-size:clamp(26px,5vw,36px);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:6px"><span class="it">Bentornato<em id="home-user-name" style="color:var(--gold);font-style:normal" data-prefix=", "></em></span><span class="en">Welcome back<em id="home-user-name-en" style="color:var(--gold);font-style:normal" data-prefix=", "></em></span></div>
       <div style="font-family:var(--font-b);font-size:13px;color:var(--gray-400);letter-spacing:.3px"><span class="it">Il tuo spazio su AIROOBI. Accumula, partecipa, realizza.</span><span class="en">Your space on AIROOBI. Accumulate, participate, achieve.</span></div>
       <span class="dash-alpha-badge" style="margin-top:10px;display:inline-block">alpha brave</span>
     </div>
@@ -844,6 +848,12 @@
 
     <div class="ref-history-section">
       <h3 class="ref-history-title"><span class="it">Chi hai invitato</span><span class="en">People you invited</span></h3>
+      <div id="dapp-ref-invited-header" class="ref-history-header" style="display:none;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase;padding:8px 12px;border-bottom:1px solid var(--gray-700);margin-bottom:6px">
+        <span class="it">Email</span><span class="en">Email</span>
+        <span class="it">Stato</span><span class="en">Status</span>
+        <span class="it">ROBI guadagnati</span><span class="en">ROBI earned</span>
+        <span class="it">Data</span><span class="en">Date</span>
+      </div>
       <div id="dapp-ref-invited-list">
         <p style="font-size:13px;color:var(--gray-400)"><span class="it">Caricamento...</span><span class="en">Loading...</span></p>
       </div>
@@ -918,7 +928,7 @@
           <span class="wcard-compact-tag" style="color:var(--kas);border-color:rgba(73,234,203,.3)"><span class="it">Presto</span><span class="en">Soon</span></span>
         </div>
         <div class="wcard-compact-amount" style="color:var(--kas)">—</div>
-        <div class="wcard-compact-sub"><span id="dapp-wcard-kas-potential" style="display:none"><span id="dapp-wcard-kas-potential-val" style="color:var(--kas)">—</span></span><span class="it">On-chain · tuo per sempre</span><span class="en">On-chain · yours forever</span></div>
+        <div class="wcard-compact-sub"><span id="dapp-wcard-kas-potential" style="display:none"><span id="dapp-wcard-kas-potential-val" style="color:var(--kas)">—</span> · </span><span class="it">On-chain · tuo per sempre</span><span class="en">On-chain · yours forever</span></div>
         <div class="wcard-compact-footer">
           <span style="color:rgba(73,234,203,.3)">KASPA · <span class="it">Stage 2</span><span class="en">Stage 2</span></span>
         </div>
@@ -1042,6 +1052,58 @@
   <div id="tab-archive" style="display:none">
     <div class="past-grid" id="archive-grid">
       <div class="past-empty"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
+    </div>
+  </div>
+
+  <!-- ═══ PROFILO TAB ═══ -->
+  <div id="tab-profilo" style="display:none">
+    <div style="max-width:680px;margin:0 auto;padding:0 4px">
+      <div style="text-align:center;margin-bottom:32px">
+        <h2 style="font-family:var(--font-h);font-size:clamp(24px,5vw,36px);font-weight:300;color:var(--white);margin:0 0 8px"><span class="it">Profilo</span><span class="en">Profile</span></h2>
+        <p style="font-size:13px;color:var(--gray-400);margin:0"><span class="it">Gestisci il tuo account, password e preferenze.</span><span class="en">Manage your account, password and preferences.</span></p>
+      </div>
+
+      <!-- Identity card -->
+      <div class="profilo-card" style="padding:24px 28px;border:1px solid var(--gray-700);border-radius:var(--radius);background:var(--card-bg);margin-bottom:20px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:16px"><span class="it">Account</span><span class="en">Account</span></div>
+        <div class="profilo-row" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
+          <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase">Email</span>
+          <span id="profilo-email" style="font-size:15px;color:var(--white);word-break:break-all">—</span>
+        </div>
+        <div class="profilo-row" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
+          <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase"><span class="it">Nome</span><span class="en">Name</span></span>
+          <span id="profilo-name" style="font-size:15px;color:var(--white)">—</span>
+        </div>
+        <div class="profilo-row" style="display:flex;flex-direction:column;gap:6px">
+          <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase"><span class="it">Iscritto dal</span><span class="en">Member since</span></span>
+          <span id="profilo-since" style="font-size:15px;color:var(--white)">—</span>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="profilo-card" style="padding:24px 28px;border:1px solid var(--gray-700);border-radius:var(--radius);background:var(--card-bg);margin-bottom:20px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:16px"><span class="it">Sicurezza</span><span class="en">Security</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button onclick="showChangePw()" class="profilo-btn" style="padding:14px 18px;background:transparent;border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;text-align:left;cursor:pointer;border-radius:var(--radius-sm);transition:all .2s"><span class="it">Cambia password</span><span class="en">Change password</span></button>
+          <button onclick="doLogout()" class="profilo-btn" style="padding:14px 18px;background:transparent;border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;text-align:left;cursor:pointer;border-radius:var(--radius-sm);transition:all .2s">Logout</button>
+        </div>
+      </div>
+
+      <!-- Preferences quick links -->
+      <div class="profilo-card" style="padding:24px 28px;border:1px solid var(--gray-700);border-radius:var(--radius);background:var(--card-bg);margin-bottom:20px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:16px"><span class="it">Preferenze</span><span class="en">Preferences</span></div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <button onclick="navigateTo('wallet')" class="profilo-btn" style="padding:14px 18px;background:transparent;border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;text-align:left;cursor:pointer;border-radius:var(--radius-sm);transition:all .2s"><span class="it">Portafoglio · Saldi e asset</span><span class="en">Wallet · Balances and assets</span></button>
+          <button onclick="navigateTo('referral')" class="profilo-btn" style="padding:14px 18px;background:transparent;border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-b);font-size:14px;text-align:left;cursor:pointer;border-radius:var(--radius-sm);transition:all .2s"><span class="it">Referral · Invita amici</span><span class="en">Referral · Invite friends</span></button>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="profilo-card" style="padding:24px 28px;border:1px solid rgba(248,113,113,.3);border-radius:var(--radius);background:rgba(248,113,113,.04)">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:#f87171;text-transform:uppercase;margin-bottom:8px"><span class="it">Zona pericolosa</span><span class="en">Danger zone</span></div>
+        <p style="font-size:12px;color:var(--gray-400);line-height:1.6;margin:0 0 14px"><span class="it">L'eliminazione dell'account è irreversibile.</span><span class="en">Account deletion is irreversible.</span></p>
+        <button onclick="showDeleteAccount()" style="padding:12px 18px;background:transparent;border:1px solid #f87171;color:#f87171;font-family:var(--font-b);font-size:13px;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">Elimina account</span><span class="en">Delete account</span></button>
+      </div>
     </div>
   </div>
 
@@ -1269,7 +1331,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.04.26-3.57.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.09-4.1.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1341,6 +1403,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=3.57.0"></script>
+<script src="/src/dapp.js?v=4.1.0"></script>
 </body>
 </html>

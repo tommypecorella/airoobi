@@ -201,3 +201,213 @@ html[data-theme="light"] .ap-progress-fill,
 html[data-theme="light"] .counter-bar {
   background: linear-gradient(90deg, #B8893D, #9F7820) !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * MEGA closure (W2 Day 5 · 2026-05-09) — pre-go-live additions
+ * P0 mobile-first stack + clickable topbar balance + dApp coverage extension
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+/* ISSUE-22 · Topbar ARIA/ROBI balance clickable */
+.topbar-bal-clickable {
+  cursor: pointer;
+  transition: background .15s ease, border-color .15s ease;
+  user-select: none;
+}
+.topbar-bal-clickable:hover {
+  background: rgba(184,137,61,0.08) !important;
+  border-color: rgba(184,137,61,0.32) !important;
+}
+.topbar-bal-clickable:focus-visible {
+  outline: 2px solid #B8893D;
+  outline-offset: 2px;
+}
+
+/* ISSUE-17 · .dash-stats mobile-first */
+@media (max-width: 480px) {
+  .dash-stats { grid-template-columns: 1fr !important; }
+}
+
+/* ISSUE-18 · .dash-quick-links mobile-first */
+@media (max-width: 640px) {
+  .dash-quick-links { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ISSUE-19 · .stats-bar mobile-first */
+@media (max-width: 480px) {
+  .stats-bar { grid-template-columns: 1fr !important; }
+  .stats-bar-item { padding: 14px 12px; }
+}
+
+/* ISSUE-05 · Dashboard middle/bottom dark mode regression — light cards */
+html[data-theme="light"] .reward-card,
+html[data-theme="light"] .explore-card,
+html[data-theme="light"] .journey-stat,
+html[data-theme="light"] .dash-quick-link,
+html[data-theme="light"] .stats-bar-item {
+  background: #FAFAF7 !important;
+  color: #1B1814 !important;
+  border-color: rgba(27,24,20,0.08) !important;
+}
+html[data-theme="light"] .reward-card .label,
+html[data-theme="light"] .explore-card .label,
+html[data-theme="light"] .journey-stat .label,
+html[data-theme="light"] .stats-bar-label {
+  color: #5A544E !important;
+}
+html[data-theme="light"] .stats-bar {
+  background: rgba(27,24,20,0.06) !important;
+  border-color: rgba(27,24,20,0.08) !important;
+}
+
+/* ISSUE-06 · /airdrops index light-theme coverage extension */
+html[data-theme="light"] .airdrops-grid,
+html[data-theme="light"] .airdrop-card,
+html[data-theme="light"] .search-bar,
+html[data-theme="light"] .filter-pill,
+html[data-theme="light"] .cat-pill {
+  background: #FAFAF7 !important;
+  color: #1B1814 !important;
+  border-color: rgba(27,24,20,0.08) !important;
+}
+html[data-theme="light"] .filter-pill.active,
+html[data-theme="light"] .cat-pill.active {
+  background: #B8893D !important;
+  color: #FFFFFF !important;
+  border-color: #B8893D !important;
+}
+html[data-theme="light"] .search-bar input,
+html[data-theme="light"] .search-bar input::placeholder {
+  color: #1B1814 !important;
+}
+html[data-theme="light"] .search-bar input::placeholder { color: rgba(27,24,20,0.4) !important; }
+
+/* ISSUE-07 · /airdrops/:id middle/bottom light-theme coverage */
+html[data-theme="light"] .purchase-widget,
+html[data-theme="light"] .classifica-section,
+html[data-theme="light"] .detail-list,
+html[data-theme="light"] .expandable {
+  background: #FAFAF7 !important;
+  color: #1B1814 !important;
+  border-color: rgba(27,24,20,0.08) !important;
+}
+html[data-theme="light"] .detail-list li,
+html[data-theme="light"] .classifica-row {
+  border-bottom-color: rgba(27,24,20,0.08) !important;
+}
+/* Slider blu cyan v1 → gold v2 (already on .buy-slider thumb above; covers fill if scoped) */
+html[data-theme="light"] .buy-slider {
+  background: linear-gradient(90deg, #B8893D 0%, #B8893D var(--slider-pct, 50%), rgba(27,24,20,0.12) var(--slider-pct, 50%), rgba(27,24,20,0.12) 100%) !important;
+}
+
+/* ISSUE-12 · Greeting font Cormorant residue */
+html[data-theme="light"] .dashboard-greeting,
+html[data-theme="light"] .welcome-back,
+html[data-theme="light"] h1.greeting,
+html[data-theme="light"] .dash-home > div:first-child > div:first-child {
+  font-family: 'Inter', system-ui, sans-serif !important;
+  font-weight: 600 !important;
+  font-style: normal !important;
+  color: #1B1814 !important;
+}
+
+/* ISSUE-23 · KAS card whitespace fix (defensive — when text inline) */
+.wallet-kas-meta,
+.kas-card-meta { white-space: normal; }
+.wallet-kas-meta > * + *,
+.kas-card-meta > * + * { margin-left: 6px; }
+
+/* ISSUE-24 · Strategy/scoring table layout restore (light theme overlap fix)
+ * Real class is .strategy-factors (flex column). Defensive rules ensure
+ * no overlap regardless of brief's grid-table assumption. */
+.scoring-table,
+.strategy-factors {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 14px !important;
+}
+.scoring-table > *,
+.strategy-factors > * { min-width: 0; }
+.strategy-factor-block {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+.strategy-factor-head {
+  display: flex !important;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+html[data-theme="light"] .strategy-box,
+html[data-theme="light"] .strategy-factor {
+  background: #FAFAF7 !important;
+  border-color: rgba(27,24,20,0.08) !important;
+  color: #1B1814 !important;
+}
+html[data-theme="light"] .strategy-factor-heading,
+html[data-theme="light"] .strategy-title,
+html[data-theme="light"] .strategy-factor-name {
+  color: #1B1814 !important;
+}
+
+/* ISSUE-27 · Notification panel backdrop overlay */
+.notif-panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+  display: none;
+}
+.notif-panel-backdrop.active { display: block; }
+.notif-panel { z-index: 1000; }
+
+/* ISSUE-33 · ARIA quotidiano countdown layout mobile */
+@media (max-width: 640px) {
+  .aria-daily-card,
+  .faucet-row,
+  #faucet-section .faucet-meta {
+    flex-direction: column !important;
+    gap: 8px !important;
+    align-items: flex-start !important;
+  }
+  .aria-countdown,
+  #aria-countdown { font-size: 0.85rem !important; }
+}
+
+/* ISSUE-31 · Sequenza giornaliera "D" uniformity */
+.streak-week,
+.streak-days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 6px !important;
+}
+.streak-day { text-align: center; }
+
+/* Profile page (ISSUE-16) — hover states */
+.profilo-btn:hover {
+  border-color: #B8893D !important;
+  background: rgba(184,137,61,0.04) !important;
+}
+
+/* ISSUE-25 · Referral history table header */
+.ref-history-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 8px;
+}
+.ref-history-header > * { flex: 1; }
+.ref-history-header > *:first-child { flex: 1.5; text-align: left; }
+.ref-history-header > *:last-child { flex: 0 0 auto; text-align: right; }
+
+/* Section eyebrow (ISSUE-11) — fallback if home.css missing the class */
+.section-eyebrow {
+  display: inline-block;
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #B8893D;
+  margin-bottom: 0.5rem;
+}

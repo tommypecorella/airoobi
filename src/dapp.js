@@ -506,11 +506,12 @@ async function loadHomeDashboard(){
   var token=await getValidToken();
   if(!token)return;
   var email=_session.user?.email||'';
-  var name=email.split('@')[0]||'—';
+  var name=email?email.split('@')[0]:'';
   var elIt=document.getElementById('home-user-name');
   var elEn=document.getElementById('home-user-name-en');
-  if(elIt)elIt.textContent=name;
-  if(elEn)elEn.textContent=name;
+  // Render with prefix only if name available; empty otherwise (no "Bentornato, —")
+  if(elIt)elIt.textContent=name?(elIt.getAttribute('data-prefix')||', ')+name:'';
+  if(elEn)elEn.textContent=name?(elEn.getAttribute('data-prefix')||', ')+name:'';
   // Registration date
   try{
     var prof=await sbGet('profiles?id=eq.'+_session.user.id+'&select=created_at',token);
@@ -1054,6 +1055,8 @@ async function loadDappReferral(){
     var invited=myCode?(await sbGet('profiles?referred_by=eq.'+myCode+'&deleted_at=is.null&select=id,email,created_at&order=created_at.desc',token)):[];
     if(invited&&invited.length>0){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
+      var hdrEl=document.getElementById('dapp-ref-invited-header');
+      if(hdrEl)hdrEl.style.display='flex';
       invList.innerHTML=invited.map(function(p){
         var email=p.email?truncEmail(p.email):'***';
         var confirmedAt=confirmedMap[p.id];
@@ -1296,9 +1299,9 @@ function spawnConfetti(){
 // ── Page routing ──
 var _isApp=location.hostname==='airoobi.app'||location.hostname==='www.airoobi.app';
 var PAGE_PATHS=_isApp
-  ?{home:'/dashboard',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio',archive:'/archivio',learn:'/impara'}
-  :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/impara'};
-var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/impara':'learn'};
+  ?{home:'/dashboard',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio',archive:'/archivio',learn:'/impara',profilo:'/profilo'}
+  :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/impara',profilo:'/profilo'};
+var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/impara':'learn','/profilo':'profilo'};
 var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
@@ -1307,6 +1310,7 @@ var PAGE_HEADERS={
   wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'I tuoi asset: ARIA, ROBI e KAS.',sub_en:'Your assets: ARIA, ROBI and KAS.'},
   archive:{it:'<em>Archivio</em> Airdrop',en:'Airdrop <em>Archive</em>',sub_it:'Tutti gli airdrop completati. Trasparenza totale.',sub_en:'All completed airdrops. Full transparency.'},
   learn:{it:'<em>Impara</em>',en:'<em>Learn</em>',sub_it:'Scopri come funzionano ARIA, ROBI e il motore airdrop.',sub_en:'Learn how ARIA, ROBI and the airdrop engine work.'},
+  profilo:{it:'<em>Profilo</em>',en:'<em>Profile</em>',sub_it:'Account, sicurezza e preferenze.',sub_en:'Account, security and preferences.'},
 };
 
 function navigateTo(page,event){
@@ -1329,7 +1333,7 @@ function navigateTo(page,event){
 }
 
 function showPage(page){
-  ['home','explore','my','submit','referral','wallet','archive','learn'].forEach(function(t){
+  ['home','explore','my','submit','referral','wallet','archive','learn','profilo'].forEach(function(t){
     var panel=document.getElementById('tab-'+t);
     if(panel)panel.style.display=page===t?'block':'none';
   });
@@ -1349,6 +1353,8 @@ function showPage(page){
       h.querySelector('.dapp-hero-sub').innerHTML='<span class="it">'+hdr.sub_it+'</span><span class="en">'+hdr.sub_en+'</span>';
     }
   }
+  // Refresh topbar balances on every SPA navigation (fix stale state cross-route)
+  if(typeof refreshTopbarBalances==='function')refreshTopbarBalances();
   if(page==='home'){loadHomeDashboard();startFeedPolling();}
   if(page==='explore'){bindExploreSearch();}
   if(page==='my'){renderMyAirdrops();loadMySubmissions();}
@@ -1356,6 +1362,60 @@ function showPage(page){
   if(page==='referral')loadDappReferral();
   if(page==='wallet')loadDappWallet();
   if(page==='archive')loadDappArchive();
+  if(page==='profilo')loadProfilePage();
+}
+
+// ── Profilo page (account settings view) ──
+async function loadProfilePage(){
+  var emailEl=document.getElementById('profilo-email');
+  var nameEl=document.getElementById('profilo-name');
+  var sinceEl=document.getElementById('profilo-since');
+  if(emailEl&&_session&&_session.user)emailEl.textContent=_session.user.email||'—';
+  // Fetch profile detail (name, created_at)
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=full_name,created_at&id=eq.'+_session.user.id,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok)return;
+    var rows=await res.json();
+    if(!rows||!rows.length)return;
+    var p=rows[0];
+    if(nameEl)nameEl.textContent=p.full_name||(_session.user.email?_session.user.email.split('@')[0]:'—');
+    if(sinceEl&&p.created_at){
+      var d=new Date(p.created_at);
+      sinceEl.textContent=d.toLocaleDateString(document.documentElement.getAttribute('data-lang')==='en'?'en-US':'it-IT',{year:'numeric',month:'long',day:'numeric'});
+    }
+  }catch(e){}
+}
+
+// ── Topbar balance refresh (used on cross-route SPA navigation) ──
+async function refreshTopbarBalances(){
+  if(!_session||!_session.user)return;
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=total_points,kas_balance&id=eq.'+_session.user.id,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok)return;
+    var rows=await res.json();
+    if(!rows||!rows.length)return;
+    var p=rows[0];
+    var ariaEl=document.getElementById('topbar-aria-val');
+    if(ariaEl&&p.total_points!=null)ariaEl.textContent=p.total_points;
+    // ROBI = sum of nft_rewards.amount for current user
+    var rRes=await fetch(SB_URL+'/rest/v1/nft_rewards?select=amount&user_id=eq.'+_session.user.id,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(rRes.ok){
+      var rRows=await rRes.json();
+      var robiTotal=(rRows||[]).reduce(function(s,r){return s+(parseFloat(r.amount)||0)},0);
+      var robiEl=document.getElementById('topbar-robi-val');
+      if(robiEl)robiEl.textContent=robiTotal.toFixed(0);
+    }
+  }catch(e){}
 }
 
 // ── Category filter ──
@@ -1599,6 +1659,16 @@ function toggleNotifPanel(){
   if(!panel)return;
   _notifOpen=!_notifOpen;
   panel.style.display=_notifOpen?'block':'none';
+  // ISSUE-27 · backdrop overlay (lazy create)
+  var bd=document.getElementById('notif-panel-backdrop');
+  if(!bd){
+    bd=document.createElement('div');
+    bd.id='notif-panel-backdrop';
+    bd.className='notif-panel-backdrop';
+    bd.addEventListener('click',function(){toggleNotifPanel()});
+    document.body.appendChild(bd);
+  }
+  bd.classList.toggle('active',_notifOpen);
   if(_notifOpen)loadNotifications();
 }
 
@@ -2915,7 +2985,7 @@ function _renderPartCard(item,isArchive){
   var a=item.airdrop;
   if(!a)return '';
   var imgHtml=a.image_url
-    ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy">'
+    ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy" onerror="this.style.display=\'none\';if(this.nextSibling)this.nextSibling.style.display=\'flex\'"><div class="my-card-img-placeholder" style="display:none">'+placeholderSvg+'</div>'
     :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
   // Status badge
   var st=a.status;

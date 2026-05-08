@@ -110,6 +110,8 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;transition:none}
 /* ── SECTIONS ── */
 section{padding:clamp(80px,12vw,160px) 0;position:relative}
 .section-label{font-family:var(--font-m);font-size:11px;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+.section-eyebrow{display:inline-block;font-family:var(--font-m);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);opacity:.85;padding:4px 12px;border:1px solid rgba(184,150,12,.28);background:rgba(184,150,12,.05);border-radius:999px;margin-bottom:14px}
+.section-eyebrow + .section-label{margin-top:0}
 .section-title{font-family:var(--font-h);font-size:clamp(28px,5vw,52px);font-weight:300;line-height:1.2;margin-bottom:24px}
 .section-title em{font-style:italic;color:var(--gold)}
 .section-text{font-size:clamp(14px,1.5vw,17px);color:var(--gray-300);line-height:1.8;max-width:600px}

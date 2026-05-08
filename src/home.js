@@ -135,6 +135,12 @@ async function updateCounter(){
   const pct=Math.min(100,(count/ALPHA_BRAVE_MAX)*100);
   _alphaBraveFull=remaining<=0;
 
+  // Promo banner counter (live wire — replaces hardcoded 993)
+  const liveEl=document.getElementById('alpha-counter-live');
+  if(liveEl)liveEl.textContent=count;
+  const liveBar=document.getElementById('alpha-counter-bar');
+  if(liveBar)setTimeout(()=>liveBar.style.width=pct+'%',500);
+
   // Hero fomo
   const heroIt=document.getElementById('fomo-text-hero-it');
   const heroEn=document.getElementById('fomo-text-hero-en');
