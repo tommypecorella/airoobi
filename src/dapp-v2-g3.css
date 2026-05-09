@@ -626,3 +626,72 @@ html[data-theme="light"] .topbar-logo {
   font-weight: 700 !important;
   letter-spacing: -2px !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * Fix Lampo Round 4 (W2 Day 5 · 2026-05-09 evening) — visual review unique
+ * 3 issue chirurgici loggato post Round 3 deploy
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+/* R4-01 · /airdrops marketplace search input bg blu legacy → light v2.2 */
+html[data-theme="light"] .etb-search input,
+html[data-theme="light"] #etb-search-input {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  border: 1px solid rgba(15,20,23,0.12) !important;
+}
+html[data-theme="light"] .etb-search input::placeholder,
+html[data-theme="light"] #etb-search-input::placeholder {
+  color: rgba(15,20,23,0.4) !important;
+}
+html[data-theme="light"] .etb-search input:focus,
+html[data-theme="light"] #etb-search-input:focus {
+  background: #FFFFFF !important;
+  border-color: #B8893D !important;
+  outline: none !important;
+}
+html[data-theme="light"] .etb-search svg {
+  color: rgba(15,20,23,0.4) !important;
+}
+
+/* R4-02 · /airdrops/:id gallery-player bg scuro → semi-trasparente light */
+html[data-theme="light"] .gallery-player {
+  background: rgba(255,255,255,0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  border: 1px solid rgba(15,20,23,0.08) !important;
+}
+html[data-theme="light"] .gallery-play-btn {
+  color: #0F1417 !important;
+}
+html[data-theme="light"] .gallery-play-btn:hover {
+  color: #B8893D !important;
+}
+html[data-theme="light"] .gallery-dot {
+  background: rgba(15,20,23,0.25) !important;
+}
+html[data-theme="light"] .gallery-dot.active {
+  background: #B8893D !important;
+}
+html[data-theme="light"] .gallery-counter {
+  color: rgba(15,20,23,0.55) !important;
+}
+
+/* R4-03 · /airdrops/:id share button visibility (cause = low contrast color + hover blue legacy) */
+html[data-theme="light"] .share-btn {
+  background: transparent !important;
+  color: #0F1417 !important;
+  border: 1px solid rgba(15,20,23,0.18) !important;
+}
+html[data-theme="light"] .share-btn:hover {
+  color: #B8893D !important;
+  border-color: #B8893D !important;
+  background: rgba(184,137,61,0.08) !important;
+}
+html[data-theme="light"] .share-btn.detail {
+  color: #B8893D !important;
+  border-color: rgba(184,137,61,0.4) !important;
+}
+html[data-theme="light"] .share-btn.detail:hover {
+  background: rgba(184,137,61,0.12) !important;
+  border-color: #B8893D !important;
+}
