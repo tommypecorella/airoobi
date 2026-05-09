@@ -1038,61 +1038,145 @@ function updateStrategyGuide(scores,pos,total,myScore){
   }
 
   var loyaltyPctBar=Math.min(100,Math.round(Math.log10(1+myHistoricAria/100)*25));
-  var pityFillColor=myPityPhase==='hard'?'var(--gold)':myPityPhase==='soft'?'var(--accent)':'';
+
+  // Round 5 · Scoring Panel UX Redesign — compact + expanded states
+  var statusIcon=isFirst?UI_ICONS.star:UI_ICONS.target;
+  var statusLabelIt=isFirst?'Stai vincendo':(mathImpossible?'Distacco invalicabile':'Come arrivare 1&deg;');
+  var statusLabelEn=isFirst?'You\'re winning':(mathImpossible?'Impossible to reach #1':'How to reach #1');
+
+  // Action hint (compact) — context-driven
+  var actionHintIt, actionHintEn, showActionCta=true;
+  if(mathImpossible){
+    actionHintIt='Partecipa ai prossimi airdrop in categoria per crescere il moltiplicatore fedelt&agrave; e sbloccare il bonus partecipazione.';
+    actionHintEn='Join upcoming category airdrops to grow your loyalty multiplier and unlock the participation bonus.';
+    showActionCta=false;
+  } else if(isFirst){
+    actionHintIt='Difendi il primato: +1 blocco aumenta il tuo punteggio.';
+    actionHintEn='Defend the lead: +1 block raises your score.';
+  } else if(myPityPhase==='hard'){
+    actionHintIt='Bonus partecipazione HARD attivo: continua, ricevi quasi sicuramente.';
+    actionHintEn='HARD participation bonus active: keep going, you\'ll receive almost certainly.';
+  } else if(myPityPhase==='soft'){
+    actionHintIt='Bonus partecipazione soft attivo: sei molto competitivo, capitalizza con altri blocchi.';
+    actionHintEn='Soft participation bonus active: you\'re very competitive, capitalize with more blocks.';
+  } else if(blocksNeeded>0 && blocksNeeded<=300){
+    actionHintIt='Stima: ~<strong>'+blocksNeeded+'</strong> blocchi in pi&ugrave; per raggiungere il 1&deg;.';
+    actionHintEn='Estimate: ~<strong>'+blocksNeeded+'</strong> more blocks to reach #1.';
+  } else {
+    actionHintIt='Partecipa per scoprire ROBI nel rullo e far crescere il moltiplicatore fedelt&agrave; per i prossimi airdrop.';
+    actionHintEn='Participate to discover ROBI in the reel and grow your loyalty multiplier for upcoming airdrops.';
+  }
+
+  // Bonus partecipazione (ex Boost di garanzia) — remaining + ETA stima months
+  var bonusRemaining=Math.max(0,myPityThreshold-myLosses);
+  var bonusValueAtReach=myPityBonus>0?myPityBonus:1.00;
+  var bonusEtaMonths=bonusRemaining>0?calculateBonusETA(bonusRemaining,120):0;
+
+  // Blocchi pluralization
+  var blocksLabelIt=myBlocks===1?'blocco':'blocchi';
+  var blocksLabelEn=myBlocks===1?'block':'blocks';
+  var blocksContrib=Math.sqrt(Math.max(myBlocks,0)).toFixed(2);
 
   el.innerHTML=''
-    +'<div class="strategy-box'+(isFirst?' first':'')+'">'
-    +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Stai vincendo':'Come arrivare 1&deg;')+'</span>'
-    +'<span class="en">'+(isFirst?'You\'re winning':'How to reach #1')+'</span></div>'
-    +'<div class="strategy-score-top">'
-    +'<span class="it">Tuo Punteggio: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; primo: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
-    +'<span class="en">Your Score: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; leader: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
+    +'<div class="scoring-panel'+(isFirst?' first':'')+'" data-state="compact">'
+    // Header status
+    +'<div class="scoring-header">'
+    +'<span class="scoring-status-icon">'+statusIcon+'</span>'
+    +'<span class="scoring-status-label">'
+    +'<span class="it">'+statusLabelIt+'</span>'
+    +'<span class="en">'+statusLabelEn+'</span>'
+    +'</span>'
     +'</div>'
-    +'<div class="strategy-factors">'
-    +'<div class="strategy-factor-block van">'
-    +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Blocchi correnti</span><span class="en">Current blocks</span></span>'
-    +'<span class="strategy-factor-weight-badge">'+myBlocks+' &middot; &radic;='+Math.sqrt(Math.max(myBlocks,0)).toFixed(2)+'</span>'
+    // Score prominent
+    +'<div class="scoring-score">'
+    +'<div class="scoring-score-value">'+myScoreV.toFixed(2)+'</div>'
+    +'<div class="scoring-score-label"><span class="it">Tuo punteggio</span><span class="en">Your score</span></div>'
+    +(pos>1?'<div class="scoring-score-leader"><span class="it">Primo: '+leaderScoreV.toFixed(2)+'</span><span class="en">Leader: '+leaderScoreV.toFixed(2)+'</span></div>':'')
     +'</div>'
-    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Contributo a radice quadrata: 100 blocchi valgono 10, non 100.</span>'
-    +'<span class="en">Square-root contribution: 100 blocks count as 10, not 100.</span>'
+    // Action box (CTA isolato)
+    +'<div class="scoring-action-box">'
+    +'<div class="scoring-action-hint">'
+    +'<span class="it">'+actionHintIt+'</span>'
+    +'<span class="en">'+actionHintEn+'</span>'
     +'</div>'
+    +(showActionCta?'<button class="scoring-action-cta" onclick="scrollToBuyBlocks()"><span class="it">COMPRA ALTRO BLOCCO</span><span class="en">BUY ANOTHER BLOCK</span></button>':'')
     +'</div>'
-    +'<div class="strategy-factor-block van">'
-    +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.gem+' <span class="it">Moltiplicatore Fedelt&agrave;</span><span class="en">Loyalty Multiplier</span></span>'
-    +'<span class="strategy-factor-weight-badge">&times;'+myLoyaltyMult.toFixed(2)+'</span>'
+    // Presale banner separato
+    +(a.status==='presale'?'<div class="scoring-presale-banner">'+UI_ICONS.zap+' <span class="it">Presale 2x ROBI &middot; approfitta ora</span><span class="en">Presale 2x ROBI &middot; take advantage now</span></div>':'')
+    // Expand toggle
+    +'<button class="scoring-expand-toggle" onclick="toggleScoringDetails(this)">'
+    +'<span class="scoring-expand-icon">+</span>'
+    +'<span class="scoring-expand-label-collapsed"><span class="it">Vedi dettagli scoring</span><span class="en">View scoring details</span></span>'
+    +'<span class="scoring-expand-label-expanded" style="display:none"><span class="it">Nascondi dettagli</span><span class="en">Hide details</span></span>'
+    +'</button>'
+    // Expanded breakdown (default hidden)
+    +'<div class="scoring-breakdown" style="display:none">'
+    +'<h4 class="scoring-breakdown-title"><span class="it">Breakdown del tuo punteggio</span><span class="en">Your score breakdown</span></h4>'
+    // Metric 1 · Blocchi (peso 50%)
+    +'<div class="scoring-metric scoring-metric-blocks">'
+    +'<div class="scoring-metric-header"><span class="scoring-metric-icon">'+UI_ICONS.trophy+'</span><span class="scoring-metric-name"><span class="it">Blocchi (peso 50%)</span><span class="en">Blocks (50% weight)</span></span></div>'
+    +'<div class="scoring-metric-value">'
+    +'<span class="it">'+myBlocks+' '+blocksLabelIt+' &middot; contributo '+blocksContrib+'</span>'
+    +'<span class="en">'+myBlocks+' '+blocksLabelEn+' &middot; contribution '+blocksContrib+'</span>'
     +'</div>'
-    +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+loyaltyPctBar+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+Math.round(myHistoricAria).toLocaleString('it-IT')+' ARIA</div>'
+    +'<div class="scoring-metric-hint">'+UI_ICONS.bulb+' <span class="it">Pi&ugrave; blocchi = pi&ugrave; chance di ricevere l\'oggetto (con limite anti-spam).</span><span class="en">More blocks = more chance to receive the item (with anti-spam limit).</span></div>'
     +'</div>'
-    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Cresce con gli ARIA spesi in categoria (curva logaritmica).</span>'
-    +'<span class="en">Grows with ARIA spent in category (log curve).</span>'
+    // Metric 2 · Fedeltà categoria (peso 30%)
+    +'<div class="scoring-metric scoring-metric-loyalty">'
+    +'<div class="scoring-metric-header"><span class="scoring-metric-icon">'+UI_ICONS.gem+'</span><span class="scoring-metric-name"><span class="it">Fedelt&agrave; categoria (peso 30%)</span><span class="en">Category loyalty (30% weight)</span></span></div>'
+    +'<div class="scoring-metric-value">'
+    +'<span class="it">Moltiplicatore &times;'+myLoyaltyMult.toFixed(2)+' &middot; ARIA spesi: '+Math.round(myHistoricAria).toLocaleString('it-IT')+'</span>'
+    +'<span class="en">Multiplier &times;'+myLoyaltyMult.toFixed(2)+' &middot; ARIA spent: '+Math.round(myHistoricAria).toLocaleString('en-US')+'</span>'
     +'</div>'
+    +'<div class="scoring-metric-progress"><div class="scoring-metric-progress-bar" style="width:'+loyaltyPctBar+'%"></div></div>'
+    +'<div class="scoring-metric-hint">'+UI_ICONS.bulb+' <span class="it">Partecipa pi&ugrave; volte nella stessa categoria per crescere il moltiplicatore (curva logaritmica).</span><span class="en">Participate more often in the same category to grow the multiplier (logarithmic curve).</span></div>'
     +'</div>'
-    +'<div class="strategy-factor-block van'+(myPityPhase==='hard'?' pity-hard':myPityPhase==='soft'?' pity-soft':'')+'">'
-    +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.zap+' <span class="it">Boost di garanzia</span><span class="en">Guarantee Boost</span></span>'
-    +'<span class="strategy-factor-weight-badge">'+myLosses+'/'+myPityThreshold+'</span>'
+    // Metric 3 · Bonus partecipazione (ex Boost garanzia)
+    +'<div class="scoring-metric scoring-metric-bonus'+(myPityPhase==='hard'?' pity-hard':myPityPhase==='soft'?' pity-soft':'')+'">'
+    +'<div class="scoring-metric-header"><span class="scoring-metric-icon">'+UI_ICONS.zap+'</span><span class="scoring-metric-name"><span class="it">Bonus partecipazione</span><span class="en">Participation bonus</span></span></div>'
+    +'<div class="scoring-metric-value">'
+    +'<span class="it">'+(myPityPhase==='hard'?'<strong>Bonus HARD attivo</strong> &middot; +'+myPityBonus.toFixed(2):myPityPhase==='soft'?'<strong>Bonus soft attivo</strong> &middot; +'+myPityBonus.toFixed(2):'Manca: <strong>'+bonusRemaining.toLocaleString('it-IT')+'</strong> partecipazioni &middot; bonus al raggiungimento: +'+bonusValueAtReach.toFixed(2))+'</span>'
+    +'<span class="en">'+(myPityPhase==='hard'?'<strong>HARD bonus active</strong> &middot; +'+myPityBonus.toFixed(2):myPityPhase==='soft'?'<strong>Soft bonus active</strong> &middot; +'+myPityBonus.toFixed(2):'Missing: <strong>'+bonusRemaining.toLocaleString('en-US')+'</strong> participations &middot; bonus on reach: +'+bonusValueAtReach.toFixed(2))+'</span>'
     +'</div>'
-    +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+pityPct+'%'+(pityFillColor?';background:'+pityFillColor:'')+'"></div></div>'
-    +'<div class="strategy-bar-val">+'+myPityBonus.toFixed(2)+'</div>'
+    +'<div class="scoring-metric-progress"><div class="scoring-metric-progress-bar" style="width:'+pityPct+'%"></div></div>'
+    +(bonusRemaining>0?'<div class="scoring-metric-progress-eta"><span class="it">'+pityPct+'% &middot; stima ~'+bonusEtaMonths+' mes'+(bonusEtaMonths===1?'e':'i')+' al bonus</span><span class="en">'+pityPct+'% &middot; estimated ~'+bonusEtaMonths+' month'+(bonusEtaMonths===1?'':'s')+' to bonus</span></div>':'')
+    +'<div class="scoring-metric-hint">'+UI_ICONS.bulb+' <span class="it">Il bonus si attiva automaticamente ogni N partecipazioni in categoria &mdash; pity reward, nessuno esce a mani vuote.</span><span class="en">Bonus activates automatically every N category participations &mdash; pity reward, no one leaves empty-handed.</span></div>'
     +'</div>'
-    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">'+pityStatusIt+'.</span>'
-    +'<span class="en">'+pityStatusEn+'.</span>'
-    +'</div>'
-    +'</div>'
-    +'</div>'
-    +'<div class="strategy-tips">'
-    +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span></div>'}).join('')
-    +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span></div>'}).join('')
     +'</div>'
     +'</div>';
+}
+
+// Round 5 · Scoring Panel helpers
+function toggleScoringDetails(toggleBtn){
+  var panel=toggleBtn.closest('.scoring-panel');if(!panel)return;
+  var breakdown=panel.querySelector('.scoring-breakdown');
+  var collapsedLabel=toggleBtn.querySelector('.scoring-expand-label-collapsed');
+  var expandedLabel=toggleBtn.querySelector('.scoring-expand-label-expanded');
+  var icon=toggleBtn.querySelector('.scoring-expand-icon');
+  var isExpanded=breakdown.style.display!=='none';
+  if(isExpanded){
+    breakdown.style.display='none';
+    collapsedLabel.style.display='inline';
+    expandedLabel.style.display='none';
+    icon.textContent='+';
+    panel.dataset.state='compact';
+  } else {
+    breakdown.style.display='block';
+    collapsedLabel.style.display='none';
+    expandedLabel.style.display='inline';
+    icon.textContent='−';
+    panel.dataset.state='expanded';
+  }
+}
+
+function scrollToBuyBlocks(){
+  var buyBlocks=document.querySelector('.buy-box')||document.getElementById('buy-blocks');
+  if(buyBlocks)buyBlocks.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+function calculateBonusETA(remaining,avgPerMonth){
+  avgPerMonth=avgPerMonth||120;
+  return Math.max(1,Math.ceil(remaining/avgPerMonth));
 }
 
 async function refreshPosition(airdropId){
