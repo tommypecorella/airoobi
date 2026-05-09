@@ -1056,3 +1056,14 @@ html[data-theme="light"] .form-hint { color: rgba(15,20,23,0.4) !important; }
   border-radius: 4px;
   line-height: 1.5;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * Fix Lampo Round 7 (W2 Day 5 · 2026-05-09 evening) — Marketplace Wrapper
+ * ISSUE-R7-01: /airdrops .explore-toolbar wrapper bg navy residue
+ * Root cause: dapp.css:149 background:rgba(6,11,24,.92) literal dark
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+html[data-theme="light"] .explore-toolbar {
+  background: rgba(255,255,255,0.92) !important;
+  border-bottom: 1px solid rgba(15,20,23,0.08) !important;
+}
