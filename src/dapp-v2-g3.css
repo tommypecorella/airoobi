@@ -925,3 +925,134 @@ html[data-theme="light"] .share-btn.detail:hover {
   .scoring-action-cta { padding: 11px 22px; font-size: 10px; }
   .scoring-score-value { font-size: 2.6rem; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * Fix Lampo Round 6 (W2 Day 5 · 2026-05-09 evening) — Profilo Username Feature
+ * Modal edit profilo (Nome + Cognome + Username @) + realtime validation
+ * Mounted on existing .modal-bg + .modal pattern
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+/* Modifica button on profilo card */
+.profilo-edit-btn {
+  background: transparent;
+  border: 1px solid #B8893D;
+  color: #B8893D;
+  padding: 6px 16px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
+}
+.profilo-edit-btn:hover {
+  background: rgba(184,137,61,0.08);
+  color: #9F7820;
+}
+
+/* Modal uses existing .modal-bg.active pattern (display:flex via dapp.css:520) */
+
+/* Form fields (inside .modal scope) */
+.form-field {
+  margin-bottom: 18px;
+}
+.form-field label {
+  display: block;
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 6px;
+}
+html[data-theme="light"] .form-field label { color: rgba(15,20,23,0.55) !important; }
+.form-field input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--gray-800);
+  border: 1px solid var(--gray-700);
+  color: var(--white);
+  font-size: 14px;
+  font-family: 'Inter', system-ui, sans-serif;
+  border-radius: 4px;
+  outline: none;
+  transition: border-color .15s ease;
+}
+html[data-theme="light"] .form-field input[type="text"] {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  border-color: rgba(15,20,23,0.12) !important;
+}
+.form-field input[type="text"]:focus {
+  border-color: #B8893D !important;
+}
+
+/* Username input wrapper (with @ prefix) */
+.username-input-wrapper {
+  display: flex;
+  align-items: stretch;
+  border: 1px solid var(--gray-700);
+  border-radius: 4px;
+  background: var(--gray-800);
+  overflow: hidden;
+  transition: border-color .15s ease;
+}
+html[data-theme="light"] .username-input-wrapper {
+  background: #FFFFFF !important;
+  border-color: rgba(15,20,23,0.12) !important;
+}
+.username-input-wrapper:focus-within {
+  border-color: #B8893D !important;
+}
+.username-prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 4px 0 14px;
+  color: rgba(255,255,255,0.5);
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 14px;
+  user-select: none;
+}
+html[data-theme="light"] .username-prefix { color: rgba(15,20,23,0.4) !important; }
+.username-input-wrapper input[type="text"] {
+  border: none !important;
+  background: transparent !important;
+  flex: 1;
+  padding: 12px 14px 12px 4px;
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+}
+
+/* Username feedback (realtime check result) */
+.form-feedback {
+  margin-top: 6px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  min-height: 16px;
+}
+.form-feedback.checking { color: rgba(255,255,255,0.5); font-style: italic; }
+.form-feedback.available { color: #2D7A2D; }
+.form-feedback.taken { color: #F73659; }
+html[data-theme="light"] .form-feedback.checking { color: rgba(15,20,23,0.4) !important; }
+
+/* Form hint */
+.form-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  font-style: italic;
+  line-height: 1.5;
+}
+html[data-theme="light"] .form-hint { color: rgba(15,20,23,0.4) !important; }
+
+/* Form error box */
+.form-error {
+  background: rgba(247,54,89,0.1);
+  border: 1px solid rgba(247,54,89,0.3);
+  color: #F73659;
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 14px;
+  border-radius: 4px;
+  line-height: 1.5;
+}

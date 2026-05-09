@@ -24,9 +24,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>[data-lang="it"] .en,[data-lang="en"] .it{display:none!important}</style>
-<link rel="stylesheet" href="/src/tokens.css?v=4.7.0">
-<link rel="stylesheet" href="/src/dapp.css?v=4.7.0">
-<link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.7.0">
+<link rel="stylesheet" href="/src/tokens.css?v=4.8.0">
+<link rel="stylesheet" href="/src/dapp.css?v=4.8.0">
+<link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.8.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -216,6 +216,37 @@
 </div>
 
 <!-- CHANGE PASSWORD MODAL -->
+<!-- PROFILO EDIT MODAL (Round 6 · username feature) -->
+<div class="modal-bg" id="profilo-edit-modal">
+  <div class="modal" style="text-align:left">
+    <h3 style="margin-bottom:16px"><span class="it">Modifica profilo</span><span class="en">Edit profile</span></h3>
+    <div id="profilo-edit-error" class="form-error" style="display:none"></div>
+    <form id="profilo-edit-form" onsubmit="submitProfiloEdit(event)" novalidate>
+      <div class="form-field">
+        <label for="edit-name"><span class="it">Nome</span><span class="en">First name</span></label>
+        <input type="text" id="edit-name" maxlength="50" required autocomplete="given-name">
+      </div>
+      <div class="form-field">
+        <label for="edit-surname"><span class="it">Cognome</span><span class="en">Last name</span></label>
+        <input type="text" id="edit-surname" maxlength="50" required autocomplete="family-name">
+      </div>
+      <div class="form-field">
+        <label for="edit-username">Username</label>
+        <div class="username-input-wrapper">
+          <span class="username-prefix">@</span>
+          <input type="text" id="edit-username" maxlength="30" minlength="3" pattern="[a-z0-9_]+" required autocomplete="off" oninput="onUsernameInput(this)">
+        </div>
+        <div id="username-feedback" class="form-feedback"></div>
+        <div class="form-hint"><span class="it">3-30 caratteri &middot; solo lettere minuscole, numeri, underscore &middot; cambiabile max 1 volta ogni 30 giorni</span><span class="en">3-30 characters &middot; lowercase letters, numbers, underscore only &middot; changeable max once every 30 days</span></div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel" onclick="hideProfiloEditModal()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+        <button type="submit" class="modal-confirm" id="profilo-edit-save"><span class="it">Salva</span><span class="en">Save</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <div class="modal-bg" id="changepw-modal">
   <div class="modal" style="text-align:left">
     <h3 style="margin-bottom:16px"><span class="it">Cambia password</span><span class="en">Change password</span></h3>
@@ -1057,7 +1088,10 @@
 
       <!-- Identity card -->
       <div class="profilo-card" style="padding:24px 28px;border:1px solid var(--gray-700);border-radius:var(--radius);background:var(--card-bg);margin-bottom:20px">
-        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:16px"><span class="it">Account</span><span class="en">Account</span></div>
+        <div class="profilo-card-head" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap">
+          <span style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase"><span class="it">Account</span><span class="en">Account</span></span>
+          <button class="profilo-edit-btn" onclick="showProfiloEditModal()"><span class="it">Modifica</span><span class="en">Edit</span></button>
+        </div>
         <div class="profilo-row" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
           <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase">Email</span>
           <span id="profilo-email" style="font-size:15px;color:var(--white);word-break:break-all">—</span>
@@ -1065,6 +1099,10 @@
         <div class="profilo-row" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
           <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase"><span class="it">Nome</span><span class="en">Name</span></span>
           <span id="profilo-name" style="font-size:15px;color:var(--white)">—</span>
+        </div>
+        <div class="profilo-row" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
+          <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase">Username</span>
+          <span id="profilo-username" class="profilo-username" style="font-size:15px;color:var(--gold);font-family:var(--font-m)">—</span>
         </div>
         <div class="profilo-row" style="display:flex;flex-direction:column;gap:6px">
           <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase"><span class="it">Iscritto dal</span><span class="en">Member since</span></span>
@@ -1313,7 +1351,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.09-4.7.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.09-4.8.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1385,6 +1423,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.7.0"></script>
+<script src="/src/dapp.js?v=4.8.0"></script>
 </body>
 </html>

@@ -1370,24 +1370,149 @@ async function loadProfilePage(){
   var emailEl=document.getElementById('profilo-email');
   var nameEl=document.getElementById('profilo-name');
   var sinceEl=document.getElementById('profilo-since');
+  var usernameEl=document.getElementById('profilo-username');
   if(emailEl&&_session&&_session.user)emailEl.textContent=_session.user.email||'—';
-  // Fetch profile detail (name, created_at)
+  // Fetch profile detail — Round 6 added username + corrected full_name → first_name,last_name
   try{
     var token=await getValidToken();
     if(!token)return;
-    var res=await fetch(SB_URL+'/rest/v1/profiles?select=full_name,created_at&id=eq.'+_session.user.id,{
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=first_name,last_name,username,created_at&id=eq.'+_session.user.id,{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
     });
     if(!res.ok)return;
     var rows=await res.json();
     if(!rows||!rows.length)return;
     var p=rows[0];
-    if(nameEl)nameEl.textContent=p.full_name||(_session.user.email?_session.user.email.split('@')[0]:'—');
+    _currentProfile={first_name:p.first_name||'',last_name:p.last_name||'',username:p.username||''};
+    var fullName=((p.first_name||'')+' '+(p.last_name||'')).trim();
+    if(nameEl)nameEl.textContent=fullName||(_session.user.email?_session.user.email.split('@')[0]:'—');
+    if(usernameEl)usernameEl.textContent=p.username?'@'+p.username:'—';
     if(sinceEl&&p.created_at){
       var d=new Date(p.created_at);
       sinceEl.textContent=d.toLocaleDateString(document.documentElement.getAttribute('data-lang')==='en'?'en-US':'it-IT',{year:'numeric',month:'long',day:'numeric'});
     }
   }catch(e){}
+}
+
+// ── Round 6 · Profilo Edit Modal (username feature) ──
+var _currentProfile={first_name:'',last_name:'',username:''};
+var _usernameCheckTimeout=null;
+var _usernameAvailable=true;
+
+function showProfiloEditModal(){
+  var modal=document.getElementById('profilo-edit-modal');if(!modal)return;
+  document.getElementById('edit-name').value=_currentProfile.first_name||'';
+  document.getElementById('edit-surname').value=_currentProfile.last_name||'';
+  document.getElementById('edit-username').value=_currentProfile.username||'';
+  document.getElementById('username-feedback').textContent='';
+  document.getElementById('username-feedback').className='form-feedback';
+  document.getElementById('profilo-edit-error').style.display='none';
+  _usernameAvailable=true;
+  modal.classList.add('active');
+}
+
+function hideProfiloEditModal(){
+  var modal=document.getElementById('profilo-edit-modal');if(!modal)return;
+  modal.classList.remove('active');
+  if(_usernameCheckTimeout){clearTimeout(_usernameCheckTimeout);_usernameCheckTimeout=null;}
+}
+
+// Decision #5 LOCKED: debounced 300ms su input completion
+function onUsernameInput(input){
+  if(_usernameCheckTimeout)clearTimeout(_usernameCheckTimeout);
+  var feedback=document.getElementById('username-feedback');
+  feedback.className='form-feedback checking';
+  feedback.textContent=document.documentElement.getAttribute('data-lang')==='en'?'…':'…';
+  _usernameCheckTimeout=setTimeout(function(){checkUsernameAvailability(input)},300);
+}
+
+async function checkUsernameAvailability(input){
+  var username=(input.value||'').trim().toLowerCase();
+  var feedback=document.getElementById('username-feedback');
+  var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  // Same as current → no need to check
+  if(username===_currentProfile.username){
+    feedback.className='form-feedback';
+    feedback.textContent='';
+    _usernameAvailable=true;
+    return;
+  }
+  // Format validation client-side
+  if(!/^[a-z0-9_]{3,30}$/.test(username)){
+    feedback.className='form-feedback taken';
+    feedback.textContent=lang==='it'?'Formato non valido (3-30 char · a-z 0-9 _)':'Invalid format (3-30 char · a-z 0-9 _)';
+    _usernameAvailable=false;
+    return;
+  }
+  feedback.className='form-feedback checking';
+  feedback.textContent=lang==='it'?'Verifica…':'Checking…';
+  try{
+    var token=await getValidToken();if(!token){_usernameAvailable=true;return;}
+    var data=await sbRpc('check_username_available',{p_username:username},token);
+    if(data&&data.available){
+      feedback.className='form-feedback available';
+      feedback.textContent=lang==='it'?'✓ Disponibile':'✓ Available';
+      _usernameAvailable=true;
+    } else {
+      feedback.className='form-feedback taken';
+      var reason=data&&data.reason||'username_taken';
+      feedback.textContent=lang==='it'
+        ?(reason==='reserved'?'✗ Username riservato':reason==='invalid_format'?'✗ Formato non valido':'✗ Username gi&agrave; preso')
+        :(reason==='reserved'?'✗ Reserved username':reason==='invalid_format'?'✗ Invalid format':'✗ Username taken');
+      _usernameAvailable=false;
+    }
+  }catch(e){
+    feedback.className='form-feedback';feedback.textContent='';_usernameAvailable=true;
+  }
+}
+
+async function submitProfiloEdit(event){
+  event.preventDefault();
+  var name=(document.getElementById('edit-name').value||'').trim();
+  var surname=(document.getElementById('edit-surname').value||'').trim();
+  var username=(document.getElementById('edit-username').value||'').trim().toLowerCase();
+  var errorBox=document.getElementById('profilo-edit-error');
+  var saveBtn=document.getElementById('profilo-edit-save');
+  var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  errorBox.style.display='none';
+  if(!_usernameAvailable){
+    errorBox.style.display='block';
+    errorBox.textContent=lang==='it'?'Username non disponibile. Scegline un altro.':'Username not available. Choose another.';
+    return;
+  }
+  saveBtn.disabled=true;
+  try{
+    var token=await getValidToken();if(!token)throw new Error('no_token');
+    var data=await sbRpc('update_user_profile',{p_name:name,p_surname:surname,p_username:username},token);
+    if(data&&data.error){
+      errorBox.style.display='block';
+      errorBox.textContent=mapProfiloEditError(data.error,data.next_change_at,lang);
+      saveBtn.disabled=false;
+      return;
+    }
+    hideProfiloEditModal();
+    loadProfilePage();
+    showToast(lang==='it'?'Profilo aggiornato.':'Profile updated.');
+  }catch(e){
+    errorBox.style.display='block';
+    errorBox.textContent=lang==='it'?'Errore di rete. Riprova.':'Network error. Retry.';
+    saveBtn.disabled=false;
+  }
+}
+
+function mapProfiloEditError(code,nextChangeAt,lang){
+  var locale=lang==='en'?'en-US':'it-IT';
+  var dateStr=nextChangeAt?new Date(nextChangeAt).toLocaleDateString(locale):'';
+  var msg={
+    not_authenticated:{it:'Sessione scaduta. Effettua di nuovo il login.',en:'Session expired. Please log in again.'},
+    invalid_name_length:{it:'Nome non valido (1-50 caratteri).',en:'Invalid first name (1-50 chars).'},
+    invalid_surname_length:{it:'Cognome non valido (1-50 caratteri).',en:'Invalid last name (1-50 chars).'},
+    invalid_username_format:{it:'Formato username non valido.',en:'Invalid username format.'},
+    username_reserved:{it:'Username riservato dal sistema.',en:'Username reserved by system.'},
+    username_taken:{it:'Username gi&agrave; preso.',en:'Username taken.'},
+    username_rate_limit:{it:'Username cambiabile dopo '+dateStr+'.',en:'Username changeable after '+dateStr+'.'}
+  };
+  return (msg[code]&&msg[code][lang])||(lang==='it'?'Errore sconosciuto':'Unknown error');
 }
 
 // ── Topbar balance refresh (used on cross-route SPA navigation) ──
