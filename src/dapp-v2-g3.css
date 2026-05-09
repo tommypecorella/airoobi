@@ -45,6 +45,12 @@ html:not([data-theme="dark"]) {
   --gray-300: #3F3F3F !important;
   --line: rgba(15,20,23,0.12) !important;
   --line-soft: rgba(15,20,23,0.08) !important;
+  /* Legacy navy surfaces flipped — kills "navy blue legacy" cascading via var() */
+  --card-bg: #FFFFFF !important;
+  --bg-card: #FFFFFF !important;
+  --bg-modal: #FFFFFF !important;
+  --bg-elevated: #FAFAF7 !important;
+  --gray-500: #6B6B6B !important;
   /* Typography v2 — Inter unico + JetBrains Mono per labels */
   --font-h: 'Inter', system-ui, sans-serif !important;
   --font-b: 'Inter', system-ui, sans-serif !important;
@@ -410,4 +416,213 @@ html[data-theme="light"] .strategy-factor-name {
   text-transform: uppercase;
   color: #B8893D;
   margin-bottom: 0.5rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * Fix Lampo Round 2 (W2 Day 5 · 2026-05-09 evening) — visual review Skeezu
+ * 18 issue post v4.3.0 LIVE — extended brand v2.2 coverage cross dApp loggata
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+/* A.1 · Nav dropdown menu EDU light (override inline style="background:var(--card-bg)") */
+html[data-theme="light"] .nav-dropdown-menu,
+html[data-theme="light"] #nav-discover-menu {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  border: 1px solid rgba(15,20,23,0.12) !important;
+  box-shadow: 0 12px 40px rgba(15,20,23,0.12) !important;
+}
+html[data-theme="light"] .nav-dropdown-menu a,
+html[data-theme="light"] .nav-dropdown-menu .nav-dropdown-item,
+html[data-theme="light"] #nav-discover-menu a {
+  color: #0F1417 !important;
+  background: transparent !important;
+}
+html[data-theme="light"] .nav-dropdown-menu a:hover,
+html[data-theme="light"] .nav-dropdown-menu .nav-dropdown-item:hover,
+html[data-theme="light"] #nav-discover-menu a:hover {
+  background: rgba(184,137,61,0.06) !important;
+  color: #B8893D !important;
+}
+html[data-theme="light"] .nav-dropdown-trigger {
+  color: #0F1417 !important;
+}
+
+/* A.2 · User menu avatar dropdown (.ap-user-menu used in airdrop.html, .user-menu in dapp.html) */
+html[data-theme="light"] .ap-user-menu,
+html[data-theme="light"] .user-menu,
+html[data-theme="light"] #ap-user-menu,
+html[data-theme="light"] #user-menu {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  border: 1px solid rgba(15,20,23,0.12) !important;
+  box-shadow: 0 12px 40px rgba(15,20,23,0.12) !important;
+}
+html[data-theme="light"] .ap-user-menu-email,
+html[data-theme="light"] .user-menu-email {
+  color: #6B6B6B !important;
+  border-bottom: 1px solid rgba(15,20,23,0.08) !important;
+}
+html[data-theme="light"] .ap-user-menu-item,
+html[data-theme="light"] .user-menu-item {
+  color: #0F1417 !important;
+  background: transparent !important;
+}
+html[data-theme="light"] .ap-user-menu-item:hover,
+html[data-theme="light"] .user-menu-item:hover {
+  background: rgba(184,137,61,0.06) !important;
+  color: #B8893D !important;
+}
+/* Danger zone PRESERVED coral — Logout + Elimina account */
+html[data-theme="light"] .ap-um-logout,
+html[data-theme="light"] .um-logout,
+html[data-theme="light"] .user-menu-item.um-logout {
+  color: #F73659 !important;
+  border-top: 1px solid rgba(15,20,23,0.08) !important;
+}
+html[data-theme="light"] .ap-um-logout:hover,
+html[data-theme="light"] .um-logout:hover {
+  background: rgba(247,54,89,0.06) !important;
+  color: #F73659 !important;
+}
+
+/* A.4 · Wallet cards ARIA/ROBI/KAS light + accent colors preserved */
+html[data-theme="light"] .wallet-row,
+html[data-theme="light"] .wallet-flow,
+html[data-theme="light"] .wallet-section,
+html[data-theme="light"] .wallet-card,
+html[data-theme="light"] .asset-card {
+  background: #FAFAF7 !important;
+  color: #0F1417 !important;
+  border-color: rgba(15,20,23,0.08) !important;
+}
+html[data-theme="light"] .wallet-section-label,
+html[data-theme="light"] .wallet-card-label,
+html[data-theme="light"] .asset-label {
+  color: #6B6B6B !important;
+}
+/* Asset values keep their accent (ARIA blue, ROBI gold, KAS teal) — preserved by tokens */
+/* Chart "ANDAMENTO ROBI" container */
+html[data-theme="light"] .wallet-chart,
+html[data-theme="light"] .robi-chart,
+html[data-theme="light"] .chart-container {
+  background: #FAFAF7 !important;
+  border-color: rgba(15,20,23,0.08) !important;
+}
+
+/* A.6 · /invita link box light + button outline visible */
+html[data-theme="light"] .ref-card,
+html[data-theme="light"] .ref-link-wrap,
+html[data-theme="light"] .ref-stats {
+  background: #FAFAF7 !important;
+  color: #0F1417 !important;
+  border-color: rgba(15,20,23,0.08) !important;
+}
+html[data-theme="light"] .ref-link {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  border: 1px solid rgba(15,20,23,0.12) !important;
+}
+html[data-theme="light"] .ref-share-btn {
+  background: transparent !important;
+  color: #0F1417 !important;
+  border: 1px solid rgba(15,20,23,0.18) !important;
+}
+html[data-theme="light"] .ref-share-btn:hover {
+  border-color: #B8893D !important;
+  color: #B8893D !important;
+  background: rgba(184,137,61,0.04) !important;
+}
+html[data-theme="light"] .ref-copy {
+  background: #B8893D !important;
+  color: #FFFFFF !important;
+  border: none !important;
+}
+
+/* A.7 · /proponi tipo airdrop cards + regole box light */
+html[data-theme="light"] .submit-rules,
+html[data-theme="light"] .submit-rules-box,
+html[data-theme="light"] .airdrop-rules-box,
+html[data-theme="light"] .airdrop-type-card,
+html[data-theme="light"] .submit-type-card,
+html[data-theme="light"] .submit-section {
+  background: #FAFAF7 !important;
+  color: #0F1417 !important;
+  border-color: rgba(15,20,23,0.08) !important;
+}
+html[data-theme="light"] .submit-rules h3,
+html[data-theme="light"] .submit-rules p,
+html[data-theme="light"] .airdrop-type-card h3,
+html[data-theme="light"] .submit-type-card h3 {
+  color: #0F1417 !important;
+}
+/* Valori grandi 6h/24h/72h → gold accent */
+html[data-theme="light"] .airdrop-type-value,
+html[data-theme="light"] .submit-type-value,
+html[data-theme="light"] .airdrop-type-card .value,
+html[data-theme="light"] .submit-type-card .value {
+  color: #B8893D !important;
+}
+
+/* A.8 · /airdrops marketplace category nav + scroll buttons */
+html[data-theme="light"] .cat-filter,
+html[data-theme="light"] .cat-filter-wrap,
+html[data-theme="light"] .cat-dash,
+html[data-theme="light"] .cat-dash-wrap {
+  background: transparent !important;
+}
+html[data-theme="light"] .cat-nav-btn {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  border: 1px solid rgba(15,20,23,0.12) !important;
+}
+html[data-theme="light"] .cat-nav-btn:hover {
+  border-color: #B8893D !important;
+  color: #B8893D !important;
+}
+html[data-theme="light"] .cat-fade {
+  background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%) !important;
+}
+html[data-theme="light"] .cat-fade.right {
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%) !important;
+}
+/* Badge "PRESALE 2X MINING" blu legacy → gold accent */
+html[data-theme="light"] .badge-presale,
+html[data-theme="light"] .badge-mining,
+html[data-theme="light"] .badge-presale-mining,
+html[data-theme="light"] .ap-badge-presale,
+html[data-theme="light"] .product-badge-presale {
+  background: #B8893D !important;
+  color: #FFFFFF !important;
+  border-color: #B8893D !important;
+}
+
+/* A.9 · /airdrops/:id detail — preview area + airdrop-blocks-grid + symbol top-left */
+html[data-theme="light"] .pw-preview,
+html[data-theme="light"] .ap-preview,
+html[data-theme="light"] .airdrop-detail-preview,
+html[data-theme="light"] .airdrop-blocks-grid,
+html[data-theme="light"] .detail-gallery,
+html[data-theme="light"] .product-divider,
+html[data-theme="light"] .buy-box,
+html[data-theme="light"] .ap-qstat,
+html[data-theme="light"] .detail-stat,
+html[data-theme="light"] .detail-countdown,
+html[data-theme="light"] .detail-position,
+html[data-theme="light"] .mine-info-modal {
+  background: #FFFFFF !important;
+  color: #0F1417 !important;
+  border-color: rgba(15,20,23,0.08) !important;
+}
+html[data-theme="light"] .product-back {
+  color: #0F1417 !important;
+}
+html[data-theme="light"] .product-back:hover {
+  color: #B8893D !important;
+}
+/* Topbar logo "Oo" — force gold ink visible (defensive even if --accent override) */
+html[data-theme="light"] .topbar-logo {
+  color: #B8893D !important;
+  opacity: 1 !important;
+  font-weight: 700 !important;
+  letter-spacing: -2px !important;
 }

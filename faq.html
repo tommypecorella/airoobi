@@ -25,7 +25,7 @@
 <style>
 :root{
   --black: #FFFFFF;--white: #0F1417;--gold: #B8893D;
-  --accent:#4A9EFF;--kas:#49EACB;
+  --accent:#B8893D;--kas:#49EACB;
   --gray-900: #FAFAF7;--gray-800: #F2EFE9;--gray-700: #E5E1D6;
   --gray-600: #9F7820;--gray-400: #8B8B8B;--gray-300: #3F3F3F;
   --font-h: 'Inter', system-ui, sans-serif;
@@ -34,7 +34,7 @@
   --radius:14px;--radius-sm:10px;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{font-size:16px;scroll-behavior:smooth;background:var(--black);color-scheme:dark}
+html{font-size:16px;scroll-behavior:smooth;background:var(--black);color-scheme:light}
 body{color:var(--white);background:var(--black);font-family:var(--font-b);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
 [data-lang="en"] .it{display:none!important}
 [data-lang="it"] .en{display:none!important}
@@ -44,13 +44,13 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 .faq-hero p{color:var(--gray-300);font-size:clamp(.95rem,2vw,1.1rem);line-height:1.7}
 
 .faq-section{max-width:740px;margin:0 auto;padding:0 24px 80px}
-.faq-cat-title{font-family:var(--font-m);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid rgba(74,158,255,.15)}
+.faq-cat-title{font-family:var(--font-m);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;padding-bottom:10px;border-bottom:1px solid rgba(184,137,61,.15)}
 .faq-item{margin-bottom:4px}
 .faq-q{width:100%;text-align:left;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius-sm);padding:18px 48px 18px 20px;font-family:var(--font-b);font-size:15px;font-weight:600;color:var(--white);cursor:pointer;transition:all .25s;position:relative;display:block;line-height:1.5}
-.faq-q:hover{background:rgba(74,158,255,.04);border-color:rgba(74,158,255,.15)}
+.faq-q:hover{background:rgba(184,137,61,.04);border-color:rgba(184,137,61,.15)}
 .faq-q::after{content:'+';position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:20px;color:var(--accent);font-weight:300;transition:transform .3s}
 .faq-q.open::after{transform:translateY(-50%) rotate(45deg)}
-.faq-q.open{background:rgba(74,158,255,.06);border-color:rgba(74,158,255,.2)}
+.faq-q.open{background:rgba(184,137,61,.06);border-color:rgba(184,137,61,.2)}
 .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s ease}
 .faq-a.open{max-height:600px;padding:16px 20px 20px}
 .faq-a p{color:var(--gray-300);font-size:14px;line-height:1.8;margin-bottom:10px}
@@ -61,12 +61,12 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 .faq-a .kas{color:var(--kas);font-weight:600}
 
 .faq-cta{text-align:center;padding:0 24px 80px;max-width:600px;margin:0 auto}
-.faq-cta-box{background:rgba(74,158,255,.04);border:1px solid rgba(74,158,255,.15);border-radius:var(--radius);padding:40px 32px;position:relative;overflow:hidden}
-.faq-cta-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(74,158,255,.08) 0%,transparent 70%);pointer-events:none}
+.faq-cta-box{background:rgba(184,137,61,.04);border:1px solid rgba(184,137,61,.15);border-radius:var(--radius);padding:40px 32px;position:relative;overflow:hidden}
+.faq-cta-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(184,137,61,.08) 0%,transparent 70%);pointer-events:none}
 .faq-cta h2{font-family:var(--font-h);font-size:clamp(1.4rem,4vw,2rem);font-weight:600;margin-bottom:12px;font-style:italic;position:relative}
 .faq-cta p{color:var(--gray-400);font-size:14px;margin-bottom:24px;position:relative}
 .faq-cta a{display:inline-block;background:var(--accent);color:var(--black);padding:14px 36px;font-family:var(--font-b);font-size:13px;letter-spacing:1px;font-weight:700;text-decoration:none;transition:all .25s;border-radius:var(--radius-sm);text-transform:uppercase;position:relative}
-.faq-cta a:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 8px 28px rgba(74,158,255,.25)}
+.faq-cta a:hover{opacity:.88;transform:translateY(-2px);box-shadow:0 8px 28px rgba(184,137,61,.25)}
 
 .faq-footer{border-top:1px solid rgba(255,255,255,.06);padding:36px 24px;text-align:center;max-width:600px;margin:0 auto}
 .faq-footer a{color:var(--gray-400);text-decoration:none;font-size:.85rem;transition:color .25s;margin:0 10px}
@@ -229,7 +229,7 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
 
 <!-- HERO -->
 <section class="faq-hero">
-  <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" style="height:28px;margin-bottom:24px;opacity:.6">
+  <img src="/public/images/AIROOBI_Logo_Black.png" alt="AIROOBI" style="height:28px;margin-bottom:24px;opacity:.85">
   <h1><span class="it">Domande frequenti</span><span class="en">Frequently asked questions</span></h1>
   <p><span class="it">Tutto quello che devi sapere per iniziare su AIROOBI.</span><span class="en">Everything you need to know to get started on AIROOBI.</span></p>
 </section>
@@ -392,7 +392,7 @@ body{color:var(--white);background:var(--black);font-family:var(--font-b);line-h
   </div>
   <div class="faq-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce.</div>
   <div class="faq-footer-copy" style="margin-top:4px;font-size:11px;color:var(--gray-500)"><span class="it">Piattaforma riservata ai maggiorenni (18+).</span><span class="en">Platform for adults only (18+).</span></div>
-  <div class="faq-footer-ver">alfa-2026.04.14-2.8.0</div>
+  <div class="faq-footer-ver">alfa-2026.05.09-4.4.0</div>
 </footer>
 
 <script>

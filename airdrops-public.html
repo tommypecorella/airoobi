@@ -27,8 +27,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/src/tokens.css?v=4.3.0">
-<link rel="stylesheet" href="/src/topbar.css?v=4.3.0">
+<link rel="stylesheet" href="/src/tokens.css?v=4.4.0">
+<link rel="stylesheet" href="/src/topbar.css?v=4.4.0">
 <script src="/src/theme.js" defer></script>
 <style>
 /*
@@ -66,7 +66,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .hero-airdrops{padding:clamp(64px,11vh,120px) 24px clamp(40px,6vh,64px);text-align:center;max-width:920px;margin:0 auto;position:relative}
 .hero-airdrops::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:540px;background:radial-gradient(circle,rgba(184,137,61,.06) 0%,rgba(184,137,61,.02) 40%,transparent 70%);pointer-events:none;border-radius:50%}
 .section-eyebrow{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;font-weight:600;position:relative}
-.hero-airdrops h1{font-family:var(--font-h);font-size:clamp(2.1rem,5.4vw,3.6rem);font-weight:600;color:var(--ink);margin:0 0 24px;line-height:1.08;letter-spacing:-.035em;position:relative}
+.hero-airdrops h1{font-family:var(--font-h);font-size:clamp(1.75rem,4vw,2.75rem);font-weight:600;color:var(--ink);margin:0 0 24px;line-height:1.1;letter-spacing:-.03em;position:relative}
 .hero-airdrops .hero-sub{font-family:var(--font-b);font-size:clamp(1rem,2.1vw,1.125rem);color:var(--ink-soft);max-width:680px;margin:0 auto;line-height:1.7;position:relative}
 
 /* §B Active placeholders */
@@ -183,7 +183,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
           "name": "Come ottengo ARIA per partecipare?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "ARIA si accumula gratuitamente. Ricevi ARIA dal faucet quotidiano, dalla sequenza di check-in giornaliera, invitando amici che si registrano, completando le sezioni educative del marketplace. Non si compra ARIA con denaro: si guadagna con la presenza e la partecipazione attiva alla community."
+            "text": "Ogni ARIA ha un valore di 0,10 centesimi. Adesso, durante la fase Alpha, puoi ottenere ARIA gratuitamente dal faucet quotidiano, dalla sequenza di check-in giornaliera, invitando amici che si registrano e completando le sezioni educative del marketplace. Quando AIROOBI passerà a pre-produzione e produzione, gli ARIA diventeranno acquistabili — ma resteranno attive diverse modalità per accumularli gratuitamente partecipando alla community. Più sei presente in fase Alpha, più ARIA accumuli senza pagare nulla, costruendo un vantaggio strutturale per quando il marketplace andrà LIVE."
           }
         },
         {
@@ -191,7 +191,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
           "name": "Cosa sono i ROBI e a cosa servono?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "ROBI sono tessere di rendimento che maturano se non ricevi un oggetto in un airdrop. Ogni partecipazione conta: se non ricevi l'oggetto, accumuli ROBI proporzionali ai blocchi investiti. ROBI cresce di valore nel tempo grazie al meccanismo di treasury backing AIROOBI, e si può convertire ogni lunedì entro un cap settimanale. Niente è sprecato."
+            "text": "ROBI sono asset digitali del tuo portafoglio AIROOBI che maturano valore se non ricevi un oggetto in un airdrop. Ogni partecipazione conta: se non ricevi l'oggetto, accumuli ROBI proporzionali ai blocchi investiti. ROBI cresce di valore nel tempo grazie al meccanismo di treasury backing AIROOBI, e si può convertire ogni lunedì entro un cap settimanale. Niente è sprecato."
           }
         },
         {
@@ -222,7 +222,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 
 <!-- TOPBAR (shared component) -->
 <div id="topbar-mount" data-active="airdrops"></div>
-<script src="/src/topbar.js?v=4.3.0"></script>
+<script src="/src/topbar.js?v=4.4.0"></script>
 
 <main>
 
@@ -352,14 +352,14 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
       <article class="faq-item">
         <h3><span class="it">Come ottengo ARIA per partecipare?</span><span class="en">How do I get ARIA to participate?</span></h3>
         <p>
-          <span class="it">ARIA si accumula gratuitamente. Ricevi ARIA dal faucet quotidiano, dalla sequenza di check-in giornaliera, invitando amici che si registrano, completando le sezioni educative del marketplace. Non si compra ARIA con denaro: si guadagna con la presenza e la partecipazione attiva alla community.</span><span class="en">ARIA is accumulated for free. You receive ARIA from the daily faucet, the daily check-in streak, by inviting friends who register, completing educational sections of the marketplace. ARIA is not bought with money: it's earned through presence and active participation in the community.</span>
+          <span class="it" lang="it">Ogni ARIA ha un valore di <strong>0,10 centesimi</strong>. Adesso, durante la fase Alpha, puoi ottenere ARIA <strong>gratuitamente</strong> dal faucet quotidiano, dalla sequenza di check-in giornaliera, invitando amici che si registrano e completando le sezioni educative del marketplace. Quando AIROOBI passer&agrave; a pre-produzione e produzione, gli ARIA diventeranno acquistabili &mdash; ma resteranno attive diverse modalit&agrave; per accumularli gratuitamente partecipando alla community. Pi&ugrave; sei presente in fase Alpha, pi&ugrave; ARIA accumuli senza pagare nulla, costruendo un vantaggio strutturale per quando il marketplace andr&agrave; LIVE.</span><span class="en" lang="en">Each ARIA is worth <strong>0.10 cents</strong>. Right now, during the Alpha phase, you can get ARIA <strong>for free</strong> from the daily faucet, the daily check-in sequence, by inviting friends who register, and completing the educational sections of the marketplace. When AIROOBI moves to pre-production and production, ARIA will become purchasable &mdash; but several free accumulation methods will remain active by participating in the community. The more you're present in Alpha phase, the more ARIA you accumulate without paying anything, building a structural advantage for when the marketplace goes LIVE.</span>
         </p>
       </article>
 
       <article class="faq-item">
         <h3><span class="it">Cosa sono i ROBI e a cosa servono?</span><span class="en">What are ROBI and what are they for?</span></h3>
         <p>
-          <span class="it">ROBI sono tessere di rendimento che maturano se non ricevi un oggetto in un airdrop. Ogni partecipazione conta: se non ricevi l'oggetto, accumuli ROBI proporzionali ai blocchi investiti. ROBI cresce di valore nel tempo grazie al meccanismo di treasury backing AIROOBI, e si pu&ograve; convertire ogni luned&igrave; entro un cap settimanale. Niente &egrave; sprecato.</span><span class="en">ROBI are yield tokens that mature when you don't receive an item in an airdrop. Every participation counts: if you don't receive the item, you accumulate ROBI proportional to the blocks invested. ROBI grows in value over time thanks to the AIROOBI treasury backing mechanism, and can be converted every Monday within a weekly cap. Nothing is wasted.</span>
+          <span class="it" lang="it">ROBI sono asset digitali del tuo <strong>portafoglio AIROOBI</strong> che maturano valore se non ricevi un oggetto in un airdrop. Ogni partecipazione conta: se non ricevi l'oggetto, accumuli ROBI proporzionali ai blocchi investiti. ROBI cresce di valore nel tempo grazie al meccanismo di treasury backing AIROOBI, e si pu&ograve; convertire ogni luned&igrave; entro un cap settimanale. Niente &egrave; sprecato.</span><span class="en" lang="en">ROBI are digital assets in your <strong>AIROOBI wallet</strong> that mature in value if you don't receive an item in an airdrop. Every participation counts: if you don't receive the item, you accumulate ROBI proportional to the blocks invested. ROBI grows in value over time thanks to the AIROOBI treasury backing mechanism, and can be converted every Monday within a weekly cap. Nothing is wasted.</span>
         </p>
       </article>
 
@@ -393,11 +393,6 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 
 </main>
 
-<!-- ADS -->
-<div class="ads-section">
-  <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
-</div>
-
 <!-- FOOTER -->
 <footer class="landing-footer">
   <div class="landing-footer-links">
@@ -411,7 +406,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
   </div>
   <div class="landing-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>
   <div class="landing-footer-motto"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div class="landing-footer-ver">alfa-2026.05.09-4.3.0</div>
+  <div class="landing-footer-ver">alfa-2026.05.09-4.4.0</div>
 </footer>
 
 </body>
