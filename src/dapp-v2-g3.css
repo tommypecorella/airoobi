@@ -1358,3 +1358,65 @@ html[data-theme="light"] .explore-toolbar {
   display: block;
   margin-bottom: 2px;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * Fix Lampo Round 9 (W2 Day 5 · 2026-05-09 evening) — PRE-SHARE Demo Flagged
+ * Section A only · HTML+CSS (NO DB ops · Section B+C+D STOP per Skeezu approve)
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+/* A.1 · Badge "DEMO ALPHA" su airdrop card top-right */
+.airdrop-badge-demo {
+  display: inline-block;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 5;
+  background: rgba(247,54,89,0.12);
+  color: #F73659;
+  border: 1px solid #F73659;
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  padding: 3px 8px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+/* A.2 · Banner top marketplace */
+.marketplace-demo-banner {
+  background: rgba(247,54,89,0.06);
+  border-left: 4px solid #F73659;
+  padding: 14px 18px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 20px;
+}
+.marketplace-demo-banner-content strong {
+  display: block;
+  color: #0F1417;
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.marketplace-demo-banner-content p {
+  font-size: 0.85rem;
+  color: rgba(15,20,23,0.65);
+  margin: 0;
+  line-height: 1.55;
+}
+.marketplace-demo-banner-content p strong { color: #0F1417; font-weight: 600; }
+
+/* A.3 · Disclaimer detail page (airdrop.html sotto product-title) */
+.airdrop-detail-demo-note {
+  background: rgba(247,54,89,0.04);
+  border-left: 2px solid #F73659;
+  padding: 10px 14px;
+  margin: 12px 0 20px;
+  font-size: 0.85rem;
+  color: rgba(15,20,23,0.6);
+  border-radius: 0 4px 4px 0;
+}
+.airdrop-detail-demo-note em { color: #0F1417; font-style: italic; }
+html:not([data-theme="light"]) .airdrop-detail-demo-note { color: rgba(255,255,255,0.7); }
+html:not([data-theme="light"]) .airdrop-detail-demo-note em { color: #FFFFFF; }

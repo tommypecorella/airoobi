@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded',async function(){
     // Show splash tour on first visit
     if(!localStorage.getItem('airoobi_splash_done'))showSplash();
     setupUI();
-    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist(),loadRobiPrice(),loadMyRanks()]);
+    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist(),loadRobiPrice(),loadMyRanks(),loadAlphaCounterInvita()]);
     renderGrid();
     renderCatDashboard();
     renderCategoryFilter();
@@ -1165,14 +1165,17 @@ function renderReferralTier(confirmedCount){
 }
 
 async function loadAlphaCounterInvita(){
-  var el=document.getElementById('alpha-counter-invita');if(!el)return;
+  // Round 9: writes to all alpha counter IDs (invita + marketplace banner)
+  var ids=['alpha-counter-invita','banner-counter','banner-counter-en'];
+  var present=ids.map(function(id){return document.getElementById(id);}).filter(Boolean);
+  if(!present.length)return;
   try{
     var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}
     });
     if(res.ok){
       var range=res.headers.get('content-range');
-      if(range){var total=parseInt(range.split('/')[1],10)||0;el.textContent=total;}
+      if(range){var total=parseInt(range.split('/')[1],10)||0;present.forEach(function(el){el.textContent=total;});}
     }
   }catch(e){}
 }
@@ -2117,6 +2120,7 @@ function renderGrid(){
     }
 
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
+      +'<span class="airdrop-badge-demo"><span class="it">DEMO ALPHA</span><span class="en">ALPHA DEMO</span></span>'
       +badge
       +durationBadge(a.duration_type)
       +imgHtml

@@ -1368,6 +1368,7 @@ async function renderDetail(){
     +'<div class="detail-cat"><a href="/airdrops?cat='+encodeURIComponent(a.category)+'" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s" onmouseover="this.style.opacity=\'.7\'" onmouseout="this.style.opacity=\'1\'">'+(CAT_ICONS[a.category]||'')+' '+escHtml(a.category)+'</a></div>'
     +(brand?'<div class="product-brand">'+escHtml(brand)+(model?' &middot; '+escHtml(model):'')+'</div>':'')
     +'<h2 class="product-title">'+escHtml(a.title)+'</h2>'
+    +'<p class="airdrop-detail-demo-note"><span class="it"><em>Demo Alpha &mdash; partecipa per imparare il sistema, accumuli ROBI veri.</em></span><span class="en"><em>Alpha Demo &mdash; participate to learn the system, you accumulate real ROBI.</em></span></p>'
     +(a.description?'<p class="product-desc">'+escHtml(a.description)+'</p>':'')
     +(condition?'<div class="product-condition">'+escHtml(condition)+'</div>':'')
     +(highlights.length>0
