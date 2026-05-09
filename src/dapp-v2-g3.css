@@ -1067,3 +1067,294 @@ html[data-theme="light"] .explore-toolbar {
   background: rgba(255,255,255,0.92) !important;
   border-bottom: 1px solid rgba(15,20,23,0.08) !important;
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * Fix Lampo Round 8 (W2 Day 5 · 2026-05-09 evening) — /invita Content Rewrite
+ * Hero + scarcity + link box + share preset + counter gamificato + tier ladder
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+/* A · Hero header */
+.invita-hero {
+  text-align: center;
+  padding: 32px 24px 28px;
+  background: #FAFAF7;
+  border: 1px solid rgba(15,20,23,0.06);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.invita-hero-eyebrow {
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #B8893D;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+.invita-hero-title {
+  font-family: 'Inter', system-uri, sans-serif;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 600;
+  color: #0F1417;
+  margin: 0 0 14px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+.invita-hero-title em {
+  font-style: italic;
+  color: #B8893D;
+  font-weight: 500;
+}
+.invita-hero-subtitle {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.95rem;
+  color: rgba(15,20,23,0.65);
+  max-width: 540px;
+  margin: 0 auto 20px;
+  line-height: 1.6;
+}
+.invita-hero-subtitle strong { color: #0F1417; font-weight: 600; }
+.invita-hero-value-pill {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 10px;
+  background: #B8893D;
+  color: #FFFFFF;
+  padding: 10px 22px;
+  border-radius: 100px;
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.invita-hero-value-amount { font-size: 1.15rem; font-weight: 600; }
+.invita-hero-value-label { font-size: 0.72rem; opacity: 0.92; letter-spacing: 0.04em; }
+
+/* B · Scarcity hook */
+.invita-scarcity {
+  background: rgba(247,54,89,0.06);
+  border-left: 4px solid #F73659;
+  padding: 16px 20px;
+  border-radius: 0 4px 4px 0;
+  margin-bottom: 22px;
+}
+.invita-scarcity-content { display: flex; flex-direction: column; gap: 6px; }
+.invita-scarcity-title {
+  display: block;
+  color: #0F1417;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.invita-scarcity-text {
+  font-size: 0.88rem;
+  color: rgba(15,20,23,0.65);
+  margin: 0;
+  line-height: 1.55;
+}
+.invita-scarcity-counter {
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 0.85rem;
+  color: #F73659;
+  font-weight: 600;
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+
+/* C · Link box */
+.invita-link-box {
+  background: #FFFFFF;
+  border: 1px solid rgba(15,20,23,0.08);
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 22px;
+}
+.invita-link-title {
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(15,20,23,0.55);
+  margin: 0 0 12px;
+  font-weight: 500;
+}
+.invita-link-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.invita-link-url {
+  flex: 1;
+  min-width: 200px;
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 0.85rem;
+  padding: 11px 14px;
+  background: #FAFAF7;
+  border-radius: 4px;
+  color: #0F1417;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-break: break-all;
+}
+.invita-link-copy-btn {
+  background: #B8893D;
+  color: #FFFFFF;
+  border: none;
+  padding: 11px 22px;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .2s ease;
+}
+.invita-link-copy-btn:hover { background: #9F7820; }
+
+/* D · Share buttons */
+.invita-share-buttons { margin-bottom: 22px; }
+.invita-share-title {
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(15,20,23,0.55);
+  margin: 0 0 12px;
+  font-weight: 500;
+}
+.invita-share-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+@media (max-width: 480px) { .invita-share-grid { grid-template-columns: repeat(2, 1fr); } }
+.invita-share-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 10px;
+  background: #FFFFFF;
+  border: 1px solid rgba(15,20,23,0.08);
+  border-radius: 6px;
+  text-decoration: none;
+  color: #0F1417;
+  cursor: pointer;
+  transition: border-color .2s ease, background .2s ease, transform .15s ease;
+}
+.invita-share-btn:hover {
+  border-color: #B8893D;
+  background: rgba(184,137,61,0.04);
+  color: #B8893D;
+  transform: translateY(-1px);
+}
+.invita-share-label {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+.invita-share-hint {
+  font-size: 0.78rem;
+  color: rgba(15,20,23,0.5);
+  margin-top: 12px;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* E · Stats gamificato + tier ladder */
+.invita-stats { margin-bottom: 22px; }
+.invita-stats-title {
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(15,20,23,0.55);
+  margin: 0 0 12px;
+  font-weight: 500;
+}
+.invita-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+@media (max-width: 480px) { .invita-stats-grid { grid-template-columns: 1fr; } }
+.invita-stat-card {
+  background: #FFFFFF;
+  border: 1px solid rgba(15,20,23,0.08);
+  padding: 16px 12px;
+  text-align: center;
+  border-radius: 6px;
+}
+.invita-stat-value {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 2rem;
+  font-weight: 300;
+  color: #B8893D;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.invita-stat-tier {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #0F1417;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.invita-stat-card-tier .invita-stat-tier { color: #B8893D; }
+.invita-stat-label {
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 0.7rem;
+  color: rgba(15,20,23,0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 6px;
+}
+.invita-tier-ladder {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  background: #FAFAF7;
+  border: 1px solid rgba(15,20,23,0.06);
+  border-radius: 6px;
+  font-size: 0.82rem;
+}
+.invita-tier-step {
+  color: rgba(15,20,23,0.5);
+  padding: 5px 8px;
+  border-radius: 4px;
+}
+.invita-tier-step.active {
+  color: #0F1417;
+  font-weight: 600;
+  background: rgba(184,137,61,0.1);
+}
+
+/* F · How it works */
+.invita-howitworks { margin-bottom: 22px; }
+.invita-howitworks-title {
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(15,20,23,0.55);
+  margin: 0 0 12px;
+  font-weight: 500;
+}
+.invita-howitworks-steps {
+  padding-left: 22px;
+  margin: 0;
+}
+.invita-howitworks-steps li {
+  margin-bottom: 12px;
+  font-size: 0.92rem;
+  color: rgba(15,20,23,0.7);
+  line-height: 1.55;
+}
+.invita-howitworks-steps strong {
+  color: #0F1417;
+  display: block;
+  margin-bottom: 2px;
+}

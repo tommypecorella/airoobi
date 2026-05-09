@@ -24,9 +24,9 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>[data-lang="it"] .en,[data-lang="en"] .it{display:none!important}</style>
-<link rel="stylesheet" href="/src/tokens.css?v=4.9.0">
-<link rel="stylesheet" href="/src/dapp.css?v=4.9.0">
-<link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.9.0">
+<link rel="stylesheet" href="/src/tokens.css?v=4.10.0">
+<link rel="stylesheet" href="/src/dapp.css?v=4.10.0">
+<link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.10.0">
 <link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -837,38 +837,117 @@
     -->
   </div>
 
-  <!-- ═══ REFERRAL TAB ═══ -->
+  <!-- ═══ REFERRAL TAB · Round 8 content rewrite ═══ -->
   <div id="tab-referral" style="display:none">
-    <div class="ref-card">
-      <h3><span class="it">Il tuo link per invitare amici</span><span class="en">Your invite link</span></h3>
-      <div class="ref-link-wrap">
-        <div class="ref-link" id="dapp-ref-link">airoobi.app/signup?ref=...</div>
-        <button class="ref-copy" onclick="dappCopyRef()"><span class="it">COPIA</span><span class="en">COPY</span></button>
-      </div>
-      <div class="ref-share">
-        <button class="ref-share-btn" onclick="dappShareRef('whatsapp')">WhatsApp</button>
-        <button class="ref-share-btn" onclick="dappShareRef('telegram')">Telegram</button>
-        <button class="ref-share-btn" onclick="dappShareRef('x')">X / Twitter</button>
-        <button class="ref-share-btn" onclick="dappShareRef('email')">Email</button>
-      </div>
-    </div>
 
-    <div class="ref-stats">
-      <div class="ref-stat">
-        <div class="ref-stat-val" id="dapp-ref-count">0</div>
-        <div class="ref-stat-label"><span class="it">Invitati</span><span class="en">Invited</span></div>
+    <!-- A · Hero header -->
+    <section class="invita-hero">
+      <div class="invita-hero-eyebrow">Alpha Brave Referral</div>
+      <h2 class="invita-hero-title">
+        <span class="it">Invita un amico, <em>guadagnate insieme</em>.</span>
+        <span class="en">Invite a friend, <em>earn together</em>.</span>
+      </h2>
+      <p class="invita-hero-subtitle">
+        <span class="it">Per ogni amico che si registra e fa il primo login: <strong>tu ricevi +5 ROBI</strong>, lui riceve <strong>+5 ROBI</strong>. &Egrave; l'unico modo per accumulare ROBI senza partecipare agli airdrop.</span>
+        <span class="en">For each friend who signs up and completes first login: <strong>you get +5 ROBI</strong>, they get <strong>+5 ROBI</strong>. It's the only way to grow ROBI without joining airdrops.</span>
+      </p>
+      <div class="invita-hero-value-pill">
+        <span class="invita-hero-value-amount">&asymp; &euro;11,16</span>
+        <span class="invita-hero-value-label">
+          <span class="it">valore generato per ogni invito confermato</span>
+          <span class="en">value generated per confirmed invite</span>
+        </span>
       </div>
-      <div class="ref-stat">
-        <div class="ref-stat-val" id="dapp-ref-confirmed">0</div>
-        <div class="ref-stat-label"><span class="it">Confermati</span><span class="en">Confirmed</span></div>
+    </section>
+
+    <!-- B · Scarcity hook Alpha Brave -->
+    <section class="invita-scarcity">
+      <div class="invita-scarcity-content">
+        <strong class="invita-scarcity-title">
+          <span class="it">Adesso vale doppio.</span>
+          <span class="en">Right now it's worth double.</span>
+        </strong>
+        <p class="invita-scarcity-text">
+          <span class="it">Siamo in fase Alpha Brave &mdash; solo 1.000 posti totali. Chi invita ora porta amici nella community fondante con benefit permanenti (Badge Fondatore, anzianit&agrave; scoring). Quando i 1.000 posti finiscono, le condizioni cambiano.</span>
+          <span class="en">We're in Alpha Brave phase &mdash; only 1,000 spots total. Who invites now brings friends into the founding community with permanent perks (Founder Badge, scoring seniority). When the 1,000 spots fill up, conditions change.</span>
+        </p>
+        <div class="invita-scarcity-counter">
+          <span id="alpha-counter-invita">&mdash;</span>/1000
+          <span class="it">Alpha Brave attivi</span>
+          <span class="en">Alpha Brave active</span>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <div class="ref-card" style="border-color:rgba(74,158,255,.3)">
-      <h3><span class="it">Come funziona</span><span class="en">How it works</span></h3>
-      <p style="margin-bottom:0"><span class="it">1. Condividi il tuo link con amici<br>2. Si registrano su AIROOBI<br>3. Al primo login l'invito si conferma automaticamente<br>4. Tu ricevi <strong style="color:var(--gold)">+5 ROBI</strong> e anche il tuo amico riceve <strong style="color:var(--gold)">+5 ROBI</strong></span><span class="en">1. Share your link with friends<br>2. They sign up on AIROOBI<br>3. The invite auto-confirms at their first login<br>4. You get <strong style="color:var(--gold)">+5 ROBI</strong> and your friend also gets <strong style="color:var(--gold)">+5 ROBI</strong></span></p>
-    </div>
+    <!-- C · Link box CTA gold prominent -->
+    <section class="invita-link-box">
+      <h3 class="invita-link-title"><span class="it">Il tuo link personale</span><span class="en">Your personal link</span></h3>
+      <div class="invita-link-row">
+        <code class="invita-link-url" id="dapp-ref-link">airoobi.app/signup?ref=...</code>
+        <button class="invita-link-copy-btn" onclick="copyReferralLink(this)"><span class="it">COPIA</span><span class="en">COPY</span></button>
+      </div>
+    </section>
 
+    <!-- D · Share buttons preset message -->
+    <section class="invita-share-buttons">
+      <h3 class="invita-share-title"><span class="it">Condividi in 1 click</span><span class="en">Share in 1 click</span></h3>
+      <div class="invita-share-grid">
+        <a href="#" class="invita-share-btn invita-share-whatsapp" onclick="shareReferral('whatsapp', event)">
+          <span class="invita-share-label">WhatsApp</span>
+        </a>
+        <a href="#" class="invita-share-btn invita-share-telegram" onclick="shareReferral('telegram', event)">
+          <span class="invita-share-label">Telegram</span>
+        </a>
+        <a href="#" class="invita-share-btn invita-share-twitter" onclick="shareReferral('twitter', event)">
+          <span class="invita-share-label">X / Twitter</span>
+        </a>
+        <a href="#" class="invita-share-btn invita-share-email" onclick="shareReferral('email', event)">
+          <span class="invita-share-label">Email</span>
+        </a>
+      </div>
+      <p class="invita-share-hint">
+        <span class="it">Click apre l'app con messaggio gi&agrave; pronto. Personalizza prima di inviare se vuoi.</span>
+        <span class="en">Click opens the app with a ready message. Customize before sending if you want.</span>
+      </p>
+    </section>
+
+    <!-- E · Counter gamificato + tier ladder -->
+    <section class="invita-stats">
+      <h3 class="invita-stats-title"><span class="it">Il tuo impatto Alpha Brave</span><span class="en">Your Alpha Brave impact</span></h3>
+      <div class="invita-stats-grid">
+        <div class="invita-stat-card">
+          <div class="invita-stat-value" id="dapp-ref-count">0</div>
+          <div class="invita-stat-label"><span class="it">Invitati</span><span class="en">Invited</span></div>
+        </div>
+        <div class="invita-stat-card">
+          <div class="invita-stat-value" id="dapp-ref-confirmed">0</div>
+          <div class="invita-stat-label"><span class="it">Confermati</span><span class="en">Confirmed</span></div>
+        </div>
+        <div class="invita-stat-card invita-stat-card-tier">
+          <div class="invita-stat-tier" id="referral-tier">&mdash;</div>
+          <div class="invita-stat-label"><span class="it">Tier referral</span><span class="en">Referral tier</span></div>
+        </div>
+      </div>
+      <div class="invita-tier-ladder">
+        <div class="invita-tier-step" data-tier="bronze">🥉 Bronze &middot; 1+ <span class="it">confermati</span><span class="en">confirmed</span></div>
+        <div class="invita-tier-step" data-tier="silver">🥈 Silver &middot; 5+ <span class="it">confermati</span><span class="en">confirmed</span></div>
+        <div class="invita-tier-step" data-tier="gold">🥇 Gold &middot; 10+ <span class="it">confermati</span><span class="en">confirmed</span></div>
+        <div class="invita-tier-step" data-tier="platinum">💎 Platinum &middot; 25+ <span class="it">confermati</span><span class="en">confirmed</span></div>
+      </div>
+    </section>
+
+    <!-- F · Come funziona expanded Alpha Brave context -->
+    <section class="invita-howitworks">
+      <h3 class="invita-howitworks-title"><span class="it">Come funziona</span><span class="en">How it works</span></h3>
+      <ol class="invita-howitworks-steps">
+        <li><strong><span class="it">Condividi il tuo link</span><span class="en">Share your link</span></strong><span class="it"> &middot; click sui pulsanti share o copia il link e mandalo dove vuoi.</span><span class="en"> &middot; click the share buttons or copy the link and send it anywhere.</span></li>
+        <li><strong><span class="it">Il tuo amico si registra</span><span class="en">Your friend signs up</span></strong><span class="it"> &middot; prima di chiudere i 1.000 posti Alpha Brave.</span><span class="en"> &middot; before the 1,000 Alpha Brave spots close.</span></li>
+        <li><strong><span class="it">Al primo login l'invito si conferma</span><span class="en">Invite confirms at first login</span></strong><span class="it"> &middot; automatico, nessuna azione manuale.</span><span class="en"> &middot; automatic, no manual action.</span></li>
+        <li><strong><span class="it">Ricevete entrambi +5 ROBI</span><span class="en">You both get +5 ROBI</span></strong><span class="it"> &middot; &asymp; &euro;11 di valore generato in totale, spalmato tra te e il tuo amico.</span><span class="en"> &middot; &asymp; &euro;11 of value generated total, split between you and your friend.</span></li>
+      </ol>
+    </section>
+
+    <!-- History sections preserved (loadDappReferral wires them) -->
     <div class="ref-history-section">
       <h3 class="ref-history-title"><span class="it">Chi hai invitato</span><span class="en">People you invited</span></h3>
       <div id="dapp-ref-invited-header" class="ref-history-header" style="display:none;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase;padding:8px 12px;border-bottom:1px solid var(--gray-700);margin-bottom:6px">
@@ -1351,7 +1430,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.09-4.9.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.09-4.10.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1423,6 +1502,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.9.0"></script>
+<script src="/src/dapp.js?v=4.10.0"></script>
 </body>
 </html>

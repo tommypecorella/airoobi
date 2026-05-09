@@ -1047,7 +1047,11 @@ async function loadDappReferral(){
   if(confirmed&&confirmed.length){
     confirmed.forEach(function(c){confirmedMap[c.referred_id]=c.confirmed_at;});
   }
-  document.getElementById('dapp-ref-confirmed').textContent=confirmed?confirmed.length:0;
+  var confirmedCount=confirmed?confirmed.length:0;
+  document.getElementById('dapp-ref-confirmed').textContent=confirmedCount;
+  // Round 8 · render tier + alpha counter
+  if(typeof renderReferralTier==='function')renderReferralTier(confirmedCount);
+  if(typeof loadAlphaCounterInvita==='function')loadAlphaCounterInvita();
 
   // History: who you invited (source: profiles.referred_by)
   var invList=document.getElementById('dapp-ref-invited-list');
@@ -1096,11 +1100,81 @@ function dappCopyRef(){
   var link=document.getElementById('dapp-ref-link').dataset.link;
   if(!link)return;
   navigator.clipboard.writeText(link).then(function(){
-    var btn=document.querySelector('#tab-referral .ref-copy');
+    var btn=document.querySelector('#tab-referral .ref-copy, #tab-referral .invita-link-copy-btn');
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    if(btn){
+      btn.textContent=lang==='it'?'COPIATO!':'COPIED!';
+      setTimeout(function(){btn.innerHTML='<span class="it">COPIA</span><span class="en">COPY</span>'},2000);
+    }
+  });
+}
+
+// Round 8 · /invita Content Rewrite helpers
+function copyReferralLink(btn){
+  var link=document.getElementById('dapp-ref-link').dataset.link;
+  if(!link)return;
+  navigator.clipboard.writeText(link).then(function(){
     var lang=document.documentElement.getAttribute('data-lang')||'it';
     btn.textContent=lang==='it'?'COPIATO!':'COPIED!';
     setTimeout(function(){btn.innerHTML='<span class="it">COPIA</span><span class="en">COPY</span>'},2000);
   });
+}
+
+function shareReferral(platform,event){
+  if(event&&event.preventDefault)event.preventDefault();
+  var el=document.getElementById('dapp-ref-link');if(!el)return;
+  var link=el.dataset.link||el.textContent.trim();if(!link)return;
+  var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  var msgs={
+    it:{
+      whatsapp:'Ehi, ti consiglio AIROOBI: nuovo marketplace dove ricevi oggetti reali partecipando agli airdrop. Siamo in Alpha Brave (solo 1.000 posti, anche tu prendi 5 ROBI bonus se ti registri). Entra qui: '+link,
+      telegram:'Su AIROOBI ricevi oggetti reali partecipando agli airdrop su blockchain Kaspa. Adesso siamo in Alpha Brave (1.000 posti, +5 ROBI bonus se ti registri tramite questo link): '+link,
+      twitter:'Su @airoobi_com ricevi oggetti reali partecipando agli airdrop. Marketplace skill-based su Kaspa. Alpha Brave aperto (1.000 posti). +5 ROBI bonus se ti registri qui: '+link,
+      email_subject:'Ti voglio in AIROOBI · Alpha Brave',
+      email_body:'Ciao,\n\nti scrivo per consigliarti AIROOBI: il nuovo marketplace su blockchain Kaspa dove ricevi oggetti reali partecipando agli airdrop.\n\nAdesso siamo in fase Alpha Brave — solo 1.000 posti totali. Se ti registri tramite il mio link, prendi +5 ROBI di bonus benvenuto e diventi Alpha Brave (benefit permanenti che chi entra dopo non avrà mai).\n\nLink: '+link+'\n\nDammi un colpo se vuoi che ti spiego come funziona.\n\nGrazie!'
+    },
+    en:{
+      whatsapp:'Hey, I recommend AIROOBI: new marketplace where you get real items by joining airdrops. We\'re in Alpha Brave (only 1,000 spots, you also get 5 ROBI bonus if you sign up). Join here: '+link,
+      telegram:'On AIROOBI you get real items by joining airdrops on Kaspa blockchain. We\'re in Alpha Brave now (1,000 spots, +5 ROBI bonus if you sign up via this link): '+link,
+      twitter:'On @airoobi_com you get real items by joining airdrops. Skill-based marketplace on Kaspa. Alpha Brave open (1,000 spots). +5 ROBI bonus if you sign up here: '+link,
+      email_subject:'I want you on AIROOBI · Alpha Brave',
+      email_body:'Hi,\n\nI\'m writing to recommend AIROOBI: the new marketplace on Kaspa blockchain where you get real items by joining airdrops.\n\nWe\'re now in Alpha Brave phase — only 1,000 spots total. If you sign up via my link, you get +5 ROBI welcome bonus and become Alpha Brave (permanent perks that later joiners won\'t ever have).\n\nLink: '+link+'\n\nLet me know if you want me to explain how it works.\n\nThanks!'
+    }
+  };
+  var m=msgs[lang]||msgs.it;
+  if(platform==='whatsapp')window.open('https://wa.me/?text='+encodeURIComponent(m.whatsapp),'_blank');
+  else if(platform==='telegram')window.open('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(m.telegram),'_blank');
+  else if(platform==='twitter'||platform==='x')window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(m.twitter),'_blank');
+  else if(platform==='email')window.location.href='mailto:?subject='+encodeURIComponent(m.email_subject)+'&body='+encodeURIComponent(m.email_body);
+}
+
+function calculateReferralTier(confirmedCount){
+  if(confirmedCount>=25)return{tier:'platinum',label:'💎 Platinum',next:null};
+  if(confirmedCount>=10)return{tier:'gold',label:'🥇 Gold',next:25};
+  if(confirmedCount>=5)return{tier:'silver',label:'🥈 Silver',next:10};
+  if(confirmedCount>=1)return{tier:'bronze',label:'🥉 Bronze',next:5};
+  return{tier:'none',label:'—',next:1};
+}
+
+function renderReferralTier(confirmedCount){
+  var t=calculateReferralTier(confirmedCount);
+  var el=document.getElementById('referral-tier');
+  if(el)el.textContent=t.label;
+  var steps=document.querySelectorAll('.invita-tier-step');
+  steps.forEach(function(s){if(s.dataset.tier===t.tier)s.classList.add('active');else s.classList.remove('active');});
+}
+
+async function loadAlphaCounterInvita(){
+  var el=document.getElementById('alpha-counter-invita');if(!el)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}
+    });
+    if(res.ok){
+      var range=res.headers.get('content-range');
+      if(range){var total=parseInt(range.split('/')[1],10)||0;el.textContent=total;}
+    }
+  }catch(e){}
 }
 
 function dappShareRef(platform){
