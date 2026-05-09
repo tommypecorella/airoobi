@@ -4,6 +4,19 @@ Disallow: /abo
 Disallow: /admin
 Disallow: /api/
 Disallow: /supabase/
+Disallow: /portafoglio
+Disallow: /portafoglio-dapp
+Disallow: /classifica
+Disallow: /vendi
+Disallow: /proponi
+Disallow: /referral
+Disallow: /referral-dapp
+Disallow: /esplora
+Disallow: /archivio
+Disallow: /miei-airdrop
+Disallow: /profilo
+Disallow: /guadagni
+Disallow: /dashboard
 
 Sitemap: https://www.airoobi.com/sitemap.xml
 Sitemap: https://www.airoobi.app/sitemap.xml

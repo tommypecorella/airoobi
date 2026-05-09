@@ -25,8 +25,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="/src/tokens.css?v=4.1.0">
-<link rel="stylesheet" href="/src/topbar.css?v=4.1.0">
+<link rel="stylesheet" href="/src/tokens.css?v=4.2.0">
+<link rel="stylesheet" href="/src/topbar.css?v=4.2.0">
 <script src="/src/theme.js" defer></script>
 <style>
 /*
@@ -189,7 +189,57 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .skel{background:linear-gradient(90deg,#F0EDE5 25%,#E5E1D6 50%,#F0EDE5 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:var(--radius-lg)}
 .skel-card{height:320px}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+/* Latest blog teasers (M5) */
+.blog-teaser-section{max-width:1080px;margin:32px auto;padding:0 24px}
+.blog-teaser-header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:8px}
+.blog-teaser-title{font-family:var(--font-h);font-size:clamp(1.4rem,3vw,1.8rem);font-weight:600;font-style:italic;color:var(--ink)}
+.blog-teaser-link{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;color:var(--gold);text-decoration:none;text-transform:uppercase;font-weight:600;transition:opacity .25s}
+.blog-teaser-link:hover{opacity:.7}
+.blog-teaser-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.blog-teaser-card{display:flex;flex-direction:column;background:rgba(184,137,61,.04);border:.5px solid var(--line);border-radius:var(--radius-lg);padding:24px;text-decoration:none;color:inherit;transition:all .25s;min-height:200px}
+.blog-teaser-card:hover{border-color:var(--gold);background:rgba(184,137,61,.06);transform:translateY(-2px)}
+.blog-teaser-card h3{font-family:var(--font-h);font-size:1.05rem;font-weight:600;line-height:1.35;color:var(--ink);margin-bottom:10px}
+.blog-teaser-card p{font-family:var(--font-b);font-size:.85rem;color:var(--ink-soft);line-height:1.55;flex:1}
+.blog-teaser-card-cta{font-family:var(--font-m);font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-top:14px}
 </style>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://www.airoobi.app/#organization",
+      "name": "AIROOBI",
+      "url": "https://www.airoobi.app",
+      "logo": "https://www.airoobi.app/logo-black.png",
+      "description": "Marketplace bidirezionale skill-based su blockchain Kaspa. Compra e vendi oggetti di valore partecipando agli airdrop.",
+      "sameAs": [
+        "https://www.airoobi.com",
+        "https://twitter.com/airoobi_com"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.airoobi.app/#website",
+      "url": "https://www.airoobi.app",
+      "name": "AIROOBI",
+      "description": "Marketplace bidirezionale su Kaspa. Skill-based. Compra, vendi, partecipa.",
+      "publisher": { "@id": "https://www.airoobi.app/#organization" },
+      "inLanguage": ["it-IT", "en-US"],
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://www.airoobi.app/airdrops?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -205,7 +255,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 
 <!-- TOPBAR (shared component) -->
 <div id="topbar-mount" data-active="home"></div>
-<script src="/src/topbar.js?v=4.1.0"></script>
+<script src="/src/topbar.js?v=4.2.0"></script>
 
 <!-- HERO -->
 <section class="hero">
@@ -317,6 +367,31 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
   </div>
 </section>
 
+<!-- LATEST BLOG TEASERS (M5) -->
+<section class="blog-teaser-section">
+  <div class="blog-teaser-header">
+    <h2 class="blog-teaser-title"><span class="it">Ultimi articoli</span><span class="en">Latest articles</span></h2>
+    <a href="/blog" class="blog-teaser-link"><span class="it">Tutti gli articoli &rarr;</span><span class="en">All articles &rarr;</span></a>
+  </div>
+  <div class="blog-teaser-grid">
+    <a href="/blog/web3-marketplace-prossima-generazione-commercio.html" class="blog-teaser-card">
+      <h3>Web3 e marketplace: come il commercio cambierà nei prossimi 5 anni</h3>
+      <p>Da Web1 ai cataloghi online, da Web2 ad Amazon e eBay, fino a Web3 con blockchain e token. Come evolverà il commercio digitale e qual è il ruolo di AIROOBI.</p>
+      <span class="blog-teaser-card-cta"><span class="it">Leggi</span><span class="en">Read</span> &rarr;</span>
+    </a>
+    <a href="/blog/vendere-oggetti-di-lusso-online-alternative-ebay.html" class="blog-teaser-card">
+      <h3>Vendere oggetti di lusso online: le alternative a eBay che non conosci</h3>
+      <p>Commissioni alte, frodi e guerre di offerte: i problemi di eBay per il lusso. Scopri le alternative più sicure, incluso il modello airdrop di AIROOBI su Kaspa.</p>
+      <span class="blog-teaser-card-cta"><span class="it">Leggi</span><span class="en">Read</span> &rarr;</span>
+    </a>
+    <a href="/blog/venditore-airoobi-come-mettere-oggetto-airdrop.html" class="blog-teaser-card">
+      <h3>Sei un venditore? Ecco come mettere il tuo oggetto in airdrop</h3>
+      <p>Guida completa per i venditori AIROOBI: come proporre il tuo oggetto, cosa succede durante la valutazione, e come ricevi il pagamento in KAS a prezzo di mercato garantito.</p>
+      <span class="blog-teaser-card-cta"><span class="it">Leggi</span><span class="en">Read</span> &rarr;</span>
+    </a>
+  </div>
+</section>
+
 <!-- ADS -->
 <div class="ads-section">
   <iframe data-aa="2429619" src="//ad.a-ads.com/2429619?size=728x90" style="width:728px;max-width:100%;height:90px;border:0;padding:0;overflow:hidden;background:transparent"></iframe>
@@ -335,7 +410,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
   </div>
   <div class="landing-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>
   <div class="landing-footer-motto"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div class="landing-footer-ver">alfa-2026.05.09-4.1.0</div>
+  <div class="landing-footer-ver">alfa-2026.05.09-4.2.0</div>
 </footer>
 
 <script>

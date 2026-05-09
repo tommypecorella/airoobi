@@ -3,11 +3,73 @@
   "outputDirectory": ".",
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/dapp.html",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
         { "key": "Pragma", "value": "no-cache" },
         { "key": "Expires", "value": "0" }
+      ]
+    },
+    {
+      "source": "/home.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
+        { "key": "Pragma", "value": "no-cache" },
+        { "key": "Expires", "value": "0" }
+      ]
+    },
+    {
+      "source": "/abo.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/login.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/signup.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/landing.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+      ]
+    },
+    {
+      "source": "/blog.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+      ]
+    },
+    {
+      "source": "/faq.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+      ]
+    },
+    {
+      "source": "/come-funziona-airdrop.html",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+      ]
+    },
+    {
+      "source": "/blog/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(css|js|png|jpg|jpeg|svg|webp|woff2|woff|ico)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=604800" }
       ]
     }
   ],
@@ -40,7 +102,7 @@
     { "source": "/referral", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/portafoglio", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/archivio", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/impara", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/impara", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
     { "source": "/referral-dapp", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/portafoglio-dapp", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/profilo", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
@@ -68,7 +130,7 @@
     { "source": "/referral-dapp", "destination": "/dapp.html" },
     { "source": "/portafoglio-dapp", "destination": "/dapp.html" },
     { "source": "/archivio", "destination": "/dapp.html" },
-    { "source": "/impara", "destination": "/dapp.html" },
+    { "source": "/impara", "destination": "/come-funziona-airdrop.html" },
     { "source": "/dashboard", "destination": "/home.html" },
     { "source": "/profilo", "destination": "/home.html" },
     { "source": "/portafoglio", "destination": "/home.html" },
