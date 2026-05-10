@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&amp;family=DM+Mono:wght@400;500&amp;family=Instrument+Sans:wght@500;700&amp;display=swap');
+      .logo { font-family: 'Instrument Sans', system-ui, sans-serif; font-weight: 700; font-size: 64px; letter-spacing: 8px; fill: #FFFFFF; }
+      .tagline { font-family: 'DM Mono', monospace; font-weight: 500; font-size: 13px; letter-spacing: 6px; fill: #B8960C; text-transform: uppercase; }
+      .title { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-style: italic; font-weight: 600; font-size: 50px; fill: url(#goldGrad); }
+      .subtitle { font-family: 'Cormorant Garamond', 'Times New Roman', serif; font-style: italic; font-weight: 500; font-size: 26px; fill: #aaaaaa; }
+      .bullet-text { font-family: 'DM Mono', monospace; font-weight: 500; font-size: 18px; letter-spacing: 2px; fill: #B8893D; text-transform: uppercase; }
+      .bullet-dot { font-family: 'DM Mono', monospace; font-weight: 700; font-size: 22px; fill: #B8960C; }
+      .footer { font-family: 'DM Mono', monospace; font-weight: 400; font-size: 14px; letter-spacing: 3px; fill: #888888; }
+    </style>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B8960C"/>
+      <stop offset="50%" stop-color="#d4af37"/>
+      <stop offset="100%" stop-color="#B8960C"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#000000"/>
+
+  <!-- Top hairline accent -->
+  <line x1="0" y1="0" x2="1200" y2="0" stroke="#B8960C" stroke-width="2"/>
+
+  <!-- Logo block -->
+  <text x="600" y="135" text-anchor="middle" class="logo">AIROOBI</text>
+  <text x="600" y="175" text-anchor="middle" class="tagline">DREAM ROBE E-COMMERCE</text>
+
+  <!-- Decorative gold rule -->
+  <line x1="500" y1="205" x2="700" y2="205" stroke="#B8960C" stroke-width="1" opacity="0.6"/>
+
+  <!-- Title -->
+  <text x="600" y="265" text-anchor="middle" class="title">Il marketplace degli airdrop di oggetti reali.</text>
+
+  <!-- Subtitle (2 lines) -->
+  <text x="600" y="325" text-anchor="middle" class="subtitle">Guadagni ARIA ogni giorno. Chi ne accumula di pi&#249; riceve l'oggetto.</text>
+  <text x="600" y="358" text-anchor="middle" class="subtitle">Tutti gli altri guadagnano ROBI.</text>
+
+  <!-- 3 bullet columns -->
+  <g transform="translate(0, 450)">
+    <text x="200" y="0" text-anchor="middle" class="bullet-dot">&#9679;</text>
+    <text x="200" y="32" text-anchor="middle" class="bullet-text">ARIA GRATIS</text>
+    <text x="200" y="58" text-anchor="middle" class="bullet-text">OGNI GIORNO</text>
+
+    <text x="600" y="0" text-anchor="middle" class="bullet-dot">&#9679;</text>
+    <text x="600" y="32" text-anchor="middle" class="bullet-text">OGGETTI</text>
+    <text x="600" y="58" text-anchor="middle" class="bullet-text">REALI</text>
+
+    <text x="1000" y="0" text-anchor="middle" class="bullet-dot">&#9679;</text>
+    <text x="1000" y="32" text-anchor="middle" class="bullet-text">ROBI GARANTITO</text>
+    <text x="1000" y="58" text-anchor="middle" class="bullet-text">SEMPRE</text>
+  </g>
+
+  <!-- Footer -->
+  <text x="600" y="595" text-anchor="middle" class="footer">airoobi.com  &#183;  ARIA + ROBI  &#183;  Alpha Brave  &#183;  Entra gratis</text>
+
+  <!-- Bottom hairline accent -->
+  <line x1="0" y1="630" x2="1200" y2="630" stroke="#B8960C" stroke-width="2"/>
+</svg>
