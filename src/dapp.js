@@ -1125,20 +1125,21 @@ function shareReferral(platform,event){
   var el=document.getElementById('dapp-ref-link');if(!el)return;
   var link=el.dataset.link||el.textContent.trim();if(!link)return;
   var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  // Round 12 (11 May 2026) · outsider-friendly + seller hook · no jargon Alpha Brave/ROBI/airdrop
   var msgs={
     it:{
-      whatsapp:'Ehi, ti consiglio AIROOBI: nuovo marketplace dove ricevi oggetti reali partecipando agli airdrop. Siamo in Alpha Brave (solo 1.000 posti, anche tu prendi 5 ROBI bonus se ti registri). Entra qui: '+link,
-      telegram:'Su AIROOBI ricevi oggetti reali partecipando agli airdrop su blockchain Kaspa. Adesso siamo in Alpha Brave (1.000 posti, +5 ROBI bonus se ti registri tramite questo link): '+link,
-      twitter:'Su @airoobi_com ricevi oggetti reali partecipando agli airdrop. Marketplace skill-based su Kaspa. Alpha Brave aperto (1.000 posti). +5 ROBI bonus se ti registri qui: '+link,
-      email_subject:'Ti voglio in AIROOBI · Alpha Brave',
-      email_body:'Ciao,\n\nti scrivo per consigliarti AIROOBI: il nuovo marketplace su blockchain Kaspa dove ricevi oggetti reali partecipando agli airdrop.\n\nAdesso siamo in fase Alpha Brave — solo 1.000 posti totali. Se ti registri tramite il mio link, prendi +5 ROBI di bonus benvenuto e diventi Alpha Brave (benefit permanenti che chi entra dopo non avrà mai).\n\nLink: '+link+'\n\nDammi un colpo se vuoi che ti spiego come funziona.\n\nGrazie!'
+      whatsapp:'AIROOBI: il primo negozio online dove gli oggetti non si comprano, si ottengono partecipando. Entra adesso e sfrutta questo primo periodo pre-lancio ufficiale della piattaforma. Per ogni partecipazione vieni premiato. Curioso?\n'+link+'\nRegistrati e potrai anche vendere un tuo oggetto e non dovrai aspettare anni, mesi o settimane per venderlo, solo ore',
+      telegram:'AIROOBI: il primo negozio online dove gli oggetti non si comprano, si ottengono partecipando. Entra adesso e sfrutta questo primo periodo pre-lancio ufficiale della piattaforma. Per ogni partecipazione vieni premiato. Curioso?\n'+link+'\nRegistrati e potrai anche vendere un tuo oggetto e non dovrai aspettare anni, mesi o settimane per venderlo, solo ore',
+      twitter:'Su AIROOBI gli oggetti non si comprano, si ottengono partecipando. Per ogni partecipazione vieni premiato. Curioso? Plus: se hai qualcosa da vendere, qui lo liquidi in ore, non mesi. '+link,
+      email_subject:'AIROOBI · negozio dove gli oggetti non si comprano',
+      email_body:'Ciao,\n\nvolevo consigliarti AIROOBI: è un negozio online dove gli oggetti (smartphone, orologi, tech) non si comprano direttamente — si ottengono partecipando. Per ogni partecipazione vieni premiato.\n\nPlus: se hai qualcosa di valore da vendere, qui lo liquidi in ore, non mesi come eBay/Subito.\n\nSiamo nel primo periodo pre-lancio ufficiale della piattaforma, è il momento giusto per entrare.\n\nProvalo: '+link+'\n\nFammi sapere cosa ne pensi!'
     },
     en:{
-      whatsapp:'Hey, I recommend AIROOBI: new marketplace where you get real items by joining airdrops. We\'re in Alpha Brave (only 1,000 spots, you also get 5 ROBI bonus if you sign up). Join here: '+link,
-      telegram:'On AIROOBI you get real items by joining airdrops on Kaspa blockchain. We\'re in Alpha Brave now (1,000 spots, +5 ROBI bonus if you sign up via this link): '+link,
-      twitter:'On @airoobi_com you get real items by joining airdrops. Skill-based marketplace on Kaspa. Alpha Brave open (1,000 spots). +5 ROBI bonus if you sign up here: '+link,
-      email_subject:'I want you on AIROOBI · Alpha Brave',
-      email_body:'Hi,\n\nI\'m writing to recommend AIROOBI: the new marketplace on Kaspa blockchain where you get real items by joining airdrops.\n\nWe\'re now in Alpha Brave phase — only 1,000 spots total. If you sign up via my link, you get +5 ROBI welcome bonus and become Alpha Brave (permanent perks that later joiners won\'t ever have).\n\nLink: '+link+'\n\nLet me know if you want me to explain how it works.\n\nThanks!'
+      whatsapp:'AIROOBI: the first online store where items aren\'t bought, they\'re earned by participating. Join now and take advantage of this pre-launch period of the platform. Every participation gets rewarded. Curious?\n'+link+'\nSign up and you can also sell your own item — no need to wait years, months or weeks to sell it. Only hours.',
+      telegram:'AIROOBI: the first online store where items aren\'t bought, they\'re earned by participating. Join now and take advantage of this pre-launch period of the platform. Every participation gets rewarded. Curious?\n'+link+'\nSign up and you can also sell your own item — no need to wait years, months or weeks to sell it. Only hours.',
+      twitter:'On AIROOBI items aren\'t bought, they\'re earned by participating. Every participation gets rewarded. Curious? Plus: if you have something to sell, here you liquidate it in hours, not months. '+link,
+      email_subject:'AIROOBI · the store where items aren\'t bought',
+      email_body:'Hi,\n\nI wanted to recommend AIROOBI: it\'s an online store where items (smartphones, watches, tech) aren\'t bought directly — they\'re earned by participating. Every participation gets rewarded.\n\nPlus: if you have something valuable to sell, here you liquidate it in hours, not months like eBay.\n\nWe\'re in the pre-launch period of the platform — perfect timing to join.\n\nTry it: '+link+'\n\nLet me know what you think!'
     }
   };
   var m=msgs[lang]||msgs.it;
