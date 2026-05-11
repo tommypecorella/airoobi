@@ -1364,11 +1364,12 @@ html[data-theme="light"] .explore-toolbar {
  * Section A only · HTML+CSS (NO DB ops · Section B+C+D STOP per Skeezu approve)
  * ═══════════════════════════════════════════════════════════════════════ */
 
-/* A.1 · Badge "DEMO ALPHA" su airdrop card top-right */
+/* A.1 · Badge "DEMO ALPHA" su airdrop card · bottom-right per evitare overlap
+ * con badge "PRESALE 2X MINING" che occupa top-right (Round 13 fix lampo 11 May 2026) */
 .airdrop-badge-demo {
   display: inline-block;
   position: absolute;
-  top: 12px;
+  bottom: 12px;
   right: 12px;
   z-index: 5;
   background: rgba(247,54,89,0.12);

@@ -694,8 +694,21 @@ async function confirmBuy(){
         'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>',
         'INVALID_BLOCK_NUMBER':'<span class="it">Errore blocco.</span><span class="en">Block error.</span>'
       };
-      showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown')+(data.detail?' — '+data.detail:''));
-      if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';}
+      // Round 13: parse PostgREST P0001 RAISE EXCEPTION (sbRpc returns HTTP_4xx
+      // as object with .detail rawBody — never throws — so catch(e) at line ~700
+      // was unreachable for EXCEPTION-based errors).
+      var pgMsg='';
+      if((data.error==='HTTP_400'||data.error==='HTTP_409')&&data.detail){
+        try{var pg=JSON.parse(data.detail);if(pg&&pg.code==='P0001'&&pg.message)pgMsg=pg.message;}catch(_){}
+      }
+      if(pgMsg.indexOf('fairness_block:')===0){
+        showMsg('err',UI_ICONS.ban+' <span class="it">Acquisto bloccato per fairness: non potresti arrivare 1&deg;.</span><span class="en">Purchase blocked for fairness: you can\'t reach #1.</span>');
+        if(!_fairnessBlocked&&_currentDetail){_fairnessBlocked=true;applyFairnessBlock&&applyFairnessBlock();}
+        if(btn){btn.disabled=true;btn.classList.add('loading');btn.innerHTML='<span class="it">Bloccato</span><span class="en">Blocked</span>';}
+      } else {
+        showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown')+(data.detail?' — '+data.detail:''));
+        if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';}
+      }
     }
   }catch(e){
     var emsg=String((e&&e.message)||e||'');
