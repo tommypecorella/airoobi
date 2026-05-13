@@ -86,9 +86,42 @@ Query verifica post-apply:
 
 Nessuno. Schema applicato pulito, zero RLS conflict con tabelle esistenti, helper `is_admin()` riutilizzato (pattern consistent).
 
-## Next chunk Day 1
+## Day 1 chunk 2 · M2 RPCs applied
 
-**Opzione A:** continuo subito con M2 RPCs (~2h tonight)
-**Opzione B:** stop Day 1 dopo M1 · riprendo Day 2 con M2
+**Migration:** `20260513211244_w3_atto1_m2_evalobi_rpcs.sql`
+**Skeezu decision:** opzione A · continuato tonight
+
+### M2 RPCs applicate (scope ridotto strategico)
+
+- ✅ `mint_evalobi(p_seller_id, p_object_×7, p_outcome, p_price_range, p_reasoning, p_admin_id, p_evaluation_request_id?, p_supersedes_evalobi_id?)` → `RETURNS (evalobi_id UUID, token_id BIGINT)` · SECURITY DEFINER · admin-only via `is_admin()` · supersession chain auto-version
+- ✅ `transfer_evalobi(p_evalobi_id, p_new_owner_id)` → `RETURNS UUID` · SECURITY DEFINER · current_owner OR admin · `FOR UPDATE` row lock
+- ⏸ `re_evaluate_evalobi` · deferred a M4 (orchestratore evaluation_requests M3)
+
+### Smoke tests M2
+
+- ✅ Structural: pg_proc record DEFINER security_type · return types corretti (record / uuid)
+- ✅ Negative auth (postgres role no JWT): `42501` raised correttamente · mensage `mint_evalobi: caller is not admin (auth.uid=<NULL>)`
+- ⏸ Positive auth (CEO admin JWT): deferred a integration test Area 2/M4 frontend
+
+### Atomicità garantita
+
+- `mint_evalobi` · INSERT evalobi → INSERT history `minted` → (if supersession) INSERT history `superseded` sul vecchio · tutto in single transaction
+- `transfer_evalobi` · FOR UPDATE lock → UPDATE owner → INSERT history `transferred`
+
+## Sprint W3 Day 1 · totale prodotto
+
+- 2 migrations applicate (M1 schema, M2 RPCs)
+- 9 RLS policies attive
+- 10 indexes
+- 2 SECURITY DEFINER functions
+- Branch sprint-w3 con 2 commits
+- Zero blocker outstanding
+
+## Next session (Day 2)
+
+- M3 `evaluation_requests` table + RLS + GRANT
+- M4 `submit_evaluation_request` + `admin_evaluate_request` + `re_evaluate_evalobi` orchestrators
+- Email notification edge function (tier critico)
+- Auto-escalation 24h post-SLA cron
 
 — CCP · 13 May 2026 W2 Day 9 night
