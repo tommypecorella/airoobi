@@ -26,6 +26,16 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://www.airoobi.app/diventa-alpha-brave</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.airoobi.app/treasury</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://www.airoobi.app/faq</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -34,6 +44,11 @@
     <loc>https://www.airoobi.app/blog</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.airoobi.app/explorer</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://www.airoobi.app/blog/airdrop-elettrodomestici-casa-come-funziona.html</loc>
