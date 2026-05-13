@@ -94,6 +94,10 @@
     { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/sitemap-com.xml" },
 
     { "source": "/evalobi/:token_id", "destination": "/api/evalobi-ssr?token_id=:token_id" },
+    { "source": "/sla", "destination": "/api/sla-ssr" },
+
+    { "source": "/tokens", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/tokens.html" },
+    { "source": "/tokens", "destination": "/tokens.html" },
 
     { "source": "/diventa-alpha-brave", "destination": "/diventa-alpha-brave.html" },
     { "source": "/treasury", "destination": "/treasury.html" },
@@ -102,7 +106,7 @@
     { "source": "/dashboard", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/blog", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/blog.html" },
     { "source": "/airdrops", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/airdrops-public.html" },
-    { "source": "/airdrops/:id", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/airdrop.html" },
+    { "source": "/airdrops/:id", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/api/airdrop-ssr?id=:id" },
     { "source": "/esplora", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/miei-airdrop", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/proponi", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
@@ -130,7 +134,7 @@
     { "source": "/", "destination": "/home.html" },
     { "source": "/dapp", "destination": "/dapp.html" },
     { "source": "/airdrops", "destination": "/airdrops-public.html" },
-    { "source": "/airdrops/:id", "destination": "/airdrop.html" },
+    { "source": "/airdrops/:id", "destination": "/api/airdrop-ssr?id=:id" },
     { "source": "/esplora", "destination": "/dapp.html" },
     { "source": "/miei-airdrop", "destination": "/dapp.html" },
     { "source": "/proponi", "destination": "/dapp.html" },

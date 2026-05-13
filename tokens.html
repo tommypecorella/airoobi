@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tokens · AIROOBI · ARIA, KAS, ROBI</title>
+  <meta name="description" content="Schema dei tre asset AIROOBI: ARIA (utility coin testnet) · KAS (Kaspa blockchain) · ROBI (reward NFT treasury-backed). Flussi swap e ruolo di ogni token nell'ecosistema.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.airoobi.app/tokens">
+
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.airoobi.app/tokens">
+  <meta property="og:title" content="Tokens · AIROOBI · ARIA, KAS, ROBI">
+  <meta property="og:description" content="Tre asset · un ecosistema coerente. Scopri ARIA · KAS · ROBI.">
+  <meta property="og:image" content="https://www.airoobi.app/og-image.png?v=4.13.5">
+
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --black: #000000; --gold: #B8960C; --white: #FFFFFF;
+      --gray-900: #0a0a0a; --gray-800: #1a1a1a; --gray-700: #2a2a2a;
+      --gray-500: #8b8b8b; --gray-300: #d4d4d4;
+      --aria: #4A9EFF; --kas: #49EACB;
+      --font-h: 'Cormorant Garamond', serif;
+      --font-b: 'Instrument Sans', sans-serif;
+      --font-m: 'DM Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { background: var(--black); color: var(--white); font-family: var(--font-b); line-height: 1.6; -webkit-font-smoothing: antialiased; }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 24px 20px; width: 100%; }
+
+    header.brand { padding: 28px 0 20px; border-bottom: 1px solid var(--gray-700); display: flex; justify-content: space-between; align-items: center; }
+    header.brand .logo { font-family: var(--font-h); font-size: 28px; font-weight: 700; letter-spacing: 4px; color: var(--gold); text-decoration: none; }
+    header.brand nav a { font-family: var(--font-m); font-size: 12px; letter-spacing: 2px; color: var(--gray-300); text-decoration: none; margin-left: 24px; text-transform: uppercase; }
+    header.brand nav a:hover { color: var(--gold); }
+
+    .hero { padding: 80px 0 48px; text-align: center; }
+    .hero .eyebrow { font-family: var(--font-m); font-size: 12px; letter-spacing: 3px; color: var(--gray-500); text-transform: uppercase; margin-bottom: 16px; }
+    .hero h1 { font-family: var(--font-h); font-size: 56px; font-weight: 500; line-height: 1.1; margin-bottom: 16px; }
+    .hero .sub { font-size: 18px; color: var(--gray-300); max-width: 600px; margin: 0 auto; }
+
+    .schema-wrap { margin: 48px 0 64px; background: var(--gray-900); border: 1px solid var(--gray-700); border-radius: 8px; padding: 32px; text-align: center; }
+    .schema-wrap img { max-width: 100%; height: auto; }
+
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin: 48px 0; }
+    .card { background: var(--gray-900); border: 1px solid var(--gray-700); border-radius: 8px; padding: 32px; transition: border-color .2s; }
+    .card:hover { border-color: var(--gold); }
+    .card .token-label { font-family: var(--font-m); font-size: 11px; letter-spacing: 2.5px; color: var(--gray-500); text-transform: uppercase; margin-bottom: 8px; }
+    .card h2 { font-family: var(--font-h); font-size: 48px; font-weight: 500; margin-bottom: 4px; }
+    .card .tagline { font-size: 14px; color: var(--gray-300); margin-bottom: 24px; font-style: italic; }
+    .card h2.aria { color: var(--aria); }
+    .card h2.kas { color: var(--kas); }
+    .card h2.robi { color: var(--gold); }
+    .card .stat { font-family: var(--font-m); font-size: 12px; letter-spacing: 1.5px; color: var(--gray-500); margin-bottom: 16px; }
+    .card p { font-size: 15px; color: var(--gray-300); margin-bottom: 12px; }
+    .card ul { list-style: none; padding-left: 0; margin: 16px 0; }
+    .card li { font-size: 14px; color: var(--gray-300); padding: 4px 0; padding-left: 16px; position: relative; }
+    .card li::before { content: '·'; position: absolute; left: 0; color: var(--gold); font-weight: 700; }
+
+    .flows { padding: 48px 0; border-top: 1px solid var(--gray-700); margin-top: 32px; }
+    .flows h2 { font-family: var(--font-h); font-size: 36px; margin-bottom: 8px; color: var(--white); font-weight: 500; }
+    .flows .sub { color: var(--gray-300); margin-bottom: 32px; }
+    .flow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .flow { padding: 20px 24px; background: var(--gray-900); border-left: 3px solid var(--gold); border-radius: 4px; }
+    .flow .pair { font-family: var(--font-m); font-size: 14px; letter-spacing: 1.5px; color: var(--gold); margin-bottom: 8px; }
+    .flow .desc { font-size: 14px; color: var(--gray-300); }
+
+    .cta-section { padding: 56px 0; text-align: center; margin-top: auto; border-top: 1px solid var(--gray-700); }
+    .cta-section h2 { font-family: var(--font-h); font-size: 32px; color: var(--gold); margin-bottom: 12px; font-weight: 500; }
+    .cta-section p { color: var(--gray-300); margin-bottom: 24px; max-width: 480px; margin-left: auto; margin-right: auto; }
+    .cta-btn { display: inline-block; background: var(--gold); color: var(--black); padding: 14px 36px; text-decoration: none; font-family: var(--font-m); font-size: 13px; letter-spacing: 2px; text-transform: uppercase; border-radius: 2px; font-weight: 600; transition: opacity .15s; }
+    .cta-btn.outline { background: transparent; color: var(--gold); border: 1.5px solid var(--gold); margin-left: 12px; }
+
+    footer { padding: 32px 0; text-align: center; border-top: 1px solid var(--gray-700); font-family: var(--font-m); font-size: 11px; letter-spacing: 1.5px; color: var(--gray-500); }
+    footer a { color: var(--gold); text-decoration: none; }
+    footer .version { margin-top: 8px; color: var(--gray-700); }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 36px; }
+      .card h2 { font-size: 36px; }
+      .flows h2 { font-size: 26px; }
+      header.brand nav a { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="brand">
+      <a class="logo" href="/">AIROOBI</a>
+      <nav>
+        <a href="/airdrops">Airdrop</a>
+        <a href="/come-funziona-airdrop">Come funziona</a>
+        <a href="/blog">Blog</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">Token Economy</div>
+      <h1>Tre asset, un ecosistema</h1>
+      <p class="sub">ARIA per partecipare. KAS per incassare. ROBI per crescere. Ogni token ha un ruolo preciso · nessuna confusione speculativa.</p>
+    </section>
+
+    <div class="schema-wrap">
+      <img src="/public/images/airoobi_tokens_schema_v1.svg" alt="Schema dei token AIROOBI · ARIA, KAS, ROBI · flussi swap">
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="token-label">Utility · testnet</div>
+        <h2 class="aria">ARIA</h2>
+        <p class="tagline">la moneta interna AIROOBI</p>
+        <div class="stat">1 ARIA = €0,10 stabile</div>
+        <p>Si guadagna gratuitamente in app per partecipare ad airdrop, sbloccare valutazioni e funzionalità.</p>
+        <ul>
+          <li>Faucet quotidiano · 100/gg (decrescente)</li>
+          <li>Check-in giornaliero · +1/gg</li>
+          <li>Login giornaliero · +1/gg</li>
+          <li>Video airdrop · +1 max 5/gg</li>
+          <li>Streak 7gg · +1 bonus</li>
+          <li>Referral · +10/+15</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="token-label">Reward · treasury-backed</div>
+        <h2 class="robi">ROBI</h2>
+        <p class="tagline">cresce con il treasury, come un buono fruttifero</p>
+        <div class="stat">rate = treasury_eur ÷ supply</div>
+        <p>Si guadagna SOLO partecipando ad airdrop. Mai comprabile. Riscuotibile in quantità intere in KAS.</p>
+        <ul>
+          <li>Partecipi ad airdrop · accumuli ROBI</li>
+          <li>Bonus 1 ROBI su valutazione GO</li>
+          <li>Milestone airdrop +1/+5 ROBI</li>
+          <li>Streak settimanale · +1 ROBI/7gg</li>
+          <li>Convertibile in ARIA o KAS</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="token-label">Settlement · on-chain</div>
+        <h2 class="kas">KAS</h2>
+        <p class="tagline">l'incasso reale · blockchain Kaspa</p>
+        <div class="stat">rate dinamico vs EUR</div>
+        <p>La valuta blockchain reale di settlement. Stage 2 on-chain Kaspa. Da Stage 1 tracciata come saldo proxy.</p>
+        <ul>
+          <li>Vendita oggetto · incasso seller</li>
+          <li>Riscossione ROBI · in KAS</li>
+          <li>Swap bidirezionale ARIA ↔ KAS</li>
+          <li>Ritiro su wallet personale (Stage 2)</li>
+        </ul>
+      </div>
+    </div>
+
+    <section class="flows">
+      <h2>Flussi di conversione</h2>
+      <p class="sub">Solo quattro percorsi · semplici e coerenti.</p>
+      <div class="flow-grid">
+        <div class="flow"><div class="pair">KAS → ARIA</div><div class="desc">Converte saldo KAS in ARIA per partecipare ad altri airdrop.</div></div>
+        <div class="flow"><div class="pair">ARIA → KAS</div><div class="desc">Converte ARIA accumulati in KAS reali.</div></div>
+        <div class="flow"><div class="pair">ROBI → ARIA</div><div class="desc">Riscuoti ROBI in ARIA per continuare a giocare.</div></div>
+        <div class="flow"><div class="pair">ROBI → KAS</div><div class="desc">Riscuoti ROBI direttamente in KAS · incasso reale.</div></div>
+      </div>
+      <p style="margin-top:24px;font-size:13px;color:var(--gray-500);font-family:var(--font-m);letter-spacing:1.2px">ROBI NON COMPRABILE · earned, not bought</p>
+    </section>
+
+    <section class="cta-section">
+      <h2>Inizia ora</h2>
+      <p>100 ARIA in regalo all'iscrizione · primi 1000 utenti diventano Alpha Brave.</p>
+      <a class="cta-btn" href="/signup">Registrati</a>
+      <a class="cta-btn outline" href="/come-funziona-airdrop">Come funziona</a>
+    </section>
+  </div>
+
+  <footer>
+    AIROOBI &copy; 2026 · <a href="https://www.airoobi.com">airoobi.com</a> · <a href="https://www.airoobi.app">airoobi.app</a>
+    <div class="version">alfa-2026.05.14-4.14.0</div>
+  </footer>
+</body>
+</html>
