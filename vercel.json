@@ -93,6 +93,8 @@
     { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/sitemap-app.xml" },
     { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/sitemap-com.xml" },
 
+    { "source": "/evalobi/:token_id", "destination": "/api/evalobi-ssr?token_id=:token_id" },
+
     { "source": "/diventa-alpha-brave", "destination": "/diventa-alpha-brave.html" },
     { "source": "/treasury", "destination": "/treasury.html" },
 
