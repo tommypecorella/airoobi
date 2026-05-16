@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8" />
+<title>AIROOBI · Brand Kit one-pager</title>
+<style>
+  :root {
+    --black: #000000;
+    --gold:  #B8960C;
+    --gold-dim: #8C7000;
+    --gold-light: #F4E8B7;
+    --white: #FFFFFF;
+    --aria:  #4A9EFF;
+    --kas:   #49EACB;
+    --gray-900: #111111;
+    --gray-700: #333333;
+    --gray-400: #888888;
+    --gray-300: #aaaaaa;
+    --gray-200: #cccccc;
+  }
+  @page { size: A3 portrait; margin: 0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { background: var(--black); color: var(--white); font-family: 'Instrument Sans', 'Helvetica Neue', Arial, sans-serif; }
+
+  .page {
+    width: 297mm; min-height: 420mm;
+    padding: 22mm 22mm 22mm 22mm;
+    position: relative;
+  }
+  .gold-rule { position: absolute; left:0; right:0; height: 3mm; background: var(--gold); }
+  .gold-rule.top { top:0; }
+  .gold-rule.bottom { bottom:0; }
+
+  .eyebrow { font-size: 10pt; color: var(--gold); font-weight: 700; letter-spacing: 4pt; text-transform: uppercase; }
+  h1.brand-title { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 600; font-size: 44pt; line-height: 1.05; margin: 6pt 0 14pt; color: var(--white); }
+  h2.section { font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: 24pt; color: var(--white); margin: 0 0 8pt; }
+  .lede { font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 16pt; line-height: 1.3; color: var(--gray-300); margin-bottom: 12pt; max-width: 200mm; }
+
+  .grid { display: grid; gap: 6mm; }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card {
+    background: var(--gray-900);
+    border: 1px solid var(--gray-700);
+    border-left: 3px solid var(--gold);
+    padding: 10pt 12pt;
+    border-radius: 0;
+  }
+
+  .swatch { padding: 0; border: 1px solid var(--gray-700); }
+  .swatch .chip { height: 36mm; }
+  .swatch .meta { padding: 8pt 10pt; background: var(--gray-900); }
+  .swatch .name { font-family: 'Cormorant Garamond', serif; font-size: 16pt; color: var(--white); margin-bottom: 4pt; }
+  .swatch .hex { font-family: 'DM Mono', 'Consolas', monospace; font-size: 11pt; color: var(--gold); }
+  .swatch .role { font-size: 8.5pt; color: var(--gray-300); margin-top: 4pt; line-height: 1.3; }
+
+  .typo {
+    background: var(--gray-900);
+    border: 1px solid var(--gray-700);
+    padding: 10pt 12pt;
+  }
+  .typo .label { font-size: 9pt; color: var(--gold); font-weight: 700; letter-spacing: 3pt; text-transform: uppercase; margin-bottom: 6pt; }
+  .typo .sample-h { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 28pt; line-height: 1.05; color: var(--white); margin-bottom: 4pt; }
+  .typo .sample-b { font-family: 'Instrument Sans', Arial, sans-serif; font-size: 11pt; line-height: 1.4; color: var(--gray-200); margin-bottom: 4pt; }
+  .typo .sample-m { font-family: 'DM Mono', 'Consolas', monospace; font-size: 11pt; color: var(--white); }
+  .typo .meta { font-size: 8.5pt; color: var(--gray-400); margin-top: 6pt; }
+
+  .pill { display: inline-block; padding: 3pt 9pt; background: rgba(184,150,12,0.12); color: var(--gold); border: 1px solid var(--gold-dim); font-size: 9pt; letter-spacing: 1.5pt; margin-right: 4pt; }
+
+  .voice-table { width: 100%; border-collapse: collapse; }
+  .voice-table th, .voice-table td { padding: 7pt 9pt; text-align: left; border-bottom: 1px solid var(--gray-700); vertical-align: top; }
+  .voice-table th { color: var(--gold); font-size: 9pt; letter-spacing: 2pt; text-transform: uppercase; font-weight: 700; }
+  .voice-table td { color: var(--white); font-size: 10pt; line-height: 1.4; }
+  .voice-table td.ctx { color: var(--gold); font-weight: 600; width: 25%; }
+  .voice-table td em { color: var(--gray-300); font-style: italic; }
+
+  .donot { background: var(--gray-900); border: 1px solid var(--gray-700); border-left: 3px solid #B5341B; padding: 10pt 12pt; }
+  .do { background: var(--gray-900); border: 1px solid var(--gray-700); border-left: 3px solid var(--kas); padding: 10pt 12pt; }
+  .donot ul, .do ul { list-style: none; padding: 0; }
+  .donot li, .do li { font-size: 10pt; line-height: 1.5; padding-left: 18pt; position: relative; margin-bottom: 4pt; color: var(--gray-200); }
+  .donot li::before { content: "✗"; position: absolute; left: 0; color: #B5341B; font-weight: 700; }
+  .do li::before { content: "✓"; position: absolute; left: 0; color: var(--kas); font-weight: 700; }
+
+  .logo-block { background: var(--gray-900); padding: 14pt; border: 1px solid var(--gray-700); display: flex; align-items: center; justify-content: center; min-height: 65mm; }
+  .logo-block img { max-width: 80%; max-height: 50mm; }
+  .logo-block.symbol img { max-height: 40mm; }
+  .logo-caption { font-size: 8pt; color: var(--gray-400); margin-top: 4pt; text-align: center; letter-spacing: 1pt; }
+
+  .footer-line { display: flex; justify-content: space-between; align-items: center; margin-top: 16mm; padding-top: 6pt; border-top: 1px solid var(--gold); font-size: 9pt; color: var(--gray-300); letter-spacing: 1.5pt; }
+  .footer-line .logo-mini { color: var(--gold); font-weight: 700; }
+
+  .principle {
+    background: linear-gradient(180deg, var(--gray-900) 0%, var(--black) 100%);
+    border: 1px solid var(--gold-dim);
+    padding: 14pt 16pt;
+    margin-bottom: 8mm;
+  }
+  .principle h3 { font-family: 'Cormorant Garamond', serif; font-size: 18pt; color: var(--gold); margin-bottom: 4pt; font-style: italic; }
+  .principle p { font-size: 11pt; line-height: 1.5; color: var(--gray-200); }
+
+  .section-spacer { height: 12mm; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="gold-rule top"></div>
+
+  <!-- HEADER -->
+  <div class="eyebrow">Brand Kit · One-Pager · v1.0 · Apr 2026</div>
+  <h1 class="brand-title">AIROOBI</h1>
+  <p class="lede">Dream Robe E-commerce. Fair-airdrop marketplace su Kaspa.<br/>
+  Premium ma accessibile. Moderno ma umano. Tech-forward ma semplice.</p>
+
+  <!-- PRINCIPLE -->
+  <div class="principle">
+    <h3>"Realizza il tuo desiderio."</h3>
+    <p>Ogni decisione visiva, verbale o di prodotto deve far sentire AIROOBI come una promessa concreta, non come una scommessa.
+    Compri un asset reale (ROBI), partecipi a un meccanismo trasparente, ricevi qualcosa di tangibile. Mai gambling, mai aleatorio, mai "vinci o perdi".</p>
+  </div>
+
+  <!-- LOGO -->
+  <div class="eyebrow" style="margin-bottom: 6pt;">Logo & Symbol</div>
+  <div class="grid grid-2" style="margin-bottom: 8mm;">
+    <div>
+      <div class="logo-block">
+        <img src="AIROOBI_Logo_White.png" alt="AIROOBI logotype"/>
+      </div>
+      <div class="logo-caption">LOGOTIPO PRINCIPALE — uso esteso, header, intestazioni</div>
+    </div>
+    <div>
+      <div class="logo-block symbol">
+        <img src="AIROOBI_Symbol_White.png" alt="AIROOBI symbol"/>
+      </div>
+      <div class="logo-caption">SYMBOL — favicon, app icon, avatar social</div>
+    </div>
+  </div>
+
+  <!-- COLOR PALETTE -->
+  <div class="eyebrow" style="margin-bottom: 6pt;">Palette colori — sistema definitivo</div>
+  <div class="grid grid-3" style="margin-bottom: 6mm;">
+    <div class="swatch">
+      <div class="chip" style="background: var(--black); border-bottom: 1px solid var(--gray-700);"></div>
+      <div class="meta">
+        <div class="name">Black</div>
+        <div class="hex">#000000</div>
+        <div class="role">Background principale. Esatto, mai #080808 o varianti.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background: var(--gold);"></div>
+      <div class="meta">
+        <div class="name">Gold</div>
+        <div class="hex">#B8960C</div>
+        <div class="role">Accent principale. CTA, highlights, ROBI, brand identity.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background: var(--white); border-bottom: 1px solid var(--gray-700);"></div>
+      <div class="meta">
+        <div class="name">White</div>
+        <div class="hex">#FFFFFF</div>
+        <div class="role">Testo principale. Esatto, mai #FAFAFA.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom: 6mm;">
+    <div class="swatch">
+      <div class="chip" style="background: var(--aria);"></div>
+      <div class="meta">
+        <div class="name">ARIA Blue</div>
+        <div class="hex">#4A9EFF</div>
+        <div class="role">SOLO per Tessera Coin / saldo ARIA / elementi ARIA-specifici. Mai colore brand generico.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="chip" style="background: var(--kas);"></div>
+      <div class="meta">
+        <div class="name">KAS Green</div>
+        <div class="hex">#49EACB</div>
+        <div class="role">SOLO per Tessera Kaspa / saldo KAS / elementi Kaspa-specifici. Mai colore brand generico.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-left-color: #B5341B; margin-bottom: 8mm;">
+    <strong style="color: #B5341B; font-size: 10pt; letter-spacing: 2pt;">REGOLA ASSOLUTA</strong>
+    <p style="margin-top: 4pt; font-size: 11pt; color: var(--gray-200); line-height: 1.4;">
+      Solo BLACK + GOLD + WHITE nella UI principale. ARIA Blue e KAS Green sono colori di asset, non colori brand generici. Eliminati dalla palette: #2563EB, #1D4ED8, #1A7A3F, qualsiasi altro non listato sopra.
+    </p>
+  </div>
+
+  <!-- TYPOGRAPHY -->
+  <div class="eyebrow" style="margin-bottom: 6pt;">Tipografia</div>
+  <div class="grid grid-3" style="margin-bottom: 8mm;">
+    <div class="typo">
+      <div class="label">Heading editoriali</div>
+      <div class="sample-h">Realizza il tuo desiderio</div>
+      <div class="meta">CORMORANT GARAMOND · 300/400/600/700</div>
+    </div>
+    <div class="typo">
+      <div class="label">Body & UI</div>
+      <div class="sample-b">Compra blocchi · ottieni ROBI · realizza l'oggetto. Ogni partecipazione è un asset, mai una scommessa.</div>
+      <div class="meta">INSTRUMENT SANS · 400/500/600/700</div>
+    </div>
+    <div class="typo">
+      <div class="label">Dati numerici</div>
+      <div class="sample-m">1.000 ARIA · 5 ROBI · ≥95% PEG</div>
+      <div class="meta">DM MONO · 400/500</div>
+    </div>
+  </div>
+
+  <!-- TONE OF VOICE -->
+  <div class="eyebrow" style="margin-bottom: 6pt;">Tone of voice</div>
+  <table class="voice-table" style="margin-bottom: 8mm;">
+    <thead>
+      <tr><th>Contesto</th><th>Tono</th><th>Esempio</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="ctx">Onboarding / Landing</td>
+        <td>Aspirazionale, inclusivo, chiaro</td>
+        <td><em>"Dream it. Block it. Realize it."</em></td>
+      </tr>
+      <tr>
+        <td class="ctx">UI / CTA</td>
+        <td>Diretto, action-oriented</td>
+        <td>Acquista 5 blocchi · Apri portafoglio · Riscuoti ROBI</td>
+      </tr>
+      <tr>
+        <td class="ctx">Errore / Warning</td>
+        <td>Empatico, non punitivo, propositivo</td>
+        <td><em>"Saldo ARIA insufficiente. Vuoi guadagnarne altri?"</em></td>
+      </tr>
+      <tr>
+        <td class="ctx">Compliance / Legale</td>
+        <td>Preciso, trasparente</td>
+        <td><em>"Non è gioco d'azzardo. Ogni blocco = 1 ROBI con valore reale."</em></td>
+      </tr>
+      <tr>
+        <td class="ctx">Business / Corporate</td>
+        <td>Professionale, data-driven</td>
+        <td><em>"ROI tracciato on-chain. Targeting KYC-verified."</em></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- DO / DON'T -->
+  <div class="eyebrow" style="margin-bottom: 6pt;">Do · Don't (compliance lessicale tassativa)</div>
+  <div class="grid grid-2" style="margin-bottom: 8mm;">
+    <div class="do">
+      <strong style="color: var(--kas); font-size: 10pt; letter-spacing: 2pt;">DO</strong>
+      <ul style="margin-top: 6pt;">
+        <li>"Realizza il tuo desiderio" — framing utente</li>
+        <li>"Vendi il tuo oggetto di valore (min €500)" — framing seller</li>
+        <li>"Partecipi all'airdrop" / "ottieni l'oggetto"</li>
+        <li>"ROBI = buono fruttifero" / "asset garantito ≥95% PEG"</li>
+        <li>"Algoritmo trasparente" / "score deterministico"</li>
+        <li>"Fair airdrop" / "marketplace di airdrop equi"</li>
+      </ul>
+    </div>
+    <div class="donot">
+      <strong style="color: #B5341B; font-size: 10pt; letter-spacing: 2pt;">DON'T</strong>
+      <ul style="margin-top: 6pt;">
+        <li>"Vinci" / "Perdi" / "Lotteria" / "Gioco d'azzardo"</li>
+        <li>"Investimento" / "Rendimento" / "Scommetti"</li>
+        <li>"Probabilità di vincita" / "fortuna"</li>
+        <li>"Estrazione" / "biglietto" / "ticket"</li>
+        <li>"Profit" / "guadagna XX% in YY giorni"</li>
+        <li>Emoji colorate, gradienti su logo, sfondi colorati ≠ #000</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ASSET SYSTEM -->
+  <div class="eyebrow" style="margin-bottom: 6pt;">Sistema asset (chiave per UI)</div>
+  <div class="grid grid-3" style="margin-bottom: 8mm;">
+    <div class="card" style="border-left-color: var(--aria);">
+      <strong style="color: var(--aria); font-size: 10pt; letter-spacing: 2pt;">TESSERA COIN</strong>
+      <p style="margin-top: 6pt; font-size: 10pt; color: var(--white); line-height: 1.4;">Proxy wallet ARIA · saldo accumulato · usa per acquistare blocchi</p>
+      <p style="margin-top: 4pt; font-family: 'DM Mono', monospace; font-size: 9pt; color: var(--aria);">#4A9EFF</p>
+    </div>
+    <div class="card">
+      <strong style="color: var(--gold); font-size: 10pt; letter-spacing: 2pt;">ROBI</strong>
+      <p style="margin-top: 6pt; font-size: 10pt; color: var(--white); line-height: 1.4;">NFT certificato resa · ≥95% PEG in KAS · riscossione 24-48h · MAI acquistabile</p>
+      <p style="margin-top: 4pt; font-family: 'DM Mono', monospace; font-size: 9pt; color: var(--gold);">#B8960C</p>
+    </div>
+    <div class="card" style="border-left-color: var(--kas);">
+      <strong style="color: var(--kas); font-size: 10pt; letter-spacing: 2pt;">TESSERA KASPA</strong>
+      <p style="margin-top: 6pt; font-size: 10pt; color: var(--white); line-height: 1.4;">Proxy wallet KAS · saldo KAS post-redemption · sposta on-chain</p>
+      <p style="margin-top: 4pt; font-family: 'DM Mono', monospace; font-size: 9pt; color: var(--kas);">#49EACB</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer-line">
+    <span class="logo-mini">AIROOBI</span>
+    <span>BRAND KIT · ONE-PAGER · v1.0</span>
+    <span>airoobi.com · ceo@airoobi.com</span>
+  </div>
+
+  <div class="gold-rule bottom"></div>
+</div>
+
+</body>
+</html>

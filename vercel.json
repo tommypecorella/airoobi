@@ -95,6 +95,8 @@
 
     { "source": "/evalobi/:token_id", "destination": "/api/evalobi-ssr?token_id=:token_id" },
     { "source": "/sla", "destination": "/api/sla-ssr" },
+    { "source": "/storie-vincitori", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr" },
+    { "source": "/storie-vincitori/:id", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr?id=:id" },
 
     { "source": "/tokens", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/tokens.html" },
     { "source": "/tokens", "destination": "/tokens.html" },
