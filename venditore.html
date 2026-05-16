@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venditore · AIROOBI</title>
+<meta name="description" content="Dashboard venditore AIROOBI · gestisci i tuoi airdrop, conferma l'esito dell'evento, monitora payout e recensioni.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --black:#000;--white:#fff;--gold:#B8960C;--aria:#4A9EFF;--kas:#49EACB;
+  --gray-900:#0a0a0a;--gray-800:#141414;--gray-700:#1f1f1f;--gray-600:#2a2a2a;
+  --gray-500:#666;--gray-400:#999;--gray-300:#bbb;
+  --font-h:'Cormorant Garamond',serif;--font-b:'Instrument Sans',sans-serif;--font-m:'DM Mono',monospace;
+  --radius:12px;--radius-sm:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--black);color:var(--white);font-family:var(--font-b);line-height:1.6;min-height:100vh}
+a{color:inherit;text-decoration:none}
+
+.topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;height:56px;background:rgba(0,0,0,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-700)}
+.topbar-brand{font-family:var(--font-h);font-size:22px;font-weight:500;color:var(--gold);letter-spacing:.5px}
+.topbar-user{font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--gray-400)}
+.topbar a.btn{padding:8px 16px;background:transparent;border:1px solid var(--gray-700);border-radius:6px;font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-300)}
+
+.layout{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 56px)}
+.sidebar{background:var(--gray-900);border-right:1px solid var(--gray-700);padding:24px 0}
+.sidebar-label{display:block;font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gray-500);text-transform:uppercase;padding:16px 24px 6px}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:11px 24px;font-family:var(--font-m);font-size:11px;letter-spacing:.4px;color:var(--gray-400);cursor:pointer;background:transparent;border:0;width:100%;text-align:left;border-left:3px solid transparent;transition:all .15s}
+.sidebar-item:hover{color:var(--white);background:rgba(255,255,255,.03)}
+.sidebar-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(184,150,12,.04)}
+.sidebar-item svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.5}
+
+.main{padding:32px 40px;max-width:1100px;width:100%}
+.section-title{font-family:var(--font-h);font-size:32px;font-weight:300;color:var(--white);margin-bottom:6px}
+.section-sub{font-size:13px;color:var(--gray-400);margin-bottom:24px}
+.card{background:var(--gray-900);border:1px solid var(--gray-700);border-radius:var(--radius);padding:24px;margin-bottom:20px}
+.card-title{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:16px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin-bottom:24px}
+.stat-tile{background:var(--gray-900);border:1px solid var(--gray-700);border-radius:var(--radius);padding:20px;text-align:center}
+.stat-label{font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase;margin-bottom:8px}
+.stat-value{font-family:var(--font-h);font-size:28px;font-weight:500;color:var(--white)}
+.stat-value.gold{color:var(--gold)}
+
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase;text-align:left;padding:12px 14px;border-bottom:1px solid var(--gray-700)}
+.tbl td{padding:14px 14px;border-bottom:1px solid var(--gray-800)}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+
+.badge{display:inline-block;padding:3px 10px;border-radius:12px;font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase}
+.badge.gold{background:rgba(184,150,12,.12);color:var(--gold);border:1px solid rgba(184,150,12,.4)}
+.badge.aria{background:rgba(74,158,255,.12);color:var(--aria);border:1px solid rgba(74,158,255,.4)}
+.badge.green{background:rgba(73,234,203,.12);color:var(--kas);border:1px solid rgba(73,234,203,.4)}
+.badge.red{background:rgba(248,113,113,.12);color:#f87171;border:1px solid rgba(248,113,113,.4)}
+.badge.gray{background:rgba(255,255,255,.04);color:var(--gray-400);border:1px solid var(--gray-700)}
+
+.btn{padding:11px 20px;border:none;border-radius:var(--radius-sm);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:600;transition:opacity .2s}
+.btn.primary{background:var(--gold);color:var(--black)}
+.btn.danger{background:transparent;border:1px solid #f87171;color:#f87171}
+.btn.ghost{background:transparent;border:1px solid var(--gray-600);color:var(--gray-300)}
+.btn:hover{opacity:.85}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+.alert{padding:14px 18px;border-radius:var(--radius-sm);margin-bottom:16px;font-size:13px}
+.alert.ok{background:rgba(73,234,203,.08);border:1px solid rgba(73,234,203,.3);color:var(--kas)}
+.alert.warn{background:rgba(255,180,80,.08);border:1px solid rgba(255,180,80,.3);color:#FFB74D}
+.alert.err{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.3);color:#f87171}
+
+.acknowledge-box{background:linear-gradient(135deg,rgba(184,150,12,.06),transparent);border:1px solid var(--gold);border-radius:var(--radius);padding:32px;margin:16px 0}
+.acknowledge-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:20px 0}
+.acknowledge-grid > div{padding:14px;background:var(--gray-900);border-radius:8px}
+.acknowledge-grid .label{font-size:10px;color:var(--gray-500);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.acknowledge-grid .value{font-family:var(--font-h);font-size:22px;color:var(--gold)}
+.countdown{font-family:var(--font-m);font-size:13px;color:#FFB74D;letter-spacing:.5px}
+
+.empty{padding:48px 24px;text-align:center;color:var(--gray-500);font-size:13px}
+
+@media(max-width:768px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .main{padding:24px 16px}
+  .acknowledge-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-brand">AIROOBI · Venditore</div>
+  <div style="display:flex;align-items:center;gap:16px">
+    <span class="topbar-user" id="user-username">—</span>
+    <a class="btn" href="/dashboard">← Dashboard</a>
+  </div>
+</header>
+
+<div class="layout">
+  <aside class="sidebar">
+    <span class="sidebar-label">Dashboard</span>
+    <button class="sidebar-item active" data-section="overview" onclick="nav('overview')">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Overview
+    </button>
+    <span class="sidebar-label">Airdrop</span>
+    <button class="sidebar-item" data-section="airdrops" onclick="nav('airdrops')">
+      <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+      I miei airdrop
+    </button>
+    <button class="sidebar-item" data-section="acknowledge" onclick="nav('acknowledge')">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      Conferme attese
+    </button>
+    <span class="sidebar-label">Asset</span>
+    <button class="sidebar-item" data-section="evalobi" onclick="nav('evalobi')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+      I miei EVALOBI
+    </button>
+    <button class="sidebar-item" data-section="payouts" onclick="nav('payouts')">
+      <svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      Payouts
+    </button>
+    <span class="sidebar-label">Reputazione</span>
+    <button class="sidebar-item" data-section="reviews" onclick="nav('reviews')">
+      <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      Recensioni
+    </button>
+    <button class="sidebar-item" data-section="settings" onclick="nav('settings')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Impostazioni
+    </button>
+  </aside>
+
+  <main class="main">
+
+    <!-- OVERVIEW -->
+    <section id="sec-overview" class="sec">
+      <h1 class="section-title">Dashboard Venditore</h1>
+      <p class="section-sub" id="overview-greeting">Caricamento…</p>
+      <div class="stats-grid">
+        <div class="stat-tile"><div class="stat-label">Airdrop attivi</div><div class="stat-value gold" id="kpi-active">—</div></div>
+        <div class="stat-tile"><div class="stat-label">Conferme attese</div><div class="stat-value" id="kpi-waiting">—</div></div>
+        <div class="stat-tile"><div class="stat-label">EVALOBI emessi</div><div class="stat-value" id="kpi-evalobi">—</div></div>
+        <div class="stat-tile"><div class="stat-label">Completati</div><div class="stat-value" id="kpi-completed">—</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Azioni urgenti</div>
+        <div id="urgent-list">Caricamento…</div>
+      </div>
+    </section>
+
+    <!-- AIRDROPS -->
+    <section id="sec-airdrops" class="sec" style="display:none">
+      <h1 class="section-title">I miei airdrop</h1>
+      <p class="section-sub">Tutti gli airdrop legati al tuo wallet venditore.</p>
+      <div class="card" style="padding:0;overflow:hidden">
+        <table class="tbl">
+          <thead><tr>
+            <th>Titolo</th><th>Categoria</th><th>Stato</th><th>Blocchi</th><th>Scadenza</th><th></th>
+          </tr></thead>
+          <tbody id="airdrops-tbody"><tr><td colspan="6" class="empty">Caricamento…</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ACKNOWLEDGE -->
+    <section id="sec-acknowledge" class="sec" style="display:none">
+      <h1 class="section-title">Conferme attese</h1>
+      <p class="section-sub">Airdrop terminati che attendono la tua decisione · accetta entro 24h o l'esito sarà finalizzato automaticamente.</p>
+      <div id="ack-container">
+        <div class="empty">Caricamento…</div>
+      </div>
+    </section>
+
+    <!-- EVALOBI -->
+    <section id="sec-evalobi" class="sec" style="display:none">
+      <h1 class="section-title">I miei EVALOBI</h1>
+      <p class="section-sub">Certificati di valutazione emessi sui tuoi oggetti.</p>
+      <div class="card">
+        <div class="empty">Coming soon · W4 iteration · usa /dashboard per vedere asset attuali.</div>
+      </div>
+    </section>
+
+    <!-- PAYOUTS -->
+    <section id="sec-payouts" class="sec" style="display:none">
+      <h1 class="section-title">Payouts</h1>
+      <p class="section-sub">Storico incassi e fatturazione.</p>
+      <div class="card">
+        <div class="empty">Coming soon · in implementazione · Stripe wiring Stage 1.</div>
+      </div>
+    </section>
+
+    <!-- REVIEWS -->
+    <section id="sec-reviews" class="sec" style="display:none">
+      <h1 class="section-title">Recensioni</h1>
+      <p class="section-sub">Rating ricevuti post-consegna.</p>
+      <div class="card">
+        <div class="empty">Nessuna recensione disponibile (in attesa di consegne finalizzate).</div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="sec-settings" class="sec" style="display:none">
+      <h1 class="section-title">Impostazioni</h1>
+      <p class="section-sub">Preferenze comunicazione e privacy.</p>
+      <div class="card">
+        <p style="margin-bottom:16px;color:var(--gray-300)">Le preferenze categorie e notifiche si gestiscono dal tuo profilo principale.</p>
+        <a href="/dashboard#profilo" class="btn ghost">VAI AL PROFILO →</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://vuvlmlpuhovipfwtquux.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExMTUyMjEsImV4cCI6MjA1NjY5MTIyMX0.7Hd6JsB4PfcoIaSepW0DkmpzlxFhcz4eMpqo4lr8KX0';
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let CURRENT_USER = null;
+
+function nav(section) {
+  document.querySelectorAll('.sec').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+  const target = document.getElementById('sec-' + section);
+  if (target) target.style.display = '';
+  const btn = document.querySelector(`.sidebar-item[data-section="${section}"]`);
+  if (btn) btn.classList.add('active');
+  if (location.hash !== '#' + section) history.replaceState(null, '', '#' + section);
+  if (section === 'airdrops') loadAirdrops();
+  if (section === 'acknowledge') loadAcknowledge();
+}
+
+function fmtDate(s) { return s ? new Date(s).toLocaleString('it-IT', { dateStyle:'short', timeStyle:'short' }) : '—'; }
+function fmtHours(target) {
+  if (!target) return '—';
+  const d = new Date(target) - new Date();
+  if (d <= 0) return 'scaduto';
+  const h = Math.floor(d / 3600000);
+  const m = Math.floor((d % 3600000) / 60000);
+  return `${h}h ${m}m`;
+}
+function statusBadge(s) {
+  const m = {
+    presale:'aria', sale:'aria', accettato:'gold',
+    waiting_seller_acknowledge:'gold', completed:'green', annullato:'red'
+  };
+  return `<span class="badge ${m[s]||'gray'}">${s.replace(/_/g,' ')}</span>`;
+}
+
+async function bootstrap() {
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) { location.href = '/login.html?returnTo=' + encodeURIComponent('/venditore'); return; }
+  CURRENT_USER = user;
+  const { data: prof } = await sb.from('profiles').select('username').eq('id', user.id).single();
+  const uname = prof?.username || user.email;
+  document.getElementById('user-username').textContent = '@' + uname;
+  document.getElementById('overview-greeting').textContent = `Ciao @${uname} · ecco il tuo riepilogo`;
+  await loadOverview();
+  const initial = (location.hash || '#overview').slice(1);
+  nav(initial);
+}
+
+async function loadOverview() {
+  if (!CURRENT_USER) return;
+  const { data: my, error } = await sb.from('airdrops')
+    .select('id,status,winner_candidate_user_id,winner_id,seller_acknowledge_decision')
+    .or(`submitted_by.eq.${CURRENT_USER.id},created_by.eq.${CURRENT_USER.id}`);
+  if (error) { console.warn('overview', error); return; }
+  const active = (my||[]).filter(a => ['presale','sale'].includes(a.status)).length;
+  const waiting = (my||[]).filter(a => a.status === 'waiting_seller_acknowledge').length;
+  const completed = (my||[]).filter(a => a.status === 'completed').length;
+  document.getElementById('kpi-active').textContent = active;
+  document.getElementById('kpi-waiting').textContent = waiting;
+  document.getElementById('kpi-completed').textContent = completed;
+  document.getElementById('kpi-evalobi').textContent = (my||[]).length;
+
+  const urgent = (my||[]).filter(a => a.status === 'waiting_seller_acknowledge');
+  const list = document.getElementById('urgent-list');
+  if (urgent.length === 0) {
+    list.innerHTML = '<div style="color:var(--gray-500);font-size:13px">Nessuna azione richiesta · tutto in regola.</div>';
+  } else {
+    list.innerHTML = `<div class="alert warn">${urgent.length} airdrop in attesa di tua conferma · <a href="#acknowledge" onclick="nav('acknowledge');return false" style="color:#FFB74D;text-decoration:underline">vai a Conferme attese →</a></div>`;
+  }
+}
+
+async function loadAirdrops() {
+  if (!CURRENT_USER) return;
+  const tbody = document.getElementById('airdrops-tbody');
+  tbody.innerHTML = '<tr><td colspan="6" class="empty">Caricamento…</td></tr>';
+  const { data, error } = await sb.from('airdrops')
+    .select('id,title,category,status,blocks_sold,total_blocks,deadline,seller_acknowledge_sla_deadline')
+    .or(`submitted_by.eq.${CURRENT_USER.id},created_by.eq.${CURRENT_USER.id}`)
+    .order('created_at', { ascending:false });
+  if (error) { tbody.innerHTML = `<tr><td colspan="6" class="empty">Errore: ${error.message}</td></tr>`; return; }
+  if (!data || data.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty">Nessun airdrop ancora · <a href="/vendi" style="color:var(--gold)">proponi il primo →</a></td></tr>';
+    return;
+  }
+  tbody.innerHTML = data.map(a => `
+    <tr>
+      <td>${a.title}</td>
+      <td><span class="badge gray">${a.category}</span></td>
+      <td>${statusBadge(a.status)}</td>
+      <td>${a.blocks_sold||0}/${a.total_blocks||0}</td>
+      <td style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">${fmtDate(a.deadline)}</td>
+      <td>${a.status === 'waiting_seller_acknowledge' ? `<a href="#acknowledge" onclick="nav('acknowledge');return false" style="color:var(--gold);font-size:11px">→ Conferma</a>` : ''}</td>
+    </tr>
+  `).join('');
+}
+
+async function loadAcknowledge() {
+  if (!CURRENT_USER) return;
+  const container = document.getElementById('ack-container');
+  container.innerHTML = '<div class="empty">Caricamento…</div>';
+  const { data, error } = await sb.from('airdrops')
+    .select('id,title,category,object_value_eur,blocks_sold,total_blocks,end_event_trigger_type,end_event_triggered_at,seller_acknowledge_sla_deadline,winner_candidate_user_id,aria_incassato')
+    .or(`submitted_by.eq.${CURRENT_USER.id},created_by.eq.${CURRENT_USER.id}`)
+    .eq('status', 'waiting_seller_acknowledge');
+  if (error) { container.innerHTML = `<div class="alert err">Errore: ${error.message}</div>`; return; }
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="card"><div class="empty">Nessuna conferma in attesa · tutto in regola.</div></div>';
+    return;
+  }
+  container.innerHTML = data.map(a => renderAcknowledgeCard(a)).join('');
+}
+
+function renderAcknowledgeCard(a) {
+  const triggerLabel = {
+    deadline:'Scadenza raggiunta',
+    sold_out:'Sold-out 100%',
+    scacco_matto:'Scacco matto · partita decisa'
+  }[a.end_event_trigger_type] || a.end_event_trigger_type;
+
+  const aria = a.aria_incassato || 0;
+  const eur = (aria * 0.10).toFixed(2);
+  const sellerShare = (eur * 0.6799).toFixed(2);
+  const treasury = (eur * 0.22).toFixed(2);
+  const fee = (eur * 0.10).toFixed(2);
+
+  return `<div class="acknowledge-box" data-airdrop-id="${a.id}">
+    <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px">
+      <div>
+        <h2 style="font-family:var(--font-h);font-size:24px;font-weight:500;color:var(--gold);margin-bottom:4px">${a.title}</h2>
+        <div style="font-size:12px;color:var(--gray-400)">Categoria <strong>${a.category}</strong> · €${a.object_value_eur}</div>
+      </div>
+      <div style="text-align:right">
+        <div class="countdown">⏱ ${fmtHours(a.seller_acknowledge_sla_deadline)} rimasti</div>
+        <div style="font-size:10px;color:var(--gray-500);margin-top:2px;font-family:var(--font-m);letter-spacing:.5px">${triggerLabel}</div>
+      </div>
+    </div>
+    <div class="acknowledge-grid">
+      <div><div class="label">Blocchi venduti</div><div class="value">${a.blocks_sold}/${a.total_blocks}</div></div>
+      <div><div class="label">ARIA raccolto</div><div class="value">${aria}</div></div>
+      <div><div class="label">Tua quota (67.99%)</div><div class="value">€${sellerShare}</div></div>
+      <div><div class="label">Treasury (22%) · Fee (10%)</div><div class="value" style="font-size:16px">€${treasury} · €${fee}</div></div>
+    </div>
+    <div style="background:var(--gray-900);padding:14px;border-radius:8px;margin:16px 0;font-size:12px;color:var(--gray-300);line-height:1.6">
+      Se accetti, l'airdrop viene finalizzato e il vincitore reso pubblico · il payout viene preparato. Se annulli, tutti i partecipanti ricevono rimborso completo (il top-3 riceve NFT consolation).
+      Se non rispondi entro la scadenza, il sistema accetta automaticamente.
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <button class="btn primary" onclick="ackSubmit('${a.id}','accept',this)">✓ ACCETTA · FINALIZZA AIRDROP</button>
+      <button class="btn danger"  onclick="ackSubmit('${a.id}','annulla',this)">✕ ANNULLA · RIMBORSO TUTTI</button>
+    </div>
+    <div class="ack-result" style="margin-top:12px"></div>
+  </div>`;
+}
+
+async function ackSubmit(airdropId, decision, btn) {
+  const card = btn.closest('.acknowledge-box');
+  const resultEl = card.querySelector('.ack-result');
+  if (decision === 'annulla' && !confirm('Confermi annullamento? Tutti i partecipanti riceveranno rimborso completo. Azione irreversibile.')) return;
+  card.querySelectorAll('button').forEach(b => b.disabled = true);
+  resultEl.innerHTML = '<div class="alert warn">Elaborazione in corso…</div>';
+  try {
+    const { data, error } = await sb.rpc('seller_acknowledge_airdrop', {
+      p_airdrop_id: airdropId, p_decision: decision, p_service_call: false
+    });
+    if (error) throw error;
+    resultEl.innerHTML = `<div class="alert ok">${decision === 'accept' ? '✓ Airdrop finalizzato · vincitore notificato' : '✕ Airdrop annullato · rimborsi avviati'}</div>`;
+    setTimeout(() => { loadAcknowledge(); loadOverview(); }, 1500);
+  } catch (e) {
+    resultEl.innerHTML = `<div class="alert err">Errore: ${e.message || e}</div>`;
+    card.querySelectorAll('button').forEach(b => b.disabled = false);
+  }
+}
+
+window.addEventListener('hashchange', () => {
+  const s = (location.hash || '#overview').slice(1);
+  nav(s);
+});
+
+bootstrap();
+</script>
+</body>
+</html>

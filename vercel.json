@@ -97,6 +97,8 @@
     { "source": "/sla", "destination": "/api/sla-ssr" },
     { "source": "/storie-vincitori", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr" },
     { "source": "/storie-vincitori/:id", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr?id=:id" },
+    { "source": "/venditore", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/venditore.html" },
+    { "source": "/venditore/:rest*", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/venditore.html" },
 
     { "source": "/tokens", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/tokens.html" },
     { "source": "/tokens", "destination": "/tokens.html" },
