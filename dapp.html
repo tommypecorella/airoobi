@@ -1527,6 +1527,58 @@
   </div>
 </div>
 
+<!-- W4 Day 10 · Claim address modal (winner post-acceptance) -->
+<div class="modal-bg" id="claim-modal-bg" onclick="closeClaimModal(event)">
+  <div class="modal" id="claim-modal" style="text-align:left;max-width:520px">
+    <h3 style="margin-bottom:6px;font-family:var(--font-h);font-size:22px;color:var(--gold);font-weight:500"><span class="it">Reclama il tuo oggetto</span><span class="en">Claim your item</span></h3>
+    <p id="claim-modal-title" style="font-size:13px;color:var(--gray-400);margin-bottom:18px"></p>
+    <div id="claim-modal-error" class="form-error" style="display:none"></div>
+    <form id="claim-modal-form" onsubmit="submitClaim(event)" novalidate>
+      <input type="hidden" id="claim-airdrop-id">
+      <div class="form-field">
+        <label for="claim-fullname"><span class="it">Nome e cognome</span><span class="en">Full name</span></label>
+        <input type="text" id="claim-fullname" maxlength="100" required autocomplete="name">
+      </div>
+      <div class="form-field">
+        <label for="claim-phone"><span class="it">Telefono</span><span class="en">Phone</span></label>
+        <input type="tel" id="claim-phone" maxlength="30" required autocomplete="tel">
+      </div>
+      <div class="form-field">
+        <label for="claim-street"><span class="it">Indirizzo (via, numero civico)</span><span class="en">Address (street, number)</span></label>
+        <input type="text" id="claim-street" maxlength="120" required autocomplete="street-address">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 2fr;gap:10px">
+        <div class="form-field">
+          <label for="claim-cap"><span class="it">CAP</span><span class="en">ZIP</span></label>
+          <input type="text" id="claim-cap" maxlength="10" required autocomplete="postal-code">
+        </div>
+        <div class="form-field">
+          <label for="claim-city"><span class="it">Città</span><span class="en">City</span></label>
+          <input type="text" id="claim-city" maxlength="80" required autocomplete="address-level2">
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="form-field">
+          <label for="claim-province"><span class="it">Provincia</span><span class="en">Province</span></label>
+          <input type="text" id="claim-province" maxlength="40" required autocomplete="address-level1">
+        </div>
+        <div class="form-field">
+          <label for="claim-country"><span class="it">Paese</span><span class="en">Country</span></label>
+          <input type="text" id="claim-country" maxlength="60" value="Italia" required autocomplete="country-name">
+        </div>
+      </div>
+      <div class="form-field">
+        <label for="claim-notes"><span class="it">Note opzionali</span><span class="en">Optional notes</span></label>
+        <textarea id="claim-notes" maxlength="500" rows="2" style="font-family:inherit;resize:vertical"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="modal-cancel" onclick="closeClaimModal()"><span class="it">Annulla</span><span class="en">Cancel</span></button>
+        <button type="submit" class="modal-confirm" id="claim-modal-submit"><span class="it">Invia richiesta</span><span class="en">Submit request</span></button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- CONTROL ROOM MODAL (admin only) -->
 <div class="cr-overlay" id="cr-overlay" onclick="if(event.target===this)closeControlRoom()">
   <div class="cr-modal" id="cr-modal"></div>
@@ -1545,7 +1597,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.18-4.21.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.18-4.22.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
