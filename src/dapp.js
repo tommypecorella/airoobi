@@ -80,6 +80,7 @@ function updateBalanceUI(){
 var _airdrops=[];
 var _myParts=[];
 var _myRanks={}; // {airdrop_id: {rank, total, score}}
+var _myRobiByAirdrop={}; // {airdrop_id: {shares, sources, consolation_rank}} · Atto 6 reveal
 var _robiPrice=0; // treasury×0.999/robi_circolanti
 var _currentFilter='all';
 var _currentSort='deadline';
@@ -1251,7 +1252,26 @@ async function toggleWatchlist(id,e){
 }
 
 async function loadMyParticipations(){
-  _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&cancelled_at=is.null&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status)&order=created_at.desc',_session.access_token)||[];
+  _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&cancelled_at=is.null&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status,winner_id,story_public_url,story_public_visible,aria_incassato,object_value_eur,draw_executed_at)&order=created_at.desc',_session.access_token)||[];
+  // Atto 6 reveal: aggregate user's ROBI shares per completed/annullato airdrop
+  _myRobiByAirdrop={};
+  var completedIds=_myParts
+    .map(function(p){return p.airdrops&&p.airdrops.id&&['completed','annullato'].indexOf(p.airdrops.status)!==-1?p.airdrops.id:null})
+    .filter(Boolean);
+  if(completedIds.length){
+    var uniq=Array.from(new Set(completedIds));
+    var idList=uniq.map(function(id){return '"'+id+'"'}).join(',');
+    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&airdrop_id=in.('+idList+')&select=airdrop_id,shares,source,metadata',_session.access_token)||[];
+    nfts.forEach(function(n){
+      var aid=n.airdrop_id;if(!aid)return;
+      if(!_myRobiByAirdrop[aid])_myRobiByAirdrop[aid]={shares:0,sources:[],consolation_rank:null};
+      _myRobiByAirdrop[aid].shares+=Number(n.shares||0);
+      _myRobiByAirdrop[aid].sources.push(n.source);
+      if(n.source==='airdrop_draw_consolation'&&n.metadata&&n.metadata.consolation_rank){
+        _myRobiByAirdrop[aid].consolation_rank=n.metadata.consolation_rank;
+      }
+    });
+  }
 }
 
 async function loadMyRanks(){
@@ -3209,7 +3229,12 @@ function _renderPartCard(item,isArchive){
       deadlineHtml='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ef4444;background:rgba(239,68,68,.12);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700;animation:pulse 2s ease-in-out infinite;margin-left:6px"><span class="it">In scadenza</span><span class="en">Expiring</span></span>';
     }
   }
-  var cardOpacity=isArchive?'opacity:.72;':'';
+  var cardOpacity=isArchive?'opacity:.92;':'';
+  // Atto 6 buyer reveal post-completed/annullato
+  var revealHtml='';
+  if(isArchive&&(st==='completed'||st==='annullato')){
+    revealHtml=_renderRevealBlock(a,item,st);
+  }
   return '<div class="my-card" style="'+cardOpacity+'">'
     +'<div style="display:flex;gap:16px;padding:18px;align-items:center;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
     +imgHtml
@@ -3218,6 +3243,7 @@ function _renderPartCard(item,isArchive){
     +'<div class="my-card-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+a.category+' &middot; '+badge+deadlineHtml+'</div>'
     +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
     +'</div></div>'
+    +revealHtml
     +'<div style="display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--gray-800);align-items:center">'
     +'<button style="display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:7px 14px;font-family:var(--font-b);font-size:11px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:all .25s;border-radius:var(--radius-sm)" onclick="toggleMyChat(\''+a.id+'\')" onmouseover="this.style.borderColor=\'var(--accent)\';this.style.color=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">'
     +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>'
@@ -3230,6 +3256,53 @@ function _renderPartCard(item,isArchive){
     +'</div>'
     +'</div>'
     +'</div>';
+}
+
+// ── Atto 6 · Buyer reveal post-completed/annullato ──
+function _renderRevealBlock(a,item,status){
+  var uid=_session&&_session.user&&_session.user.id;
+  var robi=_myRobiByAirdrop[a.id]||{shares:0,sources:[],consolation_rank:null};
+  var isWinner=status==='completed'&&a.winner_id&&uid&&a.winner_id===uid;
+  var storyLink=a.story_public_visible&&a.story_public_url
+    ?'<a href="'+a.story_public_url+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;letter-spacing:.5px;text-decoration:none;font-family:var(--font-m)">'
+      +'<span class="it">STORIA PUBBLICA →</span><span class="en">PUBLIC STORY →</span></a>'
+    :'';
+  // Scenario 1: completed + winner
+  if(isWinner){
+    return '<div style="background:linear-gradient(135deg,rgba(184,150,12,.15),rgba(184,150,12,.02));border-top:1px solid var(--gold);padding:16px 18px;display:flex;flex-direction:column;gap:10px">'
+      +'<div style="display:flex;align-items:center;gap:10px">'
+      +'<div style="font-family:var(--font-h);font-size:18px;color:var(--gold);font-weight:500"><span class="it">Hai ottenuto l\'oggetto · '+a.title+'</span><span class="en">You got the item · '+a.title+'</span></div>'
+      +'</div>'
+      +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Inserisci l\'indirizzo di spedizione per ricevere l\'oggetto. Hai 14 giorni dalla data dell\'evento.</span><span class="en">Submit the shipping address to receive the item. You have 14 days from the event date.</span></div>'
+      +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">'
+      +'<button onclick="goToAirdrop(\''+a.id+'\')" style="background:var(--gold);color:var(--black);border:none;padding:9px 18px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">RECLAMA L\'OGGETTO →</span><span class="en">CLAIM ITEM →</span></button>'
+      +storyLink
+      +'</div></div>';
+  }
+  // Scenario 2: completed + not winner
+  if(status==='completed'){
+    var sharesNum=robi.shares?Number(robi.shares).toFixed(2):'0';
+    var sharesLine=robi.shares>0
+      ?'<div style="font-size:13px;color:var(--gold);font-family:var(--font-m);letter-spacing:.5px"><strong>'+sharesNum+'</strong> <span class="it">ROBI accumulate da questo evento</span><span class="en">ROBI shares earned from this event</span></div>'
+      :'<div style="font-size:12px;color:var(--gray-400)"><span class="it">Nessun ROBI accumulato da questo evento</span><span class="en">No ROBI earned from this event</span></div>';
+    return '<div style="background:rgba(255,255,255,.02);border-top:1px solid var(--gray-800);padding:14px 18px;display:flex;flex-direction:column;gap:8px">'
+      +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Oggetto assegnato a un altro partecipante. Le tue ROBI restano con te — il loro valore cresce nel tempo.</span><span class="en">Item went to another participant. Your ROBI stay with you — their value grows over time.</span></div>'
+      +sharesLine
+      +(storyLink?'<div>'+storyLink+'</div>':'')
+      +'</div>';
+  }
+  // Scenario 3: annullato
+  if(status==='annullato'){
+    var consoBlock='';
+    if(robi.consolation_rank){
+      consoBlock='<div style="font-size:13px;color:var(--gold);font-family:var(--font-m);letter-spacing:.5px"><strong>+1 ROBI</strong> <span class="it">di consolazione · top-3 partecipanti (rank '+robi.consolation_rank+')</span><span class="en">consolation · top-3 participants (rank '+robi.consolation_rank+')</span></div>';
+    }
+    return '<div style="background:rgba(255,255,255,.02);border-top:1px solid var(--gray-800);padding:14px 18px;display:flex;flex-direction:column;gap:8px">'
+      +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Evento annullato dal venditore. Hai ricevuto il rimborso completo: <strong>'+item.spent+' ARIA</strong> tornati nel saldo.</span><span class="en">Event cancelled by seller. You received full refund: <strong>'+item.spent+' ARIA</strong> back to your balance.</span></div>'
+      +consoBlock
+      +'</div>';
+  }
+  return '';
 }
 
 function _updateMyTabCounts(){

@@ -1218,6 +1218,109 @@
         </div>
       </div>
 
+      <!-- ═══ NOTIFICHE & CATEGORIE (W4 push T2/T3 routing) ═══ -->
+      <div class="profilo-card" style="padding:24px 28px;border:1px solid var(--gray-700);border-radius:var(--radius);background:var(--card-bg);margin-bottom:20px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:8px"><span class="it">Notifiche &amp; categorie</span><span class="en">Notifications &amp; categories</span></div>
+        <p style="font-size:12px;color:var(--gray-400);line-height:1.6;margin:0 0 16px"><span class="it">Scegli le categorie per cui vuoi ricevere notifiche quando arriva un nuovo airdrop.</span><span class="en">Choose which categories trigger notifications for new airdrops.</span></p>
+        <div id="pref-status" style="display:none;font-size:12px;padding:8px 12px;border-radius:6px;margin-bottom:12px"></div>
+        <div id="pref-categories-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:16px">
+          <!-- categoria toggles injected by JS -->
+        </div>
+        <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--gray-900);border:1px solid var(--gray-700);border-radius:var(--radius-sm);cursor:pointer;margin-bottom:14px">
+          <input type="checkbox" id="pref-notify-all" style="width:18px;height:18px;cursor:pointer;accent-color:var(--gold)">
+          <div style="flex:1">
+            <div style="font-family:var(--font-b);font-size:13px;color:var(--white)"><span class="it">Notifiche broadcast</span><span class="en">Broadcast notifications</span></div>
+            <div style="font-size:11px;color:var(--gray-500);margin-top:2px"><span class="it">Ricevi anche notifiche per nuovi airdrop fuori dalle tue categorie preferite.</span><span class="en">Also get notifications for new airdrops outside your preferred categories.</span></div>
+          </div>
+        </label>
+        <button id="pref-save-btn" onclick="savePreferenze()" style="padding:12px 24px;background:var(--gold);border:none;color:var(--black);font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">SALVA PREFERENZE</span><span class="en">SAVE PREFERENCES</span></button>
+      </div>
+
+      <script>
+      const PREF_CATEGORIES = [
+        { slug:'smartphone',  it:'Smartphone',   en:'Smartphone' },
+        { slug:'sneakers',    it:'Sneakers',     en:'Sneakers' },
+        { slug:'gaming',      it:'Gaming',       en:'Gaming' },
+        { slug:'watches',     it:'Orologi',      en:'Watches' },
+        { slug:'electronics', it:'Elettronica',  en:'Electronics' },
+        { slug:'luxury',      it:'Luxury',       en:'Luxury' },
+        { slug:'moto',        it:'Moto',         en:'Motorcycles' },
+        { slug:'gioielli',    it:'Gioielli',     en:'Jewelry' },
+        { slug:'vintage',     it:'Vintage',      en:'Vintage' },
+        { slug:'arte',        it:'Arte',         en:'Art' }
+      ];
+
+      function renderPreferenzeUI(currentPrefs, notifyAll) {
+        const grid = document.getElementById('pref-categories-grid');
+        if (!grid) return;
+        const set = new Set(currentPrefs || []);
+        grid.innerHTML = PREF_CATEGORIES.map(c => `
+          <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:${set.has(c.slug)?'rgba(184,150,12,.08)':'var(--gray-900)'};border:1px solid ${set.has(c.slug)?'var(--gold)':'var(--gray-700)'};border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;font-size:13px">
+            <input type="checkbox" class="pref-cat-cb" value="${c.slug}" ${set.has(c.slug)?'checked':''} style="width:16px;height:16px;cursor:pointer;accent-color:var(--gold)" onchange="this.parentElement.style.background=this.checked?'rgba(184,150,12,.08)':'var(--gray-900)';this.parentElement.style.borderColor=this.checked?'var(--gold)':'var(--gray-700)'">
+            <span class="it">${c.it}</span><span class="en">${c.en}</span>
+          </label>
+        `).join('');
+        const cb = document.getElementById('pref-notify-all');
+        if (cb) cb.checked = notifyAll !== false;
+      }
+
+      async function loadPreferenze() {
+        if (!window.supabase || !window.currentUser) return;
+        try {
+          const { data, error } = await window.supabase.from('profiles')
+            .select('category_preferences,notify_all')
+            .eq('id', window.currentUser.id).single();
+          if (error) { console.warn('loadPreferenze', error); return; }
+          renderPreferenzeUI(data?.category_preferences || [], data?.notify_all !== false);
+        } catch (e) { console.warn('loadPreferenze', e); }
+      }
+
+      async function savePreferenze() {
+        if (!window.supabase || !window.currentUser) {
+          showPrefStatus('error', 'Utente non autenticato'); return;
+        }
+        const btn = document.getElementById('pref-save-btn');
+        btn.disabled = true; btn.style.opacity = '0.6';
+        const selected = Array.from(document.querySelectorAll('.pref-cat-cb:checked')).map(cb => cb.value);
+        const notifyAll = document.getElementById('pref-notify-all').checked;
+        try {
+          const { error } = await window.supabase.from('profiles').update({
+            category_preferences: selected, notify_all: notifyAll
+          }).eq('id', window.currentUser.id);
+          if (error) throw error;
+          showPrefStatus('ok', 'Preferenze salvate');
+        } catch (e) {
+          showPrefStatus('error', e.message || 'Errore salvataggio');
+        } finally {
+          btn.disabled = false; btn.style.opacity = '1';
+        }
+      }
+
+      function showPrefStatus(type, msg) {
+        const el = document.getElementById('pref-status');
+        if (!el) return;
+        el.textContent = msg;
+        el.style.display = 'block';
+        el.style.background = type === 'ok' ? 'rgba(73,234,203,.08)' : 'rgba(248,113,113,.08)';
+        el.style.color = type === 'ok' ? '#49EACB' : '#f87171';
+        el.style.border = '1px solid ' + (type === 'ok' ? 'rgba(73,234,203,.3)' : 'rgba(248,113,113,.3)');
+        setTimeout(() => { el.style.display = 'none'; }, 3500);
+      }
+
+      // Auto-load when tab-profilo becomes visible
+      document.addEventListener('DOMContentLoaded', () => {
+        const tab = document.getElementById('tab-profilo');
+        if (!tab) return;
+        const obs = new MutationObserver(() => {
+          if (tab.style.display !== 'none' && !tab.dataset.prefsLoaded) {
+            tab.dataset.prefsLoaded = '1';
+            loadPreferenze();
+          }
+        });
+        obs.observe(tab, { attributes:true, attributeFilter:['style'] });
+      });
+      </script>
+
       <!-- Danger zone -->
       <div class="profilo-card" style="padding:24px 28px;border:1px solid rgba(248,113,113,.3);border-radius:var(--radius);background:rgba(248,113,113,.04)">
         <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:#f87171;text-transform:uppercase;margin-bottom:8px"><span class="it">Zona pericolosa</span><span class="en">Danger zone</span></div>
@@ -1441,7 +1544,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.13-4.13.5</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.17-4.19.0</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->

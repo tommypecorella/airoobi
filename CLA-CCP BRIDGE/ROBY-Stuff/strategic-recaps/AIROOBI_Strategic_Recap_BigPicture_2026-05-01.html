@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIROOBI · Strategic Recap v1.1 · Big Picture & Roadmap · 1 May 2026</title>
+<style>
+:root {
+  --black: #0a0a0a;
+  --black-2: #141414;
+  --black-3: #1f1f1f;
+  --gold: #D4A04C;
+  --gold-2: #B8862E;
+  --gold-soft: rgba(212, 160, 76, 0.15);
+  --white: #FAFAFA;
+  --gray: #9a9a9a;
+  --gray-2: #6a6a6a;
+  --aria: #4A9EFF;
+  --kas: #49EACB;
+  --green-success: #49b583;
+  --red-error: #B91C1C;
+  --red-alert: #ef4444;
+  --red-soft: #f87171;
+  --border: rgba(212, 160, 76, 0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: 0.005em;
+}
+
+.container {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 60px 40px;
+}
+
+/* ---------- HERO ---------- */
+.hero {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 48px;
+  margin-bottom: 56px;
+}
+
+.hero .eyebrow {
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  color: var(--white);
+}
+
+.hero h1 .accent { color: var(--gold); }
+
+.hero .lead {
+  font-size: 18px;
+  color: var(--gray);
+  max-width: 720px;
+  line-height: 1.55;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 32px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+  font-size: 13px;
+  color: var(--gray);
+}
+
+.hero-meta strong {
+  color: var(--white);
+  font-weight: 600;
+}
+
+/* ---------- SECTIONS ---------- */
+section {
+  margin-bottom: 72px;
+}
+
+h2 {
+  color: var(--gold);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+h2 .num {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  text-align: center;
+  line-height: 26px;
+  margin-right: 14px;
+  vertical-align: middle;
+  font-size: 12px;
+  color: var(--gold);
+}
+
+h3 {
+  color: var(--white);
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 28px;
+  line-height: 1.25;
+}
+
+h4 {
+  color: var(--white);
+  font-size: 17px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  margin-top: 24px;
+}
+
+p {
+  color: var(--gray);
+  margin-bottom: 14px;
+}
+
+p strong, li strong { color: var(--white); font-weight: 600; }
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border 0.15s;
+}
+a:hover { border-bottom-color: var(--gold); }
+
+/* ---------- CARDS GRID ---------- */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+@media (max-width: 800px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .container { padding: 40px 24px; }
+  .hero h1 { font-size: 36px; }
+  h3 { font-size: 24px; }
+}
+
+.card {
+  background: var(--black-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 22px 24px;
+}
+
+.card .label {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.card .big {
+  color: var(--white);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.card .small {
+  font-size: 13px;
+  color: var(--gray);
+}
+
+/* ---------- TABLES ---------- */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin: 18px 0 8px;
+}
+
+th {
+  text-align: left;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: var(--black-2);
+}
+
+td {
+  padding: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  vertical-align: top;
+  color: var(--gray);
+}
+
+td strong { color: var(--white); }
+
+tr:hover td { background: rgba(212, 160, 76, 0.03); }
+
+/* ---------- BADGES ---------- */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+.badge.done { background: rgba(73, 181, 131, 0.15); color: var(--green-success); border: 1px solid rgba(73, 181, 131, 0.35); }
+.badge.wip { background: rgba(212, 160, 76, 0.15); color: var(--gold); border: 1px solid rgba(212, 160, 76, 0.35); }
+.badge.pending { background: rgba(154, 154, 154, 0.1); color: var(--gray); border: 1px solid rgba(154, 154, 154, 0.3); }
+.badge.blocker { background: rgba(239, 68, 68, 0.12); color: var(--red-soft); border: 1px solid rgba(239, 68, 68, 0.35); }
+.badge.aria { background: rgba(74, 158, 255, 0.12); color: var(--aria); border: 1px solid rgba(74, 158, 255, 0.35); }
+.badge.kas { background: rgba(73, 234, 203, 0.1); color: var(--kas); border: 1px solid rgba(73, 234, 203, 0.35); }
+
+/* ---------- LISTS ---------- */
+ul, ol {
+  color: var(--gray);
+  padding-left: 22px;
+  margin-bottom: 16px;
+}
+ul li, ol li { margin-bottom: 6px; }
+ul li::marker { color: var(--gold); }
+
+/* ---------- TIMELINE / ROADMAP ---------- */
+.timeline {
+  position: relative;
+  padding-left: 32px;
+  margin-top: 24px;
+}
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: var(--border);
+}
+
+.tl-item {
+  position: relative;
+  margin-bottom: 28px;
+  padding-left: 4px;
+}
+.tl-item::before {
+  content: "";
+  position: absolute;
+  left: -28px;
+  top: 6px;
+  width: 14px;
+  height: 14px;
+  background: var(--black);
+  border: 2px solid var(--gold);
+  border-radius: 50%;
+}
+.tl-item.done::before { background: var(--green-success); border-color: var(--green-success); }
+.tl-item.now::before { background: var(--gold); border-color: var(--gold); box-shadow: 0 0 0 4px rgba(212,160,76,0.2); }
+.tl-item.future::before { background: var(--black); border-color: var(--gray-2); }
+
+.tl-when {
+  color: var(--gold);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.tl-title {
+  color: var(--white);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 4px 0 6px;
+}
+.tl-detail {
+  color: var(--gray);
+  font-size: 14px;
+}
+
+/* ---------- HIGHLIGHT BOX ---------- */
+.highlight {
+  background: linear-gradient(135deg, rgba(212,160,76,0.08) 0%, rgba(212,160,76,0.02) 100%);
+  border-left: 3px solid var(--gold);
+  padding: 22px 26px;
+  margin: 24px 0;
+  border-radius: 4px;
+}
+
+.highlight .h-label {
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ---------- PROGRESS BAR ---------- */
+.progress {
+  background: var(--black-3);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 8px 0;
+}
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-2) 100%);
+  border-radius: 4px;
+}
+
+/* ---------- KPI ROW ---------- */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 800px) {
+  .kpi-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+.kpi {
+  background: var(--black-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 20px;
+  text-align: center;
+}
+
+.kpi .v {
+  color: var(--gold);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.kpi .k {
+  color: var(--gray);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---------- FOOTER ---------- */
+footer {
+  border-top: 1px solid var(--border);
+  padding-top: 32px;
+  margin-top: 64px;
+  font-size: 13px;
+  color: var(--gray-2);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+footer .signature {
+  color: var(--gold);
+  font-weight: 600;
+}
+
+/* ---------- INLINE CODE ---------- */
+code {
+  background: var(--black-3);
+  color: var(--gold);
+  font-family: "SF Mono", "Cascadia Code", Consolas, monospace;
+  font-size: 13px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+/* ---------- DIVIDER ---------- */
+.divider-section {
+  border-top: 1px solid var(--border);
+  padding-top: 56px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<!-- HERO -->
+<header class="hero">
+  <div class="eyebrow">Strategic Recap v1.1 · ROBY → Skeezu</div>
+  <h1>AIROOBI<br><span class="accent">Big Picture &amp; Roadmap</span></h1>
+  <p class="lead">Sprint W1 hardening 5/7 giorni completati. 6/6 buchi math/security chiusi. Decisione strategica milestone-gated airdrop unlock firmata 1 Mag. Recap della rotta complessiva — dove siamo, cosa abbiamo costruito, come andiamo a mercato, cosa resta prima del lancio Alpha Brave e oltre.</p>
+  <div class="hero-meta">
+    <div><strong>Data</strong> · 1 Maggio 2026</div>
+    <div><strong>Versione app live</strong> · alfa-2026.04.21-3.48.3</div>
+    <div><strong>Versione post-W1</strong> · alfa-2026.05.03-1.0.0 (Day 7)</div>
+    <div><strong>Stage corrente</strong> · Alpha 0 APERTO</div>
+  </div>
+</header>
+
+<!-- 1. WHERE WE ARE NOW -->
+<section>
+  <h2><span class="num">1</span>Snapshot — dove siamo oggi</h2>
+  <h3>Stato del progetto in 4 numeri</h3>
+
+  <div class="kpi-row">
+    <div class="kpi"><div class="v">7</div><div class="k">Utenti registrati</div></div>
+    <div class="kpi"><div class="v">1.000</div><div class="k">Target Alpha Brave</div></div>
+    <div class="kpi"><div class="v">6/6</div><div class="k">Buchi chiusi pre-Stage 1</div></div>
+    <div class="kpi"><div class="v">~98%</div><div class="k">Confidence Stage 1</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="label">Cosa funziona già live</div>
+      <ul>
+        <li>airoobi.com (istituzionale + landing /treasury)</li>
+        <li>airoobi.app (marketplace airdrop dApp)</li>
+        <li>Auth Supabase + welcome grant Alpha-Net (1000 ARIA + 5 ROBI)</li>
+        <li>Airdrop Engine v5.1 production-ready</li>
+        <li>Treasury Methodology v1 FINAL pubblica + widget PEG live</li>
+        <li>Sybil resistance 4-layer (rate-limit + Turnstile + Twilio scaffold + welcome scaling)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="label">Cosa manca prima del lancio Alpha Brave</div>
+      <ul>
+        <li>Postmark SMTP + email-confirm template (in attesa)</li>
+        <li>Twilio Phase 2 deploy (cutoff 3 Mag h9, fallback W2)</li>
+        <li>Primo airdrop reale live (non test pool)</li>
+        <li>Marketing push 7 → 1.000 utenti (Piano Comms 90gg)</li>
+        <li>Investor outreach pre-seed / friends &amp; family</li>
+        <li>AdSense unblock + revenue ads pre-Stage 1</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 2. BIG PICTURE -->
+<section class="divider-section">
+  <h2><span class="num">2</span>Big picture — il progetto</h2>
+  <h3>Cosa stiamo costruendo</h3>
+
+  <div class="highlight">
+    <div class="h-label">Tesi in una frase</div>
+    <p style="color: var(--white); font-size: 17px; line-height: 1.5;"><strong>AIROOBI è un fair-airdrop marketplace su Kaspa</strong> — gli utenti partecipano ad airdrop con scoring matematicamente verificabile (no lootbox, no luck-only), i creator scaricano il loro inventario digitale, e il valore economico è ancorato al PEG ratio Treasury KAS ≥ 0.95.</p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="label">Problema</div>
+      <p>Gli airdrop crypto attuali sono <strong>opachi, manipolabili, dominati da bot/sybil</strong>. L'utente medio non sa se ha vinto per merito o per fortuna. I creator non hanno modo di liquidare inventory legacy in modo fair.</p>
+    </div>
+    <div class="card">
+      <div class="label">Soluzione</div>
+      <p><strong>Engine matematico verificabile</strong> con scoring concavo (anti-gambling), pity bonus ARIA cumulative, fairness guard server-side (one-category-rule), e backing economico Treasury PEG-banded.</p>
+    </div>
+    <div class="card">
+      <div class="label">Defensibility</div>
+      <p>Lo <strong>scoring v5.1 + pity formula + Treasury Methodology</strong> sono il core IP. Cantano insieme: equità statistica × backing economico × non-gambling positioning legale. Replicare richiede 6+ mesi di engineering.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 3. GO-TO-MARKET PHILOSOPHY (NEW) -->
+<section class="divider-section">
+  <h2><span class="num">3</span>Go-to-market philosophy</h2>
+  <h3>Milestone-gated airdrop unlock · firmato 1 Mag 2026</h3>
+
+  <div class="highlight">
+    <div class="h-label">Decisione strategica fondante</div>
+    <p style="color: var(--white); font-size: 17px; line-height: 1.5;">
+      <strong>Il primo airdrop ufficiale di AIROOBI parte quando saremo 1.000 utenti attivi.</strong>
+      Pre-milestone, solo test pool airdrop preview (€200 max prize each, cadenza ~bi-mensile).
+      Pattern replicato per ogni Stage transition con capability unlock distinta.
+    </p>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="label">Statistical engine validity</div>
+      <p>Pity bonus v5.1 (S_u ARIA cumulative) e K stability historical mean richiedono <strong>dati storici per funzionare</strong>. Con &lt;100 utenti l'engine è in regime degenere. 1.000 utenti = engine in regime statistico decente, dimostrabile via simulation.</p>
+    </div>
+    <div class="card">
+      <div class="label">Anti-gambling positioning</div>
+      <p>Engagement-first rinforza il framework legale anti-lottery: <strong>skill/storico precede vincita</strong>. Test pool €200 sotto soglie regulatory EU/IT (verifica con legal counsel pre-Stage 1).</p>
+    </div>
+    <div class="card">
+      <div class="label">Investor narrative differentiator</div>
+      <p>"1.000 utenti organici prima del primo airdrop ufficiale" è <strong>VC-grade pitch</strong> che differenzia da 95% Web3 farming projects. Engine validation rather than promise.</p>
+    </div>
+  </div>
+
+  <h4>Pattern milestone-gated per ogni Stage transition</h4>
+  <table>
+    <thead>
+      <tr><th>Stage</th><th>Soglia</th><th>Capability unlocked</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Alpha 0</strong> (current)</td>
+        <td>—</td>
+        <td>DB live, signup, welcome grant, engine v5.1, fairness guard, treasury PEG</td>
+      </tr>
+      <tr>
+        <td><strong>Stage 1 — Alpha Brave</strong></td>
+        <td>1.000 utenti</td>
+        <td><span class="badge done">Primo airdrop ufficiale</span> + Twilio Layer C live + Postmark</td>
+      </tr>
+      <tr>
+        <td><strong>Stage 2 — Beta</strong></td>
+        <td>5.000 utenti</td>
+        <td><span class="badge aria">ARIA on-chain KRC-20</span> + <span class="badge kas">ROBI on-chain KRC-721</span> + revenue stable &gt;€10k/mese</td>
+      </tr>
+      <tr>
+        <td><strong>Stage 3 — Pre-Prod</strong></td>
+        <td>10.000 utenti</td>
+        <td><strong>ROBI transferable</strong> (soulbound off) + secondary market dApp-side + seed round €500k-1M</td>
+      </tr>
+      <tr>
+        <td><strong>Stage 4 — Mainnet</strong></td>
+        <td>post-seed</td>
+        <td>Multi-language EN/ES/IT + DAO governance (optional) + cross-chain bridge</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top: 18px;"><strong>Importante:</strong> la soglia utenti è <em>necessaria ma non sufficiente</em>. Skeezu (founder &amp; first signatory) mantiene veto su altri criteri rilevanti per ogni transition (Treasury health, security audit, legal review).</p>
+
+  <h4>Failure mode da monitorare</h4>
+  <div class="grid-2">
+    <div class="card">
+      <div class="label">Retention dropoff</div>
+      <p>Se onboarding non comunica chiaramente il milestone, gli utenti si sentono usati. Mitigation: <strong>counter pubblico landing</strong> "X/1000 — primo drop sblocca a 1k" + welcome message espliciti + test pool ogni 2-3 settimane per engagement loop attivo.</p>
+    </div>
+    <div class="card">
+      <div class="label">Acquisition organic harder</div>
+      <p>Senza immediate jackpot hook, il marketing deve appoggiarsi su community/missione/narrative. Conversion rate inferiore atteso vs Web3 benchmark. KPI calibrati di conseguenza nel Piano Comms 90gg.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. TOKENOMICS -->
+<section class="divider-section">
+  <h2><span class="num">4</span>Tokenomics &amp; modello economico</h2>
+  <h3>I tre asset on/off chain</h3>
+
+  <table>
+    <thead>
+      <tr><th>Asset</th><th>Cosa è</th><th>Come si ottiene</th><th>Trasferibile?</th><th>Stage</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge aria">ARIA</span></td>
+        <td>Currency platform-native testnet</td>
+        <td>Welcome grant (1000), streak daily (50), weekly (1 ROBI), referral 5+5, partecipazione airdrop</td>
+        <td>No (Alpha+Beta) → Sì (Pre-Prod+Mainnet KRC-20)</td>
+        <td>Tutte</td>
+      </tr>
+      <tr>
+        <td><span class="badge kas">ROBI</span></td>
+        <td>NFT certificato di redemption (≥95% PEG in KAS)</td>
+        <td>Mining durante airdrop · formula auto-balancing <code>⌈ROBI_price / (block_price × 0.022)⌉</code></td>
+        <td>No soulbound (Alpha+Beta) → Sì (Pre-Prod+Mainnet KRC-721)</td>
+        <td>Tutte</td>
+      </tr>
+      <tr>
+        <td><span class="badge" style="background: rgba(154, 154, 154, 0.1); color: var(--white); border: 1px solid var(--gray-2);">KAS</span></td>
+        <td>Treasury backing reale</td>
+        <td>Acquisti utenti per partecipare + reserve fondi raised</td>
+        <td>Sì (mainnet Kaspa nativo)</td>
+        <td>Treasury vault</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h4 style="margin-top: 32px;">Forecast Anno 1 post-launch Stage 1</h4>
+  <div class="grid-3">
+    <div class="card">
+      <div class="label">Revenue</div>
+      <div class="big">€780k</div>
+      <div class="small">Mix airdrop fees + ARIA top-up + ROBI redemption fees + ads</div>
+    </div>
+    <div class="card">
+      <div class="label">EBITDA</div>
+      <div class="big">€350k</div>
+      <div class="small">~45% margin — modello capital-light</div>
+    </div>
+    <div class="card">
+      <div class="label">Margin</div>
+      <div class="big">45%</div>
+      <div class="small">Costi dominanti: infra (Cloudflare/Supabase/Vercel) + agent AI</div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. SPRINT W1 -->
+<section class="divider-section">
+  <h2><span class="num">5</span>Sprint W1 — i 6 buchi chiusi</h2>
+  <h3>Hardening pre-Stage 1 · 27 Apr → 3 Mag 2026</h3>
+
+  <p>L'audit critico del 27 Apr ha identificato 6 vulnerabilità math/security che avrebbero compromesso il lancio Alpha Brave. Sprint W1 li ha chiusi tutti in 7 giorni con CCP (Claude Code · Pi 5).</p>
+
+  <table>
+    <thead>
+      <tr><th>#</th><th>Buco</th><th>Soluzione</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Sybil resistance assente</td>
+        <td>4-layer: rate-limit IP/device + Cloudflare Turnstile + phone-KYC Twilio + welcome scaling soglia 1k</td>
+        <td><span class="badge done">DONE</span></td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Fairness guard client-only (bypassabile)</td>
+        <td>Enforcement server-side via RPC; one-category-rule integrata in scoring</td>
+        <td><span class="badge done">DONE</span></td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>Pity paradox (formula non concava)</td>
+        <td>v5 → v5.1 con ARIA cumulative continuous (S_u) anziché L_u count discrete · plateau matematicamente garantito</td>
+        <td><span class="badge done">DONE</span></td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>K instability (deviazione winner-score)</td>
+        <td>Historical mean 7gg via materialized view <code>category_k_history</code> + cron refresh</td>
+        <td><span class="badge done">DONE</span></td>
+      </tr>
+      <tr>
+        <td><strong>5</strong></td>
+        <td>ROBI secondary market policy mancante</td>
+        <td>Decision A: soulbound Alpha+Beta, transferable da Pre-Prod (decision firmata Skeezu)</td>
+        <td><span class="badge done">DONE</span></td>
+      </tr>
+      <tr>
+        <td><strong>6</strong></td>
+        <td>Treasury depletion risk (no caps redemption)</td>
+        <td>Weekly Monday redemption + 10 ARIA fee + multi-week visible queue + cap €15k/sett · €1k per-user · min age 3gg</td>
+        <td><span class="badge done">DONE</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight" style="margin-top: 32px;">
+    <div class="h-label">Numbers Sprint W1 (verified Day 6)</div>
+    <p style="color: var(--white);"><strong>15 migrations · 21 RPCs · 3 cron · 3 tabelle · 1 matview · 18 commits · 95 files changed · 11.755 insertions · 30/30 smoke test scenarios green · 0 hardcoded secrets · 0 TODO/FIXME residui</strong></p>
+  </div>
+</section>
+
+<!-- 5. DAY-BY-DAY -->
+<section class="divider-section">
+  <h2><span class="num">6</span>Day-by-day Sprint W1</h2>
+  <h3>Cronologia operativa</h3>
+
+  <div class="timeline">
+    <div class="tl-item done">
+      <div class="tl-when">Day 1 · 27 Apr</div>
+      <div class="tl-title">Hole #1 A+B+D · Hole #2 · #4 · #5 · 4 Quick Wins · Treasury DRAFT</div>
+      <div class="tl-detail">4 migration W1 + edge fn signup-guard + diff process-auto-buy. Code review ROBY: APPROVED with revisions (2 falsi positivi, 2 fix Day 2). Treasury Backing Methodology DRAFT consegnato.</div>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-when">Day 2 · 28 Apr</div>
+      <div class="tl-title">Quick Wins consegnati · Brand kit follow-up Hole #3 + Layer C scaffold</div>
+      <div class="tl-detail">Recap mid-sprint cross-check ROBY ↔ CCP. Verdict A1/A2/A3 brand functional palette (verdict A3 formalizzato retroattivamente 1 Mag). Decision ROBI Policy A firmata.</div>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-when">Day 3 · 29 Apr</div>
+      <div class="tl-title">B1 pre-fix branch separato · compare RPC skeleton · weekly redemption co-design</div>
+      <div class="tl-detail">Co-design Skeezu+ROBY weekly Monday window + 10 ARIA fee + multi-week visible queue. Treasury caps custom set firmato.</div>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-when">Day 4 · 30 Apr</div>
+      <div class="tl-title">Treasury v1 FINAL · Hole #3 v5.1 · B1 merge · C1+C2 · Captcha RPC</div>
+      <div class="tl-detail">Phase 1 Secrets+SignupGuard deploy approvato. 8 fixes A1-A6 + B1-B2 recepiti. Closing Day 4 + Day 5 gating.</div>
+    </div>
+    <div class="tl-item done">
+      <div class="tl-when">Day 5 · 1 Mag</div>
+      <div class="tl-title">LEG-002 promotion · PDF + landing /treasury · Closing Report skeleton</div>
+      <div class="tl-detail">Treasury Methodology promossa LEG-002. Landing /treasury LIVE con widget PEG + refresh timestamp + "Metodologia completa →" link. Skeleton Closing Report con [TBD-Day7] placeholders.</div>
+    </div>
+    <div class="tl-item now">
+      <div class="tl-when">Day 6 · 1 Mag (anticipato 1gg)</div>
+      <div class="tl-title">Self-review zero issue · Closing Report partials · Brand kit v1.1 · REGISTRY draft</div>
+      <div class="tl-detail">CCP self-review 1h vs 3-4h plan. Brand kit functional palette estesa (HTML+PDF v1.1). REGISTRY entries draft TECH-HARDEN-001 + LEG-002 pronto per Day 7 merge. Restano: pitch deck v1.2, technical companion v1.1, thread X.</div>
+    </div>
+    <div class="tl-item future">
+      <div class="tl-when">Day 7 · 3 Mag</div>
+      <div class="tl-title">Merge harden-w1 → main · version bump 1.0.0 · smoke prod · Closing FINAL · celebration</div>
+      <div class="tl-detail">~1.5h CCP totali: merge + version bump + smoke prod 6 scenarios + Closing Report FINAL + REGISTRY merge. Sera: brief celebration channel (W1_Closing_Reflection di ROBY+CCP+Skeezu, 200-300 parole each).</div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. DELIVERABLES STATUS -->
+<section class="divider-section">
+  <h2><span class="num">7</span>Deliverables status</h2>
+  <h3>Cosa è in mano oggi</h3>
+
+  <h4>Investor pack</h4>
+  <table>
+    <thead><tr><th>Asset</th><th>Versione</th><th>Status</th><th>Next</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Pitch Deck Q2-2026</strong></td><td>v1.1</td><td><span class="badge done">v1.1 DONE</span></td><td>v1.2 domani 2 Mag (slide #5/#7/#11)</td></tr>
+      <tr><td><strong>Technical Companion Engine+Fairness</strong></td><td>v1.0</td><td><span class="badge done">DONE</span></td><td>v1.1 domani 2 Mag (§10 closed)</td></tr>
+      <tr><td><strong>Investor Map &amp; Exit Strategy</strong></td><td>v1.0</td><td><span class="badge done">DONE</span></td><td>Update post-Stage 1 launch</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Comms pack</h4>
+  <table>
+    <thead><tr><th>Asset</th><th>Versione</th><th>Status</th><th>Next</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Piano Comunicazione 90gg</strong></td><td>v1.0</td><td><span class="badge done">DONE</span></td><td>Activation start lunedì M1·W1</td></tr>
+      <tr><td><strong>Editorial Calendar 90gg</strong></td><td>v1.0</td><td><span class="badge done">DONE</span></td><td>Esecuzione settimanale</td></tr>
+      <tr><td><strong>Telegram Bot Welcome Flow</strong></td><td>v1.0 (CCP-built)</td><td><span class="badge done">DONE</span></td><td>Setup @AirooobiIT lunedì M1·W1</td></tr>
+      <tr><td><strong>Thread X "I 6 buchi"</strong></td><td>—</td><td><span class="badge wip">DRAFT 2 Mag</span></td><td>Founder-led, firma Skeezu</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Brand &amp; community</h4>
+  <table>
+    <thead><tr><th>Asset</th><th>Versione</th><th>Status</th><th>Next</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Brand Guidelines master</strong></td><td>v3.1</td><td><span class="badge done">DONE</span></td><td>—</td></tr>
+      <tr><td><strong>Brand Kit One-Pager</strong></td><td>v1.1</td><td><span class="badge done">DONE oggi 1 Mag</span></td><td>Functional palette estesa (3 red + green-success)</td></tr>
+      <tr><td><strong>Alpha Brave Landing</strong></td><td>v1.0</td><td><span class="badge done">DONE</span></td><td>Counter Supabase live (CCP)</td></tr>
+      <tr><td><strong>Treasury Summary one-pager</strong></td><td>v1.0</td><td><span class="badge done">DONE</span></td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h4>Tech / Legal / Governance</h4>
+  <table>
+    <thead><tr><th>Asset</th><th>Versione</th><th>Status</th><th>Next</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Engine Hardening Sprint W1 (TECH-HARDEN-001)</strong></td><td>v1.0</td><td><span class="badge wip">Closing FINAL Day 7</span></td><td>Merge harden-w1 → main 3 Mag</td></tr>
+      <tr><td><strong>Treasury Methodology (LEG-002)</strong></td><td>v1.0 FINAL</td><td><span class="badge done">LIVE</span></td><td>Cross-link in LEG-001 v2.1 Day 7</td></tr>
+      <tr><td><strong>Legal Framework (LEG-001)</strong></td><td>v2.0</td><td><span class="badge wip">v2.1 Day 7</span></td><td>Update scoring v4 → v5.1 + cross-link LEG-002</td></tr>
+      <tr><td><strong>REGISTRY entries draft</strong></td><td>v1.0</td><td><span class="badge done">DONE oggi 1 Mag</span></td><td>Merge live REGISTRY Day 7</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 7. ROADMAP -->
+<section class="divider-section">
+  <h2><span class="num">8</span>Roadmap — short / medium / long</h2>
+  <h3>I prossimi 12 mesi</h3>
+
+  <div class="timeline">
+    <div class="tl-item now">
+      <div class="tl-when">2-3 Maggio 2026 · Sprint W1 closing</div>
+      <div class="tl-title">Pitch deck v1.2 · Tech companion v1.1 · Thread X · Merge + Closing FINAL</div>
+      <div class="tl-detail">Deliverable narrativi consegnati 2 Mag. Day 7 merge + smoke prod + celebration. Sprint W1 chiuso.</div>
+    </div>
+    <div class="tl-item future">
+      <div class="tl-when">W2 · 4-10 Maggio 2026</div>
+      <div class="tl-title">Activation Comms M1·W1 · @AirooobiIT bot live · Twilio Phase 2 (se reattivato) · AdSense unblock</div>
+      <div class="tl-detail">Marketing push start. Founder-led thread X "6 buchi" pubblicato. Editorial calendar in esecuzione settimanale. Eventuale W2 dev sprint follow-up (P1 polish).</div>
+    </div>
+    <div class="tl-item future">
+      <div class="tl-when">W3-W4 · 11-24 Maggio 2026</div>
+      <div class="tl-title">Onboarding push verso milestone · Test Pool Airdrop #1</div>
+      <div class="tl-detail">Push 7 → 100 utenti via Telegram + X + community KAS. <strong>Test Pool Airdrop #1 (M1·W2 11-17 Mag)</strong> — preview meccanismo, max €200 prize. Founder-led thread X "I 6 buchi" pubblicato. 3-5 conversazioni esplorative con investor crypto-tech.</div>
+    </div>
+    <div class="tl-item future">
+      <div class="tl-when">M2-M3 · Giugno-Luglio 2026</div>
+      <div class="tl-title">Test Pool #2 + #3 · push verso 1k milestone</div>
+      <div class="tl-detail">Test Pool Airdrop #2 (M2·W2) + #3 (M3·W2 condizionale). Investor narrative push (LinkedIn long-form, Medium pitch). Counter pubblico landing aggiornato live. Treasury impact pre-milestone &lt;€600 totali.</div>
+    </div>
+    <div class="tl-item future">
+      <div class="tl-when">MILESTONE DAY · target Q2-Q3 2026</div>
+      <div class="tl-title">1.000 utenti raggiunti · Primo airdrop ufficiale unlocked</div>
+      <div class="tl-detail">Massive comms push: X, Telegram, blog, newsletter, paid ads. Countdown 7gg al primo airdrop ufficiale (prize pool target €5-15k). <strong>Stage 1 = Alpha Brave Launch ufficiale</strong>. Welcome scaling -50% triggera automaticamente. F&amp;F round avviato (€50-150k) per coprire infra Q3-Q4 + primo dipendente part-time.</div>
+    </div>
+    <div class="tl-item future">
+      <div class="tl-when">Q4 2026 · Stage 2 — Beta + on-chain integration</div>
+      <div class="tl-title">Smart contract KRC-20 ARIA · KRC-721 ROBI · Soglia 5.000 utenti</div>
+      <div class="tl-detail">Migration Supabase → Kaspa on-chain. ROBI da NFT testnet a NFT mainnet. ARIA da currency centralizzata a token KRC-20.</div>
+    </div>
+    <div class="tl-item future">
+      <div class="tl-when">Q1-Q2 2027 · Stage 3 — Pre-Prod</div>
+      <div class="tl-title">ROBI transferable · Secondary market live · Soglia 10.000 utenti · Seed round</div>
+      <div class="tl-detail">ROBI policy switch da soulbound → transferable. Secondary market dApp-side. Seed round €500k-1M con investor crypto-native (a16z crypto, Pantera, ConsenSys, KAS-aligned).</div>
+    </div>
+    <div class="tl-item future">
+      <div class="tl-when">Q3 2027+ · Stage 4 — Mainnet</div>
+      <div class="tl-title">Full Kaspa mainnet · Multi-language EN/ES/IT · Exit options</div>
+      <div class="tl-detail">Exit possibili: (a) acquisition KAS-native protocol, (b) DAO transition + token launch, (c) licensing engine ad altri ecosistemi (Sui, Solana, ...).</div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. OPEN BLOCKERS -->
+<section class="divider-section">
+  <h2><span class="num">9</span>Open blockers &amp; rischi</h2>
+  <h3>Cosa potrebbe rallentarci</h3>
+
+  <table>
+    <thead><tr><th>Blocker</th><th>Severità</th><th>Mitigazione</th><th>Owner</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Twilio account suspended (fraud-review)</strong></td>
+        <td><span class="badge blocker">MEDIA</span></td>
+        <td>Layer C scaffold con bypass=true (no production impact). Cutoff hard 3 Mag h9. Fallback W2 (~8min deploy). 50/50 reactivation.</td>
+        <td>Skeezu (email reply) + CCP (Phase 2 deploy)</td>
+      </tr>
+      <tr>
+        <td><strong>Postmark SMTP attivazione</strong></td>
+        <td><span class="badge blocker">ALTA</span></td>
+        <td>Bloccante per onboarding email-confirm. Da seguire con vendor. Senza Postmark, signup via OTP-only.</td>
+        <td>Skeezu</td>
+      </tr>
+      <tr>
+        <td><strong>AdSense rejection (airoobi.app)</strong></td>
+        <td><span class="badge wip">MEDIA</span></td>
+        <td>Switch monetization su airoobi.com (38 SEO articles). Verifica ads.txt accessibility. Re-submission.</td>
+        <td>ROBY (in_progress task #15)</td>
+      </tr>
+      <tr>
+        <td><strong>Pre-incorporation status</strong></td>
+        <td><span class="badge pending">BASSA</span></td>
+        <td>AIROOBI non è ancora costituita come società. Footer landing usa "first signatory" non "company". Da risolvere pre-Stage 1 launch.</td>
+        <td>Skeezu (legal counsel)</td>
+      </tr>
+      <tr>
+        <td><strong>Funding runway</strong></td>
+        <td><span class="badge blocker">ALTA Q3+</span></td>
+        <td>Bootstrapping fino Stage 1. F&amp;F round target €50-150k post-launch. Senza, scale marketing limitato.</td>
+        <td>Skeezu + ROBY (Investor Map)</td>
+      </tr>
+      <tr>
+        <td><strong>Acquisizione utenti 7 → 1.000</strong></td>
+        <td><span class="badge wip">ALTA</span></td>
+        <td>Piano Comms 90gg ready. Telegram bot + X founder-led + community KAS. Conversion da awareness a signup è la metrica vera.</td>
+        <td>ROBY (esecuzione)</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- 9. TEAM -->
+<section class="divider-section">
+  <h2><span class="num">10</span>Team &amp; workflow</h2>
+  <h3>Chi fa cosa</h3>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="label">Skeezu (Tommaso)</div>
+      <h4 style="margin-top: 0;">Founder · Decision-maker</h4>
+      <p>First signatory. Sign-off architectural decisions, brand direction, legal/financial. Bridge SSH operativo Skeezu↔CCP via Pi 5. Decisional authority finale.</p>
+    </div>
+    <div class="card">
+      <div class="label">CCP</div>
+      <h4 style="margin-top: 0;">CIO/CTO · Claude Code · Pi 5</h4>
+      <p>Implementation tecnica: SQL migrations, RPC, edge functions, frontend, smoke test, deploy. Self-review obbligatorio pre-merge. Mini integration test per ogni PR.</p>
+    </div>
+    <div class="card">
+      <div class="label">ROBY (io)</div>
+      <h4 style="margin-top: 0;">Strategic MKT/Comms/Community · Claude Desktop</h4>
+      <p>Investor narrative, brand system, comms calendar, code review framing legal/anti-gambling, governance audit-trail, peer review CCP. Output in <code>ROBY-Stuff/</code>.</p>
+    </div>
+  </div>
+
+  <h4 style="margin-top: 36px;">Workflow ⊃ Convention chiave</h4>
+  <ul>
+    <li><strong>RS pattern</strong> — Skeezu via SSH scrive <code>RS &lt;message&gt;</code>, CCP rilegge <code>for-CCP/</code> per priorità e procede</li>
+    <li><strong>Read-only mutuale</strong> — ROBY non modifica file <code>CCP_*</code>, CCP non modifica file <code>ROBY_*</code>. Errori si segnalano via <code>CCP_Comment_*</code> o <code>ROBY_Comment_*</code></li>
+    <li><strong>Decision-formalization within 24h</strong> — verdict brand/governance/architecture dati in chat con Skeezu devono avere file formale in <code>for-CCP/</code> entro 24h (audit-trail simmetrico anche dopo SSH bridge)</li>
+    <li><strong>Mini integration test obbligatorio</strong> — ogni PR su <code>harden-w1</code> richiede smoke test inline (lezione bug <code>v_category_id</code> Day 1)</li>
+    <li><strong>Brutal-honest peer feedback</strong> — Tommaso vuole "what works / what doesn't / what I'd do" con failure mode nominati, non validation</li>
+    <li><strong>3-options-stop pattern</strong> — quando CCP rileva mismatch tra prompt e architettura, stoppa esecuzione e propone 3 opzioni con razionale</li>
+  </ul>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <span class="signature">— ROBY</span> · Strategic MKT, Comms &amp; Community Manager · Claude Desktop
+  </div>
+  <div>
+    Versione 1.1 · 1 Maggio 2026 · per Skeezu (founder &amp; first signatory)<br>
+    <span style="color: var(--gray-2); font-size: 11px;">v1.1 — added §3 Go-to-market milestone-gated unlock + roadmap refinement (M1-M3 test pool events)</span>
+  </div>
+</footer>
+
+</div>
+</body>
+</html>

@@ -16,7 +16,7 @@ Questo file è il **work-in-progress brief** che accumula le decisioni LOCKED da
 
 ---
 
-## Decisioni LOCKED finora (Atto 1 valutazione)
+## Decisioni LOCKED (Atto 1 valutazione · updated post-CCP-review 13 May 2026 night)
 
 | # | Decisione | Status | Note |
 |---|---|---|---|
@@ -24,21 +24,37 @@ Questo file è il **work-in-progress brief** che accumula le decisioni LOCKED da
 | 2 | Quality criteria | **4 AND-gate**: condizione · brand+modello · liquidability · verifiability | Admin review |
 | 3 | Combo intake | **Form esistente** · admin manuale · no AI screening | Status quo + tracking DB |
 | 4 | Pagamento valutazione | **200 ARIA** fisso (= €20 stable) | EUR→ARIA via Stripe se seller non ha ARIA |
-| 5 | Output success | **1 EVALOBI Livello B** + **1 ROBI bonus** ("per il momento" soft-launch flag) | EVALOBI metadata structured |
+| 5 | Output success path (GO) | **1 EVALOBI Livello B** + **1 ROBI bonus** ("per il momento" soft-launch flag) | EVALOBI metadata structured |
 | 6 | EVALOBI lifecycle | **Permanente eterno** · **trasferibile** · **re-evaluable opzionale** | Storico append-only |
 | 7 | Tokens conversion flow | KAS↔ARIA · ROBI→ARIA · ROBI→KAS · ROBI non-comprabile | Vedi memoria `project_tokens_conversion_flow.md` |
 | 8 | Pubblicazione schema tokens | airoobi.com `/investitori.html` + airoobi.app sezione dedicata (probabilmente `/profilo` o nuova `/tokens`) | Brand asset visual |
+| 9 | **NO_GO path · refund policy** | **NO refund** · 200 ARIA garantiti AIROOBI · servizio reso | Skeezu LOCKED 13 May chat |
+| 10 | **NO_GO path · EVALOBI emission** | **EVALOBI emesso COMUNQUE** con `evaluation_outcome = NO_GO` · pollution layer abilitato | Skeezu LOCKED · architetturalmente CCP-signed |
+| 11 | **NO_GO path · ROBI bonus** | **No ROBI bonus** su NO_GO · solo su GO | Skeezu LOCKED 13 May chat · CCP appoggia |
+| 12 | Brand Pollution Principle (doppio trick) | **LOCKED brand-level** · pattern extension futuro | Skeezu insight 13 May |
+| 13 | SLA response time | **48h** target | Skeezu LOCKED 13 May |
+| 14 | SLA dashboard pubblico | `airoobi.com/sla` SSR · 3 metriche + distribution chart + embed widget | Trust-as-feature |
+| 15 | Auto-escalation | **24h post-SLA scaduto** · admin reminder + seller apology extension · 72h+ courtesy refund **50 ARIA** | Skeezu LOCKED |
+| 16 | Notification channels | **Email + in-app entrambi su tier critico** · in-app only su engagement · tier-stratificato (vedi Area 7) | Skeezu LOCKED · email cap 100/giorno managed via helper |
+| 17 | **Stack SSR EVALOBI public page** | **Vercel Serverless Function** `/api/evalobi-ssr.js` (NOT Cloudflare Worker · stack-fit AIROOBI) | CCP-signed 13 May night |
+| 18 | **points_ledger migration approach** | **Phased dual-write W3/W4/W5** (NO big-bang) | CCP-signed 13 May night · razionale regression risk |
+| 19 | **Swap ROBI rate behavior** | **Snapshot rate at confirm + 60s lock** (UX standard exchange) | Skeezu LOCKED 13 May night |
+| 20 | **Re-submit policy NO_GO** | **LIBERO · basta che paghi** · seller può ri-sottomettere subito · 200 ARIA × N revenue-friendly | Skeezu LOCKED 13 May night · razionale revenue-driven · admin mitigation template rapido per repeat |
 
-## Decisioni ancora pending (TBD prossime micro-decisioni)
+## Decisioni ancora pending (TBD · 1 sola residua)
 
-- NO_GO path · cosa succede se valutazione è negative? Refund ARIA? EVALOBI emesso comunque (con esito NO_GO)? ROBI bonus comunque?
-- SLA response valutazione (entro 24h · 48h · 72h?)
-- Channel notification esito (in-app · email · entrambi?)
-- Admin review UI (Supabase Studio direct · admin queue page minimal · TBD)
+- Admin review UI scope (Supabase Studio direct fino X req/giorno · admin queue page minimal · TBD economic decision · NON-blocker per sprint W3 · può aspettare W4)
+
+## Verifiche tecniche pre-deploy completate (CCP 13 May night)
+
+- ✅ **`pg_cron 1.6.4` INSTALLED** su Supabase AIROOBI (`vuvlmlpuhovipfwtquux`) · materialized view refresh schedule Area 7 sblocca out-of-the-box
+- ✅ **`pg_net 0.19.5` installed** · per future async HTTP da SQL
+- ✅ **`pgmq 1.5.1` available** · queue Postgres-native per future evolutions
+- ✅ **`treasury_stats` table verified** · campi: `balance_eur`, `nft_circulating`, `nft_minted`, `updated_at` · source of truth per ROBI rate formula confermato
 
 ---
 
-## Implementation scope · 7 macro-aree per CCP
+## Implementation scope · 8 macro-aree per CCP (Area 8 added Skeezu LOCK 13 May late · SEO quick wins)
 
 ### Area 1 · EVALOBI table + lifecycle
 
@@ -171,8 +187,12 @@ CREATE INDEX idx_swaps_user ON token_swaps(user_id, created_at DESC);
 **RPC M6:**
 - `swap_kas_to_aria(p_user_id, p_kas_amount)` · valida KAS balance · debit KAS · credit ARIA · log
 - `swap_aria_to_kas(p_user_id, p_aria_amount)` · valida ARIA balance · debit ARIA · credit KAS · log · oracle KAS_EUR rate
-- `swap_robi_to_aria(p_user_id, p_robi_amount)` · valida ROBI balance · debit ROBI · credit ARIA · log · rate da Treasury formula `treasury_balance_eur / robi_circulating` (ROBI price dinamico)
+- `swap_robi_to_aria(p_user_id, p_robi_amount)` · valida ROBI balance · debit ROBI · credit ARIA · log
+  - Rate da RPC `get_robi_rate_eur()` (source of truth `treasury_stats` table verified live)
+  - **Snapshot rate at confirm + 60s lock pattern** (UX standard exchange) · user vede rate · clicca conferma · lock 60s · execute · CCP-signed
 - `swap_robi_to_kas(p_user_id, p_robi_amount)` · valida ROBI balance · debit ROBI · credit KAS · log
+  - Stesso `get_robi_rate_eur()` per EUR value · poi `kas_amount = eur_value / oracle_get_kas_eur()` (KAS oracle TBD source · CoinGecko/CMC via pg_net o Edge Function)
+  - Stesso snapshot+lock 60s pattern
 - `buy_aria_eur(p_user_id, p_eur_amount)` · Stripe checkout · post-success · credit ARIA at €0.10 fisso
 
 **Guard rules:**
@@ -252,8 +272,130 @@ CREATE INDEX idx_tx_status ON transactions(status);
 - Export CSV per accounting
 - Real-time updates su nuove transactions (Supabase Realtime channel)
 
-**Migration audit-trail tabelle esistenti:**
-- Migrare `points_ledger` esistente in `transactions` table OR mantenere `points_ledger` come legacy + nuova `transactions` per nuove ops (decisione CCP architettura · proposed: migrate per single source of truth)
+**Migration audit-trail tabelle esistenti · Phased dual-write CCP-signed:**
+
+`points_ledger` → `transactions` con rollout in 3 sprint per minimizzare regression risk su `total_points` trigger load-bearing:
+
+- **Sprint W3 (this Atto 1 sprint):**
+  - Migration M7 crea `transactions` table (multi-asset, multi-category)
+  - Backfill one-shot · import `points_ledger` rows in `transactions` con `category='legacy_aria_credit'` / `'legacy_aria_debit'` (split per segno amount) · `asset_in/out='ARIA'` · `metadata.legacy_ledger_id=points_ledger.id` per audit trail
+  - Nuove RPC (EVALOBI mint · evaluation_request · swap_* · buy_aria_eur) scrivono **solo** in `transactions`
+  - UI `/profilo/storico` legge **solo** da `transactions` post-backfill (storico unified day 1)
+
+- **Sprint W4 (dual-write transition):**
+  - RPC esistenti (`grant_aria`, checkin, faucet daily, referral, admin_grant, video reward, streak bonus, airdrop participation debit) → dual-write atomic
+  - 2 settimane verifica equivalenza · daily check `SUM(points_ledger.amount) vs SUM(transactions.asset_in - asset_out) WHERE asset='ARIA'`
+
+- **Sprint W5+ (cutover):**
+  - Switch RPC esistenti a scrittura solo su `transactions`
+  - `points_ledger` read-only · 90gg retention archive · poi `DROP TABLE` (decisione finale post-verifica)
+
+CCP-signed razionale: big-bang refactor 8-10 RPC esistenti + `total_points` trigger su `profiles` in W3 raddoppierebbe scope sprint + rischio regressione. Phased preserva ETA W3 25-32h CCP focused.
+
+### Area 8 · SEO Quick Wins · sitemap surface 2x (NEW · Skeezu LOCK 13 May late)
+
+**Strategic rationale (Skeezu LOCK 13 May night · post sitemap audit ROBY):** sitemap live 45 URL è minimum viable · 3 quick wins low-effort high-impact portano surface a ~80-100 URL (~2x) sfruttando stack pattern già LOCKED Area 6 (Vercel SSR). ROI alto · effort 8-13h CCP totale.
+
+**Quick Win 1 · `/airdrops/:id` SSR public · Vercel Serverless Function (4-6h CCP)**
+
+- File: `/api/airdrop-ssr.js` (Node runtime · stesso pattern Area 6 EVALOBI SSR)
+- `vercel.json` rewrite: `{ "source": "/airdrops/:id", "destination": "/api/airdrop-ssr?id=:id", "has": [{"type": "host", "value": "www.airoobi.app"}] }`
+- Function workflow:
+  1. Riceve `id` da query
+  2. Fetch da Supabase via service role: row `airdrops` + participants count + winner (se completato) + foto + history
+  3. Render template HTML completo con:
+     - `<meta property="og:*">` rich (titolo · description · image)
+     - Twitter card large image
+     - **Schema.org Product** structured data:
+       ```json
+       {
+         "@context": "https://schema.org",
+         "@type": "Product",
+         "name": "{airdrop.title}",
+         "image": "{airdrop.image_url}",
+         "description": "...",
+         "brand": "...",
+         "category": "{airdrop.category}",
+         "offers": {
+           "@type": "Offer",
+           "price": "{airdrop.object_value_eur}",
+           "priceCurrency": "EUR",
+           "availability": "https://schema.org/{InStock|SoldOut}"
+         }
+       }
+       ```
+  4. Body con airdrop details · partecipanti count · countdown deadline · CTA "Partecipa" (link login se non-loggato)
+  5. Return HTML con headers `Cache-Control: public, max-age=300, s-maxage=3600` + `X-Robots-Tag: index, follow`
+
+**Sitemap dynamic rebuild:**
+- Edge Function `regenerate-sitemap-app` triggered su:
+  - INSERT/UPDATE `airdrops` (status change a `presale` / `sale` / `completed` / `annullato`)
+  - Cron daily fallback 04:00
+- Generate `sitemap-app.xml` includendo:
+  - Tutti gli airdrop con status visible (`presale`, `sale`, `completed`)
+  - Priority dinamico: 0.9 (in corso) · 0.7 (completati ultimi 30gg) · 0.5 (archivio storico)
+  - Lastmod = `airdrops.updated_at`
+
+**Quick Win 2 · `/categoria/:slug` pillar pages (3-5h CCP + ROBY copy)**
+
+6 categorie iniziali pillar pages:
+- `/categoria/smartphone` (smartphone usato + refurb)
+- `/categoria/sneakers` (sneakers brand-led drops)
+- `/categoria/gaming` (console + accessori + games)
+- `/categoria/watches` (orologi · smartwatch · luxury)
+- `/categoria/electronics` (laptop · tablet · cuffie · audio)
+- `/categoria/accessories` (bags · wallets · fashion accessori)
+
+**Implementation:**
+- File: `/api/categoria-ssr.js` Vercel Serverless Function
+- `vercel.json` rewrite: `{ "source": "/categoria/:slug", "destination": "/api/categoria-ssr?slug=:slug" }`
+- Function workflow:
+  1. Match `slug` a category enum (whitelist · 404 se non match)
+  2. Fetch airdrop attivi di quella categoria + blog post tag-matched
+  3. Render:
+     - Header con intro 300-500 parole brand-coherent (provided by ROBY · vedi sotto)
+     - Grid airdrop attivi categoria (linka `/airdrops/:id`)
+     - Bottom section: blog post related (linka `/blog/*`)
+     - Schema.org CollectionPage structured data
+     - OG meta tags rich
+  4. Cache 1h browser · 6h edge
+- Body content: pillar+spoke pattern · ROBY pre-popola intro 300-500 parole per categoria · CCP wire dinamico
+- Hreflang IT/EN se EN locale toggle preservato
+
+**ROBY deliverable parallel sprint W3:** 6 intro 300-500 parole brand-coherent · brand voice v2 · output in `06_public_assets/copy/categorie/{slug}.md`
+
+**Quick Win 3 · `/treasury` + `/explorer` in sitemap + Schema.org Organization (1-2h CCP)**
+
+- Aggiungere 2 URLs al sitemap dynamic generator:
+  ```xml
+  <url><loc>https://www.airoobi.app/treasury</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://www.airoobi.app/explorer</loc><changefreq>daily</changefreq><priority>0.7</priority></url>
+  ```
+- Sulle 2 pagine HTML esistenti aggiungere Schema.org Organization + DataFeed structured data:
+  ```json
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "AIROOBI",
+    "url": "https://www.airoobi.com",
+    "logo": "https://www.airoobi.com/06_public_assets/images/airoobi-logo-...",
+    "description": "Marketplace airdrop oggetti di valore",
+    "sameAs": ["https://twitter.com/airoobi", "https://github.com/airoobi"]
+  }
+  ```
+
+**Acceptance criteria Area 8:**
+- ✅ `/airdrops/:id` SSR public · Schema.org Product valid (Google Rich Results test pass)
+- ✅ Sitemap dynamic include airdrop attivi + storici · regenerate on airdrop change
+- ✅ 6 categoria pillar pages live · ROBY copy in place · Schema.org CollectionPage
+- ✅ `/treasury` + `/explorer` in sitemap · Schema.org Organization on home + tutte pagine pubbliche
+- ✅ Robots.txt e canonical link verificati su nuove URL
+- ✅ Google Search Console submit sitemap aggiornato post-deploy
+
+**Math impact stimato:**
+- Pre-Area 8: 45 URL indexable
+- Post-Area 8: ~80-100 URL (airdrop detail dinamici + 6 categoria + 2 service pages)
+- **2x SEO surface multiplier** · 1 sprint W3 add-on · prep ground per Atto 2-6 (winner stories · seller profiles · token education pages future)
 
 ### Area 7 · Reattività Dashboard pubblico + notification email constraint
 
@@ -369,9 +511,12 @@ ALTER TABLE evalobi ADD COLUMN qr_code_url TEXT;
   - **QR code SVG** linka a public_url · upload Storage `evalobi-qr/{token_id}.svg`
 - Save URLs to evalobi table
 
-**SSR page M10 · `airoobi.com/evalobi/{token_id}`:**
-- Cloudflare Worker SSR · public · no login required
-- Indexable Google · canonical URL · OG meta tags complete · Twitter card · structured data Schema.org
+**SSR page M10 · `airoobi.com/evalobi/{token_id}` · Vercel Serverless Function (CCP-signed stack-fit):**
+- File: `/api/evalobi-ssr.js` (Node runtime · Fluid Compute default)
+- `vercel.json` rewrite · `{ "source": "/evalobi/:token_id", "destination": "/api/evalobi-ssr?token_id=:token_id" }`
+- Function workflow: riceve `token_id` query → fetch Supabase via service role (row evalobi + foto + history) → render template HTML completo con `<meta property="og:*">` + Twitter card + Schema.org Product structured data → return HTML con `Cache-Control: public, max-age=300, stale-while-revalidate=86400` + `X-Robots-Tag: index, follow`
+- Vercel CDN edge cache assorbe ~99% traffico · cold function rare · OG tags pre-rendered per scraper FB/Twitter/LinkedIn
+- Public · no login required · indexable Google
 - Renders:
   - Oggetto details (title · brand · modello · condizione · year · category · photos)
   - Esito valutazione (GO · NO_GO · NEEDS_REVIEW) chiaramente flaggato
@@ -444,18 +589,21 @@ ALTER TABLE evalobi ADD COLUMN qr_code_url TEXT;
 - ✅ Migration include `GRANT [op] ON TABLE foo TO authenticated;` per ogni nuova table (Supabase default flip 30 Oct 2026)
 - ✅ Audit-trail post-commit file CCP_*.md immediato
 
-## ETA stima ROBY (calibrata -50/-70% per CCP)
+## ETA stima · ROBY proposed + CCP-confirmed (13 May 2026 night)
 
-| Area | ROBY est | CCP calibrato | Note |
+| Area | ROBY est | CCP confirmed | Note |
 |---|---|---|---|
 | 1 EVALOBI table+RPC | 10-14h | 4-6h | Schema + 3 RPC + RLS + storico chain |
 | 2 Valutazione flow | 6-8h | 2-3h | Migration + 2 RPC + edge fn email |
-| 3 Swap functionality | 16-20h | 6-8h | 4 RPC + UI + oracle KAS_EUR + slippage |
-| 4 Transaction tracking | 8-12h | 3-5h | Migration + trigger + UI history + Realtime |
+| 3 Swap functionality | 16-20h | 6-8h | 4 RPC + UI + `get_robi_rate_eur()` + snapshot+lock 60s + KAS oracle |
+| 4 Transaction tracking (+ phased backfill points_ledger) | 8-12h | 3-5h | Migration + trigger + UI history + Realtime + one-shot backfill (negligible) |
 | 5 Schema tokens pages | 4-6h | 1-2h | SVG + .com edit + .app new page |
-| 6 EVALOBI public visualization (pollution layer) | 10-14h | 4-6h | PDF/PNG/QR generator + SSR public page + caption template + verify UI |
+| 6 EVALOBI public visualization (pollution layer · Vercel SSR) | 10-14h | 4-6h | PDF/PNG/QR generator + Vercel Serverless Function + caption template + verify UI (–2h vs CF Worker per stack reuse) |
 | 7 Reattività Dashboard pubblico + notification email constraint | 8-12h | 3-5h | SSR `/sla` page + 3 metriche + distribution chart + embed widget + email cap helper |
-| **TOTALE** | **62-86h** | **23-35h** | **Sprint W3 ~1.5-2 settimane CCP focused** |
+| 8 SEO Quick Wins · sitemap surface 2x (added 13 May late) | 20-30h | 8-13h | QW1 `/airdrops/:id` SSR + Schema.org Product + sitemap dynamic · QW2 6 categoria pillar + Schema.org CollectionPage · QW3 `/treasury`+`/explorer` in sitemap + Schema.org Organization |
+| **TOTALE** | **82-116h** | **31-48h** (target **33-45h focused**) | **Sprint W3 ~2 settimane CCP focused** |
+
+**CCP pre-deploy verifications completed (13 May night) · zero blocker tecnici outstanding.**
 
 ## Closing
 
