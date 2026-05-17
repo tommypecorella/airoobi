@@ -475,8 +475,11 @@ async function ackSubmit(airdropId, decision, btn) {
 }
 
 let _evalobiAll = [];
-let _evalobiRobiByTitle = {};
+let _evalobiRobiCandidates = {};
 
+// W4 Day 12 · M1 Option B fallback enhanced · seller_id pre-filtered in query +
+// per-version match via created_at proximity vs evaluated_at (disambiguates evalobi
+// v2 superseding case · same title multiple versions). Replaces title-only sum.
 async function loadEvalobi() {
   if (!CURRENT_USER) return;
   const container = document.getElementById('evalobi-container');
@@ -494,12 +497,16 @@ async function loadEvalobi() {
   ]);
   if (evalobiRes.error) { container.innerHTML = `<div class="alert err">Errore: ${evalobiRes.error.message}</div>`; return; }
   _evalobiAll = evalobiRes.data || [];
-  // Build title→shares aggregation from nft_rewards (title match fallback · no direct FK yet)
-  _evalobiRobiByTitle = {};
+  // Build title→[candidates] map · each candidate has shares + created_at_ms for proximity match
+  _evalobiRobiCandidates = {};
   (robiRes.data || []).forEach(r => {
     const t = ((r.metadata && r.metadata.title) || '').toLowerCase().trim();
     if (!t) return;
-    _evalobiRobiByTitle[t] = (_evalobiRobiByTitle[t] || 0) + Number(r.shares || 0);
+    if (!_evalobiRobiCandidates[t]) _evalobiRobiCandidates[t] = [];
+    _evalobiRobiCandidates[t].push({
+      shares: Number(r.shares || 0),
+      created_at_ms: r.created_at ? new Date(r.created_at).getTime() : 0
+    });
   });
   if (_evalobiAll.length === 0) {
     document.getElementById('evalobi-controls').style.display = 'none';
@@ -514,6 +521,25 @@ async function loadEvalobi() {
   catSel.innerHTML = '<option value="">Tutte le categorie</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
   if (current) catSel.value = current;
   applyEvalobiFilter();
+}
+
+// W4 Day 12 · M1 Option B · find best-matching ROBI shares for an EVALOBI
+// Uses title fallback (no FK linkage yet · W5 TODO source_evalobi_id column)
+// + per-version disambiguation via created_at proximity vs evaluated_at
+function _findRobiForEvalobi(evalobi) {
+  const t = (evalobi.object_title || '').toLowerCase().trim();
+  const candidates = _evalobiRobiCandidates[t];
+  if (!candidates || candidates.length === 0) return 0;
+  if (candidates.length === 1) return candidates[0].shares;
+  // Multi-match (v2 superseding case): pick candidate with closest created_at to evaluated_at
+  const evalMs = evalobi.evaluated_at ? new Date(evalobi.evaluated_at).getTime() : 0;
+  let best = candidates[0];
+  let bestDelta = Math.abs(best.created_at_ms - evalMs);
+  for (let i = 1; i < candidates.length; i++) {
+    const delta = Math.abs(candidates[i].created_at_ms - evalMs);
+    if (delta < bestDelta) { best = candidates[i]; bestDelta = delta; }
+  }
+  return best.shares;
 }
 
 function applyEvalobiFilter() {
@@ -543,7 +569,7 @@ function applyEvalobiFilter() {
     const pr = e.evaluation_price_range || {};
     const range = pr.min_eur && pr.max_eur ? `€${pr.min_eur}–€${pr.max_eur}` : '—';
     const outcomeBadge = {GO:'green', NO_GO:'red', NEEDS_REVIEW:'gold'}[e.evaluation_outcome] || 'gray';
-    const robiShares = _evalobiRobiByTitle[(e.object_title || '').toLowerCase().trim()] || 0;
+    const robiShares = _findRobiForEvalobi(e);
     const robiCell = robiShares > 0
       ? `<div><div style="color:var(--gray-500)">ROBI bonus</div><div style="font-family:var(--font-m);color:var(--gold)">+${robiShares.toFixed(2)}</div></div>`
       : `<div><div style="color:var(--gray-500)">ROBI bonus</div><div style="color:var(--gray-500)">—</div></div>`;
