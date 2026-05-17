@@ -110,15 +110,14 @@ function renderArchive(items, category, page, perPage, hasMore) {
   const pageLabel = page > 1 ? ` · pagina ${page}` : '';
   const fullTitle = title + pageLabel;
   const description = `Tutti gli airdrop completati su AIROOBI${category ? ' categoria ' + escapeHtml(category) : ''}. Storia, valori, partecipazione.`;
-  const baseQs = (extra) => {
-    const q = [];
-    if (category) q.push('category=' + encodeURIComponent(category));
-    if (extra && extra.page && extra.page !== 1) q.push('page=' + extra.page);
-    return q.length ? '?' + q.join('&') : '';
-  };
-  const canonical = `https://www.airoobi.com/storie-vincitori${baseQs({ page })}`;
-  const prevHref = page > 2 ? `/storie-vincitori${baseQs({ page: page - 1 })}` : (page === 2 ? `/storie-vincitori${baseQs({})}` : null);
-  const nextHref = hasMore ? `/storie-vincitori${baseQs({ page: page + 1 })}` : null;
+  // W4 Day 12 · clean URL pattern /storie-vincitori/cat/{category} (BreadcrumbList SEO depth)
+  const basePath = category
+    ? `/storie-vincitori/cat/${encodeURIComponent(category)}`
+    : '/storie-vincitori';
+  const pageQs = (p) => (p && p !== 1) ? '?page=' + p : '';
+  const canonical = `https://www.airoobi.com${basePath}${pageQs(page)}`;
+  const prevHref = page > 2 ? `${basePath}${pageQs(page - 1)}` : (page === 2 ? `${basePath}${pageQs(1)}` : null);
+  const nextHref = hasMore ? `${basePath}${pageQs(page + 1)}` : null;
   const cards = items.map(d => {
     const date = d.draw_executed_at ? new Date(d.draw_executed_at).toLocaleDateString('it-IT', { year:'numeric', month:'short', day:'numeric' }) : '';
     return `<a href="${escapeHtml(d.story_public_url)}" class="card">
@@ -155,7 +154,7 @@ function renderArchive(items, category, page, perPage, hasMore) {
     breadcrumbItems.push({
       "@type":"ListItem","position":3,
       "name": category,
-      "item": `https://www.airoobi.com/storie-vincitori?category=${encodeURIComponent(category)}`
+      "item": `https://www.airoobi.com/storie-vincitori/cat/${encodeURIComponent(category)}`
     });
   }
   const breadcrumbLd = {
@@ -215,8 +214,7 @@ footer a { color:#B8960C;text-decoration:none }
   ${(prevHref || nextHref) ? `<nav class="pagination" aria-label="Paginazione storie">
     ${prevHref ? `<a class="page-btn" href="${prevHref}" rel="prev">← Pagina precedente</a>` : ''}
     <span class="page-indicator">Pagina ${page}</span>
-    <form class="page-jump" action="/storie-vincitori" method="get" aria-label="Vai a pagina">
-      ${category ? `<input type="hidden" name="category" value="${escapeHtml(category)}">` : ''}
+    <form class="page-jump" action="${basePath}" method="get" aria-label="Vai a pagina">
       <label for="page-jump-input">Vai a:</label>
       <input id="page-jump-input" type="number" name="page" min="1" value="${page}" aria-label="Numero pagina">
       <button type="submit">VAI →</button>
