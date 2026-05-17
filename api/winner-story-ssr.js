@@ -17,7 +17,8 @@ function escapeHtml(s) {
 function renderStory(d) {
   const title = `${escapeHtml(d.title)} · Storia AIROOBI`;
   const description = `Airdrop AIROOBI completato: ${escapeHtml(d.title)} (€${d.object_value_eur}) · ${d.total_participants} partecipanti · raccolta ${d.aria_incassato} ARIA. Hai un oggetto simile? Scopri AIROOBI.`;
-  const ogImage = d.image_url || 'https://www.airoobi.com/og-image.png';
+  // W4 Day 12.5 · dynamic OG image per story via @vercel/og endpoint · fallback static
+  const ogImage = `https://www.airoobi.com/api/og-story?id=${encodeURIComponent(d.airdrop_id)}`;
   const canonical = `https://www.airoobi.com/storie-vincitori/${d.airdrop_id}`;
   const dateStr = d.draw_executed_at ? new Date(d.draw_executed_at).toLocaleDateString('it-IT', { year:'numeric', month:'long', day:'numeric' }) : '';
   const winnerLabel = d.winner_redacted ? 'Partecipante AIROOBI' : (d.winner_username ? '@' + escapeHtml(d.winner_username) : 'Partecipante AIROOBI');
