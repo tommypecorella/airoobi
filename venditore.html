@@ -177,26 +177,26 @@ a{color:inherit;text-decoration:none}
     <section id="sec-evalobi" class="sec" style="display:none">
       <h1 class="section-title">I miei EVALOBI</h1>
       <p class="section-sub">Certificati di valutazione emessi sui tuoi oggetti.</p>
-      <div class="card">
-        <div class="empty">Coming soon · W4 iteration · usa /dashboard per vedere asset attuali.</div>
+      <div id="evalobi-container">
+        <div class="empty">Caricamento…</div>
       </div>
     </section>
 
     <!-- PAYOUTS -->
     <section id="sec-payouts" class="sec" style="display:none">
       <h1 class="section-title">Payouts</h1>
-      <p class="section-sub">Storico incassi e fatturazione.</p>
-      <div class="card">
-        <div class="empty">Coming soon · in implementazione · Stripe wiring Stage 1.</div>
+      <p class="section-sub">Storico incassi airdrop finalizzati · split economica trasparente.</p>
+      <div id="payouts-container">
+        <div class="empty">Caricamento…</div>
       </div>
     </section>
 
     <!-- REVIEWS -->
     <section id="sec-reviews" class="sec" style="display:none">
       <h1 class="section-title">Recensioni</h1>
-      <p class="section-sub">Rating ricevuti post-consegna.</p>
-      <div class="card">
-        <div class="empty">Nessuna recensione disponibile (in attesa di consegne finalizzate).</div>
+      <p class="section-sub">Rating ricevuti dai vincitori post-consegna.</p>
+      <div id="reviews-container">
+        <div class="empty">Caricamento…</div>
       </div>
     </section>
 
@@ -229,6 +229,9 @@ function nav(section) {
   if (location.hash !== '#' + section) history.replaceState(null, '', '#' + section);
   if (section === 'airdrops') loadAirdrops();
   if (section === 'acknowledge') loadAcknowledge();
+  if (section === 'evalobi') loadEvalobi();
+  if (section === 'payouts') loadPayouts();
+  if (section === 'reviews') loadReviews();
 }
 
 function fmtDate(s) { return s ? new Date(s).toLocaleString('it-IT', { dateStyle:'short', timeStyle:'short' }) : '—'; }
@@ -273,7 +276,10 @@ async function loadOverview() {
   document.getElementById('kpi-active').textContent = active;
   document.getElementById('kpi-waiting').textContent = waiting;
   document.getElementById('kpi-completed').textContent = completed;
-  document.getElementById('kpi-evalobi').textContent = (my||[]).length;
+  const { count: evalobiCount } = await sb.from('evalobi')
+    .select('id', { count:'exact', head:true })
+    .eq('original_seller_id', CURRENT_USER.id);
+  document.getElementById('kpi-evalobi').textContent = evalobiCount || 0;
 
   const urgent = (my||[]).filter(a => a.status === 'waiting_seller_acknowledge');
   const list = document.getElementById('urgent-list');
@@ -384,6 +390,122 @@ async function ackSubmit(airdropId, decision, btn) {
     resultEl.innerHTML = `<div class="alert err">Errore: ${e.message || e}</div>`;
     card.querySelectorAll('button').forEach(b => b.disabled = false);
   }
+}
+
+async function loadEvalobi() {
+  if (!CURRENT_USER) return;
+  const container = document.getElementById('evalobi-container');
+  container.innerHTML = '<div class="empty">Caricamento…</div>';
+  const { data, error } = await sb.from('evalobi')
+    .select('id,token_id,object_title,object_brand,object_category,object_condition,evaluation_outcome,evaluation_price_range,evaluated_at,version,public_url')
+    .eq('original_seller_id', CURRENT_USER.id)
+    .order('evaluated_at', { ascending:false });
+  if (error) { container.innerHTML = `<div class="alert err">Errore: ${error.message}</div>`; return; }
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="card"><div class="empty">Nessun EVALOBI emesso · <a href="/vendi" style="color:var(--gold)">proponi il primo oggetto →</a></div></div>';
+    return;
+  }
+  container.innerHTML = data.map(e => {
+    const pr = e.evaluation_price_range || {};
+    const range = pr.min_eur && pr.max_eur ? `€${pr.min_eur}–€${pr.max_eur}` : '—';
+    const outcomeBadge = {GO:'green', NO_GO:'red', NEEDS_REVIEW:'gold'}[e.evaluation_outcome] || 'gray';
+    return `<div class="card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px">
+        <div>
+          <h3 style="font-family:var(--font-h);font-size:20px;color:var(--gold);margin-bottom:4px">${e.object_title}</h3>
+          <div style="font-size:12px;color:var(--gray-400)">${e.object_brand||''} ${e.object_condition.replace(/_/g,' ')} · ${e.object_category} · v${e.version}</div>
+        </div>
+        <span class="badge ${outcomeBadge}">${e.evaluation_outcome}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px;font-size:12px">
+        <div><div style="color:var(--gray-500)">Token ID</div><div style="font-family:var(--font-m);color:var(--gold)">#${e.token_id}</div></div>
+        <div><div style="color:var(--gray-500)">Range valutazione</div><div style="color:var(--gray-200)">${range}</div></div>
+        <div><div style="color:var(--gray-500)">Valutato il</div><div style="color:var(--gray-200)">${fmtDate(e.evaluated_at)}</div></div>
+      </div>
+      ${e.public_url ? `<div style="margin-top:14px"><a href="${e.public_url}" target="_blank" style="color:var(--gold);font-size:11px;letter-spacing:.5px">VEDI CERTIFICATO PUBBLICO →</a></div>` : ''}
+    </div>`;
+  }).join('');
+}
+
+async function loadPayouts() {
+  if (!CURRENT_USER) return;
+  const container = document.getElementById('payouts-container');
+  container.innerHTML = '<div class="empty">Caricamento…</div>';
+  const { data, error } = await sb.from('airdrops')
+    .select('id,title,category,status,aria_incassato,venditore_payout_eur,airoobi_fee_eur,fondo_contributo_eur,draw_executed_at')
+    .or(`submitted_by.eq.${CURRENT_USER.id},created_by.eq.${CURRENT_USER.id}`)
+    .in('status', ['completed','annullato'])
+    .not('venditore_payout_eur', 'is', null)
+    .order('draw_executed_at', { ascending:false });
+  if (error) { container.innerHTML = `<div class="alert err">Errore: ${error.message}</div>`; return; }
+  if (!data || data.length === 0) {
+    container.innerHTML = '<div class="card"><div class="empty">Nessun payout ancora · gli incassi appariranno qui dopo la finalizzazione del primo airdrop.</div></div>';
+    return;
+  }
+  const totalSeller = data.reduce((s,a) => s + Number(a.venditore_payout_eur||0), 0);
+  container.innerHTML = `
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+        <div>
+          <div style="font-size:11px;color:var(--gray-500);letter-spacing:.5px">TOTALE PAYOUT CUMULATIVO</div>
+          <div style="font-family:var(--font-h);font-size:32px;color:var(--gold)">€${totalSeller.toFixed(2)}</div>
+        </div>
+        <div style="font-size:11px;color:var(--gray-500)">${data.length} airdrop finalizzati</div>
+      </div>
+    </div>
+    ${data.map(a => `
+      <div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px;margin-bottom:14px">
+          <div>
+            <h3 style="font-family:var(--font-h);font-size:18px;color:var(--gold)">${a.title}</h3>
+            <div style="font-size:11px;color:var(--gray-500);font-family:var(--font-m)">${fmtDate(a.draw_executed_at)} · ${a.category}</div>
+          </div>
+          ${statusBadge(a.status)}
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;font-size:12px">
+          <div><div style="color:var(--gray-500)">Tua quota</div><div style="font-family:var(--font-m);color:var(--gold);font-size:16px">€${Number(a.venditore_payout_eur||0).toFixed(2)}</div></div>
+          <div><div style="color:var(--gray-500)">Treasury fondo</div><div style="color:var(--gray-200)">€${Number(a.fondo_contributo_eur||0).toFixed(2)}</div></div>
+          <div><div style="color:var(--gray-500)">Fee AIROOBI</div><div style="color:var(--gray-200)">€${Number(a.airoobi_fee_eur||0).toFixed(2)}</div></div>
+          <div><div style="color:var(--gray-500)">ARIA raccolto</div><div style="color:var(--gray-200)">${a.aria_incassato||0}</div></div>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+async function loadReviews() {
+  if (!CURRENT_USER) return;
+  const container = document.getElementById('reviews-container');
+  container.innerHTML = '<div class="empty">Caricamento…</div>';
+  const { data, error } = await sb.from('airdrop_claims')
+    .select('id,airdrop_id,rating,rating_notes,received_at,airdrops!inner(title,category,submitted_by,created_by)')
+    .not('rating', 'is', null)
+    .order('received_at', { ascending:false });
+  if (error) { container.innerHTML = `<div class="alert err">Errore: ${error.message}</div>`; return; }
+  const mine = (data||[]).filter(c => c.airdrops && (c.airdrops.submitted_by === CURRENT_USER.id || c.airdrops.created_by === CURRENT_USER.id));
+  if (mine.length === 0) {
+    container.innerHTML = '<div class="card"><div class="empty">Nessuna recensione ricevuta · le valutazioni appariranno dopo la conferma di consegna dai vincitori.</div></div>';
+    return;
+  }
+  const avg = (mine.reduce((s,c)=>s+c.rating,0) / mine.length).toFixed(2);
+  container.innerHTML = `
+    <div class="card" style="margin-bottom:16px;text-align:center">
+      <div style="font-size:11px;color:var(--gray-500);letter-spacing:.5px">RATING MEDIO</div>
+      <div style="font-family:var(--font-h);font-size:40px;color:var(--gold);line-height:1">${avg}<span style="font-size:20px;color:var(--gray-500)"> / 5</span></div>
+      <div style="font-size:11px;color:var(--gray-500);margin-top:4px">${mine.length} recensione${mine.length===1?'':' i'} ricevute</div>
+    </div>
+    ${mine.map(c => {
+      const stars = '★'.repeat(c.rating) + '☆'.repeat(5-c.rating);
+      return `<div class="card" style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px;margin-bottom:10px">
+          <h3 style="font-family:var(--font-h);font-size:18px;color:var(--gold)">${c.airdrops.title}</h3>
+          <div style="color:var(--gold);letter-spacing:2px">${stars}</div>
+        </div>
+        ${c.rating_notes ? `<div style="background:var(--gray-900);padding:12px;border-radius:6px;font-size:13px;color:var(--gray-300);line-height:1.5;margin-bottom:8px">"${c.rating_notes}"</div>` : ''}
+        <div style="font-size:10px;color:var(--gray-500);font-family:var(--font-m);letter-spacing:.5px">CONSEGNATO ${fmtDate(c.received_at)}</div>
+      </div>`;
+    }).join('')}
+  `;
 }
 
 window.addEventListener('hashchange', () => {

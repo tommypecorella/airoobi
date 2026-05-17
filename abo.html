@@ -592,6 +592,25 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <button class="bo-tab" data-bo="rifiutato" onclick="boFilter('rifiutato')">Rifiutati <span class="bo-tab-count" id="cnt-rifiutato">0</span></button>
       <button class="bo-tab" data-bo="all" onclick="boFilter('all')">Tutti <span class="bo-tab-count" id="cnt-all">0</span></button>
     </div>
+    <div id="bo-controls" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:12px 0;padding:10px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase">Categoria</label>
+        <select id="bo-cat-filter" onchange="boApplyCatSort()" style="background:var(--black);border:1px solid var(--gray-700);color:var(--white);padding:6px 10px;font-family:var(--font-m);font-size:11px;min-width:160px">
+          <option value="">Tutte le categorie</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase">Ordina per</label>
+        <select id="bo-sort" onchange="boApplyCatSort()" style="background:var(--black);border:1px solid var(--gray-700);color:var(--white);padding:6px 10px;font-family:var(--font-m);font-size:11px;min-width:160px">
+          <option value="created_desc">Data ↓ (recenti)</option>
+          <option value="created_asc">Data ↑ (vecchi)</option>
+          <option value="value_desc">Quotazione ↓</option>
+          <option value="value_asc">Quotazione ↑</option>
+          <option value="title_asc">Titolo A→Z</option>
+        </select>
+      </div>
+      <div style="margin-left:auto;font-size:10px;color:var(--gray-500);font-family:var(--font-m);letter-spacing:.5px" id="bo-results-count">—</div>
+    </div>
     <div id="bo-detail-panel"></div>
     <div id="bo-table-wrap"></div>
   </div>
@@ -2924,15 +2943,17 @@ async function catDelete(){
 var _boAllAirdrops=[];
 var _boFilter='in_valutazione';
 var _boTarget=null;
+var _boCatFilter='';
+var _boSort='created_desc';
 
 async function loadBoData(){
   var s=getSession();if(!s)return;
   try{
-    // Precarica categorie se non già in cache
     if(!_categoriesCache||!_categoriesCache.length){
       var cats=await sbGet('categories?order=sort_order.asc',s.access_token);
       _categoriesCache=cats||[];
     }
+    populateBoCatFilter();
     var res=await fetch(SB_URL+'/rest/v1/rpc/get_all_airdrops',{
       method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:'{}'
     });
@@ -2944,6 +2965,15 @@ async function loadBoData(){
   }catch(e){console.error('loadBoData:',e);showToast('Errore caricamento valutazioni','error');}
 }
 
+function populateBoCatFilter(){
+  var sel=document.getElementById('bo-cat-filter');if(!sel)return;
+  var current=sel.value;
+  var opts='<option value="">Tutte le categorie</option>';
+  (_categoriesCache||[]).forEach(function(c){if(c.is_active)opts+='<option value="'+escHtml(c.slug)+'">'+escHtml(c.name_it)+'</option>';});
+  sel.innerHTML=opts;
+  if(current)sel.value=current;
+}
+
 function boFilter(status){
   _boFilter=status;
   document.querySelectorAll('.bo-tab').forEach(function(t){t.classList.toggle('active',t.getAttribute('data-bo')===status)});
@@ -2951,10 +2981,29 @@ function boFilter(status){
   renderBoTable();
 }
 
+function boApplyCatSort(){
+  _boCatFilter=document.getElementById('bo-cat-filter').value||'';
+  _boSort=document.getElementById('bo-sort').value||'created_desc';
+  renderBoTable();
+}
+
 function getBoFiltered(){
-  if(_boFilter==='all')return _boAllAirdrops;
-  if(_boFilter==='rifiutato')return _boAllAirdrops.filter(function(a){return a.status==='rifiutato_min500'||a.status==='rifiutato_generico'});
-  return _boAllAirdrops.filter(function(a){return a.status===_boFilter});
+  var base;
+  if(_boFilter==='all')base=_boAllAirdrops.slice();
+  else if(_boFilter==='rifiutato')base=_boAllAirdrops.filter(function(a){return a.status==='rifiutato_min500'||a.status==='rifiutato_generico'});
+  else base=_boAllAirdrops.filter(function(a){return a.status===_boFilter});
+  if(_boCatFilter)base=base.filter(function(a){return a.category===_boCatFilter});
+  base.sort(function(a,b){
+    switch(_boSort){
+      case 'created_asc':return new Date(a.created_at)-new Date(b.created_at);
+      case 'value_desc':return (parseFloat(b.object_value_eur)||0)-(parseFloat(a.object_value_eur)||0);
+      case 'value_asc':return (parseFloat(a.object_value_eur)||0)-(parseFloat(b.object_value_eur)||0);
+      case 'title_asc':return (a.title||'').localeCompare(b.title||'');
+      default:return new Date(b.created_at)-new Date(a.created_at);
+    }
+  });
+  var cnt=document.getElementById('bo-results-count');if(cnt)cnt.textContent=base.length+' risultati';
+  return base;
 }
 
 function renderBoCounts(){
