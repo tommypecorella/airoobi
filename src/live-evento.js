@@ -6,7 +6,7 @@
   'use strict';
 
   const SB_URL = 'https://vuvlmlpuhovipfwtquux.supabase.co';
-  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDExMTUyMjEsImV4cCI6MjA1NjY5MTIyMX0.7Hd6JsB4PfcoIaSepW0DkmpzlxFhcz4eMpqo4lr8KX0';
+  const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
 
   function getAirdropId() {
     const m = location.pathname.match(/\/airdrops\/([0-9a-f-]+)/i);

@@ -127,6 +127,46 @@ Test endpoint SSR on www.airoobi.com production:
 - Da Lun 18/05 mattina production live aligned · 4-5gg buffer fix qualunque issue emerge prima Gio UAT
 - Alpha 0 zero traffic mitiga exposure rischio · cuscinetto preserved
 
+## ⚠️ FINDING 9 NUOVO P1 · post-merge SSR runtime errors (escalate Day 8)
+
+**Discovered POST production deploy (ca121f3 merge sprint-w4 → main):**
+
+Validation post-deploy:
+| Endpoint | Status | Body |
+|---|---|---|
+| `/favicon.ico` | 200 ✅ | F5 fix verified |
+| `/storie-vincitori` | **500** ⚠️ | Returns "Storia non trovata" (single-story fallback) instead of archive |
+| `/api/winner-story-ssr` | **500** ⚠️ | Same error |
+| `/api/evalobi-ssr` (no param) | 400 | Likely expected (route is /evalobi/:token, raw call w/o param) |
+| `/api/airdrop-ssr` (no param) | 400 | Likely expected |
+| `/api/sla-ssr` | **502** ⚠️ | Bad gateway · runtime exception |
+
+**Root cause CONFIRMED (post-deploy investigation):**
+
+GRANT check via Supabase MCP:
+- `get_winner_stories_archive` · anon execute → ✅
+- `get_winner_story_public` · anon execute → ✅
+- `get_evalobi_public` · anon execute → ✅
+- `get_airdrop_public` · anon execute → ✅
+
+GRANT non è il problema. Direct RPC call:
+- `SELECT get_winner_stories_archive(NULL, 20, 0)` → returns `[]` (empty array · Alpha 0 zero airdrop completati = expected)
+- `SELECT get_sla_metrics_30d()` → **function does not exist** in DB
+- Actual SLA function: `get_sla_metrics_public` (different name)
+- `sla_metrics_30d` is a MATERIALIZED VIEW (refresh cron) NOT a function
+
+**Bug 1 · winner-story-ssr.js empty-archive handling:**
+SSR when archive is empty (no completed airdrops yet) falls into single-story "Storia non trovata" fallback with status 500. Should render empty-archive page with status 200 + brand pollution preserved.
+
+**Bug 2 · sla-ssr.js RPC name mismatch:**
+Likely calls `get_sla_metrics_30d` (matview name, not function) → DB exception → SSR returns 502. Correct call should be `get_sla_metrics_public` o direct SELECT su materialized view.
+
+**Action Day 8 (Skeezu LOCK Lun):**
+- Read `api/winner-story-ssr.js` archive branch · fix empty-array handling (render empty archive 200)
+- Read `api/sla-ssr.js` · replace RPC call to `get_sla_metrics_public` or `SELECT * FROM sla_metrics_30d`
+- Re-validate prod post-fix · share buttons Day 6 must land su 200 archive page
+- Quick fix (~30 min context) · P1 priority Day 8 mattina pre MEDIUM items
+
 ## HIGH 5 · Mobile 380px (DONE static · UAT runtime needed)
 
 ### Static check
