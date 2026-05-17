@@ -48,7 +48,7 @@ function renderHtml(m) {
   <meta property="og:url" content="https://www.airoobi.com/sla">
   <meta property="og:title" content="${title}">
   <meta property="og:description" content="${description}">
-  <meta property="og:image" content="https://www.airoobi.com/og-image.png?v=4.13.5">
+  <meta property="og:image" content="https://www.airoobi.com/og-image.png?v=4.20.0">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
