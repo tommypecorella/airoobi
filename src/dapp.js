@@ -3258,6 +3258,55 @@ function _renderPartCard(item,isArchive){
     +'</div>';
 }
 
+// ── W4 Day 10 · Claim address modal ──
+function openClaimModal(airdropId,title){
+  var modal=document.getElementById('claim-modal-bg');if(!modal)return;
+  document.getElementById('claim-airdrop-id').value=airdropId;
+  var titleEl=document.getElementById('claim-modal-title');
+  if(titleEl)titleEl.textContent=title||'';
+  var errEl=document.getElementById('claim-modal-error');
+  if(errEl){errEl.style.display='none';errEl.textContent='';}
+  modal.classList.add('active');
+}
+function closeClaimModal(e){
+  if(e&&e.target&&e.target.id!=='claim-modal-bg')return;
+  var modal=document.getElementById('claim-modal-bg');if(!modal)return;
+  modal.classList.remove('active');
+}
+async function submitClaim(e){
+  e.preventDefault();
+  var btn=document.getElementById('claim-modal-submit');
+  var errEl=document.getElementById('claim-modal-error');
+  var airdropId=document.getElementById('claim-airdrop-id').value;
+  var address={
+    full_name:document.getElementById('claim-fullname').value.trim(),
+    street:document.getElementById('claim-street').value.trim(),
+    cap:document.getElementById('claim-cap').value.trim(),
+    city:document.getElementById('claim-city').value.trim(),
+    province:document.getElementById('claim-province').value.trim(),
+    country:document.getElementById('claim-country').value.trim()
+  };
+  var phone=document.getElementById('claim-phone').value.trim();
+  var notes=document.getElementById('claim-notes').value.trim()||null;
+  if(!address.full_name||!address.street||!address.cap||!address.city||!address.province||!address.country||!phone){
+    if(errEl){errEl.textContent='Compila tutti i campi obbligatori.';errEl.style.display='block';}
+    return;
+  }
+  btn.disabled=true;var origLabel=btn.textContent;btn.textContent='Invio…';
+  try{
+    var token=(_session&&_session.access_token)||null;
+    if(!token){throw new Error('Sessione scaduta · ricarica la pagina');}
+    var res=await sbRpc('claim_airdrop_prize',{p_airdrop_id:airdropId,p_shipping_address:address,p_shipping_phone:phone,p_shipping_notes:notes},token);
+    if(res&&res.ok===false)throw new Error(res.detail||res.error||'errore RPC');
+    closeClaimModal();
+    alert('Richiesta inviata. Il venditore è stato notificato. Riceverai aggiornamenti sulla spedizione.');
+    if(typeof loadMyParticipations==='function')loadMyParticipations();
+  }catch(err){
+    if(errEl){errEl.textContent='Errore: '+(err.message||err);errEl.style.display='block';}
+    btn.disabled=false;btn.textContent=origLabel;
+  }
+}
+
 // ── Atto 6 · Buyer reveal post-completed/annullato ──
 function _renderRevealBlock(a,item,status){
   var uid=_session&&_session.user&&_session.user.id;
@@ -3275,7 +3324,7 @@ function _renderRevealBlock(a,item,status){
       +'</div>'
       +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Inserisci l\'indirizzo di spedizione per ricevere l\'oggetto. Hai 14 giorni dalla data dell\'evento.</span><span class="en">Submit the shipping address to receive the item. You have 14 days from the event date.</span></div>'
       +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">'
-      +'<button onclick="goToAirdrop(\''+a.id+'\')" style="background:var(--gold);color:var(--black);border:none;padding:9px 18px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">RECLAMA L\'OGGETTO →</span><span class="en">CLAIM ITEM →</span></button>'
+      +'<button onclick="openClaimModal(\''+a.id+'\',\''+(a.title||'').replace(/\'/g,'\\\'')+'\')" style="background:var(--gold);color:var(--black);border:none;padding:9px 18px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">RECLAMA L\'OGGETTO →</span><span class="en">CLAIM ITEM →</span></button>'
       +storyLink
       +'</div></div>';
   }

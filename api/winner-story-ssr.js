@@ -176,10 +176,15 @@ h1 { font-family:'Cormorant Garamond',serif;color:#B8960C;font-size:36px;font-we
 .card-body { padding:14px 16px }
 .card-title { font-weight:600;margin-bottom:4px }
 .card-meta { color:#888;font-size:12px }
-.pagination { display:flex;gap:14px;justify-content:center;align-items:center;margin:40px 0 0 }
-.page-btn { padding:10px 22px;background:#111;border:1px solid #222;border-radius:8px;color:#fff;text-decoration:none;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;transition:border-color .2s,background .2s }
+.pagination { display:flex;gap:14px;justify-content:center;align-items:center;margin:40px 0 0;flex-wrap:wrap }
+.page-btn { padding:10px 22px;background:#111;border:1px solid #222;border-radius:8px;color:#fff;text-decoration:none;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;transition:border-color .2s,background .2s;cursor:pointer }
 .page-btn:hover { border-color:#B8960C;background:#1a1a1a }
 .page-indicator { font-family:'DM Mono',monospace;color:#888;font-size:11px;letter-spacing:1px }
+.page-jump { display:inline-flex;gap:8px;align-items:center;margin:0 8px;font-family:'DM Mono',monospace;font-size:11px;color:#888 }
+.page-jump input { width:60px;padding:9px 10px;background:#0a0a0a;color:#fff;border:1px solid #222;border-radius:6px;font-family:'DM Mono',monospace;font-size:12px;text-align:center }
+.page-jump input:focus { outline:none;border-color:#B8960C }
+.page-jump button { padding:9px 14px;background:#111;border:1px solid #222;border-radius:6px;color:#B8960C;font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.5px;cursor:pointer;transition:border-color .2s,background .2s }
+.page-jump button:hover { border-color:#B8960C;background:#1a1a1a }
 footer { color:#666;font-size:11px;text-align:center;padding:24px;border-top:1px solid #222;margin-top:40px }
 footer a { color:#B8960C;text-decoration:none }
 .empty { text-align:center;padding:60px;color:#888 }
@@ -193,6 +198,12 @@ footer a { color:#B8960C;text-decoration:none }
   ${(prevHref || nextHref) ? `<nav class="pagination" aria-label="Paginazione storie">
     ${prevHref ? `<a class="page-btn" href="${prevHref}" rel="prev">← Pagina precedente</a>` : ''}
     <span class="page-indicator">Pagina ${page}</span>
+    <form class="page-jump" action="/storie-vincitori" method="get" aria-label="Vai a pagina">
+      ${category ? `<input type="hidden" name="category" value="${escapeHtml(category)}">` : ''}
+      <label for="page-jump-input">Vai a:</label>
+      <input id="page-jump-input" type="number" name="page" min="1" value="${page}" aria-label="Numero pagina">
+      <button type="submit">VAI →</button>
+    </form>
     ${nextHref ? `<a class="page-btn" href="${nextHref}" rel="next">Pagina successiva →</a>` : ''}
   </nav>` : ''}
 </div>
