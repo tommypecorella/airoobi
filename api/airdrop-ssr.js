@@ -34,7 +34,7 @@ function renderHtml(data) {
   const blockPrice = data.block_price_aria ? `${data.block_price_aria} ARIA` : null;
   const productBrand = data.product_info?.brand || '';
   const productModel = data.product_info?.model || '';
-  const image = data.image_url || 'https://www.airoobi.app/og-image.png?v=4.13.5';
+  const image = data.image_url || 'https://www.airoobi.app/og-image.png?v=4.20.0';
   const title = `${escapeHtml(data.title)}${productBrand ? ' · ' + escapeHtml(productBrand) : ''} · AIROOBI Airdrop`;
   const description = `${escapeHtml(data.title)}${value ? ' · valore stimato ' + value : ''}${blockPrice ? ' · blocco a ' + blockPrice : ''} · ${escapeHtml(data.description || '').slice(0, 140)}`;
   const canonical = `https://www.airoobi.app/airdrops/${data.id}`;

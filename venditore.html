@@ -342,7 +342,7 @@ async function loadAirdrops() {
   const tbody = document.getElementById('airdrops-tbody');
   tbody.innerHTML = '<tr><td colspan="6" class="empty">Caricamento…</td></tr>';
   const { data, error } = await sb.from('airdrops')
-    .select('id,title,category,status,blocks_sold,total_blocks,deadline,seller_acknowledge_sla_deadline')
+    .select('id,title,category,status,blocks_sold,total_blocks,deadline,seller_acknowledge_sla_deadline,story_public_visible,story_public_url')
     .or(`submitted_by.eq.${CURRENT_USER.id},created_by.eq.${CURRENT_USER.id}`)
     .order('created_at', { ascending:false });
   if (error) { tbody.innerHTML = `<tr><td colspan="6" class="empty">Errore: ${error.message}</td></tr>`; return; }
@@ -357,9 +357,44 @@ async function loadAirdrops() {
       <td>${statusBadge(a.status)}</td>
       <td>${a.blocks_sold||0}/${a.total_blocks||0}</td>
       <td style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">${fmtDate(a.deadline)}</td>
-      <td>${a.status === 'waiting_seller_acknowledge' ? `<a href="#acknowledge" onclick="nav('acknowledge');return false" style="color:var(--gold);font-size:11px">→ Conferma</a>` : ''}</td>
+      <td>${renderAirdropAction(a)}</td>
     </tr>
   `).join('');
+}
+
+function renderAirdropAction(a) {
+  if (a.status === 'waiting_seller_acknowledge') {
+    return `<a href="#acknowledge" onclick="nav('acknowledge');return false" style="color:var(--gold);font-size:11px">→ Conferma</a>`;
+  }
+  if (a.status === 'completed' || a.status === 'annullato') {
+    const visible = a.story_public_visible !== false;
+    const btnClass = visible ? 'gold' : 'gray';
+    const btnLabel = visible ? 'Storia ON' : 'Storia OFF';
+    const linkPart = (visible && a.story_public_url)
+      ? `<a href="${a.story_public_url}" target="_blank" rel="noopener" style="color:var(--gray-400);font-size:11px;margin-left:8px">→ vedi</a>`
+      : '';
+    return `<button type="button" class="badge ${btnClass}" data-airdrop-id="${a.id}" data-visible="${visible}" onclick="toggleStoryVisibility('${a.id}', ${visible}, this)" style="cursor:pointer;border:none;font-family:var(--font-m);font-size:10px;letter-spacing:.5px">${btnLabel}</button>${linkPart}`;
+  }
+  return '';
+}
+
+async function toggleStoryVisibility(airdropId, currentVisible, btn) {
+  const newVisible = !currentVisible;
+  btn.disabled = true;
+  const originalLabel = btn.textContent;
+  btn.textContent = '…';
+  try {
+    const { data, error } = await sb.rpc('update_airdrop_story_visibility', {
+      p_airdrop_id: airdropId,
+      p_visible: newVisible
+    });
+    if (error) throw error;
+    loadAirdrops();
+  } catch (e) {
+    btn.textContent = originalLabel;
+    btn.disabled = false;
+    alert('Errore toggle storia: ' + (e.message || e));
+  }
 }
 
 async function loadAcknowledge() {
@@ -440,17 +475,32 @@ async function ackSubmit(airdropId, decision, btn) {
 }
 
 let _evalobiAll = [];
+let _evalobiRobiByTitle = {};
 
 async function loadEvalobi() {
   if (!CURRENT_USER) return;
   const container = document.getElementById('evalobi-container');
   container.innerHTML = '<div class="empty">Caricamento…</div>';
-  const { data, error } = await sb.from('evalobi')
-    .select('id,token_id,object_title,object_brand,object_category,object_condition,evaluation_outcome,evaluation_price_range,evaluated_at,version,public_url')
-    .eq('original_seller_id', CURRENT_USER.id)
-    .order('evaluated_at', { ascending:false });
-  if (error) { container.innerHTML = `<div class="alert err">Errore: ${error.message}</div>`; return; }
-  _evalobiAll = data || [];
+  // Parallel fetch: evalobi + ROBI bonus rows (source=object_valuation) for this seller
+  const [evalobiRes, robiRes] = await Promise.all([
+    sb.from('evalobi')
+      .select('id,token_id,object_title,object_brand,object_category,object_condition,evaluation_outcome,evaluation_price_range,evaluated_at,version,public_url')
+      .eq('original_seller_id', CURRENT_USER.id)
+      .order('evaluated_at', { ascending:false }),
+    sb.from('nft_rewards')
+      .select('shares,metadata,created_at')
+      .eq('user_id', CURRENT_USER.id)
+      .eq('source', 'object_valuation')
+  ]);
+  if (evalobiRes.error) { container.innerHTML = `<div class="alert err">Errore: ${evalobiRes.error.message}</div>`; return; }
+  _evalobiAll = evalobiRes.data || [];
+  // Build title→shares aggregation from nft_rewards (title match fallback · no direct FK yet)
+  _evalobiRobiByTitle = {};
+  (robiRes.data || []).forEach(r => {
+    const t = ((r.metadata && r.metadata.title) || '').toLowerCase().trim();
+    if (!t) return;
+    _evalobiRobiByTitle[t] = (_evalobiRobiByTitle[t] || 0) + Number(r.shares || 0);
+  });
   if (_evalobiAll.length === 0) {
     document.getElementById('evalobi-controls').style.display = 'none';
     container.innerHTML = '<div class="card"><div class="empty">Nessun EVALOBI emesso · <a href="/vendi" style="color:var(--gold)">proponi il primo oggetto →</a></div></div>';
@@ -493,6 +543,10 @@ function applyEvalobiFilter() {
     const pr = e.evaluation_price_range || {};
     const range = pr.min_eur && pr.max_eur ? `€${pr.min_eur}–€${pr.max_eur}` : '—';
     const outcomeBadge = {GO:'green', NO_GO:'red', NEEDS_REVIEW:'gold'}[e.evaluation_outcome] || 'gray';
+    const robiShares = _evalobiRobiByTitle[(e.object_title || '').toLowerCase().trim()] || 0;
+    const robiCell = robiShares > 0
+      ? `<div><div style="color:var(--gray-500)">ROBI bonus</div><div style="font-family:var(--font-m);color:var(--gold)">+${robiShares.toFixed(2)}</div></div>`
+      : `<div><div style="color:var(--gray-500)">ROBI bonus</div><div style="color:var(--gray-500)">—</div></div>`;
     return `<div class="card" style="margin-bottom:12px">
       <div style="display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:12px">
         <div>
@@ -504,6 +558,7 @@ function applyEvalobiFilter() {
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-top:14px;font-size:12px">
         <div><div style="color:var(--gray-500)">Token ID</div><div style="font-family:var(--font-m);color:var(--gold)">#${e.token_id}</div></div>
         <div><div style="color:var(--gray-500)">Range valutazione</div><div style="color:var(--gray-200)">${range}</div></div>
+        ${robiCell}
         <div><div style="color:var(--gray-500)">Valutato il</div><div style="color:var(--gray-200)">${fmtDate(e.evaluated_at)}</div></div>
       </div>
       ${e.public_url ? `<div style="margin-top:14px"><a href="${e.public_url}" target="_blank" style="color:var(--gold);font-size:11px;letter-spacing:.5px">VEDI CERTIFICATO PUBBLICO →</a></div>` : ''}

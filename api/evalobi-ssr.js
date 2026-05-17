@@ -46,7 +46,7 @@ function renderHtml(data) {
 
   const title = `EVALOBI #${data.token_id} · ${escapeHtml(data.object_brand)} ${escapeHtml(data.object_model)} · AIROOBI`;
   const description = `Certificato di valutazione AIROOBI per ${escapeHtml(data.object_title)} · esito ${outcome.label}${priceRange ? ' · ' + priceRange : ''}. Pollution layer: allegabile come prova di valutazione su Subito, Vinted, eBay.`;
-  const ogImage = data.public_image_url || `https://www.airoobi.com/og-image.png?v=4.13.5`;
+  const ogImage = data.public_image_url || `https://www.airoobi.com/og-image.png?v=4.20.0`;
   const canonical = `https://www.airoobi.com/evalobi/${data.token_id}`;
 
   const schemaOrg = {
