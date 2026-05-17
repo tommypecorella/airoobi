@@ -1623,6 +1623,9 @@ async function loadAdminAirdrops(){
       if(isDone){
         html+='<button onclick="adDrawPreview(\''+a.id+'\')" style="background:none;border:1px solid var(--gray-600);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px">RISULTATI</button>';
       }
+      if(a.status==='accettato'){
+        html+='<button data-id="'+a.id+'" data-title="'+escHtml(a.title).replace(/"/g,'&quot;')+'" onclick="adPublishListing(this.dataset.id,this.dataset.title)" style="background:var(--gold);border:1px solid var(--gold);color:var(--black);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px;font-weight:700">PUBBLICA</button>';
+      }
       html+='</td></tr>';
     });
     tbody.innerHTML=html;
@@ -1983,6 +1986,38 @@ async function adExecuteDraw(airdropId,title){
 }
 
 function drawModalClose(){document.getElementById('draw-modal-bg').classList.remove('active');}
+
+// ── Publish Airdrop Listing (Atto 2 admin orchestrator · accettato → presale|sale) ──
+async function adPublishListing(airdropId,title){
+  var s=getSession();if(!s){showToast('Sessione scaduta','error');return;}
+  var durStr=prompt('Durata airdrop (giorni · 1-60)\nStandard: 7 base · 10 mid · 14 premium\n\nOggetto: '+title,'7');
+  if(durStr===null)return;
+  var duration=parseInt(durStr,10);
+  if(!Number.isFinite(duration)||duration<1||duration>60){showToast('Durata non valida (1-60 giorni)','error');return;}
+  var presale=confirm('Abilitare PRESALE? (presale price + duration sovrascritti se sì)\n\nOK = SÌ presale+sale · ANNULLA = NO solo sale');
+  var isDemo=confirm('Visibilità DEMO solo Alpha Brave? (uso interno/test)\n\nOK = DEMO · ANNULLA = LIVE produzione');
+  var confirmMsg='Confermi pubblicazione airdrop:\n\n'
+    +'• Oggetto: '+title+'\n'
+    +'• Durata: '+duration+' giorni\n'
+    +'• Tipo: '+(presale?'PRESALE + SALE':'SOLO SALE')+'\n'
+    +'• Visibilità: '+(isDemo?'DEMO (Alpha Brave)':'LIVE pubblico');
+  if(!confirm(confirmMsg))return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/publish_airdrop_listing',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId,p_is_demo:isDemo,p_duration_days:duration,p_presale_enabled:presale})
+    });
+    if(!res.ok){var err=await res.text();throw new Error(err||('HTTP '+res.status));}
+    var result=await res.json();
+    if(result&&result.ok!==false){
+      showToast('Pubblicato: '+title+' · '+(result.status||(presale?'presale':'sale')),'success');
+      loadAdminAirdrops();
+    }else{
+      showToast('Errore pubblicazione: '+JSON.stringify(result),'error');
+    }
+  }catch(e){console.error('publishListing:',e);showToast('Errore: '+e.message,'error');}
+}
 
 // ── Airdrop Analysis ──
 async function loadAirdropStats(){
