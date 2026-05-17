@@ -1,0 +1,19 @@
+project_id = "vuvlmlpuhovipfwtquux"
+
+# Edge Functions JWT verify config
+# Cron-triggered functions deployed --no-verify-jwt because vault.secrets does not contain
+# service_role_key (only supabase_url is set). pg_cron HTTP POST cannot send valid JWT in
+# Authorization header without vault entry. Functions perform service_role ops internally
+# via Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") so disabling caller JWT verify is safe.
+#
+# Fix history: 2026-05-17 W4 Day 8 F7 · process-auto-buy redeploy --no-verify-jwt to
+# restore auto_buy_rules feature (had been silently failing 401 for 24h+ pre-discovery).
+
+[functions.check-deadlines]
+verify_jwt = false
+
+[functions.process-auto-buy]
+verify_jwt = false
+
+# Other functions (verify_jwt = true · default) require valid user JWT:
+# - phone-verify-init, phone-verify-confirm, signup-guard, send-push, process-redemption-queue
