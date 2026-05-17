@@ -146,6 +146,22 @@ function renderArchive(items, category, page, perPage, hasMore) {
       }))
     };
   }
+  // Schema.org BreadcrumbList · SEO depth navigation (Day 11)
+  const breadcrumbItems = [
+    { "@type":"ListItem","position":1,"name":"AIROOBI","item":"https://www.airoobi.com" },
+    { "@type":"ListItem","position":2,"name":"Storie vincitori","item":"https://www.airoobi.com/storie-vincitori" }
+  ];
+  if (category) {
+    breadcrumbItems.push({
+      "@type":"ListItem","position":3,
+      "name": category,
+      "item": `https://www.airoobi.com/storie-vincitori?category=${encodeURIComponent(category)}`
+    });
+  }
+  const breadcrumbLd = {
+    "@context":"https://schema.org","@type":"BreadcrumbList",
+    "itemListElement": breadcrumbItems
+  };
 
   const linkRel = [];
   if (prevHref) linkRel.push(`<link rel="prev" href="https://www.airoobi.com${prevHref}">`);
@@ -164,6 +180,7 @@ ${linkRel.join('\n')}
 <meta property="og:title" content="${fullTitle}">
 <meta property="og:description" content="${description}">
 <script type="application/ld+json">${JSON.stringify(ldJson)}</script>
+<script type="application/ld+json">${JSON.stringify(breadcrumbLd)}</script>
 <style>
 body { background:#000;color:#fff;font-family:'Instrument Sans',sans-serif;margin:0;padding:0 }
 .wrap { max-width:1100px;margin:0 auto;padding:40px 20px }
