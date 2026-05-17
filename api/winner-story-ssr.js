@@ -61,6 +61,13 @@ h1 { font-family:'Cormorant Garamond',serif;color:#B8960C;font-size:38px;margin:
 .winner-box h2 { color:#B8960C;font-family:'Cormorant Garamond',serif;font-size:24px;margin:0 0 8px;font-weight:500 }
 .cta { background:#B8960C;color:#000;padding:18px 24px;border-radius:8px;text-align:center;margin:40px 0 0;font-weight:600 }
 .cta a { color:#000;text-decoration:none;display:block }
+.share-row { display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:28px 0 8px;padding:14px 16px;background:#0a0a0a;border:1px solid #222;border-radius:10px }
+.share-label { font-size:11px;color:#888;letter-spacing:.5px;text-transform:uppercase;margin-right:4px }
+.share-btn { display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;background:#111;color:#fff;text-decoration:none;font-size:12px;border:1px solid #222;transition:border-color .2s,background .2s }
+.share-btn:hover { border-color:#B8960C;background:#1a1a1a }
+.share-btn.wa svg { color:#25D366 }
+.share-btn.tg svg { color:#26A5E4 }
+.share-btn.x svg { color:#fff }
 footer { color:#666;font-size:11px;text-align:center;padding:24px;border-top:1px solid #222;margin-top:40px }
 footer a { color:#B8960C;text-decoration:none }
 </style>
@@ -80,6 +87,15 @@ footer a { color:#B8960C;text-decoration:none }
     <h2>${winnerLabel} ha ottenuto l'oggetto</h2>
     <p style="color:#ccc;margin:0">Su AIROOBI gli oggetti di valore vanno a chi accumula i blocchi giusti · ogni partecipazione conta verso le prossime occasioni della stessa categoria.</p>
   </div>
+  <div class="share-row" aria-label="Condividi questa storia">
+    <span class="share-label">Condividi questa storia</span>
+    <a class="share-btn wa" href="https://wa.me/?text=${encodeURIComponent(`Storia AIROOBI · ${d.title} (€${d.object_value_eur}) · ${d.total_participants} partecipanti · ${canonical}`)}" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 018.413 3.488 11.824 11.824 0 013.48 8.413c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.51 5.26l-.999 3.648 3.978-1.607z"/></svg> WhatsApp</a>
+    <a class="share-btn tg" href="https://t.me/share/url?url=${encodeURIComponent(canonical)}&text=${encodeURIComponent(`Storia AIROOBI · ${d.title} (€${d.object_value_eur})`)}" target="_blank" rel="noopener" aria-label="Telegram">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71l-4.07-3.01-1.96 1.85c-.23.23-.42.42-.83.42z"/></svg> Telegram</a>
+    <a class="share-btn x" href="https://twitter.com/intent/tweet?text=${encodeURIComponent(`Storia AIROOBI · ${d.title} · ${d.total_participants} partecipanti`)}&url=${encodeURIComponent(canonical)}" target="_blank" rel="noopener" aria-label="X">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X</a>
+  </div>
   <div class="cta">
     <a href="https://www.airoobi.app/airdrops">Vedi gli airdrop attivi su AIROOBI →</a>
   </div>
@@ -89,10 +105,20 @@ footer a { color:#B8960C;text-decoration:none }
 </body></html>`;
 }
 
-function renderArchive(items, category) {
+function renderArchive(items, category, page, perPage, hasMore) {
   const title = category ? `Storie vincitori · ${escapeHtml(category)} · AIROOBI` : 'Archivio storie vincitori · AIROOBI';
+  const pageLabel = page > 1 ? ` · pagina ${page}` : '';
+  const fullTitle = title + pageLabel;
   const description = `Tutti gli airdrop completati su AIROOBI${category ? ' categoria ' + escapeHtml(category) : ''}. Storia, valori, partecipazione.`;
-  const canonical = `https://www.airoobi.com/storie-vincitori${category ? '?category=' + encodeURIComponent(category) : ''}`;
+  const baseQs = (extra) => {
+    const q = [];
+    if (category) q.push('category=' + encodeURIComponent(category));
+    if (extra && extra.page && extra.page !== 1) q.push('page=' + extra.page);
+    return q.length ? '?' + q.join('&') : '';
+  };
+  const canonical = `https://www.airoobi.com/storie-vincitori${baseQs({ page })}`;
+  const prevHref = page > 2 ? `/storie-vincitori${baseQs({ page: page - 1 })}` : (page === 2 ? `/storie-vincitori${baseQs({})}` : null);
+  const nextHref = hasMore ? `/storie-vincitori${baseQs({ page: page + 1 })}` : null;
   const cards = items.map(d => {
     const date = d.draw_executed_at ? new Date(d.draw_executed_at).toLocaleDateString('it-IT', { year:'numeric', month:'short', day:'numeric' }) : '';
     return `<a href="${escapeHtml(d.story_public_url)}" class="card">
@@ -104,21 +130,40 @@ function renderArchive(items, category) {
     </a>`;
   }).join('');
 
+  const ldJson = {
+    "@context":"https://schema.org","@type":"CollectionPage","name": fullTitle,
+    "description": description, "url": canonical,
+    "isPartOf": { "@type":"WebSite","name":"AIROOBI","url":"https://www.airoobi.com" }
+  };
+  if (items.length) {
+    ldJson.mainEntity = {
+      "@type":"ItemList",
+      "itemListElement": items.map((d, i) => ({
+        "@type":"ListItem",
+        "position": (page - 1) * perPage + i + 1,
+        "url": d.story_public_url,
+        "name": d.title
+      }))
+    };
+  }
+
+  const linkRel = [];
+  if (prevHref) linkRel.push(`<link rel="prev" href="https://www.airoobi.com${prevHref}">`);
+  if (nextHref) linkRel.push(`<link rel="next" href="https://www.airoobi.com${nextHref}">`);
+
   return `<!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>${title}</title>
+<title>${fullTitle}</title>
 <meta name="description" content="${description}">
 <link rel="canonical" href="${canonical}">
+${linkRel.join('\n')}
 <meta property="og:type" content="website">
-<meta property="og:title" content="${title}">
+<meta property="og:title" content="${fullTitle}">
 <meta property="og:description" content="${description}">
-<script type="application/ld+json">${JSON.stringify({
-  "@context":"https://schema.org","@type":"CollectionPage","name": title,
-  "description": description, "url": canonical
-})}</script>
+<script type="application/ld+json">${JSON.stringify(ldJson)}</script>
 <style>
 body { background:#000;color:#fff;font-family:'Instrument Sans',sans-serif;margin:0;padding:0 }
 .wrap { max-width:1100px;margin:0 auto;padding:40px 20px }
@@ -131,6 +176,10 @@ h1 { font-family:'Cormorant Garamond',serif;color:#B8960C;font-size:36px;font-we
 .card-body { padding:14px 16px }
 .card-title { font-weight:600;margin-bottom:4px }
 .card-meta { color:#888;font-size:12px }
+.pagination { display:flex;gap:14px;justify-content:center;align-items:center;margin:40px 0 0 }
+.page-btn { padding:10px 22px;background:#111;border:1px solid #222;border-radius:8px;color:#fff;text-decoration:none;font-family:'DM Mono',monospace;font-size:12px;letter-spacing:1px;text-transform:uppercase;transition:border-color .2s,background .2s }
+.page-btn:hover { border-color:#B8960C;background:#1a1a1a }
+.page-indicator { font-family:'DM Mono',monospace;color:#888;font-size:11px;letter-spacing:1px }
 footer { color:#666;font-size:11px;text-align:center;padding:24px;border-top:1px solid #222;margin-top:40px }
 footer a { color:#B8960C;text-decoration:none }
 .empty { text-align:center;padding:60px;color:#888 }
@@ -139,8 +188,13 @@ footer a { color:#B8960C;text-decoration:none }
 <body>
 <div class="wrap">
   <h1>Storie vincitori AIROOBI</h1>
-  <p class="intro">Gli airdrop completati su AIROOBI · partecipazione e risultati pubblici.</p>
+  <p class="intro">Gli airdrop completati su AIROOBI · partecipazione e risultati pubblici${pageLabel}.</p>
   ${items.length === 0 ? '<div class="empty">Nessuna storia disponibile per ora.</div>' : `<div class="grid">${cards}</div>`}
+  ${(prevHref || nextHref) ? `<nav class="pagination" aria-label="Paginazione storie">
+    ${prevHref ? `<a class="page-btn" href="${prevHref}" rel="prev">← Pagina precedente</a>` : ''}
+    <span class="page-indicator">Pagina ${page}</span>
+    ${nextHref ? `<a class="page-btn" href="${nextHref}" rel="next">Pagina successiva →</a>` : ''}
+  </nav>` : ''}
 </div>
 <footer>AIROOBI &copy; 2026 · <a href="https://www.airoobi.com">airoobi.com</a> · <a href="https://www.airoobi.app">airoobi.app</a></footer>
 </body></html>`;
@@ -167,11 +221,20 @@ export default async function handler(req, res) {
   try {
     if (isArchive) {
       const category = req.query?.category || null;
-      const items = await fetchSupabase('get_winner_stories_archive', { p_category: category, p_limit: 20, p_offset: 0 });
+      const perPage = 20;
+      const pageRaw = parseInt(req.query?.page, 10);
+      const page = Number.isFinite(pageRaw) && pageRaw > 0 ? pageRaw : 1;
+      // Fetch perPage+1 to detect hasMore without separate count query
+      const items = await fetchSupabase('get_winner_stories_archive', {
+        p_category: category, p_limit: perPage + 1, p_offset: (page - 1) * perPage
+      });
+      const arr = Array.isArray(items) ? items : [];
+      const hasMore = arr.length > perPage;
+      const pageItems = hasMore ? arr.slice(0, perPage) : arr;
       res.setHeader('Content-Type','text/html; charset=utf-8');
       res.setHeader('Cache-Control','public, max-age=900, stale-while-revalidate=86400');
       res.setHeader('X-Robots-Tag','index, follow');
-      res.status(200).send(renderArchive(Array.isArray(items) ? items : [], category));
+      res.status(200).send(renderArchive(pageItems, category, page, perPage, hasMore));
       return;
     }
 

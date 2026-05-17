@@ -177,6 +177,34 @@ a{color:inherit;text-decoration:none}
     <section id="sec-evalobi" class="sec" style="display:none">
       <h1 class="section-title">I miei EVALOBI</h1>
       <p class="section-sub">Certificati di valutazione emessi sui tuoi oggetti.</p>
+      <div id="evalobi-controls" style="display:none;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:14px;padding:10px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label style="font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase">Esito</label>
+          <select id="evalobi-outcome-filter" onchange="applyEvalobiFilter()" style="background:var(--black);border:1px solid var(--gray-700);color:var(--white);padding:6px 10px;font-family:var(--font-m);font-size:11px;min-width:140px">
+            <option value="">Tutti gli esiti</option>
+            <option value="GO">GO</option>
+            <option value="NO_GO">NO_GO</option>
+            <option value="NEEDS_REVIEW">NEEDS_REVIEW</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label style="font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase">Categoria</label>
+          <select id="evalobi-cat-filter" onchange="applyEvalobiFilter()" style="background:var(--black);border:1px solid var(--gray-700);color:var(--white);padding:6px 10px;font-family:var(--font-m);font-size:11px;min-width:160px">
+            <option value="">Tutte le categorie</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <label style="font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase">Ordina per</label>
+          <select id="evalobi-sort" onchange="applyEvalobiFilter()" style="background:var(--black);border:1px solid var(--gray-700);color:var(--white);padding:6px 10px;font-family:var(--font-m);font-size:11px;min-width:160px">
+            <option value="date_desc">Data ↓ (recenti)</option>
+            <option value="date_asc">Data ↑ (vecchi)</option>
+            <option value="title_asc">Titolo A→Z</option>
+            <option value="value_desc">Range max ↓</option>
+            <option value="value_asc">Range max ↑</option>
+          </select>
+        </div>
+        <div style="margin-left:auto;font-size:10px;color:var(--gray-500);font-family:var(--font-m);letter-spacing:.5px" id="evalobi-results-count">—</div>
+      </div>
       <div id="evalobi-container">
         <div class="empty">Caricamento…</div>
       </div>
@@ -392,6 +420,8 @@ async function ackSubmit(airdropId, decision, btn) {
   }
 }
 
+let _evalobiAll = [];
+
 async function loadEvalobi() {
   if (!CURRENT_USER) return;
   const container = document.getElementById('evalobi-container');
@@ -401,11 +431,46 @@ async function loadEvalobi() {
     .eq('original_seller_id', CURRENT_USER.id)
     .order('evaluated_at', { ascending:false });
   if (error) { container.innerHTML = `<div class="alert err">Errore: ${error.message}</div>`; return; }
-  if (!data || data.length === 0) {
+  _evalobiAll = data || [];
+  if (_evalobiAll.length === 0) {
+    document.getElementById('evalobi-controls').style.display = 'none';
     container.innerHTML = '<div class="card"><div class="empty">Nessun EVALOBI emesso · <a href="/vendi" style="color:var(--gold)">proponi il primo oggetto →</a></div></div>';
     return;
   }
-  container.innerHTML = data.map(e => {
+  document.getElementById('evalobi-controls').style.display = 'flex';
+  // Populate category dropdown
+  const catSel = document.getElementById('evalobi-cat-filter');
+  const current = catSel.value;
+  const cats = Array.from(new Set(_evalobiAll.map(e => e.object_category).filter(Boolean))).sort();
+  catSel.innerHTML = '<option value="">Tutte le categorie</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  if (current) catSel.value = current;
+  applyEvalobiFilter();
+}
+
+function applyEvalobiFilter() {
+  const outcome = document.getElementById('evalobi-outcome-filter').value;
+  const cat = document.getElementById('evalobi-cat-filter').value;
+  const sort = document.getElementById('evalobi-sort').value || 'date_desc';
+  let list = _evalobiAll.slice();
+  if (outcome) list = list.filter(e => e.evaluation_outcome === outcome);
+  if (cat) list = list.filter(e => e.object_category === cat);
+  list.sort((a, b) => {
+    switch (sort) {
+      case 'date_asc': return new Date(a.evaluated_at) - new Date(b.evaluated_at);
+      case 'title_asc': return (a.object_title || '').localeCompare(b.object_title || '');
+      case 'value_desc': return ((b.evaluation_price_range || {}).max_eur || 0) - ((a.evaluation_price_range || {}).max_eur || 0);
+      case 'value_asc': return ((a.evaluation_price_range || {}).max_eur || 0) - ((b.evaluation_price_range || {}).max_eur || 0);
+      default: return new Date(b.evaluated_at) - new Date(a.evaluated_at);
+    }
+  });
+  const cnt = document.getElementById('evalobi-results-count');
+  if (cnt) cnt.textContent = `${list.length} di ${_evalobiAll.length} EVALOBI`;
+  const container = document.getElementById('evalobi-container');
+  if (list.length === 0) {
+    container.innerHTML = '<div class="card"><div class="empty">Nessun EVALOBI con questi filtri.</div></div>';
+    return;
+  }
+  container.innerHTML = list.map(e => {
     const pr = e.evaluation_price_range || {};
     const range = pr.min_eur && pr.max_eur ? `€${pr.min_eur}–€${pr.max_eur}` : '—';
     const outcomeBadge = {GO:'green', NO_GO:'red', NEEDS_REVIEW:'gold'}[e.evaluation_outcome] || 'gray';
