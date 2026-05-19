@@ -277,7 +277,7 @@ async function getValidToken(){
 var PUBLIC_PAGES=['home','explore','faq','learn','blog'];
 function isPublicRoute(){
   var pp=location.pathname;
-  var page=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':null);
+  var page=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')||pp.startsWith('/dapp/airdrop/')?'explore':null);
   return page&&PUBLIC_PAGES.indexOf(page)!==-1;
 }
 
@@ -306,8 +306,8 @@ function initGuidaBanner(){
 document.addEventListener('DOMContentLoaded',async function(){
   initGuidaBanner();
   var pp=location.pathname;
-  var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':'home');
-  var airdropMatch=pp.match(/^\/airdrops\/([0-9a-f-]{36})$/);
+  var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')||pp.startsWith('/dapp/airdrop/')?'explore':'home');
+  var airdropMatch=pp.match(/^\/(?:airdrops|dapp\/airdrop)\/([0-9a-f-]{36})$/);
   var urlId=airdropMatch?airdropMatch[1]:new URLSearchParams(location.search).get('id');
   if(urlId)initialPage='explore';
 
@@ -372,7 +372,8 @@ document.addEventListener('DOMContentLoaded',async function(){
   }
   if(urlId){
     openDetail(urlId);
-    history.replaceState({page:'explore',detail:urlId},null,'/airdrops/'+urlId);
+    var detailPath=_publicMode?('/airdrops/'+urlId):('/dapp/airdrop/'+urlId);
+    history.replaceState({page:'explore',detail:urlId},null,detailPath);
   }
 });
 
@@ -3004,7 +3005,12 @@ function updateBuyDisplay(){
 }
 
 function goToAirdrop(id){
-  window.location.href='/airdrops/'+id;
+  if(_publicMode){
+    window.location.href='/airdrops/'+id;
+    return;
+  }
+  openDetail(id);
+  history.pushState({page:'explore',detail:id},null,'/dapp/airdrop/'+id);
 }
 
 function backToList(){

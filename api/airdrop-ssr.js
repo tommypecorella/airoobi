@@ -61,6 +61,19 @@ function renderHtml(data) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+  (function(){
+    try{
+      var s=localStorage.getItem('airoobi_session');
+      if(!s)return;
+      var p=JSON.parse(s);
+      if(p&&p.access_token){
+        document.documentElement.style.visibility='hidden';
+        window.location.replace('/dapp/airdrop/${data.id}');
+      }
+    }catch(e){}
+  })();
+  </script>
   <title>${title}</title>
   <meta name="description" content="${description}">
   <meta name="robots" content="index, follow">
