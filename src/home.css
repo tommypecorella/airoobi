@@ -152,7 +152,7 @@ section{padding:clamp(80px,12vw,160px) 0;position:relative}
 /* ── KASPA ── */
 .kaspa-inner{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
 @media(max-width:768px){.kaspa-inner{grid-template-columns:1fr;gap:48px}}
-#kaspa-compare{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:800px;margin:40px auto 0}
+#kaspa-compare{display:grid;grid-template-columns:1fr;gap:24px;max-width:800px;margin:40px auto 0}
 @media(max-width:600px){#kaspa-compare{grid-template-columns:1fr}}
 .kaspa-stats{display:flex;flex-direction:column;gap:32px}
 .kstat{padding:24px 0;border-bottom:1px solid var(--gray-700)}
