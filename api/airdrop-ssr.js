@@ -185,7 +185,7 @@ function renderHtml(data) {
 
     <section class="cta-section">
       <h2>Partecipa all'airdrop</h2>
-      <p>Acquista uno o più blocchi · partecipa al draw equo · ottieni l'oggetto a una frazione del valore.</p>
+      <p>Acquista uno o più blocchi · partecipa all'airdrop equo · ottieni l'oggetto a una frazione del valore.</p>
       <a class="cta-btn" href="/signup">Inizia ora</a>
       <a class="cta-btn outline" href="/come-funziona-airdrop">Come funziona</a>
     </section>

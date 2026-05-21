@@ -47,7 +47,7 @@ var EDU_LINKS=[
 ];
 
 var AUTH_LINKS=[
-  {href:'/proponi',         page:'submit',  icon:ICONS.submit,  it:'<b>Valuta</b>',   en:'<b>Evaluate</b>',  bold:true},
+  {href:'/proponi',         page:'submit',  icon:ICONS.submit,  it:'<b>Fai valutare</b>', en:'<b>Get evaluated</b>', bold:true},
   {href:'/invita',          page:'referral',icon:ICONS.referral, it:'<b>+Invita</b>',  en:'<b>+Invite</b>',   invite:true},
   {href:'/miei-airdrop',    page:'my',      icon:ICONS.my,       it:'I miei',          en:'My drops'},
   {href:'/portafoglio-dapp',page:'wallet',  icon:ICONS.wallet,   it:'Portafoglio',     en:'Wallet'}
