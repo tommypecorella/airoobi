@@ -90,12 +90,14 @@ BEGIN
   RETURN jsonb_build_object('ok', true, 'counter', v_counter, 'banned', v_banned, 'ban_until', v_ban_until);
 END; $$;
 
--- Funzione interna: REVOKE da PUBLIC per impedire chiamate dirette via API.
--- Senza, un authenticated qualsiasi potrebbe incrementare il counter / bannare
--- un altro venditore (la funzione si fida di p_seller_id, nessun auth.uid() gate).
+-- Funzione interna: REVOKE EXECUTE da tutti i ruoli pubblici per impedire chiamate
+-- dirette via API. Senza, un authenticated qualsiasi potrebbe incrementare il counter
+-- / bannare un altro venditore (la funzione si fida di p_seller_id, nessun auth.uid()
+-- gate). NB: Supabase concede EXECUTE di default ad anon+authenticated via ALTER
+-- DEFAULT PRIVILEGES → il REVOKE deve nominarli esplicitamente, FROM PUBLIC non basta.
 -- Le chiamanti (withdraw, seller_acknowledge, cron timeout) sono SECURITY DEFINER
 -- → girano come owner e mantengono EXECUTE anche dopo il REVOKE.
-REVOKE EXECUTE ON FUNCTION register_seller_cancellation(UUID, TEXT, UUID) FROM PUBLIC;
+REVOKE EXECUTE ON FUNCTION register_seller_cancellation(UUID, TEXT, UUID) FROM PUBLIC, anon, authenticated;
 
 -- ─────────────────────────────────────────────────────────────
 -- is_seller_banned · helper read-only (grant authenticated)
