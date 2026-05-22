@@ -1359,7 +1359,7 @@ function playMiningAnimation(blocksBought,oldMyBlocks,miningRate){
   var overlay=document.createElement('div');
   overlay.className='mining-overlay';
   overlay.innerHTML='<div class="mining-pickaxe">⛏</div>'
-    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">blocchi minati!</span><span class="en">blocks mined!</span></div>'
+    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">'+(blocksBought===1?'blocco minato':'blocchi minati')+'!</span><span class="en">block'+(blocksBought===1?'':'s')+' mined!</span></div>'
     +(foundRobi?'<div class="mining-robi-text">✦ ROBI <span class="it">TROVATO</span><span class="en">FOUND</span>! ✦</div>':'');
   document.body.appendChild(overlay);
 
@@ -2265,6 +2265,15 @@ function toggleGalleryPlay(){
 
 async function openDetail(id){
   var a=_airdrops.find(function(x){return x.id===id});
+  if(!a){
+    // PR-5 F7: gli airdrop conclusi non sono in _airdrops (solo presale/sale).
+    // Li carico singolarmente per renderne il recap invece del fallback marketplace.
+    var _tok0=_publicMode?SB_KEY:await getValidToken();
+    if(_tok0){
+      var _fetched=await sbGet('airdrops?id=eq.'+encodeURIComponent(id)+'&select=*&limit=1',_tok0);
+      if(Array.isArray(_fetched)&&_fetched.length)a=_fetched[0];
+    }
+  }
   if(!a)return;
   stopGalleryAutoplay();
   _currentDetail=a;
@@ -2290,10 +2299,18 @@ async function openDetail(id){
   var remaining=a.total_blocks-a.blocks_sold;
   var pct=a.total_blocks>0?(a.blocks_sold/a.total_blocks*100):0;
   var isPresale=a.status==='presale';
+  // PR-5 F7/F8: stati post-live · niente buy box, render del pannello esito.
+  var isConcluded=['completed','annullato','closed','dropped','waiting_seller_acknowledge'].indexOf(a.status)!==-1;
   var myBlocks=_publicMode?0:_gridData.filter(function(b){return b.is_mine}).length;
   var myPct=a.total_blocks>0?(myBlocks/a.total_blocks*100):0;
   var othersPct=pct-myPct;
   var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'';
+  // PR-5 F8: ROBI dell'utente da questo evento (per il pannello esito).
+  var _outcomeRobi=0;
+  if(isConcluded&&!_publicMode&&_session&&_session.user){
+    var _nftRows=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&airdrop_id=eq.'+encodeURIComponent(id)+'&select=shares',token)||[];
+    if(Array.isArray(_nftRows))_nftRows.forEach(function(n){_outcomeRobi+=Number(n.shares||0);});
+  }
 
   // Image blur: 20px at 0%, 0px at 100%
   var blurVal=Math.max(0,20-(pct/100*20));
@@ -2301,7 +2318,9 @@ async function openDetail(id){
 
   _bubbles=[];
 
-  var maxBuy=Math.min(remaining,Math.floor(_balance/a.block_price_aria));
+  // F1: prezzo effettivo (presale-aware) — coerente con l'addebito server-side
+  var effectivePrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
+  var maxBuy=Math.min(remaining,Math.floor(_balance/effectivePrice));
   if(maxBuy<1)maxBuy=0;
 
   // Product info from JSONB
@@ -2407,21 +2426,23 @@ async function openDetail(id){
     // ── ACCORDION SECTIONS ──
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
-      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' '+tokIcon('ARIA')+'</strong></li>'
+      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA')+'</strong></li>'
       +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' ogni '+calcMiningRate(a)+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' blocchi)</span>':'')+'</li>'
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
 
-    // DIVIDER → PARTECIPA
-    +'<div class="product-divider">'
-    +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
-    +'<p class="product-participate-sub"><span class="it">Ogni blocco ti fa guadagnare ROBI — il loro valore cresce nel tempo</span><span class="en">Each block earns you ROBI — their value grows over time</span></p>'
-    +'</div>'
+    // DIVIDER → PARTECIPA (solo airdrop live)
+    +(!isConcluded
+      ?'<div class="product-divider">'
+      +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
+      +'<p class="product-participate-sub"><span class="it">Ogni blocco ti fa guadagnare ROBI — il loro valore cresce nel tempo</span><span class="en">Each block earns you ROBI — their value grows over time</span></p>'
+      +'</div>'
+      :'')
 
     // MY BLOCKS badge
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*a.block_price_aria)+' '+tokIcon('ARIA')+' <span class="it">investiti</span><span class="en">invested</span></div>':'')
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">investiti</span><span class="en">invested</span></div>':'')
 
     // MINE TOWER 3D
     +buildMineTower(a,myBlocks)
@@ -2429,21 +2450,21 @@ async function openDetail(id){
     // STATS
     +'<div class="detail-stats">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+effectivePrice+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">blocchi per</span><span class="en">blocks per</span> '+tokIcon('ROBI')+'</div></div>'
     +'</div>'
 
-    // Live countdown
-    +(a.deadline?'<div class="detail-countdown" id="detail-countdown" data-deadline="'+a.deadline+'"></div>':'')
+    // Live countdown (solo airdrop live)
+    +(!isConcluded&&a.deadline?'<div class="detail-countdown" id="detail-countdown" data-deadline="'+a.deadline+'"></div>':'')
 
-    // Position live
-    +'<div class="detail-position" id="detail-position"></div>'
+    // Position live (solo airdrop live)
+    +(!isConcluded?'<div class="detail-position" id="detail-position"></div>':'')
 
-    // Strategy guide
-    +'<div class="detail-strategy" id="detail-strategy"></div>'
+    // Strategy guide (solo airdrop live)
+    +(!isConcluded?'<div class="detail-strategy" id="detail-strategy"></div>':'')
 
-    // MY STATS panel
-    +(myBlocks>0&&!_publicMode?
+    // MY STATS panel (solo airdrop live)
+    +(!isConcluded&&myBlocks>0&&!_publicMode?
     '<div class="detail-mystats" id="detail-mystats">'
     +'<div class="mystats-header"><span class="it">Le tue statistiche</span><span class="en">Your stats</span></div>'
     +'<div class="mystats-grid" id="mystats-grid"></div>'
@@ -2451,8 +2472,10 @@ async function openDetail(id){
     +'</div>'
     :'')
 
-    // BUY BOX
-    +(_publicMode
+    // BUY BOX (live) · PANNELLO ESITO (concluso · PR-5 F8)
+    +(isConcluded
+      ?_renderOutcomePanel(a,myBlocks,_outcomeRobi)
+      :_publicMode
       ?'<div class="buy-box">'
       +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
       +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi in questo airdrop.</span><span class="en">Sign up free to earn ARIA every day and buy blocks in this airdrop.</span></p>'
@@ -2465,7 +2488,7 @@ async function openDetail(id){
       +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
       +'<div class="buy-display">'
       +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-      +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' '+tokIcon('ARIA')+'</div>'
+      +'<div class="buy-display-cost" id="buy-display-cost">= '+effectivePrice+' '+tokIcon('ARIA')+'</div>'
       +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
       +'</div>'
       +'<div class="buy-slider-wrap">'
@@ -2488,8 +2511,8 @@ async function openDetail(id){
       +'</div>'
     )
 
-    // AUTO-BUY
-    +(myBlocks>0?
+    // AUTO-BUY (solo airdrop live)
+    +(!isConcluded&&myBlocks>0?
     '<div class="auto-buy-box" id="auto-buy-box">'
     +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">'+UI_ICONS.zap+' AUTO-BUY</div>'
     +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Compra automaticamente blocchi a intervalli regolari.</span><span class="en">Automatically buy blocks at regular intervals.</span></p>'
@@ -2521,16 +2544,65 @@ async function openDetail(id){
   // Start countdown ticker
   startCountdowns();
 
-  // Position live — initial + polling (uses calculate_winner_score for real rank)
-  refreshPosition(a.id);
-  if(_positionInterval)clearInterval(_positionInterval);
-  _positionInterval=setInterval(function(){refreshPosition(a.id)},30000);
+  // Position / ROBI projection / auto-buy: solo airdrop live (PR-5 F7/F8).
+  if(!isConcluded){
+    // Position live — initial + polling (uses calculate_winner_score for real rank)
+    refreshPosition(a.id);
+    if(_positionInterval)clearInterval(_positionInterval);
+    _positionInterval=setInterval(function(){refreshPosition(a.id)},30000);
 
-  // Detail stats (ROBI projection, %, history)
-  if(myBlocks>0&&!_publicMode)loadDetailStats(a.id);
+    // Detail stats (ROBI projection, %, history)
+    if(myBlocks>0&&!_publicMode)loadDetailStats(a.id);
 
-  // Auto-buy status
-  if(myBlocks>0)loadAutoBuyStatus(a.id);
+    // Auto-buy status
+    if(myBlocks>0)loadAutoBuyStatus(a.id);
+  }else if(_positionInterval){
+    clearInterval(_positionInterval);_positionInterval=null;
+  }
+}
+
+// PR-5 · Pannello esito per airdrop concluso (F7/F8): vincitore, consegna, ROBI.
+// Sostituisce il buy box quando lo status è completed/annullato/closed/
+// waiting_seller_acknowledge. Riusa lo styling buy-box e openClaimModal.
+function _renderOutcomePanel(a,myBlocks,myRobi){
+  var uid=_session&&_session.user&&_session.user.id;
+  var st=a.status;
+  var participated=myBlocks>0;
+  var isWinner=st==='completed'&&a.winner_id&&uid&&a.winner_id===uid;
+  var titleSafe=(a.title||'').replace(/'/g,"\\'");
+  var storyLink=a.story_public_visible&&a.story_public_url
+    ?'<a href="'+a.story_public_url+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;letter-spacing:.5px;text-decoration:none;font-family:var(--font-m)"><span class="it">STORIA PUBBLICA →</span><span class="en">PUBLIC STORY →</span></a>'
+    :'';
+  var chipIt,chipEn,chipColor;
+  if(st==='completed'){chipIt='Airdrop concluso';chipEn='Airdrop closed';chipColor='#22c55e';}
+  else if(st==='annullato'){chipIt='Airdrop annullato';chipEn='Airdrop cancelled';chipColor='#ef4444';}
+  else if(st==='waiting_seller_acknowledge'){chipIt='In attesa del venditore';chipEn='Awaiting seller';chipColor='var(--gold)';}
+  else {chipIt='Airdrop chiuso';chipEn='Airdrop closed';chipColor='var(--gray-400)';}
+  var head='<div class="buy-box-label" style="display:flex;align-items:center;gap:8px">'
+    +'<span style="width:8px;height:8px;border-radius:50%;background:'+chipColor+';display:inline-block;flex:none"></span>'
+    +'<span class="it">'+chipIt+'</span><span class="en">'+chipEn+'</span></div>';
+  var body;
+  if(st==='waiting_seller_acknowledge'){
+    body='<p class="buy-box-framing"><span class="it">L\'estrazione è conclusa. Il venditore ha 72 ore per confermare la chiusura — l\'esito comparirà qui appena decide.</span><span class="en">The draw is complete. The seller has 72 hours to confirm — the outcome will appear here once decided.</span></p>';
+  }else if(st==='annullato'){
+    body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; le ROBI già accumulate dal rullo restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI already mined stay in the wallet.</span></p>';
+  }else if(isWinner){
+    body='<p class="buy-box-framing"><span class="it">Hai ottenuto l\'oggetto: <strong>'+a.title+'</strong>. Inserisci l\'indirizzo di spedizione per riceverlo.</span><span class="en">You got the item: <strong>'+a.title+'</strong>. Submit your shipping address to receive it.</span></p>'
+      +'<button class="buy-btn" onclick="openClaimModal(\''+a.id+'\',\''+titleSafe+'\')"><span class="it">Reclama l\'oggetto →</span><span class="en">Claim the item →</span></button>';
+  }else if(st==='completed'&&participated){
+    body='<p class="buy-box-framing"><span class="it">L\'oggetto è stato assegnato a un altro partecipante. Le tue ROBI restano con te — il loro valore cresce nel tempo.</span><span class="en">The item went to another participant. Your ROBI stay with you — their value grows over time.</span></p>';
+  }else{
+    body='<p class="buy-box-framing"><span class="it">Questo airdrop si è concluso e l\'oggetto è stato assegnato al vincitore.</span><span class="en">This airdrop has closed — the item went to the winner.</span></p>';
+  }
+  var robiLine='';
+  if(st==='completed'&&participated&&!isWinner&&!_publicMode){
+    robiLine=myRobi>0
+      ?'<div style="font-size:13px;color:var(--gold);font-family:var(--font-m);letter-spacing:.5px;margin-top:6px"><strong>'+Number(myRobi).toFixed(2)+'</strong> '+tokIcon('ROBI')+' <span class="it">accumulate da questo evento</span><span class="en">earned from this event</span></div>'
+      :'<div style="font-size:12px;color:var(--gray-400);margin-top:6px"><span class="it">Nessun ROBI accumulato da questo evento</span><span class="en">No ROBI earned from this event</span></div>';
+  }
+  return '<div class="buy-box">'+head+body+robiLine
+    +(storyLink?'<div style="margin-top:10px">'+storyLink+'</div>':'')
+    +'</div>';
 }
 
 async function loadAutoBuyStatus(airdropId){
@@ -3046,7 +3118,10 @@ function hideTopbarCR(){
 
 function initBuy(){
   if(!_currentDetail||_buyQty<=0)return;
-  var cost=_buyQty*_currentDetail.block_price_aria;
+  // F1: costo presale-aware — il popup deve mostrare quello che il server addebita
+  var _ip=_currentDetail.status==='presale';
+  var _bp=_ip&&_currentDetail.presale_block_price?_currentDetail.presale_block_price:_currentDetail.block_price_aria;
+  var cost=_buyQty*_bp;
   if(cost>_balance){
     showMsg('err','<span class="it">ARIA insufficienti.</span><span class="en">Not enough ARIA.</span>');
     return;
@@ -4002,6 +4077,14 @@ async function submitObject(){
   }
   if(minP>desired){
     msgEl.innerHTML='<span class="it">Il prezzo minimo non può superare il desiderato.</span><span class="en">Min price cannot exceed desired price.</span>';
+    msgEl.className='submit-msg err';return;
+  }
+  // F4: le foto tecniche obbligatorie devono essere tutte caricate prima del submit
+  var _missingReq=PW_SLOTS.filter(function(s){return s.required&&!pwFindPhoto(s.id)});
+  if(_missingReq.length){
+    var _mn=_missingReq.map(function(s){return s.it}).join(', ');
+    var _mnEn=_missingReq.map(function(s){return s.en}).join(', ');
+    msgEl.innerHTML='<span class="it">Carica tutte le foto tecniche obbligatorie. Mancano: '+_mn+'.</span><span class="en">Upload all required technical photos. Missing: '+_mnEn+'.</span>';
     msgEl.className='submit-msg err';return;
   }
   if(_balance<_valuationCost){
