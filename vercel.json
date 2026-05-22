@@ -84,7 +84,9 @@
     { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "https://www.airoobi.app/$1", "statusCode": 301 },
     { "source": "/blog/perche-airoobi-non-e-gioco-azzardo.html", "destination": "/blog/airoobi-nuovo-modello-ecommerce.html", "statusCode": 301 },
     { "source": "/blog.html", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog", "statusCode": 301 },
-    { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "statusCode": 301 }
+    { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "statusCode": 301 },
+    { "source": "/venditore", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/miei-airdrop", "statusCode": 301 },
+    { "source": "/venditore/:rest*", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/miei-airdrop", "statusCode": 301 }
   ],
   "rewrites": [
     { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
@@ -98,9 +100,6 @@
     { "source": "/storie-vincitori", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr" },
     { "source": "/storie-vincitori/cat/:category", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr?category=:category" },
     { "source": "/storie-vincitori/:id", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr?id=:id" },
-    { "source": "/venditore", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/venditore.html" },
-    { "source": "/venditore/:rest*", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/venditore.html" },
-
     { "source": "/tokens", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/tokens.html" },
     { "source": "/tokens", "destination": "/tokens.html" },
 

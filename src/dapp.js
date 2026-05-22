@@ -1359,7 +1359,7 @@ function playMiningAnimation(blocksBought,oldMyBlocks,miningRate){
   var overlay=document.createElement('div');
   overlay.className='mining-overlay';
   overlay.innerHTML='<div class="mining-pickaxe">⛏</div>'
-    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">blocchi minati!</span><span class="en">blocks mined!</span></div>'
+    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">'+(blocksBought===1?'blocco minato':'blocchi minati')+'!</span><span class="en">block'+(blocksBought===1?'':'s')+' mined!</span></div>'
     +(foundRobi?'<div class="mining-robi-text">✦ ROBI <span class="it">TROVATO</span><span class="en">FOUND</span>! ✦</div>':'');
   document.body.appendChild(overlay);
 
@@ -2301,7 +2301,9 @@ async function openDetail(id){
 
   _bubbles=[];
 
-  var maxBuy=Math.min(remaining,Math.floor(_balance/a.block_price_aria));
+  // F1: prezzo effettivo (presale-aware) — coerente con l'addebito server-side
+  var effectivePrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
+  var maxBuy=Math.min(remaining,Math.floor(_balance/effectivePrice));
   if(maxBuy<1)maxBuy=0;
 
   // Product info from JSONB
@@ -2407,7 +2409,7 @@ async function openDetail(id){
     // ── ACCORDION SECTIONS ──
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
-      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' '+tokIcon('ARIA')+'</strong></li>'
+      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA')+'</strong></li>'
       +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' ogni '+calcMiningRate(a)+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' blocchi)</span>':'')+'</li>'
@@ -2421,7 +2423,7 @@ async function openDetail(id){
     +'</div>'
 
     // MY BLOCKS badge
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*a.block_price_aria)+' '+tokIcon('ARIA')+' <span class="it">investiti</span><span class="en">invested</span></div>':'')
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">investiti</span><span class="en">invested</span></div>':'')
 
     // MINE TOWER 3D
     +buildMineTower(a,myBlocks)
@@ -2429,7 +2431,7 @@ async function openDetail(id){
     // STATS
     +'<div class="detail-stats">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+effectivePrice+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">blocchi per</span><span class="en">blocks per</span> '+tokIcon('ROBI')+'</div></div>'
     +'</div>'
 
@@ -2465,7 +2467,7 @@ async function openDetail(id){
       +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
       +'<div class="buy-display">'
       +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-      +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' '+tokIcon('ARIA')+'</div>'
+      +'<div class="buy-display-cost" id="buy-display-cost">= '+effectivePrice+' '+tokIcon('ARIA')+'</div>'
       +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
       +'</div>'
       +'<div class="buy-slider-wrap">'
@@ -3046,7 +3048,10 @@ function hideTopbarCR(){
 
 function initBuy(){
   if(!_currentDetail||_buyQty<=0)return;
-  var cost=_buyQty*_currentDetail.block_price_aria;
+  // F1: costo presale-aware — il popup deve mostrare quello che il server addebita
+  var _ip=_currentDetail.status==='presale';
+  var _bp=_ip&&_currentDetail.presale_block_price?_currentDetail.presale_block_price:_currentDetail.block_price_aria;
+  var cost=_buyQty*_bp;
   if(cost>_balance){
     showMsg('err','<span class="it">ARIA insufficienti.</span><span class="en">Not enough ARIA.</span>');
     return;
@@ -4002,6 +4007,14 @@ async function submitObject(){
   }
   if(minP>desired){
     msgEl.innerHTML='<span class="it">Il prezzo minimo non può superare il desiderato.</span><span class="en">Min price cannot exceed desired price.</span>';
+    msgEl.className='submit-msg err';return;
+  }
+  // F4: le foto tecniche obbligatorie devono essere tutte caricate prima del submit
+  var _missingReq=PW_SLOTS.filter(function(s){return s.required&&!pwFindPhoto(s.id)});
+  if(_missingReq.length){
+    var _mn=_missingReq.map(function(s){return s.it}).join(', ');
+    var _mnEn=_missingReq.map(function(s){return s.en}).join(', ');
+    msgEl.innerHTML='<span class="it">Carica tutte le foto tecniche obbligatorie. Mancano: '+_mn+'.</span><span class="en">Upload all required technical photos. Missing: '+_mnEn+'.</span>';
     msgEl.className='submit-msg err';return;
   }
   if(_balance<_valuationCost){
