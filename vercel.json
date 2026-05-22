@@ -84,9 +84,7 @@
     { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "https://www.airoobi.app/$1", "statusCode": 301 },
     { "source": "/blog/perche-airoobi-non-e-gioco-azzardo.html", "destination": "/blog/airoobi-nuovo-modello-ecommerce.html", "statusCode": 301 },
     { "source": "/blog.html", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog", "statusCode": 301 },
-    { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "statusCode": 301 },
-    { "source": "/venditore", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/miei-airdrop", "statusCode": 301 },
-    { "source": "/venditore/:rest*", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/miei-airdrop", "statusCode": 301 }
+    { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "statusCode": 301 }
   ],
   "rewrites": [
     { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
@@ -114,6 +112,8 @@
     { "source": "/dapp/airdrop/:id", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/esplora", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/miei-airdrop", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
+    { "source": "/venditore", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/venditore.html" },
+    { "source": "/venditore/:rest*", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/venditore.html" },
     { "source": "/proponi", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/invita", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/referral", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
