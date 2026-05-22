@@ -1,0 +1,29 @@
+# .vercelignore — esclude gli artefatti interni/dev dal deploy pubblico.
+# Creato 22 mag 2026 (go-live Closure v3): outputDirectory è ".", quindi
+# senza questo file l'intera root del repo veniva servita su www.airoobi.app
+# (doc interni, business plan, SQL delle migration). Servire SOLO l'app:
+# *.html · src/ · api/ · public/ · blog/ · file statici di root.
+# Verificato: nessuna delle cartelle sotto è referenziata da file serviti.
+
+# Documentazione interna e bridge di team CLA-CCP
+CLA-CCP BRIDGE/
+docs/
+
+# Database — migration + config: lo SQL (RLS, SECURITY DEFINER) non va esposto
+supabase/
+
+# Script di servizio (lanciati a mano, non runtime)
+scripts/
+
+# Drop zone screenshot, asset di design, pagine legacy/prototipo, esperimenti
+screenshots/
+design/
+legacy/
+prototype/
+fitness/
+airoobi/
+
+# Artefatti di test
+tests/
+test-results/
+playwright-report/
