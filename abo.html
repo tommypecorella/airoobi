@@ -2783,7 +2783,11 @@ function recalcNFTValue(){
 }
 
 function updateNftMetrics(){
-  var treasury=parseFloat(document.getElementById('adm-input-treasury')?.value)||0;
+  // F1.a fix · 23 May 2026: leggevamo da adm-input-treasury (hidden, mai esistito in HTML
+  // → null → 0). A riga 2805 il write-back azzerava il campo visibile populato da
+  // loadTreasuryFunds → ROBI Valuation €0,00 anche con Overview/Treasury a €0,8973
+  // (review §3.C, reopen ROBY). Reader spostato sul visibile adm-treasury-input (auth).
+  var treasury=parseFloat(document.getElementById('adm-treasury-input')?.value)||0;
   var mintedLegacy=parseInt(document.getElementById('adm-input-minted')?.value)||0;
   var circulating=parseInt(document.getElementById('adm-input-circulating')?.value)||0;
   var maxSupply=parseInt(document.getElementById('adm-input-maxsupply')?.value)||1000;
@@ -2802,7 +2806,7 @@ function updateNftMetrics(){
   var v6=document.getElementById('adm-nft-fully-diluted');if(v6)v6.textContent='€ '+(nftValue*maxSupply).toFixed(2);
   var v7=document.getElementById('adm-nft-buyback');if(v7)v7.textContent='€ '+(nftValue*0.95).toFixed(2);
   var v8=document.getElementById('adm-nft-upside');if(v8)v8.textContent='€ '+(nftValue*0.05).toFixed(2);
-  var i5=document.getElementById('adm-treasury-input');if(i5&&i5.value!=treasury)i5.value=treasury;
+  // Write-back rimosso: ora treasury è letto da adm-treasury-input stesso → nulla da riscrivere.
   recalcNFTValue();
 }
 
