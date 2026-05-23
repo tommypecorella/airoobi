@@ -920,10 +920,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </div>
   </div>
 
-  <!-- COLLABORATORI (Validatori) -->
+  <!-- COLLABORATORI & PERMESSI -->
   <div class="admin-section" id="sec-collaborators">
-    <h2>Collaboratori <span class="info-i" onclick="showAboTip(this,'sec-collaborators')">i</span></h2>
-    <p style="color:var(--gray-400);font-size:12px;margin-bottom:20px">Gestisci i validatori che possono accedere a <strong>/gestione</strong>. Ogni validatore vede solo gli airdrop delle categorie assegnate.</p>
+    <h2>Collaboratori &amp; Permessi <span class="info-i" onclick="showAboTip(this,'sec-collaborators')">i</span></h2>
+    <p style="color:var(--gray-400);font-size:12px;margin-bottom:20px">Gestisci i collaboratori (Valutatori, Community Manager, Tesorieri, Analisti) e i loro permessi cella per cella tramite la matrice in fondo (PR-C2b · review §4.3).</p>
 
     <!-- Cerca utente -->
     <div style="margin-bottom:24px">
@@ -942,6 +942,50 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <thead><tr><th>Email</th><th>Categorie</th><th>Assegnato il</th><th></th></tr></thead>
         <tbody id="collab-list"><tr><td colspan="4" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
       </table>
+    </div>
+
+    <!-- PR-C2b · Matrice permessi · review §4.3 -->
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--gray-800)">
+      <h3 style="font-family:var(--font-h);font-size:16px;color:var(--gold);margin-bottom:12px;letter-spacing:1px">Matrice permessi</h3>
+      <p style="color:var(--gray-400);font-size:12px;margin-bottom:16px">Seleziona un collaboratore, scegli un template di ruolo (pre-riempie la matrice), poi rifinisci cella per cella se serve. Le celle modificate rispetto al template diventano override per-utente (marker <span style="color:var(--gold);font-family:var(--font-m)">*</span>). Il CEO è bloccato (Super User, immutabile da DB).</p>
+
+      <div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:240px">
+          <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Collaboratore</label>
+          <select id="perm-user-select" onchange="permLoadUser(this.value)" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 14px;border-radius:var(--radius-sm)">
+            <option value="">— seleziona —</option>
+          </select>
+        </div>
+        <div style="flex:1;min-width:240px">
+          <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px">Template ruolo</label>
+          <select id="perm-role-select" onchange="permApplyRoleTemplate(this.value)" disabled style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:10px 14px;border-radius:var(--radius-sm)">
+            <option value="">—</option>
+            <option value="admin">Admin</option>
+            <option value="evaluator">Valutatore</option>
+            <option value="community_manager">Community Manager</option>
+            <option value="treasurer">Tesoriere</option>
+            <option value="analyst">Analista</option>
+            <option value="custom">Custom (no template)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="perm-ceo-lock" style="display:none;padding:14px 18px;background:rgba(184,150,12,.08);border:1px solid rgba(184,150,12,.4);color:var(--gold);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;margin-bottom:16px">
+        🔒 CEO Super User · accesso totale immutabile da DB. Il CEO non è declassabile (bypass via email hardcoded nelle RPC user_has_permission + get_user_visible_modules).
+      </div>
+
+      <div id="perm-matrix-wrap" style="display:none;overflow-x:auto;border:1px solid var(--gray-800);border-radius:var(--radius-sm)">
+        <table id="perm-matrix" class="admin-table" style="margin:0;font-size:12px">
+          <thead><tr><th>Modulo</th><th>view</th><th>edit</th><th>approve</th><th>draw</th><th>reply</th><th>manage</th></tr></thead>
+          <tbody id="perm-matrix-body"></tbody>
+        </table>
+      </div>
+
+      <div id="perm-save-bar" style="display:none;margin-top:14px;align-items:center;gap:10px;flex-wrap:wrap">
+        <button onclick="permSaveOverrides()" style="background:var(--gold);color:var(--black);border:none;padding:10px 22px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)">SALVA</button>
+        <button onclick="permResetToTemplate()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:10px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;border-radius:var(--radius-sm)">RESET A TEMPLATE</button>
+        <span id="perm-save-status" style="margin-left:8px;font-family:var(--font-m);font-size:11px;color:var(--gray-400)"></span>
+      </div>
     </div>
   </div>
 
@@ -1489,6 +1533,177 @@ function aboSimulateRole(role){
     var sel=document.getElementById('abo-sim-select');if(sel)sel.value='';
   }
   aboRenderSidebarPermissions();
+}
+
+// FASE 3 PR-C2b · Matrice "Collaboratori & Permessi" + gating azioni
+var PERM_MODULES=['dashboard','pipeline_airdrop','analisi_fairness','messaggi','utenti','treasury_fondi','conto_aria_piattaforma','patrimonio_aziendale','cost_tracker','aria_robi','collaboratori_permessi','categorie','engine_config'];
+var PERM_ACTIONS=['view','edit','approve','draw','reply','manage'];
+var PERM_MODULE_LABELS={dashboard:'Dashboard',pipeline_airdrop:'Pipeline airdrop',analisi_fairness:'Analisi & Fairness',messaggi:'Messaggi',utenti:'Utenti',treasury_fondi:'Treasury & Fondi',conto_aria_piattaforma:'Conto ARIA piattaforma',patrimonio_aziendale:'Patrimonio aziendale',cost_tracker:'Cost Tracker',aria_robi:'ARIA & ROBI',collaboratori_permessi:'Collaboratori & Permessi',categorie:'Categorie',engine_config:'Engine Config'};
+var ABO_CEO_EMAILS=['ceo@airoobi.com','tommaso.pecorella+ceo@outlook.com'];
+
+window._permCurrentUser=null;
+window._permTemplateGrants={}; // module:{action:true}
+window._permOverrides={};      // module:{action:boolean}
+
+async function loadPermissionMatrixUsers(){
+  var s=getSession();if(!s)return;
+  try{
+    var r=await sbGet('user_roles?select=user_id,role,category,profiles!inner(email)&order=role.asc',s.access_token);
+    var sel=document.getElementById('perm-user-select');if(!sel)return;
+    var html='<option value="">— seleziona —</option>';
+    (r||[]).forEach(function(row){
+      var email=row.profiles&&row.profiles.email||row.user_id;
+      var cat=row.category?' · '+row.category:'';
+      html+='<option value="'+row.user_id+'" data-role="'+row.role+'" data-email="'+escHtml(email)+'">'+escHtml(email)+' ('+row.role+cat+')</option>';
+    });
+    sel.innerHTML=html;
+  }catch(e){console.error('loadPermissionMatrixUsers:',e);}
+}
+
+async function permLoadUser(userId){
+  var matrixWrap=document.getElementById('perm-matrix-wrap');
+  var ceoLock=document.getElementById('perm-ceo-lock');
+  var saveBar=document.getElementById('perm-save-bar');
+  var roleSel=document.getElementById('perm-role-select');
+  var statusEl=document.getElementById('perm-save-status');
+  if(statusEl)statusEl.textContent='';
+  if(!userId){matrixWrap.style.display='none';ceoLock.style.display='none';saveBar.style.display='none';roleSel.disabled=true;roleSel.value='';return;}
+  var opt=document.querySelector('#perm-user-select option[value="'+userId+'"]');
+  var email=opt&&opt.dataset.email||'';
+  var role=opt&&opt.dataset.role||'custom';
+  window._permCurrentUser={user_id:userId,email:email,role:role};
+  roleSel.value=role;roleSel.disabled=false;
+  if(ABO_CEO_EMAILS.indexOf(email)!==-1){matrixWrap.style.display='none';saveBar.style.display='none';ceoLock.style.display='block';return;}
+  ceoLock.style.display='none';
+  await permFetchAndRender(role,userId);
+  matrixWrap.style.display='block';saveBar.style.display='flex';
+}
+
+async function permFetchAndRender(role,userId){
+  var s=getSession();if(!s)return;
+  window._permTemplateGrants={};window._permOverrides={};
+  try{
+    if(role&&role!=='custom'){
+      var tr=await sbGet('role_permissions?role=eq.'+encodeURIComponent(role)+'&select=module,action',s.access_token);
+      (tr||[]).forEach(function(p){window._permTemplateGrants[p.module]=window._permTemplateGrants[p.module]||{};window._permTemplateGrants[p.module][p.action]=true;});
+    }
+    var ur=await sbGet('user_permission_overrides?user_id=eq.'+userId+'&select=module,action,granted',s.access_token);
+    (ur||[]).forEach(function(o){window._permOverrides[o.module]=window._permOverrides[o.module]||{};window._permOverrides[o.module][o.action]=o.granted;});
+  }catch(e){console.error('permFetchAndRender:',e);}
+  permRenderMatrix();
+}
+
+function permRenderMatrix(){
+  var tbody=document.getElementById('perm-matrix-body');if(!tbody)return;
+  var html='';
+  PERM_MODULES.forEach(function(m){
+    html+='<tr><td style="font-weight:600;white-space:nowrap">'+PERM_MODULE_LABELS[m]+'</td>';
+    PERM_ACTIONS.forEach(function(a){
+      var tplVal=!!(window._permTemplateGrants[m]&&window._permTemplateGrants[m][a]);
+      var hasOverride=window._permOverrides[m]&&window._permOverrides[m][a]!==undefined;
+      var effective=hasOverride?window._permOverrides[m][a]:tplVal;
+      var checked=effective?'checked':'';
+      var marker=hasOverride?'<span style="color:var(--gold);font-family:var(--font-m);font-size:9px;margin-left:2px">*</span>':'';
+      html+='<td style="text-align:center"><label style="display:inline-flex;align-items:center;gap:2px;cursor:pointer"><input type="checkbox" '+checked+' onchange="permToggle(\''+m+'\',\''+a+'\',this.checked)" style="accent-color:var(--gold);width:14px;height:14px">'+marker+'</label></td>';
+    });
+    html+='</tr>';
+  });
+  tbody.innerHTML=html;
+}
+
+function permToggle(module,action,checked){
+  var tplVal=!!(window._permTemplateGrants[module]&&window._permTemplateGrants[module][action]);
+  if(checked===tplVal){
+    if(window._permOverrides[module]){delete window._permOverrides[module][action];if(Object.keys(window._permOverrides[module]).length===0)delete window._permOverrides[module];}
+  }else{
+    window._permOverrides[module]=window._permOverrides[module]||{};window._permOverrides[module][action]=checked;
+  }
+  permRenderMatrix();
+}
+
+function permApplyRoleTemplate(role){
+  if(!window._permCurrentUser)return;
+  window._permCurrentUser.role=role;
+  permFetchAndRender(role,window._permCurrentUser.user_id).then(function(){
+    var st=document.getElementById('perm-save-status');if(st)st.textContent='Template "'+role+'" applicato in anteprima (clicca SALVA per persistere).';
+  });
+}
+
+function permResetToTemplate(){
+  if(!window._permCurrentUser)return;
+  window._permOverrides={};
+  permRenderMatrix();
+  var st=document.getElementById('perm-save-status');if(st)st.textContent='Override puliti in anteprima (clicca SALVA per persistere).';
+}
+
+async function permSaveOverrides(){
+  if(!window._permCurrentUser)return;
+  var s=getSession();if(!s)return;
+  var u=window._permCurrentUser;
+  var st=document.getElementById('perm-save-status');if(st)st.textContent='Salvataggio…';
+  try{
+    // Upsert ruolo (PATCH; se 0 righe → POST)
+    var patchRes=await fetch(SB_URL+'/rest/v1/user_roles?user_id=eq.'+u.user_id,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=representation'},
+      body:JSON.stringify({role:u.role})
+    });
+    var patched=patchRes.ok?await patchRes.json():[];
+    if(!patched||patched.length===0){
+      await fetch(SB_URL+'/rest/v1/user_roles',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({user_id:u.user_id,role:u.role})
+      });
+    }
+    // Reset overrides per utente, poi re-insert
+    await fetch(SB_URL+'/rest/v1/user_permission_overrides?user_id=eq.'+u.user_id,{
+      method:'DELETE',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=minimal'}
+    });
+    var rows=[];
+    Object.keys(window._permOverrides).forEach(function(m){Object.keys(window._permOverrides[m]).forEach(function(a){rows.push({user_id:u.user_id,module:m,action:a,granted:window._permOverrides[m][a]});});});
+    if(rows.length>0){
+      await fetch(SB_URL+'/rest/v1/user_permission_overrides',{
+        method:'POST',
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify(rows)
+      });
+    }
+    if(st)st.textContent='✓ Salvato · '+rows.length+' override · ruolo: '+u.role;
+    setTimeout(function(){if(st)st.textContent='';},4000);
+    aboRenderSidebarPermissions(); // ricarica sidebar se l'utente loggato è quello modificato
+    loadPermissionMatrixUsers();   // refresh lista dropdown (ruolo aggiornato)
+  }catch(e){console.error('permSaveOverrides:',e);if(st)st.textContent='✗ Errore: '+e.message;}
+}
+
+// FASE 3 PR-C2b · gating azioni · helper canonical
+async function aboCheckPermission(module,action){
+  var s=getSession();if(!s)return false;
+  try{
+    var uid=window._aboSimulating?null:s.user&&s.user.id;
+    if(!uid&&!window._aboSimulating)return false;
+    // In modalità simulata · usa role_permissions diretto (uid simulato non esiste come user reale)
+    if(window._aboSimulating){
+      var res=await fetch(SB_URL+'/rest/v1/role_permissions?role=eq.'+encodeURIComponent(window._aboSimulating)+'&module=eq.'+encodeURIComponent(module)+'&action=eq.'+encodeURIComponent(action)+'&select=role',{
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+      });
+      if(!res.ok)return false;
+      var rows=await res.json();return Array.isArray(rows)&&rows.length>0;
+    }
+    var res=await fetch(SB_URL+'/rest/v1/rpc/user_has_permission',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_user_id:uid,p_module:module,p_action:action})
+    });
+    if(!res.ok)return false;
+    return (await res.json())===true;
+  }catch(e){console.error('aboCheckPermission:',e);return false;}
+}
+
+function aboPermDenied(label){
+  var msg='Permesso negato: '+label+(window._aboSimulating?' (simulazione: '+window._aboSimulating+')':'');
+  if(typeof showToast==='function')showToast(msg,'error');else alert(msg);
 }
 
 // FASE 2 PR-B2 · merge landings: 3 voci di sidebar mostrano insieme le rispettive
@@ -2069,6 +2284,8 @@ async function adDrawPreview(airdropId){
 }
 
 async function adExecuteDraw(airdropId,title){
+  // PR-C2b · gating · richiede pipeline_airdrop:draw
+  if(!await aboCheckPermission('pipeline_airdrop','draw')){return aboPermDenied('eseguire draw airdrop');}
   if(!confirm('⚠️ ESEGUI DRAW per "'+title+'"?\n\nQuesta azione è IRREVERSIBILE.\n- Seleziona il vincitore\n- Distribuisce NFT ai perdenti\n- Aggiorna il treasury\n\nConfermi?'))return;
   if(!confirm('Seconda conferma: sei sicuro di eseguire il draw?'))return;
   var s=getSession();if(!s)return;
@@ -2870,6 +3087,8 @@ function tfPreviewSplit(){
 }
 
 async function addTreasuryFund(){
+  // PR-C2b · gating · richiede treasury_fondi:edit
+  if(!await aboCheckPermission('treasury_fondi','edit')){return aboPermDenied('aggiungere fondi a Treasury');}
   var s=getSession();if(!s)return;
   var amount=parseFloat(document.getElementById('tf-amount').value);
   var desc=document.getElementById('tf-description').value.trim();
@@ -3428,7 +3647,7 @@ adminNav=function(sectionId){
   _origAdminNav(sectionId);
   if(sectionId==='sec-categories')loadCategories();
   if(sectionId==='sec-valutazioni')loadBoData();
-  if(sectionId==='sec-collaborators')loadCollaborators();
+  if(sectionId==='sec-collaborators'){loadCollaborators();loadPermissionMatrixUsers();}
   if(sectionId==='sec-company-assets')loadCompanyAssets();
   if(sectionId==='sec-messages')loadAdminMessages();
 };
@@ -3816,6 +4035,8 @@ function caEditAsset(id){
 }
 
 async function caSaveAsset(){
+  // PR-C2b · gating · richiede patrimonio_aziendale:edit
+  if(!await aboCheckPermission('patrimonio_aziendale','edit')){return aboPermDenied('modificare Patrimonio aziendale');}
   var s=getSession();if(!s)return;
   var data={
     category:document.getElementById('ca-category').value,
