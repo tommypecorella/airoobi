@@ -108,9 +108,11 @@ servizi selezionati:
 
 - **Supabase** — database e archiviazione dei file (incluse le foto degli
   oggetti). Server nell'Unione Europea (Francoforte).
-- **Vercel** — hosting del sito e delle funzioni applicative. Regione UE.
-- **Cloudflare** — distribuzione dei contenuti e statistiche aggregate di
-  navigazione, con indirizzo IP anonimizzato.
+- **Vercel** — hosting del sito e delle funzioni applicative, e statistiche di
+  navigazione aggregate e cookieless (Vercel Insights). Regione UE.
+- **Cloudflare** — distribuzione dei contenuti (CDN), protezione anti-bot
+  (Turnstile) e statistiche di navigazione aggregate e cookieless (Cloudflare
+  Web Analytics, attivo su airoobi.com e airoobi.app), con IP anonimizzato.
 - **Postmark** — invio delle email transazionali. `[Fornitore con sede negli
   Stati Uniti — vedi §6 e Note per la revisione: SCC da formalizzare.]`
 - Dallo Stage 1, un **fornitore di verifica dell'identità (KYC)** `[da
@@ -133,22 +135,21 @@ Ai sensi del GDPR puoi in qualsiasi momento: accedere ai tuoi dati, chiederne la
 rettifica, ottenerne la cancellazione, limitarne il trattamento, opporti al
 trattamento e richiedere la portabilità dei dati.
 
-In pratica, su AIROOBI puoi:
+In pratica, su AIROOBI:
 
-- consultare e modificare i dati del profilo dalla tua area personale;
-- chiedere la cancellazione dell'account: l'account viene disattivato e i dati
-  cancellati o anonimizzati, fatti salvi quelli soggetti a obbligo di
-  conservazione legale;
-- richiedere l'esportazione dei tuoi dati in formato leggibile;
-- disattivare le comunicazioni di marketing dalle preferenze del tuo account.
+- puoi consultare e modificare i dati del profilo dalla tua area personale;
+- puoi disattivare le comunicazioni di marketing dalle preferenze del tuo
+  account;
+- per la **cancellazione dell'account**, l'**esportazione dei tuoi dati** e
+  l'esercizio di ogni altro diritto sopra elencato, invia la richiesta a
+  **privacy@airoobi.com**: daremo seguito nei termini previsti dalla legge.
 
-Per esercitare questi diritti scrivi a **privacy@airoobi.com**. Hai inoltre il
-diritto di proporre reclamo al Garante per la protezione dei dati personali.
+Hai inoltre il diritto di proporre reclamo al Garante per la protezione dei
+dati personali.
 
 ## 8. Cookie e tecnologie simili
 
-Vedi la Parte 3 di questo documento. `[Se pubblicata come pagina separata,
-inserire qui il rinvio: "Consulta la nostra Cookie Policy".]`
+Vedi la Parte 3 di questo documento.
 
 ## 9. Minori
 
@@ -161,7 +162,8 @@ account riconducibile a un minore, lo sospendiamo e ne cancelliamo i dati.
 Adottiamo misure tecniche e organizzative adeguate a proteggere i dati: le
 password sono conservate in forma cifrata, l'accesso ai dati è limitato al
 personale autorizzato e i nostri fornitori operano in ambienti conformi agli
-standard di settore.
+standard di settore. La sessione di accesso è conservata localmente nel tuo
+browser come token cifrato (JWT), non in cookie.
 
 ## 11. Fase Alpha 0
 
@@ -306,19 +308,25 @@ Per qualsiasi domanda sui presenti Termini: **info@airoobi.com**.
 
 # PARTE 3 — COOKIE E TECNOLOGIE SIMILI
 
-AIROOBI utilizza un numero minimo di tecnologie strettamente necessarie:
+AIROOBI usa solo tecnologie **strettamente necessarie** o **statistiche
+cookieless**. **Non utilizza cookie di profilazione e non richiede un banner di
+consenso.**
 
-- **Cookie e archiviazione tecnica necessari** — usati per tenerti
-  autenticato durante la sessione e per il corretto funzionamento della
-  piattaforma. Sono indispensabili al servizio e non richiedono consenso.
-- **Statistiche di navigazione** — utilizziamo uno strumento di analisi
-  aggregata che `[DA CONFERMARE CON CCP: verificare se l'attuale strumento
-  (Cloudflare Web Analytics) opera senza cookie e con IP anonimizzato — in tal
-  caso non è richiesto consenso]`.
+- **Archiviazione tecnica necessaria** — la piattaforma salva nel tuo browser
+  (in `localStorage`, non in cookie) la sessione di accesso, la preferenza di
+  lingua e l'eventuale codice referral. È indispensabile al funzionamento del
+  servizio e non richiede consenso.
+- **Protezione anti-bot** — Cloudflare Turnstile, per distinguere gli utenti
+  reali dai bot. Strettamente necessario alla sicurezza, esente da consenso.
+- **Statistiche di navigazione aggregate** — Cloudflare Web Analytics e Vercel
+  Insights. Entrambi **senza cookie**, senza profilazione e con IP anonimizzato:
+  misurano solo le visite in forma aggregata. Esenti da consenso.
+- **Service worker** — abilita il funzionamento offline e le notifiche; non
+  effettua alcun tracciamento.
 
-`[Se in futuro venissero introdotti cookie o strumenti non essenziali (es.
-analytics di terze parti, pixel pubblicitari), sarà necessario un banner di
-consenso conforme. Vedi Note per la revisione.]`
+Se in futuro venissero introdotti strumenti non essenziali (es. cookie
+pubblicitari di terze parti), verrà aggiunto un banner di consenso conforme e
+questa sezione sarà aggiornata.
 
 Per domande: **privacy@airoobi.com**.
 
@@ -341,18 +349,21 @@ pubblicazione:
 3. **Periodi di conservazione** — i valori sono ripresi da LEG-001 §6.1 ma vanno
    confermati dal legale (in particolare gli obblighi contabili/fiscali e i
    termini KYC/antiriciclaggio).
-4. **Cookie reali** — la Parte 3 va verificata con CCP su cosa carica
-   effettivamente la dApp oggi (sessione Supabase, analytics, eventuali script di
-   terze parti). Vedi l'RS per CCP.
+4. **Cookie — RISOLTO** (cookie audit CCP, 23 May 2026): storage solo
+   `localStorage` tecnico; Cloudflare Turnstile + Cloudflare Web Analytics +
+   Vercel Insights tutti cookieless; AdSense rimosso da dapp.html. Parte 3
+   aggiornata — nessun banner di consenso necessario.
 5. **Trasferimenti extra-UE** — stato delle Clausole Contrattuali Standard con i
    fornitori non-UE (es. Postmark, USA). LEG-001 §6.3 le segnala "in attesa".
 6. **DPO** — LEG-001 §4 indica la designazione di un DPO come azione pre-Stage 1;
    se designato, inserire i contatti in Privacy §1.
-7. **Cookie Policy come pagina separata** — ho tenuto la Parte 3 come sezione
-   della privacy. Se preferisci una pagina `cookie.html` dedicata con link nel
-   footer, è una riga in più nell'RS: dimmelo.
+7. **Cookie Policy — RISOLTO**: resta sezione dentro `privacy.html` (Parte 3),
+   non pagina separata. Confermato Skeezu.
 8. **Legge applicabile e foro** — da completare col legale (dipende anche dalla
    forma societaria e sede).
+9. **Cancellazione/esportazione self-service** — §7 riformulata onesta (diritti
+   via email). Il self-service in dApp (RPC + bottoni) è golden-session GS-4:
+   a flusso live, §7 si aggiorna coi bottoni.
 
 ---
 
