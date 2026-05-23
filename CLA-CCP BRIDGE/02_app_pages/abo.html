@@ -645,9 +645,18 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <!-- GESTIONE AIRDROP -->
   <div class="admin-section" id="sec-airdrops">
     <h2>Pipeline airdrop <span class="info-i" onclick="showAboTip(this,'sec-airdrops')">i</span></h2>
-    <p class="admin-note" style="margin-bottom:16px;font-size:11px;color:var(--gray-500);letter-spacing:.5px">Gestione + Statistiche + Valutazioni · merge landing FASE 2 (tab di stato in PR-B3).</p>
-    <div style="margin-bottom:16px">
+    <p class="admin-note" style="margin-bottom:16px;font-size:11px;color:var(--gray-500);letter-spacing:.5px">Una lista con tab di stato · KPI Statistiche subito sotto. Doppione Valutazioni eliminato (era la stessa lista filtrata, ora coperto dai tab).</p>
+    <div style="margin-bottom:12px">
       <button onclick="loadAdminAirdrops()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
+    </div>
+    <!-- Pipeline state tabs · PR-B3 -->
+    <div class="bo-tabs" id="pipe-tabs">
+      <button class="bo-tab active" data-filter="all" onclick="pipelineFilter('all')">Tutti <span class="bo-tab-count" id="pipe-cnt-all">0</span></button>
+      <button class="bo-tab" data-filter="in_valutazione" onclick="pipelineFilter('in_valutazione')">In valutazione <span class="bo-tab-count" id="pipe-cnt-in_valutazione">0</span></button>
+      <button class="bo-tab" data-filter="valutazione_completata" onclick="pipelineFilter('valutazione_completata')">Val. completata <span class="bo-tab-count" id="pipe-cnt-valutazione_completata">0</span></button>
+      <button class="bo-tab" data-filter="presale" onclick="pipelineFilter('presale')">Presale <span class="bo-tab-count" id="pipe-cnt-presale">0</span></button>
+      <button class="bo-tab" data-filter="sale" onclick="pipelineFilter('sale')">Sale <span class="bo-tab-count" id="pipe-cnt-sale">0</span></button>
+      <button class="bo-tab" data-filter="conclusi" onclick="pipelineFilter('conclusi')">Conclusi <span class="bo-tab-count" id="pipe-cnt-conclusi">0</span></button>
     </div>
     <table class="admin-table" id="adm-airdrop-table">
       <thead><tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Desid.</th><th>Min.</th><th>Quotaz.</th><th>Blocchi</th><th></th></tr></thead>
@@ -1401,10 +1410,47 @@ var _adminRefreshInterval=null;
 // sotto-sezioni (in DOM order). Tabification piena di status-filter su Pipeline
 // airdrop deferita a PR-B3. Map: landing → siblings da mostrare in linea sotto.
 var ABO_MERGE_LANDINGS={
-  'sec-airdrops':   ['sec-airdrop-stats','sec-valutazioni'],
+  // PR-B3: sec-valutazioni rimosso · era doppione (stessa lista airdrop di sec-airdrops).
+  // I tab di stato sotto sec-airdrops (Pipeline airdrop) ora coprono i casi che sec-valutazioni
+  // mostrava. sec-valutazioni resta nel DOM ma non più attivata dal merge landing.
+  'sec-airdrops':   ['sec-airdrop-stats'],
   'sec-analysis':   ['sec-fairness'],
   'sec-coin':       ['sec-nft-valuation','sec-nft-types']
 };
+
+// PR-B3 · Pipeline airdrop · una lista con tab di stato (review §4.2)
+window._pipelineFilter='all';
+var PIPE_CONCLUSI_STATES=['completed','closed','annullato','dropped'];
+
+function pipelineFilter(f){
+  window._pipelineFilter=f;
+  document.querySelectorAll('#pipe-tabs .bo-tab').forEach(function(t){t.classList.remove('active')});
+  var btn=document.querySelector('#pipe-tabs .bo-tab[data-filter="'+f+'"]');
+  if(btn)btn.classList.add('active');
+  applyPipelineFilter();
+}
+
+function applyPipelineFilter(){
+  var f=window._pipelineFilter||'all';
+  document.querySelectorAll('#adm-airdrop-body tr[data-status]').forEach(function(r){
+    var s=r.getAttribute('data-status')||'';
+    var show=(f==='all')||(f==='conclusi'?PIPE_CONCLUSI_STATES.indexOf(s)!==-1:s===f);
+    r.style.display=show?'':'none';
+  });
+}
+
+function updatePipelineCounts(airdrops){
+  var counts={all:0,in_valutazione:0,valutazione_completata:0,presale:0,sale:0,conclusi:0};
+  (airdrops||[]).forEach(function(a){
+    counts.all++;
+    if(PIPE_CONCLUSI_STATES.indexOf(a.status)!==-1)counts.conclusi++;
+    else if(counts[a.status]!==undefined)counts[a.status]++;
+  });
+  Object.keys(counts).forEach(function(k){
+    var el=document.getElementById('pipe-cnt-'+k);
+    if(el)el.textContent=counts[k];
+  });
+}
 
 function adminNav(sectionId){
   document.querySelectorAll('.admin-section').forEach(function(s){s.classList.remove('active')});
@@ -1598,7 +1644,7 @@ async function loadAdminAirdrops(){
       var statusColor=a.status==='sale'?'#49b583':a.status==='presale'?'var(--gold)':a.status==='completed'?'#4A9EFF':a.status==='annullato'?'#ef4444':a.status.indexOf('rifiutato')===0?'#ef4444':'var(--gray-400)';
       var canDraw=(['sale','presale','active'].indexOf(a.status)!==-1)&&!a.draw_executed_at;
       var isDone=a.draw_executed_at!=null;
-      html+='<tr>';
+      html+='<tr data-status="'+escHtml(a.status||'')+'">';
       html+='<td style="font-weight:600">'+escHtml(a.title)+'</td>';
       html+='<td>'+escHtml(a.category||'—')+'</td>';
       html+='<td style="color:'+statusColor+'">'+escHtml(a.status)+(isDone?' ✓':'')+'</td>';
@@ -1621,6 +1667,9 @@ async function loadAdminAirdrops(){
       html+='</td></tr>';
     });
     tbody.innerHTML=html;
+    // PR-B3: conteggi per tab + applica filtro corrente
+    updatePipelineCounts(airdrops);
+    applyPipelineFilter();
   }catch(e){
     console.error('Admin airdrops load:',e);
     document.getElementById('adm-airdrop-body').innerHTML='<tr><td colspan="8" style="color:#ef4444">Errore: '+escHtml(e.message)+'</td></tr>';
