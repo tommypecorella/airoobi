@@ -61,6 +61,11 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://www.airoobi.app/explorer-robi</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://www.airoobi.app/blog/airdrop-elettrodomestici-casa-come-funziona.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

@@ -1683,6 +1683,34 @@ async function refreshTopbarBalances(){
       var robiEl=document.getElementById('topbar-robi-val');
       if(robiEl)robiEl.textContent=robiTotal.toFixed(0);
     }
+    // GS-6: ROBI market data pill (price + trend 24h)
+    try{
+      var mdRes=await fetch(SB_URL+'/rest/v1/rpc/get_robi_market_data',{
+        method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'
+      });
+      if(mdRes.ok){
+        var md=await mdRes.json();
+        var priceEl=document.getElementById('topbar-robi-price');
+        var valEl=document.getElementById('topbar-robi-price-val');
+        var trendEl=document.getElementById('topbar-robi-price-trend');
+        if(priceEl&&valEl&&md&&md.price_eur!=null){
+          valEl.textContent='€'+Number(md.price_eur).toFixed(2);
+          if(trendEl){
+            if(md.trend_24h_pct!=null){
+              var tp=Number(md.trend_24h_pct);
+              var arrow=tp>0?'↑':(tp<0?'↓':'·');
+              var cls=tp>0?'up':(tp<0?'down':'flat');
+              trendEl.className='topbar-robi-trend '+cls;
+              trendEl.textContent=arrow+' '+Math.abs(tp).toFixed(1)+'%';
+              trendEl.style.display='';
+            }else{
+              trendEl.style.display='none';
+            }
+          }
+          priceEl.style.display='';
+        }
+      }
+    }catch(_){}
   }catch(e){}
 }
 

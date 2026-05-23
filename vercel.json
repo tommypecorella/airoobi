@@ -135,6 +135,7 @@
     { "source": "/come-funziona", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
     { "source": "/regolamento", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
     { "source": "/explorer", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/explorer.html" },
+    { "source": "/explorer-robi", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/explorer-robi.html" },
 
     { "source": "/", "destination": "/home.html" },
     { "source": "/dapp", "destination": "/dapp.html" },
@@ -163,6 +164,7 @@
     { "source": "/come-funziona", "destination": "/come-funziona-airdrop.html" },
     { "source": "/regolamento", "destination": "/come-funziona-airdrop.html" },
     { "source": "/explorer", "destination": "/explorer.html" },
+    { "source": "/explorer-robi", "destination": "/explorer-robi.html" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/signup", "destination": "/signup.html" }
   ]

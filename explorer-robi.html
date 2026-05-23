@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="it" data-lang="it" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#FFFFFF">
+<title>ROBI Explorer — AIROOBI</title>
+<meta name="description" content="Esplora il valore nominale ROBI in tempo reale. Treasury, ROBI in circolazione, prezzo, trend.">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://airoobi.app/explorer-robi">
+<meta property="og:title" content="ROBI Explorer — AIROOBI">
+<meta property="og:description" content="Prezzo nominale ROBI in tempo reale. Treasury, circulating supply, trend 24h. Trasparenza.">
+<meta property="og:image" content="https://airoobi.com/og-image.png?v=4.20.0">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AIROOBI ROBI Explorer">
+<meta property="og:locale" content="it_IT">
+<meta property="og:site_name" content="AIROOBI">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@airoobi_com">
+<meta name="twitter:title" content="ROBI Explorer — AIROOBI">
+<meta name="twitter:description" content="Valore nominale ROBI in tempo reale.">
+<meta name="twitter:image" content="https://airoobi.com/og-image.png?v=4.20.0">
+<link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNplMplAo5HK5wlIaeg==">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--black:#FFFFFF;--white:#0F1417;--gold:#B8893D;--gold-dim:rgba(184,137,61,.3);--gold-bg:rgba(184,137,61,.06);--gray-300:#3F3F3F;--gray-400:#6B6B6B;--gray-700:#E5E1D6;--gray-800:#FAFAF7;--gray-600:#9F7820;--aria:#4A9EFF;--kas:#49EACB;--trend-up:#16A34A;--trend-down:#DC2626;--font-h:'Inter',system-ui,sans-serif;--font-b:'Inter','Helvetica Neue',sans-serif;--font-m:'JetBrains Mono','Courier New',monospace}
+html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased}
+body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)}
+
+.exp-header{padding:32px 24px 24px;text-align:center;border-bottom:1px solid var(--gray-700)}
+.exp-header-inner{max-width:960px;margin:0 auto}
+.exp-logo{height:28px;margin-bottom:16px;opacity:.7}
+.exp-title{font-family:var(--font-h);font-size:clamp(28px,5vw,40px);font-weight:300;color:var(--gold);margin-bottom:4px}
+.exp-sub{font-size:13px;color:var(--gray-400);margin-bottom:12px}
+.exp-badge{display:inline-block;font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);border:1px solid var(--gold-dim);padding:4px 12px;text-transform:uppercase}
+.exp-nav{display:flex;align-items:center;justify-content:center;gap:16px;margin-top:16px;flex-wrap:wrap}
+.exp-nav a{font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-400);text-decoration:none;transition:color .3s}
+.exp-nav a:hover{color:var(--gold)}
+.exp-lang{background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:10px;letter-spacing:1px;padding:4px 10px;cursor:pointer;transition:all .3s}
+.exp-lang:hover{border-color:var(--gold);color:var(--gold)}
+
+.exp-container{max-width:960px;margin:0 auto;padding:32px 24px;flex:1;width:100%}
+
+/* Price hero */
+.exp-price-hero{background:var(--gold-bg);border:1px solid var(--gold-dim);padding:32px 24px;text-align:center;margin-bottom:32px;border-radius:8px}
+.exp-price-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
+.exp-price-val{font-family:var(--font-h);font-size:clamp(36px,7vw,56px);font-weight:300;color:var(--gold);line-height:1;margin-bottom:8px}
+.exp-price-formula{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.5px;margin-top:8px}
+.exp-trend{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:13px;letter-spacing:.5px;padding:4px 12px;border-radius:20px;margin-top:8px}
+.exp-trend.up{color:var(--trend-up);background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.25)}
+.exp-trend.down{color:var(--trend-down);background:rgba(220,38,38,.08);border:1px solid rgba(220,38,38,.25)}
+.exp-trend.flat{color:var(--gray-400);background:rgba(107,107,107,.08);border:1px solid rgba(107,107,107,.25)}
+.exp-trend-collecting{display:inline-block;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);background:rgba(107,107,107,.06);padding:6px 14px;border:1px dashed rgba(107,107,107,.3);border-radius:20px;margin-top:8px}
+
+/* Stats row */
+.exp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
+@media(max-width:600px){.exp-stats{grid-template-columns:1fr}}
+.exp-stat{background:var(--gray-800);border:1px solid var(--gray-700);padding:24px 20px;text-align:center;transition:border-color .3s;border-radius:6px}
+.exp-stat:hover{border-color:var(--gold)}
+.exp-stat-val{font-family:var(--font-h);font-size:clamp(24px,4vw,32px);font-weight:300;color:var(--gold);line-height:1.1}
+.exp-stat-label{font-family:var(--font-m);font-size:10px;color:var(--gray-400);margin-top:8px;text-transform:uppercase;letter-spacing:1.5px}
+
+/* Section titles */
+.exp-section-title{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--gray-700)}
+
+/* Tables */
+.exp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.exp-table{width:100%;border-collapse:collapse;margin-bottom:40px}
+.exp-table th{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;text-align:left;padding:10px 12px;border-bottom:1px solid var(--gray-700);white-space:nowrap}
+.exp-table td{font-size:13px;padding:12px;border-bottom:1px solid rgba(229,225,214,.7);color:var(--gray-300)}
+.exp-table tr:hover td{background:rgba(184,137,61,.04)}
+.exp-table .mono{font-family:var(--font-m);font-size:11px;letter-spacing:.5px}
+.exp-table .time{font-family:var(--font-m);font-size:11px;color:var(--gray-400);white-space:nowrap}
+.exp-table .price{font-family:var(--font-m);font-size:12px;color:var(--gold);font-weight:500}
+
+/* Refresh indicator */
+.exp-refresh{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1px;text-align:center;margin-bottom:24px}
+.exp-refresh .dot{display:inline-block;width:6px;height:6px;background:var(--kas);border-radius:50%;margin-right:6px;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Loading skeleton */
+.exp-skel{background:linear-gradient(90deg,var(--gray-800) 25%,rgba(229,225,214,.6) 50%,var(--gray-800) 75%);background-size:200%;animation:shimmer 1.5s infinite;height:20px;margin-bottom:8px;border-radius:3px}
+@keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+
+/* Footer */
+.exp-footer{padding:32px 24px;text-align:center;border-top:1px solid var(--gray-700);margin-top:auto}
+.exp-footer-brand{font-family:var(--font-h);font-size:16px;color:var(--gray-400);margin-bottom:8px}
+.exp-footer-brand em{color:var(--gold);font-style:normal}
+.exp-footer-copy{font-size:11px;color:var(--gray-400)}
+
+/* Lang */
+.it{display:none}.en{display:none}
+html[data-lang="it"] .it{display:inline}
+html[data-lang="en"] .en{display:inline}
+html:not([data-lang]) .it{display:inline}
+
+/* Info note (non-clickable) */
+.exp-note{background:rgba(184,137,61,.04);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:32px;font-size:13px;color:var(--gray-300);line-height:1.6;border-radius:0 4px 4px 0}
+.exp-note strong{color:var(--gold)}
+</style>
+</head>
+<body>
+
+<div class="exp-header">
+  <div class="exp-header-inner">
+    <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" class="exp-logo">
+    <h1 class="exp-title">ROBI Explorer</h1>
+    <p class="exp-sub">
+      <span class="it">Valore nominale ROBI in tempo reale — aggiornamento ogni 30 secondi</span>
+      <span class="en">Nominal ROBI value in real-time — refreshes every 30 seconds</span>
+    </p>
+    <div class="exp-badge">TESTNET ALPHA</div>
+    <div class="exp-nav">
+      <a href="https://airoobi.app"><span class="it">APP</span><span class="en">APP</span></a>
+      <a href="https://airoobi.app/explorer"><span class="it">ARIA Explorer</span><span class="en">ARIA Explorer</span></a>
+      <a href="https://airoobi.com"><span class="it">Sito</span><span class="en">Site</span></a>
+      <button class="exp-lang" id="lang-btn" onclick="toggleLang()">EN</button>
+    </div>
+  </div>
+</div>
+
+<div class="exp-container">
+
+  <!-- Refresh indicator -->
+  <div class="exp-refresh" id="refresh-indicator">
+    <span class="dot"></span> <span class="it">Live — ultimo aggiornamento</span><span class="en">Live — last update</span> <span id="last-update">—</span>
+  </div>
+
+  <!-- PRICE HERO -->
+  <div class="exp-price-hero">
+    <div class="exp-price-label"><span class="it">Valore nominale · 1 ROBI</span><span class="en">Nominal value · 1 ROBI</span></div>
+    <div class="exp-price-val" id="price-val">—</div>
+    <div id="trend-wrap">
+      <div class="exp-trend-collecting" id="trend-collecting" style="display:none">
+        <span class="it">Raccolta dati in corso — trend 24h disponibile da domani</span>
+        <span class="en">Collecting data — 24h trend available tomorrow</span>
+      </div>
+      <div class="exp-trend" id="trend-pill" style="display:none">
+        <span id="trend-arrow">·</span><span id="trend-pct">—</span> · <span class="it">24h</span><span class="en">24h</span>
+      </div>
+    </div>
+    <div class="exp-price-formula">
+      <span class="it">Treasury totale &divide; ROBI in circolazione</span><span class="en">Total Treasury &divide; ROBI in circulation</span>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="exp-stats">
+    <div class="exp-stat">
+      <div class="exp-stat-val" id="stat-treasury">—</div>
+      <div class="exp-stat-label"><span class="it">Treasury (EUR)</span><span class="en">Treasury (EUR)</span></div>
+    </div>
+    <div class="exp-stat">
+      <div class="exp-stat-val" id="stat-circulating">—</div>
+      <div class="exp-stat-label"><span class="it">ROBI in circolazione</span><span class="en">ROBI in circulation</span></div>
+    </div>
+    <div class="exp-stat">
+      <div class="exp-stat-val" id="stat-snapshots">—</div>
+      <div class="exp-stat-label"><span class="it">Snapshot raccolti</span><span class="en">Snapshots collected</span></div>
+    </div>
+  </div>
+
+  <!-- Note -->
+  <div class="exp-note">
+    <strong><span class="it">Come funziona</span><span class="en">How it works</span></strong><br>
+    <span class="it">Il valore nominale di 1 ROBI viene calcolato dividendo il Treasury totale per il numero di ROBI in circolazione. Snapshot automatici ogni ora costruiscono lo storico del prezzo per il calcolo del trend e del grafico.</span>
+    <span class="en">The nominal value of 1 ROBI is calculated by dividing the total Treasury by the number of ROBI in circulation. Hourly automatic snapshots build the price history for trend and chart calculations.</span>
+  </div>
+
+  <!-- Snapshot history -->
+  <div class="exp-section-title"><span class="it">Storico snapshot</span><span class="en">Snapshot history</span> <span style="color:var(--gray-600)">(<span class="it">ultimi 24</span><span class="en">last 24</span>)</span></div>
+  <div class="exp-table-wrap">
+    <table class="exp-table" id="snap-table">
+      <thead>
+        <tr>
+          <th><span class="it">Ora</span><span class="en">Time</span></th>
+          <th><span class="it">Prezzo ROBI</span><span class="en">ROBI Price</span></th>
+          <th><span class="it">Treasury</span><span class="en">Treasury</span></th>
+          <th><span class="it">Circolanti</span><span class="en">Circulating</span></th>
+        </tr>
+      </thead>
+      <tbody id="snap-body">
+        <tr><td colspan="4"><div class="exp-skel" style="width:100%"></div><div class="exp-skel" style="width:80%"></div><div class="exp-skel" style="width:90%"></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<footer class="exp-footer">
+  <div class="exp-footer-brand">AIROOBI <em>ROBI EXPLORER</em></div>
+  <div class="exp-footer-copy">
+    &copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
+  </div>
+  <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.24-4.32.0</div>
+</footer>
+
+<script>
+var SB_URL='https://vuvlmlpuhovipfwtquux.supabase.co';
+var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+
+function toggleLang(){
+  var root=document.documentElement;
+  var current=root.getAttribute('data-lang');
+  var next=current==='it'?'en':'it';
+  root.setAttribute('data-lang',next);
+  root.setAttribute('lang',next);
+  document.getElementById('lang-btn').textContent=next==='it'?'EN':'IT';
+  localStorage.setItem('airoobi_lang',next);
+}
+(function(){
+  var saved=localStorage.getItem('airoobi_lang');
+  if(saved&&saved!=='it'){toggleLang();}
+})();
+
+async function rpc(fn,body){
+  var res=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{
+    method:'POST',
+    headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify(body||{})
+  });
+  if(!res.ok)return null;
+  return res.json();
+}
+
+function formatPrice(n){
+  if(n===null||n===undefined)return '€—';
+  var v=Number(n);
+  return '€'+v.toFixed(v<1?4:2);
+}
+function formatEur(n){
+  if(n===null||n===undefined)return '€—';
+  return '€'+Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+}
+function formatNum(n){
+  if(n===null||n===undefined)return '—';
+  return Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+}
+function timeAgo(dateStr){
+  var d=new Date(dateStr);
+  var now=new Date();
+  var diff=Math.floor((now-d)/1000);
+  if(diff<60)return diff+'s';
+  if(diff<3600)return Math.floor(diff/60)+'m';
+  if(diff<86400)return Math.floor(diff/3600)+'h';
+  return Math.floor(diff/86400)+'d';
+}
+function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+
+async function loadMarketData(){
+  var md=await rpc('get_robi_market_data');
+  if(!md)return;
+  document.getElementById('price-val').textContent=formatPrice(md.price_eur);
+  document.getElementById('stat-treasury').textContent=formatEur(md.treasury_eur);
+  document.getElementById('stat-circulating').textContent=formatNum(md.robi_circulating);
+  document.getElementById('stat-snapshots').textContent=formatNum(md.snapshot_count);
+
+  var collectingEl=document.getElementById('trend-collecting');
+  var trendEl=document.getElementById('trend-pill');
+  if(md.trend_24h_pct!==null&&md.trend_24h_pct!==undefined){
+    var tp=Number(md.trend_24h_pct);
+    var arrow=tp>0?'↑':(tp<0?'↓':'·');
+    var cls=tp>0?'up':(tp<0?'down':'flat');
+    trendEl.className='exp-trend '+cls;
+    document.getElementById('trend-arrow').textContent=arrow;
+    document.getElementById('trend-pct').textContent=Math.abs(tp).toFixed(2)+'%';
+    trendEl.style.display='';
+    collectingEl.style.display='none';
+  }else{
+    trendEl.style.display='none';
+    collectingEl.style.display='';
+  }
+
+  document.getElementById('last-update').textContent=new Date().toLocaleTimeString();
+}
+
+async function loadSnapshots(){
+  var rows=await rpc('get_robi_snapshots_recent',{p_limit:24});
+  var body=document.getElementById('snap-body');
+  if(!rows||!Array.isArray(rows)||rows.length===0){
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    body.innerHTML='<tr><td colspan="4" style="text-align:center;color:var(--gray-400);padding:24px">'+(lang==='it'?'Nessuno snapshot ancora':'No snapshots yet')+'</td></tr>';
+    return;
+  }
+  body.innerHTML=rows.map(function(r){
+    return '<tr>'
+      +'<td class="time">'+timeAgo(r.taken_at)+'</td>'
+      +'<td class="price">'+formatPrice(r.price_eur)+'</td>'
+      +'<td class="mono">'+formatEur(r.treasury_eur)+'</td>'
+      +'<td class="mono">'+formatNum(r.robi_circulating)+'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+async function refresh(){
+  await Promise.all([loadMarketData(),loadSnapshots()]);
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  refresh();
+  setInterval(refresh,30000);
+});
+</script>
+</body>
+</html>

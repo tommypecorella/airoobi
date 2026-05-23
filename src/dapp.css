@@ -1022,6 +1022,18 @@ select option{background:var(--gray-800);color:var(--white)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
 .my-tab:hover{color:var(--white) !important}
 
+/* ── Topbar ROBI price pill (GS-6) — accanto al saldo ROBI, link a ROBI Explorer ── */
+.topbar-robi-price{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:.5px;background:rgba(184,150,12,.04);padding:5px 10px;border-radius:24px;border:1px solid rgba(184,150,12,.18);display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:background .2s,border-color .2s;cursor:pointer}
+.topbar-robi-price:hover{background:rgba(184,150,12,.12);border-color:rgba(184,150,12,.4)}
+.topbar-robi-trend{font-size:9px;letter-spacing:.3px;padding:1px 5px;border-radius:8px;font-family:var(--font-m)}
+.topbar-robi-trend.up{color:#49EACB;background:rgba(73,234,203,.12)}
+.topbar-robi-trend.down{color:#f87171;background:rgba(248,113,113,.12)}
+.topbar-robi-trend.flat{color:var(--gray-400);background:rgba(255,255,255,.04)}
+@media(max-width:640px){
+  .topbar-robi-price{font-size:10px;padding:4px 8px;gap:4px}
+  .topbar-robi-trend{display:none !important}
+}
+
 /* ── Chat bubbles (GS-13) — used by airdrop chat dApp + ABO ── */
 .chat-msg{display:flex;margin-bottom:10px}
 .chat-msg.msg-mine{justify-content:flex-end}
