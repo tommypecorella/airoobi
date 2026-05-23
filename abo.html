@@ -285,6 +285,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <span class="admin-sidebar-label"><span class="it">Operations</span><span class="en">Operations</span></span>
     <div class="admin-sidebar-item active" onclick="adminNav('sec-overview')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-airdrops')"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg><span class="it">Pipeline airdrop</span><span class="en">Airdrop pipeline</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-evalobi')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>EVALOBI Registry</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-analysis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span class="it">Analisi &amp; Fairness</span><span class="en">Analysis &amp; Fairness</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="it">Messaggi</span><span class="en">Messages</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-users')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="it">Utenti</span><span class="en">Users</span></div>
@@ -1152,7 +1153,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </select>
       <button onclick="loadEvalobiTable()" class="ab-btn" style="padding:6px 14px">Refresh</button>
     </div>
-    <div style="overflow:auto"><table class="adm-tbl" id="evalobi-tbl"><thead><tr><th>Token</th><th>Outcome</th><th>Object</th><th>Seller</th><th>Emesso</th><th>Re-eval</th></tr></thead><tbody><tr><td colspan="6" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
+    <div style="overflow:auto"><table class="adm-tbl" id="evalobi-tbl"><thead><tr><th>Token</th><th>Outcome</th><th>Object</th><th>Categoria</th><th>Valore stimato</th><th>Motivazione</th><th>Seller</th><th>Emesso</th><th>Versione</th></tr></thead><tbody><tr><td colspan="9" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
   </div>
 
   <!-- ═══ W4 · sec-disputes ═══ -->
@@ -1212,13 +1213,26 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   const sb = window.aboSb;
   window.loadEvalobiTable = async function(){
     const tbody = document.querySelector('#evalobi-tbl tbody');
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
     const outcome = document.getElementById('evalobi-filter-outcome')?.value || '';
-    let q = sb.from('evalobi').select('token_id,evaluation_outcome,object_title,object_brand,seller_id,created_at,re_evaluation_count').order('created_at',{ascending:false}).limit(100);
+    let q = sb.from('evalobi').select('token_id,evaluation_outcome,object_title,object_brand,object_category,evaluation_price_range,evaluation_reasoning,original_seller_id,evaluated_at,created_at,version').order('created_at',{ascending:false}).limit(100);
     if (outcome) q = q.eq('evaluation_outcome', outcome);
     const { data, error } = await q;
-    if (error) { tbody.innerHTML = '<tr><td colspan="6" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
-    tbody.innerHTML = (data||[]).map(r => `<tr><td>#${r.token_id||'-'}</td><td><span class="tag">${r.evaluation_outcome||'?'}</span></td><td>${r.object_brand||''} ${r.object_title||''}</td><td style="font-family:var(--font-m);font-size:10px">${(r.seller_id||'').slice(0,8)}</td><td style="font-size:11px;color:var(--gray-400)">${new Date(r.created_at).toLocaleDateString('it-IT')}</td><td>${r.re_evaluation_count||0}</td></tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:18px">Nessun EVALOBI</td></tr>';
+    if (error) { tbody.innerHTML = '<tr><td colspan="9" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
+    function fmtPriceRange(pr){
+      if(!pr) return '<span style="color:var(--gray-600)">—</span>';
+      try{ var p = typeof pr === 'string' ? JSON.parse(pr) : pr;
+        if(p && (p.min!=null || p.max!=null)){ var mn=p.min!=null?'€'+Number(p.min).toFixed(0):'—'; var mx=p.max!=null?'€'+Number(p.max).toFixed(0):'—'; return mn+' – '+mx; }
+        if(p && p.value!=null) return '€'+Number(p.value).toFixed(0);
+        return JSON.stringify(p);
+      }catch(e){ return String(pr); }
+    }
+    function trunc(s,n){ if(!s) return ''; var x=String(s); return x.length>n?x.slice(0,n-1)+'…':x; }
+    tbody.innerHTML = (data||[]).map(r => {
+      var dateEv = r.evaluated_at ? new Date(r.evaluated_at).toLocaleDateString('it-IT') : (r.created_at?new Date(r.created_at).toLocaleDateString('it-IT'):'—');
+      var reasoning = r.evaluation_reasoning || '';
+      return `<tr><td>#${r.token_id||'-'}</td><td><span class="tag">${r.evaluation_outcome||'?'}</span></td><td>${escHtml((r.object_brand||'')+' '+(r.object_title||''))}</td><td style="font-size:11px;color:var(--gray-400)">${escHtml(r.object_category||'—')}</td><td style="font-family:var(--font-m);font-size:11px;color:var(--gold)">${fmtPriceRange(r.evaluation_price_range)}</td><td style="font-size:11px;color:var(--gray-300);max-width:260px" title="${escHtml(reasoning)}">${escHtml(trunc(reasoning,80))}</td><td style="font-family:var(--font-m);font-size:10px">${(r.original_seller_id||'').slice(0,8)}</td><td style="font-size:11px;color:var(--gray-400)">${dateEv}</td><td style="text-align:center">v${r.version||1}</td></tr>`;
+    }).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--gray-500);padding:18px">Nessun EVALOBI</td></tr>';
   };
   window.loadDisputesTable = async function(){
     const tbody = document.querySelector('#disputes-tbl tbody');
