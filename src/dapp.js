@@ -5631,10 +5631,10 @@ var INFO_TIPS={
     it:'I ROBI che stai accumulando in questo airdrop in base ai blocchi acquistati. Sono tuoi a prescindere dall\'esito: li riscuoti in KAS al termine, anche se non ottieni l\'oggetto.',
     en:'The ROBI you\'re accumulating in this airdrop based on your blocks. They\'re yours regardless of outcome: redeem them for KAS when it ends, even if you don\'t get the object.'
   },
-  // GS-1 PLACEHOLDER — copy attesa da ROBY (word-craft definitivo)
+  // GS-1 · copy definitiva ROBY (ROBY_Reply_CCP_TrackA_Reopen_GO_2026-05-24.md §4)
   'evalobi':{
-    it:'EVALOBI è il certificato di valutazione del tuo oggetto. Non ha valore monetario: è la prova permanente del nostro giudizio (esito, valore stimato, motivazione). Resta nel tuo Portafoglio anche dopo la vendita o il ritiro.',
-    en:'EVALOBI is the evaluation certificate of your object. It has no monetary value: it is the permanent proof of our judgment (outcome, estimated value, reasoning). It stays in your Wallet even after sale or withdrawal.'
+    it:'EVALOBI è il certificato di valutazione del tuo oggetto — esito, valore stimato e motivazione, firmati da AIROOBI. Non ha valore monetario e non si spende: è la prova, permanente e tua, del nostro giudizio. Resta nel Portafoglio anche dopo aver venduto o ritirato l\'oggetto.',
+    en:'EVALOBI is your object\'s evaluation certificate — outcome, estimated value and reasoning, signed by AIROOBI. It has no monetary value and cannot be spent: it is a permanent, personal proof of our assessment. It stays in your Wallet even after you sell or withdraw the object.'
   }
 };
 
