@@ -1548,11 +1548,14 @@ window._permOverrides={};      // module:{action:boolean}
 async function loadPermissionMatrixUsers(){
   var s=getSession();if(!s)return;
   try{
-    var r=await sbGet('user_roles?select=user_id,role,category,profiles!inner(email)&order=role.asc',s.access_token);
+    var res=await fetch(SB_URL+'/rest/v1/rpc/admin_list_role_holders',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'}
+    });
+    var r=await res.json();
     var sel=document.getElementById('perm-user-select');if(!sel)return;
     var html='<option value="">— seleziona —</option>';
     (r||[]).forEach(function(row){
-      var email=row.profiles&&row.profiles.email||row.user_id;
+      var email=row.email||row.user_id;
       var cat=row.category?' · '+row.category:'';
       html+='<option value="'+row.user_id+'" data-role="'+row.role+'" data-email="'+escHtml(email)+'">'+escHtml(email)+' ('+row.role+cat+')</option>';
     });
