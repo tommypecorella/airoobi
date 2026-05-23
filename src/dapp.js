@@ -4607,15 +4607,13 @@ async function loadAirdropChat(airdropId,containerId){
       for(var i=0;i<msgs.length;i++){
         var m=msgs[i];
         var isMine=m.sender_id===myId;
-        var align=isMine?'flex-end':'flex-start';
-        var bg=isMine?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
-        var border=isMine?'var(--gold)':'var(--aria)';
+        var side=isMine?'msg-mine':'msg-theirs';
         var label=isMine?(m.is_admin?'AIROOBI':'Tu'):(m.is_admin?'AIROOBI':'Utente');
         var time=new Date(m.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-        html+='<div style="display:flex;justify-content:'+align+';margin-bottom:8px">';
-        html+='<div style="max-width:80%;padding:10px 14px;background:'+bg+';border-left:3px solid '+border+';font-size:13px">';
-        html+='<div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:4px"><span style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:'+border+'">'+label+'</span><span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">'+time+'</span></div>';
-        html+='<div style="color:var(--white);line-height:1.5">'+escHtml(m.body)+'</div>';
+        html+='<div class="chat-msg '+side+'">';
+        html+='<div class="chat-msg-bubble">';
+        html+='<div class="chat-msg-head"><span class="chat-msg-author">'+label+'</span><span class="chat-msg-time">'+time+'</span></div>';
+        html+='<div class="chat-msg-body">'+escHtml(m.body)+'</div>';
         html+='</div></div>';
       }
     }

@@ -1021,3 +1021,19 @@ select option{background:var(--gray-800);color:var(--white)}
 /* ── My Airdrops dashboard ── */
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
 .my-tab:hover{color:var(--white) !important}
+
+/* ── Chat bubbles (GS-13) — used by airdrop chat dApp + ABO ── */
+.chat-msg{display:flex;margin-bottom:10px}
+.chat-msg.msg-mine{justify-content:flex-end}
+.chat-msg.msg-theirs{justify-content:flex-start}
+.chat-msg-bubble{max-width:78%;padding:10px 14px 8px;font-size:13px;line-height:1.5;border-radius:14px;position:relative;word-wrap:break-word}
+.chat-msg.msg-mine .chat-msg-bubble{background:rgba(184,150,12,.16);border:1px solid rgba(184,150,12,.35);border-bottom-right-radius:4px;color:var(--white)}
+.chat-msg.msg-theirs .chat-msg-bubble{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);border-bottom-left-radius:4px;color:var(--white)}
+.chat-msg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px;font-family:var(--font-m);font-size:9px;letter-spacing:1px}
+.chat-msg.msg-mine .chat-msg-head .chat-msg-author{color:var(--gold)}
+.chat-msg.msg-theirs .chat-msg-head .chat-msg-author{color:var(--aria)}
+.chat-msg-time{color:var(--gray-500);font-size:9px}
+.chat-msg-body{color:var(--white);line-height:1.5;font-size:13px;font-family:var(--font-b)}
+@media(max-width:640px){
+  .chat-msg-bubble{max-width:88%;font-size:12.5px}
+}

@@ -201,6 +201,22 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 #abo-tooltip .tt-d{color:var(--white);margin-bottom:8px;line-height:1.55}
 #abo-tooltip .tt-ex{font-family:var(--font-m);font-size:11px;color:var(--gray-300);background:rgba(74,158,255,.06);padding:8px 10px;border-left:2px solid var(--aria);margin-bottom:8px;letter-spacing:.3px;line-height:1.55}
 #abo-tooltip .tt-tip{font-size:11px;color:var(--kas);font-style:italic;line-height:1.55}
+
+/* ── Chat bubbles (GS-13) — shared pattern with dApp ── */
+.chat-msg{display:flex;margin-bottom:10px}
+.chat-msg.msg-mine{justify-content:flex-end}
+.chat-msg.msg-theirs{justify-content:flex-start}
+.chat-msg-bubble{max-width:78%;padding:10px 14px 8px;font-size:13px;line-height:1.5;border-radius:14px;position:relative;word-wrap:break-word}
+.chat-msg.msg-mine .chat-msg-bubble{background:rgba(184,150,12,.16);border:1px solid rgba(184,150,12,.35);border-bottom-right-radius:4px;color:var(--white)}
+.chat-msg.msg-theirs .chat-msg-bubble{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);border-bottom-left-radius:4px;color:var(--white)}
+.chat-msg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px;font-family:var(--font-m);font-size:9px;letter-spacing:1px}
+.chat-msg.msg-mine .chat-msg-head .chat-msg-author{color:var(--gold)}
+.chat-msg.msg-theirs .chat-msg-head .chat-msg-author{color:var(--aria)}
+.chat-msg-time{color:var(--gray-500);font-size:9px}
+.chat-msg-body{color:var(--white);line-height:1.5;font-size:13px;font-family:var(--font-b)}
+@media(max-width:640px){
+  .chat-msg-bubble{max-width:88%;font-size:12.5px}
+}
 </style>
 </head>
 <body>
@@ -3889,15 +3905,13 @@ async function loadAboChat(airdropId,containerId){
     for(var i=0;i<msgs.length;i++){
       var m=msgs[i];
       var isMine=m.sender_id===myId;
-      var align=isMine?'flex-end':'flex-start';
-      var bg=isMine?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
-      var border=isMine?'var(--gold)':'var(--aria)';
+      var side=isMine?'msg-mine':'msg-theirs';
       var label=isMine?(m.is_admin?'AIROOBI':'Tu'):(m.is_admin?'AIROOBI':'Utente');
       var time=new Date(m.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-      html+='<div style="display:flex;justify-content:'+align+';margin-bottom:8px">';
-      html+='<div style="max-width:80%;padding:10px 14px;background:'+bg+';border-left:3px solid '+border+';font-size:13px">';
-      html+='<div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:4px"><span style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:'+border+'">'+label+'</span><span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">'+time+'</span></div>';
-      html+='<div style="color:var(--white);line-height:1.5">'+escH(m.body)+'</div>';
+      html+='<div class="chat-msg '+side+'">';
+      html+='<div class="chat-msg-bubble">';
+      html+='<div class="chat-msg-head"><span class="chat-msg-author">'+label+'</span><span class="chat-msg-time">'+time+'</span></div>';
+      html+='<div class="chat-msg-body">'+escH(m.body)+'</div>';
       html+='</div></div>';
     }
     html+='</div>';
