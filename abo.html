@@ -441,10 +441,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <!-- ROBI VALUATION & TOKENOMICS -->
   <div class="admin-section" id="sec-nft-valuation">
     <h2>ROBI Valuation &amp; Tokenomics <span class="info-i" onclick="showAboTip(this,'sec-nft-valuation')">i</span></h2>
-    <p class="admin-note" style="margin-bottom:20px">Dati in tempo reale da <code>nft_rewards</code>. <strong>Valore ROBI stimato = Treasury / ROBI in circolazione</strong>. Buyback = 95% del valore (riscossione garantita). Upside = 5% (crescita futura). Aggiorna Treasury manualmente.</p>
+    <p class="admin-note" style="margin-bottom:20px">Tutti i numeri sono <strong>live</strong>: Treasury da <code>treasury_funds</code>, ROBI in circolazione da <code>nft_rewards</code> (SUM(shares) via <code>admin_get_all_robi</code>). <strong>Valore ROBI = Treasury / ROBI in circolazione</strong> — formula unica usata su Overview, Treasury e questa sezione. Buyback = 95% del valore (riscossione garantita). Upside = 5% (crescita futura).</p>
     <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap">
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€) <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€) <span style="font-size:9px;color:var(--kas)">live · treasury_funds</span></label>
         <div style="display:flex;align-items:center;gap:6px">
           <input type="number" id="adm-treasury-input" placeholder="0.00" readonly
             style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none;cursor:not-allowed">
@@ -453,7 +453,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <div id="adm-treasury-updated" style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px"></div>
       </div>
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">ARIA IN CIRCOLAZIONE <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">ARIA IN CIRCOLAZIONE <span style="font-size:9px;color:var(--kas)">live · Σ profiles.total_points</span></label>
         <div style="display:flex;align-items:center;gap:6px">
           <input type="number" id="adm-aico-input" placeholder="0" readonly
             style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:140px;outline:none;cursor:not-allowed">
@@ -461,10 +461,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         </div>
         <div id="adm-aria-updated" style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px"></div>
       </div>
-      <button onclick="saveAdminTokenomics()"
-        style="padding:10px 20px;background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700">
-        SALVA
-      </button>
     </div>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">Treasury totale <span class="info-i" onclick="showAboTip(this,'val-treasury')">i</span></div></div>
@@ -485,7 +481,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <tr><td colspan="3" style="color:var(--gray-400)"><span style="display:inline-block;width:12px;height:12px;border:2px solid var(--gray-600);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px"></span>Caricamento...</td></tr>
       </tbody>
     </table>
-    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> calcolato da nft_rewards. <strong>ARIA IN CIRCOLAZIONE</strong> calcolato da profiles.total_points.</p>
+    <p class="admin-note" style="margin-top:16px">Tutto <strong>live</strong>: Treasury da <code>treasury_funds</code>, ROBI da <code>nft_rewards</code> (SUM(shares) via <code>admin_get_all_robi</code> RPC), ARIA da <code>profiles.total_points</code>. Una formula sola, ovunque.</p>
   </div>
 
   <!-- MESSAGGI AIRDROP -->
@@ -1500,6 +1496,7 @@ async function loadAdminData(){
     var remEl=document.getElementById('adm-remaining');
     if(remEl){remEl.textContent=remaining;remEl.style.color=remaining<=0?'#B91C1C':remaining<=100?'#F59E0B':'var(--gold)';}
     const totalPts=users.reduce(function(a,b){return a+(b.total_points||0)},0);
+    window._totalAria=totalPts; // F1.c: live ARIA total esposto per Patrimonio aziendale & altri consumer
     document.getElementById('adm-points').textContent=totalPts.toLocaleString();
     var aicoIn=document.getElementById('adm-aico-input');if(aicoIn)aicoIn.value=totalPts;
     var coinSup=document.getElementById('adm-coin-supply');if(coinSup)coinSup.textContent=totalPts.toLocaleString();
@@ -2504,10 +2501,10 @@ async function loadAdminTreasury(){
     // Treasury balance now sourced from treasury_funds table (see loadTreasuryFunds)
     try{
       var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id,shares',tk);
-      var earnOnly=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}):[];
-      var nftCount=earnOnly.length;
-      var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
-      var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=nftCount;
+      // F1.b: ROBI canonical = window._robiTotal (SUM shares via admin_get_all_robi RPC); niente filtro NFT_EARN
+      var robiTotal=(window._robiTotal!=null)?window._robiTotal:0;
+      var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=robiTotal;
+      var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=robiTotal;
       var nu=document.getElementById('adm-nft-updated');if(nu)nu.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
       var bTbody=document.getElementById('adm-nft-breakdown');
       if(bTbody){
@@ -2565,30 +2562,37 @@ async function refreshTreasuryTotal(){
 async function refreshNftCircolante(){
   var s=getSession();if(!s)return;
   try{
-    var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',s.access_token);
-    var earnOnly=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}):[];
-    var cnt=earnOnly.length;
-    var i=document.getElementById('adm-input-circulating');if(i)i.value=cnt;
-    var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=cnt;
+    // F1.b: query canonica via admin_get_all_robi (SECURITY DEFINER, bypassa RLS, SUM(shares)).
+    // Niente filtro NFT_EARN; niente row-count: tutto sum-of-shares con fallback 1 per i badge.
+    var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'}});
+    var robiData=robiRes.ok?await robiRes.json():[];
+    var breakdown={},owners={};window._robiTotal=0;
+    robiData.forEach(function(r){
+      var tp=r.nft_type||'unknown';
+      var sh=parseFloat(r.shares)||1;
+      breakdown[tp]=(breakdown[tp]||0)+sh;
+      if(!owners[tp])owners[tp]={};
+      if(r.user_id)owners[tp][r.user_id]=true;
+      window._robiTotal+=sh;
+    });
+    var robiStr=window._robiTotal%1===0?window._robiTotal:window._robiTotal.toFixed(2);
+    var i=document.getElementById('adm-input-circulating');if(i)i.value=window._robiTotal;
+    var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=window._robiTotal;
+    var ov=document.getElementById('adm-nft-circulating-ov');if(ov)ov.textContent=robiStr;
     var u=document.getElementById('adm-nft-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     var bTbody=document.getElementById('adm-nft-breakdown');
-    if(bTbody&&nfts){
-      var breakdown={};var owners={};
-      nfts.forEach(function(n){
-        var tp=n.nft_type||'unknown';
-        breakdown[tp]=(breakdown[tp]||0)+1;
-        if(!owners[tp])owners[tp]={};
-        if(n.user_id)owners[tp][n.user_id]=true;
-      });
+    if(bTbody){
       var types=Object.keys(breakdown);
       if(types.length>0){
         types.sort(function(a,b){return breakdown[b]-breakdown[a]});
         bTbody.innerHTML=types.map(function(tp){
-          return '<tr><td>'+tp+'</td><td>'+Object.keys(owners[tp]||{}).length+'</td><td>'+breakdown[tp]+'</td></tr>';
+          var total=breakdown[tp];
+          var totalStr=total%1===0?total:total.toFixed(2);
+          return '<tr><td>'+tp+'</td><td>'+Object.keys(owners[tp]||{}).length+'</td><td>'+totalStr+'</td></tr>';
         }).join('');
       }else{bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';}
-      var braveEl=document.getElementById('adm-nft-brave-count');if(braveEl)braveEl.textContent=breakdown['NFT_ALPHA_BRAVE']||0;
-      var robiEl=document.getElementById('adm-nft-robi-count');if(robiEl)robiEl.textContent=(breakdown['ROBI']||0)+(breakdown['NFT_REWARD']||0);
+      var braveEl=document.getElementById('adm-nft-brave-count');if(braveEl){var bv=breakdown['NFT_ALPHA_BRAVE']||0;braveEl.textContent=bv%1===0?bv:bv.toFixed(2);}
+      var robiEl=document.getElementById('adm-nft-robi-count');if(robiEl){var rb=(breakdown['ROBI']||0)+(breakdown['NFT_REWARD']||0);robiEl.textContent=rb%1===0?rb:rb.toFixed(2);}
     }
     updateNftMetrics();
   }catch(e){console.error('Refresh NFT error:',e);}
@@ -2802,34 +2806,9 @@ function updateNftMetrics(){
   recalcNFTValue();
 }
 
-async function saveAdminTokenomics(){
-  var s=getSession();if(!s)return;
-  await refreshAriaCircolante();
-  await refreshNftCircolante();
-  recalcNFTValue();
-  updateNftMetrics();
-  var data={
-    balance_eur:parseFloat(document.getElementById('adm-input-treasury')?.value)||0,
-    nft_minted:parseInt(document.getElementById('adm-input-minted')?.value)||0,
-    nft_circulating:parseInt(document.getElementById('adm-input-circulating')?.value)||0,
-    nft_max_supply:parseInt(document.getElementById('adm-input-maxsupply')?.value)||1000,
-    aico_circulating:parseInt(document.getElementById('adm-aico-input')?.value)||0,
-    updated_at:new Date().toISOString()
-  };
-  try{
-    var rows=await sbGet('treasury_stats?select=id&order=created_at.desc&limit=1',s.access_token);
-    if(rows&&rows.length){
-      await sbPatch('treasury_stats?id=eq.'+rows[0].id,data,s.access_token);
-    }else{
-      var postRes=await fetch(SB_URL+'/rest/v1/treasury_stats',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
-      if(!postRes.ok)throw new Error('POST failed: '+postRes.status+' '+(await postRes.text()));
-    }
-    document.querySelectorAll('[onclick*="saveAdminTokenomics"]').forEach(function(btn){
-      var orig=btn.textContent;btn.textContent='SALVATO ✓';btn.style.background='#49b583';
-      setTimeout(function(){btn.textContent=orig;btn.style.background='var(--gold)';},1500);
-    });
-  }catch(e){console.error('Save treasury error:',e);alert('Errore salvataggio: '+e.message);}
-}
+// F1.a: saveAdminTokenomics rimosso. Treasury/ROBI/ARIA sono derivati live dalle tabelle
+// (treasury_funds, nft_rewards via admin_get_all_robi, profiles.total_points) — nessuno
+// snapshot manuale da persistere in treasury_stats.
 
 // ══════════════════════════════════════════════════════════
 //  CATEGORIE CRUD
@@ -3618,6 +3597,11 @@ function renderCompanyAssets(){
   // Stats
   var fiatTotal=0,cryptoTotal=0,nftCount=0,grandTotal=0;
   _companyAssets.forEach(function(a){
+    // F1.c: ARIA circolante riga · valore LIVE da Σ profiles.total_points (no stale registry)
+    if((a.symbol||'').toUpperCase()==='ARIA' || /aria\s+circolant/i.test(a.name||'')){
+      a.amount=window._totalAria||0;
+      a.value_eur=(window._totalAria||0)*0.10;
+    }
     var v=parseFloat(a.value_eur)||0;
     if(a.category==='fiat')fiatTotal+=v;
     else if(a.category==='crypto')cryptoTotal+=v;

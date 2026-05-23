@@ -264,6 +264,13 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="it">Messaggi</span><span class="en">Messages</span></div>
   </div>
   <div class="admin-sidebar-group">
+    <span class="admin-sidebar-label">W4 · Atto 4-6</span>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-evalobi')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg><span class="it">EVALOBI</span><span class="en">EVALOBI</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-disputes')"><svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.74-3L13.74 4a2 2 0 00-3.48 0L3.34 16a2 2 0 001.73 3z"/></svg><span class="it">Dispute</span><span class="en">Disputes</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-swaps')"><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg><span class="it">Swap</span><span class="en">Swaps</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-tx-explorer')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="it">TX Explorer</span><span class="en">TX Explorer</span></div>
+  </div>
+  <div class="admin-sidebar-group">
     <span class="admin-sidebar-label">Tokenomics</span>
     <div class="admin-sidebar-item" onclick="adminNav('sec-treasury')"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Treasury</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-platform-aria')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>Conto AIROOBI</div>
@@ -434,10 +441,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <!-- ROBI VALUATION & TOKENOMICS -->
   <div class="admin-section" id="sec-nft-valuation">
     <h2>ROBI Valuation &amp; Tokenomics <span class="info-i" onclick="showAboTip(this,'sec-nft-valuation')">i</span></h2>
-    <p class="admin-note" style="margin-bottom:20px">Dati in tempo reale da <code>nft_rewards</code>. <strong>Valore ROBI stimato = Treasury / ROBI in circolazione</strong>. Buyback = 95% del valore (riscossione garantita). Upside = 5% (crescita futura). Aggiorna Treasury manualmente.</p>
+    <p class="admin-note" style="margin-bottom:20px">Tutti i numeri sono <strong>live</strong>: Treasury da <code>treasury_funds</code>, ROBI in circolazione da <code>nft_rewards</code> (SUM(shares) via <code>admin_get_all_robi</code>). <strong>Valore ROBI = Treasury / ROBI in circolazione</strong> — formula unica usata su Overview, Treasury e questa sezione. Buyback = 95% del valore (riscossione garantita). Upside = 5% (crescita futura).</p>
     <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:24px;flex-wrap:wrap">
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€) <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">TREASURY (€) <span style="font-size:9px;color:var(--kas)">live · treasury_funds</span></label>
         <div style="display:flex;align-items:center;gap:6px">
           <input type="number" id="adm-treasury-input" placeholder="0.00" readonly
             style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:180px;outline:none;cursor:not-allowed">
@@ -446,7 +453,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <div id="adm-treasury-updated" style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px"></div>
       </div>
       <div>
-        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">ARIA IN CIRCOLAZIONE <span style="font-size:9px;color:var(--gold)">AUTO</span></label>
+        <label style="display:block;font-size:11px;color:var(--gray-400);letter-spacing:1px;margin-bottom:6px">ARIA IN CIRCOLAZIONE <span style="font-size:9px;color:var(--kas)">live · Σ profiles.total_points</span></label>
         <div style="display:flex;align-items:center;gap:6px">
           <input type="number" id="adm-aico-input" placeholder="0" readonly
             style="background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);color:var(--gray-400);padding:10px 14px;font-family:var(--font-m);font-size:14px;width:140px;outline:none;cursor:not-allowed">
@@ -454,10 +461,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         </div>
         <div id="adm-aria-updated" style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px"></div>
       </div>
-      <button onclick="saveAdminTokenomics()"
-        style="padding:10px 20px;background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;cursor:pointer;font-weight:700">
-        SALVA
-      </button>
     </div>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
       <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">Treasury totale <span class="info-i" onclick="showAboTip(this,'val-treasury')">i</span></div></div>
@@ -478,7 +481,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <tr><td colspan="3" style="color:var(--gray-400)"><span style="display:inline-block;width:12px;height:12px;border:2px solid var(--gray-600);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px"></span>Caricamento...</td></tr>
       </tbody>
     </table>
-    <p class="admin-note" style="margin-top:16px">Treasury inserito manualmente. <strong>CIRCOLANTE (NFT)</strong> calcolato da nft_rewards. <strong>ARIA IN CIRCOLAZIONE</strong> calcolato da profiles.total_points.</p>
+    <p class="admin-note" style="margin-top:16px">Tutto <strong>live</strong>: Treasury da <code>treasury_funds</code>, ROBI da <code>nft_rewards</code> (SUM(shares) via <code>admin_get_all_robi</code> RPC), ARIA da <code>profiles.total_points</code>. Una formula sola, ovunque.</p>
   </div>
 
   <!-- MESSAGGI AIRDROP -->
@@ -585,6 +588,25 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <button class="bo-tab" data-bo="rifiutato" onclick="boFilter('rifiutato')">Rifiutati <span class="bo-tab-count" id="cnt-rifiutato">0</span></button>
       <button class="bo-tab" data-bo="all" onclick="boFilter('all')">Tutti <span class="bo-tab-count" id="cnt-all">0</span></button>
     </div>
+    <div id="bo-controls" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:12px 0;padding:10px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase">Categoria</label>
+        <select id="bo-cat-filter" onchange="boApplyCatSort()" style="background:var(--black);border:1px solid var(--gray-700);color:var(--white);padding:6px 10px;font-family:var(--font-m);font-size:11px;min-width:160px">
+          <option value="">Tutte le categorie</option>
+        </select>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <label style="font-size:9px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase">Ordina per</label>
+        <select id="bo-sort" onchange="boApplyCatSort()" style="background:var(--black);border:1px solid var(--gray-700);color:var(--white);padding:6px 10px;font-family:var(--font-m);font-size:11px;min-width:160px">
+          <option value="created_desc">Data ↓ (recenti)</option>
+          <option value="created_asc">Data ↑ (vecchi)</option>
+          <option value="value_desc">Quotazione ↓</option>
+          <option value="value_asc">Quotazione ↑</option>
+          <option value="title_asc">Titolo A→Z</option>
+        </select>
+      </div>
+      <div style="margin-left:auto;font-size:10px;color:var(--gray-500);font-family:var(--font-m);letter-spacing:.5px" id="bo-results-count">—</div>
+    </div>
     <div id="bo-detail-panel"></div>
     <div id="bo-table-wrap"></div>
   </div>
@@ -604,7 +626,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div><label>Durata <span class="info-i" onclick="showAboTip(this,'bo-app-duration')">i</span></label><select id="bo-approve-duration" onchange="boAutoDeadline()"><option value="flash">Flash (6h) &#9889;</option><option value="standard" selected>Standard (24h)</option><option value="extended">Extended (72h)</option></select></div>
-        <div><label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto)</span> <span class="info-i" onclick="showAboTip(this,'bo-app-deadline')">i</span></label><input type="datetime-local" id="bo-approve-deadline"><div style="font-size:9px;color:var(--gray-500);margin-top:2px" id="bo-deadline-info"></div></div>
+        <div><label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto · modificabile)</span> <span class="info-i" onclick="showAboTip(this,'bo-app-deadline')">i</span></label><input type="datetime-local" id="bo-approve-deadline"><div style="font-size:9px;color:var(--gray-500);margin-top:2px" id="bo-deadline-info"></div></div>
       </div>
       <!-- Calc preview -->
       <div id="bo-calc-preview" style="display:none;margin-top:12px;padding:12px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);font-size:11px;line-height:1.8">
@@ -1054,12 +1076,153 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   </div>
 
 </div><!-- /admin-content -->
+  <!-- ═══ W4 · sec-evalobi · EVALOBI registry admin view ═══ -->
+  <div class="admin-section" id="sec-evalobi" style="display:none">
+    <h2>EVALOBI Registry</h2>
+    <p style="font-size:12px;color:var(--gray-400);margin-bottom:16px">Tutti i certificati EVALOBI emessi · pollution layer monitoring.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <select id="evalobi-filter-outcome" onchange="loadEvalobiTable()" style="background:var(--gray-900);color:var(--white);border:1px solid var(--gray-700);padding:6px 10px;border-radius:6px;font-size:12px">
+        <option value="">Tutti outcomes</option><option value="GO">GO</option><option value="NO_GO">NO_GO</option><option value="NEEDS_REVIEW">NEEDS_REVIEW</option>
+      </select>
+      <button onclick="loadEvalobiTable()" class="ab-btn" style="padding:6px 14px">Refresh</button>
+    </div>
+    <div style="overflow:auto"><table class="adm-tbl" id="evalobi-tbl"><thead><tr><th>Token</th><th>Outcome</th><th>Object</th><th>Seller</th><th>Emesso</th><th>Re-eval</th></tr></thead><tbody><tr><td colspan="6" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
+  </div>
+
+  <!-- ═══ W4 · sec-disputes ═══ -->
+  <div class="admin-section" id="sec-disputes" style="display:none">
+    <h2>Dispute · Admin Resolution</h2>
+    <p style="font-size:12px;color:var(--gray-400);margin-bottom:16px">Dispute aperte · risoluzione manuale CEO fino Stage 2.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <select id="disputes-filter" onchange="loadDisputesTable()" style="background:var(--gray-900);color:var(--white);border:1px solid var(--gray-700);padding:6px 10px;border-radius:6px;font-size:12px">
+        <option value="pending_review">Pending review</option><option value="resolved">Risolte</option><option value="">Tutte</option>
+      </select>
+      <button onclick="loadDisputesTable()" class="ab-btn" style="padding:6px 14px">Refresh</button>
+    </div>
+    <div style="overflow:auto"><table class="adm-tbl" id="disputes-tbl"><thead><tr><th>Airdrop</th><th>Opener</th><th>Ruolo</th><th>Reason</th><th>Stato</th><th>Aperta</th><th></th></tr></thead><tbody><tr><td colspan="7" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
+  </div>
+
+  <!-- ═══ W4 · sec-swaps · token_swaps + KAS rate ═══ -->
+  <div class="admin-section" id="sec-swaps" style="display:none">
+    <h2>Token Swaps Monitor</h2>
+    <p style="font-size:12px;color:var(--gray-400);margin-bottom:16px">KAS↔ARIA · ROBI→ARIA/KAS · admin manual rate fino W5 oracle.</p>
+    <div style="background:var(--gray-900);border:1px solid var(--gray-700);border-radius:8px;padding:16px;margin-bottom:16px">
+      <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;margin-bottom:8px">KAS rate manual (EUR per KAS)</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="number" step="0.000001" id="kas-rate-input" placeholder="0.12" style="background:var(--gray-800);color:var(--white);border:1px solid var(--gray-700);padding:8px 12px;border-radius:6px;font-size:13px;width:200px">
+        <button class="ab-btn ab-btn-primary" onclick="updateKasRate()">UPDATE</button>
+        <span id="kas-rate-current" style="font-size:11px;color:var(--gray-400)">corrente: —</span>
+      </div>
+    </div>
+    <div style="overflow:auto"><table class="adm-tbl" id="swaps-tbl"><thead><tr><th>ID</th><th>User</th><th>Pair</th><th>Amount In</th><th>Amount Out</th><th>Status</th><th>Created</th></tr></thead><tbody><tr><td colspan="7" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
+  </div>
+
+  <!-- ═══ W4 · sec-tx-explorer ═══ -->
+  <div class="admin-section" id="sec-tx-explorer" style="display:none">
+    <h2>Transactions Explorer</h2>
+    <p style="font-size:12px;color:var(--gray-400);margin-bottom:16px">Multi-asset ledger · 24 categorie · audit-trail completo.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <input id="tx-filter-user" placeholder="user_id (uuid)" style="background:var(--gray-900);color:var(--white);border:1px solid var(--gray-700);padding:6px 10px;border-radius:6px;font-size:11px;width:280px;font-family:var(--font-m)">
+      <select id="tx-filter-asset" style="background:var(--gray-900);color:var(--white);border:1px solid var(--gray-700);padding:6px 10px;border-radius:6px;font-size:12px">
+        <option value="">Tutti asset</option><option value="ARIA">ARIA</option><option value="KAS">KAS</option><option value="ROBI">ROBI</option><option value="EUR">EUR</option><option value="EVALOBI">EVALOBI</option><option value="NFT_CONSOLATION">NFT_CONSOLATION</option>
+      </select>
+      <button onclick="loadTxExplorer()" class="ab-btn ab-btn-primary">CERCA</button>
+      <button onclick="exportTxCsv()" class="ab-btn">Export CSV</button>
+    </div>
+    <div style="overflow:auto"><table class="adm-tbl" id="tx-tbl"><thead><tr><th>Time</th><th>Category</th><th>Asset</th><th>Direction</th><th>Amount</th><th>User</th><th>Ref</th></tr></thead><tbody><tr><td colspan="7" style="color:var(--gray-500);text-align:center;padding:24px">Specifica filtri e premi CERCA</td></tr></tbody></table></div>
+  </div>
+
 </div><!-- /admin-main -->
 </div><!-- /admin-layout -->
 </div><!-- /admin-overlay -->
 
 <!-- Toast container -->
 <div id="notif-toast-container" class="notif-toast-container"></div>
+
+<script>
+// ═══ W4 admin sec wiring ═══
+(function(){
+  if (!window.aboSb) return;
+  const sb = window.aboSb;
+  window.loadEvalobiTable = async function(){
+    const tbody = document.querySelector('#evalobi-tbl tbody');
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
+    const outcome = document.getElementById('evalobi-filter-outcome')?.value || '';
+    let q = sb.from('evalobi').select('token_id,evaluation_outcome,object_title,object_brand,seller_id,created_at,re_evaluation_count').order('created_at',{ascending:false}).limit(100);
+    if (outcome) q = q.eq('evaluation_outcome', outcome);
+    const { data, error } = await q;
+    if (error) { tbody.innerHTML = '<tr><td colspan="6" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
+    tbody.innerHTML = (data||[]).map(r => `<tr><td>#${r.token_id||'-'}</td><td><span class="tag">${r.evaluation_outcome||'?'}</span></td><td>${r.object_brand||''} ${r.object_title||''}</td><td style="font-family:var(--font-m);font-size:10px">${(r.seller_id||'').slice(0,8)}</td><td style="font-size:11px;color:var(--gray-400)">${new Date(r.created_at).toLocaleDateString('it-IT')}</td><td>${r.re_evaluation_count||0}</td></tr>`).join('') || '<tr><td colspan="6" style="text-align:center;color:var(--gray-500);padding:18px">Nessun EVALOBI</td></tr>';
+  };
+  window.loadDisputesTable = async function(){
+    const tbody = document.querySelector('#disputes-tbl tbody');
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
+    const status = document.getElementById('disputes-filter')?.value || '';
+    let q = sb.from('airdrop_disputes').select('id,airdrop_id,opener_id,opener_role,reason,status,opened_at').order('opened_at',{ascending:false}).limit(100);
+    if (status) q = q.eq('status', status);
+    const { data, error } = await q;
+    if (error) { tbody.innerHTML = '<tr><td colspan="7" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
+    tbody.innerHTML = (data||[]).map(r => `<tr><td style="font-family:var(--font-m);font-size:10px">${r.airdrop_id.slice(0,8)}</td><td style="font-family:var(--font-m);font-size:10px">${r.opener_id.slice(0,8)}</td><td><span class="tag">${r.opener_role}</span></td><td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.reason}">${r.reason}</td><td><span class="tag ${r.status==='resolved'?'tag-ok':'tag-warn'}">${r.status}</span></td><td style="font-size:11px;color:var(--gray-400)">${new Date(r.opened_at).toLocaleString('it-IT')}</td><td>${r.status==='pending_review'?`<button class="ab-btn ab-btn-primary" style="padding:4px 10px;font-size:10px" onclick="resolveDispute('${r.id}')">Resolve</button>`:''}</td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Nessuna dispute</td></tr>';
+  };
+  window.resolveDispute = async function(disputeId){
+    const notes = prompt('Resolution notes:'); if (!notes) return;
+    const sellerPct = parseFloat(prompt('Refund seller % (0-100):', '0') || '0');
+    const buyerPct = parseFloat(prompt('Refund buyer % (0-100):', '0') || '0');
+    const { error } = await sb.rpc('resolve_airdrop_dispute', {
+      p_dispute_id: disputeId, p_resolution_notes: notes,
+      p_refund_seller_pct: sellerPct, p_refund_buyer_pct: buyerPct
+    });
+    if (error) { alert('Errore: '+error.message); return; }
+    loadDisputesTable();
+  };
+  window.loadSwapsTable = async function(){
+    const tbody = document.querySelector('#swaps-tbl tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
+    const { data, error } = await sb.from('token_swaps').select('id,user_id,from_asset,to_asset,amount_in,amount_out,status,created_at').order('created_at',{ascending:false}).limit(100);
+    if (error) { tbody.innerHTML = '<tr><td colspan="7" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
+    tbody.innerHTML = (data||[]).map(r => `<tr><td style="font-family:var(--font-m);font-size:10px">${r.id.slice(0,8)}</td><td style="font-family:var(--font-m);font-size:10px">${(r.user_id||'').slice(0,8)}</td><td>${r.from_asset}→${r.to_asset}</td><td>${r.amount_in}</td><td>${r.amount_out||'-'}</td><td><span class="tag">${r.status}</span></td><td style="font-size:11px;color:var(--gray-400)">${new Date(r.created_at).toLocaleString('it-IT')}</td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Nessuno swap</td></tr>';
+    const { data: ts } = await sb.from('treasury_stats').select('kas_eur_rate').limit(1).maybeSingle();
+    const cur = document.getElementById('kas-rate-current');
+    if (cur && ts) cur.textContent = 'corrente: ' + (ts.kas_eur_rate || '—');
+  };
+  window.updateKasRate = async function(){
+    const v = parseFloat(document.getElementById('kas-rate-input').value);
+    if (!Number.isFinite(v) || v <= 0) { alert('Rate non valido'); return; }
+    const { error } = await sb.from('treasury_stats').update({ kas_eur_rate: v }).neq('id', '00000000-0000-0000-0000-000000000000');
+    if (error) { alert('Errore: '+error.message); return; }
+    loadSwapsTable();
+  };
+  window.loadTxExplorer = async function(){
+    const tbody = document.querySelector('#tx-tbl tbody');
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
+    const userId = document.getElementById('tx-filter-user')?.value.trim();
+    const asset = document.getElementById('tx-filter-asset')?.value;
+    let q = sb.from('transactions').select('*').order('created_at',{ascending:false}).limit(200);
+    if (userId) q = q.eq('user_id', userId);
+    if (asset) q = q.eq('asset', asset);
+    const { data, error } = await q;
+    if (error) { tbody.innerHTML = '<tr><td colspan="7" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
+    tbody.innerHTML = (data||[]).map(r => `<tr><td style="font-size:11px;color:var(--gray-400)">${new Date(r.created_at).toLocaleString('it-IT')}</td><td><span class="tag">${r.category||'-'}</span></td><td>${r.asset||'-'}</td><td>${r.direction||'-'}</td><td>${r.amount||'-'}</td><td style="font-family:var(--font-m);font-size:10px">${(r.user_id||'').slice(0,8)}</td><td style="font-family:var(--font-m);font-size:10px">${(r.ref_id||'').toString().slice(0,8)}</td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Nessuna tx</td></tr>';
+  };
+  window.exportTxCsv = function(){
+    const rows = Array.from(document.querySelectorAll('#tx-tbl tr')).map(tr => Array.from(tr.children).map(c => '"'+c.textContent.replace(/"/g,'""')+'"').join(',')).join('\n');
+    const blob = new Blob([rows], { type:'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'tx-export.csv'; a.click();
+    URL.revokeObjectURL(url);
+  };
+  // Auto-load on nav
+  const _origNav = window.adminNav;
+  window.adminNav = function(secId){
+    _origNav(secId);
+    if (secId === 'sec-evalobi')     loadEvalobiTable();
+    if (secId === 'sec-disputes')    loadDisputesTable();
+    if (secId === 'sec-swaps')       loadSwapsTable();
+    if (secId === 'sec-tx-explorer') { /* requires user click CERCA */ }
+  };
+})();
+</script>
 
 <script>
 // ── Language toggle ──
@@ -1333,6 +1496,7 @@ async function loadAdminData(){
     var remEl=document.getElementById('adm-remaining');
     if(remEl){remEl.textContent=remaining;remEl.style.color=remaining<=0?'#B91C1C':remaining<=100?'#F59E0B':'var(--gold)';}
     const totalPts=users.reduce(function(a,b){return a+(b.total_points||0)},0);
+    window._totalAria=totalPts; // F1.c: live ARIA total esposto per Patrimonio aziendale & altri consumer
     document.getElementById('adm-points').textContent=totalPts.toLocaleString();
     var aicoIn=document.getElementById('adm-aico-input');if(aicoIn)aicoIn.value=totalPts;
     var coinSup=document.getElementById('adm-coin-supply');if(coinSup)coinSup.textContent=totalPts.toLocaleString();
@@ -1455,6 +1619,9 @@ async function loadAdminAirdrops(){
       }
       if(isDone){
         html+='<button onclick="adDrawPreview(\''+a.id+'\')" style="background:none;border:1px solid var(--gray-600);color:var(--gray-400);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px">RISULTATI</button>';
+      }
+      if(a.status==='accettato'){
+        html+='<button data-id="'+a.id+'" data-title="'+escHtml(a.title).replace(/"/g,'&quot;')+'" onclick="adPublishListing(this.dataset.id,this.dataset.title)" style="background:var(--gold);border:1px solid var(--gold);color:var(--black);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px;font-weight:700">PUBBLICA</button>';
       }
       html+='</td></tr>';
     });
@@ -1816,6 +1983,38 @@ async function adExecuteDraw(airdropId,title){
 }
 
 function drawModalClose(){document.getElementById('draw-modal-bg').classList.remove('active');}
+
+// ── Publish Airdrop Listing (Atto 2 admin orchestrator · accettato → presale|sale) ──
+async function adPublishListing(airdropId,title){
+  var s=getSession();if(!s){showToast('Sessione scaduta','error');return;}
+  var durStr=prompt('Durata airdrop (giorni · 1-60)\nStandard: 7 base · 10 mid · 14 premium\n\nOggetto: '+title,'7');
+  if(durStr===null)return;
+  var duration=parseInt(durStr,10);
+  if(!Number.isFinite(duration)||duration<1||duration>60){showToast('Durata non valida (1-60 giorni)','error');return;}
+  var presale=confirm('Abilitare PRESALE? (presale price + duration sovrascritti se sì)\n\nOK = SÌ presale+sale · ANNULLA = NO solo sale');
+  var isDemo=confirm('Visibilità DEMO solo Alpha Brave? (uso interno/test)\n\nOK = DEMO · ANNULLA = LIVE produzione');
+  var confirmMsg='Confermi pubblicazione airdrop:\n\n'
+    +'• Oggetto: '+title+'\n'
+    +'• Durata: '+duration+' giorni\n'
+    +'• Tipo: '+(presale?'PRESALE + SALE':'SOLO SALE')+'\n'
+    +'• Visibilità: '+(isDemo?'DEMO (Alpha Brave)':'LIVE pubblico');
+  if(!confirm(confirmMsg))return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/publish_airdrop_listing',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId,p_is_demo:isDemo,p_duration_days:duration,p_presale_enabled:presale})
+    });
+    if(!res.ok){var err=await res.text();throw new Error(err||('HTTP '+res.status));}
+    var result=await res.json();
+    if(result&&result.ok!==false){
+      showToast('Pubblicato: '+title+' · '+(result.status||(presale?'presale':'sale')),'success');
+      loadAdminAirdrops();
+    }else{
+      showToast('Errore pubblicazione: '+JSON.stringify(result),'error');
+    }
+  }catch(e){console.error('publishListing:',e);showToast('Errore: '+e.message,'error');}
+}
 
 // ── Airdrop Analysis ──
 async function loadAirdropStats(){
@@ -2302,10 +2501,10 @@ async function loadAdminTreasury(){
     // Treasury balance now sourced from treasury_funds table (see loadTreasuryFunds)
     try{
       var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id,shares',tk);
-      var earnOnly=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}):[];
-      var nftCount=earnOnly.length;
-      var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=nftCount;
-      var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=nftCount;
+      // F1.b: ROBI canonical = window._robiTotal (SUM shares via admin_get_all_robi RPC); niente filtro NFT_EARN
+      var robiTotal=(window._robiTotal!=null)?window._robiTotal:0;
+      var i3=document.getElementById('adm-input-circulating');if(i3)i3.value=robiTotal;
+      var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=robiTotal;
       var nu=document.getElementById('adm-nft-updated');if(nu)nu.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
       var bTbody=document.getElementById('adm-nft-breakdown');
       if(bTbody){
@@ -2363,30 +2562,37 @@ async function refreshTreasuryTotal(){
 async function refreshNftCircolante(){
   var s=getSession();if(!s)return;
   try{
-    var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id',s.access_token);
-    var earnOnly=nfts?nfts.filter(function(n){return n.nft_type==='NFT_EARN'}):[];
-    var cnt=earnOnly.length;
-    var i=document.getElementById('adm-input-circulating');if(i)i.value=cnt;
-    var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=cnt;
+    // F1.b: query canonica via admin_get_all_robi (SECURITY DEFINER, bypassa RLS, SUM(shares)).
+    // Niente filtro NFT_EARN; niente row-count: tutto sum-of-shares con fallback 1 per i badge.
+    var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'}});
+    var robiData=robiRes.ok?await robiRes.json():[];
+    var breakdown={},owners={};window._robiTotal=0;
+    robiData.forEach(function(r){
+      var tp=r.nft_type||'unknown';
+      var sh=parseFloat(r.shares)||1;
+      breakdown[tp]=(breakdown[tp]||0)+sh;
+      if(!owners[tp])owners[tp]={};
+      if(r.user_id)owners[tp][r.user_id]=true;
+      window._robiTotal+=sh;
+    });
+    var robiStr=window._robiTotal%1===0?window._robiTotal:window._robiTotal.toFixed(2);
+    var i=document.getElementById('adm-input-circulating');if(i)i.value=window._robiTotal;
+    var i2m=document.getElementById('adm-input-minted');if(i2m)i2m.value=window._robiTotal;
+    var ov=document.getElementById('adm-nft-circulating-ov');if(ov)ov.textContent=robiStr;
     var u=document.getElementById('adm-nft-updated');if(u)u.textContent='Aggiornato alle '+new Date().toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     var bTbody=document.getElementById('adm-nft-breakdown');
-    if(bTbody&&nfts){
-      var breakdown={};var owners={};
-      nfts.forEach(function(n){
-        var tp=n.nft_type||'unknown';
-        breakdown[tp]=(breakdown[tp]||0)+1;
-        if(!owners[tp])owners[tp]={};
-        if(n.user_id)owners[tp][n.user_id]=true;
-      });
+    if(bTbody){
       var types=Object.keys(breakdown);
       if(types.length>0){
         types.sort(function(a,b){return breakdown[b]-breakdown[a]});
         bTbody.innerHTML=types.map(function(tp){
-          return '<tr><td>'+tp+'</td><td>'+Object.keys(owners[tp]||{}).length+'</td><td>'+breakdown[tp]+'</td></tr>';
+          var total=breakdown[tp];
+          var totalStr=total%1===0?total:total.toFixed(2);
+          return '<tr><td>'+tp+'</td><td>'+Object.keys(owners[tp]||{}).length+'</td><td>'+totalStr+'</td></tr>';
         }).join('');
       }else{bTbody.innerHTML='<tr><td colspan="3" style="color:var(--gray-400)">Nessun NFT emesso ancora</td></tr>';}
-      var braveEl=document.getElementById('adm-nft-brave-count');if(braveEl)braveEl.textContent=breakdown['NFT_ALPHA_BRAVE']||0;
-      var robiEl=document.getElementById('adm-nft-robi-count');if(robiEl)robiEl.textContent=(breakdown['ROBI']||0)+(breakdown['NFT_REWARD']||0);
+      var braveEl=document.getElementById('adm-nft-brave-count');if(braveEl){var bv=breakdown['NFT_ALPHA_BRAVE']||0;braveEl.textContent=bv%1===0?bv:bv.toFixed(2);}
+      var robiEl=document.getElementById('adm-nft-robi-count');if(robiEl){var rb=(breakdown['ROBI']||0)+(breakdown['NFT_REWARD']||0);robiEl.textContent=rb%1===0?rb:rb.toFixed(2);}
     }
     updateNftMetrics();
   }catch(e){console.error('Refresh NFT error:',e);}
@@ -2600,34 +2806,9 @@ function updateNftMetrics(){
   recalcNFTValue();
 }
 
-async function saveAdminTokenomics(){
-  var s=getSession();if(!s)return;
-  await refreshAriaCircolante();
-  await refreshNftCircolante();
-  recalcNFTValue();
-  updateNftMetrics();
-  var data={
-    balance_eur:parseFloat(document.getElementById('adm-input-treasury')?.value)||0,
-    nft_minted:parseInt(document.getElementById('adm-input-minted')?.value)||0,
-    nft_circulating:parseInt(document.getElementById('adm-input-circulating')?.value)||0,
-    nft_max_supply:parseInt(document.getElementById('adm-input-maxsupply')?.value)||1000,
-    aico_circulating:parseInt(document.getElementById('adm-aico-input')?.value)||0,
-    updated_at:new Date().toISOString()
-  };
-  try{
-    var rows=await sbGet('treasury_stats?select=id&order=created_at.desc&limit=1',s.access_token);
-    if(rows&&rows.length){
-      await sbPatch('treasury_stats?id=eq.'+rows[0].id,data,s.access_token);
-    }else{
-      var postRes=await fetch(SB_URL+'/rest/v1/treasury_stats',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify(data)});
-      if(!postRes.ok)throw new Error('POST failed: '+postRes.status+' '+(await postRes.text()));
-    }
-    document.querySelectorAll('[onclick*="saveAdminTokenomics"]').forEach(function(btn){
-      var orig=btn.textContent;btn.textContent='SALVATO ✓';btn.style.background='#49b583';
-      setTimeout(function(){btn.textContent=orig;btn.style.background='var(--gold)';},1500);
-    });
-  }catch(e){console.error('Save treasury error:',e);alert('Errore salvataggio: '+e.message);}
-}
+// F1.a: saveAdminTokenomics rimosso. Treasury/ROBI/ARIA sono derivati live dalle tabelle
+// (treasury_funds, nft_rewards via admin_get_all_robi, profiles.total_points) — nessuno
+// snapshot manuale da persistere in treasury_stats.
 
 // ══════════════════════════════════════════════════════════
 //  CATEGORIE CRUD
@@ -2776,15 +2957,17 @@ async function catDelete(){
 var _boAllAirdrops=[];
 var _boFilter='in_valutazione';
 var _boTarget=null;
+var _boCatFilter='';
+var _boSort='created_desc';
 
 async function loadBoData(){
   var s=getSession();if(!s)return;
   try{
-    // Precarica categorie se non già in cache
     if(!_categoriesCache||!_categoriesCache.length){
       var cats=await sbGet('categories?order=sort_order.asc',s.access_token);
       _categoriesCache=cats||[];
     }
+    populateBoCatFilter();
     var res=await fetch(SB_URL+'/rest/v1/rpc/get_all_airdrops',{
       method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:'{}'
     });
@@ -2796,6 +2979,15 @@ async function loadBoData(){
   }catch(e){console.error('loadBoData:',e);showToast('Errore caricamento valutazioni','error');}
 }
 
+function populateBoCatFilter(){
+  var sel=document.getElementById('bo-cat-filter');if(!sel)return;
+  var current=sel.value;
+  var opts='<option value="">Tutte le categorie</option>';
+  (_categoriesCache||[]).forEach(function(c){if(c.is_active)opts+='<option value="'+escHtml(c.slug)+'">'+escHtml(c.name_it)+'</option>';});
+  sel.innerHTML=opts;
+  if(current)sel.value=current;
+}
+
 function boFilter(status){
   _boFilter=status;
   document.querySelectorAll('.bo-tab').forEach(function(t){t.classList.toggle('active',t.getAttribute('data-bo')===status)});
@@ -2803,10 +2995,29 @@ function boFilter(status){
   renderBoTable();
 }
 
+function boApplyCatSort(){
+  _boCatFilter=document.getElementById('bo-cat-filter').value||'';
+  _boSort=document.getElementById('bo-sort').value||'created_desc';
+  renderBoTable();
+}
+
 function getBoFiltered(){
-  if(_boFilter==='all')return _boAllAirdrops;
-  if(_boFilter==='rifiutato')return _boAllAirdrops.filter(function(a){return a.status==='rifiutato_min500'||a.status==='rifiutato_generico'});
-  return _boAllAirdrops.filter(function(a){return a.status===_boFilter});
+  var base;
+  if(_boFilter==='all')base=_boAllAirdrops.slice();
+  else if(_boFilter==='rifiutato')base=_boAllAirdrops.filter(function(a){return a.status==='rifiutato_min500'||a.status==='rifiutato_generico'});
+  else base=_boAllAirdrops.filter(function(a){return a.status===_boFilter});
+  if(_boCatFilter)base=base.filter(function(a){return a.category===_boCatFilter});
+  base.sort(function(a,b){
+    switch(_boSort){
+      case 'created_asc':return new Date(a.created_at)-new Date(b.created_at);
+      case 'value_desc':return (parseFloat(b.object_value_eur)||0)-(parseFloat(a.object_value_eur)||0);
+      case 'value_asc':return (parseFloat(a.object_value_eur)||0)-(parseFloat(b.object_value_eur)||0);
+      case 'title_asc':return (a.title||'').localeCompare(b.title||'');
+      default:return new Date(b.created_at)-new Date(a.created_at);
+    }
+  });
+  var cnt=document.getElementById('bo-results-count');if(cnt)cnt.textContent=base.length+' risultati';
+  return base;
 }
 
 function renderBoCounts(){
@@ -3386,6 +3597,11 @@ function renderCompanyAssets(){
   // Stats
   var fiatTotal=0,cryptoTotal=0,nftCount=0,grandTotal=0;
   _companyAssets.forEach(function(a){
+    // F1.c: ARIA circolante riga · valore LIVE da Σ profiles.total_points (no stale registry)
+    if((a.symbol||'').toUpperCase()==='ARIA' || /aria\s+circolant/i.test(a.name||'')){
+      a.amount=window._totalAria||0;
+      a.value_eur=(window._totalAria||0)*0.10;
+    }
     var v=parseFloat(a.value_eur)||0;
     if(a.category==='fiat')fiatTotal+=v;
     else if(a.category==='crypto')cryptoTotal+=v;
@@ -3692,7 +3908,7 @@ var ABO_TIPS={
   'bo-app-presale':{it:{i:'🎟️',t:'Prezzo presale',d:'ARIA per 1 blocco nei primi giorni (sconto).',ex:'Sale 10 ARIA → presale 7 ARIA (-30%)',tip:'Vuoto = niente sconto'},en:{i:'🎟️',t:'Presale price',d:'ARIA per block in early days (discount).',ex:'Sale 10 ARIA → presale 7 ARIA (-30%)',tip:'Empty = no discount'}},
   'bo-app-presale-en':{it:{i:'🔀',t:'Presale on/off',d:'Decidi se partire con uno sconto iniziale.',ex:'Sì = presale → sale · No = subito sale',tip:'Sì = premi chi crede subito nell\'airdrop'},en:{i:'🔀',t:'Presale on/off',d:'Choose if you start with an early discount.',ex:'Yes = presale → sale · No = sale only',tip:'Yes = rewards early believers'}},
   'bo-app-duration':{it:{i:'⏱️',t:'Durata',d:'Per quanto tempo è aperto.',ex:'6h flash · 24h standard · 72h extended',tip:'Breve = urgenza · Lungo = oggetti importanti'},en:{i:'⏱️',t:'Duration',d:'How long it stays open.',ex:'6h flash · 24h standard · 72h extended',tip:'Short = urgency · Long = important items'}},
-  'bo-app-deadline':{it:{i:'📅',t:'Deadline',d:'Quando chiude.',ex:'Auto: prossima ora piena + durata scelta',tip:'Cambiala a mano solo se serve davvero'},en:{i:'📅',t:'Deadline',d:'When it closes.',ex:'Auto: next full hour + chosen duration',tip:'Edit by hand only if really needed'}},
+  'bo-app-deadline':{it:{i:'📅',t:'Deadline',d:'Quando chiude l\'airdrop.',ex:'Auto da durata · se la modifichi, l\'override viene onorato alla pubblicazione (se ancora futuro)',tip:'Usala per fissare una chiusura a un orario preciso'},en:{i:'📅',t:'Deadline',d:'When the airdrop closes.',ex:'Auto from duration · if edited, the override is honored at publish (if still in the future)',tip:'Use it to pin closing to an exact time'}},
   // Reject modal (Valutazioni) — rich format
   'bo-rej-reason':{it:{i:'❌',t:'Motivo rifiuto',d:'Categoria del rifiuto.',ex:'"Sotto €500" oppure "Generico"',tip:'Regola: oggetti < €500 non si accettano'},en:{i:'❌',t:'Rejection reason',d:'Type of rejection.',ex:'"Below €500" or "Generic"',tip:'Rule: items below €500 are not accepted'}},
   'bo-rej-note':{it:{i:'✍️',t:'Note utente',d:'Spiegazione che vede l\'utente.',ex:'"Foto sfocate, riproponi con immagini chiare"',tip:'Educato ma chiaro — è il suo unico feedback'},en:{i:'✍️',t:'User notes',d:'Explanation the user will see.',ex:'"Blurry photos, please resubmit clearly"',tip:'Polite but clear — it\'s their only feedback'}},
