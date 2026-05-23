@@ -1798,10 +1798,62 @@ function adminNav(sectionId){
   if(btn){btn.classList.add('active');btn.blur();}
   if(sectionId==='sec-engine')loadThresholds();
   if(sectionId==='sec-airdrop-stats'||sectionId==='sec-airdrops')loadAirdropStats();
+  if(sectionId==='sec-evalobi'&&typeof loadEvalobiTable==='function')loadEvalobiTable();
   var main=document.getElementById('admin-main');
   if(main){main.scrollTop=0;main.focus();}
   var sb=document.getElementById('admin-sidebar');
   if(sb)sb.classList.remove('open');
+}
+
+// GS-1 reopen-3 · loadEvalobiTable standalone (l'IIFE riga 1210 con `if(!window.aboSb)return` è dead-code: window.aboSb non è mai inizializzato in abo.html, quindi loadEvalobiTable e altri loader non venivano installati). Riscritto con fetch raw, pattern allineato a loadAdminMessages.
+async function loadEvalobiTable(){
+  var s=getSession();if(!s)return;
+  var tbody=document.querySelector('#evalobi-tbl tbody');
+  if(!tbody)return;
+  tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
+  var outcome=(document.getElementById('evalobi-filter-outcome')&&document.getElementById('evalobi-filter-outcome').value)||'';
+  var url=SB_URL+'/rest/v1/evalobi?select=token_id,evaluation_outcome,object_title,object_brand,object_category,evaluation_price_range,evaluation_reasoning,original_seller_id,evaluated_at,created_at,version&order=created_at.desc&limit=100';
+  if(outcome)url+='&evaluation_outcome=eq.'+encodeURIComponent(outcome);
+  try{
+    var res=await fetch(url,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
+    if(!res.ok){
+      var errTxt=await res.text();
+      tbody.innerHTML='<tr><td colspan="9" style="color:#f87171;padding:18px">'+escHtml(errTxt||('HTTP '+res.status))+'</td></tr>';
+      return;
+    }
+    var data=await res.json();
+    function fmtPriceRange(pr){
+      if(!pr)return '<span style="color:var(--gray-600)">—</span>';
+      try{
+        var p=typeof pr==='string'?JSON.parse(pr):pr;
+        if(p&&(p.min!=null||p.max!=null)){var mn=p.min!=null?'€'+Number(p.min).toFixed(0):'—';var mx=p.max!=null?'€'+Number(p.max).toFixed(0):'—';return mn+' – '+mx;}
+        if(p&&p.value!=null)return '€'+Number(p.value).toFixed(0);
+        return escHtml(JSON.stringify(p));
+      }catch(e){return escHtml(String(pr));}
+    }
+    function trunc(x,n){if(!x)return '';var v=String(x);return v.length>n?v.slice(0,n-1)+'…':v;}
+    if(!data||data.length===0){
+      tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--gray-500);padding:18px">Nessun EVALOBI emesso</td></tr>';
+      return;
+    }
+    tbody.innerHTML=data.map(function(r){
+      var dateEv=r.evaluated_at?new Date(r.evaluated_at).toLocaleDateString('it-IT'):(r.created_at?new Date(r.created_at).toLocaleDateString('it-IT'):'—');
+      var reasoning=r.evaluation_reasoning||'';
+      return '<tr>'
+        +'<td>#'+escHtml(String(r.token_id||'-'))+'</td>'
+        +'<td><span class="tag">'+escHtml(r.evaluation_outcome||'?')+'</span></td>'
+        +'<td>'+escHtml((r.object_brand||'')+' '+(r.object_title||''))+'</td>'
+        +'<td style="font-size:11px;color:var(--gray-400)">'+escHtml(r.object_category||'—')+'</td>'
+        +'<td style="font-family:var(--font-m);font-size:11px;color:var(--gold)">'+fmtPriceRange(r.evaluation_price_range)+'</td>'
+        +'<td style="font-size:11px;color:var(--gray-300);max-width:260px" title="'+escHtml(reasoning)+'">'+escHtml(trunc(reasoning,80))+'</td>'
+        +'<td style="font-family:var(--font-m);font-size:10px">'+escHtml((r.original_seller_id||'').slice(0,8))+'</td>'
+        +'<td style="font-size:11px;color:var(--gray-400)">'+escHtml(dateEv)+'</td>'
+        +'<td style="text-align:center">v'+escHtml(String(r.version||1))+'</td>'
+        +'</tr>';
+    }).join('');
+  }catch(e){
+    tbody.innerHTML='<tr><td colspan="9" style="color:#f87171;padding:18px">'+escHtml(e.message||String(e))+'</td></tr>';
+  }
 }
 
 function toggleAdminSidebar(){
