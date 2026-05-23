@@ -1385,20 +1385,28 @@ html[data-theme="light"] .explore-toolbar {
   pointer-events: none;
 }
 
-/* A.2 · Banner top marketplace */
+/* A.2 · Banner top marketplace (GS-7 fix: > strong scope + dark mode override + flex layout) */
 .marketplace-demo-banner {
   background: rgba(247,54,89,0.06);
   border-left: 4px solid #F73659;
   padding: 14px 18px;
   border-radius: 0 4px 4px 0;
   margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
 }
-.marketplace-demo-banner-content strong {
+.marketplace-demo-banner-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.marketplace-demo-banner-content > strong {
   display: block;
   color: #0F1417;
   font-size: 0.95rem;
   font-weight: 600;
   margin-bottom: 4px;
+  line-height: 1.35;
 }
 .marketplace-demo-banner-content p {
   font-size: 0.85rem;
@@ -1407,6 +1415,10 @@ html[data-theme="light"] .explore-toolbar {
   line-height: 1.55;
 }
 .marketplace-demo-banner-content p strong { color: #0F1417; font-weight: 600; }
+/* Dark mode override (default theme) — testo bianco/gold visibile sul rosa-tonale */
+html:not([data-theme="light"]) .marketplace-demo-banner-content > strong { color: #FFFFFF; }
+html:not([data-theme="light"]) .marketplace-demo-banner-content p { color: rgba(255,255,255,0.78); }
+html:not([data-theme="light"]) .marketplace-demo-banner-content p strong { color: #FFFFFF; }
 
 /* A.3 · Disclaimer detail page (airdrop.html sotto product-title) */
 .airdrop-detail-demo-note {
