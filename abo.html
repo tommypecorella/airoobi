@@ -1849,8 +1849,11 @@ async function loadAdminData(){
     document.getElementById('adm-checkins').textContent=cks?cks.length:0;
     const vids=await sbGet('video_views?viewed_at=gte.'+today+'T00:00:00&select=id',t);
     document.getElementById('adm-videos').textContent=vids?vids.length:0;
-    const refs=await sbGet('referral_confirmations?status=eq.confirmed&select=id',t);
+    // GS-2 fix: fetch referrer_id per build live count map (vs profiles.referral_count denorm desync)
+    const refs=await sbGet('referral_confirmations?status=eq.confirmed&select=referrer_id',t);
     document.getElementById('adm-referrals').textContent=refs?refs.length:0;
+    var refMap={};
+    if(refs)refs.forEach(function(r){if(r.referrer_id)refMap[r.referrer_id]=(refMap[r.referrer_id]||0)+1;});
     var withAvatar=users?users.filter(function(u){return !!u.avatar_url}).length:0;
     document.getElementById('adm-avatars').textContent=withAvatar+'/'+userCount;
     // Load ROBI via SECURITY DEFINER RPC (bypassa RLS)
@@ -1875,7 +1878,7 @@ async function loadAdminData(){
         var d=new Date(u.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
         var uRobi=robiMap[u.id]||0;
         var robiStr=uRobi%1===0?uRobi:uRobi.toFixed(2);
-        return '<tr class="adm-user-row" onclick="toggleUserDetail(this,\''+u.id+'\')" data-uid="'+u.id+'"><td>'+u.email+'</td><td>'+(u.total_points||0)+'</td><td style="color:var(--gold)">'+robiStr+'</td><td>'+(u.current_streak||0)+'</td><td>'+(u.referral_count||0)+'</td><td>'+d+'</td></tr>';
+        return '<tr class="adm-user-row" onclick="toggleUserDetail(this,\''+u.id+'\')" data-uid="'+u.id+'"><td>'+u.email+'</td><td>'+(u.total_points||0)+'</td><td style="color:var(--gold)">'+robiStr+'</td><td>'+(u.current_streak||0)+'</td><td>'+(refMap[u.id]||0)+'</td><td>'+d+'</td></tr>';
       }).join('');
     }
     if(users&&users.length>0){
