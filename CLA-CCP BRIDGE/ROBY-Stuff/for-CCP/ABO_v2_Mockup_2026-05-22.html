@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ABO v2 · Mockup redesign — AIROOBI Back Office</title>
+<style>
+  :root{
+    --bg:#0b0b0d; --panel:#141417; --panel2:#1a1a1f; --panel3:#202027;
+    --line:#2a2a31; --line2:#34343d;
+    --txt:#ececef; --dim:#8e8e98; --dim2:#62626b;
+    --gold:#caa53d; --gold-soft:rgba(202,165,61,.13); --gold-line:rgba(202,165,61,.4);
+    --green:#46b964; --red:#e0584f; --blue:#5298d8; --amber:#d59a32; --violet:#9b8ce0;
+    --r:8px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:13px;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+  /* ===== TOP COMMAND BAR ===== */
+  .topbar{height:52px;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:18px;padding:0 16px;position:sticky;top:0;z-index:30}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:600;letter-spacing:.14em;font-size:13px}
+  .brand .mark{width:22px;height:22px;border:1.5px solid var(--gold);border-radius:5px;display:flex;align-items:center;justify-content:center;color:var(--gold);font-size:11px;font-weight:700}
+  .brand small{color:var(--gold);font-weight:600;letter-spacing:.05em;font-size:9px;border:1px solid var(--gold-line);border-radius:4px;padding:2px 5px}
+  .areas{display:flex;gap:2px;margin-left:6px}
+  .area-btn{background:none;border:none;color:var(--dim);font:inherit;font-size:12px;padding:7px 12px;border-radius:6px;cursor:pointer;letter-spacing:.02em}
+  .area-btn:hover{color:var(--txt);background:var(--panel2)}
+  .area-btn.on{color:var(--gold);background:var(--gold-soft)}
+  .tb-spacer{flex:1}
+  .search{background:var(--panel2);border:1px solid var(--line);border-radius:6px;height:32px;width:230px;color:var(--dim);font:inherit;font-size:12px;padding:0 10px}
+  .env{font-size:10px;color:var(--green);border:1px solid rgba(70,185,100,.35);background:rgba(70,185,100,.08);border-radius:5px;padding:3px 8px;letter-spacing:.04em}
+  .viewas{display:flex;align-items:center;gap:7px;background:var(--panel2);border:1px solid var(--gold-line);border-radius:6px;padding:3px 4px 3px 10px}
+  .viewas label{font-size:10px;color:var(--gold);letter-spacing:.06em;text-transform:uppercase}
+  .viewas select{background:var(--panel3);border:1px solid var(--line2);color:var(--txt);font:inherit;font-size:12px;border-radius:5px;padding:5px 6px;cursor:pointer}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--gold-soft);border:1px solid var(--gold-line);color:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px}
+
+  /* ===== LAYOUT ===== */
+  .shell{display:flex;min-height:calc(100vh - 52px)}
+  .side{width:248px;background:var(--panel);border-right:1px solid var(--line);padding:10px 0;flex-shrink:0}
+  .main{flex:1;min-width:0;background:var(--bg)}
+
+  /* ===== SITE MAP (sidebar) ===== */
+  .nav-grp{margin-bottom:6px}
+  .nav-lbl{font-size:9px;letter-spacing:.18em;color:var(--dim2);text-transform:uppercase;padding:14px 18px 6px}
+  .nav-item{display:flex;align-items:center;gap:9px;width:100%;background:none;border:none;border-left:3px solid transparent;color:var(--dim);font:inherit;font-size:12.5px;padding:8px 18px;cursor:pointer;text-align:left}
+  .nav-item:hover{color:var(--txt);background:var(--panel2)}
+  .nav-item.on{color:var(--gold);border-left-color:var(--gold);background:var(--gold-soft)}
+  .nav-item .dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.55;flex-shrink:0}
+  .nav-item .badge{margin-left:auto;font-size:10px;background:var(--panel3);color:var(--dim);border-radius:9px;padding:1px 7px}
+  .nav-item .badge.alert{background:rgba(224,88,79,.16);color:var(--red)}
+  .side-foot{margin:10px 16px 0;padding-top:12px;border-top:1px solid var(--line);font-size:10px;color:var(--dim2);line-height:1.6}
+
+  /* ===== CONTENT ===== */
+  .cmdbar{display:flex;align-items:center;gap:12px;padding:18px 26px 14px;border-bottom:1px solid var(--line)}
+  .cmdbar h1{font-size:18px;font-weight:600;letter-spacing:.01em}
+  .cmdbar .sub{font-size:11.5px;color:var(--dim);margin-top:2px}
+  .cmd-actions{margin-left:auto;display:flex;gap:8px}
+  .btn{background:var(--panel2);border:1px solid var(--line2);color:var(--txt);font:inherit;font-size:12px;border-radius:6px;padding:7px 13px;cursor:pointer}
+  .btn:hover{border-color:var(--gold-line)}
+  .btn.gold{background:var(--gold-soft);border-color:var(--gold-line);color:var(--gold)}
+  .body{padding:22px 26px 60px}
+  .screen{display:none}
+  .screen.on{display:block}
+
+  /* viewtabs */
+  .vtabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:18px;flex-wrap:wrap}
+  .vtab{background:none;border:none;border-bottom:2px solid transparent;color:var(--dim);font:inherit;font-size:12px;padding:8px 12px;cursor:pointer}
+  .vtab:hover{color:var(--txt)}
+  .vtab.on{color:var(--gold);border-bottom-color:var(--gold)}
+  .vtab .n{font-size:10px;background:var(--panel3);border-radius:9px;padding:1px 6px;margin-left:5px}
+
+  /* KPI cards */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+  .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 15px}
+  .kpi .v{font-size:23px;font-weight:600;letter-spacing:.01em}
+  .kpi .v small{font-size:13px;color:var(--dim);font-weight:400}
+  .kpi .k{font-size:11.5px;color:var(--dim);margin-top:3px}
+  .kpi .src{font-size:9.5px;color:var(--green);margin-top:8px;display:flex;align-items:center;gap:5px}
+  .kpi .src::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--green)}
+  .kpi .src.manual{color:var(--amber)}
+  .kpi .src.manual::before{background:var(--amber)}
+  .kpi.hl{border-color:var(--gold-line);background:linear-gradient(180deg,var(--gold-soft),transparent)}
+
+  .section-t{font-size:12px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin:26px 0 12px}
+
+  /* todo panel */
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--r)}
+  .todo{display:flex;align-items:center;gap:12px;padding:12px 15px;border-bottom:1px solid var(--line)}
+  .todo:last-child{border-bottom:none}
+  .todo .ic{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px}
+  .todo .tx{flex:1}
+  .todo .tx b{font-weight:600;font-size:12.5px}
+  .todo .tx span{display:block;color:var(--dim);font-size:11px;margin-top:1px}
+  .todo .go{font-size:11px;color:var(--gold);background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:6px;padding:5px 10px;cursor:pointer}
+
+  /* tables */
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:9.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--dim2);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line)}
+  td{padding:12px;border-bottom:1px solid var(--line);font-size:12.5px}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:var(--panel2)}
+  .pill{font-size:10px;padding:2px 8px;border-radius:10px;letter-spacing:.02em;white-space:nowrap}
+  .p-presale{background:rgba(82,152,216,.16);color:var(--blue)}
+  .p-closed{background:var(--panel3);color:var(--dim)}
+  .p-annul{background:rgba(224,88,79,.16);color:var(--red)}
+  .p-eval{background:rgba(213,154,50,.16);color:var(--amber)}
+  .rowact{background:var(--panel3);border:1px solid var(--line2);color:var(--txt);font:inherit;font-size:10.5px;border-radius:5px;padding:4px 8px;cursor:pointer;margin-right:4px}
+  .rowact:hover{border-color:var(--gold-line);color:var(--gold)}
+
+  .note{background:var(--gold-soft);border:1px solid var(--gold-line);border-radius:var(--r);padding:11px 14px;font-size:11.5px;color:#e8d6a4;line-height:1.6;margin-bottom:18px}
+  .note b{color:var(--gold)}
+
+  /* permission matrix */
+  .permwrap{display:grid;grid-template-columns:236px 1fr;gap:0;border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+  .collab-list{background:var(--panel);border-right:1px solid var(--line)}
+  .collab{display:flex;align-items:center;gap:10px;padding:12px 14px;border-bottom:1px solid var(--line);cursor:pointer;border-left:3px solid transparent}
+  .collab:hover{background:var(--panel2)}
+  .collab.on{background:var(--gold-soft);border-left-color:var(--gold)}
+  .collab .av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px;flex-shrink:0}
+  .collab .nm{font-size:12.5px;font-weight:600}
+  .collab .rl{font-size:10.5px;color:var(--dim)}
+  .collab.add{color:var(--gold);font-size:12px;justify-content:center}
+  .permdetail{background:var(--panel);padding:18px 20px}
+  .pd-head{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+  .pd-head .av{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:15px}
+  .pd-head .nm{font-size:15px;font-weight:600}
+  .pd-head .em{font-size:11px;color:var(--dim)}
+  .rolerow{display:flex;align-items:center;gap:10px;margin:16px 0 6px;padding:11px 13px;background:var(--panel2);border:1px solid var(--line);border-radius:var(--r)}
+  .rolerow label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+  .rolerow select{background:var(--panel3);border:1px solid var(--line2);color:var(--txt);font:inherit;font-size:12px;border-radius:6px;padding:7px 9px;cursor:pointer}
+  .rolerow .hint{font-size:10.5px;color:var(--dim);margin-left:auto}
+  .superbar{background:rgba(202,165,61,.1);border:1px solid var(--gold-line);border-radius:var(--r);padding:11px 14px;font-size:11.5px;color:#e8d6a4;display:flex;align-items:center;gap:9px}
+  .superbar .lk{color:var(--gold);font-weight:600}
+  .perm-grp-t{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim2);margin:16px 0 4px}
+  .perm-mod{display:flex;align-items:center;gap:10px;padding:9px 4px;border-bottom:1px solid var(--line)}
+  .perm-mod .mn{font-size:12.5px;flex:1}
+  .perm-mod .acts{display:flex;gap:5px;flex-wrap:wrap}
+  .chk{font-size:10.5px;border-radius:5px;padding:4px 9px;cursor:pointer;border:1px solid var(--line2);background:var(--panel2);color:var(--dim);user-select:none}
+  .chk.on{background:var(--gold-soft);border-color:var(--gold-line);color:var(--gold)}
+  .chk.locked{opacity:.5;cursor:not-allowed}
+  .chk.view.on{background:rgba(82,152,216,.14);border-color:rgba(82,152,216,.4);color:var(--blue)}
+
+  /* before/after */
+  .ba{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .ba .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:15px}
+  .ba .card.before{border-color:rgba(224,88,79,.3)}
+  .ba .card.after{border-color:rgba(70,185,100,.3)}
+  .ba h4{font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
+  .ba .before h4{color:var(--red)}
+  .ba .after h4{color:var(--green)}
+  .ba ul{list-style:none;font-size:11.5px;line-height:1.85;color:var(--dim)}
+  .ba li::before{content:"— ";color:var(--dim2)}
+  .formula{background:var(--panel2);border:1px solid var(--line);border-radius:var(--r);padding:14px;font-size:12px;line-height:1.9;margin-top:14px}
+  .formula .eq{color:var(--gold)}
+  .stub{padding:50px 0;text-align:center;color:var(--dim)}
+  .stub .big{font-size:15px;color:var(--txt);margin-bottom:6px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><span class="mark">A</span> ABO <small>v2 · MOCKUP</small></div>
+  <div class="areas" id="areas"></div>
+  <div class="tb-spacer"></div>
+  <input class="search" placeholder="Cerca airdrop, utenti, transazioni…">
+  <span class="env">ALPHA 0 · PROD</span>
+  <div class="viewas">
+    <label>Vedi come</label>
+    <select id="viewAs">
+      <option value="ceo">CEO — Super User</option>
+      <option value="valutatore">Valutatore</option>
+      <option value="community">Community Manager</option>
+      <option value="tesoriere">Tesoriere</option>
+      <option value="analista">Analista (sola lettura)</option>
+    </select>
+  </div>
+  <div class="avatar" id="meAv">CE</div>
+</div>
+
+<div class="shell">
+  <nav class="side">
+    <div id="sitemap"></div>
+    <div class="side-foot">
+      ABO v2 — proposta redesign ROBY · 22 mag 2026<br>
+      Sidebar renderizzata sui permessi del ruolo attivo.
+    </div>
+  </nav>
+
+  <main class="main">
+    <div id="viewbanner"></div>
+
+    <!-- ============ DASHBOARD ============ -->
+    <section class="screen on" data-screen="dashboard">
+      <div class="cmdbar">
+        <div><h1 id="dashTitle">Bentornato</h1><div class="sub" id="dashSub">La tua giornata in AIROOBI</div></div>
+        <div class="cmd-actions"><button class="btn">Aggiorna</button></div>
+      </div>
+      <div class="body">
+        <div class="section-t">Da fare ora</div>
+        <div class="panel" id="todoPanel"></div>
+
+        <div class="section-t">Numeri chiave — ogni cifra ha una fonte</div>
+        <div class="kpis">
+          <div class="kpi"><div class="v">9</div><div class="k">Utenti registrati</div><div class="src">profiles · live</div></div>
+          <div class="kpi"><div class="v">495.488</div><div class="k">ARIA in circolazione</div><div class="src">profiles.total_points · live</div></div>
+          <div class="kpi hl"><div class="v">€0,8973</div><div class="k">Valore nominale ROBI</div><div class="src">treasury ÷ ROBI · calcolato</div></div>
+          <div class="kpi"><div class="v">112</div><div class="k">ROBI in circolazione</div><div class="src">nft_rewards · live</div></div>
+          <div class="kpi"><div class="v">€100,50</div><div class="k">Treasury Balance</div><div class="src">treasury_funds · live</div></div>
+          <div class="kpi"><div class="v">4</div><div class="k">Airdrop totali</div><div class="src">airdrops · live</div></div>
+        </div>
+        <div class="note" style="margin-top:18px">Il vecchio Overview era una griglia piatta di 12 card che mischiava metriche vanity (video visti, foto profilo) e numeri critici. <b>v2:</b> "Da fare" in cima — orientato al lavoro — e ogni KPI porta un'etichetta di <b>fonte</b>. Verde = aggregato live dal DB. Ambra = inserito a mano (e va sempre dichiarato).</div>
+      </div>
+    </section>
+
+    <!-- ============ PIPELINE AIRDROP ============ -->
+    <section class="screen" data-screen="pipeline">
+      <div class="cmdbar">
+        <div><h1>Pipeline airdrop</h1><div class="sub">Valutazione, gestione e stato — un solo elenco</div></div>
+        <div class="cmd-actions"><button class="btn">Aggiorna</button><button class="btn gold">+ Nuovo airdrop</button></div>
+      </div>
+      <div class="body">
+        <div class="note"><b>Unifica 4 voci vecchie.</b> Valutazioni, Gestione, Statistiche e Analysis lavoravano tutte sulla stessa tabella <span class="mono">airdrops</span>. v2 = una Pipeline con tab di stato, conteggi reali e azioni per riga. Le statistiche sono i conteggi qui sopra; l'analisi dello score è una riga espandibile.</div>
+        <div class="vtabs">
+          <button class="vtab on">Tutti <span class="n">4</span></button>
+          <button class="vtab">In valutazione <span class="n">0</span></button>
+          <button class="vtab">Val. completata <span class="n">0</span></button>
+          <button class="vtab">Presale <span class="n">1</span></button>
+          <button class="vtab">Sale <span class="n">0</span></button>
+          <button class="vtab">Conclusi <span class="n">3</span></button>
+        </div>
+        <div class="panel">
+          <table>
+            <thead><tr><th>Titolo</th><th>Categoria</th><th>Stato</th><th>Desiderato</th><th>Minimo</th><th>Quotazione</th><th>Blocchi</th><th>Azioni</th></tr></thead>
+            <tbody>
+              <tr><td>Fontanella smart per animali</td><td>computer</td><td><span class="pill p-presale">presale</span></td><td>€550</td><td>€500</td><td>€500</td><td>56 / 405</td><td><button class="rowact">Modifica</button><button class="rowact">Anteprima</button><button class="rowact">Draw</button></td></tr>
+              <tr><td>iPhone 14 Pro 128GB Viola Scuro</td><td>smartphone</td><td><span class="pill p-closed">concluso</span></td><td>€1050</td><td>€800</td><td>€925</td><td>1850 / 1850</td><td><button class="rowact">Risultati</button></td></tr>
+              <tr><td>Garpez</td><td>arte</td><td><span class="pill p-annul">annullato</span></td><td>€1000</td><td>€550</td><td>€809</td><td>169 / 2618</td><td><button class="rowact">Risultati</button></td></tr>
+              <tr><td>Cuffie Bluetooth over-ear (TEST ROBY)</td><td>audio</td><td><span class="pill p-annul">annullato</span></td><td>€600</td><td>€500</td><td>€736</td><td>0 / 2383</td><td><button class="rowact">Dettaglio</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ COLLABORATORI & PERMESSI ============ -->
+    <section class="screen" data-screen="permessi">
+      <div class="cmdbar">
+        <div><h1>Collaboratori &amp; Permessi</h1><div class="sub">Assegna ogni modulo e ogni azione · il CEO è l'unico Super User</div></div>
+        <div class="cmd-actions"><button class="btn">Vedi ABO come…</button><button class="btn gold">+ Invita collaboratore</button></div>
+      </div>
+      <div class="body">
+        <div class="note"><b>Il cuore del redesign.</b> Oggi esistono solo 2 ruoli (<span class="mono">admin</span>, <span class="mono">evaluator</span>) e "Collaboratori" assegna solo categorie. v2: ogni <b>modulo</b> è assegnabile, con <b>azioni</b> distinte (vedere / modificare / approvare…). I template di ruolo riempiono la matrice in un clic; poi puoi rifinire cella per cella.</div>
+        <div class="permwrap">
+          <div class="collab-list" id="collabList"></div>
+          <div class="permdetail" id="permDetail"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ ARIA & ROBI ============ -->
+    <section class="screen" data-screen="tokenomics">
+      <div class="cmdbar">
+        <div><h1>ARIA &amp; ROBI</h1><div class="sub">Metriche token — fonte unica, zero numeri scollegati</div></div>
+        <div class="cmd-actions"><button class="btn">Aggiorna</button></div>
+      </div>
+      <div class="body">
+        <div class="note"><b>Fix di integrità.</b> Prima il valore ROBI era €0,8973 su Overview e Treasury ma <b>€0,00</b> in ROBI Valuation, perché quella pagina aveva un campo Treasury manuale fermo a 0 (etichettato "AUTO"). v2 unisce ARIA Metrics + ROBI Valuation + NFT per tipo in una pagina con <b>una sola fonte</b> Treasury.</div>
+        <div class="formula">
+          <div>Treasury Balance <span class="eq">€100,50</span> &nbsp;<span style="color:var(--dim)">— da <span class="mono">treasury_funds</span>, non più input manuale</span></div>
+          <div>ROBI in circolazione <span class="eq">112</span> &nbsp;<span style="color:var(--dim)">— da <span class="mono">nft_rewards</span> (conteggio unico, riconciliato 110↔112)</span></div>
+          <div style="border-top:1px solid var(--line);margin-top:8px;padding-top:8px">Valore ROBI = 100,50 ÷ 112 = <span class="eq">€0,8973</span> &nbsp;<span style="color:var(--dim)">— identico su Dashboard, Treasury e qui</span></div>
+        </div>
+        <div class="section-t">Metriche</div>
+        <div class="kpis">
+          <div class="kpi"><div class="v">495.488</div><div class="k">ARIA in circolazione</div><div class="src">profiles.total_points</div></div>
+          <div class="kpi"><div class="v">55.054<small> /utente</small></div><div class="k">Media ARIA per utente</div><div class="src">circolante ÷ utenti · calcolato</div></div>
+          <div class="kpi"><div class="v">112</div><div class="k">ROBI emessi</div><div class="src">nft_rewards</div></div>
+          <div class="kpi hl"><div class="v">€0,8973</div><div class="k">Valore ROBI stimato</div><div class="src">treasury ÷ ROBI · calcolato</div></div>
+          <div class="kpi"><div class="v">€0,8524</div><div class="k">Buyback garantito (95%)</div><div class="src">valore × 0,95 · calcolato</div></div>
+          <div class="kpi"><div class="v">€0,9422</div><div class="k">Upside potenziale (5%)</div><div class="src">valore × 1,05 · calcolato</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ GENERIC STUB ============ -->
+    <section class="screen" data-screen="stub">
+      <div class="cmdbar"><div><h1 id="stubTitle">Modulo</h1><div class="sub" id="stubSub"></div></div></div>
+      <div class="body"><div class="stub"><div class="big" id="stubBig"></div><div id="stubTxt"></div></div></div>
+    </section>
+  </main>
+</div>
+
+<script>
+/* ===== MODEL ===== */
+const AREAS=[{id:'ops',label:'Operations'},{id:'tes',label:'Tesoreria'},{id:'sis',label:'Sistema'}];
+const MODULES=[
+  {id:'dashboard',area:'ops',grp:'Panoramica',label:'Dashboard',screen:'dashboard',actions:['view']},
+  {id:'pipeline',area:'ops',grp:'Airdrop',label:'Pipeline airdrop',screen:'pipeline',actions:['view','edit','approve','draw'],badge:'1'},
+  {id:'analisi',area:'ops',grp:'Airdrop',label:'Analisi & Fairness',screen:'stub',actions:['view']},
+  {id:'messaggi',area:'ops',grp:'Airdrop',label:'Messaggi',screen:'stub',actions:['view','reply'],badge:'1',alert:true},
+  {id:'utenti',area:'ops',grp:'Utenti',label:'Utenti',screen:'stub',actions:['view','manage']},
+  {id:'treasury',area:'tes',grp:'Tesoreria',label:'Treasury & Fondi',screen:'stub',actions:['view','manage']},
+  {id:'conto',area:'tes',grp:'Tesoreria',label:'Conto ARIA piattaforma',screen:'stub',actions:['view']},
+  {id:'patrimonio',area:'tes',grp:'Tesoreria',label:'Patrimonio aziendale',screen:'stub',actions:['view','edit']},
+  {id:'costi',area:'tes',grp:'Tesoreria',label:'Cost Tracker',screen:'stub',actions:['view','edit']},
+  {id:'tokenomics',area:'tes',grp:'Tokenomics',label:'ARIA & ROBI',screen:'tokenomics',actions:['view','edit']},
+  {id:'permessi',area:'sis',grp:'Configurazione',label:'Collaboratori & Permessi',screen:'permessi',actions:['view','manage'],ceoOnly:true},
+  {id:'categorie',area:'sis',grp:'Configurazione',label:'Categorie',screen:'stub',actions:['view','edit']},
+  {id:'engine',area:'sis',grp:'Configurazione',label:'Engine Config',screen:'stub',actions:['view','edit']},
+];
+const ACT_LBL={view:'Vedere',edit:'Modificare',approve:'Approva/Rifiuta',draw:'Esegui Draw',reply:'Rispondere',manage:'Gestire'};
+const ALL={};MODULES.forEach(m=>ALL[m.id]=m.actions.slice());
+const ROLES={
+  ceo:{label:'CEO — Super User',perm:ALL},
+  valutatore:{label:'Valutatore',perm:{dashboard:['view'],pipeline:['view','edit','approve'],analisi:['view'],messaggi:['view','reply']}},
+  community:{label:'Community Manager',perm:{dashboard:['view'],messaggi:['view','reply'],utenti:['view'],analisi:['view']}},
+  tesoriere:{label:'Tesoriere',perm:{dashboard:['view'],treasury:['view','manage'],conto:['view'],patrimonio:['view','edit'],costi:['view','edit'],tokenomics:['view','edit']}},
+  analista:{label:'Analista (sola lettura)',perm:{dashboard:['view'],pipeline:['view'],analisi:['view'],utenti:['view'],tokenomics:['view']}},
+};
+const STUBTXT={
+  analisi:'Unisce le vecchie voci "Analysis" e "Fairness Index": breakdown score F1/F2, motivazione vincitore e indice di fairness per airdrop, in un posto solo.',
+  messaggi:'Chat di supporto compratore ↔ gestore, per airdrop. 2 messaggi · 1 conversazione · 0 da rispondere.',
+  utenti:'Elenco utenti, ricerca per email e gestione utenti di test (assorbita dalla vecchia "Fairness Index").',
+  treasury:'Treasury Balance €100,50 · Service Balance €49,50 · Fondi inseriti, split 67/33. La fonte unica del valore ROBI.',
+  conto:'Conto ARIA della piattaforma — saldo 6.600 ARIA, alimentato dalle submission fee. Rinominato per non confondersi col Patrimonio.',
+  patrimonio:'Registro patrimoniale AIROOBI: fiat, crypto e NFT. Era il secondo "Conto AIROOBI" — ora ha un nome distinto.',
+  costi:'Cost Tracker — costi previsti e pagati per mese, dalla tabella cost_tracker.',
+  categorie:'Categorie del marketplace airdrop. Da sistemare i valori "Ordine" duplicati.',
+  engine:'Pesi algoritmo, split economica e soglie di auto-transizione presale→sale. Modificare con cautela.',
+};
+
+let viewRole='ceo', activeArea='ops', activeModule='dashboard';
+const collaborators=[
+  {id:'ceo',nm:'Tommaso (CEO)',em:'ceo@airoobi.com',role:'ceo',av:'#caa53d',avbg:'rgba(202,165,61,.16)'},
+  {id:'c1',nm:'Giulia R.',em:'giulia@airoobi.com',role:'valutatore',av:'#5298d8',avbg:'rgba(82,152,216,.16)'},
+  {id:'c2',nm:'Marco V.',em:'marco@airoobi.com',role:'community',av:'#46b964',avbg:'rgba(70,185,100,.16)'},
+];
+let selCollab='c1';
+const customPerm={};
+collaborators.forEach(c=>{customPerm[c.id]=clone(ROLES[c.role].perm)});
+function clone(o){const r={};for(const k in o)r[k]=o[k].slice();return r;}
+
+/* ===== SIDEBAR ===== */
+function renderAreas(){
+  document.getElementById('areas').innerHTML=AREAS.map(a=>
+    `<button class="area-btn ${a.id===activeArea?'on':''}" onclick="setArea('${a.id}')">${a.label}</button>`).join('');
+}
+function visibleModules(){
+  const perm=viewRole==='ceo'?ALL:ROLES[viewRole].perm;
+  return MODULES.filter(m=>{
+    if(m.ceoOnly&&viewRole!=='ceo')return false;
+    return perm[m.id]&&perm[m.id].includes('view');
+  });
+}
+function renderSidebar(){
+  const mods=visibleModules().filter(m=>m.area===activeArea);
+  const groups=[];
+  mods.forEach(m=>{let g=groups.find(x=>x.name===m.grp);if(!g){g={name:m.grp,items:[]};groups.push(g);}g.items.push(m);});
+  let html='';
+  if(!groups.length)html='<div style="padding:30px 18px;color:var(--dim2);font-size:11px">Nessun modulo di quest\'area assegnato a questo ruolo.</div>';
+  groups.forEach(g=>{
+    html+=`<div class="nav-grp"><div class="nav-lbl">${g.name}</div>`;
+    g.items.forEach(m=>{
+      const on=m.id===activeModule?'on':'';
+      const bdg=m.badge?`<span class="badge ${m.alert?'alert':''}">${m.badge}</span>`:'';
+      html+=`<button class="nav-item ${on}" onclick="openModule('${m.id}')"><span class="dot"></span>${m.label}${bdg}</button>`;
+    });
+    html+='</div>';
+  });
+  document.getElementById('sitemap').innerHTML=html;
+}
+function setArea(a){
+  activeArea=a;renderAreas();
+  const first=visibleModules().find(m=>m.area===a);
+  if(first)activeModule=first.id;
+  renderSidebar();showScreen();
+}
+function openModule(id){activeModule=id;renderSidebar();showScreen();}
+function showScreen(){
+  const m=MODULES.find(x=>x.id===activeModule);if(!m)return;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  let sc=m.screen;
+  document.querySelector(`.screen[data-screen="${sc}"]`).classList.add('on');
+  if(sc==='stub'){
+    document.getElementById('stubTitle').textContent=m.label;
+    document.getElementById('stubSub').textContent='Modulo redesign v2';
+    document.getElementById('stubBig').textContent=m.label;
+    document.getElementById('stubTxt').textContent=STUBTXT[m.id]||'Modulo della ABO v2.';
+    document.getElementById('stubTxt').style.cssText='max-width:520px;margin:0 auto;line-height:1.7;font-size:12px';
+  }
+}
+
+/* ===== VIEW-AS ===== */
+function applyViewRole(){
+  viewRole=document.getElementById('viewAs').value;
+  const banner=document.getElementById('viewbanner');
+  if(viewRole==='ceo'){banner.innerHTML='';}
+  else{
+    banner.innerHTML=`<div style="background:var(--gold-soft);border-bottom:1px solid var(--gold-line);padding:8px 26px;font-size:11.5px;color:#e8d6a4">
+      Anteprima permessi — stai vedendo ABO come <b style="color:var(--gold)">${ROLES[viewRole].label}</b>. La sidebar mostra solo i moduli assegnati a questo ruolo. <span onclick="resetView()" style="color:var(--gold);cursor:pointer;text-decoration:underline">Torna a CEO</span></div>`;
+  }
+  const vis=visibleModules();
+  if(!vis.find(m=>m.id===activeModule))activeModule=vis[0]?vis[0].id:null;
+  if(activeModule){const m=MODULES.find(x=>x.id===activeModule);if(m&&m.area!==activeArea)activeArea=m.area;}
+  renderAreas();renderSidebar();showScreen();updateMe();
+}
+function resetView(){document.getElementById('viewAs').value='ceo';applyViewRole();}
+function updateMe(){
+  const map={ceo:'CE',valutatore:'VA',community:'CM',tesoriere:'TE',analista:'AN'};
+  document.getElementById('meAv').textContent=map[viewRole];
+  document.getElementById('dashTitle').textContent='Bentornato, '+ROLES[viewRole].label.split(' —')[0].split(' (')[0];
+}
+
+/* ===== DASHBOARD TODO ===== */
+const TODOS=[
+  {ic:'rgba(213,154,50,.16)',c:'var(--amber)',g:'M',t:'1 conversazione aperta',s:'Fontanella smart per animali — risposta entro 24h'},
+  {ic:'rgba(82,152,216,.16)',c:'var(--blue)',g:'P',t:'1 airdrop in presale',s:'Fontanella — 56/405 blocchi · soglia auto-sale al 20%'},
+  {ic:'rgba(70,185,100,.16)',c:'var(--green)',g:'T',t:'Treasury sana',s:'Valore ROBI €0,8973 · buyback 95% coperto'},
+];
+function renderTodos(){
+  document.getElementById('todoPanel').innerHTML=TODOS.map(t=>
+    `<div class="todo"><div class="ic" style="background:${t.ic};color:${t.c}">${t.g}</div>
+     <div class="tx"><b>${t.t}</b><span>${t.s}</span></div><button class="go">Apri</button></div>`).join('');
+}
+
+/* ===== PERMISSION MATRIX ===== */
+function renderCollabList(){
+  let h=collaborators.map(c=>
+    `<div class="collab ${c.id===selCollab?'on':''}" onclick="selectCollab('${c.id}')">
+      <div class="av" style="background:${c.avbg};color:${c.av}">${c.nm.substr(0,2).toUpperCase()}</div>
+      <div><div class="nm">${c.nm}</div><div class="rl">${roleLabel(c.role)}</div></div>
+    </div>`).join('');
+  h+=`<div class="collab add" onclick="sendInvite()">+ Invita collaboratore</div>`;
+  document.getElementById('collabList').innerHTML=h;
+}
+function selectCollab(id){selCollab=id;renderCollabList();renderPermDetail();}
+function setRole(id,role){
+  const c=collaborators.find(x=>x.id===id);
+  if(role==='custom'){c.role='custom';renderCollabList();renderPermDetail();return;}
+  c.role=role;
+  customPerm[id]=clone(ROLES[role].perm);
+  renderCollabList();renderPermDetail();
+}
+function roleLabel(r){return ROLES[r]?ROLES[r].label:'Personalizzato';}
+function toggleAct(modId,act){
+  if(selCollab==='ceo')return;
+  const p=customPerm[selCollab];
+  if(!p[modId])p[modId]=[];
+  const i=p[modId].indexOf(act);
+  if(i>=0){p[modId].splice(i,1);if(act==='view')p[modId]=[];}
+  else{p[modId].push(act);if(!p[modId].includes('view'))p[modId].push('view');}
+  if(!p[modId].length)delete p[modId];
+  const c=collaborators.find(x=>x.id===selCollab);c.role='custom';
+  renderCollabList();renderPermDetail();
+}
+function renderPermDetail(){
+  const c=collaborators.find(x=>x.id===selCollab);
+  const isCeo=c.id==='ceo';
+  const perm=isCeo?ALL:(customPerm[c.id]||{});
+  let h=`<div class="pd-head"><div class="av" style="background:${c.avbg};color:${c.av}">${c.nm.substr(0,2).toUpperCase()}</div>
+    <div><div class="nm">${c.nm}</div><div class="em">${c.em}</div></div></div>`;
+  if(isCeo){
+    h+=`<div class="superbar" style="margin-top:14px"><span class="lk">&#9679; SUPER USER</span> Il CEO ha accesso totale e immutabile a ogni modulo e azione. Unico ruolo che vede questo pannello. Non può essere declassato né rimosso.</div>`;
+  }else{
+    const roleVal=ROLES[c.role]?c.role:'custom';
+    h+=`<div class="rolerow"><label>Template ruolo</label>
+      <select onchange="setRole('${c.id}',this.value)">
+        ${Object.keys(ROLES).filter(r=>r!=='ceo').map(r=>`<option value="${r}" ${r===roleVal?'selected':''}>${ROLES[r].label}</option>`).join('')}
+        <option value="custom" ${roleVal==='custom'?'selected':''}>Personalizzato</option>
+      </select>
+      <span class="hint">Il template riempie la matrice · poi rifinisci sotto</span></div>`;
+  }
+  AREAS.forEach(a=>{
+    const mods=MODULES.filter(m=>m.area===a.id);
+    h+=`<div class="perm-grp-t">${a.label}</div>`;
+    mods.forEach(m=>{
+      if(m.ceoOnly){
+        h+=`<div class="perm-mod"><span class="mn">${m.label}</span><span class="chk locked">solo CEO</span></div>`;
+        return;
+      }
+      const have=isCeo?m.actions:(perm[m.id]||[]);
+      const acts=m.actions.map(act=>{
+        const on=have.includes(act);
+        const cls=`chk ${act==='view'?'view':''} ${on?'on':''} ${isCeo?'locked':''}`;
+        const oc=isCeo?'':`onclick="toggleAct('${m.id}','${act}')"`;
+        return `<span class="${cls}" ${oc}>${ACT_LBL[act]}</span>`;
+      }).join('');
+      h+=`<div class="perm-mod"><span class="mn">${m.label}</span><div class="acts">${acts}</div></div>`;
+    });
+  });
+  document.getElementById('permDetail').innerHTML=h;
+}
+function sendInvite(){
+  if(window.sendPrompt)sendPrompt('Mostriamo il flusso di invito di un nuovo collaboratore ABO');
+  else alert('Mockup: qui si aprirebbe il flusso "Invita collaboratore" (email + template ruolo).');
+}
+
+/* ===== INIT ===== */
+renderAreas();renderSidebar();renderTodos();renderCollabList();renderPermDetail();updateMe();showScreen();
+document.getElementById('viewAs').addEventListener('change',applyViewRole);
+</script>
+</body>
+</html>

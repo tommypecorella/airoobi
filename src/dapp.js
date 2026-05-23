@@ -139,6 +139,50 @@ function doLogout(){
   window.location.href=_isApp?'/':'https://airoobi.com';
 }
 
+// ── Export user data (GS-4 · GDPR Art. 20 portability) ──
+async function doExportUserData(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var btn=document.getElementById('exportdata-btn');
+  var errEl=document.getElementById('exportdata-error');
+  var originalLabel=btn.innerHTML;
+  btn.disabled=true;
+  btn.textContent=lang==='it'?'Esportazione...':'Exporting...';
+  errEl.style.display='none';
+  try{
+    var token=await getValidToken();
+    if(!token)throw new Error('no_token');
+    var res=await fetch(SB_URL+'/rest/v1/rpc/export_user_data',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    var data=await res.json();
+    if(!data||data.ok===false){
+      var error=data&&data.error?data.error:'unknown';
+      errEl.textContent=lang==='it'?'Errore: '+error:'Error: '+error;
+      errEl.style.display='block';
+      return;
+    }
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var d=new Date();
+    var ymd=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+    var a=document.createElement('a');
+    a.href=url;
+    a.download='airoobi-export-'+ymd+'.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){
+    errEl.textContent=lang==='it'?'Errore di rete. Riprova.':'Network error. Try again.';
+    errEl.style.display='block';
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML=originalLabel;
+  }
+}
+
 // ── Delete account ──
 function showDeleteAccount(){
   document.getElementById('deleteaccount-modal').classList.add('active');

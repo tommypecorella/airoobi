@@ -1,9 +1,9 @@
 ---
 title: ROBY · Mini-spec · gerarchia pagina airdrop (GS-9) — competitivo above-the-fold
-purpose: Spec di gerarchia per /dapp/airdrop/:id. Definisce cosa va above-the-fold (la parte competitiva e ingaggiante) e cosa scende in seconda importanza. È la spec che sblocca il cluster Track B — GS-8 / GS-10 / GS-12 / GS-15 trovano qui la loro collocazione. DRAFT per revisione Skeezu prima del relay a CCP.
+purpose: Spec di gerarchia per /dapp/airdrop/:id. Definisce cosa va above-the-fold (la parte competitiva e ingaggiante) e cosa scende in seconda importanza. È la spec che sblocca il cluster Track B — GS-8 / GS-10 / GS-12 / GS-15 trovano qui la loro collocazione. Revisione Skeezu chiusa: competitivo prima dell'immagine su desktop + mobile.
 date: Sab 23 maggio 2026
 audience: Skeezu (review) → poi CCP
-status: FINALIZZATA · revisione Skeezu OK (mobile: competitivo prima dell'immagine) · pronta per CCP
+status: FINALIZZATA · revisione Skeezu OK (competitivo prima dell'immagine · desktop + mobile) · pronta per CCP
 related: GOLDEN-SESSION_2026-05-23.md (GS-8 · GS-9 · GS-10 · GS-12 · GS-15)
 ---
 
@@ -26,8 +26,9 @@ difetti di gerarchia:
    ("puoi essere il primo") arriva dopo lo scroll.
 
 GS-9 chiede di ribaltare: **appena entri, in primo piano la parte
-competitiva e ingaggiante.** Immagine a sinistra (confermato), tutto il
-resto descrittivo in seconda battuta.
+competitiva e ingaggiante.** Il competitivo prende la colonna sinistra,
+l'immagine va a destra (direttiva Skeezu); tutto il resto descrittivo in
+seconda battuta.
 
 ## 2. Principio guida
 
@@ -43,38 +44,39 @@ Correzione del difetto #1: la pagina dettaglio deve **aprirsi sul
 dettaglio**. Il "‹ Tutti gli airdrop" come link di ritorno basta — la
 lista marketplace completa non va renderizzata sopra.
 
-## 3. Wireframe — desktop (2 colonne)
+## 3. Wireframe — desktop (2 colonne · competitivo a sinistra)
+
+Direttiva Skeezu 23 May: "competitivo prima dell'immagine" vale **anche sul
+desktop**. Le colonne sono invertite rispetto alla v1 — il competitivo
+occupa la colonna **sinistra** (quella che l'occhio legge per prima),
+l'immagine passa a **destra**.
 
 ```
 ┌──────────────────────────────────────────────────────────────────┐
-│  ⚡ AUTO-BUY ATTIVO · sta comprando per te · [gestisci]   (GS-12)  │  ← solo se attivo
-├───────────────────────────┬──────────────────────────────────────┤
-│                           │  ‹ Tutti gli airdrop                  │
-│                           │                                       │
-│                           │  AIRDROP · Computer        ♡   ⤴      │  ← GS-8
-│                           │  Fontanella smart per animali         │
-│         IMMAGINE          │                                       │
-│         carosello         │  ● ATTIVO · scade tra 2g 4h           │  ← FASE
-│      sempre a sinistra    │                                       │
-│         (GS-9 OK)         │  ┌─────────────────────────────────┐  │
-│                           │  │ La tua posizione   2°   ▲       │  │  ← COMPETITIVO
-│                           │  │ Blocchi venduti    156 / 405    │  │
-│                           │  │ Liberi             249          │  │
-│                           │  └─────────────────────────────────┘  │
-│                           │                                       │
-│                           │  ► ~144 blocchi per arrivare 1°        │  ← AGGANCIO
-│                           │  ⚠ Tra ~N blocchi venduti ad altri     │  ← GS-15
-│                           │     non potrai più aggiudicartelo      │
-│                           │                                       │
-│                           │  ┌───── ACQUISTA BLOCCHI ──────────┐   │  ← AZIONE
-│                           │  │ slider · 1 blocco = 20 ARIA      │   │
-│                           │  │ [ ACQUISTA BLOCCHI ]             │   │
-│                           │  └──────────────────────────────────┘  │
-│                           │                                       │
-│                           │  ◎ Come arrivare 1°          [A]  ⌄    │  ← GS-10
-│                           │    Tuo punteggio · 2°                  │     A visibile
-│                           │    └─ [B · dettaglio scoring] chiuso   │     B collassato
-└───────────────────────────┴──────────────────────────────────────┘
+│  ⚡ AUTO-BUY ATTIVO · sta comprando per te · [gestisci]  (GS-12)   │  solo se attivo
+├────────────────────────────────────────┬─────────────────────────┤
+│  ‹ Tutti gli airdrop                    │                         │
+│                                         │                         │
+│  AIRDROP · Computer          ♡   ⤴      │   ┌─────────────────┐   │
+│  Fontanella smart per animali           │   │                 │   │
+│                                         │   │                 │   │
+│  ● ATTIVO · scade tra 2g 4h             │   │    IMMAGINE      │   │
+│                                         │   │    carosello     │   │
+│  La tua posizione   2°  ▲               │   │   (a destra)     │   │
+│  Blocchi venduti    156 / 405           │   │                 │   │
+│  Liberi             249                 │   │                 │   │
+│                                         │   └─────────────────┘   │
+│  ► ~144 blocchi per arrivare 1°          │                         │
+│  ⚠ Tra ~N blocchi venduti ad altri       │                         │
+│     non potrai più aggiudicartelo        │                         │
+│                                         │                         │
+│  [  ACQUISTA BLOCCHI  ] · slider 1 blocco│                         │
+│                                         │                         │
+│  ◎ Come arrivare 1°  · A visibile · B ⌄  │                         │
+└────────────────────────────────────────┴─────────────────────────┘
+   colonna SX = il competitivo (si legge per primo) · colonna DX = immagine
+   zone: GS-12 banner on-top · GS-8 ♡/⤴ header · GS-15 riga soglia · GS-10 A/B
+
    ════════════ fine above-the-fold · sotto = seconda importanza ════
    • Descrizione completa dell'oggetto
    • Specifiche · "Ogni blocco ti fa guadagnare ROBI"
@@ -171,7 +173,6 @@ dell'oggetto arriva subito dopo, prima della descrizione lunga.
 
 ## 6. Cosa NON cambia
 
-- Immagine a sinistra su desktop — confermato da Skeezu, resta.
 - Nessun dato rimosso: descrizione, statistiche, storico, auto-buy
   config, CTA valutazione — tutto resta, solo ricollocato.
 - Slogan, voce, brand: invariati.
@@ -204,11 +205,12 @@ Principio: above-the-fold = competitivo, sotto = scheda prodotto.
 Da fare:
 - La pagina dettaglio si apre SUL dettaglio (oggi renderizza la lista
   marketplace sopra — va tolta, basta il link "‹ Tutti gli airdrop").
-- Colonna destra above-the-fold, in quest'ordine: categoria + ♡/⤴
+- Colonna SINISTRA above-the-fold, in quest'ordine: categoria + ♡/⤴
   (GS-8) → titolo + chip fase → box competitivo (posizione+trend /
   blocchi venduti / liberi) → "~X blocchi per il 1°" + riga soglia
   (GS-15) → pannello ACQUISTA BLOCCHI → "Come arrivare 1°" A/B (GS-10).
-- Immagine a sinistra su desktop (confermato).
+- Immagine a DESTRA su desktop · competitivo nella colonna sinistra
+  (direttiva Skeezu 23 May, desktop + mobile).
 - Banner AUTO-BUY attivo on-top (GS-12), solo quando attivo.
 - Sotto la piega: descrizione, statistiche, storico, config auto-buy,
   CTA valutazione — niente rimosso, solo ricollocato.
@@ -222,4 +224,4 @@ Ad ogni consegna ROBY ri-verifica a UI-click.
 
 ---
 
-*ROBY · Strategic MKT & Comms & Community · Mini-spec gerarchia pagina airdrop (GS-9) · DRAFT · 23 May 2026 · daje team a 4*
+*ROBY · Strategic MKT & Comms & Community · Mini-spec gerarchia pagina airdrop (GS-9) · desktop+mobile locked · 23 May 2026 · daje team a 4*
