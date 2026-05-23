@@ -247,49 +247,29 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
 <!-- SIDEBAR -->
 <nav class="admin-sidebar" id="admin-sidebar">
+  <!-- FASE 2 · ABO v2 · review §4.2: 22 voci → 13 moduli in 3 aree (Operations · Tesoreria · Sistema).
+       Sezioni dei merge (sec-valutazioni, sec-airdrop-stats, sec-fairness, sec-nft-valuation, sec-nft-types)
+       restano nell'HTML più in basso; raggiunte via "Pipeline airdrop" / "Analisi & Fairness" / "ARIA & ROBI"
+       (tabification piena in PR-B2). W4 · Atto 4-6 nascosto dietro flag (4 sezioni stub, codice preservato). -->
   <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label">Dashboard</span>
-    <div class="admin-sidebar-item active" onclick="adminNav('sec-overview')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Overview</div>
-  </div>
-  <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label"><span class="it">Utenti</span><span class="en">Users</span></span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-users')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="it">Ultimi utenti</span><span class="en">Recent users</span></div>
-  </div>
-  <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label">Airdrop</span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-valutazioni')"><svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg><span class="it">Valutazioni</span><span class="en">Reviews</span></div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-airdrops')"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg><span class="it">Gestione</span><span class="en">Manage</span></div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-analysis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>Analysis</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-airdrop-stats')"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span class="it">Statistiche</span><span class="en">Statistics</span></div>
+    <span class="admin-sidebar-label"><span class="it">Operations</span><span class="en">Operations</span></span>
+    <div class="admin-sidebar-item active" onclick="adminNav('sec-overview')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-airdrops')"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg><span class="it">Pipeline airdrop</span><span class="en">Airdrop pipeline</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-analysis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span class="it">Analisi &amp; Fairness</span><span class="en">Analysis &amp; Fairness</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="it">Messaggi</span><span class="en">Messages</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-users')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="it">Utenti</span><span class="en">Users</span></div>
   </div>
   <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label">W4 · Atto 4-6</span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-evalobi')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg><span class="it">EVALOBI</span><span class="en">EVALOBI</span></div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-disputes')"><svg viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01M5.07 19h13.86a2 2 0 001.74-3L13.74 4a2 2 0 00-3.48 0L3.34 16a2 2 0 001.73 3z"/></svg><span class="it">Dispute</span><span class="en">Disputes</span></div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-swaps')"><svg viewBox="0 0 24 24"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg><span class="it">Swap</span><span class="en">Swaps</span></div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-tx-explorer')"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span class="it">TX Explorer</span><span class="en">TX Explorer</span></div>
-  </div>
-  <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label">Tokenomics</span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-treasury')"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>Treasury</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-platform-aria')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg>Conto AIROOBI</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-coin')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg>ARIA Metrics</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-nft-valuation')"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>ROBI Valuation</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-nft-types')"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 12h16M12 4v16"/></svg><span class="it">NFT per tipo</span><span class="en">NFT by type</span></div>
-  </div>
-  <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label"><span class="it">Finanze</span><span class="en">Finance</span></span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-company-assets')"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="14" r="2"/></svg><span class="it">Conto AIROOBI</span><span class="en">AIROOBI Account</span></div>
+    <span class="admin-sidebar-label"><span class="it">Tesoreria</span><span class="en">Treasury</span></span>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-treasury')"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span class="it">Treasury &amp; Fondi</span><span class="en">Treasury &amp; Funds</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-platform-aria')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg><span class="it">Conto ARIA piattaforma</span><span class="en">Platform ARIA account</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-company-assets')"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="14" r="2"/></svg><span class="it">Patrimonio aziendale</span><span class="en">Company assets</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-costs')"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Cost Tracker</div>
-  </div>
-  <div class="admin-sidebar-group">
-    <span class="admin-sidebar-label">Fairness</span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-fairness')"><svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18M5.636 5.636l12.728 12.728M18.364 5.636L5.636 18.364"/></svg>Fairness Index</div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-coin')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg><span class="it">ARIA &amp; ROBI</span><span class="en">ARIA &amp; ROBI</span></div>
   </div>
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label"><span class="it">Sistema</span><span class="en">System</span></span>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-collaborators')"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="it">Collaboratori</span><span class="en">Collaborators</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-collaborators')"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="it">Collaboratori &amp; Permessi</span><span class="en">Collaborators &amp; Permissions</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-categories')"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span class="it">Categorie</span><span class="en">Categories</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-engine')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Engine Config</div>
   </div>
@@ -665,7 +645,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-section" id="sec-airdrops">
     <h2>Gestione Airdrop <span class="info-i" onclick="showAboTip(this,'sec-airdrops')">i</span></h2>
     <div style="margin-bottom:16px">
-      <button onclick="loadAdminAirdrops()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RICARICA</button>
+      <button onclick="loadAdminAirdrops()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
     </div>
     <table class="admin-table" id="adm-airdrop-table">
       <thead><tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Desid.</th><th>Min.</th><th>Quotaz.</th><th>Blocchi</th><th></th></tr></thead>
@@ -856,7 +836,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <h2>Airdrop Analysis <span class="info-i" onclick="showAboTip(this,'sec-analysis')">i</span></h2>
     <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Analisi algoritmo per ogni airdrop. Clicca su una riga per espandere i dettagli: score, fattori F1/F2, e motivazione vincitore.</p>
     <div style="margin-bottom:12px">
-      <button onclick="loadAirdropAnalysis()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">RICARICA</button>
+      <button onclick="loadAirdropAnalysis()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
     </div>
     <table class="admin-table">
       <thead><tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Data draw</th><th>Vincitore</th><th>Blocchi</th><th>Score</th></tr></thead>
@@ -868,7 +848,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-section" id="sec-airdrop-stats">
     <h2>Statistiche Airdrop <span class="info-i" onclick="showAboTip(this,'sec-airdrop-stats')">i</span></h2>
     <div style="margin-bottom:16px">
-      <button onclick="loadAirdropStats()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">AGGIORNA</button>
+      <button onclick="loadAirdropStats()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
     </div>
     <div class="admin-grid" id="airdrop-stats-grid">
       <div class="admin-card"><div class="admin-card-val" id="as-total">—</div><div class="admin-card-label">Airdrop totali</div></div>
@@ -908,7 +888,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <select id="fairness-airdrop-select" style="background:var(--gray-900);border:1px solid var(--gray-700);color:var(--white);font-family:var(--font-m);font-size:12px;padding:6px 10px;min-width:200px">
           <option value="">— Seleziona —</option>
         </select>
-        <button onclick="loadFairnessAnalysis()" style="background:var(--gold);color:#000;border:none;padding:6px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">ANALIZZA</button>
+        <button onclick="loadFairnessAnalysis()" style="background:var(--gold);color:#000;border:none;padding:6px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
       </div>
       <div id="fairness-result"></div>
     </div>
@@ -993,7 +973,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <h2>Engine Config <span class="info-i" onclick="showAboTip(this,'sec-engine')">i</span></h2>
     <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Pesi algoritmo vincitore, split economica, divisori NFT per fase. <span style="color:#ef4444">Modificare con cautela.</span></p>
     <div style="margin-bottom:12px">
-      <button onclick="loadEngineConfig()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;margin-right:8px">RICARICA</button>
+      <button onclick="loadEngineConfig()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;margin-right:8px">Aggiorna</button>
       <button onclick="saveEngineConfig()" style="background:none;border:1px solid #49b583;color:#49b583;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;transition:all .2s" onmouseover="this.style.background='#49b583';this.style.color='#000'" onmouseout="this.style.background='none';this.style.color='#49b583'">SALVA CONFIG</button> <span class="info-i" onclick="showAboTip(this,'eng-save-cfg')">i</span>
     </div>
     <table class="admin-table">
@@ -2799,13 +2779,14 @@ function updateNftMetrics(){
   var v2=document.getElementById('adm-nft-minted');if(v2)v2.textContent=robiLiveStr;
   var v2b=document.getElementById('adm-nft-minted-2');if(v2b)v2b.textContent=robiLiveStr;
   var v2c=document.getElementById('adm-robi-circ-treasury');if(v2c)v2c.textContent=robiLiveStr;
-  var v3=document.getElementById('adm-nft-value');if(v3)v3.textContent='€ '+nftValue.toFixed(2);
-  var v3b=document.getElementById('adm-nft-value-2');if(v3b)v3b.textContent='€ '+nftValue.toFixed(2);
+  // FASE 2 polish: Valore ROBI a 4 decimali ovunque (coerente con Overview/Treasury che usano toFixed(4) in loadTreasuryFunds)
+  var v3=document.getElementById('adm-nft-value');if(v3)v3.textContent='€ '+nftValue.toFixed(4);
+  var v3b=document.getElementById('adm-nft-value-2');if(v3b)v3b.textContent='€ '+nftValue.toFixed(4);
   var v4=document.getElementById('adm-nft-marketcap');if(v4)v4.textContent='€ '+(nftValue*circulating).toFixed(2);
   var v5=document.getElementById('adm-nft-circulating');if(v5)v5.textContent=circulating+' NFT';
   var v6=document.getElementById('adm-nft-fully-diluted');if(v6)v6.textContent='€ '+(nftValue*maxSupply).toFixed(2);
-  var v7=document.getElementById('adm-nft-buyback');if(v7)v7.textContent='€ '+(nftValue*0.95).toFixed(2);
-  var v8=document.getElementById('adm-nft-upside');if(v8)v8.textContent='€ '+(nftValue*0.05).toFixed(2);
+  var v7=document.getElementById('adm-nft-buyback');if(v7)v7.textContent='€ '+(nftValue*0.95).toFixed(4);
+  var v8=document.getElementById('adm-nft-upside');if(v8)v8.textContent='€ '+(nftValue*0.05).toFixed(4);
   // Write-back rimosso: ora treasury è letto da adm-treasury-input stesso → nulla da riscrivere.
   recalcNFTValue();
 }
