@@ -29,7 +29,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .abo-login-box button:hover{background:var(--white)}
 .abo-login-box button:disabled{opacity:.5;cursor:not-allowed}
 @keyframes spin{to{transform:rotate(360deg)}}
-.admin-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:250;background:var(--black);grid-template-rows:48px 1fr;grid-template-columns:210px 1fr;grid-template-areas:"nav nav" "side main";overflow:hidden}
+.admin-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:250;background:var(--black);grid-template-rows:48px 1fr;grid-template-columns:230px 1fr;grid-template-areas:"nav nav" "side main";overflow:hidden}
 .admin-overlay.active{display:grid}
 .admin-nav{grid-area:nav;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--gray-800);background:var(--black);z-index:12;position:relative}
 .admin-nav span{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:2px}
@@ -284,7 +284,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- OVERVIEW -->
   <div class="admin-section active" id="sec-overview">
-    <h2>Overview <span class="info-i" onclick="showAboTip(this,'sec-overview')">i</span></h2>
+    <h2>Dashboard <span class="info-i" onclick="showAboTip(this,'sec-overview')">i</span></h2>
     <div class="admin-grid">
       <div class="admin-card"><div class="admin-card-val" id="adm-users">—</div><div class="admin-card-label">Utenti registrati <span class="info-i" onclick="showAboTip(this,'ov-users')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-remaining">—</div><div class="admin-card-label">Posti rimasti (Alpha Brave) <span class="info-i" onclick="showAboTip(this,'ov-remaining')">i</span></div></div>
@@ -408,7 +408,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- COIN METRICS ARIA -->
   <div class="admin-section" id="sec-coin">
-    <h2>ARIA Metrics <span style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:rgba(74,158,255,.5);margin-left:8px">TEST COIN</span> <span class="info-i" onclick="showAboTip(this,'sec-coin')">i</span></h2>
+    <h2>ARIA &amp; ROBI <span style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:rgba(74,158,255,.5);margin-left:8px">TEST COIN</span> <span class="info-i" onclick="showAboTip(this,'sec-coin')">i</span></h2>
+    <p class="admin-note" style="margin-bottom:16px;font-size:11px;color:var(--gray-500);letter-spacing:.5px">ARIA Metrics + ROBI Valuation + NFT per tipo · merge landing FASE 2.</p>
     <p class="admin-note" style="margin-bottom:16px">ARIA è una moneta di test — nessun valore monetario. Più ARIA un utente muove, più peso ha per l'airdrop finale al lancio mainnet.</p>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
       <div class="admin-card"><div class="admin-card-val blue" id="adm-coin-supply">—</div><div class="admin-card-label">ARIA in circolazione</div></div>
@@ -479,7 +480,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- CONTO AIROOBI -->
   <div class="admin-section" id="sec-company-assets">
-    <h2>Conto AIROOBI <span class="info-i" onclick="showAboTip(this,'sec-company-assets')">i</span></h2>
+    <h2>Patrimonio aziendale <span class="info-i" onclick="showAboTip(this,'sec-company-assets')">i</span></h2>
 
     <!-- Totale patrimonio -->
     <div class="admin-grid" style="margin-bottom:24px">
@@ -643,7 +644,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- GESTIONE AIRDROP -->
   <div class="admin-section" id="sec-airdrops">
-    <h2>Gestione Airdrop <span class="info-i" onclick="showAboTip(this,'sec-airdrops')">i</span></h2>
+    <h2>Pipeline airdrop <span class="info-i" onclick="showAboTip(this,'sec-airdrops')">i</span></h2>
+    <p class="admin-note" style="margin-bottom:16px;font-size:11px;color:var(--gray-500);letter-spacing:.5px">Gestione + Statistiche + Valutazioni · merge landing FASE 2 (tab di stato in PR-B3).</p>
     <div style="margin-bottom:16px">
       <button onclick="loadAdminAirdrops()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
     </div>
@@ -833,14 +835,15 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- AIRDROP ANALYSIS -->
   <div class="admin-section" id="sec-analysis">
-    <h2>Airdrop Analysis <span class="info-i" onclick="showAboTip(this,'sec-analysis')">i</span></h2>
+    <h2>Analisi &amp; Fairness <span class="info-i" onclick="showAboTip(this,'sec-analysis')">i</span></h2>
+    <p class="admin-note" style="margin-bottom:16px;font-size:11px;color:var(--gray-500);letter-spacing:.5px">Airdrop Analysis + Fairness Index · merge landing FASE 2.</p>
     <p style="color:var(--gray-500);font-size:12px;margin-bottom:12px">Analisi algoritmo per ogni airdrop. Clicca su una riga per espandere i dettagli: score, fattori F1/F2, e motivazione vincitore.</p>
     <div style="margin-bottom:12px">
       <button onclick="loadAirdropAnalysis()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
     </div>
     <table class="admin-table">
       <thead><tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Data draw</th><th>Vincitore</th><th>Blocchi</th><th>Score</th></tr></thead>
-      <tbody id="analysis-body"><tr><td colspan="7" style="color:var(--gray-400)">Clicca RICARICA per caricare</td></tr></tbody>
+      <tbody id="analysis-body"><tr><td colspan="7" style="color:var(--gray-400)">Clicca "Aggiorna" per caricare</td></tr></tbody>
     </table>
   </div>
 
@@ -978,7 +981,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </div>
     <table class="admin-table">
       <thead><tr><th>Chiave</th><th>Valore</th><th>Descrizione</th></tr></thead>
-      <tbody id="engine-config-body"><tr><td colspan="3" style="color:var(--gray-400)">Clicca RICARICA per caricare la config</td></tr></tbody>
+      <tbody id="engine-config-body"><tr><td colspan="3" style="color:var(--gray-400)">Clicca "Aggiorna" per caricare la config</td></tr></tbody>
     </table>
 
     <!-- SOGLIE AUTO-TRANSIZIONE -->
@@ -1394,15 +1397,27 @@ var _adminRefreshInterval=null;
 })();
 
 // ── Admin Navigation ──
+// FASE 2 PR-B2 · merge landings: 3 voci di sidebar mostrano insieme le rispettive
+// sotto-sezioni (in DOM order). Tabification piena di status-filter su Pipeline
+// airdrop deferita a PR-B3. Map: landing → siblings da mostrare in linea sotto.
+var ABO_MERGE_LANDINGS={
+  'sec-airdrops':   ['sec-airdrop-stats','sec-valutazioni'],
+  'sec-analysis':   ['sec-fairness'],
+  'sec-coin':       ['sec-nft-valuation','sec-nft-types']
+};
+
 function adminNav(sectionId){
   document.querySelectorAll('.admin-section').forEach(function(s){s.classList.remove('active')});
   document.querySelectorAll('.admin-sidebar-item').forEach(function(b){b.classList.remove('active');b.blur()});
   var sec=document.getElementById(sectionId);
   if(sec)sec.classList.add('active');
+  // Merge landings · mostra anche le sotto-sezioni mergate in linea
+  var siblings=ABO_MERGE_LANDINGS[sectionId];
+  if(siblings){siblings.forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add('active');});}
   var btn=document.querySelector('.admin-sidebar-item[onclick*="\''+sectionId+'\'"]');
   if(btn){btn.classList.add('active');btn.blur();}
   if(sectionId==='sec-engine')loadThresholds();
-  if(sectionId==='sec-airdrop-stats')loadAirdropStats();
+  if(sectionId==='sec-airdrop-stats'||sectionId==='sec-airdrops')loadAirdropStats();
   var main=document.getElementById('admin-main');
   if(main){main.scrollTop=0;main.focus();}
   var sb=document.getElementById('admin-sidebar');
