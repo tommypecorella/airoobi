@@ -5362,7 +5362,22 @@ async function loadActivityFeed(){
     el.innerHTML=data.slice(0,6).map(function(item){
       var text=lang==='it'?(item.text_it||item.text_en):(item.text_en||item.text_it);
       var time=item.time?new Date(item.time).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'';
-      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--gray-800);font-size:12px;color:var(--gray-300);line-height:1.4">'
+      // GS-5: link contestuale. new_airdrop → categoria (backToList+filterCat). purchase/activity → openDetail(airdrop_id). robi (overview) → no link.
+      var clickAttr='';
+      var cursor='default';
+      var hoverCol='var(--gray-300)';
+      if(item.type==='new_airdrop' && item.category){
+        clickAttr='onclick="backToList();filterCat(\''+String(item.category).replace(/\'/g,"\\'")+'\')"';
+        cursor='pointer';
+        hoverCol='var(--gold)';
+      }else if((item.type==='purchase'||item.type==='activity') && item.airdrop_id){
+        clickAttr='onclick="openDetail(\''+String(item.airdrop_id).replace(/\'/g,"\\'")+'\')"';
+        cursor='pointer';
+        hoverCol='var(--gold)';
+      }
+      return '<div '+clickAttr+' style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--gray-800);font-size:12px;color:var(--gray-300);line-height:1.4;cursor:'+cursor+';transition:border-color .2s,color .2s"'
+        +(clickAttr?' onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\''+hoverCol+'\'" onmouseout="this.style.borderColor=\'var(--gray-800)\';this.style.color=\'var(--gray-300)\'"':'')
+        +'>'
         +'<span style="font-size:14px;flex-shrink:0">'+(icons[item.type]||'·')+'</span>'
         +'<span style="flex:1">'+escHtml(text)+'</span>'
         +'<span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);flex-shrink:0">'+time+'</span>'
