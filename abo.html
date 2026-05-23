@@ -29,7 +29,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .abo-login-box button:hover{background:var(--white)}
 .abo-login-box button:disabled{opacity:.5;cursor:not-allowed}
 @keyframes spin{to{transform:rotate(360deg)}}
-.admin-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:250;background:var(--black);grid-template-rows:48px 1fr;grid-template-columns:230px 1fr;grid-template-areas:"nav nav" "side main";overflow:hidden}
+.admin-overlay{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:250;background:var(--black);grid-template-rows:auto 48px 1fr;grid-template-columns:230px 1fr;grid-template-areas:"banner banner" "nav nav" "side main";overflow:hidden}
+/* FASE 3 PR-C2a · "Vedi come" simulator banner — collassa a 0 quando display:none */
+#abo-sim-banner{grid-area:banner}
 .admin-overlay.active{display:grid}
 .admin-nav{grid-area:nav;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--gray-800);background:var(--black);z-index:12;position:relative}
 .admin-nav span{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:2px}
@@ -221,10 +223,22 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
 <!-- ADMIN PANEL -->
 <div class="admin-overlay" id="admin-overlay">
+<!-- FASE 3 PR-C2a · "Vedi come" simulator banner (display:none di default, collassato a 0px via grid auto-row) -->
+<div id="abo-sim-banner" style="display:none;background:rgba(184,150,12,.15);border-bottom:1px solid rgba(184,150,12,.4);padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--gold);text-align:center">
+  Stai vedendo come <strong id="abo-sim-label">—</strong> · <button onclick="aboSimulateRole('')" style="background:none;border:none;color:var(--gold);text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0;margin-left:6px">Esci dalla simulazione</button>
+</div>
 <div class="admin-nav">
   <button class="admin-burger-sidebar" onclick="toggleAdminSidebar()"><span></span><span></span><span></span></button>
   <span style="display:flex;align-items:center;gap:8px"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> ABO</span>
   <div style="display:flex;align-items:center;gap:12px">
+    <!-- FASE 3 PR-C2a · "Vedi come" simulator dropdown (CEO/admin only) -->
+    <select id="abo-sim-select" onchange="aboSimulateRole(this.value)" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:10px;letter-spacing:.5px;padding:4px 8px;cursor:pointer">
+      <option value="">Vedi come… (CEO)</option>
+      <option value="evaluator">Valutatore</option>
+      <option value="community_manager">Community Manager</option>
+      <option value="treasurer">Tesoriere</option>
+      <option value="analyst">Analista</option>
+    </select>
     <a href="https://www.airoobi.app/" class="admin-close" style="text-decoration:none;color:inherit">APP &rarr;</a>
     <button class="admin-close" onclick="aboLogout()">Logout</button>
     <button class="abo-bell" id="abo-bell" onclick="toggleAboNotifPanel()" title="Notifiche">
@@ -1355,7 +1369,7 @@ async function aboLogin(){
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
     setAboAvatar(r.data);
-    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();});
+    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();aboRenderSidebarPermissions();});
     if(_adminRefreshInterval)clearInterval(_adminRefreshInterval);
     _adminRefreshInterval=setInterval(loadAdminData,60000);
   }else{
@@ -1400,12 +1414,83 @@ var _adminRefreshInterval=null;
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
     setAboAvatar(s);
-    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();});
+    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();aboRenderSidebarPermissions();});
     _adminRefreshInterval=setInterval(loadAdminData,60000);
   }
 })();
 
 // ── Admin Navigation ──
+// FASE 3 PR-C2a · sidebar permission-rendered + "Vedi come" simulator.
+// ABO_MODULE_TO_SEC mappa i 13 moduli canonical (review §4.2) ai sec-id in DOM.
+// Allineato alla IA di FASE 2 (sidebar 13 voci · merge landings).
+var ABO_MODULE_TO_SEC={
+  dashboard:'sec-overview',
+  pipeline_airdrop:'sec-airdrops',
+  analisi_fairness:'sec-analysis',
+  messaggi:'sec-messages',
+  utenti:'sec-users',
+  treasury_fondi:'sec-treasury',
+  conto_aria_piattaforma:'sec-platform-aria',
+  patrimonio_aziendale:'sec-company-assets',
+  cost_tracker:'sec-costs',
+  aria_robi:'sec-coin',
+  collaboratori_permessi:'sec-collaborators',
+  categorie:'sec-categories',
+  engine_config:'sec-engine'
+};
+
+window._aboSimulating=null; // null = no sim · role string = simulazione attiva
+var ABO_SIM_LABELS={evaluator:'Valutatore',community_manager:'Community Manager',treasurer:'Tesoriere',analyst:'Analista',custom:'Custom',admin:'Admin'};
+
+async function aboRenderSidebarPermissions(){
+  var s=getSession();if(!s)return;
+  var visibleModules=[];
+  try{
+    if(window._aboSimulating){
+      // Simulazione: fetch role_permissions WHERE role=X AND action='view' (la sidebar è governata da view)
+      var res=await fetch(SB_URL+'/rest/v1/role_permissions?role=eq.'+encodeURIComponent(window._aboSimulating)+'&action=eq.view&select=module',{
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
+      });
+      if(res.ok){var rows=await res.json();visibleModules=(rows||[]).map(function(r){return r.module;});}
+    }else{
+      // Modalità normale: RPC get_user_visible_modules(auth.uid())
+      var res=await fetch(SB_URL+'/rest/v1/rpc/get_user_visible_modules',{
+        method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:'{}'
+      });
+      if(res.ok)visibleModules=await res.json()||[];
+    }
+  }catch(e){console.error('sidebar permission render:',e);return;}
+
+  var visibleSecs={};
+  visibleModules.forEach(function(m){var sec=ABO_MODULE_TO_SEC[m];if(sec)visibleSecs[sec]=true;});
+
+  document.querySelectorAll('.admin-sidebar-item').forEach(function(item){
+    var onclick=item.getAttribute('onclick')||'';
+    var m=onclick.match(/adminNav\('([^']+)'\)/);
+    if(m){item.style.display=visibleSecs[m[1]]?'':'none';}
+  });
+
+  // Nasconde i gruppi con tutti i figli nascosti
+  document.querySelectorAll('.admin-sidebar-group').forEach(function(grp){
+    var visible=Array.prototype.filter.call(grp.querySelectorAll('.admin-sidebar-item'),function(i){return i.style.display!=='none';});
+    grp.style.display=visible.length>0?'':'none';
+  });
+}
+
+function aboSimulateRole(role){
+  window._aboSimulating=role||null;
+  var banner=document.getElementById('abo-sim-banner');
+  var lbl=document.getElementById('abo-sim-label');
+  if(window._aboSimulating){
+    if(banner)banner.style.display='block';
+    if(lbl)lbl.textContent=ABO_SIM_LABELS[role]||role;
+  }else{
+    if(banner)banner.style.display='none';
+    var sel=document.getElementById('abo-sim-select');if(sel)sel.value='';
+  }
+  aboRenderSidebarPermissions();
+}
+
 // FASE 2 PR-B2 · merge landings: 3 voci di sidebar mostrano insieme le rispettive
 // sotto-sezioni (in DOM order). Tabification piena di status-filter su Pipeline
 // airdrop deferita a PR-B3. Map: landing → siblings da mostrare in linea sotto.
