@@ -1290,8 +1290,14 @@ async function toggleWatchlist(id,e){
     else{_watchlist=_watchlist.filter(function(w){return w!==id});showToast('<span class="it">Rimosso dai preferiti</span><span class="en">Removed from favorites</span>');}
     renderGrid();
     if(_currentDetail&&_currentDetail.id===id){
+      // GS-8 reopen 24 May: toggla solo .active sul .heart-btn-v2 esistente.
+      // Sostituire className con 'heart-btn' (vecchia classe card position:absolute)
+      // teleportava il cuore in alto a destra del viewport (ROBY catch).
       var hb=document.getElementById('detail-heart');
-      if(hb)hb.className=isInWatchlist(id)?'heart-btn active':'heart-btn';
+      if(hb){
+        if(isInWatchlist(id))hb.classList.add('active');
+        else hb.classList.remove('active');
+      }
     }
   }
 }
@@ -2354,12 +2360,19 @@ async function openDetail(id){
   var valBanner=document.getElementById('val-banner');
   if(valBanner)valBanner.style.display='none';
   document.getElementById('cat-filter').style.display='none';
-  // GS-9 #1 · nascondi banner Alpha marketplace + barra ricerca quando si apre il detail
-  // (la pagina deve APRIRSI sul dettaglio, non sul marketplace renderizzato sopra)
+  // GS-9 #1 · nascondi marketplace renderizzato sopra il dettaglio
+  // (la pagina deve APRIRSI sul dettaglio, non sul marketplace)
+  // Reopen 24 May: aggiunti explore-hero-slim, explore-toolbar, cat-dashboard (ROBY catch)
   var mbAlpha=document.querySelector('.marketplace-demo-banner');
   if(mbAlpha)mbAlpha.style.display='none';
   var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
   if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='none';}
+  var heroSlim=document.querySelector('.explore-hero-slim');
+  if(heroSlim)heroSlim.style.display='none';
+  var exToolbar=document.getElementById('explore-toolbar');
+  if(exToolbar)exToolbar.style.display='none';
+  var catDash=document.getElementById('cat-dashboard');
+  if(catDash)catDash.style.display='none';
   document.getElementById('detail').classList.add('active');
   showTopbarCR(id);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -2733,7 +2746,18 @@ async function updateAutoBuyBanner(airdropId){
     +'<span class="it">sta comprando '+rule.blocks_per_interval+' blocchi ogni '+intervalLabel+' per te</span>'
     +'<span class="en">buying '+rule.blocks_per_interval+' blocks every '+intervalLabel+' for you</span>'
     +' · <span class="ab-banner-prog">'+rule.total_bought+'/'+rule.max_blocks+'</span></span>'
-    +'<a href="#auto-buy-box" class="ab-banner-link" onclick="event.preventDefault();var el=document.getElementById(\'auto-buy-box\');if(el)el.scrollIntoView({behavior:\'smooth\',block:\'start\'})"><span class="it">gestisci</span><span class="en">manage</span></a>';
+    +'<a href="#auto-buy-box" class="ab-banner-link" onclick="event.preventDefault();scrollToAutoBuyBox();return false;"><span class="it">gestisci</span><span class="en">manage</span></a>';
+}
+
+// GS-12 reopen 24 May · scroll robusto a #auto-buy-box con offset topbar (62px sticky).
+// scrollIntoView nudo non bastava (ROBY catch: scrollY non si muoveva, hash URL invariato).
+function scrollToAutoBuyBox(){
+  var el=document.getElementById('auto-buy-box');
+  if(!el)return;
+  var rect=el.getBoundingClientRect();
+  var topOffset=62+8; // topbar height + small padding
+  var targetY=window.pageYOffset+rect.top-topOffset;
+  window.scrollTo({top:targetY,behavior:'smooth'});
 }
 
 // GS-15 · Hint "~X blocchi per il 1°" + riga soglia "⚠ Tra ~N blocchi venduti…"
@@ -2746,7 +2770,12 @@ async function loadHintSoglia(airdropId){
     if(!cm||typeof cm!=='object'){el.innerHTML='';return;}
     var blocksToOvertake=Number(cm.blocks_to_overtake_leader||0);
     var ariaCost=Number(cm.aria_cost_to_overtake||0);
-    var isLeader=Number(cm.user_blocks_current)>0 && blocksToOvertake===0;
+    // GS-15 minor reopen 24 May: rank dal box "Sei 1°…" è authoritative.
+    // compute_checkmate_blocks può tornare blocks=1 anche con utente già 1°
+    // (tie-breaker score). _myRanks[airdropId].rank===1 → utente è 1° davvero.
+    var myRank=_myRanks[airdropId]&&_myRanks[airdropId].rank;
+    var isLeader=(Number(cm.user_blocks_current)>0 && blocksToOvertake===0)
+              || myRank===1;
     // Soglia via fairness_threshold_remaining
     var threshold=null;
     try{
@@ -2893,6 +2922,8 @@ function updateDetailPosition(airdropId,scores){
   _myRanks[airdropId]={rank:pos,total:total,score:_ms?.score||0,blocks:_ms?.blocks||0,aria_spent:_ms?.aria_spent||0};
   // Update strategy guide with live data
   updateStrategyGuide(scores,pos,total,myScore);
+  // GS-15 minor reopen 24 May: re-sync hint soglia con rank live (path isLeader).
+  if(_currentDetail&&_currentDetail.id===airdropId&&_session&&_session.user)loadHintSoglia(airdropId);
 }
 
 // ── Strategy Guide (engagement · Scoring v5) ──
@@ -3318,11 +3349,17 @@ function backToList(){
   document.getElementById('list-view').classList.remove('hidden');
   document.getElementById('list-view').style.display='';
   document.getElementById('cat-filter').style.display='';
-  // GS-9 #1 · ripristina banner Alpha + ricerca all'uscita dal detail
+  // GS-9 #1 · ripristina elementi marketplace nascosti in openDetail
   var mbAlpha=document.querySelector('.marketplace-demo-banner');
   if(mbAlpha)mbAlpha.style.display='';
   var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
   if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='';}
+  var heroSlim=document.querySelector('.explore-hero-slim');
+  if(heroSlim)heroSlim.style.display='';
+  var exToolbar=document.getElementById('explore-toolbar');
+  if(exToolbar)exToolbar.style.display='';
+  var catDash=document.getElementById('cat-dashboard');
+  if(catDash)catDash.style.display='';
   hideTopbarCR();
   loadValuationCount();
   history.pushState({page:'explore'},null,'/airdrops');

@@ -1028,8 +1028,9 @@ select option{background:var(--gray-800);color:var(--white)}
    GS-8 header (♡+⤴ chiaro)  GS-10 A/B  GS-12 banner top  GS-15 riga soglia
    ════════════════════════════════════════════════════════════════ */
 
-/* GS-12 · Banner AUTO-BUY attivo on-top (full-width, only shown se rule active) */
-.detail-autobuy-banner{display:flex;align-items:center;gap:12px;padding:10px 16px;margin:0 0 20px;background:linear-gradient(90deg,rgba(74,158,255,.14),rgba(74,158,255,.04));border:1px solid rgba(74,158,255,.35);border-radius:var(--radius-sm);font-size:12.5px;color:var(--white);line-height:1.4;flex-wrap:wrap}
+/* GS-12 · Banner AUTO-BUY attivo · sticky persistente sotto topbar (62px) */
+/* Reopen 24 May: position:sticky + top:62px + z-index:99 (sotto topbar z:100) */
+.detail-autobuy-banner{position:sticky;top:62px;z-index:99;display:flex;align-items:center;gap:12px;padding:10px 16px;margin:0 0 20px;background:rgba(11,18,34,.96);border:1px solid rgba(74,158,255,.45);border-radius:var(--radius-sm);font-size:12.5px;color:var(--white);line-height:1.4;flex-wrap:wrap;backdrop-filter:blur(12px) saturate(1.4);-webkit-backdrop-filter:blur(12px) saturate(1.4);box-shadow:0 2px 12px rgba(0,0,0,.3)}
 .detail-autobuy-banner .ab-banner-icon{color:var(--aria);flex-shrink:0;display:inline-flex;align-items:center}
 .detail-autobuy-banner .ab-banner-text{flex:1;min-width:0}
 .detail-autobuy-banner .ab-banner-text strong{color:var(--aria);font-family:var(--font-m);letter-spacing:1.5px;font-size:10px;text-transform:uppercase}
