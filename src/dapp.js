@@ -2573,6 +2573,9 @@ async function openDetail(id){
     // §4.6 · Pannello acquisto above-the-fold (o outcome se concluded)
     +buyBoxHtml
 
+    // GS-16 · aggancio "scopri ROBI nel rullo" (populated by loadRulloHook)
+    +(!isConcluded?'<div class="detail-rullo-hook" id="detail-rullo-hook"></div>':'')
+
     // GS-10 §4.7 · Come arrivare 1° A/B collapsible (populated by updateStrategyGuide)
     +(!isConcluded?'<div class="detail-strategy detail-strategy-ab" id="detail-strategy"></div>':'')
 
@@ -2699,9 +2702,33 @@ async function openDetail(id){
 
     // GS-15 · hint blocchi per 1° + soglia threshold (loadHintSoglia)
     loadHintSoglia(a.id);
+    // GS-16 · aggancio "scopri ROBI nel rullo" (loadRulloHook)
+    loadRulloHook(a.id);
   }else if(_positionInterval){
     clearInterval(_positionInterval);_positionInterval=null;
   }
+}
+
+// GS-16 · aggancio "scopri ROBI nel rullo" — copy ROBY locked Skeezu (rullo formula B)
+async function loadRulloHook(airdropId){
+  var el=document.getElementById('detail-rullo-hook');
+  if(!el)return;
+  try{
+    var token=_session?await getValidToken():null;
+    var r=await sbRpc('get_airdrop_rullo_count',{p_airdrop_id:airdropId},token);
+    if(!r||typeof r!=='object'){el.innerHTML='';return;}
+    var total=Number(r.total||0);
+    var outstanding=Number(r.outstanding||0);
+    if(total<=0){el.innerHTML='';return;}
+    // Mostra solo quanti ROBI il rullo nasconde · MAI dove (no spoiler)
+    var countLine=outstanding>0
+      ?'<strong>'+outstanding.toLocaleString('it-IT')+'</strong> <span class="it">ROBI ancora nel rullo</span><span class="en">ROBI still in the reel</span>'
+      :'<span class="it">Tutti i ROBI del rullo sono stati trovati</span><span class="en">All reel ROBI found</span>';
+    el.innerHTML=''
+      +'<div class="rullo-hook-head">'+UI_ICONS.gem+' <span class="rullo-hook-title"><span class="it">Il rullo ROBI</span><span class="en">The ROBI reel</span></span></div>'
+      +'<p class="rullo-hook-copy"><span class="it">Alcuni blocchi nascondono un ROBI. Minali e scopri quali — il ROBI trovato è subito tuo, sul wallet.</span><span class="en">Some blocks hide a ROBI. Mine them and find out which — the ROBI you find is yours instantly, on your wallet.</span></p>'
+      +'<div class="rullo-hook-count">'+countLine+'</div>';
+  }catch(e){el.innerHTML='';}
 }
 
 // GS-8 · Condividi airdrop (Web Share API native + clipboard fallback)
@@ -3446,6 +3473,25 @@ async function confirmBuy(){
       showToast(lang==='it'
         ?data.blocks_bought+' '+(data.blocks_bought===1?'blocco acquisito':'blocchi acquisiti')+' per '+data.aria_spent+' ARIA'
         :data.blocks_bought+' block'+(data.blocks_bought===1?'':'s')+' purchased for '+data.aria_spent+' ARIA');
+
+      // GS-16 · IL RULLO ROBI · reveal post-mining (accredito istantaneo backend Chunk 3)
+      var revealedRobi=Number(data.revealed_robi_total||0);
+      if(revealedRobi>0){
+        // Toast distinto · tono caccia
+        setTimeout(function(){
+          showToast(lang==='it'
+            ?'<span style="color:var(--gold)">&#9830; +'+revealedRobi+' ROBI</span> &middot; trovato nel rullo! Subito sul wallet.'
+            :'<span style="color:var(--gold)">&#9830; +'+revealedRobi+' ROBI</span> &middot; found in the reel! Instant on your wallet.');
+        },800);
+        // Refresh saldo ROBI in topbar (delta-style · evita full re-fetch)
+        var robiEl=document.getElementById('tb-robi-val');
+        if(robiEl){
+          var cur=parseFloat(robiEl.textContent)||0;
+          robiEl.textContent=Math.round((cur+revealedRobi)*100)/100;
+          robiEl.parentElement&&robiEl.parentElement.classList.add('robi-flash');
+          setTimeout(function(){robiEl.parentElement&&robiEl.parentElement.classList.remove('robi-flash')},2400);
+        }
+      }
 
       // Mining animation — calculate ROBI discovery
       var oldMyBlocks=_gridData?_gridData.filter(function(b){return b.is_mine}).length:0;
