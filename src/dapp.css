@@ -1022,6 +1022,78 @@ select option{background:var(--gray-800);color:var(--white)}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
 .my-tab:hover{color:var(--white) !important}
 
+/* ══════════════════════════════════════════════════════════════════
+   Track B cluster (mini-spec GS-9 LOCKED) · /dapp/airdrop/:id redesign
+   GS-9 layout 2-col competitivo SX / immagine DX (desktop)
+   GS-8 header (♡+⤴ chiaro)  GS-10 A/B  GS-12 banner top  GS-15 riga soglia
+   ════════════════════════════════════════════════════════════════ */
+
+/* GS-12 · Banner AUTO-BUY attivo on-top (full-width, only shown se rule active) */
+.detail-autobuy-banner{display:flex;align-items:center;gap:12px;padding:10px 16px;margin:0 0 20px;background:linear-gradient(90deg,rgba(74,158,255,.14),rgba(74,158,255,.04));border:1px solid rgba(74,158,255,.35);border-radius:var(--radius-sm);font-size:12.5px;color:var(--white);line-height:1.4;flex-wrap:wrap}
+.detail-autobuy-banner .ab-banner-icon{color:var(--aria);flex-shrink:0;display:inline-flex;align-items:center}
+.detail-autobuy-banner .ab-banner-text{flex:1;min-width:0}
+.detail-autobuy-banner .ab-banner-text strong{color:var(--aria);font-family:var(--font-m);letter-spacing:1.5px;font-size:10px;text-transform:uppercase}
+.detail-autobuy-banner .ab-banner-prog{font-family:var(--font-m);font-size:11px;color:var(--gray-300)}
+.detail-autobuy-banner .ab-banner-link{flex-shrink:0;color:var(--aria);text-decoration:underline;font-family:var(--font-m);font-size:11px;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
+.detail-autobuy-banner .ab-banner-link:hover{color:var(--white)}
+
+/* GS-9 · Layout 2-col INVERTITO: competitivo SX, immagine DX (mini-spec direttiva Skeezu) */
+.detail-split-v2{display:flex;flex-direction:column;gap:0}
+.detail-competitive-col{order:1;flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
+.detail-gallery-v2{order:2;width:100%;position:relative;aspect-ratio:1;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius-lg);overflow:hidden;margin-top:20px;margin-bottom:20px}
+@media(min-width:960px){
+  .detail-split-v2{flex-direction:row;gap:32px;align-items:flex-start}
+  .detail-competitive-col{order:1;flex:1;max-width:600px}
+  .detail-gallery-v2{order:2;width:45%;max-width:480px;flex-shrink:0;position:sticky;top:20px;margin-top:0;margin-bottom:0;aspect-ratio:auto;height:calc(100vh - 100px);border-radius:var(--radius-lg)}
+}
+
+/* GS-8 · Header (categoria + ♡ + ⤴) — sfondo chiaro per heart visible */
+.detail-header-v2{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.detail-cat-v2{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase;text-decoration:none;transition:color .2s}
+.detail-cat-v2:hover{color:var(--gold)}
+.detail-header-actions{display:flex;gap:8px;flex-shrink:0}
+.heart-btn-v2,.share-btn-v2{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;background:rgba(255,255,255,.05);border:1px solid var(--gray-700);border-radius:50%;color:var(--gray-300);font-size:18px;cursor:pointer;transition:all .2s;padding:0}
+.heart-btn-v2:hover,.share-btn-v2:hover{background:rgba(184,150,12,.1);border-color:var(--gold);color:var(--gold)}
+.heart-btn-v2.active{background:rgba(220,38,38,.12);border-color:#dc2626;color:#dc2626}
+.heart-btn-v2.active::after{content:'\2665';position:absolute}
+.heart-btn-v2.active{color:transparent}
+.heart-btn-v2.active::before{content:'\2665';color:#dc2626;font-size:18px}
+
+/* GS-9 · Titolo + chip fase (§4.3) */
+.detail-title-v2{font-family:var(--font-h);font-size:clamp(22px,4vw,32px);font-weight:300;color:var(--white);line-height:1.15;margin:0 0 4px}
+.detail-phase-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:8px}
+.detail-chip-fase{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:var(--radius-pill,999px);border:1px solid}
+.detail-chip-fase.presale{color:var(--aria);background:rgba(74,158,255,.06);border-color:rgba(74,158,255,.3)}
+.detail-chip-fase.active{color:var(--kas);background:rgba(73,234,203,.06);border-color:rgba(73,234,203,.3)}
+.detail-chip-fase.closed{color:var(--gray-400);background:rgba(255,255,255,.03);border-color:var(--gray-700)}
+.detail-chip-fase.cancelled{color:#f87171;background:rgba(248,113,113,.06);border-color:rgba(248,113,113,.3)}
+.detail-chip-fase.waiting{color:var(--gold);background:rgba(184,150,12,.06);border-color:rgba(184,150,12,.3)}
+.detail-phase-time{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.5px}
+
+/* GS-15 · Riga hint "~X blocchi per il 1°" + riga soglia "⚠ Tra ~N…" */
+.detail-hint-soglia{display:flex;flex-direction:column;gap:6px;margin:6px 0}
+.detail-hint-soglia .hint-row{padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;line-height:1.45;display:flex;align-items:flex-start;gap:8px}
+.detail-hint-soglia .hint-target{background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.28);color:var(--white)}
+.detail-hint-soglia .hint-target strong{color:var(--gold)}
+.detail-hint-soglia .hint-leader{background:rgba(73,234,203,.06);border:1px solid rgba(73,234,203,.28);color:var(--white)}
+.detail-hint-soglia .hint-soglia{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.28);color:var(--gray-200)}
+.detail-hint-soglia .hint-soglia strong{color:#f59e0b}
+.detail-hint-soglia .hint-soglia-out{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.32);color:#f87171}
+.detail-hint-soglia .hint-aria-cost{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.5px}
+
+/* GS-10 · "Come arrivare 1°" A/B collapsible */
+.detail-strategy-ab .strategy-box{position:relative}
+.detail-strategy-ab .strategy-ab-header{display:flex;justify-content:space-between;align-items:center;width:100%;background:none;border:none;padding:14px 16px 10px;cursor:pointer;color:inherit;text-align:left;font-family:inherit;font-size:inherit}
+.detail-strategy-ab .strategy-ab-header:hover{background:rgba(255,255,255,.02)}
+.detail-strategy-ab .strategy-ab-chevron{color:var(--gray-400);transition:transform .25s;flex-shrink:0}
+.detail-strategy-ab .strategy-box.gs10-open .strategy-ab-chevron{transform:rotate(180deg)}
+.detail-strategy-ab .strategy-ab-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.detail-strategy-ab .strategy-box.gs10-open .strategy-ab-body{max-height:3000px}
+
+/* §4.8 · Sotto la piega ricollocato */
+.detail-below-v2{margin-top:36px;padding-top:24px;border-top:1px solid var(--gray-800)}
+.detail-below-v2 .product-info-v2{margin-bottom:24px}
+
 /* ── Topbar ROBI price pill (GS-6) — accanto al saldo ROBI, link a ROBI Explorer ── */
 .topbar-robi-price{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:.5px;background:rgba(184,150,12,.04);padding:5px 10px;border-radius:24px;border:1px solid rgba(184,150,12,.18);display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:background .2s,border-color .2s;cursor:pointer}
 .topbar-robi-price:hover{background:rgba(184,150,12,.12);border-color:rgba(184,150,12,.4)}

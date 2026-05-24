@@ -2354,6 +2354,12 @@ async function openDetail(id){
   var valBanner=document.getElementById('val-banner');
   if(valBanner)valBanner.style.display='none';
   document.getElementById('cat-filter').style.display='none';
+  // GS-9 #1 · nascondi banner Alpha marketplace + barra ricerca quando si apre il detail
+  // (la pagina deve APRIRSI sul dettaglio, non sul marketplace renderizzato sopra)
+  var mbAlpha=document.querySelector('.marketplace-demo-banner');
+  if(mbAlpha)mbAlpha.style.display='none';
+  var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
+  if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='none';}
   document.getElementById('detail').classList.add('active');
   showTopbarCR(id);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -2452,38 +2458,128 @@ async function openDetail(id){
     +'</div>'
     :'';
 
-  var html=''
-    // ══ SPLIT LAYOUT ══
-    +'<div class="detail-split">'
+  // Track B redesign (cluster GS-8/9/10/12/15 · mini-spec GS-9 LOCKED)
+  // GS-9: gerarchia above-the-fold = competitivo · sotto = scheda prodotto
+  // GS-9 layout: 2-col desktop con competitivo a SX (.detail-split-v2 invertito)
+  // GS-12 banner top: detail-autobuy-banner-top, populated by updateAutoBuyBanner()
+  // GS-8 header: .detail-header-v2 con categoria + ♡ + ⤴ (heart-btn-v2 sfondo chiaro, share-btn-v2 nuovo)
+  // GS-15 riga soglia: detail-hint-soglia, populated by loadHintSoglia()
+  // GS-10 A/B: detail-strategy collapsible, gestito in updateStrategyGuide()
 
-    // ── LEFT: GALLERY ──
-    +'<div class="detail-gallery" id="detail-gallery">'
+  // Chip fase basato su status
+  var phaseChip='';
+  if(!isConcluded){
+    if(isPresale)phaseChip='<span class="detail-chip-fase presale">● <span class="it">PRESALE · apre per il sale a chiusura</span><span class="en">PRESALE</span></span>';
+    else if(a.status==='sale')phaseChip='<span class="detail-chip-fase active">● <span class="it">ATTIVO</span><span class="en">ACTIVE</span></span>';
+  } else if(a.status==='completed')phaseChip='<span class="detail-chip-fase closed">● <span class="it">CONCLUSO</span><span class="en">CLOSED</span></span>';
+  else if(a.status==='annullato')phaseChip='<span class="detail-chip-fase cancelled">● <span class="it">ANNULLATO</span><span class="en">CANCELLED</span></span>';
+  else if(a.status==='waiting_seller_acknowledge')phaseChip='<span class="detail-chip-fase waiting">● <span class="it">IN ATTESA</span><span class="en">WAITING</span></span>';
+
+  // Build pezzi riusabili (riordinati per nuova gerarchia)
+  var galleryHtml=''
+    +'<div class="detail-gallery detail-gallery-v2" id="detail-gallery">'
     +'<div class="gallery-track" id="gallery-track">'+slidesHtml+'</div>'
     +playerHtml
     +'<div class="product-badge" style="position:absolute;top:14px;left:14px;z-index:2">Airdrop</div>'
+    +'</div>';
+
+  // GS-8 header: categoria + ♡ + ⤴ (heart sfondo chiaro)
+  var titleSafe=(a.title||'').replace(/'/g,"\\'");
+  var headerV2=''
+    +'<div class="detail-header-v2">'
+    +'<a href="#" class="detail-cat-v2" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false">'
+    +(CAT_ICONS[a.category]||'')+' <span class="it">AIRDROP · '+a.category+'</span><span class="en">AIRDROP · '+a.category+'</span>'
+    +'</a>'
+    +'<div class="detail-header-actions">'
+    +'<button class="heart-btn-v2'+(isInWatchlist(a.id)?' active':'')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" title="Preferito" aria-label="Aggiungi ai preferiti">&#9825;</button>'
+    +'<button class="share-btn-v2" onclick="shareAirdrop(\''+a.id+'\',\''+titleSafe+'\')" title="Condividi" aria-label="Condividi airdrop">'
+    +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>'
+    +'</button>'
     +'</div>'
-    +'<div class="detail-below-gallery"><button class="'+(isInWatchlist(a.id)?'heart-btn detail active':'heart-btn detail')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')">&#9825;</button></div>'
+    +'</div>';
 
-    // ── RIGHT: CONTENT ──
-    +'<div class="detail-right" id="detail-right">'
+  // Hint + soglia (GS-15 §4.5) · async populated
+  var hintSogliaStub=!isConcluded?'<div id="detail-hint-soglia" class="detail-hint-soglia"></div>':'';
 
-    // Product info
-    +'<div class="product-info">'
+  // Buy box (acquisto subito sotto soglia — §4.6 above-the-fold)
+  var buyBoxHtml=isConcluded
+    ?_renderOutcomePanel(a,myBlocks,_outcomeRobi)
+    :_publicMode
+    ?'<div class="buy-box">'
+    +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
+    +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi in questo airdrop.</span><span class="en">Sign up free to earn ARIA every day and buy blocks in this airdrop.</span></p>'
+    +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>'
+    +'<a href="/login?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" style="display:block;text-align:center;margin-top:10px;color:var(--gray-400);font-size:13px;text-decoration:none"><span class="it">Hai gi&agrave; un account? Accedi</span><span class="en">Already have an account? Log in</span></a>'
+    +'</div>'
+    :'<div class="buy-box">'
+    +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
+    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
+    +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
+    +'<div class="buy-display">'
+    +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
+    +'<div class="buy-display-cost" id="buy-display-cost">= '+effectivePrice+' '+tokIcon('ARIA')+'</div>'
+    +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
+    +'</div>'
+    +'<div class="buy-slider-wrap">'
+    +'<input type="range" class="buy-slider" id="buy-slider" min="1" max="'+(maxBuy||1)+'" value="1" '+(maxBuy<1?'disabled':'')+' oninput="onSlider()">'
+    +'<div class="buy-slider-labels"><span>1</span><span>'+(maxBuy||0)+'</span></div>'
+    +'</div>'
+    +'<div class="buy-presets">'
+    +(maxBuy>=5?'<button class="buy-preset" onclick="setSlider(5)">5</button>':'')
+    +(maxBuy>=10?'<button class="buy-preset" onclick="setSlider(10)">10</button>':'')
+    +(maxBuy>=25?'<button class="buy-preset" onclick="setSlider(25)">25</button>':'')
+    +(maxBuy>=50?'<button class="buy-preset" onclick="setSlider(50)">50</button>':'')
+    +(maxBuy>0?'<button class="buy-preset" onclick="setSlider('+maxBuy+')">Max</button>':'')
+    +'</div>'
+    +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
+    +(remaining>0&&maxBuy>=1
+      ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
+      :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
+    +'</button>'
+    +'<div class="buy-msg" id="buy-msg"></div>'
+    +'</div>';
+
+  var html=''
+    // GS-12 · Banner AUTO-BUY attivo on-top (populated by updateAutoBuyBanner)
+    +'<div id="detail-autobuy-banner" class="detail-autobuy-banner" style="display:none"></div>'
+
+    // GS-9 · 2-col split (competitivo SX, immagine DX)
+    +'<div class="detail-split detail-split-v2">'
+
+    // ── COL SX: competitivo (above-the-fold §4.1-4.7) ──
+    +'<div class="detail-right detail-competitive-col" id="detail-right">'
+
+    +headerV2
+
+    // Titolo + chip fase (§4.3)
+    +'<h1 class="detail-title-v2">'+a.title+'</h1>'
+    +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
+
+    // Box competitivo §4.4 (posizione live · populated by refreshPosition)
+    +(!isConcluded?'<div class="detail-position" id="detail-position"></div>':'')
+
+    // Hint "~X blocchi per il 1°" + soglia GS-15 (§4.5 · populated by loadHintSoglia)
+    +hintSogliaStub
+
+    // §4.6 · Pannello acquisto above-the-fold (o outcome se concluded)
+    +buyBoxHtml
+
+    // GS-10 §4.7 · Come arrivare 1° A/B collapsible (populated by updateStrategyGuide)
+    +(!isConcluded?'<div class="detail-strategy detail-strategy-ab" id="detail-strategy"></div>':'')
+
+    +'</div>' // close detail-right
+
+    // ── COL DX: immagine + prezzo (mini-spec wireframe) ──
+    +galleryHtml
+
+    +'</div>' // close detail-split
+
+    // ══════════ FINE ABOVE-THE-FOLD · §4.8 SOTTO LA PIEGA ══════════
+    +'<div class="detail-below-v2">'
+
+    // Prezzo + presale info (resta accessibile, ora sotto-piega come "scheda prodotto")
+    +'<div class="product-info-v2">'
     +(brand?'<div class="product-brand">'+brand+'</div>':'')
-    +'<h2 class="product-title">'+a.title+'</h2>'
-    +(a.description?'<p class="product-desc">'+a.description+'</p>':'')
-    +(model?'<div class="product-model">'+model+'</div>':'')
-    +(condition?'<div class="product-condition">'+condition+'</div>':'')
-    // Product details inline (under title)
-    +(highlights.length>0
-      ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
-      :'')
-    +(included.length>0
-      ?'<div class="product-included-label"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
-      +'<ul class="product-included">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
-      :'')
-    +'<div class="detail-cat"><a href="#" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s" onmouseover="this.style.opacity=\'.7\'" onmouseout="this.style.opacity=\'1\'">'+(CAT_ICONS[a.category]||'')+' '+a.category+'</a></div>'
-    +durationBadge(a.duration_type)
     +'<div class="product-price-row">'
     +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' '+tokIcon('ARIA',18)+'</div>'
     +'<div class="product-price-aria">'
@@ -2493,9 +2589,20 @@ async function openDetail(id){
     +'</div>'
     +'</div>'
     +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>&#9935; 2x MINING BOOST</strong> — <span class="it">Compra in presale e guadagna il doppio dei ROBI</span><span class="en">Buy in presale and earn 2x ROBI</span></div>':'')
+    +(a.description?'<p class="product-desc">'+a.description+'</p>':'')
+    +(model?'<div class="product-model">'+model+'</div>':'')
+    +(condition?'<div class="product-condition">'+condition+'</div>':'')
+    +(highlights.length>0
+      ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
+      :'')
+    +(included.length>0
+      ?'<div class="product-included-label"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
+      +'<ul class="product-included">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
+      :'')
+    +durationBadge(a.duration_type)
     +'</div>'
 
-    // ── ACCORDION SECTIONS ──
+    // Accordion dettagli airdrop
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
       +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA')+'</strong></li>'
@@ -2505,35 +2612,18 @@ async function openDetail(id){
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
 
-    // DIVIDER → PARTECIPA (solo airdrop live)
-    +(!isConcluded
-      ?'<div class="product-divider">'
-      +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
-      +'<p class="product-participate-sub"><span class="it">Ogni blocco ti fa guadagnare ROBI — il loro valore cresce nel tempo</span><span class="en">Each block earns you ROBI — their value grows over time</span></p>'
-      +'</div>'
-      :'')
-
-    // MY BLOCKS badge
+    // I tuoi blocchi (badge sintetico)
     +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">investiti</span><span class="en">invested</span></div>':'')
 
-    // MINE TOWER 3D
+    // Mine Tower 3D
     +buildMineTower(a,myBlocks)
 
-    // STATS
+    // Mini stats Rimasti/per blocco/per ROBI
     +'<div class="detail-stats">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+effectivePrice+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">blocchi per</span><span class="en">blocks per</span> '+tokIcon('ROBI')+'</div></div>'
     +'</div>'
-
-    // Live countdown (solo airdrop live)
-    +(!isConcluded&&a.deadline?'<div class="detail-countdown" id="detail-countdown" data-deadline="'+a.deadline+'"></div>':'')
-
-    // Position live (solo airdrop live)
-    +(!isConcluded?'<div class="detail-position" id="detail-position"></div>':'')
-
-    // Strategy guide (solo airdrop live)
-    +(!isConcluded?'<div class="detail-strategy" id="detail-strategy"></div>':'')
 
     // MY STATS panel (solo airdrop live)
     +(!isConcluded&&myBlocks>0&&!_publicMode?
@@ -2544,46 +2634,7 @@ async function openDetail(id){
     +'</div>'
     :'')
 
-    // BUY BOX (live) · PANNELLO ESITO (concluso · PR-5 F8)
-    +(isConcluded
-      ?_renderOutcomePanel(a,myBlocks,_outcomeRobi)
-      :_publicMode
-      ?'<div class="buy-box">'
-      +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
-      +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi in questo airdrop.</span><span class="en">Sign up free to earn ARIA every day and buy blocks in this airdrop.</span></p>'
-      +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>'
-      +'<a href="/login?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" style="display:block;text-align:center;margin-top:10px;color:var(--gray-400);font-size:13px;text-decoration:none"><span class="it">Hai gi&agrave; un account? Accedi</span><span class="en">Already have an account? Log in</span></a>'
-      +'</div>'
-      :'<div class="buy-box">'
-      +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-      +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
-      +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
-      +'<div class="buy-display">'
-      +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-      +'<div class="buy-display-cost" id="buy-display-cost">= '+effectivePrice+' '+tokIcon('ARIA')+'</div>'
-      +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
-      +'</div>'
-      +'<div class="buy-slider-wrap">'
-      +'<input type="range" class="buy-slider" id="buy-slider" min="1" max="'+(maxBuy||1)+'" value="1" '+(maxBuy<1?'disabled':'')+' oninput="onSlider()">'
-      +'<div class="buy-slider-labels"><span>1</span><span>'+(maxBuy||0)+'</span></div>'
-      +'</div>'
-      +'<div class="buy-presets">'
-      +(maxBuy>=5?'<button class="buy-preset" onclick="setSlider(5)">5</button>':'')
-      +(maxBuy>=10?'<button class="buy-preset" onclick="setSlider(10)">10</button>':'')
-      +(maxBuy>=25?'<button class="buy-preset" onclick="setSlider(25)">25</button>':'')
-      +(maxBuy>=50?'<button class="buy-preset" onclick="setSlider(50)">50</button>':'')
-      +(maxBuy>0?'<button class="buy-preset" onclick="setSlider('+maxBuy+')">Max</button>':'')
-      +'</div>'
-      +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
-      +(remaining>0&&maxBuy>=1
-        ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
-        :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
-      +'</button>'
-      +'<div class="buy-msg" id="buy-msg"></div>'
-      +'</div>'
-    )
-
-    // AUTO-BUY (solo airdrop live)
+    // AUTO-BUY config (solo airdrop live) — toggle attivazione resta in fondo (mini-spec §4.8)
     +(!isConcluded&&myBlocks>0?
     '<div class="auto-buy-box" id="auto-buy-box">'
     +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">'+UI_ICONS.zap+' AUTO-BUY</div>'
@@ -2601,9 +2652,14 @@ async function openDetail(id){
     +'</div>'
     :'')
 
-    +'</div>' // close detail-right
+    // CTA "Hai un oggetto di valore?" (sotto-la-piega §4.8)
+    +(!_publicMode?'<div class="detail-cta-fai-valutare" style="margin-top:24px;padding:18px 20px;border:1px solid rgba(184,150,12,.25);background:rgba(184,150,12,.04);border-radius:var(--radius-sm);text-align:center">'
+    +'<div style="font-family:var(--font-h);font-size:18px;color:var(--white);margin-bottom:6px"><span class="it">Hai un oggetto di valore?</span><span class="en">Got a valuable item?</span></div>'
+    +'<p style="font-size:13px;color:var(--gray-400);margin-bottom:12px;line-height:1.5"><span class="it">Lo facciamo valutare gratis e, se rientra nei criteri, parte come airdrop.</span><span class="en">We evaluate it free and, if it qualifies, it becomes an airdrop.</span></p>'
+    +'<button onclick="navigateTo(\'submit\')" style="background:var(--gold);color:#000;border:none;padding:10px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">FAI VALUTARE →</span><span class="en">GET EVALUATED →</span></button>'
+    +'</div>':'')
 
-    +'</div>'; // close detail-split
+    +'</div>'; // close detail-below-v2
 
   document.getElementById('detail-content').innerHTML=html;
 
@@ -2626,11 +2682,97 @@ async function openDetail(id){
     // Detail stats (ROBI projection, %, history)
     if(myBlocks>0&&!_publicMode)loadDetailStats(a.id);
 
-    // Auto-buy status
-    if(myBlocks>0)loadAutoBuyStatus(a.id);
+    // Auto-buy status (config btn label) + banner top GS-12
+    if(myBlocks>0){
+      loadAutoBuyStatus(a.id);
+      updateAutoBuyBanner(a.id);
+    }
+
+    // GS-15 · hint blocchi per 1° + soglia threshold (loadHintSoglia)
+    loadHintSoglia(a.id);
   }else if(_positionInterval){
     clearInterval(_positionInterval);_positionInterval=null;
   }
+}
+
+// GS-8 · Condividi airdrop (Web Share API native + clipboard fallback)
+async function shareAirdrop(airdropId,title){
+  var url=location.origin+'/dapp/airdrop/'+airdropId;
+  var shareData={title:title?(title+' — AIROOBI'):'AIROOBI airdrop',text:'Guarda questo airdrop su AIROOBI',url:url};
+  try{
+    if(navigator.share){await navigator.share(shareData);return;}
+  }catch(e){if(e&&e.name==='AbortError')return;}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(url);
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      showToast(lang==='it'?'Link copiato negli appunti':'Link copied to clipboard','success');
+      return;
+    }
+  }catch(_){ }
+  // ultimo fallback: prompt
+  try{prompt('Copia il link:',url);}catch(_){ }
+}
+
+// GS-12 · Banner AUTO-BUY attivo on-top (mostra solo se rule attiva)
+async function updateAutoBuyBanner(airdropId){
+  var banner=document.getElementById('detail-autobuy-banner');
+  if(!banner)return;
+  var rule=await loadAutoBuyRule(airdropId);
+  if(!rule||!rule.active){
+    banner.style.display='none';
+    banner.innerHTML='';
+    return;
+  }
+  var h=parseFloat(rule.interval_hours);
+  var intervalLabel=h<1?Math.round(h*60)+'min':h+'h';
+  banner.style.display='';
+  banner.innerHTML=''
+    +'<span class="ab-banner-icon">'+UI_ICONS.zap+'</span>'
+    +'<span class="ab-banner-text"><strong><span class="it">AUTO-BUY ATTIVO</span><span class="en">AUTO-BUY ACTIVE</span></strong> · '
+    +'<span class="it">sta comprando '+rule.blocks_per_interval+' blocchi ogni '+intervalLabel+' per te</span>'
+    +'<span class="en">buying '+rule.blocks_per_interval+' blocks every '+intervalLabel+' for you</span>'
+    +' · <span class="ab-banner-prog">'+rule.total_bought+'/'+rule.max_blocks+'</span></span>'
+    +'<a href="#auto-buy-box" class="ab-banner-link" onclick="event.preventDefault();var el=document.getElementById(\'auto-buy-box\');if(el)el.scrollIntoView({behavior:\'smooth\',block:\'start\'})"><span class="it">gestisci</span><span class="en">manage</span></a>';
+}
+
+// GS-15 · Hint "~X blocchi per il 1°" + riga soglia "⚠ Tra ~N blocchi venduti…"
+async function loadHintSoglia(airdropId){
+  var el=document.getElementById('detail-hint-soglia');
+  if(!el||!_session||!_session.user)return;
+  var token=await getValidToken();if(!token)return;
+  try{
+    var cm=await sbRpc('compute_checkmate_blocks',{p_user_id:_session.user.id,p_airdrop_id:airdropId},token);
+    if(!cm||typeof cm!=='object'){el.innerHTML='';return;}
+    var blocksToOvertake=Number(cm.blocks_to_overtake_leader||0);
+    var ariaCost=Number(cm.aria_cost_to_overtake||0);
+    var isLeader=Number(cm.user_blocks_current)>0 && blocksToOvertake===0;
+    // Soglia via fairness_threshold_remaining
+    var threshold=null;
+    try{
+      var t=await sbRpc('fairness_threshold_remaining',{p_airdrop_id:airdropId,p_user_id:_session.user.id},token);
+      if(t!==null&&t!==undefined)threshold=Number(t);
+    }catch(_){threshold=null;}
+    var html='';
+    if(isLeader){
+      html+='<div class="hint-row hint-leader">'+UI_ICONS.star+' <span class="it">Sei in testa — difendi il primato con altri blocchi</span><span class="en">You\'re leading — defend it with more blocks</span></div>';
+    }else if(blocksToOvertake>0){
+      html+='<div class="hint-row hint-target">&#9658; <span class="it">~<strong>'+blocksToOvertake.toLocaleString('it-IT')+'</strong> blocchi per arrivare 1&deg;</span>'
+        +'<span class="en">~<strong>'+blocksToOvertake.toLocaleString('en-US')+'</strong> blocks to reach #1</span>'
+        +(ariaCost>0?' <span class="hint-aria-cost">&middot; '+ariaCost.toLocaleString('it-IT')+' '+tokIcon('ARIA')+'</span>':'')
+        +'</div>';
+    }
+    if(threshold!==null && !isLeader){
+      if(threshold===0){
+        html+='<div class="hint-row hint-soglia hint-soglia-out">&#9888; <span class="it">Matematicamente fuori — il leader è irraggiungibile per te</span><span class="en">Mathematically out — leader unreachable</span></div>';
+      }else if(threshold<=300){
+        html+='<div class="hint-row hint-soglia">&#9888; <span class="it">Tra ~<strong>'+threshold.toLocaleString('it-IT')+'</strong> blocchi venduti ad altri non potrai più aggiudicartelo</span>'
+          +'<span class="en">In ~<strong>'+threshold.toLocaleString('en-US')+'</strong> blocks sold to others you won\'t be able to win it anymore</span>'
+          +'</div>';
+      }
+    }
+    el.innerHTML=html;
+  }catch(e){el.innerHTML='';}
 }
 
 // PR-5 · Pannello esito per airdrop concluso (F7/F8): vincitore, consegna, ROBI.
@@ -2865,14 +3007,24 @@ function updateStrategyGuide(scores,pos,total,myScore){
   var loyaltyPctBar=Math.min(100,Math.round(Math.log10(1+myHistoricAria/100)*25));
   var pityFillColor=myPityPhase==='hard'?'var(--gold)':myPityPhase==='soft'?'var(--accent)':'';
 
+  // GS-10 A/B collapsible: blocco A (header + Tuo Punteggio) sempre visibile,
+  // blocco B (factors + tips) collassato di default. Clic su A toggle B.
+  // Preserva stato open precedente dell'utente nel re-render (refreshPosition polling 30s)
+  var prevOpen=el.querySelector('.strategy-box.gs10-open')?true:false;
   el.innerHTML=''
-    +'<div class="strategy-box'+(isFirst?' first':'')+'">'
+    +'<div class="strategy-box'+(isFirst?' first':'')+(prevOpen?' gs10-open':'')+'">'
+    // Blocco A: header (clickable) + score · sempre visibile
+    +'<button class="strategy-ab-header" type="button" onclick="this.parentElement.classList.toggle(\'gs10-open\')" aria-label="Espandi dettaglio scoring">'
     +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Stai vincendo!':'Come arrivare 1&deg;')+'</span>'
     +'<span class="en">'+(isFirst?'You\'re winning!':'How to reach #1')+'</span></div>'
+    +'<svg class="strategy-ab-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'
+    +'</button>'
     +'<div class="strategy-score-top">'
     +'<span class="it">Tuo Punteggio: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; primo: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
     +'<span class="en">Your Score: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; leader: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
     +'</div>'
+    // Blocco B: factors + tips · collassato di default, espanso quando .gs10-open
+    +'<div class="strategy-ab-body">'
     +'<div class="strategy-factors">'
     // 1. Blocchi (radice quadrata)
     +'<div class="strategy-factor-block van">'
@@ -2920,6 +3072,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
     +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span></div>'}).join('')
     +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span></div>'}).join('')
     +'</div>'
+    +'</div>' // close strategy-ab-body
     +'</div>';
 }
 
@@ -3165,6 +3318,11 @@ function backToList(){
   document.getElementById('list-view').classList.remove('hidden');
   document.getElementById('list-view').style.display='';
   document.getElementById('cat-filter').style.display='';
+  // GS-9 #1 · ripristina banner Alpha + ricerca all'uscita dal detail
+  var mbAlpha=document.querySelector('.marketplace-demo-banner');
+  if(mbAlpha)mbAlpha.style.display='';
+  var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
+  if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='';}
   hideTopbarCR();
   loadValuationCount();
   history.pushState({page:'explore'},null,'/airdrops');
