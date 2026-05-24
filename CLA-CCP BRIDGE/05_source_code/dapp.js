@@ -532,6 +532,10 @@ function toggleMobileNav(){
 
 // ── Browser back/forward ──
 window.addEventListener('popstate',function(e){
+  // MNB-1 fix 3 v2: rete di sicurezza · qualsiasi route-change rilascia body scroll-lock
+  document.body.style.overflow='';
+  var mob=document.getElementById('topbar-mobile-menu');
+  if(mob)mob.classList.remove('active');
   var page=(e.state&&e.state.page)?e.state.page:(PATH_TO_PAGE[location.pathname]||'home');
   showPage(page);
   if(e.state&&e.state.detail){
@@ -1476,9 +1480,10 @@ function navigateTo(page,event){
   showPage(page);
   var path=PAGE_PATHS[page]||'/esplora';
   if(location.pathname!==path)history.pushState({page:page},null,path);
-  // Close mobile menu
+  // Close mobile menu (MNB-1 fix 3 v2: rilascia anche body scroll-lock orfano post-tap voce)
   var mob=document.getElementById('topbar-mobile-menu');
   if(mob)mob.classList.remove('active');
+  document.body.style.overflow='';
 }
 
 function showPage(page){
