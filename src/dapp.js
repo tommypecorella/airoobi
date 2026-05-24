@@ -5390,16 +5390,17 @@ async function loadActivityFeed(){
     el.innerHTML=data.slice(0,6).map(function(item){
       var text=lang==='it'?(item.text_it||item.text_en):(item.text_en||item.text_it);
       var time=item.time?new Date(item.time).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'';
-      // GS-5: link contestuale. new_airdrop → categoria (backToList+filterCat). purchase/activity → openDetail(airdrop_id). robi (overview) → no link.
+      // GS-5 reopen: feed è SEMPRE in tab-home (dapp.html:489), target (#list-view/#detail) in tab-explore.
+      // Fix: navigateTo('explore') PRIMA, poi filterCat/openDetail. showPage è sincrono, no setTimeout.
       var clickAttr='';
       var cursor='default';
       var hoverCol='var(--gray-300)';
       if(item.type==='new_airdrop' && item.category){
-        clickAttr='onclick="backToList();filterCat(\''+String(item.category).replace(/\'/g,"\\'")+'\')"';
+        clickAttr='onclick="navigateTo(\'explore\');filterCat(\''+String(item.category).replace(/\'/g,"\\'")+'\')"';
         cursor='pointer';
         hoverCol='var(--gold)';
       }else if((item.type==='purchase'||item.type==='activity') && item.airdrop_id){
-        clickAttr='onclick="openDetail(\''+String(item.airdrop_id).replace(/\'/g,"\\'")+'\')"';
+        clickAttr='onclick="navigateTo(\'explore\');openDetail(\''+String(item.airdrop_id).replace(/\'/g,"\\'")+'\')"';
         cursor='pointer';
         hoverCol='var(--gold)';
       }
