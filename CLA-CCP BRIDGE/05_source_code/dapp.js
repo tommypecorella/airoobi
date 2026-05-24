@@ -2807,12 +2807,15 @@ async function loadHintSoglia(airdropId){
       var t=await sbRpc('fairness_threshold_remaining',{p_airdrop_id:airdropId,p_user_id:_session.user.id},token);
       if(t!==null&&t!==undefined)threshold=Number(t);
     }catch(_){threshold=null;}
-    // GS-15p1 · claim "corsa in salita" — intestazione + stato salita (claim lockato Skeezu 24 May, diffusione ampia)
+    // GS-15p1 + GS-15 reopen v3 · claim "corsa in salita" intestazione + 5 stati salita
+    // threshold sentinel: -1 guard blocca · 0 limite (compra tutti) · 1-300 warning · >300 neutro
     var salitaStato='';
     if(isLeader){
       salitaStato='<div class="hint-salita-stato hint-salita-cima"><span class="it">Sei in cima alla salita.</span><span class="en">You\'re at the top of the climb.</span></div>';
-    }else if(threshold===0){
+    }else if(threshold===-1){
       salitaStato='<div class="hint-salita-stato hint-salita-fuori"><span class="it">La salita è chiusa per te.</span><span class="en">The climb is closed for you.</span></div>';
+    }else if(threshold===0){
+      salitaStato='<div class="hint-salita-stato hint-salita-limite"><span class="it">Sei al limite della salita.</span><span class="en">You\'re at the climb\'s edge.</span></div>';
     }else if(threshold!==null && threshold<=300){
       salitaStato='<div class="hint-salita-stato hint-salita-chiudendo"><span class="it">La salita si sta chiudendo.</span><span class="en">The climb is closing.</span></div>';
     }else{
@@ -2832,8 +2835,10 @@ async function loadHintSoglia(airdropId){
         +'</div>';
     }
     if(threshold!==null && !isLeader){
-      if(threshold===0){
+      if(threshold===-1){
         html+='<div class="hint-row hint-soglia hint-soglia-out">&#9888; <span class="it">Matematicamente fuori — il leader è irraggiungibile per te</span><span class="en">Mathematically out — leader unreachable</span></div>';
+      }else if(threshold===0){
+        html+='<div class="hint-row hint-soglia hint-soglia-limite">&#9888; <span class="it">Sei al limite — solo comprando tutti i blocchi restanti puoi ancora aggiudicartelo</span><span class="en">At the edge — only buying all remaining blocks keeps you in</span></div>';
       }else if(threshold<=300){
         html+='<div class="hint-row hint-soglia">&#9888; <span class="it">Tra ~<strong>'+threshold.toLocaleString('it-IT')+'</strong> blocchi venduti ad altri non potrai più aggiudicartelo</span>'
           +'<span class="en">In ~<strong>'+threshold.toLocaleString('en-US')+'</strong> blocks sold to others you won\'t be able to win it anymore</span>'
