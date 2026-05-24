@@ -1089,6 +1089,15 @@ body.detail-open #cat-dashboard{display:none!important}
 .detail-hint-soglia .hint-soglia-out{background:rgba(220,38,38,.06);border:1px solid rgba(220,38,38,.32);color:#f87171}
 .detail-hint-soglia .hint-aria-cost{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:.5px}
 
+/* GS-15p1 · "La tua salita" — claim "corsa in salita" lockato Skeezu 24 May */
+.detail-hint-soglia .hint-salita-head{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:2px 2px 4px;border-bottom:1px solid rgba(184,150,12,.18);margin-bottom:4px}
+.detail-hint-soglia .hint-salita-title{font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold)}
+.detail-hint-soglia .hint-salita-stato{font-family:var(--font-m);font-size:10px;letter-spacing:.5px;padding:3px 8px;border-radius:10px}
+.detail-hint-soglia .hint-salita-corsa{background:rgba(73,234,203,.10);color:#49eacb;border:1px solid rgba(73,234,203,.32)}
+.detail-hint-soglia .hint-salita-cima{background:rgba(184,150,12,.12);color:var(--gold);border:1px solid rgba(184,150,12,.38)}
+.detail-hint-soglia .hint-salita-chiudendo{background:rgba(245,158,11,.10);color:#f59e0b;border:1px solid rgba(245,158,11,.32)}
+.detail-hint-soglia .hint-salita-fuori{background:rgba(220,38,38,.10);color:#f87171;border:1px solid rgba(220,38,38,.32)}
+
 /* GS-10 · "Come arrivare 1°" A/B collapsible */
 .detail-strategy-ab .strategy-box{position:relative}
 .detail-strategy-ab .strategy-ab-header{display:flex;justify-content:space-between;align-items:center;width:100%;background:none;border:none;padding:14px 16px 10px;cursor:pointer;color:inherit;text-align:left;font-family:inherit;font-size:inherit}

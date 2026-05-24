@@ -2780,7 +2780,22 @@ async function loadHintSoglia(airdropId){
       var t=await sbRpc('fairness_threshold_remaining',{p_airdrop_id:airdropId,p_user_id:_session.user.id},token);
       if(t!==null&&t!==undefined)threshold=Number(t);
     }catch(_){threshold=null;}
-    var html='';
+    // GS-15p1 · claim "corsa in salita" — intestazione + stato salita (claim lockato Skeezu 24 May, diffusione ampia)
+    var salitaStato='';
+    if(isLeader){
+      salitaStato='<div class="hint-salita-stato hint-salita-cima"><span class="it">Sei in cima alla salita.</span><span class="en">You\'re at the top of the climb.</span></div>';
+    }else if(threshold===0){
+      salitaStato='<div class="hint-salita-stato hint-salita-fuori"><span class="it">La salita è chiusa per te.</span><span class="en">The climb is closed for you.</span></div>';
+    }else if(threshold!==null && threshold<=300){
+      salitaStato='<div class="hint-salita-stato hint-salita-chiudendo"><span class="it">La salita si sta chiudendo.</span><span class="en">The climb is closing.</span></div>';
+    }else{
+      salitaStato='<div class="hint-salita-stato hint-salita-corsa"><span class="it">Sei ancora in corsa.</span><span class="en">You\'re still in the race.</span></div>';
+    }
+    var html=''
+      +'<div class="hint-salita-head">'
+      +'<span class="hint-salita-title"><span class="it">La tua salita</span><span class="en">Your climb</span></span>'
+      +salitaStato
+      +'</div>';
     if(isLeader){
       html+='<div class="hint-row hint-leader">'+UI_ICONS.star+' <span class="it">Sei in testa — difendi il primato con altri blocchi</span><span class="en">You\'re leading — defend it with more blocks</span></div>';
     }else if(blocksToOvertake>0){

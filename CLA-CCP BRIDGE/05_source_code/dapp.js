@@ -80,6 +80,7 @@ function updateBalanceUI(){
 var _airdrops=[];
 var _myParts=[];
 var _myRanks={}; // {airdrop_id: {rank, total, score}}
+var _myRobiByAirdrop={}; // {airdrop_id: {shares, sources, consolation_rank}} · Atto 6 reveal
 var _robiPrice=0; // treasury×0.999/robi_circolanti
 var _currentFilter='all';
 var _currentSort='deadline';
@@ -136,6 +137,50 @@ function requireAuth(){
 function doLogout(){
   localStorage.removeItem('airoobi_session');
   window.location.href=_isApp?'/':'https://airoobi.com';
+}
+
+// ── Export user data (GS-4 · GDPR Art. 20 portability) ──
+async function doExportUserData(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var btn=document.getElementById('exportdata-btn');
+  var errEl=document.getElementById('exportdata-error');
+  var originalLabel=btn.innerHTML;
+  btn.disabled=true;
+  btn.textContent=lang==='it'?'Esportazione...':'Exporting...';
+  errEl.style.display='none';
+  try{
+    var token=await getValidToken();
+    if(!token)throw new Error('no_token');
+    var res=await fetch(SB_URL+'/rest/v1/rpc/export_user_data',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:'{}'
+    });
+    var data=await res.json();
+    if(!data||data.ok===false){
+      var error=data&&data.error?data.error:'unknown';
+      errEl.textContent=lang==='it'?'Errore: '+error:'Error: '+error;
+      errEl.style.display='block';
+      return;
+    }
+    var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+    var url=URL.createObjectURL(blob);
+    var d=new Date();
+    var ymd=d.getFullYear()+String(d.getMonth()+1).padStart(2,'0')+String(d.getDate()).padStart(2,'0');
+    var a=document.createElement('a');
+    a.href=url;
+    a.download='airoobi-export-'+ymd+'.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){
+    errEl.textContent=lang==='it'?'Errore di rete. Riprova.':'Network error. Try again.';
+    errEl.style.display='block';
+  }finally{
+    btn.disabled=false;
+    btn.innerHTML=originalLabel;
+  }
 }
 
 // ── Delete account ──
@@ -276,7 +321,7 @@ async function getValidToken(){
 var PUBLIC_PAGES=['home','explore','faq','learn','blog'];
 function isPublicRoute(){
   var pp=location.pathname;
-  var page=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':null);
+  var page=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')||pp.startsWith('/dapp/airdrop/')?'explore':null);
   return page&&PUBLIC_PAGES.indexOf(page)!==-1;
 }
 
@@ -305,8 +350,8 @@ function initGuidaBanner(){
 document.addEventListener('DOMContentLoaded',async function(){
   initGuidaBanner();
   var pp=location.pathname;
-  var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')?'explore':'home');
-  var airdropMatch=pp.match(/^\/airdrops\/([0-9a-f-]{36})$/);
+  var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')||pp.startsWith('/dapp/airdrop/')?'explore':'home');
+  var airdropMatch=pp.match(/^\/(?:airdrops|dapp\/airdrop)\/([0-9a-f-]{36})$/);
   var urlId=airdropMatch?airdropMatch[1]:new URLSearchParams(location.search).get('id');
   if(urlId)initialPage='explore';
 
@@ -334,7 +379,7 @@ document.addEventListener('DOMContentLoaded',async function(){
     // Show splash tour on first visit
     if(!localStorage.getItem('airoobi_splash_done'))showSplash();
     setupUI();
-    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist(),loadRobiPrice(),loadMyRanks()]);
+    await Promise.all([loadBalance(),loadAirdrops(),loadMyParticipations(),checkUserRoles(),loadWatchlist(),loadRobiPrice(),loadMyRanks(),loadAlphaCounterInvita()]);
     renderGrid();
     renderCatDashboard();
     renderCategoryFilter();
@@ -371,7 +416,8 @@ document.addEventListener('DOMContentLoaded',async function(){
   }
   if(urlId){
     openDetail(urlId);
-    history.replaceState({page:'explore',detail:urlId},null,'/airdrops/'+urlId);
+    var detailPath=_publicMode?('/airdrops/'+urlId):('/dapp/airdrop/'+urlId);
+    history.replaceState({page:'explore',detail:urlId},null,detailPath);
   }
 });
 
@@ -506,11 +552,12 @@ async function loadHomeDashboard(){
   var token=await getValidToken();
   if(!token)return;
   var email=_session.user?.email||'';
-  var name=email.split('@')[0]||'—';
+  var name=email?email.split('@')[0]:'';
   var elIt=document.getElementById('home-user-name');
   var elEn=document.getElementById('home-user-name-en');
-  if(elIt)elIt.textContent=name;
-  if(elEn)elEn.textContent=name;
+  // Render with prefix only if name available; empty otherwise (no "Bentornato, —")
+  if(elIt)elIt.textContent=name?(elIt.getAttribute('data-prefix')||', ')+name:'';
+  if(elEn)elEn.textContent=name?(elEn.getAttribute('data-prefix')||', ')+name:'';
   // Registration date
   try{
     var prof=await sbGet('profiles?id=eq.'+_session.user.id+'&select=created_at',token);
@@ -1046,7 +1093,11 @@ async function loadDappReferral(){
   if(confirmed&&confirmed.length){
     confirmed.forEach(function(c){confirmedMap[c.referred_id]=c.confirmed_at;});
   }
-  document.getElementById('dapp-ref-confirmed').textContent=confirmed?confirmed.length:0;
+  var confirmedCount=confirmed?confirmed.length:0;
+  document.getElementById('dapp-ref-confirmed').textContent=confirmedCount;
+  // Round 8 · render tier + alpha counter
+  if(typeof renderReferralTier==='function')renderReferralTier(confirmedCount);
+  if(typeof loadAlphaCounterInvita==='function')loadAlphaCounterInvita();
 
   // History: who you invited (source: profiles.referred_by)
   var invList=document.getElementById('dapp-ref-invited-list');
@@ -1054,6 +1105,8 @@ async function loadDappReferral(){
     var invited=myCode?(await sbGet('profiles?referred_by=eq.'+myCode+'&deleted_at=is.null&select=id,email,created_at&order=created_at.desc',token)):[];
     if(invited&&invited.length>0){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
+      var hdrEl=document.getElementById('dapp-ref-invited-header');
+      if(hdrEl)hdrEl.style.display='flex';
       invList.innerHTML=invited.map(function(p){
         var email=p.email?truncEmail(p.email):'***';
         var confirmedAt=confirmedMap[p.id];
@@ -1093,11 +1146,85 @@ function dappCopyRef(){
   var link=document.getElementById('dapp-ref-link').dataset.link;
   if(!link)return;
   navigator.clipboard.writeText(link).then(function(){
-    var btn=document.querySelector('#tab-referral .ref-copy');
+    var btn=document.querySelector('#tab-referral .ref-copy, #tab-referral .invita-link-copy-btn');
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    if(btn){
+      btn.textContent=lang==='it'?'COPIATO!':'COPIED!';
+      setTimeout(function(){btn.innerHTML='<span class="it">COPIA</span><span class="en">COPY</span>'},2000);
+    }
+  });
+}
+
+// Round 8 · /invita Content Rewrite helpers
+function copyReferralLink(btn){
+  var link=document.getElementById('dapp-ref-link').dataset.link;
+  if(!link)return;
+  navigator.clipboard.writeText(link).then(function(){
     var lang=document.documentElement.getAttribute('data-lang')||'it';
     btn.textContent=lang==='it'?'COPIATO!':'COPIED!';
     setTimeout(function(){btn.innerHTML='<span class="it">COPIA</span><span class="en">COPY</span>'},2000);
   });
+}
+
+function shareReferral(platform,event){
+  if(event&&event.preventDefault)event.preventDefault();
+  var el=document.getElementById('dapp-ref-link');if(!el)return;
+  var link=el.dataset.link||el.textContent.trim();if(!link)return;
+  var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  // Round 12 (11 May 2026) · outsider-friendly + seller hook · no jargon Alpha Brave/ROBI/airdrop
+  var msgs={
+    it:{
+      whatsapp:'AIROOBI: il primo negozio online dove gli oggetti non si comprano, si ottengono partecipando. Entra adesso e sfrutta questo primo periodo pre-lancio ufficiale della piattaforma. Per ogni partecipazione vieni premiato. Curioso?\n'+link+'\nRegistrati e potrai anche vendere un tuo oggetto e non dovrai aspettare anni, mesi o settimane per venderlo, solo ore',
+      telegram:'AIROOBI: il primo negozio online dove gli oggetti non si comprano, si ottengono partecipando. Entra adesso e sfrutta questo primo periodo pre-lancio ufficiale della piattaforma. Per ogni partecipazione vieni premiato. Curioso?\n'+link+'\nRegistrati e potrai anche vendere un tuo oggetto e non dovrai aspettare anni, mesi o settimane per venderlo, solo ore',
+      twitter:'Su AIROOBI gli oggetti non si comprano, si ottengono partecipando. Per ogni partecipazione vieni premiato. Curioso? Plus: se hai qualcosa da vendere, qui lo liquidi in ore, non mesi. '+link,
+      email_subject:'AIROOBI · negozio dove gli oggetti non si comprano',
+      email_body:'Ciao,\n\nvolevo consigliarti AIROOBI: è un negozio online dove gli oggetti (smartphone, orologi, tech) non si comprano direttamente — si ottengono partecipando. Per ogni partecipazione vieni premiato.\n\nPlus: se hai qualcosa di valore da vendere, qui lo liquidi in ore, non mesi come eBay/Subito.\n\nSiamo nel primo periodo pre-lancio ufficiale della piattaforma, è il momento giusto per entrare.\n\nProvalo: '+link+'\n\nFammi sapere cosa ne pensi!'
+    },
+    en:{
+      whatsapp:'AIROOBI: the first online store where items aren\'t bought, they\'re earned by participating. Join now and take advantage of this pre-launch period of the platform. Every participation gets rewarded. Curious?\n'+link+'\nSign up and you can also sell your own item — no need to wait years, months or weeks to sell it. Only hours.',
+      telegram:'AIROOBI: the first online store where items aren\'t bought, they\'re earned by participating. Join now and take advantage of this pre-launch period of the platform. Every participation gets rewarded. Curious?\n'+link+'\nSign up and you can also sell your own item — no need to wait years, months or weeks to sell it. Only hours.',
+      twitter:'On AIROOBI items aren\'t bought, they\'re earned by participating. Every participation gets rewarded. Curious? Plus: if you have something to sell, here you liquidate it in hours, not months. '+link,
+      email_subject:'AIROOBI · the store where items aren\'t bought',
+      email_body:'Hi,\n\nI wanted to recommend AIROOBI: it\'s an online store where items (smartphones, watches, tech) aren\'t bought directly — they\'re earned by participating. Every participation gets rewarded.\n\nPlus: if you have something valuable to sell, here you liquidate it in hours, not months like eBay.\n\nWe\'re in the pre-launch period of the platform — perfect timing to join.\n\nTry it: '+link+'\n\nLet me know what you think!'
+    }
+  };
+  var m=msgs[lang]||msgs.it;
+  if(platform==='whatsapp')window.open('https://wa.me/?text='+encodeURIComponent(m.whatsapp),'_blank');
+  else if(platform==='telegram')window.open('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(m.telegram),'_blank');
+  else if(platform==='twitter'||platform==='x')window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(m.twitter),'_blank');
+  else if(platform==='email')window.location.href='mailto:?subject='+encodeURIComponent(m.email_subject)+'&body='+encodeURIComponent(m.email_body);
+}
+
+function calculateReferralTier(confirmedCount){
+  if(confirmedCount>=25)return{tier:'platinum',label:'💎 Platinum',next:null};
+  if(confirmedCount>=10)return{tier:'gold',label:'🥇 Gold',next:25};
+  if(confirmedCount>=5)return{tier:'silver',label:'🥈 Silver',next:10};
+  if(confirmedCount>=1)return{tier:'bronze',label:'🥉 Bronze',next:5};
+  return{tier:'none',label:'—',next:1};
+}
+
+function renderReferralTier(confirmedCount){
+  var t=calculateReferralTier(confirmedCount);
+  var el=document.getElementById('referral-tier');
+  if(el)el.textContent=t.label;
+  var steps=document.querySelectorAll('.invita-tier-step');
+  steps.forEach(function(s){if(s.dataset.tier===t.tier)s.classList.add('active');else s.classList.remove('active');});
+}
+
+async function loadAlphaCounterInvita(){
+  // Round 9: writes to all alpha counter IDs (invita + marketplace banner)
+  var ids=['alpha-counter-invita','banner-counter','banner-counter-en'];
+  var present=ids.map(function(id){return document.getElementById(id);}).filter(Boolean);
+  if(!present.length)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}
+    });
+    if(res.ok){
+      var range=res.headers.get('content-range');
+      if(range){var total=parseInt(range.split('/')[1],10)||0;present.forEach(function(el){el.textContent=total;});}
+    }
+  }catch(e){}
 }
 
 function dappShareRef(platform){
@@ -1163,14 +1290,39 @@ async function toggleWatchlist(id,e){
     else{_watchlist=_watchlist.filter(function(w){return w!==id});showToast('<span class="it">Rimosso dai preferiti</span><span class="en">Removed from favorites</span>');}
     renderGrid();
     if(_currentDetail&&_currentDetail.id===id){
+      // GS-8 reopen 24 May: toggla solo .active sul .heart-btn-v2 esistente.
+      // Sostituire className con 'heart-btn' (vecchia classe card position:absolute)
+      // teleportava il cuore in alto a destra del viewport (ROBY catch).
       var hb=document.getElementById('detail-heart');
-      if(hb)hb.className=isInWatchlist(id)?'heart-btn active':'heart-btn';
+      if(hb){
+        if(isInWatchlist(id))hb.classList.add('active');
+        else hb.classList.remove('active');
+      }
     }
   }
 }
 
 async function loadMyParticipations(){
-  _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&cancelled_at=is.null&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status)&order=created_at.desc',_session.access_token)||[];
+  _myParts=await sbGet('airdrop_participations?user_id=eq.'+_session.user.id+'&cancelled_at=is.null&select=*,airdrops(id,title,category,image_url,block_price_aria,total_blocks,blocks_sold,status,winner_id,story_public_url,story_public_visible,aria_incassato,object_value_eur,draw_executed_at)&order=created_at.desc',_session.access_token)||[];
+  // Atto 6 reveal: aggregate user's ROBI shares per completed/annullato airdrop
+  _myRobiByAirdrop={};
+  var completedIds=_myParts
+    .map(function(p){return p.airdrops&&p.airdrops.id&&['completed','annullato'].indexOf(p.airdrops.status)!==-1?p.airdrops.id:null})
+    .filter(Boolean);
+  if(completedIds.length){
+    var uniq=Array.from(new Set(completedIds));
+    var idList=uniq.map(function(id){return '"'+id+'"'}).join(',');
+    var nfts=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&airdrop_id=in.('+idList+')&select=airdrop_id,shares,source,metadata',_session.access_token)||[];
+    nfts.forEach(function(n){
+      var aid=n.airdrop_id;if(!aid)return;
+      if(!_myRobiByAirdrop[aid])_myRobiByAirdrop[aid]={shares:0,sources:[],consolation_rank:null};
+      _myRobiByAirdrop[aid].shares+=Number(n.shares||0);
+      _myRobiByAirdrop[aid].sources.push(n.source);
+      if(n.source==='airdrop_draw_consolation'&&n.metadata&&n.metadata.consolation_rank){
+        _myRobiByAirdrop[aid].consolation_rank=n.metadata.consolation_rank;
+      }
+    });
+  }
 }
 
 async function loadMyRanks(){
@@ -1257,7 +1409,7 @@ function playMiningAnimation(blocksBought,oldMyBlocks,miningRate){
   var overlay=document.createElement('div');
   overlay.className='mining-overlay';
   overlay.innerHTML='<div class="mining-pickaxe">⛏</div>'
-    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">blocchi minati!</span><span class="en">blocks mined!</span></div>'
+    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">'+(blocksBought===1?'blocco minato':'blocchi minati')+'!</span><span class="en">block'+(blocksBought===1?'':'s')+' mined!</span></div>'
     +(foundRobi?'<div class="mining-robi-text">✦ ROBI <span class="it">TROVATO</span><span class="en">FOUND</span>! ✦</div>':'');
   document.body.appendChild(overlay);
 
@@ -1296,17 +1448,18 @@ function spawnConfetti(){
 // ── Page routing ──
 var _isApp=location.hostname==='airoobi.app'||location.hostname==='www.airoobi.app';
 var PAGE_PATHS=_isApp
-  ?{home:'/dashboard',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio',archive:'/archivio',learn:'/impara'}
-  :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/impara'};
-var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/impara':'learn'};
+  ?{home:'/dashboard',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio',archive:'/archivio',learn:'/impara',profilo:'/profilo'}
+  :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/impara',profilo:'/profilo'};
+var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/impara':'learn','/profilo':'profilo'};
 var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
   submit:{it:'<b>Valuta</b> il tuo <em>oggetto</em>',en:'<b>Evaluate</b> your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
-  referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e ricevi ARIA bonus. Più accumuli, più ROBI guadagni.',sub_en:'Invite friends and earn bonus ARIA. The more you accumulate, the more ROBI you earn.'},
+  referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e accumula ROBI insieme. +5 ROBI per ogni invito confermato.',sub_en:'Invite friends and accumulate ROBI together. +5 ROBI for every confirmed invite.'},
   wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'I tuoi asset: ARIA, ROBI e KAS.',sub_en:'Your assets: ARIA, ROBI and KAS.'},
   archive:{it:'<em>Archivio</em> Airdrop',en:'Airdrop <em>Archive</em>',sub_it:'Tutti gli airdrop completati. Trasparenza totale.',sub_en:'All completed airdrops. Full transparency.'},
   learn:{it:'<em>Impara</em>',en:'<em>Learn</em>',sub_it:'Scopri come funzionano ARIA, ROBI e il motore airdrop.',sub_en:'Learn how ARIA, ROBI and the airdrop engine work.'},
+  profilo:{it:'<em>Profilo</em>',en:'<em>Profile</em>',sub_it:'Account, sicurezza e preferenze.',sub_en:'Account, security and preferences.'},
 };
 
 function navigateTo(page,event){
@@ -1329,7 +1482,7 @@ function navigateTo(page,event){
 }
 
 function showPage(page){
-  ['home','explore','my','submit','referral','wallet','archive','learn'].forEach(function(t){
+  ['home','explore','my','submit','referral','wallet','archive','learn','profilo'].forEach(function(t){
     var panel=document.getElementById('tab-'+t);
     if(panel)panel.style.display=page===t?'block':'none';
   });
@@ -1349,6 +1502,8 @@ function showPage(page){
       h.querySelector('.dapp-hero-sub').innerHTML='<span class="it">'+hdr.sub_it+'</span><span class="en">'+hdr.sub_en+'</span>';
     }
   }
+  // Refresh topbar balances on every SPA navigation (fix stale state cross-route)
+  if(typeof refreshTopbarBalances==='function')refreshTopbarBalances();
   if(page==='home'){loadHomeDashboard();startFeedPolling();}
   if(page==='explore'){bindExploreSearch();}
   if(page==='my'){renderMyAirdrops();loadMySubmissions();}
@@ -1356,6 +1511,213 @@ function showPage(page){
   if(page==='referral')loadDappReferral();
   if(page==='wallet')loadDappWallet();
   if(page==='archive')loadDappArchive();
+  if(page==='profilo')loadProfilePage();
+}
+
+// ── Profilo page (account settings view) ──
+async function loadProfilePage(){
+  var emailEl=document.getElementById('profilo-email');
+  var nameEl=document.getElementById('profilo-name');
+  var sinceEl=document.getElementById('profilo-since');
+  var usernameEl=document.getElementById('profilo-username');
+  if(emailEl&&_session&&_session.user)emailEl.textContent=_session.user.email||'—';
+  // Fetch profile detail — Round 6 added username + corrected full_name → first_name,last_name
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=first_name,last_name,username,created_at&id=eq.'+_session.user.id,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok)return;
+    var rows=await res.json();
+    if(!rows||!rows.length)return;
+    var p=rows[0];
+    _currentProfile={first_name:p.first_name||'',last_name:p.last_name||'',username:p.username||''};
+    var fullName=((p.first_name||'')+' '+(p.last_name||'')).trim();
+    if(nameEl)nameEl.textContent=fullName||(_session.user.email?_session.user.email.split('@')[0]:'—');
+    if(usernameEl)usernameEl.textContent=p.username?'@'+p.username:'—';
+    if(sinceEl&&p.created_at){
+      var d=new Date(p.created_at);
+      sinceEl.textContent=d.toLocaleDateString(document.documentElement.getAttribute('data-lang')==='en'?'en-US':'it-IT',{year:'numeric',month:'long',day:'numeric'});
+    }
+  }catch(e){}
+}
+
+// ── Round 6 · Profilo Edit Modal (username feature) ──
+var _currentProfile={first_name:'',last_name:'',username:''};
+var _usernameCheckTimeout=null;
+var _usernameAvailable=true;
+
+function showProfiloEditModal(){
+  var modal=document.getElementById('profilo-edit-modal');if(!modal)return;
+  document.getElementById('edit-name').value=_currentProfile.first_name||'';
+  document.getElementById('edit-surname').value=_currentProfile.last_name||'';
+  document.getElementById('edit-username').value=_currentProfile.username||'';
+  document.getElementById('username-feedback').textContent='';
+  document.getElementById('username-feedback').className='form-feedback';
+  document.getElementById('profilo-edit-error').style.display='none';
+  _usernameAvailable=true;
+  modal.classList.add('active');
+}
+
+function hideProfiloEditModal(){
+  var modal=document.getElementById('profilo-edit-modal');if(!modal)return;
+  modal.classList.remove('active');
+  if(_usernameCheckTimeout){clearTimeout(_usernameCheckTimeout);_usernameCheckTimeout=null;}
+}
+
+// Decision #5 LOCKED: debounced 300ms su input completion
+function onUsernameInput(input){
+  if(_usernameCheckTimeout)clearTimeout(_usernameCheckTimeout);
+  var feedback=document.getElementById('username-feedback');
+  feedback.className='form-feedback checking';
+  feedback.textContent=document.documentElement.getAttribute('data-lang')==='en'?'…':'…';
+  _usernameCheckTimeout=setTimeout(function(){checkUsernameAvailability(input)},300);
+}
+
+async function checkUsernameAvailability(input){
+  var username=(input.value||'').trim().toLowerCase();
+  var feedback=document.getElementById('username-feedback');
+  var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  // Same as current → no need to check
+  if(username===_currentProfile.username){
+    feedback.className='form-feedback';
+    feedback.textContent='';
+    _usernameAvailable=true;
+    return;
+  }
+  // Format validation client-side
+  if(!/^[a-z0-9_]{3,30}$/.test(username)){
+    feedback.className='form-feedback taken';
+    feedback.textContent=lang==='it'?'Formato non valido (3-30 char · a-z 0-9 _)':'Invalid format (3-30 char · a-z 0-9 _)';
+    _usernameAvailable=false;
+    return;
+  }
+  feedback.className='form-feedback checking';
+  feedback.textContent=lang==='it'?'Verifica…':'Checking…';
+  try{
+    var token=await getValidToken();if(!token){_usernameAvailable=true;return;}
+    var data=await sbRpc('check_username_available',{p_username:username},token);
+    if(data&&data.available){
+      feedback.className='form-feedback available';
+      feedback.textContent=lang==='it'?'✓ Disponibile':'✓ Available';
+      _usernameAvailable=true;
+    } else {
+      feedback.className='form-feedback taken';
+      var reason=data&&data.reason||'username_taken';
+      feedback.textContent=lang==='it'
+        ?(reason==='reserved'?'✗ Username riservato':reason==='invalid_format'?'✗ Formato non valido':'✗ Username gi&agrave; preso')
+        :(reason==='reserved'?'✗ Reserved username':reason==='invalid_format'?'✗ Invalid format':'✗ Username taken');
+      _usernameAvailable=false;
+    }
+  }catch(e){
+    feedback.className='form-feedback';feedback.textContent='';_usernameAvailable=true;
+  }
+}
+
+async function submitProfiloEdit(event){
+  event.preventDefault();
+  var name=(document.getElementById('edit-name').value||'').trim();
+  var surname=(document.getElementById('edit-surname').value||'').trim();
+  var username=(document.getElementById('edit-username').value||'').trim().toLowerCase();
+  var errorBox=document.getElementById('profilo-edit-error');
+  var saveBtn=document.getElementById('profilo-edit-save');
+  var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
+  errorBox.style.display='none';
+  if(!_usernameAvailable){
+    errorBox.style.display='block';
+    errorBox.textContent=lang==='it'?'Username non disponibile. Scegline un altro.':'Username not available. Choose another.';
+    return;
+  }
+  saveBtn.disabled=true;
+  try{
+    var token=await getValidToken();if(!token)throw new Error('no_token');
+    var data=await sbRpc('update_user_profile',{p_name:name,p_surname:surname,p_username:username},token);
+    if(data&&data.error){
+      errorBox.style.display='block';
+      errorBox.textContent=mapProfiloEditError(data.error,data.next_change_at,lang);
+      saveBtn.disabled=false;
+      return;
+    }
+    hideProfiloEditModal();
+    loadProfilePage();
+    showToast(lang==='it'?'Profilo aggiornato.':'Profile updated.');
+  }catch(e){
+    errorBox.style.display='block';
+    errorBox.textContent=lang==='it'?'Errore di rete. Riprova.':'Network error. Retry.';
+    saveBtn.disabled=false;
+  }
+}
+
+function mapProfiloEditError(code,nextChangeAt,lang){
+  var locale=lang==='en'?'en-US':'it-IT';
+  var dateStr=nextChangeAt?new Date(nextChangeAt).toLocaleDateString(locale):'';
+  var msg={
+    not_authenticated:{it:'Sessione scaduta. Effettua di nuovo il login.',en:'Session expired. Please log in again.'},
+    invalid_name_length:{it:'Nome non valido (1-50 caratteri).',en:'Invalid first name (1-50 chars).'},
+    invalid_surname_length:{it:'Cognome non valido (1-50 caratteri).',en:'Invalid last name (1-50 chars).'},
+    invalid_username_format:{it:'Formato username non valido.',en:'Invalid username format.'},
+    username_reserved:{it:'Username riservato dal sistema.',en:'Username reserved by system.'},
+    username_taken:{it:'Username gi&agrave; preso.',en:'Username taken.'},
+    username_rate_limit:{it:'Username cambiabile dopo '+dateStr+'.',en:'Username changeable after '+dateStr+'.'}
+  };
+  return (msg[code]&&msg[code][lang])||(lang==='it'?'Errore sconosciuto':'Unknown error');
+}
+
+// ── Topbar balance refresh (used on cross-route SPA navigation) ──
+async function refreshTopbarBalances(){
+  if(!_session||!_session.user)return;
+  try{
+    var token=await getValidToken();
+    if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=total_points,kas_balance&id=eq.'+_session.user.id,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(!res.ok)return;
+    var rows=await res.json();
+    if(!rows||!rows.length)return;
+    var p=rows[0];
+    var ariaEl=document.getElementById('topbar-aria-val');
+    if(ariaEl&&p.total_points!=null)ariaEl.textContent=p.total_points;
+    // ROBI = sum of nft_rewards.amount for current user
+    var rRes=await fetch(SB_URL+'/rest/v1/nft_rewards?select=amount&user_id=eq.'+_session.user.id,{
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
+    });
+    if(rRes.ok){
+      var rRows=await rRes.json();
+      var robiTotal=(rRows||[]).reduce(function(s,r){return s+(parseFloat(r.amount)||0)},0);
+      var robiEl=document.getElementById('topbar-robi-val');
+      if(robiEl)robiEl.textContent=robiTotal.toFixed(0);
+    }
+    // GS-6: ROBI market data pill (price + trend 24h)
+    try{
+      var mdRes=await fetch(SB_URL+'/rest/v1/rpc/get_robi_market_data',{
+        method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'
+      });
+      if(mdRes.ok){
+        var md=await mdRes.json();
+        var priceEl=document.getElementById('topbar-robi-price');
+        var valEl=document.getElementById('topbar-robi-price-val');
+        var trendEl=document.getElementById('topbar-robi-price-trend');
+        if(priceEl&&valEl&&md&&md.price_eur!=null){
+          valEl.textContent='€'+Number(md.price_eur).toFixed(2);
+          if(trendEl){
+            if(md.trend_24h_pct!=null){
+              var tp=Number(md.trend_24h_pct);
+              var arrow=tp>0?'↑':(tp<0?'↓':'·');
+              var cls=tp>0?'up':(tp<0?'down':'flat');
+              trendEl.className='topbar-robi-trend '+cls;
+              trendEl.textContent=arrow+' '+Math.abs(tp).toFixed(1)+'%';
+              trendEl.style.display='';
+            }else{
+              trendEl.style.display='none';
+            }
+          }
+          priceEl.style.display='';
+        }
+      }
+    }catch(_){}
+  }catch(e){}
 }
 
 // ── Category filter ──
@@ -1599,6 +1961,16 @@ function toggleNotifPanel(){
   if(!panel)return;
   _notifOpen=!_notifOpen;
   panel.style.display=_notifOpen?'block':'none';
+  // ISSUE-27 · backdrop overlay (lazy create)
+  var bd=document.getElementById('notif-panel-backdrop');
+  if(!bd){
+    bd=document.createElement('div');
+    bd.id='notif-panel-backdrop';
+    bd.className='notif-panel-backdrop';
+    bd.addEventListener('click',function(){toggleNotifPanel()});
+    document.body.appendChild(bd);
+  }
+  bd.classList.toggle('active',_notifOpen);
   if(_notifOpen)loadNotifications();
 }
 
@@ -1848,6 +2220,7 @@ function renderGrid(){
     }
 
     return '<div class="card" onclick="goToAirdrop(\''+a.id+'\')">'
+      +'<span class="airdrop-badge-demo"><span class="it">DEMO ALPHA</span><span class="en">ALPHA DEMO</span></span>'
       +badge
       +durationBadge(a.duration_type)
       +imgHtml
@@ -1970,6 +2343,15 @@ function toggleGalleryPlay(){
 
 async function openDetail(id){
   var a=_airdrops.find(function(x){return x.id===id});
+  if(!a){
+    // PR-5 F7: gli airdrop conclusi non sono in _airdrops (solo presale/sale).
+    // Li carico singolarmente per renderne il recap invece del fallback marketplace.
+    var _tok0=_publicMode?SB_KEY:await getValidToken();
+    if(_tok0){
+      var _fetched=await sbGet('airdrops?id=eq.'+encodeURIComponent(id)+'&select=*&limit=1',_tok0);
+      if(Array.isArray(_fetched)&&_fetched.length)a=_fetched[0];
+    }
+  }
   if(!a)return;
   stopGalleryAutoplay();
   _currentDetail=a;
@@ -1978,6 +2360,15 @@ async function openDetail(id){
   var valBanner=document.getElementById('val-banner');
   if(valBanner)valBanner.style.display='none';
   document.getElementById('cat-filter').style.display='none';
+  // GS-9 #1 · nascondi marketplace renderizzato sopra il dettaglio.
+  // Reopen-2 24 May: classe body.detail-open + CSS !important (robusta a renderCatDashboard
+  // async che ri-scrive display:block inline su #cat-dashboard).
+  document.body.classList.add('detail-open');
+  // Inline hide solo per marketplace-banner + search (non re-renderizzati async).
+  var mbAlpha=document.querySelector('.marketplace-demo-banner');
+  if(mbAlpha)mbAlpha.style.display='none';
+  var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
+  if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='none';}
   document.getElementById('detail').classList.add('active');
   showTopbarCR(id);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1995,10 +2386,18 @@ async function openDetail(id){
   var remaining=a.total_blocks-a.blocks_sold;
   var pct=a.total_blocks>0?(a.blocks_sold/a.total_blocks*100):0;
   var isPresale=a.status==='presale';
+  // PR-5 F7/F8: stati post-live · niente buy box, render del pannello esito.
+  var isConcluded=['completed','annullato','closed','dropped','waiting_seller_acknowledge'].indexOf(a.status)!==-1;
   var myBlocks=_publicMode?0:_gridData.filter(function(b){return b.is_mine}).length;
   var myPct=a.total_blocks>0?(myBlocks/a.total_blocks*100):0;
   var othersPct=pct-myPct;
   var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT',{day:'numeric',month:'long',year:'numeric'}):'';
+  // PR-5 F8: ROBI dell'utente da questo evento (per il pannello esito).
+  var _outcomeRobi=0;
+  if(isConcluded&&!_publicMode&&_session&&_session.user){
+    var _nftRows=await sbGet('nft_rewards?user_id=eq.'+_session.user.id+'&airdrop_id=eq.'+encodeURIComponent(id)+'&select=shares',token)||[];
+    if(Array.isArray(_nftRows))_nftRows.forEach(function(n){_outcomeRobi+=Number(n.shares||0);});
+  }
 
   // Image blur: 20px at 0%, 0px at 100%
   var blurVal=Math.max(0,20-(pct/100*20));
@@ -2006,7 +2405,9 @@ async function openDetail(id){
 
   _bubbles=[];
 
-  var maxBuy=Math.min(remaining,Math.floor(_balance/a.block_price_aria));
+  // F1: prezzo effettivo (presale-aware) — coerente con l'addebito server-side
+  var effectivePrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
+  var maxBuy=Math.min(remaining,Math.floor(_balance/effectivePrice));
   if(maxBuy<1)maxBuy=0;
 
   // Product info from JSONB
@@ -2066,38 +2467,128 @@ async function openDetail(id){
     +'</div>'
     :'';
 
-  var html=''
-    // ══ SPLIT LAYOUT ══
-    +'<div class="detail-split">'
+  // Track B redesign (cluster GS-8/9/10/12/15 · mini-spec GS-9 LOCKED)
+  // GS-9: gerarchia above-the-fold = competitivo · sotto = scheda prodotto
+  // GS-9 layout: 2-col desktop con competitivo a SX (.detail-split-v2 invertito)
+  // GS-12 banner top: detail-autobuy-banner-top, populated by updateAutoBuyBanner()
+  // GS-8 header: .detail-header-v2 con categoria + ♡ + ⤴ (heart-btn-v2 sfondo chiaro, share-btn-v2 nuovo)
+  // GS-15 riga soglia: detail-hint-soglia, populated by loadHintSoglia()
+  // GS-10 A/B: detail-strategy collapsible, gestito in updateStrategyGuide()
 
-    // ── LEFT: GALLERY ──
-    +'<div class="detail-gallery" id="detail-gallery">'
+  // Chip fase basato su status
+  var phaseChip='';
+  if(!isConcluded){
+    if(isPresale)phaseChip='<span class="detail-chip-fase presale">● <span class="it">PRESALE · apre per il sale a chiusura</span><span class="en">PRESALE</span></span>';
+    else if(a.status==='sale')phaseChip='<span class="detail-chip-fase active">● <span class="it">ATTIVO</span><span class="en">ACTIVE</span></span>';
+  } else if(a.status==='completed')phaseChip='<span class="detail-chip-fase closed">● <span class="it">CONCLUSO</span><span class="en">CLOSED</span></span>';
+  else if(a.status==='annullato')phaseChip='<span class="detail-chip-fase cancelled">● <span class="it">ANNULLATO</span><span class="en">CANCELLED</span></span>';
+  else if(a.status==='waiting_seller_acknowledge')phaseChip='<span class="detail-chip-fase waiting">● <span class="it">IN ATTESA</span><span class="en">WAITING</span></span>';
+
+  // Build pezzi riusabili (riordinati per nuova gerarchia)
+  var galleryHtml=''
+    +'<div class="detail-gallery detail-gallery-v2" id="detail-gallery">'
     +'<div class="gallery-track" id="gallery-track">'+slidesHtml+'</div>'
     +playerHtml
     +'<div class="product-badge" style="position:absolute;top:14px;left:14px;z-index:2">Airdrop</div>'
+    +'</div>';
+
+  // GS-8 header: categoria + ♡ + ⤴ (heart sfondo chiaro)
+  var titleSafe=(a.title||'').replace(/'/g,"\\'");
+  var headerV2=''
+    +'<div class="detail-header-v2">'
+    +'<a href="#" class="detail-cat-v2" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false">'
+    +(CAT_ICONS[a.category]||'')+' <span class="it">AIRDROP · '+a.category+'</span><span class="en">AIRDROP · '+a.category+'</span>'
+    +'</a>'
+    +'<div class="detail-header-actions">'
+    +'<button class="heart-btn-v2'+(isInWatchlist(a.id)?' active':'')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" title="Preferito" aria-label="Aggiungi ai preferiti">&#9825;</button>'
+    +'<button class="share-btn-v2" onclick="shareAirdrop(\''+a.id+'\',\''+titleSafe+'\')" title="Condividi" aria-label="Condividi airdrop">'
+    +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>'
+    +'</button>'
     +'</div>'
-    +'<div class="detail-below-gallery"><button class="'+(isInWatchlist(a.id)?'heart-btn detail active':'heart-btn detail')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')">&#9825;</button></div>'
+    +'</div>';
 
-    // ── RIGHT: CONTENT ──
-    +'<div class="detail-right" id="detail-right">'
+  // Hint + soglia (GS-15 §4.5) · async populated
+  var hintSogliaStub=!isConcluded?'<div id="detail-hint-soglia" class="detail-hint-soglia"></div>':'';
 
-    // Product info
-    +'<div class="product-info">'
+  // Buy box (acquisto subito sotto soglia — §4.6 above-the-fold)
+  var buyBoxHtml=isConcluded
+    ?_renderOutcomePanel(a,myBlocks,_outcomeRobi)
+    :_publicMode
+    ?'<div class="buy-box">'
+    +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
+    +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi in questo airdrop.</span><span class="en">Sign up free to earn ARIA every day and buy blocks in this airdrop.</span></p>'
+    +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>'
+    +'<a href="/login?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" style="display:block;text-align:center;margin-top:10px;color:var(--gray-400);font-size:13px;text-decoration:none"><span class="it">Hai gi&agrave; un account? Accedi</span><span class="en">Already have an account? Log in</span></a>'
+    +'</div>'
+    :'<div class="buy-box">'
+    +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
+    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
+    +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
+    +'<div class="buy-display">'
+    +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
+    +'<div class="buy-display-cost" id="buy-display-cost">= '+effectivePrice+' '+tokIcon('ARIA')+'</div>'
+    +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
+    +'</div>'
+    +'<div class="buy-slider-wrap">'
+    +'<input type="range" class="buy-slider" id="buy-slider" min="1" max="'+(maxBuy||1)+'" value="1" '+(maxBuy<1?'disabled':'')+' oninput="onSlider()">'
+    +'<div class="buy-slider-labels"><span>1</span><span>'+(maxBuy||0)+'</span></div>'
+    +'</div>'
+    +'<div class="buy-presets">'
+    +(maxBuy>=5?'<button class="buy-preset" onclick="setSlider(5)">5</button>':'')
+    +(maxBuy>=10?'<button class="buy-preset" onclick="setSlider(10)">10</button>':'')
+    +(maxBuy>=25?'<button class="buy-preset" onclick="setSlider(25)">25</button>':'')
+    +(maxBuy>=50?'<button class="buy-preset" onclick="setSlider(50)">50</button>':'')
+    +(maxBuy>0?'<button class="buy-preset" onclick="setSlider('+maxBuy+')">Max</button>':'')
+    +'</div>'
+    +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
+    +(remaining>0&&maxBuy>=1
+      ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
+      :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
+    +'</button>'
+    +'<div class="buy-msg" id="buy-msg"></div>'
+    +'</div>';
+
+  var html=''
+    // GS-12 · Banner AUTO-BUY attivo on-top (populated by updateAutoBuyBanner)
+    +'<div id="detail-autobuy-banner" class="detail-autobuy-banner" style="display:none"></div>'
+
+    // GS-9 · 2-col split (competitivo SX, immagine DX)
+    +'<div class="detail-split detail-split-v2">'
+
+    // ── COL SX: competitivo (above-the-fold §4.1-4.7) ──
+    +'<div class="detail-right detail-competitive-col" id="detail-right">'
+
+    +headerV2
+
+    // Titolo + chip fase (§4.3)
+    +'<h1 class="detail-title-v2">'+a.title+'</h1>'
+    +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
+
+    // Box competitivo §4.4 (posizione live · populated by refreshPosition)
+    +(!isConcluded?'<div class="detail-position" id="detail-position"></div>':'')
+
+    // Hint "~X blocchi per il 1°" + soglia GS-15 (§4.5 · populated by loadHintSoglia)
+    +hintSogliaStub
+
+    // §4.6 · Pannello acquisto above-the-fold (o outcome se concluded)
+    +buyBoxHtml
+
+    // GS-10 §4.7 · Come arrivare 1° A/B collapsible (populated by updateStrategyGuide)
+    +(!isConcluded?'<div class="detail-strategy detail-strategy-ab" id="detail-strategy"></div>':'')
+
+    +'</div>' // close detail-right
+
+    // ── COL DX: immagine + prezzo (mini-spec wireframe) ──
+    +galleryHtml
+
+    +'</div>' // close detail-split
+
+    // ══════════ FINE ABOVE-THE-FOLD · §4.8 SOTTO LA PIEGA ══════════
+    +'<div class="detail-below-v2">'
+
+    // Prezzo + presale info (resta accessibile, ora sotto-piega come "scheda prodotto")
+    +'<div class="product-info-v2">'
     +(brand?'<div class="product-brand">'+brand+'</div>':'')
-    +'<h2 class="product-title">'+a.title+'</h2>'
-    +(a.description?'<p class="product-desc">'+a.description+'</p>':'')
-    +(model?'<div class="product-model">'+model+'</div>':'')
-    +(condition?'<div class="product-condition">'+condition+'</div>':'')
-    // Product details inline (under title)
-    +(highlights.length>0
-      ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
-      :'')
-    +(included.length>0
-      ?'<div class="product-included-label"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
-      +'<ul class="product-included">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
-      :'')
-    +'<div class="detail-cat"><a href="#" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false" style="color:inherit;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s" onmouseover="this.style.opacity=\'.7\'" onmouseout="this.style.opacity=\'1\'">'+(CAT_ICONS[a.category]||'')+' '+a.category+'</a></div>'
-    +durationBadge(a.duration_type)
     +'<div class="product-price-row">'
     +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' '+tokIcon('ARIA',18)+'</div>'
     +'<div class="product-price-aria">'
@@ -2107,48 +2598,44 @@ async function openDetail(id){
     +'</div>'
     +'</div>'
     +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>&#9935; 2x MINING BOOST</strong> — <span class="it">Compra in presale e guadagna il doppio dei ROBI</span><span class="en">Buy in presale and earn 2x ROBI</span></div>':'')
+    +(a.description?'<p class="product-desc">'+a.description+'</p>':'')
+    +(model?'<div class="product-model">'+model+'</div>':'')
+    +(condition?'<div class="product-condition">'+condition+'</div>':'')
+    +(highlights.length>0
+      ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
+      :'')
+    +(included.length>0
+      ?'<div class="product-included-label"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
+      +'<ul class="product-included">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
+      :'')
+    +durationBadge(a.duration_type)
     +'</div>'
 
-    // ── ACCORDION SECTIONS ──
+    // Accordion dettagli airdrop
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
-      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' '+tokIcon('ARIA')+'</strong></li>'
+      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA')+'</strong></li>'
       +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
       +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' ogni '+calcMiningRate(a)+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' blocchi)</span>':'')+'</li>'
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
 
-    // DIVIDER → PARTECIPA
-    +'<div class="product-divider">'
-    +'<div class="product-participate-label"><span class="it">Partecipa all\'<em>airdrop</em></span><span class="en">Join the <em>airdrop</em></span></div>'
-    +'<p class="product-participate-sub"><span class="it">Ogni blocco ti fa guadagnare ROBI — il loro valore cresce nel tempo</span><span class="en">Each block earns you ROBI — their value grows over time</span></p>'
-    +'</div>'
+    // I tuoi blocchi (badge sintetico)
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">investiti</span><span class="en">invested</span></div>':'')
 
-    // MY BLOCKS badge
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*a.block_price_aria)+' '+tokIcon('ARIA')+' <span class="it">investiti</span><span class="en">invested</span></div>':'')
-
-    // MINE TOWER 3D
+    // Mine Tower 3D
     +buildMineTower(a,myBlocks)
 
-    // STATS
+    // Mini stats Rimasti/per blocco/per ROBI
     +'<div class="detail-stats">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+a.block_price_aria+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+effectivePrice+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">blocchi per</span><span class="en">blocks per</span> '+tokIcon('ROBI')+'</div></div>'
     +'</div>'
 
-    // Live countdown
-    +(a.deadline?'<div class="detail-countdown" id="detail-countdown" data-deadline="'+a.deadline+'"></div>':'')
-
-    // Position live
-    +'<div class="detail-position" id="detail-position"></div>'
-
-    // Strategy guide
-    +'<div class="detail-strategy" id="detail-strategy"></div>'
-
-    // MY STATS panel
-    +(myBlocks>0&&!_publicMode?
+    // MY STATS panel (solo airdrop live)
+    +(!isConcluded&&myBlocks>0&&!_publicMode?
     '<div class="detail-mystats" id="detail-mystats">'
     +'<div class="mystats-header"><span class="it">Le tue statistiche</span><span class="en">Your stats</span></div>'
     +'<div class="mystats-grid" id="mystats-grid"></div>'
@@ -2156,45 +2643,8 @@ async function openDetail(id){
     +'</div>'
     :'')
 
-    // BUY BOX
-    +(_publicMode
-      ?'<div class="buy-box">'
-      +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
-      +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi in questo airdrop.</span><span class="en">Sign up free to earn ARIA every day and buy blocks in this airdrop.</span></p>'
-      +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>'
-      +'<a href="/login?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" style="display:block;text-align:center;margin-top:10px;color:var(--gray-400);font-size:13px;text-decoration:none"><span class="it">Hai gi&agrave; un account? Accedi</span><span class="en">Already have an account? Log in</span></a>'
-      +'</div>'
-      :'<div class="buy-box">'
-      +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-      +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
-      +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
-      +'<div class="buy-display">'
-      +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
-      +'<div class="buy-display-cost" id="buy-display-cost">= '+a.block_price_aria+' '+tokIcon('ARIA')+'</div>'
-      +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
-      +'</div>'
-      +'<div class="buy-slider-wrap">'
-      +'<input type="range" class="buy-slider" id="buy-slider" min="1" max="'+(maxBuy||1)+'" value="1" '+(maxBuy<1?'disabled':'')+' oninput="onSlider()">'
-      +'<div class="buy-slider-labels"><span>1</span><span>'+(maxBuy||0)+'</span></div>'
-      +'</div>'
-      +'<div class="buy-presets">'
-      +(maxBuy>=5?'<button class="buy-preset" onclick="setSlider(5)">5</button>':'')
-      +(maxBuy>=10?'<button class="buy-preset" onclick="setSlider(10)">10</button>':'')
-      +(maxBuy>=25?'<button class="buy-preset" onclick="setSlider(25)">25</button>':'')
-      +(maxBuy>=50?'<button class="buy-preset" onclick="setSlider(50)">50</button>':'')
-      +(maxBuy>0?'<button class="buy-preset" onclick="setSlider('+maxBuy+')">Max</button>':'')
-      +'</div>'
-      +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
-      +(remaining>0&&maxBuy>=1
-        ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
-        :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
-      +'</button>'
-      +'<div class="buy-msg" id="buy-msg"></div>'
-      +'</div>'
-    )
-
-    // AUTO-BUY
-    +(myBlocks>0?
+    // AUTO-BUY config (solo airdrop live) — toggle attivazione resta in fondo (mini-spec §4.8)
+    +(!isConcluded&&myBlocks>0?
     '<div class="auto-buy-box" id="auto-buy-box">'
     +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">'+UI_ICONS.zap+' AUTO-BUY</div>'
     +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Compra automaticamente blocchi a intervalli regolari.</span><span class="en">Automatically buy blocks at regular intervals.</span></p>'
@@ -2211,9 +2661,14 @@ async function openDetail(id){
     +'</div>'
     :'')
 
-    +'</div>' // close detail-right
+    // CTA "Hai un oggetto di valore?" (sotto-la-piega §4.8)
+    +(!_publicMode?'<div class="detail-cta-fai-valutare" style="margin-top:24px;padding:18px 20px;border:1px solid rgba(184,150,12,.25);background:rgba(184,150,12,.04);border-radius:var(--radius-sm);text-align:center">'
+    +'<div style="font-family:var(--font-h);font-size:18px;color:var(--white);margin-bottom:6px"><span class="it">Hai un oggetto di valore?</span><span class="en">Got a valuable item?</span></div>'
+    +'<p style="font-size:13px;color:var(--gray-400);margin-bottom:12px;line-height:1.5"><span class="it">Lo facciamo valutare gratis e, se rientra nei criteri, parte come airdrop.</span><span class="en">We evaluate it free and, if it qualifies, it becomes an airdrop.</span></p>'
+    +'<button onclick="navigateTo(\'submit\')" style="background:var(--gold);color:#000;border:none;padding:10px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">FAI VALUTARE →</span><span class="en">GET EVALUATED →</span></button>'
+    +'</div>':'')
 
-    +'</div>'; // close detail-split
+    +'</div>'; // close detail-below-v2
 
   document.getElementById('detail-content').innerHTML=html;
 
@@ -2226,16 +2681,184 @@ async function openDetail(id){
   // Start countdown ticker
   startCountdowns();
 
-  // Position live — initial + polling (uses calculate_winner_score for real rank)
-  refreshPosition(a.id);
-  if(_positionInterval)clearInterval(_positionInterval);
-  _positionInterval=setInterval(function(){refreshPosition(a.id)},30000);
+  // Position / ROBI projection / auto-buy: solo airdrop live (PR-5 F7/F8).
+  if(!isConcluded){
+    // Position live — initial + polling (uses calculate_winner_score for real rank)
+    refreshPosition(a.id);
+    if(_positionInterval)clearInterval(_positionInterval);
+    _positionInterval=setInterval(function(){refreshPosition(a.id)},30000);
 
-  // Detail stats (ROBI projection, %, history)
-  if(myBlocks>0&&!_publicMode)loadDetailStats(a.id);
+    // Detail stats (ROBI projection, %, history)
+    if(myBlocks>0&&!_publicMode)loadDetailStats(a.id);
 
-  // Auto-buy status
-  if(myBlocks>0)loadAutoBuyStatus(a.id);
+    // Auto-buy status (config btn label) + banner top GS-12
+    if(myBlocks>0){
+      loadAutoBuyStatus(a.id);
+      updateAutoBuyBanner(a.id);
+    }
+
+    // GS-15 · hint blocchi per 1° + soglia threshold (loadHintSoglia)
+    loadHintSoglia(a.id);
+  }else if(_positionInterval){
+    clearInterval(_positionInterval);_positionInterval=null;
+  }
+}
+
+// GS-8 · Condividi airdrop (Web Share API native + clipboard fallback)
+async function shareAirdrop(airdropId,title){
+  var url=location.origin+'/dapp/airdrop/'+airdropId;
+  var shareData={title:title?(title+' — AIROOBI'):'AIROOBI airdrop',text:'Guarda questo airdrop su AIROOBI',url:url};
+  try{
+    if(navigator.share){await navigator.share(shareData);return;}
+  }catch(e){if(e&&e.name==='AbortError')return;}
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      await navigator.clipboard.writeText(url);
+      var lang=document.documentElement.getAttribute('data-lang')||'it';
+      showToast(lang==='it'?'Link copiato negli appunti':'Link copied to clipboard','success');
+      return;
+    }
+  }catch(_){ }
+  // ultimo fallback: prompt
+  try{prompt('Copia il link:',url);}catch(_){ }
+}
+
+// GS-12 · Banner AUTO-BUY attivo on-top (mostra solo se rule attiva)
+async function updateAutoBuyBanner(airdropId){
+  var banner=document.getElementById('detail-autobuy-banner');
+  if(!banner)return;
+  var rule=await loadAutoBuyRule(airdropId);
+  if(!rule||!rule.active){
+    banner.style.display='none';
+    banner.innerHTML='';
+    return;
+  }
+  var h=parseFloat(rule.interval_hours);
+  var intervalLabel=h<1?Math.round(h*60)+'min':h+'h';
+  banner.style.display='';
+  banner.innerHTML=''
+    +'<span class="ab-banner-icon">'+UI_ICONS.zap+'</span>'
+    +'<span class="ab-banner-text"><strong><span class="it">AUTO-BUY ATTIVO</span><span class="en">AUTO-BUY ACTIVE</span></strong> · '
+    +'<span class="it">sta comprando '+rule.blocks_per_interval+' blocchi ogni '+intervalLabel+' per te</span>'
+    +'<span class="en">buying '+rule.blocks_per_interval+' blocks every '+intervalLabel+' for you</span>'
+    +' · <span class="ab-banner-prog">'+rule.total_bought+'/'+rule.max_blocks+'</span></span>'
+    +'<a href="#auto-buy-box" class="ab-banner-link" onclick="event.preventDefault();scrollToAutoBuyBox();return false;"><span class="it">gestisci</span><span class="en">manage</span></a>';
+}
+
+// GS-12 reopen 24 May · scroll robusto a #auto-buy-box con offset topbar (62px sticky).
+// Reopen-2: smooth scroll era no-op su questa pagina (ROBY measured). Scroll istantaneo
+// window.scrollTo(0, targetY) — instant è UX accettabile, smooth lo verifichi una volta
+// trovato il conflitto (scroll-behavior CSS o altro che annulla il smooth).
+function scrollToAutoBuyBox(){
+  var el=document.getElementById('auto-buy-box');
+  if(!el)return;
+  var rect=el.getBoundingClientRect();
+  var topOffset=62+8; // topbar height + small padding
+  var targetY=window.pageYOffset+rect.top-topOffset;
+  window.scrollTo(0,targetY);
+}
+
+// GS-15 · Hint "~X blocchi per il 1°" + riga soglia "⚠ Tra ~N blocchi venduti…"
+async function loadHintSoglia(airdropId){
+  var el=document.getElementById('detail-hint-soglia');
+  if(!el||!_session||!_session.user)return;
+  var token=await getValidToken();if(!token)return;
+  try{
+    var cm=await sbRpc('compute_checkmate_blocks',{p_user_id:_session.user.id,p_airdrop_id:airdropId},token);
+    if(!cm||typeof cm!=='object'){el.innerHTML='';return;}
+    var blocksToOvertake=Number(cm.blocks_to_overtake_leader||0);
+    var ariaCost=Number(cm.aria_cost_to_overtake||0);
+    // GS-15 minor reopen 24 May: rank dal box "Sei 1°…" è authoritative.
+    // compute_checkmate_blocks può tornare blocks=1 anche con utente già 1°
+    // (tie-breaker score). _myRanks[airdropId].rank===1 → utente è 1° davvero.
+    var myRank=_myRanks[airdropId]&&_myRanks[airdropId].rank;
+    var isLeader=(Number(cm.user_blocks_current)>0 && blocksToOvertake===0)
+              || myRank===1;
+    // Soglia via fairness_threshold_remaining
+    var threshold=null;
+    try{
+      var t=await sbRpc('fairness_threshold_remaining',{p_airdrop_id:airdropId,p_user_id:_session.user.id},token);
+      if(t!==null&&t!==undefined)threshold=Number(t);
+    }catch(_){threshold=null;}
+    // GS-15p1 · claim "corsa in salita" — intestazione + stato salita (claim lockato Skeezu 24 May, diffusione ampia)
+    var salitaStato='';
+    if(isLeader){
+      salitaStato='<div class="hint-salita-stato hint-salita-cima"><span class="it">Sei in cima alla salita.</span><span class="en">You\'re at the top of the climb.</span></div>';
+    }else if(threshold===0){
+      salitaStato='<div class="hint-salita-stato hint-salita-fuori"><span class="it">La salita è chiusa per te.</span><span class="en">The climb is closed for you.</span></div>';
+    }else if(threshold!==null && threshold<=300){
+      salitaStato='<div class="hint-salita-stato hint-salita-chiudendo"><span class="it">La salita si sta chiudendo.</span><span class="en">The climb is closing.</span></div>';
+    }else{
+      salitaStato='<div class="hint-salita-stato hint-salita-corsa"><span class="it">Sei ancora in corsa.</span><span class="en">You\'re still in the race.</span></div>';
+    }
+    var html=''
+      +'<div class="hint-salita-head">'
+      +'<span class="hint-salita-title"><span class="it">La tua salita</span><span class="en">Your climb</span></span>'
+      +salitaStato
+      +'</div>';
+    if(isLeader){
+      html+='<div class="hint-row hint-leader">'+UI_ICONS.star+' <span class="it">Sei in testa — difendi il primato con altri blocchi</span><span class="en">You\'re leading — defend it with more blocks</span></div>';
+    }else if(blocksToOvertake>0){
+      html+='<div class="hint-row hint-target">&#9658; <span class="it">~<strong>'+blocksToOvertake.toLocaleString('it-IT')+'</strong> blocchi per arrivare 1&deg;</span>'
+        +'<span class="en">~<strong>'+blocksToOvertake.toLocaleString('en-US')+'</strong> blocks to reach #1</span>'
+        +(ariaCost>0?' <span class="hint-aria-cost">&middot; '+ariaCost.toLocaleString('it-IT')+' '+tokIcon('ARIA')+'</span>':'')
+        +'</div>';
+    }
+    if(threshold!==null && !isLeader){
+      if(threshold===0){
+        html+='<div class="hint-row hint-soglia hint-soglia-out">&#9888; <span class="it">Matematicamente fuori — il leader è irraggiungibile per te</span><span class="en">Mathematically out — leader unreachable</span></div>';
+      }else if(threshold<=300){
+        html+='<div class="hint-row hint-soglia">&#9888; <span class="it">Tra ~<strong>'+threshold.toLocaleString('it-IT')+'</strong> blocchi venduti ad altri non potrai più aggiudicartelo</span>'
+          +'<span class="en">In ~<strong>'+threshold.toLocaleString('en-US')+'</strong> blocks sold to others you won\'t be able to win it anymore</span>'
+          +'</div>';
+      }
+    }
+    el.innerHTML=html;
+  }catch(e){el.innerHTML='';}
+}
+
+// PR-5 · Pannello esito per airdrop concluso (F7/F8): vincitore, consegna, ROBI.
+// Sostituisce il buy box quando lo status è completed/annullato/closed/
+// waiting_seller_acknowledge. Riusa lo styling buy-box e openClaimModal.
+function _renderOutcomePanel(a,myBlocks,myRobi){
+  var uid=_session&&_session.user&&_session.user.id;
+  var st=a.status;
+  var participated=myBlocks>0;
+  var isWinner=st==='completed'&&a.winner_id&&uid&&a.winner_id===uid;
+  var titleSafe=(a.title||'').replace(/'/g,"\\'");
+  var storyLink=a.story_public_visible&&a.story_public_url
+    ?'<a href="'+a.story_public_url+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;letter-spacing:.5px;text-decoration:none;font-family:var(--font-m)"><span class="it">STORIA PUBBLICA →</span><span class="en">PUBLIC STORY →</span></a>'
+    :'';
+  var chipIt,chipEn,chipColor;
+  if(st==='completed'){chipIt='Airdrop concluso';chipEn='Airdrop closed';chipColor='#22c55e';}
+  else if(st==='annullato'){chipIt='Airdrop annullato';chipEn='Airdrop cancelled';chipColor='#ef4444';}
+  else if(st==='waiting_seller_acknowledge'){chipIt='In attesa del venditore';chipEn='Awaiting seller';chipColor='var(--gold)';}
+  else {chipIt='Airdrop chiuso';chipEn='Airdrop closed';chipColor='var(--gray-400)';}
+  var head='<div class="buy-box-label" style="display:flex;align-items:center;gap:8px">'
+    +'<span style="width:8px;height:8px;border-radius:50%;background:'+chipColor+';display:inline-block;flex:none"></span>'
+    +'<span class="it">'+chipIt+'</span><span class="en">'+chipEn+'</span></div>';
+  var body;
+  if(st==='waiting_seller_acknowledge'){
+    body='<p class="buy-box-framing"><span class="it">L\'estrazione è conclusa. Il venditore ha 72 ore per confermare la chiusura — l\'esito comparirà qui appena decide.</span><span class="en">The draw is complete. The seller has 72 hours to confirm — the outcome will appear here once decided.</span></p>';
+  }else if(st==='annullato'){
+    body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; le ROBI già accumulate dal rullo restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI already mined stay in the wallet.</span></p>';
+  }else if(isWinner){
+    body='<p class="buy-box-framing"><span class="it">Hai ottenuto l\'oggetto: <strong>'+a.title+'</strong>. Inserisci l\'indirizzo di spedizione per riceverlo.</span><span class="en">You got the item: <strong>'+a.title+'</strong>. Submit your shipping address to receive it.</span></p>'
+      +'<button class="buy-btn" onclick="openClaimModal(\''+a.id+'\',\''+titleSafe+'\')"><span class="it">Reclama l\'oggetto →</span><span class="en">Claim the item →</span></button>';
+  }else if(st==='completed'&&participated){
+    body='<p class="buy-box-framing"><span class="it">L\'oggetto è stato assegnato a un altro partecipante. Le tue ROBI restano con te — il loro valore cresce nel tempo.</span><span class="en">The item went to another participant. Your ROBI stay with you — their value grows over time.</span></p>';
+  }else{
+    body='<p class="buy-box-framing"><span class="it">Questo airdrop si è concluso e l\'oggetto è stato assegnato al vincitore.</span><span class="en">This airdrop has closed — the item went to the winner.</span></p>';
+  }
+  var robiLine='';
+  if(st==='completed'&&participated&&!isWinner&&!_publicMode){
+    robiLine=myRobi>0
+      ?'<div style="font-size:13px;color:var(--gold);font-family:var(--font-m);letter-spacing:.5px;margin-top:6px"><strong>'+Number(myRobi).toFixed(2)+'</strong> '+tokIcon('ROBI')+' <span class="it">accumulate da questo evento</span><span class="en">earned from this event</span></div>'
+      :'<div style="font-size:12px;color:var(--gray-400);margin-top:6px"><span class="it">Nessun ROBI accumulato da questo evento</span><span class="en">No ROBI earned from this event</span></div>';
+  }
+  return '<div class="buy-box">'+head+body+robiLine
+    +(storyLink?'<div style="margin-top:10px">'+storyLink+'</div>':'')
+    +'</div>';
 }
 
 async function loadAutoBuyStatus(airdropId){
@@ -2312,6 +2935,8 @@ function updateDetailPosition(airdropId,scores){
   _myRanks[airdropId]={rank:pos,total:total,score:_ms?.score||0,blocks:_ms?.blocks||0,aria_spent:_ms?.aria_spent||0};
   // Update strategy guide with live data
   updateStrategyGuide(scores,pos,total,myScore);
+  // GS-15 minor reopen 24 May: re-sync hint soglia con rank live (path isLeader).
+  if(_currentDetail&&_currentDetail.id===airdropId&&_session&&_session.user)loadHintSoglia(airdropId);
 }
 
 // ── Strategy Guide (engagement · Scoring v5) ──
@@ -2325,8 +2950,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       +'<div class="strategy-box">'
       +'<div class="strategy-title"><span class="it">Come si vince?</span><span class="en">How do you win?</span></div>'
       +'<div style="padding:14px 16px;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
-      +'<span class="it">Il Punteggio combina tre cose: i <strong style="color:var(--gold)">blocchi</strong> che compri (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora vincere. Nessuna lotteria.</span>'
-      +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> you buy (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without winning yet. No lottery.</span>'
+      +'<span class="it">Il Punteggio combina tre cose: i <strong style="color:var(--gold)">blocchi</strong> che compri (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora vincere. Tutto deterministico: conta il punteggio, non il caso.</span>'
+      +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> you buy (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without winning yet. Fully deterministic: your score decides, not chance.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
       +'<span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti scoprono ROBI nel rullo e minano ROBI frazionari.</span>'
@@ -2426,14 +3051,24 @@ function updateStrategyGuide(scores,pos,total,myScore){
   var loyaltyPctBar=Math.min(100,Math.round(Math.log10(1+myHistoricAria/100)*25));
   var pityFillColor=myPityPhase==='hard'?'var(--gold)':myPityPhase==='soft'?'var(--accent)':'';
 
+  // GS-10 A/B collapsible: blocco A (header + Tuo Punteggio) sempre visibile,
+  // blocco B (factors + tips) collassato di default. Clic su A toggle B.
+  // Preserva stato open precedente dell'utente nel re-render (refreshPosition polling 30s)
+  var prevOpen=el.querySelector('.strategy-box.gs10-open')?true:false;
   el.innerHTML=''
-    +'<div class="strategy-box'+(isFirst?' first':'')+'">'
+    +'<div class="strategy-box'+(isFirst?' first':'')+(prevOpen?' gs10-open':'')+'">'
+    // Blocco A: header (clickable) + score · sempre visibile
+    +'<button class="strategy-ab-header" type="button" onclick="this.parentElement.classList.toggle(\'gs10-open\')" aria-label="Espandi dettaglio scoring">'
     +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Stai vincendo!':'Come arrivare 1&deg;')+'</span>'
     +'<span class="en">'+(isFirst?'You\'re winning!':'How to reach #1')+'</span></div>'
+    +'<svg class="strategy-ab-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'
+    +'</button>'
     +'<div class="strategy-score-top">'
     +'<span class="it">Tuo Punteggio: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; primo: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
     +'<span class="en">Your Score: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; leader: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
     +'</div>'
+    // Blocco B: factors + tips · collassato di default, espanso quando .gs10-open
+    +'<div class="strategy-ab-body">'
     +'<div class="strategy-factors">'
     // 1. Blocchi (radice quadrata)
     +'<div class="strategy-factor-block van">'
@@ -2481,6 +3116,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
     +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span></div>'}).join('')
     +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span></div>'}).join('')
     +'</div>'
+    +'</div>' // close strategy-ab-body
     +'</div>';
 }
 
@@ -2710,7 +3346,12 @@ function updateBuyDisplay(){
 }
 
 function goToAirdrop(id){
-  window.location.href='/airdrops/'+id;
+  if(_publicMode){
+    window.location.href='/airdrops/'+id;
+    return;
+  }
+  openDetail(id);
+  history.pushState({page:'explore',detail:id},null,'/dapp/airdrop/'+id);
 }
 
 function backToList(){
@@ -2721,6 +3362,12 @@ function backToList(){
   document.getElementById('list-view').classList.remove('hidden');
   document.getElementById('list-view').style.display='';
   document.getElementById('cat-filter').style.display='';
+  // GS-9 #1 · ripristina elementi marketplace nascosti in openDetail.
+  document.body.classList.remove('detail-open');
+  var mbAlpha=document.querySelector('.marketplace-demo-banner');
+  if(mbAlpha)mbAlpha.style.display='';
+  var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
+  if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='';}
   hideTopbarCR();
   loadValuationCount();
   history.pushState({page:'explore'},null,'/airdrops');
@@ -2746,7 +3393,10 @@ function hideTopbarCR(){
 
 function initBuy(){
   if(!_currentDetail||_buyQty<=0)return;
-  var cost=_buyQty*_currentDetail.block_price_aria;
+  // F1: costo presale-aware — il popup deve mostrare quello che il server addebita
+  var _ip=_currentDetail.status==='presale';
+  var _bp=_ip&&_currentDetail.presale_block_price?_currentDetail.presale_block_price:_currentDetail.block_price_aria;
+  var cost=_buyQty*_bp;
   if(cost>_balance){
     showMsg('err','<span class="it">ARIA insufficienti.</span><span class="en">Not enough ARIA.</span>');
     return;
@@ -2915,7 +3565,7 @@ function _renderPartCard(item,isArchive){
   var a=item.airdrop;
   if(!a)return '';
   var imgHtml=a.image_url
-    ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy">'
+    ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy" onerror="this.style.display=\'none\';if(this.nextSibling)this.nextSibling.style.display=\'flex\'"><div class="my-card-img-placeholder" style="display:none">'+placeholderSvg+'</div>'
     :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
   // Status badge
   var st=a.status;
@@ -2935,7 +3585,12 @@ function _renderPartCard(item,isArchive){
       deadlineHtml='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ef4444;background:rgba(239,68,68,.12);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700;animation:pulse 2s ease-in-out infinite;margin-left:6px"><span class="it">In scadenza</span><span class="en">Expiring</span></span>';
     }
   }
-  var cardOpacity=isArchive?'opacity:.72;':'';
+  var cardOpacity=isArchive?'opacity:.92;':'';
+  // Atto 6 buyer reveal post-completed/annullato
+  var revealHtml='';
+  if(isArchive&&(st==='completed'||st==='annullato')){
+    revealHtml=_renderRevealBlock(a,item,st);
+  }
   return '<div class="my-card" style="'+cardOpacity+'">'
     +'<div style="display:flex;gap:16px;padding:18px;align-items:center;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
     +imgHtml
@@ -2944,6 +3599,7 @@ function _renderPartCard(item,isArchive){
     +'<div class="my-card-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+a.category+' &middot; '+badge+deadlineHtml+'</div>'
     +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
     +'</div></div>'
+    +revealHtml
     +'<div style="display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--gray-800);align-items:center">'
     +'<button style="display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:7px 14px;font-family:var(--font-b);font-size:11px;font-weight:500;letter-spacing:1px;cursor:pointer;transition:all .25s;border-radius:var(--radius-sm)" onclick="toggleMyChat(\''+a.id+'\')" onmouseover="this.style.borderColor=\'var(--accent)\';this.style.color=\'var(--accent)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'">'
     +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>'
@@ -2956,6 +3612,102 @@ function _renderPartCard(item,isArchive){
     +'</div>'
     +'</div>'
     +'</div>';
+}
+
+// ── W4 Day 10 · Claim address modal ──
+function openClaimModal(airdropId,title){
+  var modal=document.getElementById('claim-modal-bg');if(!modal)return;
+  document.getElementById('claim-airdrop-id').value=airdropId;
+  var titleEl=document.getElementById('claim-modal-title');
+  if(titleEl)titleEl.textContent=title||'';
+  var errEl=document.getElementById('claim-modal-error');
+  if(errEl){errEl.style.display='none';errEl.textContent='';}
+  modal.classList.add('active');
+}
+function closeClaimModal(e){
+  if(e&&e.target&&e.target.id!=='claim-modal-bg')return;
+  var modal=document.getElementById('claim-modal-bg');if(!modal)return;
+  modal.classList.remove('active');
+}
+async function submitClaim(e){
+  e.preventDefault();
+  var btn=document.getElementById('claim-modal-submit');
+  var errEl=document.getElementById('claim-modal-error');
+  var airdropId=document.getElementById('claim-airdrop-id').value;
+  var address={
+    full_name:document.getElementById('claim-fullname').value.trim(),
+    street:document.getElementById('claim-street').value.trim(),
+    cap:document.getElementById('claim-cap').value.trim(),
+    city:document.getElementById('claim-city').value.trim(),
+    province:document.getElementById('claim-province').value.trim(),
+    country:document.getElementById('claim-country').value.trim()
+  };
+  var phone=document.getElementById('claim-phone').value.trim();
+  var notes=document.getElementById('claim-notes').value.trim()||null;
+  if(!address.full_name||!address.street||!address.cap||!address.city||!address.province||!address.country||!phone){
+    if(errEl){errEl.textContent='Compila tutti i campi obbligatori.';errEl.style.display='block';}
+    return;
+  }
+  btn.disabled=true;var origLabel=btn.textContent;btn.textContent='Invio…';
+  try{
+    var token=(_session&&_session.access_token)||null;
+    if(!token){throw new Error('Sessione scaduta · ricarica la pagina');}
+    var res=await sbRpc('claim_airdrop_prize',{p_airdrop_id:airdropId,p_shipping_address:address,p_shipping_phone:phone,p_shipping_notes:notes},token);
+    if(res&&res.ok===false)throw new Error(res.detail||res.error||'errore RPC');
+    closeClaimModal();
+    alert('Richiesta inviata. Il venditore è stato notificato. Riceverai aggiornamenti sulla spedizione.');
+    if(typeof loadMyParticipations==='function')loadMyParticipations();
+  }catch(err){
+    if(errEl){errEl.textContent='Errore: '+(err.message||err);errEl.style.display='block';}
+    btn.disabled=false;btn.textContent=origLabel;
+  }
+}
+
+// ── Atto 6 · Buyer reveal post-completed/annullato ──
+function _renderRevealBlock(a,item,status){
+  var uid=_session&&_session.user&&_session.user.id;
+  var robi=_myRobiByAirdrop[a.id]||{shares:0,sources:[],consolation_rank:null};
+  var isWinner=status==='completed'&&a.winner_id&&uid&&a.winner_id===uid;
+  var storyLink=a.story_public_visible&&a.story_public_url
+    ?'<a href="'+a.story_public_url+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;letter-spacing:.5px;text-decoration:none;font-family:var(--font-m)">'
+      +'<span class="it">STORIA PUBBLICA →</span><span class="en">PUBLIC STORY →</span></a>'
+    :'';
+  // Scenario 1: completed + winner
+  if(isWinner){
+    return '<div style="background:linear-gradient(135deg,rgba(184,150,12,.15),rgba(184,150,12,.02));border-top:1px solid var(--gold);padding:16px 18px;display:flex;flex-direction:column;gap:10px">'
+      +'<div style="display:flex;align-items:center;gap:10px">'
+      +'<div style="font-family:var(--font-h);font-size:18px;color:var(--gold);font-weight:500"><span class="it">Hai ottenuto l\'oggetto · '+a.title+'</span><span class="en">You got the item · '+a.title+'</span></div>'
+      +'</div>'
+      +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Inserisci l\'indirizzo di spedizione per ricevere l\'oggetto. Hai 14 giorni dalla data dell\'evento.</span><span class="en">Submit the shipping address to receive the item. You have 14 days from the event date.</span></div>'
+      +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">'
+      +'<button onclick="openClaimModal(\''+a.id+'\',\''+(a.title||'').replace(/\'/g,'\\\'')+'\')" style="background:var(--gold);color:var(--black);border:none;padding:9px 18px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">RECLAMA L\'OGGETTO →</span><span class="en">CLAIM ITEM →</span></button>'
+      +storyLink
+      +'</div></div>';
+  }
+  // Scenario 2: completed + not winner
+  if(status==='completed'){
+    var sharesNum=robi.shares?Number(robi.shares).toFixed(2):'0';
+    var sharesLine=robi.shares>0
+      ?'<div style="font-size:13px;color:var(--gold);font-family:var(--font-m);letter-spacing:.5px"><strong>'+sharesNum+'</strong> <span class="it">ROBI accumulate da questo evento</span><span class="en">ROBI shares earned from this event</span></div>'
+      :'<div style="font-size:12px;color:var(--gray-400)"><span class="it">Nessun ROBI accumulato da questo evento</span><span class="en">No ROBI earned from this event</span></div>';
+    return '<div style="background:rgba(255,255,255,.02);border-top:1px solid var(--gray-800);padding:14px 18px;display:flex;flex-direction:column;gap:8px">'
+      +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Oggetto assegnato a un altro partecipante. Le tue ROBI restano con te — il loro valore cresce nel tempo.</span><span class="en">Item went to another participant. Your ROBI stay with you — their value grows over time.</span></div>'
+      +sharesLine
+      +(storyLink?'<div>'+storyLink+'</div>':'')
+      +'</div>';
+  }
+  // Scenario 3: annullato
+  if(status==='annullato'){
+    var consoBlock='';
+    if(robi.consolation_rank){
+      consoBlock='<div style="font-size:13px;color:var(--gold);font-family:var(--font-m);letter-spacing:.5px"><strong>+1 ROBI</strong> <span class="it">di consolazione · top-3 partecipanti (rank '+robi.consolation_rank+')</span><span class="en">consolation · top-3 participants (rank '+robi.consolation_rank+')</span></div>';
+    }
+    return '<div style="background:rgba(255,255,255,.02);border-top:1px solid var(--gray-800);padding:14px 18px;display:flex;flex-direction:column;gap:8px">'
+      +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Evento annullato dal venditore. Hai ricevuto il rimborso completo: <strong>'+item.spent+' ARIA</strong> tornati nel saldo.</span><span class="en">Event cancelled by seller. You received full refund: <strong>'+item.spent+' ARIA</strong> back to your balance.</span></div>'
+      +consoBlock
+      +'</div>';
+  }
+  return '';
 }
 
 function _updateMyTabCounts(){
@@ -3602,6 +4354,14 @@ async function submitObject(){
     msgEl.innerHTML='<span class="it">Il prezzo minimo non può superare il desiderato.</span><span class="en">Min price cannot exceed desired price.</span>';
     msgEl.className='submit-msg err';return;
   }
+  // F4: le foto tecniche obbligatorie devono essere tutte caricate prima del submit
+  var _missingReq=PW_SLOTS.filter(function(s){return s.required&&!pwFindPhoto(s.id)});
+  if(_missingReq.length){
+    var _mn=_missingReq.map(function(s){return s.it}).join(', ');
+    var _mnEn=_missingReq.map(function(s){return s.en}).join(', ');
+    msgEl.innerHTML='<span class="it">Carica tutte le foto tecniche obbligatorie. Mancano: '+_mn+'.</span><span class="en">Upload all required technical photos. Missing: '+_mnEn+'.</span>';
+    msgEl.className='submit-msg err';return;
+  }
   if(_balance<_valuationCost){
     msgEl.innerHTML='<span class="it">Saldo ARIA insufficiente. Servono '+_valuationCost+' ARIA.</span><span class="en">Insufficient ARIA balance. '+_valuationCost+' ARIA required.</span>';
     msgEl.className='submit-msg err';return;
@@ -4078,15 +4838,13 @@ async function loadAirdropChat(airdropId,containerId){
       for(var i=0;i<msgs.length;i++){
         var m=msgs[i];
         var isMine=m.sender_id===myId;
-        var align=isMine?'flex-end':'flex-start';
-        var bg=isMine?'rgba(184,150,12,.12)':'rgba(74,158,255,.08)';
-        var border=isMine?'var(--gold)':'var(--aria)';
+        var side=isMine?'msg-mine':'msg-theirs';
         var label=isMine?(m.is_admin?'AIROOBI':'Tu'):(m.is_admin?'AIROOBI':'Utente');
         var time=new Date(m.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-        html+='<div style="display:flex;justify-content:'+align+';margin-bottom:8px">';
-        html+='<div style="max-width:80%;padding:10px 14px;background:'+bg+';border-left:3px solid '+border+';font-size:13px">';
-        html+='<div style="display:flex;justify-content:space-between;gap:12px;margin-bottom:4px"><span style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:'+border+'">'+label+'</span><span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">'+time+'</span></div>';
-        html+='<div style="color:var(--white);line-height:1.5">'+escHtml(m.body)+'</div>';
+        html+='<div class="chat-msg '+side+'">';
+        html+='<div class="chat-msg-bubble">';
+        html+='<div class="chat-msg-head"><span class="chat-msg-author">'+label+'</span><span class="chat-msg-time">'+time+'</span></div>';
+        html+='<div class="chat-msg-body">'+escHtml(m.body)+'</div>';
         html+='</div></div>';
       }
     }
@@ -4835,7 +5593,25 @@ async function loadActivityFeed(){
     el.innerHTML=data.slice(0,6).map(function(item){
       var text=lang==='it'?(item.text_it||item.text_en):(item.text_en||item.text_it);
       var time=item.time?new Date(item.time).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'';
-      return '<div style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--gray-800);font-size:12px;color:var(--gray-300);line-height:1.4">'
+      // GS-5 reopen: feed è SEMPRE in tab-home (dapp.html:489), target (#list-view/#detail) in tab-explore.
+      // Fix: navigateTo('explore') PRIMA, poi filterCat/openDetail. showPage è sincrono, no setTimeout.
+      var clickAttr='';
+      var cursor='default';
+      var hoverCol='var(--gray-300)';
+      if(item.type==='new_airdrop' && item.category){
+        clickAttr='onclick="navigateTo(\'explore\');filterCat(\''+String(item.category).replace(/\'/g,"\\'")+'\')"';
+        cursor='pointer';
+        hoverCol='var(--gold)';
+      }else if((item.type==='purchase'||item.type==='activity') && item.airdrop_id){
+        // GS-5 follow-up bundle (ROBY_SignOff_GS5 §5): URL canonico /dapp/airdrop/:id per share/refresh
+        var safeId=String(item.airdrop_id).replace(/\'/g,"\\'");
+        clickAttr='onclick="navigateTo(\'explore\');openDetail(\''+safeId+'\');history.replaceState({page:\'explore\',detail:\''+safeId+'\'},null,\'/dapp/airdrop/\'+\''+safeId+'\')"';
+        cursor='pointer';
+        hoverCol='var(--gold)';
+      }
+      return '<div '+clickAttr+' style="display:flex;align-items:center;gap:10px;padding:8px 12px;border:1px solid var(--gray-800);font-size:12px;color:var(--gray-300);line-height:1.4;cursor:'+cursor+';transition:border-color .2s,color .2s"'
+        +(clickAttr?' onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\''+hoverCol+'\'" onmouseout="this.style.borderColor=\'var(--gray-800)\';this.style.color=\'var(--gray-300)\'"':'')
+        +'>'
         +'<span style="font-size:14px;flex-shrink:0">'+(icons[item.type]||'·')+'</span>'
         +'<span style="flex:1">'+escHtml(text)+'</span>'
         +'<span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500);flex-shrink:0">'+time+'</span>'
@@ -5060,6 +5836,11 @@ var INFO_TIPS={
   'robi-card-projection':{
     it:'I ROBI che stai accumulando in questo airdrop in base ai blocchi acquistati. Sono tuoi a prescindere dall\'esito: li riscuoti in KAS al termine, anche se non ottieni l\'oggetto.',
     en:'The ROBI you\'re accumulating in this airdrop based on your blocks. They\'re yours regardless of outcome: redeem them for KAS when it ends, even if you don\'t get the object.'
+  },
+  // GS-1 · copy definitiva ROBY (ROBY_Reply_CCP_TrackA_Reopen_GO_2026-05-24.md §4)
+  'evalobi':{
+    it:'EVALOBI è il certificato di valutazione del tuo oggetto — esito, valore stimato e motivazione, firmati da AIROOBI. Non ha valore monetario e non si spende: è la prova, permanente e tua, del nostro giudizio. Resta nel Portafoglio anche dopo aver venduto o ritirato l\'oggetto.',
+    en:'EVALOBI is your object\'s evaluation certificate — outcome, estimated value and reasoning, signed by AIROOBI. It has no monetary value and cannot be spent: it is a permanent, personal proof of our assessment. It stays in your Wallet even after you sell or withdraw the object.'
   }
 };
 
