@@ -2360,19 +2360,15 @@ async function openDetail(id){
   var valBanner=document.getElementById('val-banner');
   if(valBanner)valBanner.style.display='none';
   document.getElementById('cat-filter').style.display='none';
-  // GS-9 #1 · nascondi marketplace renderizzato sopra il dettaglio
-  // (la pagina deve APRIRSI sul dettaglio, non sul marketplace)
-  // Reopen 24 May: aggiunti explore-hero-slim, explore-toolbar, cat-dashboard (ROBY catch)
+  // GS-9 #1 · nascondi marketplace renderizzato sopra il dettaglio.
+  // Reopen-2 24 May: classe body.detail-open + CSS !important (robusta a renderCatDashboard
+  // async che ri-scrive display:block inline su #cat-dashboard).
+  document.body.classList.add('detail-open');
+  // Inline hide solo per marketplace-banner + search (non re-renderizzati async).
   var mbAlpha=document.querySelector('.marketplace-demo-banner');
   if(mbAlpha)mbAlpha.style.display='none';
   var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
   if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='none';}
-  var heroSlim=document.querySelector('.explore-hero-slim');
-  if(heroSlim)heroSlim.style.display='none';
-  var exToolbar=document.getElementById('explore-toolbar');
-  if(exToolbar)exToolbar.style.display='none';
-  var catDash=document.getElementById('cat-dashboard');
-  if(catDash)catDash.style.display='none';
   document.getElementById('detail').classList.add('active');
   showTopbarCR(id);
   window.scrollTo({top:0,behavior:'smooth'});
@@ -2750,14 +2746,16 @@ async function updateAutoBuyBanner(airdropId){
 }
 
 // GS-12 reopen 24 May · scroll robusto a #auto-buy-box con offset topbar (62px sticky).
-// scrollIntoView nudo non bastava (ROBY catch: scrollY non si muoveva, hash URL invariato).
+// Reopen-2: smooth scroll era no-op su questa pagina (ROBY measured). Scroll istantaneo
+// window.scrollTo(0, targetY) — instant è UX accettabile, smooth lo verifichi una volta
+// trovato il conflitto (scroll-behavior CSS o altro che annulla il smooth).
 function scrollToAutoBuyBox(){
   var el=document.getElementById('auto-buy-box');
   if(!el)return;
   var rect=el.getBoundingClientRect();
   var topOffset=62+8; // topbar height + small padding
   var targetY=window.pageYOffset+rect.top-topOffset;
-  window.scrollTo({top:targetY,behavior:'smooth'});
+  window.scrollTo(0,targetY);
 }
 
 // GS-15 · Hint "~X blocchi per il 1°" + riga soglia "⚠ Tra ~N blocchi venduti…"
@@ -3349,17 +3347,12 @@ function backToList(){
   document.getElementById('list-view').classList.remove('hidden');
   document.getElementById('list-view').style.display='';
   document.getElementById('cat-filter').style.display='';
-  // GS-9 #1 · ripristina elementi marketplace nascosti in openDetail
+  // GS-9 #1 · ripristina elementi marketplace nascosti in openDetail.
+  document.body.classList.remove('detail-open');
   var mbAlpha=document.querySelector('.marketplace-demo-banner');
   if(mbAlpha)mbAlpha.style.display='';
   var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
   if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='';}
-  var heroSlim=document.querySelector('.explore-hero-slim');
-  if(heroSlim)heroSlim.style.display='';
-  var exToolbar=document.getElementById('explore-toolbar');
-  if(exToolbar)exToolbar.style.display='';
-  var catDash=document.getElementById('cat-dashboard');
-  if(catDash)catDash.style.display='';
   hideTopbarCR();
   loadValuationCount();
   history.pushState({page:'explore'},null,'/airdrops');
