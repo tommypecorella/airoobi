@@ -58,8 +58,9 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)
 .exp-trend-collecting{display:inline-block;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);background:rgba(107,107,107,.06);padding:6px 14px;border:1px dashed rgba(107,107,107,.3);border-radius:20px;margin-top:8px}
 
 /* Stats row */
-.exp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
-@media(max-width:600px){.exp-stats{grid-template-columns:1fr}}
+.exp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:40px}
+@media(max-width:900px){.exp-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.exp-stats{grid-template-columns:1fr}}
 .exp-stat{background:var(--gray-800);border:1px solid var(--gray-700);padding:24px 20px;text-align:center;transition:border-color .3s;border-radius:6px}
 .exp-stat:hover{border-color:var(--gold)}
 .exp-stat-val{font-family:var(--font-h);font-size:clamp(24px,4vw,32px);font-weight:300;color:var(--gold);line-height:1.1}
@@ -86,6 +87,20 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)
 /* Loading skeleton */
 .exp-skel{background:linear-gradient(90deg,var(--gray-800) 25%,rgba(229,225,214,.6) 50%,var(--gray-800) 75%);background-size:200%;animation:shimmer 1.5s infinite;height:20px;margin-bottom:8px;border-radius:3px}
 @keyframes shimmer{0%{background-position:200%}100%{background-position:-200%}}
+
+/* GS-14 · Chart SVG sparkline (no CDN, pure SVG) */
+.exp-chart-wrap{background:var(--gray-800);border:1px solid var(--gray-700);border-radius:6px;padding:24px 20px 16px;margin-bottom:24px}
+.exp-chart-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:16px;flex-wrap:wrap;gap:8px}
+.exp-chart-title{font-family:var(--font-m);font-size:11px;color:var(--gray-400);letter-spacing:2px;text-transform:uppercase}
+.exp-chart-range{font-family:var(--font-m);font-size:10px;color:var(--gray-600);letter-spacing:1px}
+.exp-chart-svg{width:100%;height:auto;display:block;font-family:var(--font-m);font-size:9px}
+.exp-chart-axis{stroke:var(--gray-700);stroke-width:1}
+.exp-chart-gridline{stroke:var(--gray-700);stroke-width:.5;stroke-dasharray:2 3;opacity:.6}
+.exp-chart-line{fill:none;stroke:var(--gold);stroke-width:2}
+.exp-chart-area{fill:rgba(184,137,61,.08)}
+.exp-chart-dot{fill:var(--gold);stroke:var(--black);stroke-width:1.5}
+.exp-chart-label{fill:var(--gray-400);font-size:9px}
+.exp-chart-empty{text-align:center;color:var(--gray-400);font-size:13px;padding:32px 12px;font-style:italic}
 
 /* Footer */
 .exp-footer{padding:32px 24px;text-align:center;border-top:1px solid var(--gray-700);margin-top:auto}
@@ -156,12 +171,27 @@ html:not([data-lang]) .it{display:inline}
       <div class="exp-stat-label"><span class="it">Treasury (EUR)</span><span class="en">Treasury (EUR)</span></div>
     </div>
     <div class="exp-stat">
+      <div class="exp-stat-val" id="stat-marketcap">—</div>
+      <div class="exp-stat-label"><span class="it">Market cap (EUR)</span><span class="en">Market cap (EUR)</span></div>
+    </div>
+    <div class="exp-stat">
       <div class="exp-stat-val" id="stat-circulating">—</div>
       <div class="exp-stat-label"><span class="it">ROBI in circolazione</span><span class="en">ROBI in circulation</span></div>
     </div>
     <div class="exp-stat">
       <div class="exp-stat-val" id="stat-snapshots">—</div>
       <div class="exp-stat-label"><span class="it">Snapshot raccolti</span><span class="en">Snapshots collected</span></div>
+    </div>
+  </div>
+
+  <!-- GS-14 · Chart sparkline andamento prezzo ROBI (SVG no-CDN) -->
+  <div class="exp-chart-wrap">
+    <div class="exp-chart-head">
+      <div class="exp-chart-title"><span class="it">Andamento prezzo ROBI</span><span class="en">ROBI Price trend</span></div>
+      <div class="exp-chart-range" id="chart-range-label">—</div>
+    </div>
+    <div id="chart-container">
+      <div class="exp-chart-empty"><span class="it">Caricamento grafico…</span><span class="en">Loading chart…</span></div>
     </div>
   </div>
 
@@ -198,7 +228,7 @@ html:not([data-lang]) .it{display:inline}
     &copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.24-4.32.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.24-4.36.0</div>
 </footer>
 
 <script>
@@ -260,6 +290,9 @@ async function loadMarketData(){
   document.getElementById('stat-treasury').textContent=formatEur(md.treasury_eur);
   document.getElementById('stat-circulating').textContent=formatNum(md.robi_circulating);
   document.getElementById('stat-snapshots').textContent=formatNum(md.snapshot_count);
+  // GS-14: Market cap = price × circulating. Per ROBI treasury-backed ≈ Treasury.
+  var marketcap=Number(md.price_eur||0)*Number(md.robi_circulating||0);
+  document.getElementById('stat-marketcap').textContent=formatEur(marketcap);
 
   var collectingEl=document.getElementById('trend-collecting');
   var trendEl=document.getElementById('trend-pill');
@@ -282,6 +315,7 @@ async function loadMarketData(){
 
 async function loadSnapshots(){
   var rows=await rpc('get_robi_snapshots_recent',{p_limit:24});
+  renderChart(rows);
   var body=document.getElementById('snap-body');
   if(!rows||!Array.isArray(rows)||rows.length===0){
     var lang=document.documentElement.getAttribute('data-lang')||'it';
@@ -296,6 +330,64 @@ async function loadSnapshots(){
       +'<td class="mono">'+formatNum(r.robi_circulating)+'</td>'
       +'</tr>';
   }).join('');
+}
+
+// GS-14 · Sparkline SVG no-CDN. Asse X = snapshot index (oldest→newest), Y = price_eur.
+// Asse Y auto-scalato min/max con padding 10%. Polyline + area sotto. Punti come dot.
+function renderChart(rows){
+  var container=document.getElementById('chart-container');
+  var rangeLabel=document.getElementById('chart-range-label');
+  if(!container)return;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(!rows||!Array.isArray(rows)||rows.length===0){
+    container.innerHTML='<div class="exp-chart-empty">'+(lang==='it'?'Nessuno snapshot ancora — il grafico apparirà dal primo':'No snapshots yet — chart will appear after the first one')+'</div>';
+    if(rangeLabel)rangeLabel.textContent='—';
+    return;
+  }
+  // Ordine cronologico ascendente per il grafico (la RPC ritorna DESC)
+  var sorted=rows.slice().sort(function(a,b){return new Date(a.taken_at)-new Date(b.taken_at);});
+  if(sorted.length===1){
+    var only=Number(sorted[0].price_eur);
+    var t0=new Date(sorted[0].taken_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+    container.innerHTML='<div class="exp-chart-empty">'+(lang==='it'?'Un solo snapshot ('+t0+', €'+only.toFixed(4)+'). Il grafico si arricchisce ad ogni snapshot orario.':'Single snapshot ('+t0+', €'+only.toFixed(4)+'). Chart grows with each hourly snapshot.')+'</div>';
+    if(rangeLabel)rangeLabel.textContent=(lang==='it'?'1 punto':'1 point');
+    return;
+  }
+  // Build sparkline
+  var W=720,H=200,PADL=46,PADR=12,PADT=14,PADB=22;
+  var IW=W-PADL-PADR,IH=H-PADT-PADB;
+  var prices=sorted.map(function(r){return Number(r.price_eur);});
+  var pMin=Math.min.apply(null,prices),pMax=Math.max.apply(null,prices);
+  if(pMin===pMax){pMin=pMin*0.95;pMax=pMax*1.05;if(pMin===pMax){pMin=0;pMax=1;}}
+  var rng=pMax-pMin;
+  var pad=rng*0.1;
+  var yMin=pMin-pad,yMax=pMax+pad;
+  var n=sorted.length;
+  function x(i){return PADL+(n>1?(i*IW)/(n-1):IW/2);}
+  function y(p){return PADT+(IH-(((p-yMin)/(yMax-yMin))*IH));}
+  var line=sorted.map(function(r,i){return (i===0?'M':'L')+x(i).toFixed(1)+','+y(Number(r.price_eur)).toFixed(1);}).join(' ');
+  var area=line+' L'+x(n-1).toFixed(1)+','+(PADT+IH).toFixed(1)+' L'+x(0).toFixed(1)+','+(PADT+IH).toFixed(1)+' Z';
+  var dots=sorted.map(function(r,i){return '<circle class="exp-chart-dot" cx="'+x(i).toFixed(1)+'" cy="'+y(Number(r.price_eur)).toFixed(1)+'" r="2.5"><title>€'+Number(r.price_eur).toFixed(4)+' · '+new Date(r.taken_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})+'</title></circle>';}).join('');
+  // Y-axis labels: 3 levels (min, mid, max)
+  var yLabels='';
+  [yMax,(yMax+yMin)/2,yMin].forEach(function(v,idx){
+    var yy=PADT+(idx*IH)/2;
+    yLabels+='<line class="exp-chart-gridline" x1="'+PADL+'" y1="'+yy.toFixed(1)+'" x2="'+(PADL+IW).toFixed(1)+'" y2="'+yy.toFixed(1)+'"/>';
+    yLabels+='<text class="exp-chart-label" x="'+(PADL-6)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end">€'+v.toFixed(v<1?4:2)+'</text>';
+  });
+  // X-axis labels: oldest + newest timestamps
+  var tOld=new Date(sorted[0].taken_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  var tNew=new Date(sorted[n-1].taken_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+  container.innerHTML='<svg class="exp-chart-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" role="img" aria-label="'+(lang==='it'?'Grafico andamento prezzo ROBI':'ROBI price trend chart')+'">'
+    +yLabels
+    +'<path class="exp-chart-area" d="'+area+'"/>'
+    +'<path class="exp-chart-line" d="'+line+'"/>'
+    +dots
+    +'<line class="exp-chart-axis" x1="'+PADL+'" y1="'+(PADT+IH)+'" x2="'+(PADL+IW)+'" y2="'+(PADT+IH)+'"/>'
+    +'<text class="exp-chart-label" x="'+PADL+'" y="'+(H-6)+'" text-anchor="start">'+tOld+'</text>'
+    +'<text class="exp-chart-label" x="'+(PADL+IW)+'" y="'+(H-6)+'" text-anchor="end">'+tNew+'</text>'
+    +'</svg>';
+  if(rangeLabel)rangeLabel.textContent=(lang==='it'?n+' snapshot':n+' snapshots');
 }
 
 async function refresh(){

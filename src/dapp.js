@@ -5400,7 +5400,9 @@ async function loadActivityFeed(){
         cursor='pointer';
         hoverCol='var(--gold)';
       }else if((item.type==='purchase'||item.type==='activity') && item.airdrop_id){
-        clickAttr='onclick="navigateTo(\'explore\');openDetail(\''+String(item.airdrop_id).replace(/\'/g,"\\'")+'\')"';
+        // GS-5 follow-up bundle (ROBY_SignOff_GS5 §5): URL canonico /dapp/airdrop/:id per share/refresh
+        var safeId=String(item.airdrop_id).replace(/\'/g,"\\'");
+        clickAttr='onclick="navigateTo(\'explore\');openDetail(\''+safeId+'\');history.replaceState({page:\'explore\',detail:\''+safeId+'\'},null,\'/dapp/airdrop/\'+\''+safeId+'\')"';
         cursor='pointer';
         hoverCol='var(--gold)';
       }
