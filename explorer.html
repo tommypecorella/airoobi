@@ -29,8 +29,8 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--black: #FFFFFF;--white: #0F1417;--gold: #B8893D;--gold-dim:rgba(184,137,61,.3);--gray-300:#3F3F3F;--gray-400:#6B6B6B;--gray-700:#E5E1D6;--gray-800:#FAFAF7;--gray-600:#9F7820;--aria:#4A9EFF;--kas:#49EACB;--font-h: 'Inter', system-ui, sans-serif;--font-b:'Inter','Helvetica Neue',sans-serif;--font-m:'JetBrains Mono','Courier New',monospace}
-html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased}
-body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)}
+html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased;max-width:100vw;overflow-x:hidden}
+body{min-height:100vh;display:flex;flex-direction:column;background:var(--black);max-width:100vw;overflow-x:hidden}
 
 /* Header */
 .exp-header{padding:32px 24px 24px;text-align:center;border-bottom:1px solid var(--gray-700)}
@@ -46,7 +46,7 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)
 .exp-lang:hover{border-color:var(--gold);color:var(--gold)}
 
 /* Container */
-.exp-container{max-width:960px;margin:0 auto;padding:32px 24px;flex:1}
+.exp-container{max-width:960px;width:100%;min-width:0;margin:0 auto;padding:32px 24px;flex:1}
 
 /* Stats row */
 .exp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:40px}
@@ -64,7 +64,7 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)
 .exp-table th{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;text-align:left;padding:10px 12px;border-bottom:1px solid var(--gray-700);white-space:nowrap}
 .exp-table td{font-size:13px;padding:12px;border-bottom:1px solid rgba(55,65,81,.4);color:var(--gray-300)}
 .exp-table tr:hover td{background:rgba(74,158,255,.03)}
-.exp-table .mono{font-family:var(--font-m);font-size:11px;letter-spacing:.5px}
+.exp-table .mono{font-family:var(--font-m);font-size:11px;letter-spacing:.5px;word-break:break-all;overflow-wrap:anywhere}
 .exp-table .rank{color:var(--gold);font-family:var(--font-h);font-size:18px;font-weight:400;width:40px}
 .exp-table .amount-pos{color:var(--kas);font-family:var(--font-m);font-size:12px}
 .exp-table .amount-neg{color:#f87171;font-family:var(--font-m);font-size:12px}
@@ -94,7 +94,7 @@ html[data-lang="en"] .en{display:inline}
 html:not([data-lang]) .it{display:inline}
 
 /* Responsive table scroll */
-.exp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.exp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;min-width:0;max-width:100%}
 </style>
 </head>
 <body>
@@ -183,7 +183,7 @@ html:not([data-lang]) .it{display:inline}
     &copy; 2026 AIROOBI — Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.09-4.12.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.25-4.13.0</div>
 </footer>
 
 <script>
