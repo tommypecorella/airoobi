@@ -4299,7 +4299,7 @@ document.addEventListener('DOMContentLoaded',function(){
 
 // ── Info tooltip system ──
 var ABO_TIPS={
-  'sec-overview':{it:'Panoramica generale: utenti registrati, ARIA in circolo, check-in, referral, valore nominale ROBI.',en:'General overview: registered users, ARIA in circulation, check-ins, referrals, ROBI nominal value.'},
+  'sec-overview':{it:'Panoramica generale: utenti registrati, ARIA in circolo, sequenza giornaliera, referral, valore nominale ROBI.',en:'General overview: registered users, ARIA in circulation, daily streak, referrals, ROBI nominal value.'},
   'sec-users':{it:'Gli ultimi utenti iscritti con saldo ARIA, sequenza, ROBI accumulati e stato profilo. Clicca una riga per il dettaglio utente.',en:'Recent signups with ARIA balance, streak, ROBI and profile status. Click a row for user detail.'},
   'sec-valutazioni':{it:'Coda delle submission utenti: foto oggetto + dati, da valutare e trasformare in draft airdrop. Solo admin ed evaluator (filtrati per categoria).',en:'User submission queue: photos + data, to review and convert into airdrop drafts. Admin and evaluators only (filtered by category).'},
   'sec-airdrops':{it:'Gestione airdrop in tutti gli stati: draft, accettato, presale, sale, closed, completed. Crea, modifica, blocca/sblocca e promuovi.',en:'Airdrop management across all states: draft, accepted, presale, sale, closed, completed. Create, edit, block/unblock and promote.'},
@@ -4309,7 +4309,7 @@ var ABO_TIPS={
   'sec-treasury':{it:'Il cuore economico: Treasury balance, valore nominale ROBI, Service balance, revenue ads. Qui aggiungi fondi e vedi lo split automatico Treasury/Service.',en:'Economic core: Treasury balance, ROBI nominal value, Service balance, ad revenue. Add funds here and see automatic Treasury/Service split.'},
   'sec-platform-aria':{it:'Conto ARIA della piattaforma AIROOBI. Ogni submission fee (50 ARIA) e future fee airdrop confluiscono qui. Ogni transazione è tracciata e consultabile.',en:'AIROOBI platform ARIA account. Every submission fee (50 ARIA) and future airdrop fees flow here. Every transaction is tracked and auditable.'},
   'pa-balance':{it:'Saldo ARIA corrente del conto AIROOBI (totale entrate - totale uscite).',en:'Current ARIA balance of the AIROOBI account (total in - total out).'},
-  'sec-coin':{it:'Metriche del token ARIA: circolazione totale, emissione giornaliera, distribuzione per fonte (faucet, check-in, referral, video).',en:'ARIA token metrics: total supply, daily emission, distribution by source (faucet, check-in, referral, video).'},
+  'sec-coin':{it:'Metriche del token ARIA: circolazione totale, emissione giornaliera, distribuzione per fonte (faucet, sequenza giornaliera).',en:'ARIA token metrics: total supply, daily emission, distribution by source (faucet, daily streak).'},
   'sec-nft-valuation':{it:'Valutazione aggregata dei ROBI: quanti in circolazione, valore nominale per unità, proiezione in KAS.',en:'Aggregate ROBI valuation: how many in circulation, nominal value per unit, KAS projection.'},
   'val-treasury':{it:'Capitale in EUR accantonato per garantire il valore dei ROBI. Si alimenta da % sui ricavi degli airdrop (venditori, ads, buyback). Inserito a mano nel campo TREASURY (€) sopra.',en:'EUR reserve backing ROBI value. Fed by revenue cuts from airdrops (sellers, ads, buybacks). Manually entered in the TREASURY (€) field above.'},
   'val-minted':{it:'Totale ROBI esistenti nel sistema (SUM shares da nft_rewards tipo ROBI/NFT_REWARD). In assenza di burn, coincide con i ROBI in circolazione.',en:'Total ROBI existing in system (SUM shares from nft_rewards type ROBI/NFT_REWARD). Without burn, equals circulating ROBI.'},
@@ -4328,9 +4328,9 @@ var ABO_TIPS={
   'ov-users':{it:'Numero totale di utenti registrati (con profilo creato). Include admin, evaluator, partecipanti.',en:'Total registered users (with profile). Includes admins, evaluators and participants.'},
   'ov-remaining':{it:'Posti rimanenti nel programma Alpha Brave (target 1.000 utenti prima dello Stage 1).',en:'Remaining slots in the Alpha Brave program (target 1,000 users before Stage 1).'},
   'ov-points':{it:'ARIA totali in circolazione: somma dei saldi utenti + ARIA non ancora spese negli airdrop.',en:'Total ARIA in circulation: sum of user balances + ARIA not yet spent in airdrops.'},
-  'ov-checkins':{it:'Utenti che hanno completato il check-in giornaliero oggi (reset a mezzanotte UTC).',en:'Users who completed today\'s check-in (resets at midnight UTC).'},
-  'ov-videos':{it:'Visualizzazioni video totali oggi (max 5 per utente, +1 ARIA ciascuna).',en:'Total video views today (max 5 per user, +1 ARIA each).'},
-  'ov-referrals':{it:'Referral confermati (utente invitato che ha fatto signup + primo check-in). Bonus +10/+15 ARIA al referente.',en:'Confirmed referrals (invited user signed up + did first check-in). Bonus +10/+15 ARIA to referrer.'},
+  'ov-checkins':{it:'Utenti che hanno timbrato la sequenza giornaliera oggi (reset a mezzanotte UTC).',en:'Users who stamped the daily streak today (resets at midnight UTC).'},
+  'ov-videos':{it:'Visualizzazioni video totali oggi.',en:'Total video views today.'},
+  'ov-referrals':{it:'Referral confermati (invitato che ha fatto signup + primo accesso). Bonus +5 ROBI al referente e +5 ROBI all\'invitato.',en:'Confirmed referrals (invited user signed up + first login). Bonus +5 ROBI to referrer and +5 ROBI to invitee.'},
   'ov-avatars':{it:'Utenti che hanno impostato una foto profilo — proxy per engagement iniziale.',en:'Users with a profile photo set — proxy for initial engagement.'},
   'ov-nft-circulating':{it:'ROBI totali distribuiti agli utenti (fractional + interi). Somma di tutti i ROBI minati da tutti gli airdrop.',en:'Total ROBI distributed to users (fractional + whole). Sum of all ROBI mined across airdrops.'},
   'ov-robi-nominal':{it:'Valore nominale attuale di 1 ROBI in EUR (Treasury balance / ROBI in circolazione). Indicativo — non è il prezzo di riscossione.',en:'Current nominal value of 1 ROBI in EUR (Treasury balance / ROBI in circulation). Indicative — not the redemption price.'},
