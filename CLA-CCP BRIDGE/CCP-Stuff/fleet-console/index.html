@@ -149,6 +149,26 @@
   .modal-actions .btn.prim{background:var(--gold);border-color:var(--gold);color:#0b0b0d}
   .note{font-size:11.5px;color:var(--faint);background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px;line-height:1.5}
 
+  /* ARCHIVIO */
+  .arch-search{width:100%;background:var(--bg);border:1px solid var(--line2);color:var(--txt);border-radius:9px;padding:9px 11px;font-size:13px;outline:none;margin-bottom:8px}
+  .arch-search:focus{border-color:var(--gold)}
+  .arch-count{font-size:11px;color:var(--faint);margin:0 2px 10px}
+  .arch-item{background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 11px;margin-bottom:8px;cursor:pointer}
+  .arch-item:hover{border-color:var(--line2);background:var(--raise)}
+  .arch-top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+  .arch-kind{font-size:9.5px;font-weight:800;letter-spacing:.04em;padding:1px 6px;border-radius:5px;background:#33333b;color:#bdbcb6}
+  .arch-kind.CCP{background:#1e2c3a;color:#8fb6e6}.arch-kind.ROBY{background:#3a341e;color:#e6c869}.arch-kind.ARO{background:#2e2340;color:#c3a0e8}.arch-kind.ROBLOCK{background:#3a341e;color:#e0b84a}.arch-kind.AIRIA{background:#1e3a25;color:#7bd897}
+  .arch-date{font-size:10.5px;color:var(--faint);margin-left:auto}
+  .arch-title{font-size:13px;font-weight:600;color:var(--txt);line-height:1.35}
+  .arch-fn{font-size:10.5px;color:var(--faint);margin-top:3px;word-break:break-all}
+  /* DOC VIEWER */
+  .modal.doc{width:720px;max-width:94vw;display:flex;flex-direction:column;max-height:84vh}
+  .doc-head{display:flex;align-items:flex-start;gap:10px}
+  .doc-head h3{margin:0 0 2px;font-size:16px}
+  .doc-head p{margin:0;font-size:11.5px;color:var(--faint)}
+  .doc-head .iconbtn{margin-left:auto;flex:0 0 auto}
+  .doc-body{margin-top:14px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:14px;font-size:12.5px;line-height:1.55;color:#dedcd6;white-space:pre-wrap;word-wrap:break-word;font-family:inherit}
+
   @media(max-width:1000px){.body{grid-template-columns:200px 1fr}.rail{display:none}}
 </style>
 </head>
@@ -207,6 +227,7 @@
         <button class="tab active" data-tab="team">Squadra</button>
         <button class="tab" data-tab="appr">Approvazioni <span id="apprCount"></span></button>
         <button class="tab" data-tab="tasks">Task</button>
+        <button class="tab" data-tab="archive">Archivio</button>
       </div>
       <div class="rail-scroll" id="railBody"></div>
     </div>
@@ -229,6 +250,17 @@
   </div>
 </div>
 
+<!-- DOC VIEWER MODAL (Archivio) -->
+<div class="modal-bg" id="docModal">
+  <div class="modal doc">
+    <div class="doc-head">
+      <div><h3 id="docTitle"></h3><p id="docMeta"></p></div>
+      <button class="iconbtn" id="docClose" title="Chiudi">✕</button>
+    </div>
+    <pre id="docBody" class="doc-body"></pre>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 /* ============================================================
@@ -241,6 +273,9 @@
    build 2026-05-30c — Fase B status/heartbeat: render "sta facendo X" + dot pulsante
      nel pannello Squadra, TTL anti-stale 5min, subscribe realtime agents, indicatore
      globale "N al lavoro". Org: ROBLOCK (slug roblock), ARO → ROBLOCK.
+   build 2026-05-30d — Fase D archivio: tab "Archivio" con ricerca (titolo/file/agente/
+     status/data) + apertura doc; tabella agora.archive (ingest non distruttivo dei
+     ~374 for-CCP/*.md, read-only in UI). Lazy-load metadati + body on-click.
    GO deploy: Skeezu diretto via chat (non via ROBY RS) — firma OK. [audit-trail]
    Sorgente unica console: CLA-CCP BRIDGE/CCP-Stuff/fleet-console/.
    ============================================================ */
@@ -291,7 +326,8 @@ const SEED_TASKS = [
 
 /* ---------- state ---------- */
 let state = { me:'skeezu', channel:'general', tab:'team', connected:false, lastError:null,
-  agents:[...AGENTS], channels:[...CHANNELS], messages:[], approvals:[], tasks:[] };
+  agents:[...AGENTS], channels:[...CHANNELS], messages:[], approvals:[], tasks:[],
+  archive:[], archiveLoaded:false, archiveQuery:'' };
 let sb = null;
 
 /* ---------- helpers ---------- */
@@ -395,14 +431,56 @@ function renderRail(){
       c.innerHTML=h; b.appendChild(c);
     });
     b.querySelectorAll('[data-ap]').forEach(btn=>btn.onclick=()=>decideApproval(btn.dataset.ap, btn.dataset.act));
-  } else {
+  } else if(state.tab==='tasks'){
     if(!state.tasks.length){b.innerHTML='<div class="empty">Nessun task.</div>';return;}
     state.tasks.forEach(t=>{
       const c=el('div','task');
       c.innerHTML=`<div class="ttl">${t.title}</div><div class="flow"><div class="av" style="width:18px;height:18px;font-size:9px;background:${agent(t.from).color}">${initials(agent(t.from))}</div>→<div class="av" style="width:18px;height:18px;font-size:9px;background:${agent(t.to).color}">${initials(agent(t.to))}</div><span class="st ${t.status}">${t.status.replace('_',' ')}</span></div>`;
       b.appendChild(c);
     });
+  } else if(state.tab==='archive'){
+    renderArchive(b);
   }
+}
+
+/* ---------- render: archivio (Fase D) ---------- */
+function renderArchive(b){
+  if(!state.connected){ b.innerHTML='<div class="empty">Archivio disponibile da connesso.<br>⚙ Collega Supabase.</div>'; return; }
+  if(!state.archiveLoaded){ b.innerHTML='<div class="empty">Carico l\'archivio…</div>'; loadArchive(); return; }
+  b.innerHTML=`<input class="arch-search" id="archSearch" placeholder="Cerca: titolo, file, agente, status…" value="${escapeHtml(state.archiveQuery)}">
+    <div class="arch-count" id="archCount"></div><div id="archiveList"></div>`;
+  const inp=$('#archSearch'); inp.oninput=()=>{ state.archiveQuery=inp.value; renderArchiveList(); };
+  renderArchiveList();
+}
+function renderArchiveList(){
+  const box=$('#archiveList'); if(!box) return;
+  const q=state.archiveQuery.trim().toLowerCase();
+  let list=state.archive;
+  if(q) list=list.filter(d=> (d.title||'').toLowerCase().includes(q) || d.filename.toLowerCase().includes(q) || (d.kind||'').toLowerCase().includes(q) || (d.status||'').toLowerCase().includes(q) || (d.doc_date||'').toLowerCase().includes(q));
+  const cnt=$('#archCount'); if(cnt) cnt.textContent=`${list.length} su ${state.archive.length} doc`;
+  box.innerHTML='';
+  if(!list.length){ box.innerHTML='<div class="empty">Nessun documento.</div>'; return; }
+  list.slice(0,200).forEach(d=>{
+    const c=el('div','arch-item');
+    c.innerHTML=`<div class="arch-top"><span class="arch-kind ${d.kind}">${d.kind||'?'}</span><span class="arch-date">${escapeHtml(d.doc_date||'')}</span></div>
+      <div class="arch-title">${escapeHtml(d.title||d.filename)}</div><div class="arch-fn">${escapeHtml(d.filename)}</div>`;
+    c.onclick=()=>openDoc(d.filename);
+    box.appendChild(c);
+  });
+  if(list.length>200){ const m=el('div','empty'); m.textContent=`… +${list.length-200} altri — affina la ricerca`; box.appendChild(m); }
+}
+async function loadArchive(){
+  if(!sb) return;
+  const r=await sb.from('archive').select('filename,kind,title,doc_date,status').order('filename');
+  if(r.data){ state.archive=r.data; state.archiveLoaded=true; if(state.tab==='archive') renderRail(); }
+  else if(r.error){ const b=$('#railBody'); if(b&&state.tab==='archive') b.innerHTML='<div class="empty">Errore nel caricare l\'archivio.</div>'; }
+}
+async function openDoc(fn){
+  const meta=state.archive.find(d=>d.filename===fn)||{filename:fn};
+  $('#docTitle').textContent=meta.title||fn;
+  $('#docMeta').textContent=`${meta.kind||''}${meta.doc_date?' · '+meta.doc_date:''}${meta.status?' · '+meta.status:''}`;
+  $('#docBody').textContent='Carico…'; $('#docModal').classList.add('show');
+  if(sb){ const r=await sb.from('archive').select('body').eq('filename',fn).maybeSingle(); $('#docBody').textContent=(r.data&&r.data.body)||'(corpo non disponibile)'; }
 }
 
 /* ---------- actions ---------- */
@@ -455,7 +533,7 @@ async function connectSupabase(url,key){
     state.messages = (ms.data||[]).map(x=>({id:x.id,channel:x.channel_slug,sender:x.sender_slug,kind:x.kind,body:x.body,meta:x.meta,created_at:x.created_at})); // success: il bus sostituisce i seed (anche se vuoto)
     if(ap.data) state.approvals = ap.data.map(x=>({id:x.id,title:x.title,detail:x.detail,by:x.requested_by,level:x.level,bl:x.blacklist_ref,status:x.status,decided_by:x.decided_by}));
     if(tk.data) state.tasks = tk.data.map(x=>({id:x.id,title:x.title,from:x.from_slug,to:x.to_slug,status:x.status}));
-    state.connected=true; state.lastError=null;
+    state.connected=true; state.lastError=null; state.archiveLoaded=false;
     // realtime
     sb.channel('agora')
       .on('postgres_changes',{event:'*',schema:'agora',table:'messages'},p=>{
@@ -486,6 +564,8 @@ $('#input').addEventListener('input',autosize);
 document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{state.tab=t.dataset.tab; document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); t.classList.add('active'); renderRail();});
 $('#openSettings').onclick=()=>{ const cfg=JSON.parse(localStorage.getItem(LS.cfg)||'{}'); $('#sbUrl').value=cfg.url||''; $('#sbKey').value=cfg.key||''; $('#modal').classList.add('show'); };
 $('#modal').onclick=e=>{ if(e.target.id==='modal') $('#modal').classList.remove('show'); };
+$('#docClose').onclick=()=>$('#docModal').classList.remove('show');
+$('#docModal').onclick=e=>{ if(e.target.id==='docModal') $('#docModal').classList.remove('show'); };
 $('#clearSb').onclick=()=>{ localStorage.removeItem(LS.cfg); $('#modal').classList.remove('show'); location.reload(); };
 $('#saveSb').onclick=async()=>{ const url=$('#sbUrl').value.trim(), key=$('#sbKey').value.trim(); localStorage.setItem(LS.cfg,JSON.stringify({url,key})); $('#saveSb').textContent='Connessione…'; const ok=await connectSupabase(url,key); $('#saveSb').textContent='Connetti'; $('#modal').classList.remove('show'); renderAll(); if(!ok&&url) alert('Connessione non riuscita: '+(state.lastError||'schema agora non esposto o tabelle assenti')+'\n\nResto in Demo mode. Controlla URL/key del progetto agent-bus.'); };
 
