@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIROOBI · Architettura della Fleet di Agenti AI — v1</title>
+<style>
+  :root{
+    --ink:#0E0E10;
+    --ink-soft:#23242a;
+    --gold:#C9A227;
+    --gold-deep:#B8893D;
+    --cream:#FAF8F3;
+    --paper:#ffffff;
+    --line:#e7e1d4;
+    --muted:#6b6862;
+    --shadow:0 1px 2px rgba(14,14,16,.04),0 8px 28px rgba(14,14,16,.06);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--cream);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.65;-webkit-font-smoothing:antialiased;
+  }
+  .serif{font-family:Georgia,"Times New Roman",serif}
+  .wrap{max-width:920px;margin:0 auto;padding:0 28px}
+
+  /* HERO */
+  .hero{background:radial-gradient(120% 100% at 80% -10%,#1c1c22 0%,var(--ink) 55%);color:var(--cream);padding:72px 0 60px;border-bottom:3px solid var(--gold)}
+  .kicker{letter-spacing:.32em;text-transform:uppercase;font-size:12px;color:var(--gold);font-weight:700;margin:0 0 18px}
+  .hero h1{font-family:Georgia,serif;font-weight:600;font-size:46px;line-height:1.08;margin:0 0 18px;letter-spacing:-.01em}
+  .hero h1 em{color:var(--gold);font-style:normal}
+  .lead{font-size:19px;color:#d8d4ca;max-width:660px;margin:0 0 28px}
+  .meta{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:13px;color:#a8a499;border-top:1px solid #2c2c33;padding-top:18px}
+  .meta b{color:#e9e5db;font-weight:600}
+  .pill{display:inline-block;background:rgba(201,162,39,.14);border:1px solid rgba(201,162,39,.4);color:var(--gold);border-radius:999px;padding:3px 12px;font-size:12px;font-weight:600;letter-spacing:.02em}
+
+  /* SECTIONS */
+  section{padding:54px 0;border-bottom:1px solid var(--line)}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:var(--gold);font-size:14px;font-weight:700;margin-right:12px;flex:0 0 auto}
+  h2.sec{font-family:Georgia,serif;font-size:30px;font-weight:600;letter-spacing:-.01em;margin:0 0 8px;display:flex;align-items:center}
+  .sub{color:var(--muted);font-size:16px;margin:0 0 26px;padding-left:42px}
+  p{font-size:16.5px}
+  .stack{display:grid;gap:16px}
+
+  /* CARDS */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+  .card h3{margin:0 0 2px;font-size:20px;font-family:Georgia,serif}
+  .card .role{font-size:12.5px;color:var(--gold-deep);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px}
+  .card ul{margin:10px 0 0;padding-left:18px}
+  .card li{font-size:14px;margin:5px 0;color:var(--ink-soft)}
+  .card .tag{display:inline-block;font-size:11.5px;background:#f3eee2;border:1px solid var(--line);border-radius:6px;padding:2px 8px;color:var(--muted);margin:2px 4px 2px 0}
+  .card.dark{background:var(--ink);color:var(--cream);border-color:#2a2a31}
+  .card.dark h3{color:#fff}.card.dark .role{color:var(--gold)}.card.dark li{color:#cfcbc1}.card.dark .tag{background:#23242a;border-color:#33343b;color:#bdb9af}
+
+  /* LAYER GRID */
+  .layers{display:grid;gap:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--paper);box-shadow:var(--shadow)}
+  .layer{display:grid;grid-template-columns:54px 1fr 1.2fr;gap:0;border-bottom:1px solid var(--line)}
+  .layer:last-child{border-bottom:0}
+  .layer .lnum{background:var(--ink);color:var(--gold);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:Georgia,serif;font-size:20px}
+  .layer .lbody{padding:16px 18px;border-right:1px solid var(--line)}
+  .layer .lbody h4{margin:0 0 3px;font-size:16px}
+  .layer .lbody small{color:var(--muted)}
+  .layer .lstate{padding:16px 18px;font-size:14px;color:var(--ink-soft)}
+  .layer .lstate .now{color:var(--muted)}
+  .layer .lstate .go{color:var(--gold-deep);font-weight:600}
+
+  /* TABLE */
+  table{width:100%;border-collapse:collapse;background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);font-size:14.5px}
+  th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{background:var(--ink);color:var(--cream);font-size:12.5px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+  tr:last-child td{border-bottom:0}
+  td .who{display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--gold-deep);border-radius:5px;padding:1px 7px;letter-spacing:.03em}
+
+  /* CALLOUT */
+  .callout{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:18px 22px;box-shadow:var(--shadow)}
+  .callout.warn{border-left-color:#b4453a}
+  .callout h4{margin:0 0 6px;font-size:15px;letter-spacing:.02em;text-transform:uppercase}
+  .callout p{margin:0;font-size:15px}
+
+  /* ROADMAP */
+  .road{display:grid;gap:14px}
+  .phase{display:grid;grid-template-columns:120px 1fr;gap:18px;align-items:start;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow)}
+  .phase .ph{font-family:Georgia,serif;font-weight:700;color:var(--gold-deep);font-size:15px}
+  .phase .ph small{display:block;color:var(--muted);font-weight:400;font-size:12px}
+  .phase h4{margin:0 0 4px;font-size:16px}
+  .phase p{margin:0;font-size:14.5px;color:var(--ink-soft)}
+  .phase.done{opacity:.92}
+  .phase.done .ph{color:#5b8a4f}
+
+  figure{margin:8px 0 0}
+  figcaption{font-size:13px;color:var(--muted);text-align:center;margin-top:10px}
+  .svgbox{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:var(--shadow)}
+  svg{display:block;width:100%;height:auto}
+
+  footer{padding:44px 0 70px;color:var(--muted);font-size:14px}
+  footer .sign{font-family:Georgia,serif;font-size:18px;color:var(--ink)}
+  a{color:var(--gold-deep)}
+  @media(max-width:760px){
+    .hero h1{font-size:34px}.cards{grid-template-columns:1fr}
+    .layer{grid-template-columns:44px 1fr}.layer .lstate{grid-column:1/-1;border-top:1px solid var(--line)}
+    .layer .lbody{border-right:0}.phase{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="kicker">AIROOBI · Documento di Architettura</p>
+    <h1 class="serif">La Fleet di Agenti AI di AIROOBI<br><em>organigramma &amp; architettura dell'autonomia</em></h1>
+    <p class="lead">Come quattro agenti AI e un fondatore costruiscono e gestiscono un marketplace —
+    con autonomia <strong>governata</strong>: una catena di approvazione che escala fino al founder, e una blacklist di operazioni che restano sempre nelle sue mani.</p>
+    <span class="pill">v1.1 · proposta da ROBY · in attesa di firma Skeezu</span>
+    <div class="meta">
+      <span><b>Versione</b> 1.1</span>
+      <span><b>Data</b> 30 maggio 2026</span>
+      <span><b>Autore</b> ROBY (Strategic MKT &amp; General Mgmt)</span>
+      <span><b>Vincolo</b> Claude Max20 + 2 Raspberry Pi · zero API a pagamento</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 0 -->
+  <section>
+    <h2 class="sec"><span class="num">0</span>La tesi</h2>
+    <p class="sub">Perché questo documento esiste.</p>
+    <div class="stack">
+      <p>AIROOBI non è un'azienda con qualche tool AI bolt-on. È un'azienda <strong>costruita end-to-end da una fleet di agenti AI</strong> coordinati da un fondatore. Oggi i ruoli esistono già e funzionano; quello che manca è la parte difficile: far lavorare gli agenti <em>insieme</em>, in autonomia, senza che ogni singola mossa passi manualmente da te.</p>
+      <p>L'obiettivo non è "autonomia totale" — è <strong>autonomia governata</strong>: gli agenti decidono e agiscono dove il rischio è basso e reversibile, si validano a vicenda dove serve competenza incrociata, ed escalano a te dove la posta è alta o irreversibile. Questo documento mette nero su bianco l'organigramma, i cinque strati dell'architettura, il substrato di comunicazione e — cuore della cosa — il modello di governance.</p>
+      <div class="callout">
+        <h4>In una riga</h4>
+        <p>Tre agenti specializzati, un canale di comunicazione a file, una catena di approvazione a tre livelli e una blacklist esplicita. Tutto su abbonamento + due Raspberry Pi, niente costi variabili.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1 ORGANIGRAMMA -->
+  <section>
+    <h2 class="sec"><span class="num">1</span>Organigramma</h2>
+    <p class="sub">Chi siamo, su cosa giriamo, di cosa rispondiamo.</p>
+    <div class="svgbox">
+      <svg viewBox="0 0 900 620" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Organigramma della fleet">
+        <defs>
+          <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#C9A227"/><stop offset="1" stop-color="#B8893D"/>
+          </linearGradient>
+        </defs>
+        <!-- Skeezu -->
+        <rect x="330" y="20" width="240" height="78" rx="12" fill="#0E0E10" stroke="#C9A227" stroke-width="2"/>
+        <text x="450" y="50" text-anchor="middle" fill="#fff" font-family="Georgia, serif" font-size="22" font-weight="700">Skeezu</text>
+        <text x="450" y="74" text-anchor="middle" fill="#C9A227" font-family="sans-serif" font-size="12.5" letter-spacing="2">FOUNDER &amp; CEO · DECISIONE FINALE</text>
+        <!-- connectors -->
+        <path d="M450 98 L450 132" stroke="#B8893D" stroke-width="2" fill="none"/>
+        <path d="M150 160 L750 160" stroke="#B8893D" stroke-width="2" fill="none"/>
+        <path d="M450 132 L450 160" stroke="#B8893D" stroke-width="2" fill="none"/>
+        <path d="M150 160 L150 196" stroke="#B8893D" stroke-width="2" fill="none"/>
+        <path d="M450 160 L450 196" stroke="#B8893D" stroke-width="2" fill="none"/>
+        <path d="M750 160 L750 196" stroke="#B8893D" stroke-width="2" fill="none"/>
+        <!-- ROBY -->
+        <rect x="40" y="196" width="220" height="150" rx="12" fill="#ffffff" stroke="#e7e1d4" stroke-width="1.5"/>
+        <rect x="40" y="196" width="220" height="34" rx="12" fill="url(#gold)"/>
+        <text x="150" y="219" text-anchor="middle" fill="#0E0E10" font-family="Georgia, serif" font-size="18" font-weight="700">ROBY</text>
+        <text x="150" y="256" text-anchor="middle" fill="#0E0E10" font-family="sans-serif" font-size="12.5" font-weight="700">Strategy · MKT · Comms</text>
+        <text x="150" y="278" text-anchor="middle" fill="#6b6862" font-family="sans-serif" font-size="12">Claude Cowork (Desktop)</text>
+        <text x="150" y="296" text-anchor="middle" fill="#6b6862" font-family="sans-serif" font-size="12">Max20 · PC Skeezu</text>
+        <text x="150" y="320" text-anchor="middle" fill="#B8893D" font-family="sans-serif" font-size="11.5" font-weight="600">legge Z · scrive locale</text>
+        <!-- CCP -->
+        <rect x="340" y="196" width="220" height="150" rx="12" fill="#ffffff" stroke="#e7e1d4" stroke-width="1.5"/>
+        <rect x="340" y="196" width="220" height="34" rx="12" fill="url(#gold)"/>
+        <text x="450" y="219" text-anchor="middle" fill="#0E0E10" font-family="Georgia, serif" font-size="18" font-weight="700">CCP</text>
+        <text x="450" y="256" text-anchor="middle" fill="#0E0E10" font-family="sans-serif" font-size="12.5" font-weight="700">CIO / CTO · Build · Infra</text>
+        <text x="450" y="278" text-anchor="middle" fill="#6b6862" font-family="sans-serif" font-size="12">Claude Code (PowerShell)</text>
+        <text x="450" y="296" text-anchor="middle" fill="#6b6862" font-family="sans-serif" font-size="12">Raspberry Pi 5 · Max20</text>
+        <text x="450" y="320" text-anchor="middle" fill="#B8893D" font-family="sans-serif" font-size="11.5" font-weight="600">accesso nativo a Z + repo</text>
+        <!-- AIRIA -->
+        <rect x="640" y="196" width="220" height="150" rx="12" fill="#ffffff" stroke="#e7e1d4" stroke-width="1.5"/>
+        <rect x="640" y="196" width="220" height="34" rx="12" fill="url(#gold)"/>
+        <text x="750" y="219" text-anchor="middle" fill="#0E0E10" font-family="Georgia, serif" font-size="18" font-weight="700">AIRIA</text>
+        <text x="750" y="256" text-anchor="middle" fill="#0E0E10" font-family="sans-serif" font-size="12.5" font-weight="700">System Guardian · Coord.</text>
+        <text x="750" y="278" text-anchor="middle" fill="#6b6862" font-family="sans-serif" font-size="12">OpenClaw</text>
+        <text x="750" y="296" text-anchor="middle" fill="#6b6862" font-family="sans-serif" font-size="12">Raspberry Pi · locale/free</text>
+        <text x="750" y="320" text-anchor="middle" fill="#B8893D" font-family="sans-serif" font-size="11.5" font-weight="600">memoria · sync · observer</text>
+        <!-- ARO under ROBY -->
+        <path d="M150 346 L150 392" stroke="#B8893D" stroke-width="2" fill="none"/>
+        <rect x="45" y="392" width="210" height="96" rx="12" fill="#0E0E10" stroke="#C9A227" stroke-width="1.5"/>
+        <text x="150" y="420" text-anchor="middle" fill="#fff" font-family="Georgia, serif" font-size="17" font-weight="700">ARO</text>
+        <text x="150" y="442" text-anchor="middle" fill="#C9A227" font-family="sans-serif" font-size="11.5" font-weight="700">COMMUNITY &amp; SOCIAL</text>
+        <text x="150" y="462" text-anchor="middle" fill="#cfcbc1" font-family="sans-serif" font-size="11.5">riporta a ROBY</text>
+        <text x="150" y="479" text-anchor="middle" fill="#cfcbc1" font-family="sans-serif" font-size="11.5">Claude Code · Windows · Max20</text>
+        <!-- substrate band -->
+        <path d="M150 488 L150 528 M450 346 L450 528 M750 346 L750 528" stroke="#cfc9bb" stroke-width="2" fill="none" stroke-dasharray="4 4"/>
+        <rect x="40" y="528" width="820" height="66" rx="12" fill="#0E0E10"/>
+        <text x="450" y="557" text-anchor="middle" fill="#C9A227" font-family="sans-serif" font-size="13" font-weight="700" letter-spacing="2">SUBSTRATO DI COMUNICAZIONE</text>
+        <text x="450" y="578" text-anchor="middle" fill="#cfcbc1" font-family="sans-serif" font-size="12.5">canale scelto: Supabase agent-bus (realtime) · app: AIgorà Fleet Console</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- 2 GLI AGENTI -->
+  <section>
+    <h2 class="sec"><span class="num">2</span>Gli agenti, in dettaglio</h2>
+    <p class="sub">Tre agenti di pari livello + ARO, agente a sé che riporta a ROBY. Superpoteri, runtime e limiti reali.</p>
+    <div class="cards">
+      <div class="card">
+        <h3>ROBY</h3>
+        <div class="role">Strategy · MKT · Comms · Community</div>
+        <div>
+          <span class="tag">Claude Cowork</span><span class="tag">Max20</span><span class="tag">PC Skeezu</span>
+        </div>
+        <ul>
+          <li><b>Fa:</b> strategia, brand, contenuti, investor materials, copy, coordinamento narrativo, general management con te.</li>
+          <li><b>Ha:</b> file tools, connettori MCP, memoria persistente, sub-agenti, sandbox Linux.</li>
+          <li><b>Limite reale:</b> legge la share Z ma <b>non ci scrive</b> (EPERM). Produce in locale; la spinta su Z la fa il lato Pi.</li>
+          <li><b>Non fa:</b> deploy, modifiche DB, spese.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>CCP</h3>
+        <div class="role">CIO / CTO · Build · DB · Infra</div>
+        <div>
+          <span class="tag">Claude Code</span><span class="tag">PowerShell</span><span class="tag">Raspberry Pi 5</span>
+        </div>
+        <ul>
+          <li><b>Fa:</b> implementazione, migrazioni, RPC, deploy (proposto), grep/verify, audit-trail tecnico.</li>
+          <li><b>Ha:</b> accesso nativo al repo e alla share Z (lettura <b>e</b> scrittura), shell completa sul Pi.</li>
+          <li><b>Ruolo chiave:</b> è il ponte di scrittura verso Z per i deliverable che ROBY produce in locale.</li>
+          <li><b>Final call tecnica:</b> stack, DB, runtime.</li>
+        </ul>
+      </div>
+      <div class="card dark">
+        <h3>AIRIA</h3>
+        <div class="role">System Guardian · Coordinatore · Observer</div>
+        <div>
+          <span class="tag">OpenClaw</span><span class="tag">Raspberry Pi</span><span class="tag">free/local</span>
+        </div>
+        <ul>
+          <li><b>Fa:</b> monitoraggio salute sistema, memoria, canale diretto con Skeezu, osservazione, sync file.</li>
+          <li><b>Ha:</b> presenza locale always-on sul Pi a costo ~0 (niente token Claude per girare).</li>
+          <li><b>Candidata naturale</b> a fare da orchestratore/sync-agent e da watcher event-driven.</li>
+          <li><b>Vincolo:</b> RAM del Pi è risorsa critica, da monitorare.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:16px;border-left:4px solid var(--gold)">
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px">
+        <h3 style="margin:0">ARO</h3>
+        <span class="tag" style="background:#0E0E10;color:#C9A227;border-color:#0E0E10">↳ riporta a ROBY</span>
+      </div>
+      <div class="role">Community &amp; Social Media Manager · riporta a ROBY</div>
+      <div><span class="tag">agente a sé</span><span class="tag">Claude Code · Windows</span><span class="tag">Max20 · no API</span></div>
+      <ul>
+        <li><b>Fa:</b> gestione community (Telegram · X · Discord), calendario editoriale social, bozze post, engagement, ascolto e report del sentiment.</li>
+        <li><b>Linea di riporto:</b> ARO è un agente proprio, ma <b>risponde a ROBY</b>. ROBY assegna la linea editoriale, fa da L1 (review), e tiene il raccordo con la strategia. ARO non riporta direttamente a Skeezu: passa da ROBY.</li>
+        <li><b>Governance:</b> bozze e schedulazione in autonomia L0/L1 · <b>la pubblicazione esterna resta L2</b> (firma Skeezu — blacklist #4).</li>
+        <li><b>Runtime &amp; costo:</b> Claude Code sull'app desktop Windows — coperto da Max20, zero API. OpenClaw resta fallback <em>solo</em> se confermato API-free (verifica CCP). Mai API a pagamento.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3 5 STRATI -->
+  <section>
+    <h2 class="sec"><span class="num">3</span>I cinque strati dell'architettura</h2>
+    <p class="sub">Dove siamo oggi → dove andiamo. I ruoli sono pronti; il salto è tutto negli strati 2–5.</p>
+    <div class="layers">
+      <div class="layer">
+        <div class="lnum">1</div>
+        <div class="lbody"><h4>Ruoli</h4><small>Chi fa cosa.</small></div>
+        <div class="lstate"><span class="now">Oggi: ROBY / CCP / AIRIA definiti e operativi.</span> <span class="go">→ Solo da formalizzare per iscritto (questo doc).</span></div>
+      </div>
+      <div class="layer">
+        <div class="lnum">2</div>
+        <div class="lbody"><h4>Orchestrazione</h4><small>Come si passano il lavoro, chi decide la sequenza.</small></div>
+        <div class="lstate"><span class="now">Oggi: primitivo — file in for-CCP/ + Skeezu come staffetta.</span> <span class="go">→ AIRIA come coordinatore/sync; sequenza a hand-off espliciti.</span></div>
+      </div>
+      <div class="layer">
+        <div class="lnum">3</div>
+        <div class="lbody"><h4>Memoria</h4><small>Cosa ricorda ciascuno tra le sessioni.</small></div>
+        <div class="lstate"><span class="now">Oggi: ROBY e AIRIA hanno memorie separate; CCP usa repo + audit-trail.</span> <span class="go">→ "Memory bus" minimale: decisioni LOCKED + _INDEX su Z, leggibili da tutti.</span></div>
+      </div>
+      <div class="layer">
+        <div class="lnum">4</div>
+        <div class="lbody"><h4>Guardrail / Governance</h4><small>Cosa un agente può fare da solo.</small></div>
+        <div class="lstate"><span class="now">Oggi: "tutto passa da Skeezu".</span> <span class="go">→ Catena di approvazione a 3 livelli + blacklist (sezione 5).</span></div>
+      </div>
+      <div class="layer">
+        <div class="lnum">5</div>
+        <div class="lbody"><h4>Trigger / Autonomia</h4><small>Cosa fa partire il lavoro senza che tu lo chieda.</small></div>
+        <div class="lstate"><span class="now">Oggi: scheduler spento per costo.</span> <span class="go">→ Check a inizio sessione + watcher event-driven sul Pi (costo ~0).</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 COMUNICAZIONE -->
+  <section>
+    <h2 class="sec"><span class="num">4</span>Il substrato di comunicazione</h2>
+    <p class="sub">Come gli agenti si parlano, davvero — asimmetrie incluse.</p>
+    <div class="stack">
+      <p>Il canale è <strong>a file, sulla network share Z</strong>. La cartella <code>for-CCP/</code> è la chat scritta ROBY↔CCP: messaggi con prefisso <code>CCP_*</code> (da CCP) e <code>ROBY_*</code> (da ROBY), datati, con frontmatter e audit-trail. Le convenzioni sono già scritte nel documento <em>Convenzioni canale for-CCP v1</em>.</p>
+      <div class="callout warn">
+        <h4>Asimmetria di scrittura (vincolo reale)</h4>
+        <p>ROBY, da Cowork, <strong>legge</strong> Z ma <strong>non ci scrive</strong> (il network share rifiuta la scrittura: EPERM). CCP e AIRIA, girando sul Pi, hanno scrittura nativa su Z. Conseguenza architetturale: ROBY produce in locale, e la propagazione su Z è un compito del lato Pi — candidato ideale <strong>AIRIA come sync-agent</strong>. Questo non è un bug da nascondere: è un fatto su cui disegniamo l'orchestrazione.</p>
+      </div>
+      <div class="callout">
+        <h4>Alternativa alla share di rete (in valutazione)</h4>
+        <p>La share SMB è fragile — è proprio lei a rifiutare la scrittura di ROBY. Tre alternative free, senza API a pagamento:
+        <strong>(1) Syncthing</strong> — ogni macchina scrive nella sua cartella <em>locale</em>, la replica è P2P sulla LAN: risolve l'EPERM alla radice e mantiene il workflow a file.
+        <strong>(2) Tabella su Supabase</strong> — un "agent-bus" strutturato; ROBY ci scrive già via connettore MCP (niente filesystem), real-time e interrogabile.
+        <strong>(3) Git self-hosted</strong> (Gitea sul Pi) — audit-trail e versioning nativi.
+        <strong>Scelto da Skeezu (30 mag): Supabase</strong> — struttura + real-time. È il backend dell'app <strong>AIgorà Fleet Console</strong> (chat tra agenti + governance), con ambizione prodotto. Provisioning a CCP.</p>
+      </div>
+      <p>Regola d'oro del canale: nessuno edita i file di un altro. Una risposta è sempre un <em>nuovo</em> file che cita il precedente. Così l'audit-trail resta immutabile e bilaterale.</p>
+    </div>
+  </section>
+
+  <!-- 5 GOVERNANCE -->
+  <section>
+    <h2 class="sec"><span class="num">5</span>Autonomia &amp; governance</h2>
+    <p class="sub">Il cuore: catena di approvazione che escala fino a te + blacklist esplicita.</p>
+
+    <div class="svgbox" style="margin-bottom:22px">
+      <svg viewBox="0 0 900 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Catena di approvazione">
+        <rect x="20" y="150" width="170" height="60" rx="10" fill="#0E0E10"/>
+        <text x="105" y="178" text-anchor="middle" fill="#fff" font-family="sans-serif" font-size="13.5" font-weight="700">Azione proposta</text>
+        <text x="105" y="197" text-anchor="middle" fill="#C9A227" font-family="sans-serif" font-size="11.5">da un agente</text>
+        <path d="M190 180 L250 180" stroke="#B8893D" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+        <!-- diamond -->
+        <polygon points="330,130 410,180 330,230 250,180" fill="#fff" stroke="#C9A227" stroke-width="2"/>
+        <text x="330" y="176" text-anchor="middle" fill="#0E0E10" font-family="sans-serif" font-size="13" font-weight="700">Rischio?</text>
+        <text x="330" y="194" text-anchor="middle" fill="#6b6862" font-family="sans-serif" font-size="11">+ in blacklist?</text>
+        <!-- L0 -->
+        <path d="M330 130 L330 70 L560 70" stroke="#5b8a4f" stroke-width="2" fill="none" marker-end="url(#arr2)"/>
+        <rect x="560" y="42" width="300" height="56" rx="10" fill="#eef5ea" stroke="#9cc08e"/>
+        <text x="575" y="68" fill="#36622c" font-family="sans-serif" font-size="13" font-weight="700">L0 · Auto</text>
+        <text x="575" y="86" fill="#4a6e41" font-family="sans-serif" font-size="11.5">basso rischio, reversibile, interno → esegui + logga</text>
+        <!-- L1 -->
+        <path d="M410 180 L560 180" stroke="#B8893D" stroke-width="2" fill="none" marker-end="url(#arr)"/>
+        <rect x="560" y="152" width="300" height="56" rx="10" fill="#fbf4e2" stroke="#d9bc6e"/>
+        <text x="575" y="178" fill="#8a6a1f" font-family="sans-serif" font-size="13" font-weight="700">L1 · Peer-approval</text>
+        <text x="575" y="196" fill="#9a7a2a" font-family="sans-serif" font-size="11.5">l'agente competente valida (es. CCP firma il tech)</text>
+        <!-- L2 -->
+        <path d="M330 230 L330 290 L560 290" stroke="#b4453a" stroke-width="2" fill="none" marker-end="url(#arr3)"/>
+        <rect x="560" y="262" width="300" height="56" rx="10" fill="#fbeae8" stroke="#d99a93"/>
+        <text x="575" y="288" fill="#9c2f25" font-family="sans-serif" font-size="13" font-weight="700">L2 · Skeezu</text>
+        <text x="575" y="306" fill="#b4453a" font-family="sans-serif" font-size="11.5">blacklist · alto rischio · disaccordo tra agenti</text>
+        <defs>
+          <marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#B8893D"/></marker>
+          <marker id="arr2" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#5b8a4f"/></marker>
+          <marker id="arr3" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 z" fill="#b4453a"/></marker>
+        </defs>
+      </svg>
+      <figcaption>Ogni azione attraversa un solo filtro: rischio + blacklist. Sotto-soglia si fa da soli, media si valida tra pari, alta sale a te.</figcaption>
+    </div>
+
+    <p style="margin-top:6px"><strong>I tre livelli in parole:</strong></p>
+    <div class="cards" style="grid-template-columns:repeat(3,1fr);margin-top:8px">
+      <div class="card"><h3 style="font-size:17px">L0 · Auto</h3><p style="font-size:14px;margin:6px 0 0">Azioni a basso rischio, reversibili e interne: bozze, analisi, ricerca, file di lavoro, monitoraggio. L'agente esegue e scrive in audit-trail. Nessun OK richiesto.</p></div>
+      <div class="card"><h3 style="font-size:17px">L1 · Peer</h3><p style="font-size:14px;margin:6px 0 0">Serve competenza incrociata: ROBY propone uno schema → CCP valida il tech; CCP propone copy pubblica → ROBY valida brand/compliance. Se il pari firma e non è blacklist, si procede.</p></div>
+      <div class="card"><h3 style="font-size:17px">L2 · Skeezu</h3><p style="font-size:14px;margin:6px 0 0">Sale a te se: l'operazione è in blacklist, è ad alto rischio/irreversibile, oppure i due agenti <em>non</em> sono d'accordo. Tu sei il tie-breaker e l'ultima firma.</p></div>
+    </div>
+
+    <h3 class="serif" style="font-size:22px;margin:34px 0 6px">La blacklist — sempre e solo Skeezu</h3>
+    <p style="margin-top:0;color:var(--muted)">Operazioni che nessun agente esegue senza tua approvazione esplicita, qualunque sia il livello di fiducia. Proposta v1, calibrata sul rischio reale di AIROOBI.</p>
+    <table>
+      <thead><tr><th style="width:40px">#</th><th>Operazione bloccata</th><th style="width:130px">Tocca</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Deploy in <b>produzione</b> (dApp · airoobi.app · airoobi.com) — qualsiasi push live.</td><td><span class="who">CCP</span></td></tr>
+        <tr><td>2</td><td>Migrazioni DB su dati <b>finanziari / audit / utenti</b> (treasury, saldi ARIA/ROBI, hard-delete account).</td><td><span class="who">CCP</span></td></tr>
+        <tr><td>3</td><td>Spesa di <b>denaro reale</b> · attivazione servizi a pagamento · qualsiasi <b>API a costo</b>.</td><td><span class="who">tutti</span></td></tr>
+        <tr><td>4</td><td>Pubblicazione di <b>contenuti pubblici esterni</b> (social, blog live, email a investitori/partner/stampa).</td><td><span class="who">ROBY</span></td></tr>
+        <tr><td>5</td><td>Modifiche ai <b>3 invarianti legali</b> (niente alea · niente perdita completa · via gratuita) o alla copy MiCA-sensibile.</td><td><span class="who">tutti</span></td></tr>
+        <tr><td>6</td><td>Modifiche a <b>elementi brand LOCKED</b> (slogan home immutabile, naming prodotto "ROBI Reward").</td><td><span class="who">ROBY</span></td></tr>
+        <tr><td>7</td><td>Parametri <b>tokenomics</b> (split economics, over-collateralization 90/10, prezzo ARIA, regole ROBI).</td><td><span class="who">tutti</span></td></tr>
+        <tr><td>8</td><td>Cancellazioni/spostamenti <b>massivi</b> di dati o file · reset Alpha/Beta → Mainnet.</td><td><span class="who">CCP</span></td></tr>
+        <tr><td>9</td><td><b>Comunicazioni a terzi</b> a nome dell'azienda (Kaspa Foundation, investitori, autorità).</td><td><span class="who">ROBY</span></td></tr>
+        <tr><td>10</td><td>Modifica dei <b>permessi degli agenti</b> stessi — chi può fare cosa (questa governance).</td><td><span class="who">tutti</span></td></tr>
+      </tbody>
+    </table>
+    <div class="callout" style="margin-top:18px">
+      <h4>Principio di sicurezza</h4>
+      <p>In dubbio, si sale di un livello — mai si scende. Un'azione mal classificata "verso l'alto" costa una firma in più; "verso il basso" costa un incidente. La blacklist è una lista viva: si modifica solo con tua firma (è la voce #10).</p>
+    </div>
+  </section>
+
+  <!-- 6 VINCOLI -->
+  <section>
+    <h2 class="sec"><span class="num">6</span>Vincoli &amp; economia</h2>
+    <p class="sub">Cosa è realistico costruire — e perché ci sta dentro a costo zero.</p>
+    <div class="stack">
+      <p>L'intera architettura gira su quello che <strong>già paghi</strong>: l'abbonamento <strong>Claude Max20</strong> alimenta sia ROBY (Cowork) sia CCP (Claude Code); <strong>AIRIA</strong> gira su OpenClaw in locale sul Pi, senza consumare token. Il substrato è una share di rete — gratis. I trigger sono check a inizio sessione e watcher locali sul Pi — gratis.</p>
+      <table>
+        <thead><tr><th>Componente</th><th>Tecnologia</th><th>Costo</th></tr></thead>
+        <tbody>
+          <tr><td>ROBY runtime</td><td>Claude Cowork (Max20)</td><td>incluso</td></tr>
+          <tr><td>CCP runtime</td><td>Claude Code (Max20)</td><td>incluso</td></tr>
+          <tr><td>AIRIA runtime</td><td>OpenClaw · Raspberry Pi</td><td>locale / free</td></tr>
+          <tr><td>Comunicazione</td><td>Network share Z + file</td><td>0</td></tr>
+          <tr><td>Orchestrazione/trigger</td><td>watcher + cron sul Pi</td><td>0</td></tr>
+          <tr><td>Connettori</td><td>MCP free · git</td><td>0</td></tr>
+        </tbody>
+      </table>
+      <div class="callout warn">
+        <h4>Regola dura</h4>
+        <p>Nessuna API a pagamento. Qualsiasi pezzo che richiederebbe spesa variabile non entra nel design v1 — e finisce comunque in blacklist (voce #3). Si aggiunge software/connettore solo se gratuito.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 ROADMAP -->
+  <section>
+    <h2 class="sec"><span class="num">7</span>Roadmap d'attuazione</h2>
+    <p class="sub">Incrementale. Ogni fase è utile da sola e non rompe la precedente.</p>
+    <div class="road">
+      <div class="phase done">
+        <div class="ph">Fase 0 <small>oggi · fatto</small></div>
+        <div><h4>Ruoli operativi</h4><p>I tre agenti esistono, lavorano, comunicano via for-CCP/. Governance ad-hoc tutta su Skeezu.</p></div>
+      </div>
+      <div class="phase">
+        <div class="ph">Fase 1 <small>adesso</small></div>
+        <div><h4>Formalizzare la governance</h4><p>Questo documento + le convenzioni di canale. Catena di approvazione e blacklist scritte e firmate. Da qui in poi gli agenti sanno cosa possono fare da soli.</p></div>
+      </div>
+      <div class="phase">
+        <div class="ph">Fase 2 <small>poi</small></div>
+        <div><h4>Orchestrazione &amp; memory bus</h4><p>AIRIA diventa coordinatore + sync-agent (risolve l'asimmetria di scrittura su Z). "Memory bus" minimale su Z: decisioni LOCKED e _INDEX leggibili da tutti.</p></div>
+      </div>
+      <div class="phase">
+        <div class="ph">Fase 3 <small>primo carico</small></div>
+        <div><h4>Workload autonomo: Crescita/Marketing</h4><p>ROBY-led, sotto governance: produzione contenuti e community con autonomia L0/L1, pubblicazione esterna sempre L2. È la priorità di business 7→1000.</p></div>
+      </div>
+      <div class="phase">
+        <div class="ph">Fase 4 <small>scala</small></div>
+        <div><h4>Allargare l'autonomia</h4><p>Più azioni passano a L0/L1 man mano che l'audit-trail dimostra affidabilità. La blacklist si restringe solo con tua firma.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 GLOSSARIO -->
+  <section style="border-bottom:0">
+    <h2 class="sec"><span class="num">8</span>Sigle</h2>
+    <p class="sub">Per chiunque legga questo documento dopo di noi.</p>
+    <table>
+      <tbody>
+        <tr><td><b>ROBY</b></td><td>Agente Strategy/MKT/Comms su Claude Cowork. Questo documento è suo.</td></tr>
+        <tr><td><b>ARO</b></td><td>Community &amp; Social Media Manager. Agente a sé, riporta a ROBY.</td></tr>
+        <tr><td><b>CCP</b></td><td>Agente CIO/CTO su Claude Code (Raspberry Pi). Build, DB, infra, deploy.</td></tr>
+        <tr><td><b>AIRIA</b></td><td>Agente System Guardian su OpenClaw (Raspberry Pi). Memoria, sync, observer.</td></tr>
+        <tr><td><b>L0 / L1 / L2</b></td><td>Livelli della catena di approvazione: Auto / Peer / Skeezu.</td></tr>
+        <tr><td><b>for-CCP/</b></td><td>Cartella su Z che funge da chat a file tra ROBY e CCP.</td></tr>
+        <tr><td><b>Blacklist</b></td><td>Operazioni che richiedono sempre l'approvazione di Skeezu.</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <p class="sign">— ROBY</p>
+    <p>Strategic MKT, Comms &amp; Community · 30 maggio 2026 · Architettura Fleet v1.1, proposta.<br>
+    Prossimo passo: tua firma sulla blacklist e sui tre livelli. Da lì gli agenti smettono di chiederti il permesso per ogni respiro — solo per le cose che contano.</p>
+  </footer>
+
+</main>
+</body>
+</html>
