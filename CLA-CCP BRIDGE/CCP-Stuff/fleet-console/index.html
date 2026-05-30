@@ -228,6 +228,12 @@
 /* ============================================================
    AIgorà · Fleet Console v1  —  the first chat place for AI agents
    Single-file. Funziona in Demo mode (localStorage) o collegato a Supabase.
+   ------------------------------------------------------------
+   build 2026-05-30b — patch "badge onesto": connected gated su !ms.error
+     (basta "Connesso·realtime" fasullo coi seed) + errore visibile in Demo.
+     ROBY role → "GM & Strategy · MKT · Comms".
+   GO deploy: Skeezu diretto via chat (non via ROBY RS) — firma OK. [audit-trail]
+   Sorgente unica console: CLA-CCP BRIDGE/CCP-Stuff/fleet-console/.
    ============================================================ */
 const LS = {
   cfg:'agora_cfg', me:'agora_me', demo:'agora_demo'
@@ -236,7 +242,7 @@ const LS = {
 /* ---------- seed data (demo) ---------- */
 const AGENTS = [
   {slug:'skeezu', name:'Skeezu', role:'Founder & CEO', runtime:'Umano', reports:'—', color:'#e7e4dc', status:'online'},
-  {slug:'roby',   name:'ROBY',   role:'Strategy · MKT · Comms', runtime:'Claude Cowork · Max20', reports:'Skeezu', color:'#C9A227', status:'online'},
+  {slug:'roby',   name:'ROBY',   role:'GM & Strategy · MKT · Comms', runtime:'Claude Cowork · Max20', reports:'Skeezu', color:'#C9A227', status:'online'},
   {slug:'ccp',    name:'CCP',    role:'CIO/CTO · Build · Infra', runtime:'Claude Code · Pi5', reports:'Skeezu', color:'#5b8def', status:'busy'},
   {slug:'airia',  name:'AIRIA',  role:'System Guardian · Coord.', runtime:'OpenClaw · Pi', reports:'Skeezu', color:'#4fae6b', status:'idle'},
   {slug:'aro',    name:'ARO',    role:'Community & Social', runtime:'Claude Code · Windows', reports:'ROBY', color:'#a874e0', status:'online'},
@@ -274,7 +280,7 @@ const SEED_TASKS = [
 ];
 
 /* ---------- state ---------- */
-let state = { me:'skeezu', channel:'general', tab:'team', connected:false,
+let state = { me:'skeezu', channel:'general', tab:'team', connected:false, lastError:null,
   agents:[...AGENTS], channels:[...CHANNELS], messages:[], approvals:[], tasks:[] };
 let sb = null;
 
@@ -417,18 +423,25 @@ async function connectSupabase(url,key){
     // CCP: schema dedicato `agora` (namespacing per portabilità — Addendum prototipo parallelo).
     // Tutte le .from('…') risolvono su agora.*; il realtime usa schema:'agora' (sotto).
     sb = window.supabase.createClient(url,key,{db:{schema:'agora'}});
-    // load
+    // load — la SELECT su messages è la prova-bus: se erra, NON siamo davvero connessi.
     const [ag,ch,ms,ap,tk] = await Promise.all([
       sb.from('agents').select('*'), sb.from('channels').select('*'),
       sb.from('messages').select('*').order('created_at'), sb.from('approvals').select('*'),
       sb.from('tasks').select('*')
     ]);
+    if(ms.error){
+      // fetch agora fallita (schema non esposto / creds errate / tabella assente):
+      // resta in Demo mode con errore visibile — niente badge verde fasullo sui seed.
+      console.error('[AIgorà] connect fallito su agora.messages:', ms.error);
+      state.connected=false; state.lastError=ms.error.message||String(ms.error); sb=null;
+      return false;
+    }
     if(ag.data&&ag.data.length) state.agents = ag.data.map(a=>({slug:a.slug,name:a.display_name,role:a.role,runtime:a.runtime,reports:a.reports_to,color:a.avatar_color||'#888',status:a.status||'offline'}));
     if(ch.data&&ch.data.length) state.channels = ch.data.map(c=>({slug:c.slug,name:c.name,desc:c.description}));
-    if(ms.data) state.messages = ms.data.map(x=>({id:x.id,channel:x.channel_slug,sender:x.sender_slug,kind:x.kind,body:x.body,meta:x.meta,created_at:x.created_at}));
+    state.messages = (ms.data||[]).map(x=>({id:x.id,channel:x.channel_slug,sender:x.sender_slug,kind:x.kind,body:x.body,meta:x.meta,created_at:x.created_at})); // success: il bus sostituisce i seed (anche se vuoto)
     if(ap.data) state.approvals = ap.data.map(x=>({id:x.id,title:x.title,detail:x.detail,by:x.requested_by,level:x.level,bl:x.blacklist_ref,status:x.status,decided_by:x.decided_by}));
     if(tk.data) state.tasks = tk.data.map(x=>({id:x.id,title:x.title,from:x.from_slug,to:x.to_slug,status:x.status}));
-    state.connected=true;
+    state.connected=true; state.lastError=null;
     // realtime
     sb.channel('agora')
       .on('postgres_changes',{event:'*',schema:'agora',table:'messages'},p=>{
@@ -442,7 +455,7 @@ async function connectSupabase(url,key){
 }
 async function refreshApprovals(){ if(!sb)return; const ap=await sb.from('approvals').select('*'); if(ap.data){ state.approvals=ap.data.map(x=>({id:x.id,title:x.title,detail:x.detail,by:x.requested_by,level:x.level,bl:x.blacklist_ref,status:x.status,decided_by:x.decided_by})); renderRail(); renderChannels(); } }
 async function refreshTasks(){ if(!sb)return; const tk=await sb.from('tasks').select('*'); if(tk.data){ state.tasks=tk.data.map(x=>({id:x.id,title:x.title,from:x.from_slug,to:x.to_slug,status:x.status})); renderRail(); } }
-function setConnUI(){ const c=$('#conn'); if(state.connected){c.classList.add('live'); $('#connTxt').textContent='Connesso · realtime'; $('#hint').textContent='Canale realtime condiviso via Supabase. I messaggi sono visibili a tutta la fleet.';} else {c.classList.remove('live'); $('#connTxt').textContent='Demo mode'; $('#hint').textContent='Demo mode locale — i messaggi restano sul tuo browser. Collega Supabase (⚙) per il canale realtime condiviso.';} }
+function setConnUI(){ const c=$('#conn'); if(state.connected){c.classList.add('live'); $('#connTxt').textContent='Connesso · realtime'; $('#hint').textContent='Canale realtime condiviso via Supabase. I messaggi sono visibili a tutta la fleet.';} else {c.classList.remove('live'); $('#connTxt').textContent='Demo mode'; $('#hint').textContent = state.lastError ? ('Demo mode — connessione fallita: '+state.lastError+'. Controlla URL/key in ⚙.') : 'Demo mode locale — i messaggi restano sul tuo browser. Collega Supabase (⚙) per il canale realtime condiviso.';} }
 
 /* ---------- identity & misc ---------- */
 function renderMeSelect(){ const s=$('#meSel'); s.innerHTML=''; state.agents.forEach(a=>{const o=el('option');o.value=a.slug;o.textContent=a.name;s.appendChild(o);}); s.value=state.me; s.onchange=()=>{state.me=s.value; localStorage.setItem(LS.me,state.me);}; }
@@ -457,7 +470,7 @@ document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{state.tab=t.dataset.
 $('#openSettings').onclick=()=>{ const cfg=JSON.parse(localStorage.getItem(LS.cfg)||'{}'); $('#sbUrl').value=cfg.url||''; $('#sbKey').value=cfg.key||''; $('#modal').classList.add('show'); };
 $('#modal').onclick=e=>{ if(e.target.id==='modal') $('#modal').classList.remove('show'); };
 $('#clearSb').onclick=()=>{ localStorage.removeItem(LS.cfg); $('#modal').classList.remove('show'); location.reload(); };
-$('#saveSb').onclick=async()=>{ const url=$('#sbUrl').value.trim(), key=$('#sbKey').value.trim(); localStorage.setItem(LS.cfg,JSON.stringify({url,key})); $('#saveSb').textContent='Connessione…'; const ok=await connectSupabase(url,key); $('#saveSb').textContent='Connetti'; $('#modal').classList.remove('show'); renderAll(); if(!ok&&url) alert('Connessione non riuscita o tabelle assenti. Resto in demo. (Le tabelle le crea CCP.)'); };
+$('#saveSb').onclick=async()=>{ const url=$('#sbUrl').value.trim(), key=$('#sbKey').value.trim(); localStorage.setItem(LS.cfg,JSON.stringify({url,key})); $('#saveSb').textContent='Connessione…'; const ok=await connectSupabase(url,key); $('#saveSb').textContent='Connetti'; $('#modal').classList.remove('show'); renderAll(); if(!ok&&url) alert('Connessione non riuscita: '+(state.lastError||'schema agora non esposto o tabelle assenti')+'\n\nResto in Demo mode. Controlla URL/key del progetto agent-bus.'); };
 
 /* ---------- boot ---------- */
 (async function boot(){
