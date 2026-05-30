@@ -110,6 +110,11 @@
   .scard .kv b{color:var(--txt);font-weight:600}
   .pres-txt{font-size:11px;font-weight:700}
   .pres-txt.online{color:var(--green)}.pres-txt.busy{color:var(--amber)}.pres-txt.idle{color:var(--faint)}.pres-txt.offline{color:var(--faint)}
+  .scard .act{display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--green);margin-top:8px}
+  .scard .act b{color:#bfe9cd;font-weight:600}
+  .act-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex:0 0 auto;animation:pulse 1.6s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(79,174,107,.5)}70%{box-shadow:0 0 0 6px rgba(79,174,107,0)}100%{box-shadow:0 0 0 0 rgba(79,174,107,0)}}
+  .working{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--green);background:var(--panel2);border:1px solid var(--line);padding:5px 10px;border-radius:999px}
 
   .appr-card{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;padding:13px;margin-bottom:11px}
   .appr-card .ttl{font-weight:700;font-size:13.5px}
@@ -158,6 +163,7 @@
     </div>
     <div class="spacer"></div>
     <div class="conn" id="conn"><span class="dot"></span><span id="connTxt">Demo mode</span></div>
+    <span class="working" id="working" style="display:none"></span>
     <div class="me">
       <span style="color:var(--faint)">io:</span>
       <select id="meSel"></select>
@@ -171,7 +177,7 @@
     <!-- SIDEBAR -->
     <div class="col sidebar">
       <div class="side-scroll">
-        <div class="ws"><h4>AIROOBI Fleet</h4><p>4 agenti · 1 founder</p></div>
+        <div class="ws"><h4>AIROOBI Fleet</h4><p>5 agenti · 1 founder</p></div>
         <div class="grouplabel">Canali</div>
         <div id="channels"></div>
         <div class="grouplabel">Squadra</div>
@@ -232,6 +238,9 @@
    build 2026-05-30b — patch "badge onesto": connected gated su !ms.error
      (basta "Connesso·realtime" fasullo coi seed) + errore visibile in Demo.
      ROBY role → "GM & Strategy · MKT · Comms".
+   build 2026-05-30c — Fase B status/heartbeat: render "sta facendo X" + dot pulsante
+     nel pannello Squadra, TTL anti-stale 5min, subscribe realtime agents, indicatore
+     globale "N al lavoro". Org: ROBLOCK (slug roblock), ARO → ROBLOCK.
    GO deploy: Skeezu diretto via chat (non via ROBY RS) — firma OK. [audit-trail]
    Sorgente unica console: CLA-CCP BRIDGE/CCP-Stuff/fleet-console/.
    ============================================================ */
@@ -243,9 +252,10 @@ const LS = {
 const AGENTS = [
   {slug:'skeezu', name:'Skeezu', role:'Founder & CEO', runtime:'Umano', reports:'—', color:'#e7e4dc', status:'online'},
   {slug:'roby',   name:'ROBY',   role:'GM & Strategy · MKT · Comms', runtime:'Claude Cowork · Max20', reports:'Skeezu', color:'#C9A227', status:'online'},
-  {slug:'ccp',    name:'CCP',    role:'CIO/CTO · Build · Infra', runtime:'Claude Code · Pi5', reports:'Skeezu', color:'#5b8def', status:'busy'},
+  {slug:'roblock',name:'ROBLOCK',role:'Operative Marketing Manager', runtime:'Claude Code · Pi', reports:'ROBY', color:'#d8b13e', status:'offline'},
+  {slug:'ccp',    name:'CCP',    role:'CIO/CTO · Build · Infra', runtime:'Claude Code · Pi4', reports:'Skeezu', color:'#5b8def', status:'busy', activity:'buildando la Fase B · status/heartbeat', activitySince:new Date(Date.now()-120000).toISOString()},
   {slug:'airia',  name:'AIRIA',  role:'System Guardian · Coord.', runtime:'OpenClaw · Pi', reports:'Skeezu', color:'#4fae6b', status:'idle'},
-  {slug:'aro',    name:'ARO',    role:'Community & Social', runtime:'Claude Code · Windows', reports:'ROBY', color:'#a874e0', status:'online'},
+  {slug:'aro',    name:'ARO',    role:'Community & Social', runtime:'Claude Code · Windows', reports:'ROBLOCK', color:'#a874e0', status:'online'},
 ];
 const CHANNELS = [
   {slug:'general',    name:'general',    desc:'plancia comune della fleet'},
@@ -349,6 +359,8 @@ function renderChat(){
   box.scrollTop=box.scrollHeight;
 }
 function escapeHtml(s){return (s||'').replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+const ACTIVITY_TTL_MS = 5*60*1000; // heartbeat stale dopo 5 min → anti "busy fantasma" se un claude -p muore senza pulire
+function activityLive(a){ if(!a||!a.activity||!a.activitySince) return false; const t=new Date(a.activitySince).getTime(); return !isNaN(t) && (Date.now()-t) < ACTIVITY_TTL_MS; }
 
 /* ---------- render: rail ---------- */
 function renderRail(){
@@ -358,9 +370,11 @@ function renderRail(){
   if(state.tab==='team'){
     state.agents.forEach(a=>{
       const c=el('div','scard');
+      const liveAct = activityLive(a) ? `<div class="act"><span class="act-dot"></span>sta facendo: <b>${escapeHtml(a.activity)}</b></div>` : '';
       c.innerHTML=`<div class="top2"><div class="av" style="background:${a.color}">${initials(a)}<span class="pres ${a.status}"></span></div>
         <div><div class="nm">${a.name}</div><div class="rl">${a.role}</div></div>
         <span class="pres-txt ${a.status}" style="margin-left:auto">${a.status}</span></div>
+        ${liveAct}
         <div class="kv"><span>runtime</span><b>${a.runtime}</b></div>
         <div class="kv"><span>riporta a</span><b>${a.reports}</b></div>`;
       b.appendChild(c);
@@ -436,7 +450,7 @@ async function connectSupabase(url,key){
       state.connected=false; state.lastError=ms.error.message||String(ms.error); sb=null;
       return false;
     }
-    if(ag.data&&ag.data.length) state.agents = ag.data.map(a=>({slug:a.slug,name:a.display_name,role:a.role,runtime:a.runtime,reports:a.reports_to,color:a.avatar_color||'#888',status:a.status||'offline'}));
+    if(ag.data&&ag.data.length) state.agents = ag.data.map(a=>({slug:a.slug,name:a.display_name,role:a.role,runtime:a.runtime,reports:a.reports_to,color:a.avatar_color||'#888',status:a.status||'offline',activity:a.current_activity,activitySince:a.activity_since}));
     if(ch.data&&ch.data.length) state.channels = ch.data.map(c=>({slug:c.slug,name:c.name,desc:c.description}));
     state.messages = (ms.data||[]).map(x=>({id:x.id,channel:x.channel_slug,sender:x.sender_slug,kind:x.kind,body:x.body,meta:x.meta,created_at:x.created_at})); // success: il bus sostituisce i seed (anche se vuoto)
     if(ap.data) state.approvals = ap.data.map(x=>({id:x.id,title:x.title,detail:x.detail,by:x.requested_by,level:x.level,bl:x.blacklist_ref,status:x.status,decided_by:x.decided_by}));
@@ -449,17 +463,20 @@ async function connectSupabase(url,key){
       })
       .on('postgres_changes',{event:'*',schema:'agora',table:'approvals'},()=>refreshApprovals())
       .on('postgres_changes',{event:'*',schema:'agora',table:'tasks'},()=>refreshTasks())
+      .on('postgres_changes',{event:'*',schema:'agora',table:'agents'},()=>refreshAgents())
       .subscribe();
     return true;
   }catch(e){ console.error(e); state.connected=false; return false; }
 }
 async function refreshApprovals(){ if(!sb)return; const ap=await sb.from('approvals').select('*'); if(ap.data){ state.approvals=ap.data.map(x=>({id:x.id,title:x.title,detail:x.detail,by:x.requested_by,level:x.level,bl:x.blacklist_ref,status:x.status,decided_by:x.decided_by})); renderRail(); renderChannels(); } }
 async function refreshTasks(){ if(!sb)return; const tk=await sb.from('tasks').select('*'); if(tk.data){ state.tasks=tk.data.map(x=>({id:x.id,title:x.title,from:x.from_slug,to:x.to_slug,status:x.status})); renderRail(); } }
+async function refreshAgents(){ if(!sb)return; const ag=await sb.from('agents').select('*'); if(ag.data&&ag.data.length){ state.agents=ag.data.map(a=>({slug:a.slug,name:a.display_name,role:a.role,runtime:a.runtime,reports:a.reports_to,color:a.avatar_color||'#888',status:a.status||'offline',activity:a.current_activity,activitySince:a.activity_since})); renderRosterSide(); renderRail(); updateWorking(); } }
+function updateWorking(){ const w=$('#working'); if(!w) return; const n=state.agents.filter(activityLive).length; if(n>0){ w.style.display='flex'; w.innerHTML=`<span class="act-dot"></span>${n} al lavoro`; } else { w.style.display='none'; } }
 function setConnUI(){ const c=$('#conn'); if(state.connected){c.classList.add('live'); $('#connTxt').textContent='Connesso · realtime'; $('#hint').textContent='Canale realtime condiviso via Supabase. I messaggi sono visibili a tutta la fleet.';} else {c.classList.remove('live'); $('#connTxt').textContent='Demo mode'; $('#hint').textContent = state.lastError ? ('Demo mode — connessione fallita: '+state.lastError+'. Controlla URL/key in ⚙.') : 'Demo mode locale — i messaggi restano sul tuo browser. Collega Supabase (⚙) per il canale realtime condiviso.';} }
 
 /* ---------- identity & misc ---------- */
 function renderMeSelect(){ const s=$('#meSel'); s.innerHTML=''; state.agents.forEach(a=>{const o=el('option');o.value=a.slug;o.textContent=a.name;s.appendChild(o);}); s.value=state.me; s.onchange=()=>{state.me=s.value; localStorage.setItem(LS.me,state.me);}; }
-function renderAll(){ renderChannels(); renderRosterSide(); renderChat(); renderRail(); setConnUI(); }
+function renderAll(){ renderChannels(); renderRosterSide(); renderChat(); renderRail(); setConnUI(); updateWorking(); }
 function autosize(){ const t=$('#input'); t.style.height='auto'; t.style.height=Math.min(t.scrollHeight,140)+'px'; }
 
 /* ---------- wire up ---------- */
