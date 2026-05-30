@@ -99,7 +99,7 @@
 
   /* RAIL */
   .tabs{display:flex;border-bottom:1px solid var(--line)}
-  .tab{flex:1;padding:13px 0;text-align:center;font-size:12.5px;color:var(--muted);background:transparent;border:0;border-bottom:2px solid transparent}
+  .tab{flex:1;padding:12px 2px;text-align:center;font-size:11.5px;white-space:nowrap;color:var(--muted);background:transparent;border:0;border-bottom:2px solid transparent}
   .tab.active{color:var(--txt);border-bottom-color:var(--gold)}
   .rail-scroll{overflow-y:auto;padding:14px}
   .scard{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:13px;margin-bottom:11px}
@@ -168,6 +168,8 @@
   .doc-head p{margin:0;font-size:11.5px;color:var(--faint)}
   .doc-head .iconbtn{margin-left:auto;flex:0 0 auto}
   .doc-body{margin-top:14px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:9px;padding:14px;font-size:12.5px;line-height:1.55;color:#dedcd6;white-space:pre-wrap;word-wrap:break-word;font-family:inherit}
+  .file-area{width:100%;background:var(--bg);border:1px solid var(--line2);color:var(--txt);border-radius:9px;padding:8px 10px;font-size:12.5px;outline:none;margin-bottom:10px}
+  .file-ext{font-size:9.5px;font-weight:800;letter-spacing:.04em;padding:1px 6px;border-radius:5px;background:#2a2a31;color:#9a98a2;text-transform:uppercase}
 
   @media(max-width:1000px){.body{grid-template-columns:200px 1fr}.rail{display:none}}
 </style>
@@ -225,9 +227,10 @@
     <div class="col rail">
       <div class="tabs">
         <button class="tab active" data-tab="team">Squadra</button>
-        <button class="tab" data-tab="appr">Approvazioni <span id="apprCount"></span></button>
+        <button class="tab" data-tab="appr">Appr.<span id="apprCount"></span></button>
         <button class="tab" data-tab="tasks">Task</button>
         <button class="tab" data-tab="archive">Archivio</button>
+        <button class="tab" data-tab="files">File</button>
       </div>
       <div class="rail-scroll" id="railBody"></div>
     </div>
@@ -276,6 +279,9 @@
    build 2026-05-30d — Fase D archivio: tab "Archivio" con ricerca (titolo/file/agente/
      status/data) + apertura doc; tabella agora.archive (ingest non distruttivo dei
      ~374 for-CCP/*.md, read-only in UI). Lazy-load metadati + body on-click.
+   build 2026-05-30e — Fase E file explorer: tab "File", tabella agora.files (761 file
+     del bridge, testo inline / binari metadati+percorso). Filtro per area + ricerca,
+     apertura nel doc-viewer. Lazy-load. Storage upload binari = v1.1.
    GO deploy: Skeezu diretto via chat (non via ROBY RS) — firma OK. [audit-trail]
    Sorgente unica console: CLA-CCP BRIDGE/CCP-Stuff/fleet-console/.
    ============================================================ */
@@ -327,7 +333,8 @@ const SEED_TASKS = [
 /* ---------- state ---------- */
 let state = { me:'skeezu', channel:'general', tab:'team', connected:false, lastError:null,
   agents:[...AGENTS], channels:[...CHANNELS], messages:[], approvals:[], tasks:[],
-  archive:[], archiveLoaded:false, archiveQuery:'' };
+  archive:[], archiveLoaded:false, archiveQuery:'',
+  files:[], filesLoaded:false, filesQuery:'', filesArea:'' };
 let sb = null;
 
 /* ---------- helpers ---------- */
@@ -440,6 +447,8 @@ function renderRail(){
     });
   } else if(state.tab==='archive'){
     renderArchive(b);
+  } else if(state.tab==='files'){
+    renderFiles(b);
   }
 }
 
@@ -481,6 +490,54 @@ async function openDoc(fn){
   $('#docMeta').textContent=`${meta.kind||''}${meta.doc_date?' · '+meta.doc_date:''}${meta.status?' · '+meta.status:''}`;
   $('#docBody').textContent='Carico…'; $('#docModal').classList.add('show');
   if(sb){ const r=await sb.from('archive').select('body').eq('filename',fn).maybeSingle(); $('#docBody').textContent=(r.data&&r.data.body)||'(corpo non disponibile)'; }
+}
+
+/* ---------- render: file explorer (Fase E) ---------- */
+function renderFiles(b){
+  if(!state.connected){ b.innerHTML='<div class="empty">File explorer disponibile da connesso.<br>⚙ Collega Supabase.</div>'; return; }
+  if(!state.filesLoaded){ b.innerHTML='<div class="empty">Carico i file…</div>'; loadFiles(); return; }
+  const areas=[...new Set(state.files.map(f=>f.area))].sort();
+  b.innerHTML=`<input class="arch-search" id="fileSearch" placeholder="Cerca file: nome, percorso, agente…" value="${escapeHtml(state.filesQuery)}">
+    <select class="file-area" id="fileArea"><option value="">tutte le aree (${state.files.length})</option>${areas.map(a=>`<option value="${escapeHtml(a)}"${a===state.filesArea?' selected':''}>${escapeHtml(a)}</option>`).join('')}</select>
+    <div class="arch-count" id="fileCount"></div><div id="filesList"></div>`;
+  $('#fileSearch').oninput=e=>{ state.filesQuery=e.target.value; renderFilesList(); };
+  $('#fileArea').onchange=e=>{ state.filesArea=e.target.value; renderFilesList(); };
+  renderFilesList();
+}
+function renderFilesList(){
+  const box=$('#filesList'); if(!box) return;
+  const q=state.filesQuery.trim().toLowerCase();
+  let list=state.files;
+  if(state.filesArea) list=list.filter(f=>f.area===state.filesArea);
+  if(q) list=list.filter(f=> f.name.toLowerCase().includes(q) || f.path.toLowerCase().includes(q) || (f.author||'').toLowerCase().includes(q) || (f.ext||'').toLowerCase().includes(q));
+  const cnt=$('#fileCount'); if(cnt) cnt.textContent=`${list.length} su ${state.files.length} file`;
+  box.innerHTML='';
+  if(!list.length){ box.innerHTML='<div class="empty">Nessun file.</div>'; return; }
+  list.slice(0,200).forEach(f=>{
+    const c=el('div','arch-item');
+    const kb=f.size_bytes>1024?Math.round(f.size_bytes/1024)+'KB':(f.size_bytes||0)+'B';
+    c.innerHTML=`<div class="arch-top"><span class="file-ext">${escapeHtml(f.ext||'?')}</span>${f.author?`<span class="arch-kind ${f.author}">${f.author}</span>`:''}<span class="arch-date">${kb}${f.is_text?'':' · binario'}</span></div>
+      <div class="arch-title">${escapeHtml(f.name)}</div><div class="arch-fn">${escapeHtml(f.path)}</div>`;
+    c.onclick=()=>openFile(f.path);
+    box.appendChild(c);
+  });
+  if(list.length>200){ const m=el('div','empty'); m.textContent=`… +${list.length-200} altri — affina ricerca o area`; box.appendChild(m); }
+}
+async function loadFiles(){
+  if(!sb) return;
+  const r=await sb.from('files').select('path,name,ext,area,author,size_bytes,is_text').order('path');
+  if(r.data){ state.files=r.data; state.filesLoaded=true; if(state.tab==='files') renderRail(); }
+  else if(r.error){ const b=$('#railBody'); if(b&&state.tab==='files') b.innerHTML='<div class="empty">Errore nel caricare i file.</div>'; }
+}
+async function openFile(path){
+  const f=state.files.find(x=>x.path===path)||{path,name:path};
+  $('#docTitle').textContent=f.name||path;
+  const kb=f.size_bytes>1024?Math.round(f.size_bytes/1024)+'KB':(f.size_bytes||0)+'B';
+  $('#docMeta').textContent=`${f.path}${f.author?' · '+f.author:''} · ${kb}`;
+  $('#docModal').classList.add('show');
+  if(!f.is_text){ $('#docBody').textContent=`File binario (${(f.ext||'?').toUpperCase()}). Anteprima inline non disponibile in v1.\nPercorso: ${f.path}\n(download/Storage = prossima iterazione)`; return; }
+  $('#docBody').textContent='Carico…';
+  if(sb){ const r=await sb.from('files').select('body').eq('path',path).maybeSingle(); $('#docBody').textContent=(r.data&&r.data.body)||'(corpo non disponibile)'; }
 }
 
 /* ---------- actions ---------- */
@@ -533,7 +590,7 @@ async function connectSupabase(url,key){
     state.messages = (ms.data||[]).map(x=>({id:x.id,channel:x.channel_slug,sender:x.sender_slug,kind:x.kind,body:x.body,meta:x.meta,created_at:x.created_at})); // success: il bus sostituisce i seed (anche se vuoto)
     if(ap.data) state.approvals = ap.data.map(x=>({id:x.id,title:x.title,detail:x.detail,by:x.requested_by,level:x.level,bl:x.blacklist_ref,status:x.status,decided_by:x.decided_by}));
     if(tk.data) state.tasks = tk.data.map(x=>({id:x.id,title:x.title,from:x.from_slug,to:x.to_slug,status:x.status}));
-    state.connected=true; state.lastError=null; state.archiveLoaded=false;
+    state.connected=true; state.lastError=null; state.archiveLoaded=false; state.filesLoaded=false;
     // realtime
     sb.channel('agora')
       .on('postgres_changes',{event:'*',schema:'agora',table:'messages'},p=>{
