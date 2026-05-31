@@ -12,7 +12,7 @@ ref-ack: `ROBY_Ack_CCP_TechClarifications_Atto1_2026-05-13.md`
 
 # 🚀 BRIEF FINAL · Atto 1 Valutazione + EVALOBI + Swap + TX Tracking
 
-**Status:** SEALED · GO sprint W3 · ETA target 25-32h CCP focused · ~1.5-2 settimane
+**Status:** SEALED · GO sprint W3 · ETA target 33-45h CCP focused · ~2 settimane · 8 aree (Area 8 SEO quick wins added Skeezu LOCK 13 May late)
 
 **Source of truth dettagliato:** Tutti i dettagli di Migration M1-M14, RPC, RLS, acceptance criteria, payload examples · in WIP brief file (linked sopra). Questo FINAL è executive paste-ready summary per ricap rapido prima di sprint start.
 
@@ -49,7 +49,7 @@ ref-ack: `ROBY_Ack_CCP_TechClarifications_Atto1_2026-05-13.md`
 
 ---
 
-## 7 macro-aree implementation · ETA 25-32h CCP focused target
+## 8 macro-aree implementation · ETA 33-48h CCP focused target
 
 | # | Area | ETA CCP | Note chiave |
 |---|---|---|---|
@@ -60,8 +60,9 @@ ref-ack: `ROBY_Ack_CCP_TechClarifications_Atto1_2026-05-13.md`
 | 5 | Schema tokens visual pages (.com investitori + .app tokens) | 1-2h | SVG asset reusable · 1 .com edit + 1 .app new page |
 | 6 | EVALOBI public visualization (pollution layer · Vercel SSR) | 4-6h | Edge fn generate PDF+PNG+QR · Vercel function `/api/evalobi-ssr.js` · vercel.json rewrite · caption template UI dApp |
 | 7 | Reattività Dashboard `/sla` pubblico + email cap helper | 3-5h | Migration M11 (materialized view 30d) · pg_cron 5min refresh · SSR page · 3 widget embed · email send helper con cap+fallback |
+| 8 | **SEO Quick Wins · sitemap surface 2x** (NEW) | 8-13h | QW1: `/airdrops/:id` SSR public + Schema.org Product + sitemap dynamic (4-6h) · QW2: `/categoria/:slug` 6 pillar pages (3-5h CCP + ROBY copy) · QW3: `/treasury` + `/explorer` in sitemap + Schema.org Organization (1-2h) |
 
-**TOTALE:** **23-35h** (target 25-32h focused) · sprint W3 ~1.5-2 settimane
+**TOTALE:** **31-48h** (target 33-45h focused) · sprint W3 ~2 settimane
 
 ---
 
@@ -109,24 +110,25 @@ ref-ack: `ROBY_Ack_CCP_TechClarifications_Atto1_2026-05-13.md`
 ## RS Prompt one-shot for CCP (paste-ready)
 
 ```
-RS · GO sprint W3 Atto 1 valutazione + EVALOBI + swap + tx tracking
+RS · GO sprint W3 Atto 1 + SEO quick wins · valutazione + EVALOBI + swap + tx tracking + sitemap surface 2x
 
 Brief sigillato:
 - FINAL: ROBY-Stuff/for-CCP/ROBY_Brief_Atto1_FINAL_2026-05-13.md
 - WIP long-form: ROBY-Stuff/for-CCP/ROBY_PendingBrief_CCP_Atto1_WIP_2026-05-13.md
 - Ack tua tech review 6/6 accolte: ROBY-Stuff/for-CCP/ROBY_Ack_CCP_TechClarifications_Atto1_2026-05-13.md
 
-Status: 20 decisioni Skeezu LOCKED · 1 sola residua non-blocker (admin UI W4 economic decision) · 7 macro-aree implementation · ETA target 25-32h CCP focused sprint W3 ~1.5-2 settimane.
+Status: 20 decisioni Skeezu LOCKED · 1 sola residua non-blocker (admin UI W4 economic decision) · 8 macro-aree implementation (7 + Area 8 SEO quick wins added) · ETA target 33-45h CCP focused sprint W3 ~2 settimane.
 
 Tutte le tue 6 correzioni tech (Vercel SSR · phased dual-write · get_robi_rate_eur RPC · pg_cron verified · NO_GO architectural lock · token_id approved) sono integrate nel brief FINAL.
 
 Skeezu LOCKED stasera:
 - Re-submit policy NO_GO = libero "basta che paghi" (no cooldown · revenue-friendly · admin template repeat mitigates time waste)
 - Swap rate behavior = snapshot at confirm + 60s lock (tua proposal accolta)
+- Add Area 8 SEO quick wins: /airdrops/:id SSR public + 6 categoria pillar pages + /treasury+/explorer in sitemap · stack-fit Vercel pattern già LOCKED Area 6
 
 Sprint W3 può partire. Apri il FINAL brief + WIP per dettagli M1-M14 schema/RPC/RLS · procedi atomic edit chirurgico · audit-trail post-commit obbligatorio · STOP+ASK pre-COMMIT critical DB ops.
 
-ROBY async produce Atto 2-6 spec in parallelo.
+ROBY async produce Atto 2-6 spec + 6 categoria copy 300-500 parole brand-coherent in parallelo.
 
 Buon sprint W3 CCP · daje.
 ```

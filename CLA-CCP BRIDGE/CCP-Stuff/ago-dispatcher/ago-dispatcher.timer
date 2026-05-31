@@ -1,0 +1,11 @@
+[Unit]
+Description=Tick /ago dispatcher (~ogni 15s). flock serializza: un solo passo/wake alla volta.
+
+[Timer]
+OnBootSec=45
+OnUnitActiveSec=15
+AccuracySec=2
+Unit=ago-dispatcher.service
+
+[Install]
+WantedBy=timers.target

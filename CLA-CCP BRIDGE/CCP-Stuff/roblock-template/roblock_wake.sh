@@ -16,4 +16,6 @@ CONTEXT="${1:-Sei ROBLOCK. Controlla il bus AIgorà (node roblock_bus.mjs pendin
 
 cd "$DIR"
 # claude -p = print/non-interactive: agisce ed esce, liberando la RAM.
-claude -p "$CONTEXT"
+# env -u ANTHROPIC_API_KEY = blindatura costo (GO ROBY 31 May): Claude Code non vede mai la
+# paid key globale → usa SEMPRE l'abbonamento Max → costo per-token 0.
+env -u ANTHROPIC_API_KEY claude -p "$CONTEXT"

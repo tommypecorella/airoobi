@@ -1,0 +1,11 @@
+[Unit]
+Description=AIgora /ago dispatcher — un passo deterministico (zero-LLM). Sveglia ROBLOCK via claude -p (Max).
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+# Motore di SISTEMA (systemd user). MAI cron-agente OpenClaw (= sveglierebbe AIRIA = costo).
+# I segreti stanno in %h/ago-dispatcher/.env (chmod 600), NON qui.
+ExecStart=%h/ago-dispatcher/ago_dispatcher.sh
+TimeoutStartSec=600
