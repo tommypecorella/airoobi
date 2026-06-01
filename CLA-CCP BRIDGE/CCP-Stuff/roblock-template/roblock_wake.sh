@@ -18,4 +18,12 @@ cd "$DIR"
 # claude -p = print/non-interactive: agisce ed esce, liberando la RAM.
 # env -u ANTHROPIC_API_KEY = blindatura costo (GO ROBY 31 May): Claude Code non vede mai la
 # paid key globale → usa SEMPRE l'abbonamento Max → costo per-token 0.
-env -u ANTHROPIC_API_KEY claude -p "$CONTEXT"
+# 'claude' può non essere nel PATH minimale di systemd (user service): risolvi robustamente.
+CLAUDE_BIN="$(command -v claude || true)"
+if [ -z "$CLAUDE_BIN" ]; then
+  for c in "$HOME/.npm-global/bin/claude" "$HOME/.local/bin/claude" /usr/local/bin/claude; do
+    [ -x "$c" ] && { CLAUDE_BIN="$c"; break; }
+  done
+fi
+[ -n "$CLAUDE_BIN" ] || { echo "ERRORE roblock_wake: binario 'claude' non trovato (PATH systemd minimale)" >&2; exit 127; }
+env -u ANTHROPIC_API_KEY "$CLAUDE_BIN" -p "$CONTEXT"
