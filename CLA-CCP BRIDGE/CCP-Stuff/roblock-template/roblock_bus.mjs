@@ -40,11 +40,11 @@ try {
     }
     case 'activity':
       await rest(`agents?slug=eq.${SLUG}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({ status: 'busy', current_activity: args.join(' '), activity_since: new Date().toISOString() }) });
+        body: JSON.stringify({ status: 'busy', current_activity: args.join(' '), activity_since: new Date().toISOString(), last_seen: new Date().toISOString() }) });
       console.log('activity set'); break;
     case 'done':
       await rest(`agents?slug=eq.${SLUG}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({ status: 'idle', current_activity: null }) });
+        body: JSON.stringify({ status: 'idle', current_activity: null, last_seen: new Date().toISOString() }) });
       console.log('done'); break;
     case 'handled': {
       if (!args.length) { console.error('uso: handled <id> [<id>...]'); process.exit(1); }

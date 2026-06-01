@@ -9,6 +9,11 @@ Questo template è quel pezzo. **AIRIA** ci costruisce sopra il loop/freni (suo 
 cp -r roblock-template ~/roblock
 cd ~/roblock
 cp .env.example .env && chmod 600 .env     # incolla la anon key agora in .env
+# permessi headless claude -p (1 giu 2026): allowlist least-privilege per l'helper bus,
+# altrimenti i wake AIRIA si bloccano sul gate permessi. .claude/ è gitignored → crearlo al deploy:
+mkdir -p .claude && cat > .claude/settings.json <<'JSON'
+{ "permissions": { "allow": ["Bash(node roblock_bus.mjs:*)", "Bash(node ./roblock_bus.mjs:*)"] } }
+JSON
 # test contratto bus (senza AIRIA):
 node roblock_bus.mjs pending                 # vede i messaggi non gestiti
 ./roblock_wake.sh "test: presentati in #marketing"   # spawn effimero ROBLOCK

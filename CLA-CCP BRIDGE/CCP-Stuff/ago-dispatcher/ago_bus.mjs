@@ -66,14 +66,14 @@ async function main() {
       const [slug, ...act] = args;
       if (!slug) { console.error('uso: busy <slug> <attivita>'); process.exit(1); }
       await rest(`agents?slug=eq.${slug}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({ status: 'busy', current_activity: act.join(' ') || null, activity_since: new Date().toISOString() }) });
+        body: JSON.stringify({ status: 'busy', current_activity: act.join(' ') || null, activity_since: new Date().toISOString(), last_seen: new Date().toISOString() }) });
       console.log(`busy:${slug}`); break;
     }
     case 'idle': {
       const [slug] = args;
       if (!slug) { console.error('uso: idle <slug>'); process.exit(1); }
       await rest(`agents?slug=eq.${slug}`, { method: 'PATCH', headers: { Prefer: 'return=minimal' },
-        body: JSON.stringify({ status: 'idle', current_activity: null }) });
+        body: JSON.stringify({ status: 'idle', current_activity: null, last_seen: new Date().toISOString() }) });
       console.log(`idle:${slug}`); break;
     }
     case 'handled': {
