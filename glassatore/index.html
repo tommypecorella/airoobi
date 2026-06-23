@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Glassatore — Prova occhiali multi-angolo · AIROOBI Lab</title>
+<meta name="description" content="Prototipo motore try-on occhiali multi-angolo: carica 3 foto della montatura (fronte/sx/dx), scatta 3 foto del viso, il motore ti fa indossare gli occhiali su tutti e 3 gli angoli.">
+<!-- Prototipo sperimentale: NON indicizzare -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/glassatore/style.css?v=1.0.0">
+</head>
+<body>
+
+<!-- ===================== TOP BAR ===================== -->
+<header class="gl-top">
+  <a class="gl-brand" href="/">
+    <span class="gl-brand-mark">◓◓</span>
+    <span class="gl-brand-name">Glassatore</span>
+    <span class="gl-brand-lab">AIROOBI&nbsp;Lab</span>
+  </a>
+  <div class="gl-top-right">
+    <span class="gl-engine-pill" id="enginePill" title="Stato del motore di rilevamento volto">
+      <span class="gl-dot" id="engineDot"></span><span id="engineState">motore: idle</span>
+    </span>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="gl-hero">
+  <p class="gl-eyebrow">Prototipo · Motore try-on multi-angolo</p>
+  <h1>Indossa gli occhiali<br>prima di averli.</h1>
+  <p class="gl-sub">
+    Carica <strong>3 foto della montatura</strong> (fronte, lato&nbsp;SX, lato&nbsp;DX), scatta
+    <strong>3 foto del tuo viso</strong> agli stessi angoli. Il motore allinea lenti e
+    <em>aste</em> sul tuo volto e ti mostra come ti stanno — da ogni lato.
+  </p>
+</section>
+
+<!-- ===================== STEPPER ===================== -->
+<nav class="gl-steps" aria-label="Avanzamento">
+  <a href="#step-glasses" class="gl-step is-active" data-step="1"><i>1</i> Occhiali</a>
+  <a href="#step-face"    class="gl-step" data-step="2"><i>2</i> Viso</a>
+  <a href="#step-engine"  class="gl-step" data-step="3"><i>3</i> Motore</a>
+  <a href="#step-result"  class="gl-step" data-step="4"><i>4</i> Risultato</a>
+</nav>
+
+<main class="gl-wrap">
+
+  <!-- ============ STEP 1 + 2 (input affiancati) ============ -->
+  <div class="gl-grid-2">
+
+    <!-- ---- OCCHIALI ---- -->
+    <section class="gl-card" id="step-glasses">
+      <div class="gl-card-h">
+        <span class="gl-card-n">01</span>
+        <h2>La montatura</h2>
+        <p>Foto su sfondo chiaro e uniforme = scontorno migliore.</p>
+      </div>
+
+      <div class="gl-slots" id="glassesSlots">
+        <label class="gl-slot" data-key="front">
+          <input type="file" accept="image/*" hidden>
+          <div class="gl-slot-ph"><span class="gl-slot-ic">◳</span><b>Fronte</b><small>montatura di faccia</small></div>
+          <img class="gl-slot-img" alt="">
+          <span class="gl-slot-badge">FRONTE</span>
+        </label>
+        <label class="gl-slot" data-key="left">
+          <input type="file" accept="image/*" hidden>
+          <div class="gl-slot-ph"><span class="gl-slot-ic">◰</span><b>Lato SX</b><small>asta sinistra visibile</small></div>
+          <img class="gl-slot-img" alt="">
+          <span class="gl-slot-badge">LATO SX</span>
+        </label>
+        <label class="gl-slot" data-key="right">
+          <input type="file" accept="image/*" hidden>
+          <div class="gl-slot-ph"><span class="gl-slot-ic">◱</span><b>Lato DX</b><small>asta destra visibile</small></div>
+          <img class="gl-slot-img" alt="">
+          <span class="gl-slot-badge">LATO DX</span>
+        </label>
+      </div>
+
+      <div class="gl-ctl">
+        <label class="gl-range">
+          <span>Scontorno sfondo <small id="bgTolVal">42</small></span>
+          <input type="range" id="bgTol" min="0" max="120" value="42">
+        </label>
+        <label class="gl-check">
+          <input type="checkbox" id="bgEnable" checked>
+          <span>Rimuovi sfondo automaticamente</span>
+        </label>
+      </div>
+      <p class="gl-hint">Suggerimento: PNG con trasparenza? Disattiva lo scontorno e li uso così come sono.</p>
+    </section>
+
+    <!-- ---- VISO ---- -->
+    <section class="gl-card" id="step-face">
+      <div class="gl-card-h">
+        <span class="gl-card-n">02</span>
+        <h2>Il tuo viso</h2>
+        <p>Fronte dritto, lato SX e lato DX leggermente ruotati (~30°).</p>
+      </div>
+
+      <div class="gl-cam">
+        <video id="cam" playsinline muted autoplay></video>
+        <canvas id="camGuide" class="gl-cam-guide"></canvas>
+        <div class="gl-cam-empty" id="camEmpty">
+          <span class="gl-slot-ic">◉</span>
+          <b>Fotocamera</b>
+          <button class="gl-btn gl-btn-cam" id="btnCam">Attiva fotocamera</button>
+          <small>oppure carica le foto qui sotto</small>
+        </div>
+        <div class="gl-cam-pose" id="camPose">guarda dritto in camera</div>
+      </div>
+
+      <div class="gl-shoot">
+        <button class="gl-shoot-btn" data-pose="front" disabled>Scatta <b>Fronte</b></button>
+        <button class="gl-shoot-btn" data-pose="left"  disabled>Scatta <b>Lato SX</b></button>
+        <button class="gl-shoot-btn" data-pose="right" disabled>Scatta <b>Lato DX</b></button>
+      </div>
+
+      <div class="gl-slots" id="faceSlots">
+        <label class="gl-slot gl-slot-sm" data-key="front">
+          <input type="file" accept="image/*" hidden>
+          <div class="gl-slot-ph"><b>Fronte</b></div>
+          <img class="gl-slot-img" alt=""><span class="gl-slot-badge">FRONTE</span>
+          <span class="gl-slot-detect" hidden>volto ✓</span>
+        </label>
+        <label class="gl-slot gl-slot-sm" data-key="left">
+          <input type="file" accept="image/*" hidden>
+          <div class="gl-slot-ph"><b>Lato SX</b></div>
+          <img class="gl-slot-img" alt=""><span class="gl-slot-badge">LATO SX</span>
+          <span class="gl-slot-detect" hidden>volto ✓</span>
+        </label>
+        <label class="gl-slot gl-slot-sm" data-key="right">
+          <input type="file" accept="image/*" hidden>
+          <div class="gl-slot-ph"><b>Lato DX</b></div>
+          <img class="gl-slot-img" alt=""><span class="gl-slot-badge">LATO DX</span>
+          <span class="gl-slot-detect" hidden>volto ✓</span>
+        </label>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ STEP 3 — MOTORE ============ -->
+  <section class="gl-card gl-engine" id="step-engine">
+    <div class="gl-card-h">
+      <span class="gl-card-n">03</span>
+      <h2>Il motore</h2>
+      <p>Rilevo i punti del volto, calcolo le misure (le <em>ASA</em>) e indosso la montatura.</p>
+    </div>
+
+    <div class="gl-engine-grid">
+      <div class="gl-engine-actions">
+        <button class="gl-btn gl-btn-go" id="btnGenerate" disabled>
+          <span class="gl-go-ic">⟳</span> Genera il try-on
+        </button>
+
+        <label class="gl-hd">
+          <input type="checkbox" id="hdToggle">
+          <span class="gl-hd-box"></span>
+          <span class="gl-hd-txt"><b>HD realistico</b> <small>(AI generativa)</small></span>
+        </label>
+        <p class="gl-hd-note" id="hdNote">
+          Il motore <b>geometrico</b> è sempre attivo (gratis, locale). L'HD generativo è opzionale e
+          richiede una chiave modello-immagine lato server: se non configurata, resto sul geometrico.
+        </p>
+
+        <div class="gl-log" id="engineLog" aria-live="polite"></div>
+      </div>
+
+      <aside class="gl-measures" id="measures">
+        <h3>Misure rilevate <small>“le ASA”</small></h3>
+        <ul class="gl-measure-list" id="measureList">
+          <li class="gl-empty">— in attesa del volto —</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ============ STEP 4 — RISULTATO ============ -->
+  <section class="gl-card gl-result" id="step-result">
+    <div class="gl-card-h">
+      <span class="gl-card-n">04</span>
+      <h2>Come ti stanno</h2>
+      <p>Trascina il cursore per il prima/dopo. Trascina i pallini per rifinire l'allineamento.</p>
+    </div>
+
+    <div class="gl-results" id="results">
+      <article class="gl-res" data-key="front">
+        <header><b>Fronte</b><span class="gl-res-badge" hidden>geometrico</span></header>
+        <div class="gl-res-stage">
+          <canvas class="gl-res-canvas"></canvas>
+          <canvas class="gl-res-overlay"></canvas>
+          <input type="range" class="gl-res-slider" min="0" max="100" value="100" title="prima / dopo">
+          <p class="gl-res-ph">in attesa di generazione</p>
+        </div>
+        <button class="gl-btn gl-btn-dl" disabled>Scarica PNG</button>
+      </article>
+
+      <article class="gl-res" data-key="left">
+        <header><b>Lato SX</b><span class="gl-res-badge" hidden>geometrico</span></header>
+        <div class="gl-res-stage">
+          <canvas class="gl-res-canvas"></canvas>
+          <canvas class="gl-res-overlay"></canvas>
+          <input type="range" class="gl-res-slider" min="0" max="100" value="100" title="prima / dopo">
+          <p class="gl-res-ph">in attesa di generazione</p>
+        </div>
+        <button class="gl-btn gl-btn-dl" disabled>Scarica PNG</button>
+      </article>
+
+      <article class="gl-res" data-key="right">
+        <header><b>Lato DX</b><span class="gl-res-badge" hidden>geometrico</span></header>
+        <div class="gl-res-stage">
+          <canvas class="gl-res-canvas"></canvas>
+          <canvas class="gl-res-overlay"></canvas>
+          <input type="range" class="gl-res-slider" min="0" max="100" value="100" title="prima / dopo">
+          <p class="gl-res-ph">in attesa di generazione</p>
+        </div>
+        <button class="gl-btn gl-btn-dl" disabled>Scarica PNG</button>
+      </article>
+    </div>
+
+    <div class="gl-result-foot">
+      <button class="gl-btn gl-btn-ghost" id="btnDownloadAll" disabled>Scarica tutti</button>
+      <button class="gl-btn gl-btn-ghost" id="btnReset">Ricomincia</button>
+    </div>
+  </section>
+
+  <footer class="gl-foot">
+    <p>Glassatore — prototipo motore try-on · <span class="gl-ver">alfa-2026.06.23-1.0.0</span></p>
+    <p class="gl-foot-sub">
+      Motore geometrico: MediaPipe Face Landmarker + scontorno CV + allineamento similarità a 2 punti, 100% nel browser.
+      Nessuna immagine lascia il dispositivo in modalità geometrica.
+    </p>
+  </footer>
+</main>
+
+<!-- modale calibrazione manuale (fallback senza rilevamento) -->
+<div class="gl-modal" id="calibModal" hidden>
+  <div class="gl-modal-box">
+    <h3 id="calibTitle">Calibrazione manuale</h3>
+    <p id="calibHint">Clicca i due punti richiesti sull'immagine.</p>
+    <div class="gl-calib-stage"><canvas id="calibCanvas"></canvas></div>
+    <div class="gl-modal-foot">
+      <button class="gl-btn gl-btn-ghost" id="calibReset">Azzera</button>
+      <button class="gl-btn gl-btn-go" id="calibOk" disabled>Conferma</button>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="/glassatore/app.js?v=1.0.0"></script>
+</body>
+</html>
