@@ -229,6 +229,7 @@ em{font-style:italic;color:var(--gold-soft)}
 .gl-foot p{color:var(--txt-mute);font-size:12px}
 .gl-ver{font-family:var(--font-m);color:var(--gold-soft)}
 .gl-foot-sub{max-width:620px;margin:8px auto 0;font-size:11px;line-height:1.6}
+.gl-foot-lab{font-family:var(--font-m);letter-spacing:1.5px;text-transform:uppercase;color:var(--gold-soft);font-size:10px}
 
 /* ---------------- MODAL (calibrazione) ---------------- */
 .gl-modal{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.8);backdrop-filter:blur(6px);

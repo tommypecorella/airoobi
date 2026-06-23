@@ -17,12 +17,14 @@ export const config = { runtime: 'nodejs', maxDuration: 60 };
 const MODEL = process.env.GLASSATORE_IMAGE_MODEL || 'gemini-2.5-flash-image';
 
 const PROMPT =
-  'Take the EXACT eyeglasses shown in the SECOND image and place them naturally on the ' +
-  'face of the person in the FIRST image. ' +
-  'CRITICAL — reproduce the eyewear faithfully: keep the SAME colors, materials and finish ' +
+  'FIRST image = the person. SECOND image = the eyeglasses isolated on transparent background (use it for the exact SHAPE). ' +
+  'THIRD image (if present) = the ORIGINAL photo of the SAME eyeglasses — use it as the GROUND TRUTH for exact ' +
+  'colors, materials, finish and texture. ' +
+  'Place those exact eyeglasses naturally on the face of the person in the FIRST image. ' +
+  'CRITICAL — reproduce the eyewear faithfully: keep the SAME colors, materials and texture ' +
   'for BOTH the frame front and the temple arms separately (for example, if the frame front ' +
   'is black and the temple arms are red, the result must show a black front with red temples). ' +
-  'Do NOT recolor, restyle or simplify the glasses; preserve their exact shape, thickness and color blocking. ' +
+  'Do NOT recolor, restyle or simplify the glasses; preserve their exact shape, thickness, color blocking and texture. ' +
   'Match the head pose, perspective and lighting; size the frame realistically for the face; ' +
   'render the temple arms along the side of the head toward the ear. ' +
   'Keep the person, hair, skin, expression, framing, aspect ratio and background EXACTLY as in the first image. ' +
@@ -74,20 +76,21 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { view, face, glasses } = await readBody(req);
+    const { view, face, glasses, glassesRef } = await readBody(req);
     if (!face || !glasses) { res.status(400).json({ error: 'missing_images' }); return; }
     const f = splitDataUrl(face), g = splitDataUrl(glasses);
+    const gr = glassesRef ? splitDataUrl(glassesRef) : null;
+
+    const reqParts = [
+      { text: PROMPT },
+      { inline_data: { mime_type: f.mime, data: f.data } },         // FIRST = viso
+      { inline_data: { mime_type: g.mime, data: g.data } },         // SECOND = occhiali scontornati (forma)
+    ];
+    if (gr && gr.data) reqParts.push({ inline_data: { mime_type: gr.mime, data: gr.data } }); // THIRD = originale (colori/texture)
 
     const url = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`;
     const payload = {
-      contents: [{
-        role: 'user',
-        parts: [
-          { text: PROMPT },
-          { inline_data: { mime_type: f.mime, data: f.data } },     // FIRST = viso
-          { inline_data: { mime_type: g.mime, data: g.data } },     // SECOND = occhiali
-        ],
-      }],
+      contents: [{ role: 'user', parts: reqParts }],
       generationConfig: { responseModalities: ['IMAGE'], temperature: 0.2 },
     };
 

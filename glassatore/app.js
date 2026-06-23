@@ -309,7 +309,7 @@ async function processGlasses(view, src) {
     const temple = { x: lensLeft ? bbox.x + bbox.w * 0.97 : bbox.x + bbox.w * 0.03, y: bbox.y + bbox.h * 0.40 };
     anchors = { hinge, temple, auto: true };
   }
-  S.glasses[view] = { cutout, anchors, bbox };
+  S.glasses[view] = { cutout, anchors, bbox, original: base };   // original = riferimento colore/texture per l'HD
   log(`Montatura ${view}: ${anchors.auto ? 'ancore auto ✓' : 'ancore stimate'} (${cutout.width}×${cutout.height})`, anchors.auto ? 'ok' : 'warn');
   refreshGenerate();
 }
@@ -613,9 +613,11 @@ async function generateHD(view, pass) {
   try {
     const faceData = cappedDataURL(S.face[view].canvas, 896, 'image/jpeg', 0.9);
     const glassesData = cappedDataURL(S.glasses[view].cutout, 896, 'image/png');
+    // foto originale della montatura (con sfondo) = ground-truth per colori e texture
+    const glassesRef = S.glasses[view].original ? cappedDataURL(S.glasses[view].original, 896, 'image/jpeg', 0.92) : null;
     const res = await fetch('/api/glassatore-hd', {
       method: 'POST', headers: { 'Content-Type': 'application/json', 'x-glassatore-pass': pass || '' },
-      body: JSON.stringify({ view, face: faceData, glasses: glassesData }),
+      body: JSON.stringify({ view, face: faceData, glasses: glassesData, glassesRef }),
     });
     if (res.status === 401) { const j = await res.json().catch(() => ({}));
       log(`HD bloccato (${view}): ${j.message || 'password errata o mancante'} — resto sul geometrico.`, 'err'); return; }
