@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/glassatore/style.css?v=1.2.0">
+<link rel="stylesheet" href="/glassatore/style.css?v=1.3.0">
 </head>
 <body>
 
@@ -24,8 +24,12 @@
     <span class="gl-brand-lab">AIROOBI&nbsp;Lab</span>
   </a>
   <div class="gl-top-right">
-    <span class="gl-engine-pill" id="enginePill" title="Stato del motore di rilevamento volto">
-      <span class="gl-dot" id="engineDot"></span><span id="engineState">motore: idle</span>
+    <button class="gl-theme-btn" id="themeBtn" aria-label="Cambia tema chiaro/scuro" title="Tema chiaro / scuro">
+      <svg class="gl-ic-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      <svg class="gl-ic-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <span class="gl-engine-pill" id="enginePill" title="Rilevamento automatico del volto (MediaPipe). 'auto' = pupille trovate da solo · 'manuale' = trascini tu i pallini sul risultato">
+      <span class="gl-dot" id="engineDot"></span><span id="engineState">viso: avvio…</span>
     </span>
   </div>
 </header>
@@ -90,16 +94,22 @@
       </div>
 
       <div class="gl-ctl">
-        <label class="gl-range">
-          <span>Scontorno sfondo <small id="bgTolVal">42</small></span>
+        <details class="gl-help" open>
+          <summary>Cos'è lo <b>scontorno sfondo</b>?</summary>
+          <p>Ritaglia la montatura <b>togliendo lo sfondo</b> della foto, così sul viso resta solo l'occhiale
+          (e le lenti diventano trasparenti). Alza l'<b>intensità</b> se resta dello sfondo attorno alla montatura;
+          abbassala se sta "mangiando" parti dell'occhiale. Foto su <b>sfondo chiaro e uniforme</b> = risultato migliore.</p>
+        </details>
+        <label class="gl-range" id="bgTolRow">
+          <span>Intensità scontorno <small id="bgTolVal">42</small></span>
           <input type="range" id="bgTol" min="0" max="120" value="42">
         </label>
         <label class="gl-check">
-          <input type="checkbox" id="bgEnable" checked>
-          <span>Rimuovi sfondo automaticamente</span>
+          <input type="checkbox" id="bgTransparent">
+          <span>La foto è già senza sfondo <small>(PNG trasparente)</small></span>
         </label>
+        <p class="gl-hint" id="bgTransparentHint" hidden>Scontorno azzerato e disattivato: uso direttamente la trasparenza del PNG.</p>
       </div>
-      <p class="gl-hint">Suggerimento: PNG con trasparenza? Disattiva lo scontorno e li uso così come sono.</p>
     </section>
 
     <!-- ---- VISO ---- -->
@@ -144,7 +154,7 @@
     <div class="gl-card-h">
       <span class="gl-card-n">03</span>
       <h2>Il motore</h2>
-      <p>Rilevo i punti del volto, calcolo le misure (le <em>ASA</em>) e indosso la montatura.</p>
+      <p>Rilevo i punti del volto, calcolo le misure di calibratura e indosso la montatura.</p>
     </div>
 
     <div class="gl-engine-grid">
@@ -158,17 +168,31 @@
           <span class="gl-hd-box"></span>
           <span class="gl-hd-txt"><b>HD realistico</b> <small>(AI generativa)</small></span>
         </label>
-        <p class="gl-hd-cost">Costo stimato: <b>~€0,04</b> a immagine · <b>~€0,11</b> per i 3 angoli<small>stima (Gemini nano-banana, ~$0.04/img)</small></p>
+
+        <div class="gl-hd-panel" id="hdPanel" hidden>
+          <label class="gl-hd-field">
+            <span>Genera HD su</span>
+            <select id="hdScope">
+              <option value="front" selected>Solo fronte — più veloce/economico (test)</option>
+              <option value="all">Tutti e 3 gli angoli</option>
+            </select>
+          </label>
+          <label class="gl-hd-field">
+            <span>Password HD</span>
+            <input type="password" id="hdPass" placeholder="richiesta per usare l'AI" autocomplete="off">
+          </label>
+          <p class="gl-hd-cost">Costo stimato: <b>~€0,04</b> a immagine · <b>~€0,11</b> per i 3 angoli<small>protetta da password per non consumare credito a caso · Gemini nano-banana</small></p>
+        </div>
         <p class="gl-hd-note" id="hdNote">
-          Il motore <b>geometrico</b> è sempre attivo (gratis, locale). L'HD generativo è opzionale e
-          richiede una chiave modello-immagine lato server: se non configurata, resto sul geometrico.
+          Il motore <b>geometrico</b> è sempre attivo (gratis, locale). L'<b>HD generativo</b> è opzionale,
+          a pagamento e protetto da password: se non sblocchi, resto sul geometrico.
         </p>
 
         <div class="gl-log" id="engineLog" aria-live="polite"></div>
       </div>
 
       <aside class="gl-measures" id="measures">
-        <h3>Misure rilevate <small>“le ASA”</small></h3>
+        <h3>Misure di calibratura</h3>
         <ul class="gl-measure-list" id="measureList">
           <li class="gl-empty">— in attesa del volto —</li>
         </ul>
@@ -226,7 +250,7 @@
   </section>
 
   <footer class="gl-foot">
-    <p>Glassatore — prototipo motore try-on · <span class="gl-ver">alfa-2026.06.24-1.2.0</span></p>
+    <p>Glassatore — prototipo motore try-on · <span class="gl-ver">alfa-2026.06.24-1.3.0</span></p>
     <p class="gl-foot-sub">
       Motore geometrico: MediaPipe Face Landmarker + scontorno CV + allineamento similarità a 2 punti, 100% nel browser.
       Nessuna immagine lascia il dispositivo in modalità geometrica.
@@ -270,6 +294,6 @@
   </div>
 </div>
 
-<script type="module" src="/glassatore/app.js?v=1.2.0"></script>
+<script type="module" src="/glassatore/app.js?v=1.3.0"></script>
 </body>
 </html>

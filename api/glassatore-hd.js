@@ -17,11 +17,15 @@ export const config = { runtime: 'nodejs', maxDuration: 60 };
 const MODEL = process.env.GLASSATORE_IMAGE_MODEL || 'gemini-2.5-flash-image';
 
 const PROMPT =
-  'Take the eyeglasses shown in the SECOND image and place them naturally on the ' +
-  "face of the person in the FIRST image. Match the head pose, perspective and " +
-  'lighting; size the frame realistically for the face; render the temple arms ' +
-  'along the side of the head toward the ear. Keep the person, hair, skin, ' +
-  'expression, framing, aspect ratio and background EXACTLY as in the first image. ' +
+  'Take the EXACT eyeglasses shown in the SECOND image and place them naturally on the ' +
+  'face of the person in the FIRST image. ' +
+  'CRITICAL — reproduce the eyewear faithfully: keep the SAME colors, materials and finish ' +
+  'for BOTH the frame front and the temple arms separately (for example, if the frame front ' +
+  'is black and the temple arms are red, the result must show a black front with red temples). ' +
+  'Do NOT recolor, restyle or simplify the glasses; preserve their exact shape, thickness and color blocking. ' +
+  'Match the head pose, perspective and lighting; size the frame realistically for the face; ' +
+  'render the temple arms along the side of the head toward the ear. ' +
+  'Keep the person, hair, skin, expression, framing, aspect ratio and background EXACTLY as in the first image. ' +
   'Photorealistic result. Output only the edited photograph, no text.';
 
 function readBody(req) {
@@ -44,6 +48,20 @@ function splitDataUrl(u) {
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') { res.status(405).json({ error: 'method_not_allowed' }); return; }
+
+  // --- gate password (protegge il budget: l'endpoint è pubblico) ---
+  // Fail-safe: senza GLASSATORE_HD_PASSWORD configurata, l'HD è BLOCCATO.
+  const PASS = process.env.GLASSATORE_HD_PASSWORD;
+  const given = req.headers['x-glassatore-pass'] || '';
+  if (!PASS) {
+    res.status(401).json({ ok: false, message: 'HD bloccato: password non configurata sul server.',
+      hint: 'Imposta GLASSATORE_HD_PASSWORD tra le env del progetto Vercel per abilitare l’HD.' });
+    return;
+  }
+  if (given !== PASS) {
+    res.status(401).json({ ok: false, message: 'password errata o mancante.' });
+    return;
+  }
 
   const KEY = process.env.GLASSATORE_IMAGE_API_KEY || process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
   if (!KEY) {

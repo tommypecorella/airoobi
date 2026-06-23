@@ -45,7 +45,7 @@ function log(msg, cls = '') {
 function setEngine(state, label) {
   S.landmarkerState = state;
   engineDot.className = 'gl-dot ' + (state === 'loading' ? 'is-loading' : state === 'ready' ? 'is-ready' : state === 'error' ? 'is-error' : '');
-  engineState.textContent = 'motore: ' + label;
+  engineState.textContent = label;
 }
 
 /* =================================================================
@@ -103,33 +103,34 @@ function similarity(s0, s1, d0, d1) {
 /* =================================================================
    MEDIAPIPE  —  init lazy
 ================================================================= */
+const MP_VER = '0.10.35';   // versione MediaPipe tasks-vision (verificata su jsdelivr)
 async function getLandmarker() {
   if (S.landmarker) return S.landmarker;
   if (S.landmarkerState === 'error') return null;
-  setEngine('loading', 'carico…');
+  setEngine('loading', 'viso: carico…');
   log('Inizializzo MediaPipe Face Landmarker…', 'dim');
   try {
-    const vision = await import('https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22');
+    const vision = await import(`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VER}`);
     const fileset = await vision.FilesetResolver.forVisionTasks(
-      'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.22/wasm'
+      `https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${MP_VER}/wasm`
     );
-    S.landmarker = await vision.FaceLandmarker.createFromOptions(fileset, {
+    const make = (delegate) => vision.FaceLandmarker.createFromOptions(fileset, {
       baseOptions: {
         modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task',
-        delegate: 'GPU',
+        delegate,
       },
-      runningMode: 'IMAGE',
-      numFaces: 1,
-      minFaceDetectionConfidence: 0.25,
-      minFacePresenceConfidence: 0.25,
+      runningMode: 'IMAGE', numFaces: 1,
+      minFaceDetectionConfidence: 0.25, minFacePresenceConfidence: 0.25,
     });
-    setEngine('ready', 'pronto');
-    log('Motore volto pronto ✓', 'ok');
+    try { S.landmarker = await make('GPU'); }
+    catch (gpuErr) { console.warn('GPU delegate ko, provo CPU', gpuErr); S.landmarker = await make('CPU'); }
+    setEngine('ready', 'viso: auto ✓');
+    log('Rilevamento volto pronto ✓', 'ok');
     return S.landmarker;
   } catch (err) {
     console.error(err);
-    setEngine('error', 'manuale');
-    log('MediaPipe non disponibile — passo a calibrazione manuale.', 'warn');
+    setEngine('error', 'viso: manuale');
+    log('Rilevamento automatico non disponibile — usa i pallini per allineare a mano.', 'warn');
     return null;
   }
 }
@@ -287,7 +288,7 @@ async function processGlasses(view, src) {
   const base = toCanvas(src);                 // accetta Image (upload) o Canvas (cattura)
   const slot = $(`#glassesSlots .gl-slot[data-key="${view}"]`);
   if (slot) { slot.classList.add('is-filled'); $('.gl-slot-img', slot).src = base.toDataURL('image/jpeg', 0.9); }
-  const enable = $('#bgEnable').checked;
+  const enable = !$('#bgTransparent').checked;   // PNG già trasparente → niente scontorno
   const tol = +$('#bgTol').value;
   // scontorno attivo → segmenta per colore; disattivo → fidati dell'alpha del PNG
   const { canvas: cutout, lens } = segmentFrame(base, tol, !enable);
@@ -447,24 +448,40 @@ const CAM = { mode: null, pose: 0, stream: null, captured: null };
 /* sagome guida (SVG tratteggiato oro) per modalità + posa */
 function camGuideSVG(mode, key) {
   const o = 'stroke="#B8960C" fill="none" stroke-width="2.2" stroke-dasharray="7 6" opacity=".9"';
-  const arrow = (x, y, dir) => `<path d="M${x} ${y} l${dir*14} -8 m${-dir*14} 8 l${dir*14} 8" stroke="#B8960C" stroke-width="2.4" fill="none" opacity=".9"/>`;
+  const sld = 'stroke="#B8960C" fill="none" stroke-width="2.6" opacity=".95"';
+  const cap = (y, t) => `<text x="150" y="${y}" text-anchor="middle" fill="#B8960C" font-size="13" font-family="monospace" opacity=".9">${t}</text>`;
+  const tag = (x, y, t, a = 'start') => `<text x="${x}" y="${y}" text-anchor="${a}" fill="#B8960C" font-size="11" font-family="monospace" opacity=".85">${t}</text>`;
   let body = '';
   if (mode === 'face') {
-    if (key === 'front') body = `<ellipse cx="150" cy="200" rx="92" ry="120" ${o}/>
-      <line x1="74" y1="178" x2="226" y2="178" ${o}/>
-      <circle cx="120" cy="178" r="6" ${o}/><circle cx="180" cy="178" r="6" ${o}/>`;
-    else { const s = key === 'left' ? -1 : 1;
-      body = `<ellipse cx="${150 + s*14}" cy="200" rx="80" ry="120" ${o}/>
-        <line x1="${90 + s*14}" y1="178" x2="${210 + s*14}" y2="178" ${o}/>
-        ${arrow(150 + s*70, 200, s)}<text x="150" y="345" text-anchor="middle" fill="#B8960C" font-size="13" font-family="monospace" opacity=".85">gira ${s<0?'a sinistra':'a destra'}</text>`; }
+    if (key === 'front') {
+      body = `<ellipse cx="150" cy="205" rx="92" ry="118" ${o}/>
+        <line x1="70" y1="180" x2="230" y2="180" ${o}/>
+        <circle cx="120" cy="180" r="6" ${o}/><circle cx="180" cy="180" r="6" ${o}/>
+        ${tag(236, 184, '← occhi')}${cap(350, 'centra il viso · occhi sulla linea')}`;
+    } else { const s = key === 'left' ? -1 : 1;       // freccia di rotazione curva sopra la testa
+      body = `<ellipse cx="${150 + s*16}" cy="205" rx="78" ry="118" ${o}/>
+        <line x1="${86 + s*16}" y1="180" x2="${214 + s*16}" y2="180" ${o}/>
+        <circle cx="${150 + s*16}" cy="180" r="6" ${o}/>
+        <path d="M${150 - s*48} 66 q${s*52} -22 ${s*92} 8" ${sld}/>
+        <path d="M${150 + s*44} 74 l${s*16} -3 l${-s*7} 14" ${sld}/>
+        ${tag(236, 184, '← linea occhi')}
+        ${cap(330, `ruota la testa ${s < 0 ? 'a SINISTRA ⟲' : '⟳ a DESTRA'}`)}
+        ${cap(350, 'tieni gli occhi sulla linea tratteggiata')}`;
+    }
   } else {
-    if (key === 'front') body = `<circle cx="108" cy="200" r="40" ${o}/><circle cx="192" cy="200" r="40" ${o}/>
-      <path d="M148 200 q2 -10 4 0" ${o}/>
-      <line x1="68" y1="196" x2="40" y2="188" ${o}/><line x1="232" y1="196" x2="260" y2="188" ${o}/>`;
-    else { const s = key === 'left' ? -1 : 1; const lx = 150 - s*60;
-      body = `<ellipse cx="${lx}" cy="200" rx="34" ry="40" ${o}/>
-        <line x1="${lx + s*32}" y1="196" x2="${lx + s*150}" y2="182" ${o}/>
-        ${arrow(150 + s*40, 270, s)}<text x="150" y="345" text-anchor="middle" fill="#B8960C" font-size="13" font-family="monospace" opacity=".85">mostra l’asta ${s<0?'sinistra':'destra'}</text>`; }
+    if (key === 'front') {
+      body = `<circle cx="108" cy="205" r="40" ${o}/><circle cx="192" cy="205" r="40" ${o}/>
+        <path d="M148 205 q2 -9 4 0" ${o}/>
+        <line x1="68" y1="201" x2="40" y2="193" ${o}/><line x1="232" y1="201" x2="260" y2="193" ${o}/>
+        ${cap(350, 'montatura dritta, ben centrata')}`;
+    } else { const s = key === 'left' ? -1 : 1; const lx = 150 - s*58;
+      body = `<ellipse cx="${lx}" cy="205" rx="34" ry="42" ${o}/>
+        <line x1="${lx + s*32}" y1="201" x2="${lx + s*150}" y2="184" ${o}/>
+        <path d="M${lx + s*150} 184 l${-s*16} -4 m${s*16} 4 l${-s*16} 10" ${sld}/>
+        ${tag(lx - 26, 152, 'lente')}
+        ${cap(330, `mostra l’asta ${s < 0 ? 'SINISTRA' : 'DESTRA'}`)}
+        ${cap(350, 'lente nel cerchio, asta distesa')}`;
+    }
   }
   return `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid meet">${body}</svg>`;
 }
@@ -579,23 +596,29 @@ async function generate() {
   $('#btnDownloadAll').disabled = done === 0;
 
   if ($('#hdToggle').checked) {
-    log('HD generativo richiesto: chiamo il server…', 'dim');
-    for (const v of VIEWS) if (S.result[v]) await generateHD(v);
+    const scope = $('#hdScope').value;                 // 'front' | 'all'
+    const pass = $('#hdPass').value.trim();
+    const targets = (scope === 'all' ? VIEWS : ['front']).filter(v => S.result[v]);
+    if (!pass) log('HD: inserisci la password per usare l’AI — resto sul geometrico.', 'warn');
+    else { log(`HD generativo (${scope === 'all' ? '3 angoli' : 'solo fronte'}): chiamo il server…`, 'dim');
+      for (const v of targets) await generateHD(v, pass); }
   }
   btn.classList.remove('is-running'); btn.disabled = false;
   document.getElementById('step-result').scrollIntoView({ behavior: 'smooth' });
 }
 
-/* path generativo HD — gated lato server */
-async function generateHD(view) {
+/* path generativo HD — gated + protetto da password lato server */
+async function generateHD(view, pass) {
   const card = $(`.gl-res[data-key="${view}"]`);
   try {
     const faceData = cappedDataURL(S.face[view].canvas, 896, 'image/jpeg', 0.9);
     const glassesData = cappedDataURL(S.glasses[view].cutout, 896, 'image/png');
     const res = await fetch('/api/glassatore-hd', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'x-glassatore-pass': pass || '' },
       body: JSON.stringify({ view, face: faceData, glasses: glassesData }),
     });
+    if (res.status === 401) { const j = await res.json().catch(() => ({}));
+      log(`HD bloccato (${view}): ${j.message || 'password errata o mancante'} — resto sul geometrico.`, 'err'); return; }
     if (res.status === 501) { const j = await res.json().catch(() => ({}));
       log(`HD non configurato (${view}): ${j.message || 'manca la chiave modello-immagine'} — resto sul geometrico.`, 'warn'); return; }
     if (!res.ok) { log(`HD errore ${res.status} (${view}) — resto sul geometrico.`, 'err'); return; }
@@ -722,13 +745,43 @@ function init() {
   $('#btnReset').addEventListener('click', () => location.reload());
   $('#bgTol').addEventListener('input', e => { $('#bgTolVal').textContent = e.target.value; });
   $('#bgTol').addEventListener('change', reprocessGlasses);
-  $('#bgEnable').addEventListener('change', reprocessGlasses);
-  $('#hdToggle').addEventListener('change', e => {
-    if (e.target.checked) log('HD generativo ON — verrà tentato alla generazione (gated lato server).', 'dim');
+  // toggle "PNG già trasparente": azzera+disabilita lo scontorno
+  $('#bgTransparent').addEventListener('change', e => {
+    const on = e.target.checked;
+    $('#bgTol').disabled = on;
+    $('#bgTolRow').classList.toggle('is-disabled', on);
+    $('#bgTransparentHint').hidden = !on;
+    reprocessGlasses();
   });
+  // HD: mostra pannello (scope + password), ricorda la password nella sessione
+  const hdPass = $('#hdPass');
+  hdPass.value = sessionStorage.getItem('gl-hdpass') || '';
+  hdPass.addEventListener('input', () => sessionStorage.setItem('gl-hdpass', hdPass.value));
+  $('#hdToggle').addEventListener('change', e => {
+    $('#hdPanel').hidden = !e.target.checked;
+    if (e.target.checked) { log('HD ON — scegli ambito e inserisci la password.', 'dim'); if (!hdPass.value) hdPass.focus(); }
+  });
+  // tema chiaro/scuro
+  $('#themeBtn').addEventListener('click', toggleTheme);
+
   // precarico il motore volto in background (non blocca la UI)
   getLandmarker();
   log('Glassatore pronto. Carica la montatura e scatta il viso.', 'dim');
 }
+
+/* =================================================================
+   TEMA (chiaro/scuro) — persistito
+================================================================= */
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', t === 'light' ? '#FFFFFF' : '#000000');
+}
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  const next = cur === 'light' ? 'dark' : 'light';
+  applyTheme(next); localStorage.setItem('gl-theme', next);
+}
+applyTheme(localStorage.getItem('gl-theme') || 'dark');   // prima del paint
 
 document.addEventListener('DOMContentLoaded', init);

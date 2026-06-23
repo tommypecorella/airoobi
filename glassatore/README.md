@@ -1,6 +1,6 @@
 # Glassatore — prototipo motore try-on occhiali multi-angolo
 
-> AIROOBI Lab · prototipo · `alfa-2026.06.24-1.2.0`
+> AIROOBI Lab · prototipo · `alfa-2026.06.24-1.3.0`
 > Live: `https://www.airoobi.app/glassatore` · **noindex** (sperimentale)
 
 Configuratore che ti fa **indossare un paio di occhiali prima di averli**, da 3 angoli.
@@ -69,8 +69,17 @@ Provider: **Google Gemini 2.5 Flash Image ("nano-banana")** — editing multi-re
 prende gli occhiali dalla 2ª immagine e li indossa sul viso della 1ª, mantenendo posa/luce/identità.
 Fotorealistico ma richiede una **chiave modello-immagine** lato server.
 Se la chiave manca → `501` pulito e il front-end **resta sul geometrico** senza errori.
-Per attivarlo: imposta `GLASSATORE_IMAGE_API_KEY` (chiave Google AI Studio) tra le env del progetto
-Vercel — opzionali: `GEMINI_API_KEY`/`GOOGLE_API_KEY`, e `GLASSATORE_IMAGE_MODEL` per cambiare modello.
+
+**Protezione budget (password):** l'endpoint è pubblico, quindi è protetto da password lato server.
+Richiede l'header `x-glassatore-pass` uguale a env `GLASSATORE_HD_PASSWORD`. Se la password non è
+configurata → `401` (HD bloccato, fail-safe: nessuno può consumare credito). Nel front-end la password
+si inserisce nel pannello HD (memorizzata solo nella sessione del browser).
+
+**Ambito (per risparmiare):** opzione "Solo fronte" (default) o "Tutti e 3 gli angoli" — di default genera
+una sola immagine HD (fronte) per non spendere su 3 angoli durante i test.
+
+Env: `GLASSATORE_IMAGE_API_KEY` (chiave Google AI Studio) · opzionali `GEMINI_API_KEY`/`GOOGLE_API_KEY`,
+`GLASSATORE_IMAGE_MODEL` (modello), `GLASSATORE_HD_PASSWORD` (password HD, **obbligatoria** per usare l'HD).
 
 ---
 
