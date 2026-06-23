@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/glassatore/style.css?v=1.0.0">
+<link rel="stylesheet" href="/glassatore/style.css?v=1.2.0">
 </head>
 <body>
 
@@ -62,6 +62,12 @@
         <p>Foto su sfondo chiaro e uniforme = scontorno migliore.</p>
       </div>
 
+      <button class="gl-btn gl-opencam" data-mode="glasses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="gl-ic-cam"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.2"/></svg>
+        Fotocamera guidata
+      </button>
+      <p class="gl-orsep"><span>oppure carica i file</span></p>
+
       <div class="gl-slots" id="glassesSlots">
         <label class="gl-slot" data-key="front">
           <input type="file" accept="image/*" hidden>
@@ -104,23 +110,11 @@
         <p>Fronte dritto, lato SX e lato DX leggermente ruotati (~30°).</p>
       </div>
 
-      <div class="gl-cam">
-        <video id="cam" playsinline muted autoplay></video>
-        <canvas id="camGuide" class="gl-cam-guide"></canvas>
-        <div class="gl-cam-empty" id="camEmpty">
-          <span class="gl-slot-ic">◉</span>
-          <b>Fotocamera</b>
-          <button class="gl-btn gl-btn-cam" id="btnCam">Attiva fotocamera</button>
-          <small>oppure carica le foto qui sotto</small>
-        </div>
-        <div class="gl-cam-pose" id="camPose">guarda dritto in camera</div>
-      </div>
-
-      <div class="gl-shoot">
-        <button class="gl-shoot-btn" data-pose="front" disabled>Scatta <b>Fronte</b></button>
-        <button class="gl-shoot-btn" data-pose="left"  disabled>Scatta <b>Lato SX</b></button>
-        <button class="gl-shoot-btn" data-pose="right" disabled>Scatta <b>Lato DX</b></button>
-      </div>
+      <button class="gl-btn gl-btn-cam gl-opencam" data-mode="face">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="gl-ic-cam"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.2"/></svg>
+        Fotocamera guidata
+      </button>
+      <p class="gl-orsep"><span>oppure carica i selfie</span></p>
 
       <div class="gl-slots" id="faceSlots">
         <label class="gl-slot gl-slot-sm" data-key="front">
@@ -164,6 +158,7 @@
           <span class="gl-hd-box"></span>
           <span class="gl-hd-txt"><b>HD realistico</b> <small>(AI generativa)</small></span>
         </label>
+        <p class="gl-hd-cost">Costo stimato: <b>~€0,04</b> a immagine · <b>~€0,11</b> per i 3 angoli<small>stima (Gemini nano-banana, ~$0.04/img)</small></p>
         <p class="gl-hd-note" id="hdNote">
           Il motore <b>geometrico</b> è sempre attivo (gratis, locale). L'HD generativo è opzionale e
           richiede una chiave modello-immagine lato server: se non configurata, resto sul geometrico.
@@ -231,13 +226,36 @@
   </section>
 
   <footer class="gl-foot">
-    <p>Glassatore — prototipo motore try-on · <span class="gl-ver">alfa-2026.06.23-1.1.0</span></p>
+    <p>Glassatore — prototipo motore try-on · <span class="gl-ver">alfa-2026.06.24-1.2.0</span></p>
     <p class="gl-foot-sub">
       Motore geometrico: MediaPipe Face Landmarker + scontorno CV + allineamento similarità a 2 punti, 100% nel browser.
       Nessuna immagine lascia il dispositivo in modalità geometrica.
     </p>
   </footer>
 </main>
+
+<!-- modale fotocamera guidata (montatura + viso) -->
+<div class="gl-modal gl-cammodal" id="camModal" hidden>
+  <div class="gl-modal-box gl-cammodal-box">
+    <header class="gl-cam-head">
+      <h3 id="camModalTitle">Fotocamera guidata</h3>
+      <button class="gl-cam-close" id="camClose" aria-label="Chiudi">&times;</button>
+    </header>
+    <div class="gl-cam-stage">
+      <video id="camVideo" playsinline muted autoplay></video>
+      <div class="gl-cam-frameguide" id="camFrameGuide"></div>
+      <div class="gl-cam-preview" id="camPreview" hidden><img id="camPreviewImg" alt="anteprima scatto"></div>
+    </div>
+    <p class="gl-cam-pose-label" id="camPoseLabel">…</p>
+    <ul class="gl-cam-tips" id="camTips"></ul>
+    <div class="gl-cam-dots" id="camDots"></div>
+    <div class="gl-modal-foot gl-cam-foot">
+      <button class="gl-btn gl-btn-ghost" id="camRetake" hidden>Rifai</button>
+      <button class="gl-btn gl-btn-go" id="camShoot">Scatta</button>
+      <button class="gl-btn gl-btn-go" id="camUse" hidden>Usa questa</button>
+    </div>
+  </div>
+</div>
 
 <!-- modale calibrazione manuale (fallback senza rilevamento) -->
 <div class="gl-modal" id="calibModal" hidden>
@@ -252,6 +270,6 @@
   </div>
 </div>
 
-<script type="module" src="/glassatore/app.js?v=1.1.0"></script>
+<script type="module" src="/glassatore/app.js?v=1.2.0"></script>
 </body>
 </html>

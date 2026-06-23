@@ -1,6 +1,6 @@
 # Glassatore — prototipo motore try-on occhiali multi-angolo
 
-> AIROOBI Lab · prototipo · `alfa-2026.06.23-1.1.0`
+> AIROOBI Lab · prototipo · `alfa-2026.06.24-1.2.0`
 > Live: `https://www.airoobi.app/glassatore` · **noindex** (sperimentale)
 
 Configuratore che ti fa **indossare un paio di occhiali prima di averli**, da 3 angoli.

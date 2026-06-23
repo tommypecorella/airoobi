@@ -13,7 +13,6 @@
 
 const MAXDIM = 1024;            // lato massimo immagini di lavoro
 const VIEWS  = ['front', 'left', 'right'];
-const POSE_LABEL = { front: 'guarda dritto in camera', left: 'gira la testa ~30° a SINISTRA', right: 'gira la testa ~30° a DESTRA' };
 
 /* ---------- stato globale ---------- */
 const S = {
@@ -284,8 +283,10 @@ function bandHeight(cutout, x0, x1) {
 }
 
 /* elabora una foto montatura → cutout + ancore (per la vista) */
-async function processGlasses(view, img) {
-  const base = toCanvas(img);
+async function processGlasses(view, src) {
+  const base = toCanvas(src);                 // accetta Image (upload) o Canvas (cattura)
+  const slot = $(`#glassesSlots .gl-slot[data-key="${view}"]`);
+  if (slot) { slot.classList.add('is-filled'); $('.gl-slot-img', slot).src = base.toDataURL('image/jpeg', 0.9); }
   const enable = $('#bgEnable').checked;
   const tol = +$('#bgTol').value;
   // scontorno attivo → segmenta per colore; disattivo → fidati dell'alpha del PNG
@@ -416,33 +417,127 @@ function renderMeasures() {
 }
 
 /* =================================================================
-   FOTOCAMERA
+   FOTOCAMERA GUIDATA (modale riusabile: montatura + viso, stile KYC)
 ================================================================= */
-async function startCamera() {
-  try {
-    S.stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false,
-    });
-    const cam = $('#cam'); cam.srcObject = S.stream; await cam.play();
-    $('.gl-cam').classList.add('is-live');
-    $$('.gl-shoot-btn').forEach(b => b.disabled = false);
-    armPose('front');
-    log('Fotocamera attiva ✓', 'ok');
-  } catch (e) { console.error(e); log('Fotocamera negata o assente — usa il caricamento foto.', 'warn'); }
+const CAM_POSES = {
+  glasses: [
+    { key: 'front', label: 'FRONTE — montatura dritta, di faccia' },
+    { key: 'left',  label: 'LATO SX — ruota per mostrare l’asta sinistra' },
+    { key: 'right', label: 'LATO DX — ruota per mostrare l’asta destra' },
+  ],
+  face: [
+    { key: 'front', label: 'FRONTE — guarda dritto nell’obiettivo' },
+    { key: 'left',  label: 'LATO SX — gira la testa ~30° a sinistra' },
+    { key: 'right', label: 'LATO DX — gira la testa ~30° a destra' },
+  ],
+};
+const CAM_TIPS = {
+  glasses: ['Sfondo chiaro e uniforme (un foglio bianco è perfetto)',
+            'Riempi il riquadro con la montatura, ben centrata',
+            'Evita riflessi e ombre sulle lenti',
+            'Inquadra dritto, a fuoco, da circa 20–30 cm'],
+  face:    ['Buona luce sul viso, niente controluce dietro di te',
+            'Tieni il viso dentro l’ovale tratteggiato',
+            'Allinea gli occhi alla linea tratteggiata',
+            'Niente capelli, cappello o occhiali sugli occhi'],
+};
+const POSE_SHORT = { front: 'Fronte', left: 'Lato SX', right: 'Lato DX' };
+const CAM = { mode: null, pose: 0, stream: null, captured: null };
+
+/* sagome guida (SVG tratteggiato oro) per modalità + posa */
+function camGuideSVG(mode, key) {
+  const o = 'stroke="#B8960C" fill="none" stroke-width="2.2" stroke-dasharray="7 6" opacity=".9"';
+  const arrow = (x, y, dir) => `<path d="M${x} ${y} l${dir*14} -8 m${-dir*14} 8 l${dir*14} 8" stroke="#B8960C" stroke-width="2.4" fill="none" opacity=".9"/>`;
+  let body = '';
+  if (mode === 'face') {
+    if (key === 'front') body = `<ellipse cx="150" cy="200" rx="92" ry="120" ${o}/>
+      <line x1="74" y1="178" x2="226" y2="178" ${o}/>
+      <circle cx="120" cy="178" r="6" ${o}/><circle cx="180" cy="178" r="6" ${o}/>`;
+    else { const s = key === 'left' ? -1 : 1;
+      body = `<ellipse cx="${150 + s*14}" cy="200" rx="80" ry="120" ${o}/>
+        <line x1="${90 + s*14}" y1="178" x2="${210 + s*14}" y2="178" ${o}/>
+        ${arrow(150 + s*70, 200, s)}<text x="150" y="345" text-anchor="middle" fill="#B8960C" font-size="13" font-family="monospace" opacity=".85">gira ${s<0?'a sinistra':'a destra'}</text>`; }
+  } else {
+    if (key === 'front') body = `<circle cx="108" cy="200" r="40" ${o}/><circle cx="192" cy="200" r="40" ${o}/>
+      <path d="M148 200 q2 -10 4 0" ${o}/>
+      <line x1="68" y1="196" x2="40" y2="188" ${o}/><line x1="232" y1="196" x2="260" y2="188" ${o}/>`;
+    else { const s = key === 'left' ? -1 : 1; const lx = 150 - s*60;
+      body = `<ellipse cx="${lx}" cy="200" rx="34" ry="40" ${o}/>
+        <line x1="${lx + s*32}" y1="196" x2="${lx + s*150}" y2="182" ${o}/>
+        ${arrow(150 + s*40, 270, s)}<text x="150" y="345" text-anchor="middle" fill="#B8960C" font-size="13" font-family="monospace" opacity=".85">mostra l’asta ${s<0?'sinistra':'destra'}</text>`; }
+  }
+  return `<svg viewBox="0 0 300 400" preserveAspectRatio="xMidYMid meet">${body}</svg>`;
 }
-function armPose(pose) {
-  S.armedPose = pose;
-  $('#camPose').textContent = POSE_LABEL[pose];
-  $$('.gl-shoot-btn').forEach(b => b.classList.toggle('is-armed', b.dataset.pose === pose));
+
+async function openCam(mode) {
+  CAM.mode = mode; CAM.captured = null;
+  CAM.pose = firstMissingPose(mode);
+  $('#camModalTitle').textContent = mode === 'glasses' ? 'Fotocamera — montatura' : 'Fotocamera — viso';
+  $('#camTips').innerHTML = CAM_TIPS[mode].map(t => `<li>${t}</li>`).join('');
+  $('#camModal').hidden = false;
+  camRetake(); renderCamPose(); renderCamDots();
+  await startCamStream(mode);
 }
-function capturePose(pose) {
-  const cam = $('#cam');
-  if (!cam.videoWidth) return;
-  const c = toCanvas(cam, cam.videoWidth, cam.videoHeight);
-  setFaceImage(pose, c);
-  const next = { front: 'left', left: 'right', right: 'front' }[pose];
-  armPose(next);
+function firstMissingPose(mode) {
+  const store = mode === 'glasses' ? S.glasses : S.face;
+  const i = CAM_POSES[mode].findIndex(p => !store[p.key]);
+  return i < 0 ? 0 : i;
 }
+async function startCamStream(mode) {
+  stopCamStream();
+  const want = { video: { facingMode: mode === 'glasses' ? { ideal: 'environment' } : 'user',
+                          width: { ideal: 1280 }, height: { ideal: 1280 } }, audio: false };
+  try { CAM.stream = await navigator.mediaDevices.getUserMedia(want); }
+  catch (e) { try { CAM.stream = await navigator.mediaDevices.getUserMedia({ video: true }); }
+              catch (e2) { camError(); return; } }
+  const v = $('#camVideo'); v.srcObject = CAM.stream;
+  try { await v.play(); } catch (e) {}
+  $('#camShoot').disabled = false;
+}
+function stopCamStream() {
+  if (CAM.stream) { CAM.stream.getTracks().forEach(t => t.stop()); CAM.stream = null; }
+}
+function camError() {
+  $('#camPoseLabel').textContent = 'Fotocamera non disponibile — chiudi e carica i file dagli slot.';
+  $('#camShoot').disabled = true;
+}
+function renderCamPose() {
+  const p = CAM_POSES[CAM.mode][CAM.pose];
+  $('#camPoseLabel').textContent = p.label;
+  $('#camFrameGuide').innerHTML = camGuideSVG(CAM.mode, p.key);
+  $('#camShoot').textContent = 'Scatta ' + POSE_SHORT[p.key];
+}
+function renderCamDots() {
+  const store = CAM.mode === 'glasses' ? S.glasses : S.face;
+  $('#camDots').innerHTML = CAM_POSES[CAM.mode].map((p, i) =>
+    `<button class="gl-cam-dot${store[p.key] ? ' is-done' : ''}${i === CAM.pose ? ' is-cur' : ''}" data-i="${i}">${POSE_SHORT[p.key]}</button>`).join('');
+}
+function camShoot() {
+  const v = $('#camVideo'); if (!v.videoWidth) return;
+  CAM.captured = toCanvas(v, v.videoWidth, v.videoHeight);   // cattura raw (no mirror → SX/DX reali)
+  $('#camPreviewImg').src = CAM.captured.toDataURL('image/jpeg', 0.9);
+  $('#camPreview').hidden = false;
+  $('#camShoot').hidden = true; $('#camRetake').hidden = false; $('#camUse').hidden = false;
+}
+function camRetake() {
+  CAM.captured = null;
+  $('#camPreview').hidden = true;
+  $('#camShoot').hidden = false; $('#camRetake').hidden = true; $('#camUse').hidden = true;
+}
+async function camUse() {
+  if (!CAM.captured) return;
+  const pose = CAM_POSES[CAM.mode][CAM.pose].key;
+  if (CAM.mode === 'glasses') await processGlasses(pose, CAM.captured);
+  else await setFaceImage(pose, CAM.captured);
+  const store = CAM.mode === 'glasses' ? S.glasses : S.face;
+  const list = CAM_POSES[CAM.mode];
+  let next = -1;
+  for (let k = 1; k <= list.length; k++) { const i = (CAM.pose + k) % list.length; if (!store[list[i].key]) { next = i; break; } }
+  camRetake();
+  if (next < 0) { closeCam(); log('Tutte le pose acquisite ✓', 'ok'); }
+  else { CAM.pose = next; renderCamPose(); renderCamDots(); }
+}
+function closeCam() { stopCamStream(); $('#camModal').hidden = true; }
 
 /* =================================================================
    INGRESSO FOTO VOLTO  (camera o upload)  → detect + ancore
@@ -571,8 +666,7 @@ function bindGlassesSlots() {
     input.addEventListener('change', async () => {
       if (!input.files[0]) return;
       const img = await fileToImage(input.files[0]);
-      slot.classList.add('is-filled'); $('.gl-slot-img', slot).src = img.src;
-      await processGlasses(key, img);
+      await processGlasses(key, img);            // imposta lui miniatura + is-filled
     });
     ;['dragover','dragleave','drop'].forEach(t => slot.addEventListener(t, e => {
       e.preventDefault();
@@ -612,8 +706,17 @@ function init() {
   bindGlassesSlots();
   bindFaceUpload();
   bindResults();
-  $('#btnCam').addEventListener('click', startCamera);
-  $$('.gl-shoot-btn').forEach(b => b.addEventListener('click', () => capturePose(b.dataset.pose)));
+  // fotocamera guidata (montatura + viso)
+  $$('.gl-opencam').forEach(b => b.addEventListener('click', () => openCam(b.dataset.mode)));
+  $('#camShoot').addEventListener('click', camShoot);
+  $('#camRetake').addEventListener('click', camRetake);
+  $('#camUse').addEventListener('click', camUse);
+  $('#camClose').addEventListener('click', closeCam);
+  $('#camDots').addEventListener('click', e => {
+    const b = e.target.closest('.gl-cam-dot'); if (!b) return;
+    CAM.pose = +b.dataset.i; camRetake(); renderCamPose(); renderCamDots();
+  });
+  $('#camModal').addEventListener('click', e => { if (e.target.id === 'camModal') closeCam(); });
   $('#btnGenerate').addEventListener('click', generate);
   $('#btnDownloadAll').addEventListener('click', () => VIEWS.forEach(v => S.result[v] && downloadView(v)));
   $('#btnReset').addEventListener('click', () => location.reload());

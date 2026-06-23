@@ -221,3 +221,43 @@ em{font-style:italic;color:var(--gold-soft)}
 .gl-calib-stage{position:relative;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--line);background:#000}
 .gl-calib-stage canvas{width:100%;display:block;cursor:crosshair;touch-action:none}
 .gl-modal-foot{display:flex;justify-content:space-between;gap:12px;margin-top:16px}
+
+/* ---------------- OPEN-CAMERA BUTTON + SEPARATORE + COSTO ---------------- */
+.gl-opencam{width:100%;justify-content:center;background:var(--gold);color:#000;border-color:var(--gold);margin-bottom:10px}
+.gl-opencam:hover{filter:brightness(1.07)}
+.gl-ic-cam{width:18px;height:18px}
+.gl-orsep{display:flex;align-items:center;gap:10px;color:var(--txt-mute);font-size:11px;font-family:var(--font-m);
+  letter-spacing:1px;text-transform:uppercase;margin:0 0 14px}
+.gl-orsep::before,.gl-orsep::after{content:"";flex:1;height:1px;background:var(--line)}
+.gl-hd-cost{font-family:var(--font-m);font-size:12px;color:var(--txt-dim);background:rgba(184,150,12,.06);
+  border:1px solid rgba(184,150,12,.18);border-radius:var(--radius-xs);padding:8px 12px;line-height:1.5}
+.gl-hd-cost b{color:var(--gold)}
+.gl-hd-cost small{display:block;color:var(--txt-mute);font-size:10px;margin-top:2px}
+
+/* ---------------- MODALE FOTOCAMERA GUIDATA ---------------- */
+.gl-cammodal-box{max-width:460px;max-height:92vh;overflow:auto}
+.gl-cam-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.gl-cam-head h3{font-family:var(--font-h);font-style:italic;font-size:1.45rem;color:var(--white)}
+.gl-cam-close{background:transparent;border:1px solid var(--line);color:var(--txt-dim);width:32px;height:32px;
+  border-radius:8px;font-size:16px;line-height:1}
+.gl-cam-close:hover{border-color:var(--gold);color:var(--white)}
+.gl-cam-stage{position:relative;aspect-ratio:3/4;background:#000;border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--line)}
+#camVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.gl-cam-frameguide{position:absolute;inset:0;pointer-events:none;z-index:2}
+.gl-cam-frameguide svg{width:100%;height:100%;display:block}
+.gl-cam-preview{position:absolute;inset:0;z-index:3;background:#000}
+.gl-cam-preview img{width:100%;height:100%;object-fit:cover}
+.gl-cam-pose-label{font-family:var(--font-m);font-size:12.5px;letter-spacing:.4px;color:var(--gold);
+  text-align:center;margin:14px 0 10px;line-height:1.5}
+.gl-cam-tips{list-style:none;display:grid;gap:7px;margin-bottom:14px}
+.gl-cam-tips li{position:relative;padding-left:22px;font-size:12.5px;color:var(--txt-dim);line-height:1.45}
+.gl-cam-tips li::before{content:"";position:absolute;left:4px;top:6px;width:7px;height:7px;border-radius:50%;
+  background:rgba(184,150,12,.25);border:1px solid var(--gold)}
+.gl-cam-dots{display:flex;gap:8px;justify-content:center;margin-bottom:6px}
+.gl-cam-dot{flex:1;max-width:120px;padding:8px 6px;border:1px solid var(--line);background:var(--panel-2);
+  color:var(--txt-dim);border-radius:20px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;transition:.2s}
+.gl-cam-dot.is-cur{border-color:var(--gold);color:var(--white)}
+.gl-cam-dot.is-done{border-color:var(--green);color:var(--green)}
+.gl-cam-dot.is-done::after{content:" ✓"}
+.gl-cam-foot{margin-top:6px}
+.gl-cam-foot .gl-btn{flex:1}
