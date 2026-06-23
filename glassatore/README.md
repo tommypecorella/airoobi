@@ -1,6 +1,6 @@
 # Glassatore — prototipo motore try-on occhiali multi-angolo
 
-> AIROOBI Lab · prototipo · `alfa-2026.06.23-1.0.0`
+> AIROOBI Lab · prototipo · `alfa-2026.06.23-1.1.0`
 > Live: `https://www.airoobi.app/glassatore` · **noindex** (sperimentale)
 
 Configuratore che ti fa **indossare un paio di occhiali prima di averli**, da 3 angoli.
@@ -65,9 +65,12 @@ ancore volto) e **wipe prima/dopo**.
 
 ### 2. Motore generativo "HD" — opzionale, gated
 Toggle **HD realistico** → `POST /api/glassatore-hd` con foto viso + montatura.
-Fotorealistico (gestisce luce/occlusioni) ma richiede una **chiave modello-immagine** lato server.
+Provider: **Google Gemini 2.5 Flash Image ("nano-banana")** — editing multi-reference:
+prende gli occhiali dalla 2ª immagine e li indossa sul viso della 1ª, mantenendo posa/luce/identità.
+Fotorealistico ma richiede una **chiave modello-immagine** lato server.
 Se la chiave manca → `501` pulito e il front-end **resta sul geometrico** senza errori.
-Per attivarlo: imposta `GLASSATORE_IMAGE_API_KEY` (o `OPENAI_API_KEY`) tra le env del progetto Vercel.
+Per attivarlo: imposta `GLASSATORE_IMAGE_API_KEY` (chiave Google AI Studio) tra le env del progetto
+Vercel — opzionali: `GEMINI_API_KEY`/`GOOGLE_API_KEY`, e `GLASSATORE_IMAGE_MODEL` per cambiare modello.
 
 ---
 

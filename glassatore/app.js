@@ -76,6 +76,16 @@ function toCanvas(src, sw, sh) {
   return c;
 }
 
+/* dataURL ridimensionato (per i payload HD: sotto il limite body di Vercel) */
+function cappedDataURL(canvas, max, type, q) {
+  const sc = Math.min(1, max / Math.max(canvas.width, canvas.height));
+  if (sc === 1) return canvas.toDataURL(type, q);
+  const c = document.createElement('canvas');
+  c.width = Math.round(canvas.width * sc); c.height = Math.round(canvas.height * sc);
+  c.getContext('2d').drawImage(canvas, 0, 0, c.width, c.height);
+  return c.toDataURL(type, q);
+}
+
 /* matrice di similarità (rotazione+scala+traslazione) che mappa s0→d0, s1→d1.
    Restituisce i 6 parametri per ctx.setTransform(a,b,c,d,e,f). */
 function similarity(s0, s1, d0, d1) {
@@ -485,11 +495,11 @@ async function generate() {
 async function generateHD(view) {
   const card = $(`.gl-res[data-key="${view}"]`);
   try {
-    const facePng = S.face[view].canvas.toDataURL('image/png');
-    const glassesPng = S.glasses[view].cutout.toDataURL('image/png');
+    const faceData = cappedDataURL(S.face[view].canvas, 896, 'image/jpeg', 0.9);
+    const glassesData = cappedDataURL(S.glasses[view].cutout, 896, 'image/png');
     const res = await fetch('/api/glassatore-hd', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ view, face: facePng, glasses: glassesPng }),
+      body: JSON.stringify({ view, face: faceData, glasses: glassesData }),
     });
     if (res.status === 501) { const j = await res.json().catch(() => ({}));
       log(`HD non configurato (${view}): ${j.message || 'manca la chiave modello-immagine'} — resto sul geometrico.`, 'warn'); return; }
@@ -499,7 +509,10 @@ async function generateHD(view) {
     const img = new Image();
     await new Promise((ok, no) => { img.onload = ok; img.onerror = no; img.src = j.image; });
     const out = document.createElement('canvas'); out.width = S.face[view].canvas.width; out.height = S.face[view].canvas.height;
-    out.getContext('2d').drawImage(img, 0, 0, out.width, out.height);
+    const oc = out.getContext('2d');                 // cover-fit (preserva proporzioni)
+    const sc = Math.max(out.width / img.width, out.height / img.height);
+    const dw = img.width * sc, dh = img.height * sc;
+    oc.drawImage(img, (out.width - dw) / 2, (out.height - dh) / 2, dw, dh);
     S.result[view].hd = out;
     const badge = $('.gl-res-badge', card); badge.textContent = 'HD AI'; badge.classList.add('is-hd');
     renderResult(view);
