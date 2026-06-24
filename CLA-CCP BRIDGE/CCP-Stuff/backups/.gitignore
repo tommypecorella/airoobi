@@ -1,0 +1,5 @@
+# Backup fleet: artefatti locali di reversibilità. I tarball contengono .env
+# (anon key agora = bearer secret) → MAI su git. Solo dump JSON + runbook si committano.
+*.tar.gz
+*.env
+.env

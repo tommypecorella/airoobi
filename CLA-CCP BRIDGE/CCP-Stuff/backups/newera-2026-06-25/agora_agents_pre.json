@@ -1,0 +1,74 @@
+[
+  {
+    "slug": "airia",
+    "display_name": "AIRIA",
+    "role": "System Guardian · Coord.",
+    "runtime": "OpenClaw · Pi",
+    "reports_to": "skeezu",
+    "status": "idle",
+    "avatar_color": "#4fae6b",
+    "last_seen": "2026-05-30T09:57:20.319964+00:00",
+    "current_activity": null,
+    "activity_since": null
+  },
+  {
+    "slug": "aro",
+    "display_name": "ARO",
+    "role": "Community & Social",
+    "runtime": "Claude Code · Windows",
+    "reports_to": "roblock",
+    "status": "online",
+    "avatar_color": "#a874e0",
+    "last_seen": "2026-05-30T09:57:20.319964+00:00",
+    "current_activity": null,
+    "activity_since": null
+  },
+  {
+    "slug": "ccp",
+    "display_name": "CCP",
+    "role": "CIO/CTO · Build · Infra",
+    "runtime": "Claude Code · Pi5",
+    "reports_to": "skeezu",
+    "status": "busy",
+    "avatar_color": "#5b8def",
+    "last_seen": "2026-05-30T09:57:20.319964+00:00",
+    "current_activity": "buildando la Fase B · status/heartbeat",
+    "activity_since": "2026-05-30T18:39:27.89518+00:00"
+  },
+  {
+    "slug": "roblock",
+    "display_name": "ROBLOCK",
+    "role": "Operative Marketing Manager",
+    "runtime": "Claude Code · always-on",
+    "reports_to": "roby",
+    "status": "idle",
+    "avatar_color": "#e0894f",
+    "last_seen": "2026-06-09T06:59:59.825+00:00",
+    "current_activity": null,
+    "activity_since": "2026-06-09T06:59:30.041+00:00"
+  },
+  {
+    "slug": "roby",
+    "display_name": "ROBY",
+    "role": "GM & Strategy · MKT · Comms",
+    "runtime": "Claude Cowork · Max20",
+    "reports_to": "skeezu",
+    "status": "online",
+    "avatar_color": "#C9A227",
+    "last_seen": "2026-05-30T09:57:20.319964+00:00",
+    "current_activity": null,
+    "activity_since": null
+  },
+  {
+    "slug": "skeezu",
+    "display_name": "Skeezu",
+    "role": "Founder & CEO",
+    "runtime": "Umano",
+    "reports_to": "—",
+    "status": "online",
+    "avatar_color": "#e7e4dc",
+    "last_seen": "2026-05-30T09:57:20.319964+00:00",
+    "current_activity": null,
+    "activity_since": null
+  }
+]
