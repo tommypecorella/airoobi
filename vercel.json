@@ -167,6 +167,7 @@
     { "source": "/explorer", "destination": "/explorer.html" },
     { "source": "/explorer-robi", "destination": "/explorer-robi.html" },
     { "source": "/glassatore", "destination": "/glassatore/index.html" },
+    { "source": "/hub", "destination": "/api/hub" },
     { "source": "/login", "destination": "/login.html" },
     { "source": "/signup", "destination": "/signup.html" }
   ]
