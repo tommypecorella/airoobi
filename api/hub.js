@@ -1,5 +1,5 @@
 // AIROOBI LAB · hub interno riservato (SSR gate + schedine servizi)
-// Vercel Serverless Function · /hub on airoobi.com (vercel.json rewrite -> /api/hub)
+// Vercel Serverless Function · /lab on airoobi.com (vercel.json rewrite -> /api/hub)
 // Auth server-side: password (env HUB_PASSWORD) -> cookie HttpOnly firmato HMAC.
 // Servizi: Glassatore (/glassatore) e Bottarella (env BOTTARELLA_URL, via Cloudflare).
 import crypto from 'node:crypto';
@@ -92,7 +92,7 @@ function renderGate(error) {
     <div class="mark" style="font-size:46px;line-height:1">AIROOBI <b>LAB</b></div>
     <div style="color:var(--muted);font-size:14px;margin-top:8px">Laboratorio interno — accesso riservato</div>
   </div>
-  <form method="post" action="/hub" autocomplete="off"
+  <form method="post" action="/lab" autocomplete="off"
     style="width:100%;max-width:340px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px">
     <label class="mono" style="display:block;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Password</label>
     <input type="password" name="password" autofocus
@@ -130,7 +130,7 @@ function renderHub() {
     <div class="mark" style="font-size:38px">AIROOBI <b>LAB</b></div>
     <div style="display:flex;align-items:center;gap:12px">
       <span class="mono" style="display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--red);border:1px solid var(--red-dim);background:var(--red-bg);border-radius:20px;padding:5px 12px">&#9679; sessione attiva</span>
-      <a class="mono" href="/hub?logout=1" style="font-size:11px;color:var(--muted)">esci</a>
+      <a class="mono" href="/lab?logout=1" style="font-size:11px;color:var(--muted)">esci</a>
     </div>
   </div>
   <div style="color:var(--muted);font-size:14px;margin-bottom:26px">Laboratorio interno — servizi riservati</div>
@@ -169,7 +169,7 @@ export default async function handler(req, res) {
       const token = sign({ exp: Date.now() + SESSION_HOURS * 3600 * 1000 }, HUB_SECRET);
       setCookie(res, token, SESSION_HOURS * 3600);
       res.statusCode = 302;
-      res.setHeader('Location', '/hub');
+      res.setHeader('Location', '/lab');
       return res.end();
     }
     return sendHtml(res, 401, renderGate('Password errata.'));

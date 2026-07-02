@@ -9,6 +9,9 @@
 CLA-CCP BRIDGE/
 docs/
 
+# Doc interni a livello root (situation report, hub setup, readme) — MAI pubblici
+/*.md
+
 # Database — migration + config: lo SQL (RLS, SECURITY DEFINER) non va esposto
 supabase/
 
