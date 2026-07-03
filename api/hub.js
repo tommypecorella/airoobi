@@ -7,8 +7,9 @@ import crypto from 'node:crypto';
 const HUB_PASSWORD = process.env.HUB_PASSWORD || '';
 const HUB_SECRET = process.env.HUB_SECRET || HUB_PASSWORD || 'airoobi-lab-dev';
 const BOTTARELLA_URL = process.env.BOTTARELLA_URL || 'https://bottarella.airoobi.com';
+const AIGORA_URL = process.env.AIGORA_URL || 'https://aigora.airoobi.com';
 const SESSION_HOURS = 12;
-const VERSION = 'alfa-2026.06.27-hub.1.0';
+const VERSION = 'alfa-2026.07.03-hub.1.1';
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -137,7 +138,7 @@ function renderHub() {
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
     ${card({ icon: '&#9683;', name: 'Glassatore', desc: 'Try-on occhiali AI multi-angolo. Motore ibrido geometrico + HD.', status: 'live', statusColor: '#49b88a', href: '/glassatore', external: false })}
     ${card({ icon: '&#9650;', name: 'Bottarella', desc: 'Accumulatore KAS su Gate. Grid bot — paper + live, con kill-switch.', status: 'paper + live', statusColor: 'var(--red)', href: BOTTARELLA_URL, external: true })}
-    ${ghost('prossimo servizio')}
+    ${card({ icon: '&#10022;', name: 'AIgorà', desc: 'Console di flotta multi-agente. Piazza operativa tra Skeezu, CCP e ROBI.', status: 'live · v1', statusColor: '#49b88a', href: AIGORA_URL, external: true })}
     ${ghost('in incubazione')}
   </div>
 </div>` + FOOT;
