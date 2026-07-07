@@ -20,10 +20,10 @@
   --ink-soft: rgba(15, 20, 23, 0.55);
   --ink-faint: rgba(15, 20, 23, 0.4);
 
-  /* Renaissance gold — signature */
-  --gold: #B8893D;
-  --gold-light: #D4A04C;
-  --gold-deep: #9F7820;
+  /* v3: accento = ROSSO primary (era Renaissance gold — ZERO ORO, legge di brand 8 lug 2026) */
+  --gold: #EF3E4F;
+  --gold-light: #FB6675;
+  --gold-deep: #B4192A;
 
   /* Coral — seller-side action */
   --coral: #F73659;
@@ -41,7 +41,7 @@
   --kas-green: #49EACB;
 
   /* Typography */
-  --font-display: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'DM Mono', ui-monospace, monospace;
 

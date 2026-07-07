@@ -47,7 +47,7 @@
     const ms = new Date(deadline) - new Date();
     if (ms <= 3600000)   return '#f87171';  // < 1h: red
     if (ms <= 86400000)  return '#FFB74D';  // < 24h: orange
-    return '#B8960C';                        // > 24h: gold
+    return '#EF3E4F';                        // > 24h: gold
   }
 
   function render(airdrop, scoreboard, counts, checkmate, currentUserId) {
@@ -101,7 +101,7 @@
     return `
     <style>
     .live-evento { background:linear-gradient(135deg,rgba(184,150,12,.06),transparent); border:1px solid rgba(184,150,12,.4); border-radius:12px; padding:24px; margin:24px 0; font-family:'Instrument Sans',system-ui,sans-serif; color:#fff }
-    .le-title { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:500; color:#B8960C; margin:0 0 4px }
+    .le-title { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:500; color:#EF3E4F; margin:0 0 4px }
     .le-sub { font-size:12px; color:#999; margin-bottom:18px }
     .le-counters { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:18px; font-size:12px }
     .le-counter { padding:8px 14px; background:rgba(255,255,255,.04); border-radius:6px; border:1px solid #2a2a2a }
@@ -109,20 +109,20 @@
     .le-counter-val { font-family:'Cormorant Garamond',serif; font-size:18px; color:#fff }
     .le-countdown { font-family:'DM Mono',monospace; font-size:14px; letter-spacing:1px }
     .le-sold-bar { width:100%; height:10px; background:#1a1a1a; border-radius:6px; overflow:hidden; margin-bottom:16px }
-    .le-sold-fill { height:100%; background:linear-gradient(90deg,#B8960C,#d4ad30); transition:width .3s }
+    .le-sold-fill { height:100%; background:linear-gradient(90deg,#EF3E4F,#d4ad30); transition:width .3s }
     .le-tbl { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:12px }
     .le-tbl th { text-align:left; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.5px; color:#666; text-transform:uppercase; padding:8px 10px; border-bottom:1px solid #2a2a2a }
     .le-tbl td { padding:10px; border-bottom:1px solid #1a1a1a }
     .le-row-you td { background:rgba(74,158,255,.08) }
     .le-badge { display:inline-block; padding:2px 8px; margin-left:6px; border-radius:10px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.8px }
-    .le-badge-gold { background:rgba(184,150,12,.15); color:#B8960C; border:1px solid rgba(184,150,12,.4) }
+    .le-badge-gold { background:rgba(184,150,12,.15); color:#EF3E4F; border:1px solid rgba(184,150,12,.4) }
     .le-badge-aria { background:rgba(74,158,255,.15); color:#4A9EFF; border:1px solid rgba(74,158,255,.4) }
     .le-badge-gray { background:rgba(255,255,255,.04); color:#888; border:1px solid #333 }
     .le-checkmate { background:#0a0a0a; border:1px solid #2a2a2a; border-radius:8px; padding:16px; margin-top:14px }
-    .le-checkmate-title { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.5px; color:#B8960C; text-transform:uppercase; margin-bottom:10px }
+    .le-checkmate-title { font-family:'DM Mono',monospace; font-size:9px; letter-spacing:1.5px; color:#EF3E4F; text-transform:uppercase; margin-bottom:10px }
     .le-checkmate-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13px }
     .le-cm-label { color:#bbb }
-    .le-cm-value { color:#B8960C; font-weight:600 }
+    .le-cm-value { color:#EF3E4F; font-weight:600 }
     .le-cm-cost { color:#666; font-family:'DM Mono',monospace; font-size:11px; font-weight:400; margin-left:6px }
     .le-cm-leader { color:#49EACB; font-weight:600 }
     .le-scacco-active { background:rgba(248,113,113,.08); border:1px solid rgba(248,113,113,.3); color:#f87171; border-radius:6px; padding:10px 14px; margin-top:10px; font-size:12px }
@@ -149,7 +149,7 @@
 
       ${userRow ? `
         <div style="margin-bottom:10px;font-size:13px;color:#bbb">
-          La tua posizione: <strong style="color:#fff">#${userRow.rank}</strong> · score <strong style="color:#B8960C">${Number(userRow.score).toFixed(2)}</strong> · ${userRow.blocks_count} blocchi · <span style="color:${userRow.is_attivo?'#49EACB':'#888'}">${userRow.is_attivo?'attivo':'escluso (math fairness)'}</span>
+          La tua posizione: <strong style="color:#fff">#${userRow.rank}</strong> · score <strong style="color:#EF3E4F">${Number(userRow.score).toFixed(2)}</strong> · ${userRow.blocks_count} blocchi · <span style="color:${userRow.is_attivo?'#49EACB':'#888'}">${userRow.is_attivo?'attivo':'escluso (math fairness)'}</span>
         </div>
       ` : ''}
 

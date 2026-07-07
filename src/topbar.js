@@ -11,7 +11,7 @@ var SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI
 /* ── Token icon helper (cerchiate ARIA/ROBI/KAS) ── */
 window.tokIcon=function(t,sz){
   sz=sz||14;
-  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#B8893D':t==='KAS'?'#49EACB':'var(--gray-500)';
+  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#EF3E4F':t==='KAS'?'#49EACB':'var(--gray-500)';
   var l=t==='ARIA'?'A':t==='ROBI'?'R':t==='KAS'?'K':'?';
   return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 16 16" style="vertical-align:-2px;flex-shrink:0"><circle cx="8" cy="8" r="7" fill="none" stroke="'+c+'" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="'+c+'" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">'+l+'</text></svg>';
 };
@@ -79,6 +79,12 @@ function eduDropdownHtml(active){
     +'</div>';
 }
 
+/* v3: toggle tema sole/luna (SVG flat) — onclick globale + data-wired: sopravvive ai re-render */
+var THEME_BTN='<button class="theme-toggle" id="airoobi-theme-toggle" data-wired="1" onclick="window._airoobiThemeToggle&&window._airoobiThemeToggle()" aria-label="Tema chiaro/scuro" aria-pressed="false" title="Tema chiaro/scuro">'
+  +'<svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+  +'<svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>'
+  +'</button>';
+
 function buildTopbar(active,links){
   var navHtml=links.map(function(l){return linkHtml(l,active)}).join('');
   navHtml+=eduDropdownHtml(active);
@@ -86,6 +92,7 @@ function buildTopbar(active,links){
     +'<button class="topbar-burger" id="topbar-burger" onclick="window._topbarToggle()"><span></span><span></span><span></span></button>'
     +'<nav class="topbar-nav" id="topbar-nav">'+navHtml+'</nav>'
     +'<div class="topbar-right" id="topbar-right">'
+    +THEME_BTN
     +'<button class="lang-toggle" id="lang-btn" onclick="window._topbarLang()">EN</button>'
     +'<a href="/login" class="topbar-auth-link" id="topbar-login"><span class="it">Accedi</span><span class="en">Log in</span></a>'
     +'<a href="/signup" class="topbar-auth-cta" id="topbar-signup"><span class="it">Registrati</span><span class="en">Sign up</span></a>'
@@ -229,7 +236,8 @@ function upgradeToLoggedIn(session){
     var lang=(document.documentElement.getAttribute('data-lang')||'it')==='it'?'EN':'IT';
     topRight.innerHTML=
       '<span class="topbar-bal" id="tb-aria"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700">A</text></svg><span id="tb-aria-val">\u2014</span></span>'
-      +'<span class="topbar-bal topbar-bal-robi" id="tb-robi"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#B8893D" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#B8893D" font-size="9" font-weight="700">R</text></svg><span id="tb-robi-val">\u2014</span></span>'
+      +'<span class="topbar-bal topbar-bal-robi" id="tb-robi"><svg width="16" height="16" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#EF3E4F" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#EF3E4F" font-size="9" font-weight="700">R</text></svg><span id="tb-robi-val">\u2014</span></span>'
+      +THEME_BTN
       +'<button class="lang-toggle" id="lang-btn" onclick="window._topbarLang()">'+lang+'</button>'
       +'<button class="topbar-avatar" id="tb-avatar-btn" onclick="window._topbarToggleUserMenu(event)" aria-label="Menu utente"><span id="tb-avatar-letter">'+letter+'</span></button>';
   }
