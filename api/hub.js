@@ -9,7 +9,7 @@ const HUB_SECRET = process.env.HUB_SECRET || HUB_PASSWORD || 'airoobi-lab-dev';
 const BOTTARELLA_URL = process.env.BOTTARELLA_URL || 'https://bottarella.airoobi.com';
 const AIGORA_URL = process.env.AIGORA_URL || 'https://aigora.airoobi.com';
 const SESSION_HOURS = 12;
-const VERSION = 'alfa-2026.07.03-hub.1.1';
+const VERSION = 'alfa-2026.07.08-hub.1.2';
 
 function esc(s) {
   return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -136,6 +136,7 @@ function renderHub() {
   </div>
   <div style="color:var(--muted);font-size:14px;margin-bottom:26px">Laboratorio interno — servizi riservati</div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px">
+    ${card({ icon: '&#9678;', name: 'AIROOBI', desc: 'Il prodotto: marketplace di airdrop equi su Kaspa. Dream Robe E-commerce.', status: 'alpha 0 · live', statusColor: '#49b88a', href: 'https://www.airoobi.app', external: true })}
     ${card({ icon: '&#9683;', name: 'Glassatore', desc: 'Try-on occhiali AI multi-angolo. Motore ibrido geometrico + HD.', status: 'live', statusColor: '#49b88a', href: '/glassatore', external: false })}
     ${card({ icon: '&#9650;', name: 'Bottarella', desc: 'Accumulatore KAS su Gate. Grid bot — paper + live, con kill-switch.', status: 'paper + live', statusColor: 'var(--red)', href: BOTTARELLA_URL, external: true })}
     ${card({ icon: '&#10022;', name: 'AIgorà', desc: 'Console di flotta multi-agente. Piazza operativa tra Skeezu, CCP e ROBI.', status: 'live · v1', statusColor: '#49b88a', href: AIGORA_URL, external: true })}
