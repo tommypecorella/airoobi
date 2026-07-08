@@ -58,24 +58,6 @@
   h3 { font-size: 22px; }
   p { font-size: 16px; color: var(--gray-200); line-height: 1.6; }
 
-  /* === TOP BAR === */
-  .topbar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(255,255,255,0.92); backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--gray-700);
-  }
-  .topbar-inner {
-    max-width: 1080px; margin: 0 auto; padding: 14px 24px;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .brand-mini { font-size: 14px; font-weight: 700; letter-spacing: 4px; color: var(--gold); }
-  .topbar nav a { color: var(--gray-200); font-size: 13px; margin-left: 22px; text-decoration: none; letter-spacing: 1px; }
-  .topbar nav a:hover { color: var(--gold); }
-  .topbar .cta-mini {
-    background: var(--gold); color: var(--black); padding: 8px 18px;
-    font-weight: 700; font-size: 12px; letter-spacing: 2px; text-decoration: none;
-    text-transform: uppercase;
-  }
 
   /* === HERO === */
   .hero {
@@ -227,21 +209,18 @@
     50% { opacity: 0.5; box-shadow: 0 0 0 8px transparent; }
   }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.4">
+<link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
+<script src="/src/theme.js?v=4.48.0" defer></script>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<header class="topbar">
-  <div class="topbar-inner">
-    <span class="brand-mini">AIROOBI</span>
-    <nav>
-      <a href="#how">Come funziona</a>
-      <a href="#fairness">Math</a>
-      <a href="#faq">FAQ</a>
-      <a class="cta-mini" href="#signup">Apri account</a>
-    </nav>
-  </div>
-</header>
+<!-- TOPBAR (shared component) -->
+<div id="topbar-mount" data-active=""></div>
+<script src="/src/topbar.js?v=4.48.4"></script>
+
+
 
 <!-- HERO -->
 <section class="hero">
@@ -256,7 +235,7 @@
     <div class="gold-rule"></div>
     <h1>Realizza il tuo<br/><span class="em">desiderio.</span></h1>
     <p class="lede">
-      AIROOBI è il primo marketplace al mondo dove ottieni oggetti reali a una frazione del prezzo, con un asset garantito (ROBI ≥95% PEG) anche se non sei tra i vincitori.
+      AIROOBI è il primo marketplace al mondo dove ottieni oggetti reali a una frazione del prezzo, con un asset garantito (ROBI ≥95% PEG) anche se l'oggetto va a un altro partecipante.
       <strong style="color:var(--white);">Determinismo, calcolo verificabile. Algoritmo trasparente.</strong>
     </p>
 
@@ -299,12 +278,12 @@
       <div class="step">
         <div class="n">04</div>
         <div class="t">Draw deterministico</div>
-        <div class="d">Vince chi ha lo score più alto (impegno categoria + pity bonus). Auditabile, riproducibile.</div>
+        <div class="d">L'oggetto va a chi ha lo score più alto (impegno categoria + pity bonus). Auditabile, riproducibile.</div>
       </div>
       <div class="step">
         <div class="n">05</div>
         <div class="t">Riscuoti</div>
-        <div class="d">Vincitore: ottiene l'oggetto. Tutti: ROBI sempre, riscuotibile in KAS al ≥95% (24-48h).</div>
+        <div class="d">1ª posizione: ottiene l'oggetto. Tutti: ROBI sempre, riscuotibile in KAS al ≥95% (24-48h).</div>
       </div>
     </div>
   </div>
@@ -421,8 +400,8 @@
         <div class="faq-a">ROBI è un NFT che certifica il diritto a riscuotere KAS dal Fondo Comune di AIROOBI. Ogni ROBI vale almeno il 95% del suo valore PEG (Treasury / ROBI circolanti). Lo riscuoti quando vuoi: 24-48h di processing, ti arriva sul wallet Kaspa. Mai acquistabile direttamente — solo ottenibile partecipando.</div>
       </div>
       <div class="faq-item">
-        <div class="faq-q">Cosa succede se non vinco?</div>
-        <div class="faq-a">Niente di brutto. Se non vinci, hai comunque accumulato ROBI proporzionali alla tua partecipazione (1 blocco ≈ 1 ROBI mining). Il pity system garantisce inoltre che nella stessa categoria vincerai entro un numero limitato di partecipazioni — la matematica garantisce che non spenderai mai più del 30% del valore oggetto prima di vincere.</div>
+        <div class="faq-q">Cosa succede se non arrivo 1º?</div>
+        <div class="faq-a">Niente di brutto. Se non arrivi 1º, hai comunque accumulato ROBI proporzionali alla tua partecipazione (1 blocco ≈ 1 ROBI mining). Il pity system garantisce inoltre che nella stessa categoria otterrai l'oggetto entro un numero limitato di partecipazioni — la matematica garantisce che non spenderai mai più del 30% del valore oggetto prima di ottenere l'oggetto.</div>
       </div>
       <div class="faq-item">
         <div class="faq-q">Perché su Kaspa?</div>
@@ -438,6 +417,7 @@
 
 <!-- FOOTER -->
 <footer>
+<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);text-align:center;padding:8px 0">alfa-2026.07.08-1.1.0</div>
   <div class="wrap">
     <div class="footer-inner">
       <div class="left">

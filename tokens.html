@@ -88,17 +88,18 @@
       header.brand nav a { display: none; }
     }
   </style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.4">
+<link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
+<script src="/src/theme.js?v=4.48.0" defer></script>
 </head>
 <body>
+
+<!-- TOPBAR (shared component) -->
+<div id="topbar-mount" data-active=""></div>
+<script src="/src/topbar.js?v=4.48.4"></script>
+
   <div class="container">
-    <header class="brand">
-      <a class="logo" href="/">AIROOBI</a>
-      <nav>
-        <a href="/airdrops">Airdrop</a>
-        <a href="/come-funziona-airdrop">Come funziona</a>
-        <a href="/blog">Blog</a>
-      </nav>
-    </header>
 
     <section class="hero">
       <div class="eyebrow">Token Economy</div>
@@ -163,7 +164,7 @@
       <div class="flow-grid">
         <div class="flow"><div class="pair">KAS → ARIA</div><div class="desc">Converte saldo KAS in ARIA per partecipare ad altri airdrop.</div></div>
         <div class="flow"><div class="pair">ARIA → KAS</div><div class="desc">Converte ARIA accumulati in KAS reali.</div></div>
-        <div class="flow"><div class="pair">ROBI → ARIA</div><div class="desc">Riscuoti ROBI in ARIA per continuare a giocare.</div></div>
+        <div class="flow"><div class="pair">ROBI → ARIA</div><div class="desc">Riscuoti ROBI in ARIA per continuare a partecipare.</div></div>
         <div class="flow"><div class="pair">ROBI → KAS</div><div class="desc">Riscuoti ROBI direttamente in KAS · incasso reale.</div></div>
       </div>
       <p style="margin-top:24px;font-size:13px;color:var(--gray-500);font-family:var(--font-m);letter-spacing:1.2px">ROBI NON COMPRABILE · earned, not bought</p>
@@ -179,7 +180,7 @@
 
   <footer>
     AIROOBI &copy; 2026 · <a href="https://www.airoobi.com">airoobi.com</a> · <a href="https://www.airoobi.app">airoobi.app</a>
-    <div class="version">alfa-2026.05.30-4.15.0</div>
+    <div class="version">alfa-2026.07.08-4.15.1</div>
   </footer>
 </body>
 </html>

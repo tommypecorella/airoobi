@@ -307,6 +307,8 @@ function upgradeToLoggedIn(session){
 function init(){
   var mount=document.getElementById('topbar-mount');
   if(!mount)return;
+  // default lingua: garantisce che le regole [data-lang] scattino anche su pagine senza attributo
+  if(!document.documentElement.getAttribute('data-lang'))document.documentElement.setAttribute('data-lang','it');
   var active=mount.getAttribute('data-active')||'';
 
   mount.innerHTML=buildTopbar(active,PUBLIC_LINKS)+buildMobile(active,PUBLIC_LINKS);

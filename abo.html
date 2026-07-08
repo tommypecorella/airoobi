@@ -51,7 +51,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .admin-sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:.3px;color:var(--gray-400);cursor:pointer;transition:all .15s;border-left:3px solid transparent;background:none;border-top:none;border-bottom:none;border-right:none;width:100%;max-width:100%;box-sizing:border-box;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .admin-sidebar-item:hover{color:var(--white);background:rgba(255,255,255,.03)}
 .admin-sidebar-item:focus,.admin-sidebar-item:focus-visible,.admin-sidebar-item:active{outline:0!important;outline-style:none!important;box-shadow:none!important;-webkit-appearance:none!important;-webkit-tap-highlight-color:transparent!important}
-.admin-sidebar-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(184,150,12,.04)}
+.admin-sidebar-item.active{color:var(--gold);border-left-color:var(--gold);background:rgba(139,92,246,.04)}
 .admin-overlay *:focus,.admin-overlay *:focus-visible,.admin-overlay *:active{outline:0!important;outline-style:none!important;box-shadow:none!important;-webkit-appearance:none!important;-webkit-tap-highlight-color:transparent!important}
 .admin-sidebar-item svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.5;flex-shrink:0}
 .admin-main{grid-area:main;overflow-y:auto;overflow-x:hidden;position:relative;z-index:10;background:var(--black)}
@@ -77,12 +77,12 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .admin-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 .admin-table th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--gray-700);color:var(--gold);font-family:var(--font-m);font-size:11px;letter-spacing:1px;text-transform:uppercase}
 .admin-table td{padding:10px 12px;border-bottom:1px solid var(--gray-800);color:var(--gray-300)}
-.admin-table tr:hover td{background:rgba(184,150,12,.03)}
+.admin-table tr:hover td{background:rgba(139,92,246,.03)}
 .admin-table tr.adm-user-row{cursor:pointer}
 .admin-table tr.adm-user-row td:first-child::before{content:'▸ ';color:var(--gold);font-size:11px}
 .admin-table tr.adm-user-row.expanded td:first-child::before{content:'▾ '}
 .adm-detail-row td{padding:0!important;border-bottom:1px solid var(--gray-800)}
-.adm-detail-inner{padding:12px 16px;background:rgba(184,150,12,.04);border-left:3px solid var(--gold);margin:4px 0}
+.adm-detail-inner{padding:12px 16px;background:rgba(139,92,246,.04);border-left:3px solid var(--gold);margin:4px 0}
 .adm-detail-inner h4{font-family:var(--font-h);font-size:14px;color:var(--gold);margin-bottom:8px;font-weight:400}
 .adm-detail-inner table{width:100%;font-size:12px;margin-bottom:12px}
 .adm-detail-inner table th{color:var(--gray-400);font-size:10px;text-transform:uppercase;letter-spacing:1px;padding:4px 8px;border-bottom:1px solid var(--gray-800);text-align:left}
@@ -90,14 +90,14 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .adm-detail-inner .adm-reason{font-family:var(--font-m);font-size:11px;padding:2px 6px;border-radius:3px}
 .adm-detail-inner .adm-r-checkin{background:rgba(74,158,255,.15);color:var(--aria)}
 .adm-detail-inner .adm-r-referral{background:rgba(73,234,203,.15);color:var(--kas)}
-.adm-detail-inner .adm-r-welcome{background:rgba(184,150,12,.15);color:var(--gold)}
+.adm-detail-inner .adm-r-welcome{background:rgba(139,92,246,.15);color:var(--gold)}
 .adm-detail-inner .adm-r-video{background:rgba(168,85,247,.15);color:#a855f7}
 .adm-detail-inner .adm-r-streak{background:rgba(251,146,60,.15);color:#fb923c}
 .adm-detail-inner .adm-r-default{background:rgba(255,255,255,.08);color:var(--gray-300)}
-.adm-detail-inner .adm-nft-badge{display:inline-block;padding:2px 8px;font-size:10px;letter-spacing:1px;font-family:var(--font-m);background:rgba(184,150,12,.15);color:var(--gold);border:1px solid rgba(184,150,12,.3);border-radius:3px}
+.adm-detail-inner .adm-nft-badge{display:inline-block;padding:2px 8px;font-size:10px;letter-spacing:1px;font-family:var(--font-m);background:rgba(139,92,246,.15);color:var(--gold);border:1px solid rgba(139,92,246,.3);border-radius:3px}
 .admin-badge{display:inline-block;padding:2px 8px;font-size:10px;letter-spacing:1px;font-family:var(--font-m)}
 .admin-badge-green{background:rgba(73,181,131,.15);color:#49b583;border:1px solid rgba(73,181,131,.3)}
-.admin-badge-gold{background:rgba(184,150,12,.15);color:var(--gold);border:1px solid var(--gold-dim)}
+.admin-badge-gold{background:rgba(139,92,246,.15);color:var(--gold);border:1px solid var(--gold-dim)}
 .admin-note{font-size:12px;color:var(--gray-400);font-style:italic;margin-top:8px}
 @media(max-width:480px){.admin-param-grid{grid-template-columns:1fr!important}}
 @media(max-width:768px){.admin-grid{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}.admin-card{padding:16px}.admin-card-val{font-size:22px}}
@@ -122,7 +122,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .ct-actions button:hover{border-color:var(--gold);color:var(--gold)}
 .ct-status{display:inline-block;padding:2px 8px;font-size:10px;letter-spacing:1px;font-family:var(--font-m)}
 .ct-s-pagato{background:rgba(73,181,131,.15);color:#49b583;border:1px solid rgba(73,181,131,.3)}
-.ct-s-da_pagare{background:rgba(184,150,12,.15);color:var(--gold);border:1px solid var(--gold-dim)}
+.ct-s-da_pagare{background:rgba(139,92,246,.15);color:var(--gold);border:1px solid var(--gold-dim)}
 .ct-s-free,.ct-s-freemium{background:rgba(74,158,255,.1);color:var(--aria);border:1px solid rgba(74,158,255,.3)}
 .ct-s-a_pagamento{background:rgba(255,255,255,.05);color:var(--white);border:1px solid var(--gray-700)}
 .ct-s-abbandonato{background:rgba(255,255,255,.03);color:var(--gray-400);border:1px solid var(--gray-700);text-decoration:line-through}
@@ -143,7 +143,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .abo-notif-list{overflow-y:auto;max-height:420px}
 .abo-notif-item{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.04);cursor:pointer;transition:background .2s}
 .abo-notif-item:hover{background:rgba(255,255,255,.04)}
-.abo-notif-item.unread{background:rgba(184,150,12,.05);border-left:3px solid var(--gold)}
+.abo-notif-item.unread{background:rgba(139,92,246,.05);border-left:3px solid var(--gold)}
 .abo-notif-item .n-title{font-size:12px;font-weight:600;color:var(--white);margin-bottom:3px}
 .abo-notif-item .n-body{font-size:11px;color:var(--gray-400);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .abo-notif-item .n-time{font-family:var(--font-m);font-size:9px;color:var(--gray-500);margin-top:4px;letter-spacing:.5px}
@@ -195,7 +195,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .admin-card-label .info-i{margin-left:4px;width:14px;height:14px;font-size:8px}
 #abo-tooltip{display:none;position:fixed;z-index:400;max-width:340px;padding:14px 16px;background:rgba(10,16,34,.98);backdrop-filter:blur(20px);border:1px solid rgba(139,92,246,.3);border-radius:8px;color:var(--white);font-family:var(--font-b);font-size:12px;line-height:1.55;box-shadow:0 12px 40px rgba(0,0,0,.5)}
 #abo-tooltip::before{content:'';position:absolute;top:-6px;left:16px;width:10px;height:10px;background:rgba(10,16,34,.98);border-left:1px solid rgba(139,92,246,.3);border-top:1px solid rgba(139,92,246,.3);transform:rotate(45deg)}
-#abo-tooltip .tt-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(184,150,12,.2)}
+#abo-tooltip .tt-h{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid rgba(139,92,246,.2)}
 #abo-tooltip .tt-i{font-size:16px;line-height:1;flex-shrink:0}
 #abo-tooltip .tt-t{font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase;font-weight:600}
 #abo-tooltip .tt-d{color:var(--white);margin-bottom:8px;line-height:1.55}
@@ -207,7 +207,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .chat-msg.msg-mine{justify-content:flex-end}
 .chat-msg.msg-theirs{justify-content:flex-start}
 .chat-msg-bubble{max-width:78%;padding:10px 14px 8px;font-size:13px;line-height:1.5;border-radius:14px;position:relative;word-wrap:break-word}
-.chat-msg.msg-mine .chat-msg-bubble{background:rgba(184,150,12,.16);border:1px solid rgba(184,150,12,.35);border-bottom-right-radius:4px;color:var(--white)}
+.chat-msg.msg-mine .chat-msg-bubble{background:rgba(139,92,246,.16);border:1px solid rgba(139,92,246,.35);border-bottom-right-radius:4px;color:var(--white)}
 .chat-msg.msg-theirs .chat-msg-bubble{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);border-bottom-left-radius:4px;color:var(--white)}
 .chat-msg-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:4px;font-family:var(--font-m);font-size:9px;letter-spacing:1px}
 .chat-msg.msg-mine .chat-msg-head .chat-msg-author{color:var(--gold)}
@@ -240,7 +240,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 <!-- ADMIN PANEL -->
 <div class="admin-overlay" id="admin-overlay">
 <!-- FASE 3 PR-C2a · "Vedi come" simulator banner (display:none di default, collassato a 0px via grid auto-row) -->
-<div id="abo-sim-banner" style="display:none;background:rgba(184,150,12,.15);border-bottom:1px solid rgba(184,150,12,.4);padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--gold);text-align:center">
+<div id="abo-sim-banner" style="display:none;background:rgba(139,92,246,.15);border-bottom:1px solid rgba(139,92,246,.4);padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--gold);text-align:center">
   Stai vedendo come <strong id="abo-sim-label">—</strong> · <button onclick="aboSimulateRole('')" style="background:none;border:none;color:var(--gold);text-decoration:underline;cursor:pointer;font-family:inherit;font-size:inherit;padding:0;margin-left:6px">Esci dalla simulazione</button>
 </div>
 <div class="admin-nav">
@@ -338,8 +338,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-section" id="sec-treasury">
     <h2>Treasury <span class="info-i" onclick="showAboTip(this,'sec-treasury')">i</span></h2>
     <div class="admin-grid" style="margin-bottom:20px">
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-treasury-balance" style="color:var(--gold)">€0.00</div><div class="admin-card-label">Treasury Balance <span class="info-i" onclick="showAboTip(this,'tr-balance')">i</span></div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.3)"><div class="admin-card-val" id="adm-robi-circ-funds" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'tr-robi-circ')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(139,92,246,.4)"><div class="admin-card-val" id="adm-treasury-balance" style="color:var(--gold)">€0.00</div><div class="admin-card-label">Treasury Balance <span class="info-i" onclick="showAboTip(this,'tr-balance')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(139,92,246,.3)"><div class="admin-card-val" id="adm-robi-circ-funds" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'tr-robi-circ')">i</span></div></div>
       <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI <span class="info-i" onclick="showAboTip(this,'tr-robi-nominal')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-service-balance" style="color:var(--white)">€0.00</div><div class="admin-card-label"><span class="it">Service Balance (AIROOBI)</span><span class="en">Service Balance (AIROOBI)</span> <span class="info-i" onclick="showAboTip(this,'tr-service')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-revenue-ads">—</div><div class="admin-card-label">Revenue Ads (A-Ads) <span class="info-i" onclick="showAboTip(this,'tr-ads')">i</span></div></div>
@@ -475,9 +475,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </div>
     </div>
     <div class="admin-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:24px">
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">Treasury totale <span class="info-i" onclick="showAboTip(this,'val-treasury')">i</span></div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="adm-nft-minted-2" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI emessi <span class="info-i" onclick="showAboTip(this,'val-minted')">i</span></div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.3)"><div class="admin-card-val" id="adm-robi-circ-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'val-circ')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(139,92,246,.4)"><div class="admin-card-val" id="adm-nft-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">Treasury totale <span class="info-i" onclick="showAboTip(this,'val-treasury')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(139,92,246,.4)"><div class="admin-card-val" id="adm-nft-minted-2" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI emessi <span class="info-i" onclick="showAboTip(this,'val-minted')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(139,92,246,.3)"><div class="admin-card-val" id="adm-robi-circ-treasury" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'val-circ')">i</span></div></div>
       <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-nft-value-2" style="color:var(--gold);font-size:28px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore ROBI stimato <span class="info-i" onclick="showAboTip(this,'val-value')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-nft-buyback">—</div><div class="admin-card-label">Buyback garantito (95%) <span class="info-i" onclick="showAboTip(this,'val-buyback')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-nft-upside">—</div><div class="admin-card-label">Upside potenziale (5%) <span class="info-i" onclick="showAboTip(this,'val-upside')">i</span></div></div>
@@ -501,7 +501,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <h2>Messaggi Airdrop <span class="info-i" onclick="showAboTip(this,'sec-messages')">i</span></h2>
     <div class="admin-grid" style="margin-bottom:20px">
       <div class="admin-card" style="border-color:rgba(74,158,255,.4)"><div class="admin-card-val" id="msg-total" style="color:var(--aria)">—</div><div class="admin-card-label">Totale messaggi</div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="msg-threads" style="color:var(--gold)">—</div><div class="admin-card-label">Conversazioni</div></div>
+      <div class="admin-card" style="border-color:rgba(139,92,246,.4)"><div class="admin-card-val" id="msg-threads" style="color:var(--gold)">—</div><div class="admin-card-label">Conversazioni</div></div>
       <div class="admin-card" style="border-color:rgba(239,68,68,.3)"><div class="admin-card-val" id="msg-unread" style="color:#ef4444">—</div><div class="admin-card-label">Da rispondere</div></div>
     </div>
     <div id="msg-thread-list" style="display:flex;flex-direction:column;gap:12px">
@@ -516,7 +516,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <!-- Totale patrimonio -->
     <div class="admin-grid" style="margin-bottom:24px">
       <div class="admin-card" style="border-color:rgba(74,158,255,.4)"><div class="admin-card-val" id="ca-total-eur" style="color:var(--aria)">—</div><div class="admin-card-label">Totale patrimonio (EUR)</div></div>
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="ca-fiat-total" style="color:var(--gold)">—</div><div class="admin-card-label">Fiat</div></div>
+      <div class="admin-card" style="border-color:rgba(139,92,246,.4)"><div class="admin-card-val" id="ca-fiat-total" style="color:var(--gold)">—</div><div class="admin-card-label">Fiat</div></div>
       <div class="admin-card" style="border-color:rgba(73,234,203,.3)"><div class="admin-card-val" id="ca-crypto-total" style="color:var(--kas)">—</div><div class="admin-card-label">Crypto</div></div>
       <div class="admin-card"><div class="admin-card-val" id="ca-nft-count">—</div><div class="admin-card-label">NFT posseduti</div></div>
     </div>
@@ -574,7 +574,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-section" id="sec-costs">
     <h2>Cost Tracker <span class="info-i" onclick="showAboTip(this,'sec-costs')">i</span></h2>
     <div class="admin-grid" style="margin-bottom:20px">
-      <div class="admin-card" style="border-color:rgba(184,150,12,.4)"><div class="admin-card-val" id="ct-total-prev" style="color:var(--gold)">—</div><div class="admin-card-label">Previsto (mese)</div></div>
+      <div class="admin-card" style="border-color:rgba(139,92,246,.4)"><div class="admin-card-val" id="ct-total-prev" style="color:var(--gold)">—</div><div class="admin-card-label">Previsto (mese)</div></div>
       <div class="admin-card" style="border-color:rgba(73,181,131,.3)"><div class="admin-card-val" id="ct-total-paid" style="color:#49b583">—</div><div class="admin-card-label">Pagato (mese)</div></div>
       <div class="admin-card"><div class="admin-card-val" id="ct-total-year">—</div><div class="admin-card-label">Totale annuale stimato</div></div>
     </div>
@@ -641,7 +641,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <div><label>Deadline <span style="font-size:9px;color:var(--gray-500);letter-spacing:0;text-transform:none">(auto · modificabile)</span> <span class="info-i" onclick="showAboTip(this,'bo-app-deadline')">i</span></label><input type="datetime-local" id="bo-approve-deadline"><div style="font-size:9px;color:var(--gray-500);margin-top:2px" id="bo-deadline-info"></div></div>
       </div>
       <!-- Calc preview -->
-      <div id="bo-calc-preview" style="display:none;margin-top:12px;padding:12px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);font-size:11px;line-height:1.8">
+      <div id="bo-calc-preview" style="display:none;margin-top:12px;padding:12px;border:1px solid rgba(139,92,246,.2);background:rgba(139,92,246,.04);font-size:11px;line-height:1.8">
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px">
           <div>ARIA totali: <strong id="bo-calc-aria" style="color:var(--gold)">—</strong></div>
           <div>EUR incassati: <strong id="bo-calc-eur">—</strong></div>
@@ -764,7 +764,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <!-- Breakdown blocchi -->
           <div id="ad-calc-breakdown" style="padding:8px 16px;border:1px solid var(--gray-700);background:var(--gray-900);font-family:var(--font-m);font-size:11px;color:var(--gray-300);margin-bottom:8px;letter-spacing:.3px"></div>
           <!-- Revenue summary -->
-          <div style="padding:12px 16px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);font-size:12px;line-height:1.8;margin-bottom:8px">
+          <div style="padding:12px 16px;border:1px solid rgba(139,92,246,.2);background:rgba(139,92,246,.04);font-size:12px;line-height:1.8;margin-bottom:8px">
             <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:6px">REVENUE (100% SELL-THROUGH)</div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
               <div>ARIA totali: <strong id="ad-calc-aria" style="color:var(--white)">—</strong></div>
@@ -987,7 +987,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         </div>
       </div>
 
-      <div id="perm-ceo-lock" style="display:none;padding:14px 18px;background:rgba(184,150,12,.08);border:1px solid rgba(184,150,12,.4);color:var(--gold);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;margin-bottom:16px">
+      <div id="perm-ceo-lock" style="display:none;padding:14px 18px;background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.4);color:var(--gold);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;margin-bottom:16px">
         🔒 CEO Super User · accesso totale immutabile da DB. Il CEO non è declassabile (bypass via email hardcoded nelle RPC user_has_permission + get_user_visible_modules).
       </div>
 
@@ -1069,7 +1069,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </table>
 
     <!-- SOGLIE AUTO-TRANSIZIONE -->
-    <div style="margin-top:32px;border:1px solid rgba(184,150,12,.2);padding:20px;background:rgba(184,150,12,.03)">
+    <div style="margin-top:32px;border:1px solid rgba(139,92,246,.2);padding:20px;background:rgba(139,92,246,.03)">
       <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:4px">SOGLIE AUTO-TRANSIZIONE</div>
       <p style="color:var(--gray-500);font-size:11px;margin-bottom:16px;line-height:1.5">Percentuale di blocchi venduti in presale per far scattare automaticamente il passaggio a Sale. Quando un airdrop raggiunge il 100% → auto-close + draw.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
@@ -1089,7 +1089,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           </div>
           <div style="font-size:10px;color:var(--gray-500);margin-top:6px">presale → sale</div>
         </div>
-        <div style="text-align:center;padding:16px;border:1px solid rgba(184,150,12,.3);background:rgba(184,150,12,.04)">
+        <div style="text-align:center;padding:16px;border:1px solid rgba(139,92,246,.3);background:rgba(139,92,246,.04)">
           <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">72H EXTENDED <span class="info-i" onclick="showAboTip(this,'eng-thr-ext')">i</span></div>
           <div style="display:flex;align-items:center;justify-content:center;gap:6px">
             <input type="number" id="threshold-extended" min="5" max="100" value="15" style="width:60px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:16px">
@@ -2354,7 +2354,7 @@ async function adDrawPreview(airdropId){
         var rowBg=isWinner?'rgba(73,181,131,.1)':'transparent';
         var rowBorder=isWinner?'1px solid rgba(73,181,131,.3)':'none';
         var phase=sc.pity_phase||'normal';
-        var phaseBadge=phase==='hard'?' <span style="background:rgba(184,150,12,.2);color:var(--gold);font-size:8px;padding:1px 4px;border-radius:3px;font-family:var(--font-m);letter-spacing:.5px">HARD</span>':phase==='soft'?' <span style="background:rgba(74,158,255,.2);color:#4A9EFF;font-size:8px;padding:1px 4px;border-radius:3px;font-family:var(--font-m);letter-spacing:.5px">SOFT</span>':'';
+        var phaseBadge=phase==='hard'?' <span style="background:rgba(139,92,246,.2);color:var(--gold);font-size:8px;padding:1px 4px;border-radius:3px;font-family:var(--font-m);letter-spacing:.5px">HARD</span>':phase==='soft'?' <span style="background:rgba(74,158,255,.2);color:#4A9EFF;font-size:8px;padding:1px 4px;border-radius:3px;font-family:var(--font-m);letter-spacing:.5px">SOFT</span>':'';
         h+='<tr style="background:'+rowBg+';border:'+rowBorder+'">';
         h+='<td style="padding:6px 8px;color:var(--gray-400)">'+(isWinner?'👑 ':'')+sc.rank+phaseBadge+'</td>';
         h+='<td style="padding:6px 8px;color:var(--gray-300);font-family:var(--font-mono);font-size:11px" title="Perdite cat: '+(sc.losses_count||0)+'/'+(sc.pity_threshold||0)+'">'+sc.user_id.substring(0,8)+'...</td>';
@@ -2567,7 +2567,7 @@ async function toggleAnalysisDetail(row,airdropId){
       var winnerEmail=winnerDetail?winnerDetail.email:winner.user_id.substring(0,12)+'...';
       h+='<div style="background:rgba(73,181,131,.08);border:1px solid rgba(73,181,131,.3);padding:12px;margin-bottom:16px">';
       var winnerPhase=winner.pity_phase||'normal';
-      var winnerPhaseBadge=winnerPhase==='hard'?' <span style="background:rgba(184,150,12,.25);color:var(--gold);font-size:9px;padding:2px 6px;border-radius:3px;font-family:var(--font-m);letter-spacing:.5px">HARD PITY</span>':winnerPhase==='soft'?' <span style="background:rgba(74,158,255,.2);color:#4A9EFF;font-size:9px;padding:2px 6px;border-radius:3px;font-family:var(--font-m);letter-spacing:.5px">SOFT PITY</span>':'';
+      var winnerPhaseBadge=winnerPhase==='hard'?' <span style="background:rgba(139,92,246,.25);color:var(--gold);font-size:9px;padding:2px 6px;border-radius:3px;font-family:var(--font-m);letter-spacing:.5px">HARD PITY</span>':winnerPhase==='soft'?' <span style="background:rgba(74,158,255,.2);color:#4A9EFF;font-size:9px;padding:2px 6px;border-radius:3px;font-family:var(--font-m);letter-spacing:.5px">SOFT PITY</span>':'';
       h+='<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">';
       h+='<div><span style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">VINCITORE</span>'+winnerPhaseBadge+'<br><span style="color:#49b583;font-family:var(--font-mono);font-size:13px">'+escHtml(winnerEmail)+'</span></div>';
       h+='<div style="text-align:right"><span style="font-size:10px;color:var(--gray-500);font-family:var(--font-m)">SCORE v5</span><br><span style="color:#49b583;font-weight:600;font-size:18px">'+parseFloat(winner.score).toFixed(2)+'</span></div></div>';
@@ -2587,7 +2587,7 @@ async function toggleAnalysisDetail(row,airdropId){
         var email=pDetail?pDetail.email:sc.user_id.substring(0,8)+'...';
         var emailTrunc=email.length>25?email.substring(0,25)+'...':email;
         var phase=sc.pity_phase||'normal';
-        var phaseBadge=phase==='hard'?' <span style="background:rgba(184,150,12,.2);color:var(--gold);font-size:8px;padding:1px 3px;border-radius:2px;font-family:var(--font-m)">H</span>':phase==='soft'?' <span style="background:rgba(74,158,255,.2);color:#4A9EFF;font-size:8px;padding:1px 3px;border-radius:2px;font-family:var(--font-m)">S</span>':'';
+        var phaseBadge=phase==='hard'?' <span style="background:rgba(139,92,246,.2);color:var(--gold);font-size:8px;padding:1px 3px;border-radius:2px;font-family:var(--font-m)">H</span>':phase==='soft'?' <span style="background:rgba(74,158,255,.2);color:#4A9EFF;font-size:8px;padding:1px 3px;border-radius:2px;font-family:var(--font-m)">S</span>':'';
         h+='<tr style="background:'+rowBg+';border-bottom:1px solid var(--gray-800)">';
         h+='<td style="padding:5px 6px;color:var(--gray-400)">'+(isWinner?'👑 ':'')+sc.rank+phaseBadge+'</td>';
         h+='<td style="padding:5px 6px;color:var(--gray-300);font-family:var(--font-mono);font-size:10px" title="'+escHtml(email)+' · Perdite cat: '+(sc.losses_count||0)+'/'+(sc.pity_threshold||0)+'">'+escHtml(emailTrunc)+'</td>';
@@ -3767,7 +3767,7 @@ async function loadCollaborators(){
       var u=byUser[uid];
       var date=new Date(u.created).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
       var catBadges=u.cats.map(function(c){
-        return '<span style="display:inline-block;padding:2px 8px;background:rgba(184,150,12,.1);border:1px solid rgba(184,150,12,.2);color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:.5px;border-radius:10px;margin:2px">'+c+'</span>';
+        return '<span style="display:inline-block;padding:2px 8px;background:rgba(139,92,246,.1);border:1px solid rgba(139,92,246,.2);color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:.5px;border-radius:10px;margin:2px">'+c+'</span>';
       }).join('');
       return '<tr><td>'+u.email+'</td><td>'+catBadges+'</td><td style="font-family:var(--font-m);font-size:12px">'+date+'</td><td><button onclick="removeCollaborator(\''+uid+'\')" style="background:transparent;border:1px solid #c0392b;color:#e74c3c;font-family:var(--font-m);font-size:10px;padding:4px 10px;cursor:pointer;letter-spacing:1px">RIMUOVI</button></td></tr>';
     }).join('');
@@ -3806,7 +3806,7 @@ function showAddCollabForm(userId,email){
     return '<label style="display:flex;align-items:center;gap:6px;cursor:pointer;padding:4px 0"><input type="checkbox" value="'+c.slug+'" class="collab-cat-check" style="accent-color:var(--gold)"><span style="font-size:12px;color:var(--gray-300)">'+c.name+'</span></label>';
   }).join('');
 
-  res_el.innerHTML='<div style="padding:16px;border:1px solid var(--gold);border-radius:var(--radius-sm);background:rgba(184,150,12,.03)">'+
+  res_el.innerHTML='<div style="padding:16px;border:1px solid var(--gold);border-radius:var(--radius-sm);background:rgba(139,92,246,.03)">'+
     '<div style="font-family:var(--font-m);font-size:12px;color:var(--white);margin-bottom:12px">Aggiungi <strong style="color:var(--gold)">'+email+'</strong> come validatore</div>'+
     '<div style="margin-bottom:12px">'+
       '<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;margin-bottom:8px">CATEGORIE ABILITATE</div>'+
@@ -4063,7 +4063,7 @@ function renderCompanyAssets(){
     return;
   }
   body.innerHTML=filtered.map(function(a){
-    var catBadge={'fiat':'background:rgba(184,150,12,.15);color:var(--gold)','crypto':'background:rgba(73,234,203,.15);color:var(--kas)','nft':'background:rgba(74,158,255,.15);color:var(--aria)'};
+    var catBadge={'fiat':'background:rgba(139,92,246,.15);color:var(--gold)','crypto':'background:rgba(73,234,203,.15);color:var(--kas)','nft':'background:rgba(74,158,255,.15);color:var(--aria)'};
     return '<tr>'
       +'<td><span style="'+catBadge[a.category]+';padding:2px 8px;font-size:10px;letter-spacing:1px;font-family:var(--font-m);text-transform:uppercase">'+a.category+'</span></td>'
       +'<td>'+escH(a.name)+'</td>'

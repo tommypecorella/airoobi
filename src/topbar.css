@@ -89,3 +89,7 @@ html[data-theme="dark"] .topbar-auth-cta,
 html[data-theme="dark"] .topbar-mobile-auth a.topbar-auth-cta{background:#EF3E4F;border-color:#EF3E4F}
 html[data-theme="dark"] .topbar-auth-cta:hover{background:#D6293A}
 html[data-theme="dark"] .topbar-mobile-menu a{color:#E8EDF2}
+
+/* ── Regole lingua IT/EN — condivise: nessuna pagina deve ridefinirle ── */
+[data-lang="en"] .it{display:none!important}
+[data-lang="it"] .en{display:none!important}

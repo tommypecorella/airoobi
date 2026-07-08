@@ -64,14 +64,6 @@
 
   .wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
 
-  /* TOP BAR */
-  .topbar {
-    border-bottom: 1px solid var(--gray-700);
-    padding: 18px 0;
-    background: rgba(0,0,0,0.96);
-  }
-  .topbar-inner { display: flex; justify-content: space-between; align-items: center; }
-  .brand { font-size: 14px; font-weight: 700; letter-spacing: 4px; color: var(--gold); }
   .doc-id { font-family: var(--font-m); font-size: 11px; color: var(--gray-400); letter-spacing: 1px; }
 
   /* HERO */
@@ -253,16 +245,18 @@
   }
   footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 </style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.4">
+<link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
+<script src="/src/theme.js?v=4.48.0" defer></script>
 </head>
 <body>
 
-<!-- TOPBAR -->
-<header class="topbar">
-  <div class="wrap topbar-inner">
-    <span class="brand">AIROOBI</span>
-    <span class="doc-id">LEG-002 · Treasury Methodology v1 · summary</span>
-  </div>
-</header>
+<!-- TOPBAR (shared component) -->
+<div id="topbar-mount" data-active=""></div>
+<script src="/src/topbar.js?v=4.48.4"></script>
+
+
 
 <!-- HERO -->
 <section class="hero">
@@ -485,7 +479,7 @@
       </div>
       <div class="num-box">
         <div class="big">≤ 30%</div>
-        <div class="lab">Spesa massima utente prima di vincita garantita · pity bound</div>
+        <div class="lab">Spesa massima utente prima dell'oggetto garantito · pity bound</div>
       </div>
       <div class="num-box">
         <div class="big">€ 2.500</div>
@@ -559,6 +553,7 @@
 
 <!-- FOOTER -->
 <footer>
+<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);text-align:center;padding:8px 0">alfa-2026.07.08-1.1.0</div>
   <div class="wrap row">
     <span><strong style="color:var(--gold)">AIROOBI</strong> · LEG-002 Treasury Backing Methodology v1.0 · sintesi visiva</span>
     <span><a href="/" style="color:var(--gray-300);text-decoration:none;">← Torna a airoobi.com</a> · Skeezu · founder &amp; first signatory · 2026-05-01</span>

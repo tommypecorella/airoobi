@@ -231,7 +231,7 @@ function showSuccess(id,msg){var e=document.getElementById(id);e.textContent=msg
   var email=params.get('email');
   if(ref){
     var refInput=document.getElementById('signup-ref');
-    if(refInput){refInput.value=ref;refInput.style.color='var(--gold)';}
+    if(refInput){refInput.value=ref;refInput.style.color='var(--accent)';}
     localStorage.setItem('airoobi_pending_ref',ref);
   }
   if(email){document.getElementById('signup-email').value=email;}
