@@ -4139,6 +4139,15 @@ function renderSubPhotos(){
   var baseEl=document.getElementById('pw-prog-base-val'); if(baseEl)baseEl.textContent=base+'/6';
   var extraEl=document.getElementById('pw-prog-extra-val'); if(extraEl)extraEl.textContent=extra+'/6';
   var fill=document.getElementById('pw-prog-fill'); if(fill)fill.style.width=Math.round((base+extra)/12*100)+'%';
+  // checklist requisiti sopra il bottone (8 lug, giro test Skeezu)
+  var reqEl=document.getElementById('sub-req-photos');
+  if(reqEl){reqEl.textContent=base+'/6';reqEl.style.color=base>=6?'#16A34A':'var(--red-alert)';}
+}
+// L'errore di submit non deve MAI passare inosservato (8 lug: 5 foto su 6,
+// messaggio fuori viewport, Skeezu convinto di aver completato): scroll + toast.
+function subErrFocus(msgEl,toastMsg){
+  try{msgEl.scrollIntoView({behavior:'smooth',block:'center'});}catch(e){}
+  if(toastMsg)showToast(toastMsg);
 }
 function pwRenderSlotTile(slot,slotIdx,photo,otherIdx,isAddMore){
   var isExtra=!slot.required;
@@ -4148,7 +4157,7 @@ function pwRenderSlotTile(slot,slotIdx,photo,otherIdx,isAddMore){
   var dataAttrs='data-slot="'+slot.id+'" data-slot-idx="'+slotIdx+'"';
   if(otherIdx!=null)dataAttrs+=' data-other-idx="'+otherIdx+'"';
   var html='<div class="'+cls+'" '+dataAttrs+' onclick="pwOpenForSlot('+slotIdx+(otherIdx!=null?','+otherIdx:'')+(isAddMore?',true':'')+')">';
-  if(slot.required)html+='<span class="pw-slot-required-badge">!</span>';
+  if(slot.required)html+='<span class="pw-slot-required-badge"><span class="it">OBBLIGATORIA</span><span class="en">REQUIRED</span></span>';
   if(photo){
     html+='<img src="'+(photo.url||'')+'" alt="" class="pw-slot-img">';
     html+='<div class="pw-slot-tag">'+(slot.id==='other'&&photo.caption?escHtml(photo.caption):(slot.it||slot.id))+'</div>';
@@ -4396,31 +4405,35 @@ async function submitObject(){
   msgEl.innerHTML='';msgEl.className='';
   if(!title||!cat){
     msgEl.innerHTML='<span class="it">Compila titolo e categoria.</span><span class="en">Fill title and category.</span>';
-    msgEl.className='submit-msg err';return;
+    msgEl.className='submit-msg err';subErrFocus(msgEl);return;
   }
   if(!desired||desired<500){
     msgEl.innerHTML='<span class="it">Il prezzo desiderato deve essere almeno €500.</span><span class="en">Desired price must be at least €500.</span>';
-    msgEl.className='submit-msg err';return;
+    msgEl.className='submit-msg err';subErrFocus(msgEl);return;
   }
   if(!minP||minP<500){
     msgEl.innerHTML='<span class="it">Il prezzo minimo deve essere almeno €500.</span><span class="en">Min price must be at least €500.</span>';
-    msgEl.className='submit-msg err';return;
+    msgEl.className='submit-msg err';subErrFocus(msgEl);return;
   }
   if(minP>desired){
     msgEl.innerHTML='<span class="it">Il prezzo minimo non può superare il desiderato.</span><span class="en">Min price cannot exceed desired price.</span>';
-    msgEl.className='submit-msg err';return;
+    msgEl.className='submit-msg err';subErrFocus(msgEl);return;
   }
   // F4: le foto tecniche obbligatorie devono essere tutte caricate prima del submit
   var _missingReq=PW_SLOTS.filter(function(s){return s.required&&!pwFindPhoto(s.id)});
+  document.querySelectorAll('.pw-slot.pw-missing').forEach(function(el){el.classList.remove('pw-missing')});
   if(_missingReq.length){
     var _mn=_missingReq.map(function(s){return s.it}).join(', ');
     var _mnEn=_missingReq.map(function(s){return s.en}).join(', ');
+    _missingReq.forEach(function(s){var el=document.querySelector('.pw-slot[data-slot="'+s.id+'"]');if(el)el.classList.add('pw-missing')});
     msgEl.innerHTML='<span class="it">Carica tutte le foto tecniche obbligatorie. Mancano: '+_mn+'.</span><span class="en">Upload all required technical photos. Missing: '+_mnEn+'.</span>';
-    msgEl.className='submit-msg err';return;
+    msgEl.className='submit-msg err';
+    subErrFocus(msgEl,(document.documentElement.getAttribute('data-lang')||'it')==='it'?('Mancano foto obbligatorie: '+_mn):('Missing required photos: '+_mnEn));
+    return;
   }
   if(_balance<_valuationCost){
     msgEl.innerHTML='<span class="it">Saldo ARIA insufficiente. Servono '+_valuationCost+' ARIA.</span><span class="en">Insufficient ARIA balance. '+_valuationCost+' ARIA required.</span>';
-    msgEl.className='submit-msg err';return;
+    msgEl.className='submit-msg err';subErrFocus(msgEl);return;
   }
   var btn=document.getElementById('sub-btn');
   btn.disabled=true;btn.classList.add('loading');
@@ -4474,16 +4487,19 @@ async function submitObject(){
           msgEl.innerHTML='<span class="it">Errore: '+result.error+'</span><span class="en">Error: '+result.error+'</span>';
         }
         msgEl.className='submit-msg err';
+        subErrFocus(msgEl);
       }
     } else {
       console.error('Submit error:',await res.text());
       msgEl.innerHTML='<span class="it">Errore nell\'invio. Riprova.</span><span class="en">Submission error. Try again.</span>';
       msgEl.className='submit-msg err';
+      subErrFocus(msgEl,'Errore nell\'invio');
     }
   }catch(e){
     console.error('submitObject catch:',e);
     msgEl.innerHTML='<span class="it">Errore di rete.</span><span class="en">Network error.</span>';
     msgEl.className='submit-msg err';
+    subErrFocus(msgEl,'Errore di rete');
   }
   btn.disabled=false;btn.classList.remove('loading');
 }
