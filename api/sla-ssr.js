@@ -20,7 +20,7 @@ function renderHtml(m) {
   const buckets = [
     { label: '0-12h', count: Number(m.bucket_0_12h) || 0, color: '#49EACB' },
     { label: '12-24h', count: Number(m.bucket_12_24h) || 0, color: '#4A9EFF' },
-    { label: '24-36h', count: Number(m.bucket_24_36h) || 0, color: '#B8960C' },
+    { label: '24-36h', count: Number(m.bucket_24_36h) || 0, color: '#EF3E4F' },
     { label: '36-48h', count: Number(m.bucket_36_48h) || 0, color: '#E2A93E' },
     { label: 'oltre 48h', count: Number(m.bucket_over_48h) || 0, color: '#E57373' }
   ];
@@ -56,7 +56,7 @@ function renderHtml(m) {
 
   <style>
     :root {
-      --black: #000000; --gold: #B8960C; --white: #FFFFFF;
+      --black: #000000; --gold: #EF3E4F; --white: #FFFFFF;
       --gray-900: #0a0a0a; --gray-800: #1a1a1a; --gray-700: #2a2a2a;
       --gray-500: #8b8b8b; --gray-300: #d4d4d4;
       --aria: #4A9EFF; --kas: #49EACB; --warn: #E57373;
@@ -203,7 +203,7 @@ function renderHtml(m) {
 }
 
 function renderError() {
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>SLA · AIROOBI</title><style>body{background:#000;color:#fff;font-family:sans-serif;padding:40px;text-align:center}a{color:#B8960C}</style></head><body><h1 style="color:#B8960C">SLA temporaneamente non disponibile</h1><p>Riprova tra qualche minuto.</p><p><a href="https://www.airoobi.com">airoobi.com</a></p></body></html>`;
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>SLA · AIROOBI</title><style>body{background:#000;color:#fff;font-family:sans-serif;padding:40px;text-align:center}a{color:#EF3E4F}</style></head><body><h1 style="color:#EF3E4F">SLA temporaneamente non disponibile</h1><p>Riprova tra qualche minuto.</p><p><a href="https://www.airoobi.com">airoobi.com</a></p></body></html>`;
 }
 
 export default async function handler(req, res) {

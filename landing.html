@@ -26,7 +26,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/src/tokens.css?v=4.26.2">
-<link rel="stylesheet" href="/src/topbar.css?v=4.48.4">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.5">
 <script src="/src/theme.js?v=4.48.0" defer></script>
 <style>
 /*
@@ -42,12 +42,12 @@
   --ink:#0F1417;
   --ink-soft:rgba(15,20,23,0.55);
   --ink-faint:rgba(15,20,23,0.4);
-  --gold:#B8893D;              /* Renaissance gold */
-  --gold-light:#D4A04C;
-  --gold-deep:#9F7820;
-  --gold-dim:rgba(184,137,61,0.25);
-  --gold-glow:rgba(184,137,61,0.08);
-  --accent:#B8893D;            /* same as gold (signature) */
+  --gold:#EF3E4F;              /* Renaissance gold */
+  --gold-light:#FF9AA4;
+  --gold-deep:#D6293A;
+  --gold-dim:rgba(239,62,79,0.25);
+  --gold-glow:rgba(239,62,79,0.08);
+  --accent:#EF3E4F;            /* same as gold (signature) */
   --coral:#F73659;             /* CTA Vendi seller-side */
   --espresso:#1B1814;
   --kas:#49EACB;               /* asset-specific KAS green (preserved per brief §7) */
@@ -55,7 +55,7 @@
   --gray-900:#FAFAF7;          /* was deepest dark, now off-white surface */
   --gray-800:#F2EFE9;          /* was very dark, now light surface */
   --gray-700:#E5E1D6;          /* was dark border, now light border */
-  --gray-600:#9F7820;          /* repurposed to gold-deep for subdued accent */
+  --gray-600:#D6293A;          /* repurposed to gold-deep for subdued accent */
   --gray-400:#6B6B6B;          /* secondary text on light BG */
   --gray-300:#3F3F3F;          /* darker readable gray for body text */
   --line:rgba(15,20,23,0.12);
@@ -75,11 +75,11 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 
 /* Hero — Italian Editorial Manifesto */
 .hero{text-align:center;padding:clamp(72px,14vh,140px) 24px clamp(48px,8vh,80px);max-width:780px;margin:0 auto;position:relative}
-.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:600px;background:radial-gradient(circle,rgba(184,137,61,.06) 0%,rgba(184,137,61,.02) 40%,transparent 70%);pointer-events:none;border-radius:50%}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:600px;background:radial-gradient(circle,rgba(239,62,79,.06) 0%,rgba(239,62,79,.02) 40%,transparent 70%);pointer-events:none;border-radius:50%}
 .hero h1{font-family:var(--font-h);font-size:clamp(2.4rem,7vw,4.4rem);font-weight:500;line-height:1.05;color:var(--ink);margin-bottom:24px;letter-spacing:-.045em;position:relative}
 .hero h1 em{display:inline-block;color:var(--gold);font-weight:700;font-style:italic;letter-spacing:-.05em;font-size:1.05em;margin-top:.15em}
 .hero-sub{font-size:clamp(1rem,2.2vw,1.1rem);color:var(--ink-soft);max-width:560px;margin:0 auto 36px;line-height:1.7;position:relative}
-.hero-badge{display:inline-block;font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--gold);border:.5px solid var(--line);padding:7px 18px;margin-bottom:36px;border-radius:var(--radius-pill,999px);background:rgba(184,137,61,.04);position:relative;text-transform:uppercase;font-weight:600}
+.hero-badge{display:inline-block;font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--gold);border:.5px solid var(--line);padding:7px 18px;margin-bottom:36px;border-radius:var(--radius-pill,999px);background:rgba(239,62,79,.04);position:relative;text-transform:uppercase;font-weight:600}
 .hero-ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative}
 .btn-primary{display:inline-block;background:var(--ink);color:#fff;padding:13px 30px;font-family:var(--font-b);font-size:11px;letter-spacing:.08em;font-weight:500;text-decoration:none;transition:all .2s ease;border-radius:var(--radius);text-transform:uppercase}
 .btn-primary:hover{background:#000;transform:translateY(-1px);box-shadow:0 6px 18px rgba(15,20,23,.18)}
@@ -87,7 +87,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .btn-secondary:hover{background:#E12950;transform:translateY(-1px);box-shadow:0 6px 18px rgba(247,54,89,.22)}
 
 /* Welcome grant */
-.welcome-grant{margin:36px auto 0;max-width:540px;padding:22px 28px;border:.5px solid rgba(184,137,61,.25);border-radius:var(--radius-lg);background:var(--bg-alt);text-align:center;position:relative}
+.welcome-grant{margin:36px auto 0;max-width:540px;padding:22px 28px;border:.5px solid rgba(239,62,79,.25);border-radius:var(--radius-lg);background:var(--bg-alt);text-align:center;position:relative}
 .welcome-grant-label{font-family:var(--font-m);font-size:10px;letter-spacing:.18em;color:var(--gold);margin-bottom:16px;text-transform:uppercase;font-weight:600}
 .welcome-grant-row{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:14px}
 .welcome-grant-item{display:flex;flex-direction:column;align-items:center;gap:4px}
@@ -104,9 +104,9 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .how-grid{display:grid;grid-template-columns:1fr;gap:16px}
 @media(min-width:640px){.how-grid{grid-template-columns:1fr 1fr 1fr}}
 .how-card{background:var(--bg-alt);border:.5px solid var(--line);border-radius:var(--radius-lg);padding:32px 26px;text-align:center;transition:all .25s ease;position:relative;overflow:hidden}
-.how-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(184,137,61,.25),transparent)}
-.how-card:hover{border-color:rgba(184,137,61,.3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,20,23,.06)}
-.how-step{font-family:var(--font-m);font-size:28px;font-weight:500;color:rgba(184,137,61,.45);margin-bottom:14px;line-height:1}
+.how-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(239,62,79,.25),transparent)}
+.how-card:hover{border-color:rgba(239,62,79,.3);transform:translateY(-3px);box-shadow:0 8px 24px rgba(15,20,23,.06)}
+.how-step{font-family:var(--font-m);font-size:28px;font-weight:500;color:rgba(239,62,79,.45);margin-bottom:14px;line-height:1}
 .how-card h3{font-family:var(--font-b);font-size:1rem;font-weight:600;margin-bottom:10px;color:var(--ink)}
 .how-card p{font-size:.875rem;color:var(--ink-soft);line-height:1.7}
 
@@ -118,7 +118,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 @media(min-width:520px){.airdrop-grid{grid-template-columns:1fr 1fr}}
 @media(min-width:860px){.airdrop-grid{grid-template-columns:1fr 1fr 1fr}}
 .airdrop-card{background:var(--bg-alt);border:.5px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;color:inherit;transition:all .25s ease;cursor:pointer;display:flex;flex-direction:column;box-shadow:0 2px 6px rgba(15,20,23,.04)}
-.airdrop-card:hover{border-color:rgba(184,137,61,.4);transform:translateY(-3px);box-shadow:0 10px 28px rgba(15,20,23,.08),0 0 0 1px rgba(184,137,61,.18)}
+.airdrop-card:hover{border-color:rgba(239,62,79,.4);transform:translateY(-3px);box-shadow:0 10px 28px rgba(15,20,23,.08),0 0 0 1px rgba(239,62,79,.18)}
 .airdrop-card img{width:100%;height:190px;object-fit:cover;display:block}
 .airdrop-card .card-placeholder{width:100%;height:190px;background:linear-gradient(135deg,#F0EDE5 0%,#E5E1D6 100%);display:flex;align-items:center;justify-content:center}
 .airdrop-card .card-placeholder svg{width:44px;height:44px;stroke:var(--accent);fill:none;stroke-width:1}
@@ -153,11 +153,11 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .carousel-title{font-family:var(--font-h);font-size:clamp(1.2rem,3vw,1.6rem);font-weight:500;color:var(--ink);letter-spacing:-.025em}
 .carousel-arrows{display:flex;gap:8px}
 .carousel-arrow{width:32px;height:32px;border-radius:50%;border:.5px solid var(--line);background:var(--bg-alt);color:var(--ink-soft);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s ease;font-size:14px}
-.carousel-arrow:hover{border-color:var(--gold);color:var(--gold);background:rgba(184,137,61,.06)}
+.carousel-arrow:hover{border-color:var(--gold);color:var(--gold);background:rgba(239,62,79,.06)}
 .carousel-track{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:8px}
 .carousel-track::-webkit-scrollbar{display:none}
 .carousel-card{flex:0 0 220px;scroll-snap-align:start;background:var(--bg-alt);border:.5px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;text-decoration:none;color:inherit;transition:all .25s ease;cursor:pointer;display:flex;flex-direction:column}
-.carousel-card:hover{border-color:rgba(184,137,61,.4);transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,20,23,.06)}
+.carousel-card:hover{border-color:rgba(239,62,79,.4);transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,20,23,.06)}
 .carousel-card img{width:100%;height:130px;object-fit:cover;display:block}
 .carousel-card .card-placeholder{width:100%;height:130px;background:linear-gradient(135deg,#F0EDE5 0%,#E5E1D6 100%);display:flex;align-items:center;justify-content:center}
 .carousel-card .card-placeholder svg{width:32px;height:32px;stroke:var(--accent);fill:none;stroke-width:1}
@@ -173,12 +173,12 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .skel-carousel{flex:0 0 220px;height:240px}
 
 /* Alpha Brave Banner — prominent */
-.alpha-banner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:36px;padding:28px 40px 24px;border:.5px solid rgba(184,137,61,.35);border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(184,137,61,.06) 0%,rgba(184,137,61,.02) 50%,rgba(247,54,89,.03) 100%);overflow:hidden;max-width:480px;margin-left:auto;margin-right:auto}
-.alpha-banner-pulse{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(184,137,61,.1) 0%,transparent 70%);animation:alphaPulse 3s ease-in-out infinite;pointer-events:none}
+.alpha-banner{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:36px;padding:28px 40px 24px;border:.5px solid rgba(239,62,79,.35);border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(239,62,79,.06) 0%,rgba(239,62,79,.02) 50%,rgba(247,54,89,.03) 100%);overflow:hidden;max-width:480px;margin-left:auto;margin-right:auto}
+.alpha-banner-pulse{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(239,62,79,.1) 0%,transparent 70%);animation:alphaPulse 3s ease-in-out infinite;pointer-events:none}
 @keyframes alphaPulse{0%,100%{opacity:.5;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
 .alpha-banner-content{position:relative;text-align:center;width:100%}
 .alpha-banner-label{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:8px;text-transform:uppercase;font-weight:600}
-.alpha-banner-count{font-family:var(--font-h);font-size:clamp(48px,12vw,72px);font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.04em;text-shadow:0 0 30px rgba(184,137,61,.18)}
+.alpha-banner-count{font-family:var(--font-h);font-size:clamp(48px,12vw,72px);font-weight:700;color:var(--ink);line-height:1;letter-spacing:-.04em;text-shadow:0 0 30px rgba(239,62,79,.18)}
 .alpha-banner-count .alpha-banner-total{font-size:.55em;color:var(--ink-faint);font-weight:400;letter-spacing:0}
 .alpha-banner-sub{font-family:var(--font-b);font-size:13px;color:var(--ink-soft);margin-top:10px;letter-spacing:0}
 .alpha-banner-bar{width:100%;height:6px;background:var(--line-soft);border-radius:var(--radius);margin-top:14px;overflow:hidden}
@@ -197,8 +197,8 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .blog-teaser-link{font-family:var(--font-m);font-size:11px;letter-spacing:.16em;color:var(--gold);text-decoration:none;text-transform:uppercase;font-weight:600;transition:opacity .25s}
 .blog-teaser-link:hover{opacity:.7}
 .blog-teaser-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.blog-teaser-card{display:flex;flex-direction:column;background:rgba(184,137,61,.04);border:.5px solid var(--line);border-radius:var(--radius-lg);padding:24px;text-decoration:none;color:inherit;transition:all .25s;min-height:200px}
-.blog-teaser-card:hover{border-color:var(--gold);background:rgba(184,137,61,.06);transform:translateY(-2px)}
+.blog-teaser-card{display:flex;flex-direction:column;background:rgba(239,62,79,.04);border:.5px solid var(--line);border-radius:var(--radius-lg);padding:24px;text-decoration:none;color:inherit;transition:all .25s;min-height:200px}
+.blog-teaser-card:hover{border-color:var(--gold);background:rgba(239,62,79,.06);transform:translateY(-2px)}
 .blog-teaser-card h3{font-family:var(--font-h);font-size:1.05rem;font-weight:600;line-height:1.35;color:var(--ink);margin-bottom:10px}
 .blog-teaser-card p{font-family:var(--font-b);font-size:.85rem;color:var(--ink-soft);line-height:1.55;flex:1}
 .blog-teaser-card-cta{font-family:var(--font-m);font-size:10px;letter-spacing:.16em;color:var(--gold);text-transform:uppercase;font-weight:600;margin-top:14px}
@@ -256,7 +256,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 
 <!-- TOPBAR (shared component) -->
 <div id="topbar-mount" data-active="home"></div>
-<script src="/src/topbar.js?v=4.48.4"></script>
+<script src="/src/topbar.js?v=4.48.5"></script>
 
 <!-- HERO -->
 <section class="hero">

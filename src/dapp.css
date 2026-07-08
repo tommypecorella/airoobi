@@ -178,7 +178,7 @@ select option{background:var(--gray-800);color:var(--white)}
 .ecv-title{font-family:var(--font-h);font-size:20px;font-weight:400;color:var(--white);margin-bottom:4px;line-height:1.25}
 .ecv-sub{font-size:12px;color:var(--gray-400);line-height:1.5}
 .ecv-btn{background:var(--gold);color:var(--black);border:none;padding:12px 28px;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0;border-radius:var(--radius-sm);transition:all .15s}
-.ecv-btn:hover{background:#d0ab14;transform:translateY(-1px)}
+.ecv-btn:hover{background:#D6293A;transform:translateY(-1px)}
 
 /* ── REFERRAL ── */
 .ref-card{border:1px solid rgba(255,255,255,.07);background:var(--card-bg);padding:32px;margin-bottom:32px;border-radius:var(--radius);box-shadow:0 4px 20px rgba(0,0,0,.25)}
@@ -657,7 +657,7 @@ select option{background:var(--gray-800);color:var(--white)}
 .pw-btn{flex:1;min-width:110px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 14px;border:none;cursor:pointer;font-family:var(--font-m);font-size:10px;letter-spacing:1.2px;font-weight:700;border-radius:var(--radius-sm);transition:all .15s;text-transform:uppercase}
 .pw-btn svg{width:14px;height:14px}
 .pw-btn-primary{background:var(--gold);color:var(--black)}
-.pw-btn-primary:hover{background:#d0ab14;transform:translateY(-1px)}
+.pw-btn-primary:hover{background:#D6293A;transform:translateY(-1px)}
 .pw-btn-secondary{background:var(--gray-800);color:var(--white);border:1px solid var(--gray-700)}
 .pw-btn-secondary:hover{border-color:var(--gold);color:var(--gold)}
 .pw-btn-ghost{background:none;color:var(--gray-400);border:1px solid var(--gray-700)}
@@ -1129,15 +1129,14 @@ body.detail-open #cat-dashboard{display:none!important}
 .detail-below-v2{margin-top:36px;padding-top:24px;border-top:1px solid var(--gray-800)}
 .detail-below-v2 .product-info-v2{margin-bottom:24px}
 
-/* ── Topbar ROBI price pill (GS-6) — accanto al saldo ROBI, link a ROBI Explorer ── */
-.topbar-robi-price{font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:.5px;background:rgba(239,62,79,.04);padding:5px 10px;border-radius:24px;border:1px solid rgba(239,62,79,.18);display:inline-flex;align-items:center;gap:6px;text-decoration:none;transition:background .2s,border-color .2s;cursor:pointer}
-.topbar-robi-price:hover{background:rgba(239,62,79,.12);border-color:rgba(239,62,79,.4)}
+/* ── Pill ROBI unificata (giro Skeezu 8 lug): posseduti + valore nominale in un solo elemento ── */
+.topbar-robi-inline{display:inline-flex;align-items:center;gap:5px;margin-left:2px;padding-left:8px;border-left:1px solid rgba(239,62,79,.25);font-family:var(--font-m);font-size:11px;color:var(--gold);letter-spacing:.3px}
 .topbar-robi-trend{font-size:9px;letter-spacing:.3px;padding:1px 5px;border-radius:8px;font-family:var(--font-m)}
 .topbar-robi-trend.up{color:#49EACB;background:rgba(73,234,203,.12)}
 .topbar-robi-trend.down{color:#f87171;background:rgba(248,113,113,.12)}
 .topbar-robi-trend.flat{color:var(--gray-400);background:rgba(255,255,255,.04)}
 @media(max-width:640px){
-  .topbar-robi-price{font-size:10px;padding:4px 8px;gap:4px}
+  .topbar-robi-inline{font-size:10px}
   .topbar-robi-trend{display:none !important}
 }
 /* Mobile nav bug fix (RS ROBY 24 May) · contenimento topbar a viewport stretti */
@@ -1146,7 +1145,7 @@ body.detail-open #cat-dashboard{display:none!important}
   .topbar-right{gap:6px}
   .topbar-bal{font-size:11px;padding:4px 9px;gap:4px}
   .topbar-bal svg{width:14px;height:14px}
-  .topbar-robi-price{display:none !important}
+  .topbar-robi-inline{display:none !important}
   .topbar-avatar{width:30px;height:30px;font-size:12px}
   .topbar-cr-btn{display:none !important}
 }
@@ -1166,3 +1165,8 @@ body.detail-open #cat-dashboard{display:none!important}
 @media(max-width:640px){
   .chat-msg-bubble{max-width:88%;font-size:12.5px}
 }
+
+/* ── Dropdown AIRDROPS (giro Skeezu 8 lug): I miei sotto Airdrops, apre su hover ── */
+.nav-airdrops-menu{display:none}
+.nav-airdrops-wrap:hover .nav-airdrops-menu,.nav-airdrops-wrap:focus-within .nav-airdrops-menu{display:block}
+.nav-airdrops-menu a:hover{background:rgba(239,62,79,.06);color:var(--white)}

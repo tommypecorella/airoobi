@@ -93,3 +93,8 @@ html[data-theme="dark"] .topbar-mobile-menu a{color:#E8EDF2}
 /* ── Regole lingua IT/EN — condivise: nessuna pagina deve ridefinirle ── */
 [data-lang="en"] .it{display:none!important}
 [data-lang="it"] .en{display:none!important}
+
+/* ── Dropdown AIRDROPS da loggati (giro Skeezu 8 lug): I miei sotto Airdrops ── */
+.topbar-airdrops-menu{display:none}
+.topbar-airdrops-wrap:hover .topbar-airdrops-menu,.topbar-airdrops-wrap:focus-within .topbar-airdrops-menu{display:block}
+.topbar-airdrops-menu{left:0;right:auto}

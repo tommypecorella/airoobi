@@ -24,9 +24,9 @@
     --gray-900: #FAFAF7;
     --gray-800: #F2EFE9;
     --gray-700: #E5E1D6;
-    --gold: #B8893D;
-    --gold-dim: rgba(184,137,61,0.3);
-    --gold-glow: rgba(184,137,61,0.18);
+    --gold: #EF3E4F;
+    --gold-dim: rgba(239,62,79,0.3);
+    --gold-glow: rgba(239,62,79,0.18);
     --white: #0F1417;
     --aria:  #4A9EFF;
     --kas:   #49EACB;
@@ -64,7 +64,7 @@
     min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
     padding: 120px 0 60px; position: relative;
     background:
-      radial-gradient(circle at 10% 30%, rgba(184,137,61,0.08), transparent 50%),
+      radial-gradient(circle at 10% 30%, rgba(239,62,79,0.08), transparent 50%),
       radial-gradient(circle at 90% 70%, rgba(74,158,255,0.05), transparent 50%),
       var(--black);
   }
@@ -89,14 +89,15 @@
   .counter-box {
     display: inline-block;
     padding: 18px 28px;
-    border: 1px solid var(--gold-dim);
-    background: linear-gradient(180deg, rgba(184,137,61,0.06), rgba(0,0,0,0.4));
+    border: 1px solid rgba(239,62,79,.2);
+    border-radius: 12px;
+    background: rgba(239,62,79,.04);
     margin-bottom: 28px;
   }
   .counter-box .label { font-size: 10px; color: var(--gold); letter-spacing: 4px; text-transform: uppercase; margin-bottom: 6px; }
   .counter-box .num { font-family: var(--font-m); font-size: 36px; color: var(--white); font-weight: 700; }
   .counter-box .num .total { color: var(--gray-400); font-weight: 400; }
-  .counter-box .progress { width: 280px; height: 4px; background: var(--gray-700); margin-top: 10px; position: relative; overflow: hidden; }
+  .counter-box .progress { width: 280px; height: 4px; background: rgba(239,62,79,.12); border-radius: 2px; margin-top: 10px; position: relative; overflow: hidden; }
   .counter-box .progress-fill { position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: var(--gold); transition: width 1.2s cubic-bezier(.2,.7,.2,1); }
 
   /* === SECTIONS === */
@@ -134,7 +135,7 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center; margin-top: 40px;
   }
   .fairness .formula {
-    background: linear-gradient(135deg, rgba(184,137,61,0.05), rgba(74,158,255,0.03));
+    background: linear-gradient(135deg, rgba(239,62,79,0.05), rgba(74,158,255,0.03));
     border: 1px solid var(--gold-dim); padding: 36px 32px;
   }
   .fairness .formula .eq { font-family: var(--font-m); font-size: 22px; font-weight: 700; color: var(--white); margin-bottom: 16px; }
@@ -150,7 +151,7 @@
   .signup {
     text-align: center; padding: 120px 0;
     background:
-      radial-gradient(circle at 50% 50%, rgba(184,137,61,0.08), transparent 60%),
+      radial-gradient(circle at 50% 50%, rgba(239,62,79,0.08), transparent 60%),
       var(--black);
   }
   .signup h2 { margin-bottom: 16px; }
@@ -210,7 +211,7 @@
   }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/topbar.css?v=4.48.4">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.5">
 <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
 <script src="/src/theme.js?v=4.48.0" defer></script>
 </head>
@@ -218,7 +219,7 @@
 
 <!-- TOPBAR (shared component) -->
 <div id="topbar-mount" data-active=""></div>
-<script src="/src/topbar.js?v=4.48.4"></script>
+<script src="/src/topbar.js?v=4.48.5"></script>
 
 
 
@@ -417,7 +418,7 @@
 
 <!-- FOOTER -->
 <footer>
-<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);text-align:center;padding:8px 0">alfa-2026.07.08-1.1.0</div>
+<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);text-align:center;padding:8px 0">alfa-2026.07.08-1.1.1</div>
   <div class="wrap">
     <div class="footer-inner">
       <div class="left">

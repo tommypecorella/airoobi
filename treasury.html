@@ -40,9 +40,9 @@
     --gray-400: #8B8B8B;
     --gray-300: #b8b8b8;
     --gray-200: #6B6B6B;
-    --gold: #B8893D;
-    --gold-dim: rgba(184,137,61,0.3);
-    --gold-glow: rgba(184,137,61,0.18);
+    --gold: #EF3E4F;
+    --gold-dim: rgba(239,62,79,0.3);
+    --gold-glow: rgba(239,62,79,0.18);
     --white: #0F1417;
     --aria: #4A9EFF;
     --kas: #49EACB;
@@ -70,7 +70,7 @@
   .hero {
     padding: 80px 0 60px;
     background:
-      radial-gradient(circle at 20% 30%, rgba(184,137,61,0.12), transparent 50%),
+      radial-gradient(circle at 20% 30%, rgba(239,62,79,0.12), transparent 50%),
       radial-gradient(circle at 80% 70%, rgba(74,158,255,0.06), transparent 50%),
       var(--black);
     border-bottom: 1px solid var(--gray-800);
@@ -110,7 +110,7 @@
 
   /* FORMULA BOX */
   .formula-box {
-    background: linear-gradient(135deg, rgba(184,137,61,0.06), rgba(74,158,255,0.03));
+    background: linear-gradient(135deg, rgba(239,62,79,0.06), rgba(74,158,255,0.03));
     border: 1px solid var(--gold-dim);
     padding: 30px 32px;
     margin: 24px 0;
@@ -149,7 +149,7 @@
     margin-bottom: 12px;
   }
   .band.green .band-status { background: rgba(73,181,131,0.15); color: var(--green-success); }
-  .band.yellow .band-status { background: rgba(184,137,61,0.15); color: var(--gold); }
+  .band.yellow .band-status { background: rgba(239,62,79,0.15); color: var(--gold); }
   .band.red .band-status { background: rgba(239,68,68,0.15); color: var(--red-alert); }
   .band .ratio {
     font-family: var(--font-m); font-size: 22px; font-weight: 700;
@@ -170,7 +170,7 @@
   .col.aria { border-left-color: var(--aria); }
   .col h3 { color: var(--white); font-size: 20px; margin-bottom: 12px; }
   .col p { font-size: 14px; color: var(--gray-200); line-height: 1.55; margin-bottom: 8px; }
-  .col code { font-family: var(--font-m); font-size: 12px; color: var(--gold); background: rgba(184,137,61,0.08); padding: 2px 6px; }
+  .col code { font-family: var(--font-m); font-size: 12px; color: var(--gold); background: rgba(239,62,79,0.08); padding: 2px 6px; }
 
   /* COMPARISON TABLE */
   .compare {
@@ -226,7 +226,7 @@
 
   /* CALLOUT */
   .callout {
-    background: linear-gradient(180deg, rgba(184,137,61,0.04), rgba(0,0,0,0.4));
+    background: linear-gradient(180deg, rgba(239,62,79,0.04), rgba(0,0,0,0.4));
     border: 1px solid var(--gold-dim);
     padding: 26px 28px;
     margin: 28px 0;
@@ -246,7 +246,7 @@
   footer .row { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/src/topbar.css?v=4.48.4">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.5">
 <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
 <script src="/src/theme.js?v=4.48.0" defer></script>
 </head>
@@ -254,7 +254,7 @@
 
 <!-- TOPBAR (shared component) -->
 <div id="topbar-mount" data-active=""></div>
-<script src="/src/topbar.js?v=4.48.4"></script>
+<script src="/src/topbar.js?v=4.48.5"></script>
 
 
 
@@ -293,7 +293,7 @@
       </div>
     </div>
     <p style="font-size:12px;color:var(--gray-400);margin-top:14px;line-height:1.5;">
-      Endpoint pubblico no-auth · ricalcolato real-time da <code style="font-family:var(--font-m);font-size:11px;color:var(--gold);background:rgba(184,137,61,0.08);padding:1px 5px;">public.get_treasury_health()</code> · refresh ogni 60s · <span id="peg-ts" style="color:var(--gray-300);">—</span>
+      Endpoint pubblico no-auth · ricalcolato real-time da <code style="font-family:var(--font-m);font-size:11px;color:var(--gold);background:rgba(239,62,79,0.08);padding:1px 5px;">public.get_treasury_health()</code> · refresh ogni 60s · <span id="peg-ts" style="color:var(--gray-300);">—</span>
     </p>
     <p style="margin-top:10px;"><a href="/AIROOBI_Treasury_Methodology_v1.pdf" style="font-size:13px;color:var(--gold);text-decoration:none;font-weight:600;letter-spacing:1px;">Metodologia completa →</a></p>
   </div>
@@ -553,7 +553,7 @@
 
 <!-- FOOTER -->
 <footer>
-<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);text-align:center;padding:8px 0">alfa-2026.07.08-1.1.0</div>
+<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-400);text-align:center;padding:8px 0">alfa-2026.07.08-1.1.1</div>
   <div class="wrap row">
     <span><strong style="color:var(--gold)">AIROOBI</strong> · LEG-002 Treasury Backing Methodology v1.0 · sintesi visiva</span>
     <span><a href="/" style="color:var(--gray-300);text-decoration:none;">← Torna a airoobi.com</a> · Skeezu · founder &amp; first signatory · 2026-05-01</span>
@@ -574,7 +574,7 @@
 
   const BAND_COLORS={
     green:{bg:'rgba(73,181,131,0.15)',color:'#49b583'},
-    yellow:{bg:'rgba(184,137,61,0.15)',color:'#B8893D'},
+    yellow:{bg:'rgba(239,62,79,0.15)',color:'#EF3E4F'},
     red:{bg:'rgba(239,68,68,0.15)',color:'#ef4444'},
     unknown:{bg:'#2a2a2a',color:'#888'}
   };

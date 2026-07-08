@@ -15,9 +15,9 @@ function escapeHtml(s) {
 function statusLabel(status) {
   switch (status) {
     case 'active': return { label: 'Live ora', color: '#49EACB' };
-    case 'in_valutazione': return { label: 'In valutazione', color: '#B8960C' };
+    case 'in_valutazione': return { label: 'In valutazione', color: '#EF3E4F' };
     case 'accettato': return { label: 'In partenza', color: '#4A9EFF' };
-    case 'presale': return { label: 'Presale aperta', color: '#B8960C' };
+    case 'presale': return { label: 'Presale aperta', color: '#EF3E4F' };
     case 'completed':
     case 'settled': return { label: 'Concluso', color: '#8b8b8b' };
     case 'closed': return { label: 'Chiuso', color: '#8b8b8b' };
@@ -100,7 +100,7 @@ function renderHtml(data) {
 
   <style>
     :root {
-      --black: #000000; --gold: #B8960C; --white: #FFFFFF;
+      --black: #000000; --gold: #EF3E4F; --white: #FFFFFF;
       --gray-900: #0a0a0a; --gray-800: #1a1a1a; --gray-700: #2a2a2a;
       --gray-500: #8b8b8b; --gray-300: #d4d4d4;
       --status: ${st.color};
@@ -199,7 +199,7 @@ function renderHtml(data) {
 }
 
 function render404(id) {
-  return `<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><meta name="robots" content="noindex"><title>Airdrop non trovato · AIROOBI</title><style>body{background:#000;color:#fff;font-family:sans-serif;padding:40px;text-align:center}h1{color:#B8960C}a{color:#B8960C}</style></head><body><h1>Airdrop non trovato</h1><p>L'airdrop richiesto non esiste o non è pubblicamente visibile.</p><p><a href="https://www.airoobi.app/airdrops">Vedi tutti gli airdrop</a></p></body></html>`;
+  return `<!DOCTYPE html><html lang="it"><head><meta charset="UTF-8"><meta name="robots" content="noindex"><title>Airdrop non trovato · AIROOBI</title><style>body{background:#000;color:#fff;font-family:sans-serif;padding:40px;text-align:center}h1{color:#EF3E4F}a{color:#EF3E4F}</style></head><body><h1>Airdrop non trovato</h1><p>L'airdrop richiesto non esiste o non è pubblicamente visibile.</p><p><a href="https://www.airoobi.app/airdrops">Vedi tutti gli airdrop</a></p></body></html>`;
 }
 
 export default async function handler(req, res) {

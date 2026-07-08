@@ -50,9 +50,22 @@ var EDU_LINKS=[
 var AUTH_LINKS=[
   {href:'/proponi',         page:'submit',  icon:ICONS.submit,  it:'<b>Fai valutare</b>', en:'<b>Get evaluated</b>', bold:true},
   {href:'/invita',          page:'referral',icon:ICONS.referral, it:'<b>+Invita</b>',  en:'<b>+Invite</b>',   invite:true},
-  {href:'/miei-airdrop',    page:'my',      icon:ICONS.my,       it:'I miei',          en:'My drops'},
   {href:'/portafoglio-dapp',page:'wallet',  icon:ICONS.wallet,   it:'Portafoglio',     en:'Wallet'}
 ];
+/* I miei vive nel dropdown sotto AIRDROPS (giro Skeezu 8 lug) — nel mobile resta piatto */
+var MY_LINK={href:'/miei-airdrop',page:'my',icon:ICONS.my,it:'I miei airdrop',en:'My airdrops'};
+
+/* Dropdown AIRDROPS (solo da loggati): Esplora + I miei, apre su hover */
+function airdropsDropdownHtml(active){
+  var trigger=linkHtml(PUBLIC_LINKS[1],active).replace('</a>',' '+ICONS.caret+'</a>');
+  var items=[{href:'/airdrops',page:'explore',icon:ICONS.explore,it:'Esplora airdrop',en:'Explore airdrops'},MY_LINK].map(function(l){
+    var ac=l.page===active?' active':'';
+    return '<a href="'+l.href+'" data-page="'+l.page+'" class="topbar-edu-item'+ac+'">'
+      +l.icon+' <span class="it">'+l.it+'</span><span class="en">'+l.en+'</span></a>';
+  }).join('');
+  return '<div class="topbar-dropdown topbar-airdrops-wrap">'+trigger
+    +'<div class="topbar-edu-menu topbar-airdrops-menu">'+items+'</div></div>';
+}
 
 function linkHtml(l,active){
   var cls=[];
@@ -228,8 +241,10 @@ function upgradeToLoggedIn(session){
     var active=document.querySelector('#topbar-mount')?.getAttribute('data-active')||'';
     // Override Home link → /dashboard for logged users
     var homeLogged=Object.assign({},PUBLIC_LINKS[0],{href:'/dashboard'});
-    var allLinks=[homeLogged,PUBLIC_LINKS[1]].concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2));
-    nav.innerHTML=allLinks.map(function(l){return linkHtml(l,active)}).join('')+eduDropdownHtml(active);
+    nav.innerHTML=linkHtml(homeLogged,active)+airdropsDropdownHtml(active)
+      +AUTH_LINKS.map(function(l){return linkHtml(l,active)}).join('')
+      +PUBLIC_LINKS.slice(2).map(function(l){return linkHtml(l,active)}).join('')
+      +eduDropdownHtml(active);
   }
 
   // Replace auth buttons with balance + avatar (with contextual dropdown menu)
@@ -272,7 +287,7 @@ function upgradeToLoggedIn(session){
   if(mm){
     var active2=document.querySelector('#topbar-mount')?.getAttribute('data-active')||'';
     var homeLogged2=Object.assign({},PUBLIC_LINKS[0],{href:'/dashboard'});
-    var allLinks2=[homeLogged2,PUBLIC_LINKS[1]].concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2)).concat(EDU_LINKS);
+    var allLinks2=[homeLogged2,PUBLIC_LINKS[1],MY_LINK].concat(AUTH_LINKS).concat(PUBLIC_LINKS.slice(2)).concat(EDU_LINKS);
     // Remove auth section, add full links
     var mobileAuth=document.getElementById('topbar-mobile-auth');
     if(mobileAuth)mobileAuth.remove();

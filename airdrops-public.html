@@ -28,7 +28,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6346998237302066" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="/src/tokens.css?v=4.26.2">
-<link rel="stylesheet" href="/src/topbar.css?v=4.48.4">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.5">
 <script src="/src/theme.js?v=4.48.0" defer></script>
 <style>
 /*
@@ -43,11 +43,11 @@
   --ink:#0F1417;
   --ink-soft:rgba(15,20,23,0.55);
   --ink-faint:rgba(15,20,23,0.4);
-  --gold:#B8893D;
-  --gold-light:#D4A04C;
-  --gold-deep:#9F7820;
-  --gold-glow:rgba(184,137,61,0.08);
-  --accent:#B8893D;
+  --gold:#EF3E4F;
+  --gold-light:#FF9AA4;
+  --gold-deep:#D6293A;
+  --gold-glow:rgba(239,62,79,0.08);
+  --accent:#EF3E4F;
   --coral:#F73659;
   --line:rgba(15,20,23,0.12);
   --line-soft:rgba(15,20,23,0.08);
@@ -64,7 +64,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 
 /* §A Hero */
 .hero-airdrops{padding:clamp(64px,11vh,120px) 24px clamp(40px,6vh,64px);text-align:center;max-width:920px;margin:0 auto;position:relative}
-.hero-airdrops::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:540px;background:radial-gradient(circle,rgba(184,137,61,.06) 0%,rgba(184,137,61,.02) 40%,transparent 70%);pointer-events:none;border-radius:50%}
+.hero-airdrops::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:700px;height:540px;background:radial-gradient(circle,rgba(239,62,79,.06) 0%,rgba(239,62,79,.02) 40%,transparent 70%);pointer-events:none;border-radius:50%}
 .section-eyebrow{font-family:var(--font-m);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:18px;font-weight:600;position:relative}
 .hero-airdrops h1{font-family:var(--font-h);font-size:clamp(1.75rem,4vw,2.75rem);font-weight:600;color:var(--ink);margin:0 0 24px;line-height:1.1;letter-spacing:-.03em;position:relative}
 .hero-airdrops .hero-sub{font-family:var(--font-b);font-size:clamp(1rem,2.1vw,1.125rem);color:var(--ink-soft);max-width:680px;margin:0 auto;line-height:1.7;position:relative}
@@ -76,7 +76,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .airdrops-active-stage{font-family:var(--font-m);font-size:.85rem;color:var(--coral);letter-spacing:.05em;font-weight:600}
 .airdrops-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
 .airdrop-card-placeholder{background:var(--bg-alt);border:.5px solid var(--line);border-radius:var(--radius-lg);padding:32px;text-align:center;transition:all .25s ease}
-.airdrop-card-placeholder:hover{border-color:rgba(184,137,61,.3);transform:translateY(-2px);box-shadow:0 6px 18px rgba(15,20,23,.05)}
+.airdrop-card-placeholder:hover{border-color:rgba(239,62,79,.3);transform:translateY(-2px);box-shadow:0 6px 18px rgba(15,20,23,.05)}
 .airdrop-card-cat{font-family:var(--font-m);font-size:11px;letter-spacing:.14em;color:var(--gold);text-transform:uppercase;margin-bottom:14px;font-weight:600}
 .airdrop-card-placeholder h3{font-family:var(--font-h);font-size:1.2rem;font-weight:600;color:var(--ink);margin:0 0 12px;letter-spacing:-.01em}
 .airdrop-card-placeholder p{font-size:.9rem;color:var(--ink-soft);margin:0 0 22px;line-height:1.6}
@@ -103,7 +103,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .faq-item h3{font-family:var(--font-h);font-size:1.1rem;font-weight:600;color:var(--ink);margin:0 0 12px;letter-spacing:-.005em}
 .faq-item p{font-family:var(--font-b);font-size:.95rem;color:var(--ink-soft);margin:0;line-height:1.7}
 .faq-all-link{text-align:center;margin-top:16px}
-.faq-all-link a{font-family:var(--font-b);font-size:.95rem;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(184,137,61,.4);padding-bottom:2px;transition:all .2s}
+.faq-all-link a{font-family:var(--font-b);font-size:.95rem;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(239,62,79,.4);padding-bottom:2px;transition:all .2s}
 .faq-all-link a:hover{color:var(--gold-deep);border-color:var(--gold-deep)}
 
 /* §E CTA finale */
@@ -223,7 +223,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 
 <!-- TOPBAR (shared component) -->
 <div id="topbar-mount" data-active="airdrops"></div>
-<script src="/src/topbar.js?v=4.48.4"></script>
+<script src="/src/topbar.js?v=4.48.5"></script>
 
 <main>
 

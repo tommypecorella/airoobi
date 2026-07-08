@@ -103,7 +103,7 @@ function renderHtml(data) {
 
   <style>
     :root {
-      --black: #000000; --gold: #B8960C; --white: #FFFFFF;
+      --black: #000000; --gold: #EF3E4F; --white: #FFFFFF;
       --gray-900: #0a0a0a; --gray-800: #1a1a1a; --gray-700: #2a2a2a;
       --gray-500: #8b8b8b; --gray-300: #d4d4d4;
       --outcome: ${outcome.color};
@@ -215,7 +215,7 @@ function render404(tokenId) {
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex">
 <title>EVALOBI non trovato · AIROOBI</title>
-<style>body{background:#000;color:#fff;font-family:sans-serif;padding:40px;text-align:center}h1{color:#B8960C;font-size:24px;margin-bottom:16px}a{color:#B8960C}</style>
+<style>body{background:#000;color:#fff;font-family:sans-serif;padding:40px;text-align:center}h1{color:#EF3E4F;font-size:24px;margin-bottom:16px}a{color:#EF3E4F}</style>
 </head>
 <body>
 <h1>EVALOBI #${escapeHtml(String(tokenId))} non trovato</h1>
