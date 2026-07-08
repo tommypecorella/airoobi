@@ -2479,13 +2479,13 @@ async function loadAirdropStats(){
     document.getElementById('as-annullato').textContent=counts.annullato;
     document.getElementById('as-rifiutato').textContent=counts.rifiutato;
     // Participations
-    var res2=await fetch(SB_URL+'/rest/v1/airdrop_participations?select=id,user_id,blocks_bought,total_aria_spent&cancelled_at=is.null',{
+    var res2=await fetch(SB_URL+'/rest/v1/airdrop_participations?select=id,user_id,blocks_count,aria_spent&cancelled_at=is.null',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
     });
     var parts=await res2.json();
     if(!Array.isArray(parts))parts=[];
     var totalBlocks=0,totalAria=0,uniqueBuyers=new Set();
-    parts.forEach(function(p){totalBlocks+=(p.blocks_bought||0);totalAria+=(parseFloat(p.total_aria_spent)||0);uniqueBuyers.add(p.user_id)});
+    parts.forEach(function(p){totalBlocks+=(p.blocks_count||0);totalAria+=(parseFloat(p.aria_spent)||0);uniqueBuyers.add(p.user_id)});
     document.getElementById('as-participations').textContent=parts.length;
     document.getElementById('as-blocks-sold').textContent=totalBlocks;
     document.getElementById('as-aria-spent').textContent=Math.round(totalAria).toLocaleString('it-IT');

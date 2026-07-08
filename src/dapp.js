@@ -1684,13 +1684,15 @@ async function refreshTopbarBalances(){
     var p=rows[0];
     var ariaEl=document.getElementById('topbar-aria-val');
     if(ariaEl&&p.total_points!=null)ariaEl.textContent=p.total_points;
-    // ROBI = sum of nft_rewards.amount for current user
-    var rRes=await fetch(SB_URL+'/rest/v1/nft_rewards?select=amount&user_id=eq.'+_session.user.id,{
+    // ROBI = somma di nft_rewards.shares (solo ROBI/NFT_REWARD — canone come
+    // le altre viste; la vecchia query usava .amount, colonna inesistente:
+    // saldo topbar rotto in silenzio, scoperto nel check ABO 8 lug 2026)
+    var rRes=await fetch(SB_URL+'/rest/v1/nft_rewards?select=shares&nft_type=in.(ROBI,NFT_REWARD)&user_id=eq.'+_session.user.id,{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
     });
     if(rRes.ok){
       var rRows=await rRes.json();
-      var robiTotal=(rRows||[]).reduce(function(s,r){return s+(parseFloat(r.amount)||0)},0);
+      var robiTotal=(rRows||[]).reduce(function(s,r){return s+(parseFloat(r.shares)||0)},0);
       var robiEl=document.getElementById('topbar-robi-val');
       if(robiEl)robiEl.textContent=robiTotal.toFixed(0);
     }
