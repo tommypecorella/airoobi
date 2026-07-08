@@ -383,7 +383,7 @@ function spawnConfetti(){
   setTimeout(function(){c.remove()},3500);
 }
 
-// ── Mine Info modal (spiega il rullo + ROBI) ──
+// ── Mine Info modal (spiega i blocchi + ROBI nascosti) ──
 function openMineInfo(){
   var a=_currentDetail;if(!a)return;
   var total=a.total_blocks||0;
@@ -405,18 +405,18 @@ function openMineInfo(){
       +'<button class="mine-info-close" onclick="closeMineInfo()" aria-label="Chiudi">'
         +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       +'</button>'
-      +'<h3><span class="it">Cos\'&egrave; il rullo e cosa sono i ROBI</span><span class="en">What is the reel and what are ROBI</span></h3>'
+      +'<h3><span class="it">Cosa sono i blocchi e i ROBI nascosti</span><span class="en">What are blocks and hidden ROBI</span></h3>'
       +'<div class="mine-info-section">'
-        +'<h4><span class="it">Il rullo</span><span class="en">The reel</span></h4>'
+        +'<h4><span class="it">La griglia dei blocchi</span><span class="en">The block grid</span></h4>'
         +'<p><span class="it">Ogni blocco colorato rappresenta un blocco dell\'airdrop. Blu = i tuoi, rosso = altri partecipanti, grigio = ancora disponibili.</span><span class="en">Each colored block represents one airdrop block. Blue = yours, red = others, gray = still available.</span></p>'
       +'</div>'
       +'<div class="mine-info-section">'
-        +'<h4><span class="it">I ROBI in regalo (puntini oro)</span><span class="en">Giveaway ROBI (gold dots)</span></h4>'
-        +'<p><span class="it">Ogni blocco ti avvicina al 1&deg; posto. In pi&ugrave;, alcuni blocchi contengono ROBI "in regalo": ogni acquisto scopre un tassello del rullo. Se sotto c\'&egrave; un puntino oro, hai trovato un ROBI. I ROBI scoperti sono tuoi a prescindere dall\'esito dell\'airdrop.</span><span class="en">Each block brings you closer to #1. In addition, some blocks contain giveaway ROBI: every purchase uncovers a tile. If there\'s a gold dot underneath, you found a ROBI. Found ROBI are yours regardless of airdrop outcome.</span></p>'
+        +'<h4><span class="it">I ROBI nascosti (puntini rossi)</span><span class="en">Hidden ROBI (red dots)</span></h4>'
+        +'<p><span class="it">Ogni blocco ti avvicina al 1&deg; posto. In pi&ugrave;, alcuni blocchi nascondono un ROBI: ogni acquisto apre un tassello della griglia. Se sotto c\'&egrave; un puntino rosso, hai trovato un ROBI. I ROBI scoperti sono tuoi a prescindere dall\'esito dell\'airdrop.</span><span class="en">Each block brings you closer to #1. In addition, some blocks hide a ROBI: every purchase opens a grid tile. If there\'s a red dot underneath, you found a ROBI. Found ROBI are yours regardless of airdrop outcome.</span></p>'
       +'</div>'
       +'<div class="mine-info-stats">'
         +'<div class="mis-row">'
-          +'<span class="mis-label"><span class="it">ROBI in regalo (totale)</span><span class="en">Total giveaway ROBI</span></span>'
+          +'<span class="mis-label"><span class="it">ROBI nascosti (totale)</span><span class="en">Total hidden ROBI</span></span>'
           +'<span class="mis-val">'+robiTotal+'</span>'
         +'</div>'
         +'<div class="mis-row">'
@@ -945,8 +945,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> (square-root), <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without winning yet. Fully deterministic: your score decides, not chance.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
-      +UI_ICONS.zap+' <span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti scoprono ROBI nel rullo e minano ROBI frazionari.</span>'
-      +'<span class="en">Whoever is #1 at close gets the item. Everyone discovers ROBI in the reel and mines fractional ROBI.</span>'
+      +UI_ICONS.zap+' <span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti trovano i ROBI nascosti nei blocchi e minano ROBI frazionari.</span>'
+      +'<span class="en">Whoever is #1 at close gets the item. Everyone finds the ROBI hidden in the blocks and mines fractional ROBI.</span>'
       +'</div>'
       +'</div>';
     return;
@@ -1034,8 +1034,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       tipsIt.push(UI_ICONS.target+' Stima: circa <strong>'+blocksNeeded+' blocchi</strong> in pi&ugrave; per raggiungere il 1&deg;.');
       tipsEn.push(UI_ICONS.target+' Estimate: about <strong>'+blocksNeeded+' more blocks</strong> to reach #1.');
     } else if(blocksNeeded>300){
-      tipsIt.push(UI_ICONS.target+' Il distacco dal 1&deg; &egrave; ampio. Partecipa comunque: <strong>scopri ROBI nel rullo</strong> e fai crescere fedelt&agrave;/Boost per i prossimi airdrop.');
-      tipsEn.push(UI_ICONS.target+' Gap to #1 is wide. Participate anyway: <strong>discover ROBI in the reel</strong> and grow loyalty/Boost for upcoming airdrops.');
+      tipsIt.push(UI_ICONS.target+' Il distacco dal 1&deg; &egrave; ampio. Partecipa comunque: <strong>trovi i ROBI nascosti nei blocchi</strong> e fai crescere fedelt&agrave;/Boost per i prossimi airdrop.');
+      tipsEn.push(UI_ICONS.target+' Gap to #1 is wide. Participate anyway: <strong>find the ROBI hidden in the blocks</strong> and grow loyalty/Boost for upcoming airdrops.');
     }
     if(myHistoricAria>0 && loyaltyNext){
       var toNext=loyaltyNext-myHistoricAria;
@@ -1046,8 +1046,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       tipsIt.push(UI_ICONS.zap+' La presale &egrave; il momento migliore: prezzo ridotto e 2x ROBI.');
       tipsEn.push(UI_ICONS.zap+' Presale is the best time: lower price and 2x ROBI.');
     }
-    tipsIt.push(UI_ICONS.gem+' Anche senza vincere, <strong>scopri ROBI nel rullo</strong> e mini ROBI frazionari alla chiusura.');
-    tipsEn.push(UI_ICONS.gem+' Even without winning, <strong>you discover ROBI in the reel</strong> and mine fractional ROBI at close.');
+    tipsIt.push(UI_ICONS.gem+' Anche se non arrivi 1°, <strong>trovi i ROBI nascosti nei blocchi</strong> e mini ROBI frazionari alla chiusura.');
+    tipsEn.push(UI_ICONS.gem+' Even if you don\'t finish #1, <strong>you find the ROBI hidden in the blocks</strong> and mine fractional ROBI at close.');
   }
 
   var loyaltyPctBar=Math.min(100,Math.round(Math.log10(1+myHistoricAria/100)*25));
@@ -1076,8 +1076,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
     actionHintIt='Stima: ~<strong>'+blocksNeeded+'</strong> blocchi in pi&ugrave; per raggiungere il 1&deg;.';
     actionHintEn='Estimate: ~<strong>'+blocksNeeded+'</strong> more blocks to reach #1.';
   } else {
-    actionHintIt='Partecipa per scoprire ROBI nel rullo e far crescere il moltiplicatore fedelt&agrave; per i prossimi airdrop.';
-    actionHintEn='Participate to discover ROBI in the reel and grow your loyalty multiplier for upcoming airdrops.';
+    actionHintIt='Partecipa per trovare i ROBI nascosti nei blocchi e far crescere il moltiplicatore fedelt&agrave; per i prossimi airdrop.';
+    actionHintEn='Participate to find the hidden ROBI in the blocks and grow your loyalty multiplier for upcoming airdrops.';
   }
 
   // Bonus partecipazione (ex Boost di garanzia) — remaining + ETA stima months
