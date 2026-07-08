@@ -41,7 +41,8 @@ var PUBLIC_LINKS=[
 ];
 
 var EDU_LINKS=[
-  {href:'/impara',  page:'learn',   icon:ICONS.learn,   it:'Impara',  en:'Learn'},
+  /* 'Impara' rimossa (8 lug 2026, giro test Skeezu): era lo STESSO contenuto di
+     'Come funziona' in nav — doppione che sfasava l'active. /impara ora redirige. */
   {href:'/blog',    page:'blog',    icon:ICONS.blog,    it:'Blog',    en:'Blog'},
   {href:'/faq',     page:'faq',     icon:ICONS.faq,     it:'FAQ',     en:'FAQ'}
 ];

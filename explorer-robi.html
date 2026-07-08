@@ -25,10 +25,10 @@
 <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AAABAAEAEBAAAAAAIAB0AgAAFgAAAIlQTkcNChoKAAAADUlIRFIAAAAQAAAAEAgCAAAAkJFoNgAAAjtJREFUeJx9kkFI02EUwN/3d4nIyiau/6H/wDTIBptLtsMED8MJFWmK5VRI2MEO2kGGnaqLXUfmaac0woldXSuJYtawQ96MHMzN/rQGKpvbLF34/3/vdfhKELTf5eO97/vee/B+jIjgH4gIAIwxxhicgCQOzjkRSZIkSRJjTITHfmBEhIiSJAFAJpPZ29uTZdlkMomGIn8EXdeJKBqNut1ukTEajX6/P5vNilqIqGmapuuariMRENGz6WnxtMPr7enpbmq6BAANDQ2ZzHcx2yGIyBKJREtLS2Vl5fh4YHNz6+BAk8+Zv6lqODzX2XljYSFSLBaDwaCqqp1dXb6+PkMoFCqXywP9vlQq3dt7y+l0Tk4+sSjnLzY2RiKvVHUjELi/tvbV0Wy/NzKSz+WgtbWVMXZ3ePjRwweib7FYGBq609HhZYw9npi4UF8/O/sCEft9t202m6GiogIAEPVs9kepVKqpqYnFlk4ZJEIEgDNnT3POV1e/1NUt7pZ2a2trDS6XKx6Pf15ZuX7t6ujoiKJYUuvrjivNbxbfEtHgwODP3V9TT6fiHz7m8jszz2dYMpl0OByIvKf7ptVqLf8+MNeZ3r2PRaOvfb6++fmXALD8aTmd3vB4PBZFASKamwsLF6zWy21tbRZFAQC73b69vcU5F4sS6Jz/XdzSUqy9vb26uhoAZFkeGxsrFHaICJETka7rmqZxzpHoiBr5fH5/f99sNplMplAo5HK5wlIaeg==">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--black:#FFFFFF;--white:#0F1417;--gold:#B8893D;--gold-dim:rgba(184,137,61,.3);--gold-bg:rgba(184,137,61,.06);--gray-300:#3F3F3F;--gray-400:#6B6B6B;--gray-700:#E5E1D6;--gray-800:#FAFAF7;--gray-600:#9F7820;--aria:#4A9EFF;--kas:#49EACB;--trend-up:#16A34A;--trend-down:#DC2626;--font-h:'Inter',system-ui,sans-serif;--font-b:'Inter','Helvetica Neue',sans-serif;--font-m:'JetBrains Mono','Courier New',monospace}
+:root{--black:#FFFFFF;--white:#0F1417;--gold:#EF3E4F;--gold-dim:rgba(239,62,79,.3);--gold-bg:rgba(239,62,79,.06);--gray-300:#33404F;--gray-400:#5B6A7D;--gray-700:#D4DBE3;--gray-800:#F5F7FA;--gray-600:#B4192A;--aria:#4A9EFF;--kas:#49EACB;--trend-up:#16A34A;--trend-down:#DC2626;--font-h:'Space Grotesk','Inter',system-ui,sans-serif;--font-b:'Inter','Helvetica Neue',sans-serif;--font-m:'JetBrains Mono','Courier New',monospace}
 html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased;max-width:100vw;overflow-x:hidden}
 body{min-height:100vh;display:flex;flex-direction:column;background:var(--black);max-width:100vw;overflow-x:hidden}
 
@@ -74,7 +74,7 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)
 .exp-table{width:100%;border-collapse:collapse;margin-bottom:40px}
 .exp-table th{font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;text-align:left;padding:10px 12px;border-bottom:1px solid var(--gray-700);white-space:nowrap}
 .exp-table td{font-size:13px;padding:12px;border-bottom:1px solid rgba(229,225,214,.7);color:var(--gray-300)}
-.exp-table tr:hover td{background:rgba(184,137,61,.04)}
+.exp-table tr:hover td{background:rgba(239,62,79,.04)}
 .exp-table .mono{font-family:var(--font-m);font-size:11px;letter-spacing:.5px;word-break:break-all;overflow-wrap:anywhere}
 .exp-table .time{font-family:var(--font-m);font-size:11px;color:var(--gray-400);white-space:nowrap}
 .exp-table .price{font-family:var(--font-m);font-size:12px;color:var(--gold);font-weight:500}
@@ -97,7 +97,7 @@ body{min-height:100vh;display:flex;flex-direction:column;background:var(--black)
 .exp-chart-axis{stroke:var(--gray-700);stroke-width:1}
 .exp-chart-gridline{stroke:var(--gray-700);stroke-width:.5;stroke-dasharray:2 3;opacity:.6}
 .exp-chart-line{fill:none;stroke:var(--gold);stroke-width:2}
-.exp-chart-area{fill:rgba(184,137,61,.08)}
+.exp-chart-area{fill:rgba(239,62,79,.08)}
 .exp-chart-dot{fill:var(--gold);stroke:var(--black);stroke-width:1.5}
 .exp-chart-label{fill:var(--gray-400);font-size:9px}
 .exp-chart-empty{text-align:center;color:var(--gray-400);font-size:13px;padding:32px 12px;font-style:italic}
@@ -115,9 +115,11 @@ html[data-lang="en"] .en{display:inline}
 html:not([data-lang]) .it{display:inline}
 
 /* Info note (non-clickable) */
-.exp-note{background:rgba(184,137,61,.04);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:32px;font-size:13px;color:var(--gray-300);line-height:1.6;border-radius:0 4px 4px 0}
+.exp-note{background:rgba(239,62,79,.04);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:32px;font-size:13px;color:var(--gray-300);line-height:1.6;border-radius:0 4px 4px 0}
 .exp-note strong{color:var(--gold)}
 </style>
+<link rel="stylesheet" href="/src/theme-v3.css?v=4.48.0">
+<script src="/src/theme.js?v=4.48.0"></script>
 </head>
 <body>
 

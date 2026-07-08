@@ -30,12 +30,12 @@
 <link rel="stylesheet" href="/src/topbar.css?v=4.48.0">
 <style>
 :root{
-  --black: #FFFFFF;--white: #0F1417;--gold: #B8893D;
-  --accent:#B8893D;--kas:#49EACB;
-  --gray-900: #FAFAF7;--gray-800: #F2EFE9;--gray-700: #E5E1D6;
-  --gray-600: #9F7820;--gray-500:#44547a;--gray-400: #8B8B8B;--gray-300: #3F3F3F;
+  --black: #FFFFFF;--white: #0F1417;--gold: #EF3E4F;
+  --accent:#EF3E4F;--kas:#49EACB;
+  --gray-900: #F5F7FA;--gray-800: #F5F7FA;--gray-700: #D4DBE3;
+  --gray-600: #B4192A;--gray-500:#44547a;--gray-400: #5B6A7D;--gray-300: #33404F;
   --red:#ef4444;
-  --font-h: 'Inter', system-ui, sans-serif;
+  --font-h: 'Space Grotesk', 'Inter', system-ui, sans-serif;
   --font-b: 'Inter', system-ui, sans-serif;
   --font-m: 'JetBrains Mono', monospace;
   --radius:14px;--radius-sm:10px;
@@ -57,8 +57,8 @@ a:hover{text-decoration:underline}
 .cf-nav{max-width:760px;margin:0 auto 40px;padding:0 24px}
 .cf-nav-title{font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-500);margin-bottom:12px}
 .cf-nav-list{display:flex;flex-wrap:wrap;gap:8px}
-.cf-nav-list a{display:inline-block;padding:7px 14px;background:rgba(184,137,61,.05);border:1px solid rgba(184,137,61,.15);border-radius:var(--radius-sm);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--accent);text-decoration:none;transition:all .2s}
-.cf-nav-list a:hover{background:rgba(184,137,61,.12);border-color:rgba(184,137,61,.4);text-decoration:none}
+.cf-nav-list a{display:inline-block;padding:7px 14px;background:rgba(239,62,79,.05);border:1px solid rgba(239,62,79,.15);border-radius:var(--radius-sm);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--accent);text-decoration:none;transition:all .2s}
+.cf-nav-list a:hover{background:rgba(239,62,79,.12);border-color:rgba(239,62,79,.4);text-decoration:none}
 
 .cf-section{max-width:760px;margin:0 auto;padding:0 24px 48px}
 .cf-section h2{font-family:var(--font-h);font-size:clamp(1.6rem,4vw,2.2rem);font-weight:500;color:var(--white);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--gray-800);scroll-margin-top:80px}
@@ -72,19 +72,19 @@ a:hover{text-decoration:underline}
 .cf-robi{color:var(--gold);font-weight:600}
 .cf-kas{color:var(--kas);font-weight:600}
 
-.cf-callout{padding:18px 22px;border:1px solid var(--gray-800);border-left:3px solid var(--accent);background:rgba(184,137,61,.03);border-radius:var(--radius-sm);margin:18px 0}
-.cf-callout.gold{border-left-color:var(--gold);background:rgba(184,137,61,.04)}
+.cf-callout{padding:18px 22px;border:1px solid var(--gray-800);border-left:3px solid var(--accent);background:rgba(239,62,79,.03);border-radius:var(--radius-sm);margin:18px 0}
+.cf-callout.gold{border-left-color:var(--gold);background:rgba(239,62,79,.04)}
 .cf-callout.red{border-left-color:var(--red);background:rgba(239,68,68,.03)}
 .cf-callout .cf-co-title{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:6px}
 .cf-callout.gold .cf-co-title{color:var(--gold)}
 .cf-callout.red .cf-co-title{color:var(--red)}
 .cf-callout p{margin-bottom:0;font-size:14px}
 
-.cf-stage-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(184,137,61,.08);border:1px solid rgba(184,137,61,.3);border-radius:20px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin:0 4px;vertical-align:middle}
+.cf-stage-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(239,62,79,.08);border:1px solid rgba(239,62,79,.3);border-radius:20px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gold);text-transform:uppercase;margin:0 4px;vertical-align:middle}
 
 .cf-steps{display:flex;flex-direction:column;gap:12px;margin:20px 0}
 .cf-step{display:flex;gap:14px;padding:14px 16px;background:rgba(255,255,255,.02);border:1px solid var(--gray-800);border-radius:var(--radius-sm)}
-.cf-step-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(184,137,61,.12);border:1px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:11px;font-weight:700}
+.cf-step-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:rgba(239,62,79,.12);border:1px solid var(--accent);color:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:11px;font-weight:700}
 .cf-step-body{flex:1}
 .cf-step-title{font-family:var(--font-b);font-size:14px;font-weight:600;color:var(--white);margin-bottom:3px}
 .cf-step-desc{font-size:13px;color:var(--gray-300);line-height:1.6}
@@ -98,6 +98,8 @@ a:hover{text-decoration:underline}
 .cf-cta{display:inline-block;margin-top:18px;padding:12px 28px;background:var(--gold);color:var(--black);border:none;font-family:var(--font-m);font-size:11px;letter-spacing:2px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm);text-decoration:none;transition:all .15s}
 .cf-cta:hover{background:#d0ab14;transform:translateY(-1px);text-decoration:none;color:var(--black)}
 </style>
+<link rel="stylesheet" href="/src/theme-v3.css?v=4.48.0">
+<script src="/src/theme.js?v=4.48.0"></script>
 </head>
 <body>
 
@@ -419,7 +421,7 @@ a:hover{text-decoration:underline}
   </div>
 </footer>
 
-<script src="/src/topbar.js?v=4.48.0"></script>
+<script src="/src/topbar.js?v=4.48.1"></script>
 
 </body>
 </html>

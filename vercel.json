@@ -83,6 +83,7 @@
     { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.com"}], "destination": "https://www.airoobi.com/$1", "statusCode": 301 },
     { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "https://www.airoobi.app/$1", "statusCode": 301 },
     { "source": "/hub", "destination": "/lab", "statusCode": 301 },
+    { "source": "/impara", "destination": "/come-funziona-airdrop", "statusCode": 301 },
     { "source": "/blog/perche-airoobi-non-e-gioco-azzardo.html", "destination": "/blog/airoobi-nuovo-modello-ecommerce.html", "statusCode": 301 },
     { "source": "/blog.html", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog", "statusCode": 301 },
     { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "statusCode": 301 }
@@ -120,7 +121,6 @@
     { "source": "/referral", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/portafoglio", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/archivio", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/impara", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
     { "source": "/referral-dapp", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/portafoglio-dapp", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
     { "source": "/profilo", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
@@ -151,7 +151,6 @@
     { "source": "/referral-dapp", "destination": "/dapp.html" },
     { "source": "/portafoglio-dapp", "destination": "/dapp.html" },
     { "source": "/archivio", "destination": "/dapp.html" },
-    { "source": "/impara", "destination": "/come-funziona-airdrop.html" },
     { "source": "/dashboard", "destination": "/home.html" },
     { "source": "/profilo", "destination": "/home.html" },
     { "source": "/portafoglio", "destination": "/home.html" },
