@@ -205,7 +205,7 @@ html[data-theme="light"] footer {
 /* Accent fill backgrounds (legacy blue) → subtle gold tint */
 html[data-theme="light"] .ap-progress-fill,
 html[data-theme="light"] .counter-bar {
-  background: linear-gradient(90deg, #EF3E4F, #B4192A) !important;
+  background: #EF3E4F !important;
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
@@ -920,7 +920,7 @@ html[data-theme="light"] .share-btn.detail:hover {
 }
 .scoring-metric-progress-bar {
   height: 100%;
-  background: linear-gradient(90deg, #EF3E4F, #FB6675);
+  background: #EF3E4F;
   border-radius: 3px;
   transition: width .4s ease;
 }

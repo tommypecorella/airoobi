@@ -36,13 +36,13 @@ var ICONS={
 
 var PUBLIC_LINKS=[
   {href:'/',        page:'home',    icon:ICONS.home,    it:'Home',    en:'Home'},
-  {href:'/airdrops',page:'explore', icon:ICONS.explore, it:'Airdrops',en:'Airdrops', primary:true},
-  {href:'/come-funziona-airdrop',page:'rules', icon:ICONS.rules, it:'Come funziona', en:'How it works'}
+  {href:'/airdrops',page:'explore', icon:ICONS.explore, it:'Airdrops',en:'Airdrops', primary:true}
 ];
 
+/* Menu unico COME FUNZIONA (8 lug, giro test Skeezu): guida + Blog + FAQ sotto
+   un solo dropdown, stabile su tutte le pagine. Niente più voci doppie. */
 var EDU_LINKS=[
-  /* 'Impara' rimossa (8 lug 2026, giro test Skeezu): era lo STESSO contenuto di
-     'Come funziona' in nav — doppione che sfasava l'active. /impara ora redirige. */
+  {href:'/come-funziona-airdrop', page:'rules', icon:ICONS.rules, it:'Come funziona', en:'How it works'},
   {href:'/blog',    page:'blog',    icon:ICONS.blog,    it:'Blog',    en:'Blog'},
   {href:'/faq',     page:'faq',     icon:ICONS.faq,     it:'FAQ',     en:'FAQ'}
 ];
@@ -74,7 +74,7 @@ function eduDropdownHtml(active){
   }).join('');
   return '<div class="topbar-dropdown" id="topbar-edu-wrap">'
     +'<button class="topbar-edu-btn'+(isActive?' active':'')+'" id="topbar-edu-btn" type="button" onclick="window._topbarToggleEdu(event)">'
-    +ICONS.edu+' <span class="it">EDU</span><span class="en">EDU</span> '+ICONS.caret
+    +ICONS.edu+' <span class="it">COME FUNZIONA</span><span class="en">HOW IT WORKS</span> '+ICONS.caret
     +'</button>'
     +'<div class="topbar-edu-menu" id="topbar-edu-menu">'+items+'</div>'
     +'</div>';

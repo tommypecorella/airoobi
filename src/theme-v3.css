@@ -178,6 +178,17 @@ a.text-link, .prose a, p > a[href], li > a[href] { color: var(--color-link); }
 a.text-link:hover, .prose a:hover, p > a[href]:hover, li > a[href]:hover {
   color: var(--color-link-hover); text-decoration: underline; }
 
+/* toggle tema: UNA sola icona per tema — regole qui nel layer v3 perché
+   vivevano solo in tokens.css e le pagine EDU/blog non lo caricano */
+.theme-toggle{appearance:none;background:transparent;border:1px solid var(--line);color:var(--ink);
+  width:36px;height:36px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;
+  justify-content:center;transition:background .2s ease,border-color .2s ease}
+.theme-toggle:hover{background:var(--bg-alt);border-color:var(--gold)}
+.theme-toggle .icon-sun{display:none}
+.theme-toggle .icon-moon{display:inline}
+[data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
 /* marchio in topbar + Symbol theme-aware (PNG b/n: l'invert fa il lavoro) */
 .topbar-brand{display:inline-flex;align-items:center;flex:none;margin-right:2px}
 .topbar-brand img{height:26px;width:auto;display:block}

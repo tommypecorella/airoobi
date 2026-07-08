@@ -928,7 +928,7 @@ function renderStreakCalendar(daysChecked,today){
       bottomContent='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
       topLine='<div style="font-size:10px;letter-spacing:.5px;color:'+fg+';font-weight:'+weight+';opacity:.85">'+labels[i]+'</div>';
     } else if(isToday){
-      bg='rgba(184,150,12,.06)';
+      bg='rgba(239,62,79,.06)';
       fg='var(--gold)';
       border='1.5px solid var(--gold)';
       weight='700';
@@ -1845,7 +1845,7 @@ function renderCatDashboard(){
   var totalActive=_airdrops.length;
   var totalComing=_comingSoonItems.length;
 
-  var html='<div style="flex:0 0 auto;padding:10px 16px;border:1px solid rgba(184,150,12,.2);background:rgba(184,150,12,.04);border-radius:var(--radius-sm);text-align:center;min-width:90px">'
+  var html='<div style="flex:0 0 auto;padding:10px 16px;border:1px solid rgba(239,62,79,.2);background:rgba(239,62,79,.04);border-radius:var(--radius-sm);text-align:center;min-width:90px">'
     +'<div style="font-family:var(--font-m);font-size:20px;color:var(--gold);font-weight:600">'+totalActive+'</div>'
     +'<div style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-400);text-transform:uppercase;margin-top:2px"><span class="it">Attivi</span><span class="en">Active</span></div>'
     +'</div>';
@@ -2670,7 +2670,7 @@ async function openDetail(id){
     :'')
 
     // CTA "Hai un oggetto di valore?" (sotto-la-piega §4.8)
-    +(!_publicMode?'<div class="detail-cta-fai-valutare" style="margin-top:24px;padding:18px 20px;border:1px solid rgba(184,150,12,.25);background:rgba(184,150,12,.04);border-radius:var(--radius-sm);text-align:center">'
+    +(!_publicMode?'<div class="detail-cta-fai-valutare" style="margin-top:24px;padding:18px 20px;border:1px solid rgba(239,62,79,.25);background:rgba(239,62,79,.04);border-radius:var(--radius-sm);text-align:center">'
     +'<div style="font-family:var(--font-h);font-size:18px;color:var(--white);margin-bottom:6px"><span class="it">Hai un oggetto di valore?</span><span class="en">Got a valuable item?</span></div>'
     +'<p style="font-size:13px;color:var(--gray-400);margin-bottom:12px;line-height:1.5"><span class="it">Lo facciamo valutare gratis e, se rientra nei criteri, parte come airdrop.</span><span class="en">We evaluate it free and, if it qualifies, it becomes an airdrop.</span></p>'
     +'<button onclick="navigateTo(\'submit\')" style="background:var(--gold);color:#000;border:none;padding:10px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">FAI VALUTARE →</span><span class="en">GET EVALUATED →</span></button>'
@@ -2986,7 +2986,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
     el.innerHTML=''
       +'<div class="strategy-box">'
       +'<div class="strategy-title"><span class="it">Come si vince?</span><span class="en">How do you win?</span></div>'
-      +'<div style="padding:14px 16px;background:rgba(184,150,12,.05);border:1px solid rgba(184,150,12,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
+      +'<div style="padding:14px 16px;background:rgba(239,62,79,.05);border:1px solid rgba(239,62,79,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
       +'<span class="it">Il Punteggio combina tre cose: i <strong style="color:var(--gold)">blocchi</strong> che compri (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora vincere. Tutto deterministico: conta il punteggio, non il caso.</span>'
       +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> you buy (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without winning yet. Fully deterministic: your score decides, not chance.</span>'
       +'</div>'
@@ -3629,7 +3629,7 @@ function _renderPartCard(item,isArchive){
   var deadlineHtml='';
   if(st==='presale')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);background:rgba(74,158,255,.1);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Pre-vendita</span><span class="en">Pre-sale</span></span>';
   else if(st==='sale')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--kas);background:rgba(73,234,203,.1);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Live</span><span class="en">Live</span></span>';
-  else if(st==='pending_seller_decision')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);background:rgba(184,150,12,.12);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">In attesa</span><span class="en">Pending</span></span>';
+  else if(st==='pending_seller_decision')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);background:rgba(239,62,79,.12);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">In attesa</span><span class="en">Pending</span></span>';
   else if(st==='completed'||st==='dropped')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#22c55e;background:rgba(34,197,94,.1);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Completato</span><span class="en">Completed</span></span>';
   else if(st==='annullato')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ef4444;background:rgba(239,68,68,.1);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Annullato</span><span class="en">Cancelled</span></span>';
   else if(st==='closed')badge='<span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);background:rgba(255,255,255,.05);padding:3px 10px;border-radius:10px;text-transform:uppercase;font-weight:700"><span class="it">Chiuso</span><span class="en">Closed</span></span>';
@@ -3730,7 +3730,7 @@ function _renderRevealBlock(a,item,status){
     :'';
   // Scenario 1: completed + winner
   if(isWinner){
-    return '<div style="background:linear-gradient(135deg,rgba(184,150,12,.15),rgba(184,150,12,.02));border-top:1px solid var(--gold);padding:16px 18px;display:flex;flex-direction:column;gap:10px">'
+    return '<div style="background:linear-gradient(135deg,rgba(239,62,79,.15),rgba(239,62,79,.02));border-top:1px solid var(--gold);padding:16px 18px;display:flex;flex-direction:column;gap:10px">'
       +'<div style="display:flex;align-items:center;gap:10px">'
       +'<div style="font-family:var(--font-h);font-size:18px;color:var(--gold);font-weight:500"><span class="it">Hai ottenuto l\'oggetto · '+a.title+'</span><span class="en">You got the item · '+a.title+'</span></div>'
       +'</div>'
@@ -4635,7 +4635,7 @@ function _renderSubsHtml(subs,isArchive){
     if(!isArchive&&isPendingSellerDecision){
       var reason=s.early_close_reason==='value_threshold'?'soglia valore raggiunta dal primo':'fairness lockdown (tutti i non-primi bloccati)';
       var reasonEn=s.early_close_reason==='value_threshold'?'value threshold reached by leader':'fairness lockdown (all non-leaders blocked)';
-      html+='<div style="margin-top:10px;padding:12px 14px;background:rgba(184,150,12,.06);border:1px solid rgba(184,150,12,.25);border-radius:var(--radius-sm);font-size:12px;line-height:1.55;color:var(--gray-300)"><span class="it">&#9888; Airdrop chiuso anticipatamente ('+reason+'). Blocchi venduti: <strong>'+(s.blocks_sold||0)+'</strong>/<strong>'+(s.original_total_blocks||s.total_blocks||0)+'</strong>. Clicca COMPLETA per vedere il riepilogo e accettare il payout ridotto, o ANNULLA per ritirare (fee di valutazione NON rimborsata).</span><span class="en">&#9888; Airdrop closed early ('+reasonEn+'). Blocks sold: <strong>'+(s.blocks_sold||0)+'</strong>/<strong>'+(s.original_total_blocks||s.total_blocks||0)+'</strong>. Click COMPLETE to review the reduced payout, or CANCEL to withdraw (valuation fee NOT refunded).</span></div>';
+      html+='<div style="margin-top:10px;padding:12px 14px;background:rgba(239,62,79,.06);border:1px solid rgba(239,62,79,.25);border-radius:var(--radius-sm);font-size:12px;line-height:1.55;color:var(--gray-300)"><span class="it">&#9888; Airdrop chiuso anticipatamente ('+reason+'). Blocchi venduti: <strong>'+(s.blocks_sold||0)+'</strong>/<strong>'+(s.original_total_blocks||s.total_blocks||0)+'</strong>. Clicca COMPLETA per vedere il riepilogo e accettare il payout ridotto, o ANNULLA per ritirare (fee di valutazione NON rimborsata).</span><span class="en">&#9888; Airdrop closed early ('+reasonEn+'). Blocks sold: <strong>'+(s.blocks_sold||0)+'</strong>/<strong>'+(s.original_total_blocks||s.total_blocks||0)+'</strong>. Click COMPLETE to review the reduced payout, or CANCEL to withdraw (valuation fee NOT refunded).</span></div>';
     }
     html+='<div id="sub-chat-'+s.id+'" style="margin-top:8px"></div>';
     html+='</div>';
@@ -4679,7 +4679,7 @@ async function openCompleteEarlyClose(airdropId){
     +'<div style="max-width:540px;width:100%;max-height:90vh;overflow-y:auto;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:28px 24px">'
     +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:6px"><span class="it">Chiusura anticipata</span><span class="en">Early close</span></div>'
     +'<h3 style="font-family:var(--font-h);font-size:22px;font-weight:500;color:var(--white);margin:0 0 14px">'+escHtml(a.title)+'</h3>'
-    +'<div style="padding:14px 16px;background:rgba(184,150,12,.05);border-left:3px solid var(--gold);border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;color:var(--gray-300);line-height:1.55"><span class="it">Motivo: '+reasonIt+'.</span><span class="en">Reason: '+reasonEn+'.</span></div>'
+    +'<div style="padding:14px 16px;background:rgba(239,62,79,.05);border-left:3px solid var(--gold);border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;color:var(--gray-300);line-height:1.55"><span class="it">Motivo: '+reasonIt+'.</span><span class="en">Reason: '+reasonEn+'.</span></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-bottom:18px;font-size:13px">'
     +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Blocchi venduti</span><span class="en">Blocks sold</span></div><div style="color:var(--white);font-size:15px"><strong>'+blocksSold.toLocaleString('it-IT')+'</strong> / '+originalBlocks.toLocaleString('it-IT')+'</div></div>'
     +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Blocchi bruciati</span><span class="en">Burned</span></div><div style="color:var(--gray-400);font-size:15px">'+burned.toLocaleString('it-IT')+'</div></div>'
@@ -5332,12 +5332,12 @@ async function loadDappWallet(){
         var label=b.nft_type?b.nft_type.replace(/_/g,' '):'Badge';
         var isAlpha=b.nft_type==='ALPHA_BRAVE';
         var borderColor=isAlpha?'var(--gold)':'var(--gray-700)';
-        var glowBg=isAlpha?'radial-gradient(ellipse at center,rgba(184,150,12,.08) 0%,transparent 70%)':'none';
+        var glowBg=isAlpha?'radial-gradient(ellipse at center,rgba(239,62,79,.08) 0%,transparent 70%)':'none';
         return '<div style="padding:24px 16px;border:1px solid '+borderColor+';border-radius:var(--radius-sm);text-align:center;background:'+glowBg+';position:relative;overflow:hidden">'+
-          (isAlpha?'<div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:100px;height:100px;background:radial-gradient(circle,rgba(184,150,12,.12) 0%,transparent 70%);pointer-events:none"></div>':'')+
-          '<div style="font-size:36px;margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(184,150,12,.3))'+(isAlpha?'':'')+'">'+(isAlpha?'&#9813;':'&#9734;')+'</div>'+
+          (isAlpha?'<div style="position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:100px;height:100px;background:radial-gradient(circle,rgba(239,62,79,.12) 0%,transparent 70%);pointer-events:none"></div>':'')+
+          '<div style="font-size:36px;margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(239,62,79,.3))'+(isAlpha?'':'')+'">'+(isAlpha?'&#9813;':'&#9734;')+'</div>'+
           '<div style="font-family:var(--font-h);font-size:14px;letter-spacing:2px;color:'+(isAlpha?'var(--gold)':'var(--white)')+';margin-bottom:4px;text-transform:uppercase">'+label+'</div>'+
-          (isAlpha?'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:rgba(184,150,12,.5);margin-bottom:6px">FOUNDER · TOP 1000</div>':'')+
+          (isAlpha?'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:rgba(239,62,79,.5);margin-bottom:6px">FOUNDER · TOP 1000</div>':'')+
           '<div style="font-family:var(--font-m);font-size:10px;color:var(--gray-500)">'+new Date(b.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'})+'</div>'+
           '</div>';
       }).join('');
@@ -5398,7 +5398,7 @@ async function renderCategoryAlertsUI(token){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   grid.innerHTML=cats.map(function(c){
     var checked=alerts.indexOf(c.slug)!==-1;
-    return '<label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid '+(checked?'rgba(184,150,12,.3)':'var(--gray-700)')+';background:'+(checked?'rgba(184,150,12,.04)':'transparent')+';cursor:pointer;font-size:12px;color:var(--white);transition:all .2s">'
+    return '<label style="display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px solid '+(checked?'rgba(239,62,79,.3)':'var(--gray-700)')+';background:'+(checked?'rgba(239,62,79,.04)':'transparent')+';cursor:pointer;font-size:12px;color:var(--white);transition:all .2s">'
       +'<input type="checkbox" data-slug="'+c.slug+'" '+(checked?'checked':'')+' style="accent-color:var(--gold);width:14px;height:14px">'
       +(c.icon?'<span>'+c.icon+'</span>':'')
       +'<span>'+(lang==='it'?c.name_it:c.name_en)+'</span>'
@@ -5447,7 +5447,7 @@ function showValuationDetail(idx){
   h+='</div>';
   // Quotation (if evaluated)
   if(objVal>0){
-    h+='<div style="padding:12px;border:1px solid var(--gold);background:rgba(184,150,12,.04);margin-bottom:16px;text-align:center">';
+    h+='<div style="padding:12px;border:1px solid var(--gold);background:rgba(239,62,79,.04);margin-bottom:16px;text-align:center">';
     h+='<div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:4px">'+(lang==='it'?'QUOTAZIONE AIROOBI':'AIROOBI QUOTATION')+'</div>';
     h+='<div style="font-family:var(--font-h);font-size:28px;color:var(--gold)">€'+objVal.toFixed(2)+'</div>';
     h+='</div>';
@@ -5562,7 +5562,7 @@ async function loadRobiHistory(token){
       ctx.translate(10,pT+plotH/2);
       ctx.rotate(-Math.PI/2);
       ctx.textAlign='center';
-      ctx.fillStyle='rgba(184,150,12,.8)';
+      ctx.fillStyle='rgba(239,62,79,.8)';
       ctx.fillText('ROBI',0,0);
       ctx.restore();
 
@@ -5595,7 +5595,7 @@ async function loadRobiHistory(token){
       ctx.lineTo(pL+plotW,pT+plotH);
       ctx.lineTo(pL,pT+plotH);
       ctx.closePath();
-      ctx.fillStyle='rgba(184,150,12,.12)';
+      ctx.fillStyle='rgba(239,62,79,.12)';
       ctx.fill();
 
       // Puntini sui dati

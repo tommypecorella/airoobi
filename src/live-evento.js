@@ -100,7 +100,7 @@
 
     return `
     <style>
-    .live-evento { background:linear-gradient(135deg,rgba(184,150,12,.06),transparent); border:1px solid rgba(184,150,12,.4); border-radius:12px; padding:24px; margin:24px 0; font-family:'Instrument Sans',system-ui,sans-serif; color:#fff }
+    .live-evento { background:linear-gradient(135deg,rgba(239,62,79,.06),transparent); border:1px solid rgba(239,62,79,.4); border-radius:12px; padding:24px; margin:24px 0; font-family:'Instrument Sans',system-ui,sans-serif; color:#fff }
     .le-title { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:500; color:#EF3E4F; margin:0 0 4px }
     .le-sub { font-size:12px; color:#999; margin-bottom:18px }
     .le-counters { display:flex; gap:16px; flex-wrap:wrap; margin-bottom:18px; font-size:12px }
@@ -115,7 +115,7 @@
     .le-tbl td { padding:10px; border-bottom:1px solid #1a1a1a }
     .le-row-you td { background:rgba(74,158,255,.08) }
     .le-badge { display:inline-block; padding:2px 8px; margin-left:6px; border-radius:10px; font-family:'DM Mono',monospace; font-size:9px; letter-spacing:.8px }
-    .le-badge-gold { background:rgba(184,150,12,.15); color:#EF3E4F; border:1px solid rgba(184,150,12,.4) }
+    .le-badge-gold { background:rgba(239,62,79,.15); color:#EF3E4F; border:1px solid rgba(239,62,79,.4) }
     .le-badge-aria { background:rgba(74,158,255,.15); color:#4A9EFF; border:1px solid rgba(74,158,255,.4) }
     .le-badge-gray { background:rgba(255,255,255,.04); color:#888; border:1px solid #333 }
     .le-checkmate { background:#0a0a0a; border:1px solid #2a2a2a; border-radius:8px; padding:16px; margin-top:14px }
