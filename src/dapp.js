@@ -11,7 +11,7 @@ function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
 function tokIcon(t,sz){
   sz=sz||14;
-  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#B8960C':t==='KAS'?'#49EACB':'var(--gray-500)';
+  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#EF3E4F':t==='KAS'?'#49EACB':'var(--gray-500)';
   var l=t==='ARIA'?'A':t==='ROBI'?'R':t==='KAS'?'K':'?';
   return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 16 16" style="vertical-align:-2px;flex-shrink:0;display:inline-block"><circle cx="8" cy="8" r="7" fill="none" stroke="'+c+'" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="'+c+'" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">'+l+'</text></svg>';
 }
@@ -825,7 +825,7 @@ async function loadPortfolioChart(token,userRobi){
     }
 
     drawLine(ariaData,'#4A9EFF',0.06,0.25);
-    drawLine(robiData,'#B8960C',0.08,0.5);
+    drawLine(robiData,'#EF3E4F',0.08,0.5);
     if(kasData.length)drawLine(kasData,'#49EACB',0.05,0.75);
 
     // Date labels
@@ -5583,7 +5583,7 @@ async function loadRobiHistory(token){
       }
 
       // Linea ROBI cumulativa
-      ctx.strokeStyle='#B8960C';ctx.lineWidth=2;ctx.beginPath();
+      ctx.strokeStyle='#EF3E4F';ctx.lineWidth=2;ctx.beginPath();
       pts.forEach(function(p,i){
         var x=pL+(i/(pts.length-1||1))*plotW;
         var y=pT+plotH-(p.val/yMax)*plotH;
@@ -5599,7 +5599,7 @@ async function loadRobiHistory(token){
       ctx.fill();
 
       // Puntini sui dati
-      ctx.fillStyle='#B8960C';
+      ctx.fillStyle='#EF3E4F';
       pts.forEach(function(p,i){
         var x=pL+(i/(pts.length-1||1))*plotW;
         var y=pT+plotH-(p.val/yMax)*plotH;

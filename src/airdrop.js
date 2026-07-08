@@ -14,7 +14,7 @@ function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
 function tokIcon(t,sz){
   sz=sz||14;
-  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#B8960C':t==='KAS'?'#49EACB':'var(--gray-500)';
+  var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#EF3E4F':t==='KAS'?'#49EACB':'var(--gray-500)';
   var l=t==='ARIA'?'A':t==='ROBI'?'R':t==='KAS'?'K':'?';
   return '<svg width="'+sz+'" height="'+sz+'" viewBox="0 0 16 16" style="vertical-align:-2px;flex-shrink:0;display:inline-block"><circle cx="8" cy="8" r="7" fill="none" stroke="'+c+'" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="'+c+'" font-size="9" font-weight="700" font-family="Instrument Sans,sans-serif">'+l+'</text></svg>';
 }

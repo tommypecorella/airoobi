@@ -20,16 +20,16 @@
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght;500;600;700;800&family=JetBrains+Mono:wght;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght;500;600;700;800&family=JetBrains+Mono:wght;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--black: #FFFFFF;--white: #0F1417;--accent:#4A9EFF;--accent-dim:rgba(74,158,255,.25);--gray-300: #3F3F3F;--gray-400: #8B8B8B;--gray-700: #E5E1D6;--gray-800: #F2EFE9;--aria:#4A9EFF;--kas:#49EACB;--font-h: 'Inter', system-ui, sans-serif;--font-b:'Inter','Helvetica Neue',sans-serif;--font-m:'JetBrains Mono','Courier New',monospace;--radius:14px;--radius-sm:10px}
-html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased;color-scheme:dark}
+:root{--black: #FFFFFF;--white: #0F1417;--accent:#EF3E4F;--accent-dim:rgba(239,62,79,.25);--gray-300: #33404F;--gray-400: #5B6A7D;--gray-700: #D4DBE3;--gray-800: #F5F7FA;--aria:#4A9EFF;--kas:#49EACB;--font-h: 'Space Grotesk', 'Inter', system-ui, sans-serif;--font-b:'Inter','Helvetica Neue',sans-serif;--font-m:'JetBrains Mono','Courier New',monospace;--radius:12px;--radius-sm:8px}
+html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased;color-scheme:light}
 body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:var(--black)}
 .auth-logo-wrap{margin-bottom:32px;text-align:center}
 .auth-logo{font-family:var(--font-b);font-size:36px;font-weight:700;letter-spacing:-3px;color:var(--accent);opacity:.8}
 .auth-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);max-width:420px;width:100%;padding:48px 40px;position:relative;border-radius:var(--radius);box-shadow:0 4px 24px rgba(0,0,0,.3)}
-.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(74,158,255,.15),transparent);border-radius:var(--radius) var(--radius) 0 0}
+.auth-box::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(239,62,79,.15),transparent);border-radius:var(--radius) var(--radius) 0 0}
 .auth-box h2{font-family:var(--font-h);font-size:28px;font-weight:300;margin-bottom:8px}
 .auth-box .auth-sub{font-size:13px;color:var(--gray-400);margin-bottom:32px}
 .auth-box label{display:block;font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-400);margin-bottom:6px}
@@ -40,13 +40,13 @@ body{min-height:100vh;display:flex;flex-direction:column;align-items:center;just
 .pw-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.5}
 .auth-box input:focus{border-color:var(--accent)}
 .auth-btn{width:100%;padding:14px;background:var(--accent);color:var(--black);border:none;font-family:var(--font-b);font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all .3s;margin-bottom:16px;border-radius:var(--radius-sm)}
-.auth-btn:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 6px 20px rgba(74,158,255,.25)}
+.auth-btn:hover{opacity:.88;transform:translateY(-1px);box-shadow:0 6px 20px rgba(239,62,79,.25)}
 .auth-btn:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
 .auth-toggle{font-size:13px;color:var(--gray-400);text-align:center}
 .auth-toggle a{color:var(--accent);cursor:pointer;text-decoration:none}
 .auth-toggle a:hover{text-decoration:underline}
 .auth-error{background:rgba(185,28,28,.15);border:1px solid rgba(185,28,28,.3);color:#f87171;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none;border-radius:var(--radius-sm)}
-.auth-success{background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.2);color:var(--accent);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none;border-radius:var(--radius-sm)}
+.auth-success{background:rgba(239,62,79,.08);border:1px solid rgba(239,62,79,.2);color:var(--accent);padding:10px 14px;font-size:13px;margin-bottom:16px;display:none;border-radius:var(--radius-sm)}
 .pw-strength{height:4px;margin:-12px 0 16px;display:flex;gap:3px;border-radius:2px;overflow:hidden}
 .pw-strength-bar{flex:1;height:100%;background:var(--gray-700);transition:background .3s}
 .pw-strength-bar.weak{background:#B91C1C}
@@ -214,7 +214,7 @@ function updatePwStrength(){
   var score=checkPasswordStrength(pw);
   bars.forEach(function(b,i){b.className='pw-strength-bar';if(i<score){b.classList.add(score<=1?'weak':score<=2?'medium':'strong')}});
   var labels={it:['','Debole','Discreta','Buona','Forte'],en:['','Weak','Fair','Good','Strong']};
-  var colors=['','#B91C1C','#B8893D','#B8893D','#1a7a3f'];
+  var colors=['','#B91C1C','#EF3E4F','#EF3E4F','#1a7a3f'];
   label.textContent=labels[lang][score]||'';label.style.color=colors[score]||'';
 }
 document.getElementById('signup-password').addEventListener('input',updatePwStrength);

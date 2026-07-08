@@ -192,9 +192,9 @@ html:not([data-lang]) .it{display:inline}
 .mine-block.avail{background:var(--gray-700);border:1px solid var(--gray-600)}
 .mine-block.others{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.35)}
 .mine-block.mine{background:var(--accent);border:1px solid var(--aria);box-shadow:0 0 14px var(--accent-dim)}
-.mine-block.robi{border-color:#B8960C !important;box-shadow:0 0 10px rgba(184,150,12,.45);animation:robi-pulse 2.5s ease-in-out infinite}
-.mine-block.robi::after{content:'✦';position:absolute;font-size:9px;color:#B8960C;top:50%;left:50%;transform:translate(-50%,-50%);text-shadow:0 0 6px rgba(184,150,12,.8)}
-.mine-block.mine.robi{background:linear-gradient(135deg,var(--accent),#B8960C);box-shadow:0 0 18px rgba(184,150,12,.6)}
+.mine-block.robi{border-color:#EF3E4F !important;box-shadow:0 0 10px rgba(184,150,12,.45);animation:robi-pulse 2.5s ease-in-out infinite}
+.mine-block.robi::after{content:'✦';position:absolute;font-size:9px;color:#EF3E4F;top:50%;left:50%;transform:translate(-50%,-50%);text-shadow:0 0 6px rgba(184,150,12,.8)}
+.mine-block.mine.robi{background:linear-gradient(135deg,var(--accent),#EF3E4F);box-shadow:0 0 18px rgba(184,150,12,.6)}
 .mine-label{display:none}
 .mine-legend{display:flex;justify-content:center;gap:16px;margin-top:24px;margin-bottom:18px;flex-wrap:wrap}
 .mine-legend-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--gray-400)}
@@ -202,7 +202,7 @@ html:not([data-lang]) .it{display:inline}
 .mine-legend-dot.m-mine{background:var(--accent);box-shadow:0 0 6px var(--accent-dim)}
 .mine-legend-dot.m-others{background:rgba(239,68,68,.25);border:1px solid rgba(239,68,68,.35)}
 .mine-legend-dot.m-avail{background:var(--gray-700)}
-.mine-legend-dot.m-robi{background:#B8960C;box-shadow:0 0 6px rgba(184,150,12,.5)}
+.mine-legend-dot.m-robi{background:#EF3E4F;box-shadow:0 0 6px rgba(184,150,12,.5)}
 
 /* ROBI bar: totale/trovati + bottone info */
 .mine-robi-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 auto 18px;max-width:520px;padding:10px 14px;border:1px solid var(--gray-800);border-radius:var(--radius-sm);background:rgba(184,150,12,.03);flex-wrap:wrap}
@@ -230,7 +230,7 @@ html:not([data-lang]) .it{display:inline}
 .mis-val{font-family:var(--font-h);font-size:22px;font-weight:600;color:var(--white);line-height:1}
 .mis-val.gold{color:var(--gold)}
 .mis-progress{height:6px;background:var(--gray-800);border-radius:3px;overflow:hidden;margin-top:10px}
-.mis-progress-fill{height:100%;background:linear-gradient(90deg,rgba(184,150,12,.6),#B8960C);border-radius:3px;transition:width .4s ease}
+.mis-progress-fill{height:100%;background:linear-gradient(90deg,rgba(184,150,12,.6),#EF3E4F);border-radius:3px;transition:width .4s ease}
 .mis-progress-label{text-align:right;font-family:var(--font-m);font-size:10px;color:var(--gold);margin-top:4px;letter-spacing:.5px}
 .mine-info-footer{margin-top:8px;padding-top:14px;border-top:1px solid var(--gray-800);font-size:11px;color:var(--gray-500);text-align:center}
 .mine-info-footer strong{color:var(--white)}
@@ -443,14 +443,14 @@ html:not([data-lang]) .it{display:inline}
 .mining-overlay.active{opacity:1;pointer-events:auto}
 .mining-pickaxe{font-size:64px;animation:pickaxe-swing 0.5s ease-in-out 3}
 .mining-blocks-text{font-family:var(--font-h);font-size:clamp(28px,6vw,48px);font-weight:600;color:var(--accent);margin-top:16px;animation:mine-pop .6s ease .3s both}
-.mining-robi-text{font-family:var(--font-h);font-size:clamp(22px,5vw,36px);font-weight:600;color:#B8960C;margin-top:12px;animation:mine-pop .6s ease .8s both;text-shadow:0 0 30px rgba(184,150,12,.5)}
+.mining-robi-text{font-family:var(--font-h);font-size:clamp(22px,5vw,36px);font-weight:600;color:#EF3E4F;margin-top:12px;animation:mine-pop .6s ease .8s both;text-shadow:0 0 30px rgba(184,150,12,.5)}
 @keyframes pickaxe-swing{0%{transform:rotate(0deg)}40%{transform:rotate(-30deg)}70%{transform:rotate(15deg)}100%{transform:rotate(0deg)}}
 @keyframes mine-pop{from{opacity:0;transform:scale(.5) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
 
 /* ── Confetti particles ── */
 .confetti-container{position:fixed;inset:0;z-index:10000;pointer-events:none;overflow:hidden}
 .confetti{position:absolute;top:40%;width:8px;height:8px;border-radius:2px;animation:confetti-fall 2s ease-out forwards}
-.confetti:nth-child(odd){background:#B8960C;width:6px;height:10px}
+.confetti:nth-child(odd){background:#EF3E4F;width:6px;height:10px}
 .confetti:nth-child(even){background:var(--accent);width:10px;height:6px}
 .confetti:nth-child(3n){background:#49EACB;border-radius:50%;width:7px;height:7px}
 @keyframes confetti-fall{0%{transform:translateY(0) translateX(0) rotate(0deg) scale(1);opacity:1}100%{transform:translateY(60vh) translateX(var(--x)) rotate(720deg) scale(0);opacity:0}}

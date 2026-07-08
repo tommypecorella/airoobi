@@ -11,7 +11,11 @@
   'use strict';
 
   var STORAGE_KEY = 'airoobi-theme';
-  var DEFAULT = 'light';
+  // v3: default = preferenza di sistema (§7 checklist), il toggle la sovrascrive
+  var DEFAULT = (function () {
+    try { return matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+    catch (e) { return 'light'; }
+  })();
 
   function getSaved() {
     try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
@@ -26,23 +30,33 @@
   }
 
   // Apply saved theme ASAP (avoid flash). Runs synchronously at script load.
-  var saved = getSaved() || DEFAULT;
+  // ?theme=light|dark in URL = override non persistito (test/preview).
+  var urlTheme = null;
+  try { urlTheme = new URLSearchParams(location.search).get('theme'); } catch (e) { /* ignore */ }
+  var saved = (urlTheme === 'dark' || urlTheme === 'light') ? urlTheme : (getSaved() || DEFAULT);
   apply(saved);
+
+  function toggle() {
+    var current = document.documentElement.getAttribute('data-theme') || DEFAULT;
+    var next = current === 'dark' ? 'light' : 'dark';
+    // Smooth transition
+    document.documentElement.classList.add('theme-transition');
+    apply(next);
+    setSaved(next);
+    var btn = document.getElementById('airoobi-theme-toggle');
+    if (btn) btn.setAttribute('aria-pressed', next === 'dark' ? 'true' : 'false');
+    setTimeout(function () {
+      document.documentElement.classList.remove('theme-transition');
+    }, 300);
+  }
+  // v3: globale — le topbar rigenerate via JS usano onclick, niente listener persi
+  window._airoobiThemeToggle = toggle;
 
   function attach() {
     var btn = document.getElementById('airoobi-theme-toggle');
-    if (!btn) return;
-    btn.addEventListener('click', function () {
-      var current = document.documentElement.getAttribute('data-theme') || DEFAULT;
-      var next = current === 'dark' ? 'light' : 'dark';
-      // Smooth transition
-      document.documentElement.classList.add('theme-transition');
-      apply(next);
-      setSaved(next);
-      setTimeout(function () {
-        document.documentElement.classList.remove('theme-transition');
-      }, 300);
-    });
+    if (!btn || btn.getAttribute('data-wired')) return;
+    btn.setAttribute('data-wired', '1');
+    btn.addEventListener('click', toggle);
   }
 
   if (document.readyState === 'loading') {
