@@ -1404,49 +1404,41 @@ function buildMineTower(a,myBlocks){
   return html;
 }
 
-// ── Mining Animation ──
-function playMiningAnimation(blocksBought,oldMyBlocks,miningRate){
-  var oldRobi=Math.floor(oldMyBlocks/miningRate);
-  var newRobi=Math.floor((oldMyBlocks+blocksBought)/miningRate);
-  var foundRobi=newRobi>oldRobi;
-
+/* §5 prompt ROBI (8 lug) · Reveal = UNBOXING ecommerce: pacco che si apre,
+   esito reale dal server (revealed_robi_total), sempre valorizzato.
+   Sostituisce piccone+coriandoli (estetica jackpot, vietata dalla legge di brand). */
+function playUnboxingReveal(blocksBought,revealedRobi){
   var overlay=document.createElement('div');
-  overlay.className='mining-overlay';
-  overlay.innerHTML='<div class="mining-pickaxe">⛏</div>'
-    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">'+(blocksBought===1?'blocco minato':'blocchi minati')+'!</span><span class="en">block'+(blocksBought===1?'':'s')+' mined!</span></div>'
-    +(foundRobi?'<div class="mining-robi-text">✦ ROBI <span class="it">TROVATO</span><span class="en">FOUND</span>! ✦</div>':'');
+  overlay.className='unbox-overlay';
+  var boxSvg=''
+    +'<svg viewBox="0 0 64 64">'
+    +'<g class="unbox-lid"><path d="M8 24l24-10 24 10-24 10z"/><path d="M32 14v20"/></g>'
+    +'<path d="M8 24v22l24 10 24-10V24"/><path d="M32 34v22"/>'
+    +'</svg>';
+  overlay.innerHTML='<div class="unbox-card">'
+    +'<div class="unbox-pack">'+boxSvg+'</div>'
+    +'<div class="unbox-blocks">'+blocksBought+' <span class="it">'+(blocksBought===1?'blocco tuo':'blocchi tuoi')+'</span><span class="en">block'+(blocksBought===1?'':'s')+' yours</span></div>'
+    +'<div class="unbox-result">'
+    +(revealedRobi>0
+      ?'<div class="unbox-robi">+'+revealedRobi+' ROBI Reward <span class="it">trovati nei blocchi</span><span class="en">found in your blocks</span></div>'
+       +'<div class="unbox-note"><span class="it">Gi&agrave; sul tuo portafoglio.</span><span class="en">Already in your wallet.</span></div>'
+      :'<div class="unbox-note"><span class="it">La tua posizione in classifica sale. Altri ROBI restano nascosti nei blocchi.</span><span class="en">Your ranking position climbs. More ROBI remain hidden in the blocks.</span></div>')
+    +'</div>'
+    +'</div>';
+  overlay.addEventListener('click',function(){
+    overlay.classList.remove('active');
+    setTimeout(function(){overlay.remove()},350);
+  });
   document.body.appendChild(overlay);
-
-  // Speed up tower rotation
-  var tower=document.getElementById('mine-tower');
-  if(tower)tower.classList.add('mining');
-
   requestAnimationFrame(function(){
     overlay.classList.add('active');
-    if(foundRobi)spawnConfetti();
-    var dur=foundRobi?2800:1600;
+    var dur=revealedRobi>0?3000:2200;
     setTimeout(function(){
+      if(!overlay.parentNode)return;
       overlay.classList.remove('active');
-      if(tower)tower.classList.remove('mining');
-      setTimeout(function(){overlay.remove()},500);
+      setTimeout(function(){overlay.remove()},350);
     },dur);
   });
-}
-
-function spawnConfetti(){
-  var c=document.createElement('div');
-  c.className='confetti-container';
-  document.body.appendChild(c);
-  for(var i=0;i<40;i++){
-    var p=document.createElement('div');
-    p.className='confetti';
-    p.style.left=(30+Math.random()*40)+'%';
-    p.style.animationDelay=(Math.random()*0.4)+'s';
-    p.style.animationDuration=(1.5+Math.random()*1)+'s';
-    p.style.setProperty('--x',(Math.random()*300-150)+'px');
-    c.appendChild(p);
-  }
-  setTimeout(function(){c.remove()},3500);
 }
 
 // ── Page routing ──
@@ -2429,8 +2421,8 @@ async function openDetail(id){
     ?'<img src="'+a.image_url+'" alt="'+a.title+'">'
     :'<img class="product-img-placeholder" src="/public/images/AIROOBI_Symbol_White.png" alt="">';
 
-  // Gallery images: main + extra_photos
-  var galleryImgs=[a.image_url];
+  // Gallery images: main + extra_photos (solo URL reali — mai <img src="null">)
+  var galleryImgs=a.image_url?[a.image_url]:[];
   var extraPhotos=pi.extra_photos||[];
   for(var ei=0;ei<extraPhotos.length;ei++){
     if(extraPhotos[ei]&&galleryImgs.indexOf(extraPhotos[ei])===-1) galleryImgs.push(extraPhotos[ei]);
@@ -2450,12 +2442,17 @@ async function openDetail(id){
       +'</div>';
   }
 
-  // ── BUILD GALLERY SLIDES ──
-  var slidesHtml=galleryImgs.map(function(src,i){
-    return '<div class="gallery-slide'+(i===0?' active':'')+'">'
-      +'<img src="'+src+'" alt="'+a.title+' — '+(i+1)+'" loading="'+(i<2?'eager':'lazy')+'">'
+  // ── BUILD GALLERY SLIDES ── (senza foto: placeholder flat, niente img rotta)
+  var slidesHtml=galleryImgs.length
+    ?galleryImgs.map(function(src,i){
+      return '<div class="gallery-slide'+(i===0?' active':'')+'">'
+        +'<img src="'+src+'" alt="'+a.title+' — '+(i+1)+'" loading="'+(i<2?'eager':'lazy')+'">'
+        +'</div>';
+    }).join('')
+    :'<div class="gallery-slide active gallery-slide-placeholder">'
+      +'<svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/></svg>'
+      +'<span class="it">Foto in arrivo</span><span class="en">Photos coming soon</span>'
       +'</div>';
-  }).join('');
 
   var dotsHtml=galleryImgs.length>1
     ?'<div class="gallery-dots">'+galleryImgs.map(function(_,i){
@@ -2529,7 +2526,7 @@ async function openDetail(id){
     +'</div>'
     :'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI — il loro valore cresce nel tempo.</span><span class="en">Each block brings you closer to the item and earns you ROBI — their value grows over time.</span></p>'
+    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI Reward — reward reali, riscattabili in KAS.</span><span class="en">Each block brings you closer to the item and earns you ROBI Reward — real rewards, redeemable in KAS.</span></p>'
     +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
     +'<div class="buy-display">'
     +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
@@ -2632,7 +2629,7 @@ async function openDetail(id){
       +'</ul>',false)
 
     // I tuoi blocchi (badge sintetico)
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">investiti</span><span class="en">invested</span></div>':'')
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">impiegati</span><span class="en">spent</span></div>':'')
 
     // Mine Tower 3D
     +buildMineTower(a,myBlocks)
@@ -2729,10 +2726,10 @@ async function loadRulloHook(airdropId){
     if(total<=0){el.innerHTML='';return;}
     // Mostra solo quanti ROBI il rullo nasconde · MAI dove (no spoiler)
     var countLine=outstanding>0
-      ?'<strong>'+outstanding.toLocaleString('it-IT')+'</strong> <span class="it">ROBI ancora nel rullo</span><span class="en">ROBI still in the reel</span>'
-      :'<span class="it">Tutti i ROBI del rullo sono stati trovati</span><span class="en">All reel ROBI found</span>';
+      ?'<strong>'+outstanding.toLocaleString('it-IT')+'</strong> <span class="it">ROBI ancora nascosti</span><span class="en">ROBI still hidden</span>'
+      :'<span class="it">Tutti i ROBI nascosti sono stati trovati</span><span class="en">All hidden ROBI found</span>';
     el.innerHTML=''
-      +'<div class="rullo-hook-head">'+UI_ICONS.gem+' <span class="rullo-hook-title"><span class="it">Il rullo ROBI</span><span class="en">The ROBI reel</span></span></div>'
+      +'<div class="rullo-hook-head">'+UI_ICONS.gem+' <span class="rullo-hook-title"><span class="it">ROBI nascosti nei blocchi</span><span class="en">Hidden ROBI</span></span></div>'
       +'<p class="rullo-hook-copy"><span class="it">Alcuni blocchi nascondono un ROBI. Minali e scopri quali — il ROBI trovato è subito tuo, sul wallet.</span><span class="en">Some blocks hide a ROBI. Mine them and find out which — the ROBI you find is yours instantly, on your wallet.</span></p>'
       +'<div class="rullo-hook-count">'+countLine+'</div>';
   }catch(e){el.innerHTML='';}
@@ -2878,16 +2875,16 @@ function _renderOutcomePanel(a,myBlocks,myRobi){
     +'<span class="it">'+chipIt+'</span><span class="en">'+chipEn+'</span></div>';
   var body;
   if(st==='waiting_seller_acknowledge'){
-    body='<p class="buy-box-framing"><span class="it">L\'estrazione è conclusa. Il venditore ha 72 ore per confermare la chiusura — l\'esito comparirà qui appena decide.</span><span class="en">The draw is complete. The seller has 72 hours to confirm — the outcome will appear here once decided.</span></p>';
+    body='<p class="buy-box-framing"><span class="it">L\'airdrop è concluso. Il venditore ha 72 ore per confermare la chiusura — l\'esito comparirà qui appena decide.</span><span class="en">The airdrop has closed. The seller has 72 hours to confirm — the outcome will appear here once decided.</span></p>';
   }else if(st==='annullato'){
-    body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; le ROBI già accumulate dal rullo restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI already mined stay in the wallet.</span></p>';
+    body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; i ROBI già trovati nei blocchi restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI already found stay in the wallet.</span></p>';
   }else if(isWinner){
     body='<p class="buy-box-framing"><span class="it">Hai ottenuto l\'oggetto: <strong>'+a.title+'</strong>. Inserisci l\'indirizzo di spedizione per riceverlo.</span><span class="en">You got the item: <strong>'+a.title+'</strong>. Submit your shipping address to receive it.</span></p>'
       +'<button class="buy-btn" onclick="openClaimModal(\''+a.id+'\',\''+titleSafe+'\')"><span class="it">Reclama l\'oggetto →</span><span class="en">Claim the item →</span></button>';
   }else if(st==='completed'&&participated){
-    body='<p class="buy-box-framing"><span class="it">L\'oggetto è stato assegnato a un altro partecipante. Le tue ROBI restano con te — il loro valore cresce nel tempo.</span><span class="en">The item went to another participant. Your ROBI stay with you — their value grows over time.</span></p>';
+    body='<p class="buy-box-framing"><span class="it">L\'oggetto è stato assegnato a un altro partecipante. I tuoi ROBI Reward restano con te, riscattabili in KAS quando vuoi.</span><span class="en">The item went to another participant. Your ROBI Reward stay with you, redeemable in KAS anytime.</span></p>';
   }else{
-    body='<p class="buy-box-framing"><span class="it">Questo airdrop si è concluso e l\'oggetto è stato assegnato al vincitore.</span><span class="en">This airdrop has closed — the item went to the winner.</span></p>';
+    body='<p class="buy-box-framing"><span class="it">Questo airdrop si è concluso e l\'oggetto è andato al 1° in classifica.</span><span class="en">This airdrop has closed — the item went to the #1 in the ranking.</span></p>';
   }
   var robiLine='';
   if(st==='completed'&&participated&&!isWinner&&!_publicMode){
@@ -2949,7 +2946,7 @@ function updateDetailPosition(airdropId,scores){
   var myPityPhase=myScore&&myScore.pity_phase?myScore.pity_phase:'normal';
   var pityBadge='';
   if(myPityPhase==='hard'){
-    pityBadge=' <span class="pity-badge hard" title="Sei nel Boost di garanzia hard — vincerai quasi sicuramente">'+UI_ICONS.zap+' <span class="it">Boost HARD</span><span class="en">HARD Boost</span></span>';
+    pityBadge=' <span class="pity-badge hard" title="Sei nel Boost di garanzia hard — il prossimo oggetto è quasi sicuramente tuo">'+UI_ICONS.zap+' <span class="it">Boost HARD</span><span class="en">HARD Boost</span></span>';
   } else if(myPityPhase==='soft'){
     pityBadge=' <span class="pity-badge soft" title="Boost di garanzia soft attivo">'+UI_ICONS.zap+' <span class="it">Boost soft</span><span class="en">Soft Boost</span></span>';
   }
@@ -2987,14 +2984,14 @@ function updateStrategyGuide(scores,pos,total,myScore){
   if(!_session||!myScore||pos===0){
     el.innerHTML=''
       +'<div class="strategy-box">'
-      +'<div class="strategy-title"><span class="it">Come si vince?</span><span class="en">How do you win?</span></div>'
+      +'<div class="strategy-title"><span class="it">Come funziona il punteggio?</span><span class="en">How does scoring work?</span></div>'
       +'<div style="padding:14px 16px;background:rgba(239,62,79,.05);border:1px solid rgba(239,62,79,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
-      +'<span class="it">Il Punteggio combina tre cose: i <strong style="color:var(--gold)">blocchi</strong> che compri (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora vincere. Tutto deterministico: conta il punteggio, non il caso.</span>'
-      +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> you buy (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without winning yet. Fully deterministic: your score decides, not chance.</span>'
+      +'<span class="it">Il Punteggio combina tre cose: i <strong style="color:var(--gold)">blocchi</strong> che compri (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora ottenere un oggetto. Tutto deterministico: conta il punteggio, non il caso.</span>'
+      +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> you buy (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without getting an item yet. Fully deterministic: your score decides, not chance.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
-      +'<span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti scoprono ROBI nel rullo e minano ROBI frazionari.</span>'
-      +'<span class="en">Whoever is #1 at close gets the item. Everyone discovers ROBI in the reel and mines fractional ROBI.</span>'
+      +'<span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti trovano i ROBI nascosti nei blocchi e minano ROBI frazionari.</span>'
+      +'<span class="en">Whoever is #1 at close gets the item. Everyone finds the ROBI hidden in the blocks and mines fractional ROBI.</span>'
       +'</div>'
       +'</div>';
     return;
@@ -3028,7 +3025,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
   var softPitySoglia=Math.ceil(myPityThreshold*0.6);
   var pityStatusIt, pityStatusEn;
   if(myPityPhase==='hard'){
-    pityStatusIt='Boost HARD attivo — vinci quasi sicuramente, salvo altri utenti con pi&ugrave; partecipazioni di te in Hard';
+    pityStatusIt='Boost HARD attivo — il 1° posto è quasi sicuramente tuo, salvo altri utenti con pi&ugrave; partecipazioni di te in Hard';
     pityStatusEn='HARD Boost active — you\'ll win almost certainly, unless others have more participations in Hard';
   } else if(myPityPhase==='soft'){
     var softProg=Math.max(1,Math.round((myLosses-softPitySoglia)/Math.max(1,myPityThreshold-softPitySoglia)*100));
@@ -3055,7 +3052,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
     }
   } else {
     if(myPityPhase==='hard'){
-      tipsIt.push('Il tuo <strong>Boost HARD</strong> &egrave; attivo: continua a comprare blocchi — vinci quasi sicuramente.');
+      tipsIt.push('Il tuo <strong>Boost HARD</strong> &egrave; attivo: continua a comprare blocchi — il 1° posto è quasi sicuramente tuo.');
       tipsEn.push('Your <strong>HARD Boost</strong> is active: keep buying blocks — you\'ll win almost certainly.');
     } else if(myPityPhase==='soft'){
       tipsIt.push('Sei nel <strong>Boost soft</strong>: molto competitivo. Compra altri blocchi per capitalizzare.');
@@ -3069,8 +3066,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
         tipsIt.push('Stima: circa <strong>'+blocksNeeded+' blocchi</strong> in pi&ugrave; per raggiungere il 1&deg;.');
         tipsEn.push('Estimate: about <strong>'+blocksNeeded+' more blocks</strong> to reach #1.');
       } else if(blocksNeeded>300){
-        tipsIt.push('Il distacco dal 1&deg; &egrave; ampio. Partecipa comunque: <strong>scopri ROBI nel rullo</strong>, fai crescere il moltiplicatore fedelt&agrave;, e avvicinati al Boost.');
-        tipsEn.push('Gap to #1 is wide. Participate anyway: <strong>discover ROBI in the reel</strong>, grow your Loyalty Multiplier, and approach the Boost.');
+        tipsIt.push('Il distacco dal 1&deg; &egrave; ampio. Partecipa comunque: <strong>trovi i ROBI nascosti nei blocchi</strong>, fai crescere il moltiplicatore fedelt&agrave;, e avvicinati al Boost.');
+        tipsEn.push('Gap to #1 is wide. Participate anyway: <strong>find the ROBI hidden in the blocks</strong>, grow your Loyalty Multiplier, and approach the Boost.');
       }
     }
     if(myHistoricAria>0 && loyaltyNext){
@@ -3082,8 +3079,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       tipsIt.push('Presale: prezzo ridotto e doppi ROBI dal mining.');
       tipsEn.push('Presale: lower price and double mining ROBI.');
     }
-    tipsIt.push('Anche senza vincere, <strong>scopri ROBI nel rullo</strong> e mini ROBI frazionari alla chiusura.');
-    tipsEn.push('Even without winning, <strong>you discover ROBI in the reel</strong> and mine fractional ROBI at close.');
+    tipsIt.push('Anche se non arrivi 1°, <strong>trovi i ROBI nascosti nei blocchi</strong> e mini ROBI frazionari alla chiusura.');
+    tipsEn.push('Even if you don\'t finish #1, <strong>you find the ROBI hidden in the blocks</strong> and mine fractional ROBI at close.');
   }
 
   // Loyalty bar progress (visual, log10 scaled)
@@ -3098,7 +3095,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
     +'<div class="strategy-box'+(isFirst?' first':'')+(prevOpen?' gs10-open':'')+'">'
     // Blocco A: header (clickable) + score · sempre visibile
     +'<button class="strategy-ab-header" type="button" onclick="this.parentElement.classList.toggle(\'gs10-open\')" aria-label="Espandi dettaglio scoring">'
-    +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Stai vincendo!':'Come arrivare 1&deg;')+'</span>'
+    +'<div class="strategy-title">'+(isFirst?UI_ICONS.star:UI_ICONS.target)+' <span class="it">'+(isFirst?'Sei in 1ª posizione!':'Come arrivare 1&deg;')+'</span>'
     +'<span class="en">'+(isFirst?'You\'re winning!':'How to reach #1')+'</span></div>'
     +'<svg class="strategy-ab-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'
     +'</button>'
@@ -3486,15 +3483,9 @@ async function confirmBuy(){
         ?data.blocks_bought+' '+(data.blocks_bought===1?'blocco acquisito':'blocchi acquisiti')+' per '+data.aria_spent+' ARIA'
         :data.blocks_bought+' block'+(data.blocks_bought===1?'':'s')+' purchased for '+data.aria_spent+' ARIA');
 
-      // GS-16 · IL RULLO ROBI · reveal post-mining (accredito istantaneo backend Chunk 3)
+      // GS-16 · ROBI nascosti nei blocchi (accredito istantaneo backend Chunk 3)
       var revealedRobi=Number(data.revealed_robi_total||0);
       if(revealedRobi>0){
-        // Toast distinto · tono caccia
-        setTimeout(function(){
-          showToast(lang==='it'
-            ?'<span style="color:var(--gold)">&#9830; +'+revealedRobi+' ROBI</span> &middot; trovato nel rullo! Subito sul wallet.'
-            :'<span style="color:var(--gold)">&#9830; +'+revealedRobi+' ROBI</span> &middot; found in the reel! Instant on your wallet.');
-        },800);
         // Refresh saldo ROBI in topbar (delta-style · evita full re-fetch)
         var robiEl=document.getElementById('tb-robi-val');
         if(robiEl){
@@ -3505,16 +3496,14 @@ async function confirmBuy(){
         }
       }
 
-      // Mining animation — calculate ROBI discovery
-      var oldMyBlocks=_gridData?_gridData.filter(function(b){return b.is_mine}).length:0;
-      var rate=_currentDetail?calcMiningRate(_currentDetail):50;
-      playMiningAnimation(data.blocks_bought,oldMyBlocks,rate);
+      // §5 · Reveal unboxing con l'esito reale dal server (mai stima client)
+      playUnboxingReveal(data.blocks_bought,revealedRobi);
 
       _balance=data.new_balance;
       updateBalanceUI();
 
       // Refresh and re-render detail (after animation)
-      var animDur=Math.floor(oldMyBlocks/rate)<Math.floor((oldMyBlocks+data.blocks_bought)/rate)?3200:2000;
+      var animDur=revealedRobi>0?3200:2400;
       setTimeout(async function(){
         await Promise.all([loadAirdrops(),loadMyParticipations(),loadBalance(),loadMyRanks()]);
         renderGrid();
@@ -3749,7 +3738,7 @@ function _renderRevealBlock(a,item,status){
       ?'<div style="font-size:13px;color:var(--gold);font-family:var(--font-m);letter-spacing:.5px"><strong>'+sharesNum+'</strong> <span class="it">ROBI accumulate da questo evento</span><span class="en">ROBI shares earned from this event</span></div>'
       :'<div style="font-size:12px;color:var(--gray-400)"><span class="it">Nessun ROBI accumulato da questo evento</span><span class="en">No ROBI earned from this event</span></div>';
     return '<div style="background:rgba(255,255,255,.02);border-top:1px solid var(--gray-800);padding:14px 18px;display:flex;flex-direction:column;gap:8px">'
-      +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Oggetto assegnato a un altro partecipante. Le tue ROBI restano con te — il loro valore cresce nel tempo.</span><span class="en">Item went to another participant. Your ROBI stay with you — their value grows over time.</span></div>'
+      +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Oggetto assegnato a un altro partecipante. I tuoi ROBI Reward restano con te, riscattabili in KAS quando vuoi.</span><span class="en">Item went to another participant. Your ROBI Reward stay with you, redeemable in KAS anytime.</span></div>'
       +sharesLine
       +(storyLink?'<div>'+storyLink+'</div>':'')
       +'</div>';
@@ -4722,8 +4711,8 @@ async function openCompleteEarlyClose(airdropId){
 async function confirmCompleteEarlyClose(airdropId){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var msg=lang==='it'
-    ?'Confermi la chiusura dell\'airdrop? Riceverai il payout indicato, il vincitore otterrà l\'oggetto e le partecipazioni saranno finalizzate.'
-    :'Confirm airdrop completion? You\'ll receive the indicated payout, the winner gets the item, and participations are finalized.';
+    ?'Confermi la chiusura dell\'airdrop? Riceverai il payout indicato, il 1° in classifica otterrà l\'oggetto e le partecipazioni saranno finalizzate.'
+    :'Confirm airdrop completion? You\'ll receive the indicated payout, the #1 in the ranking gets the item, and participations are finalized.';
   if(!confirm(msg))return;
   var token=await getValidToken();if(!token)return;
   var res=await sbRpc('complete_airdrop_seller_accept',{p_airdrop_id:airdropId},token);

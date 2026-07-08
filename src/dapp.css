@@ -416,21 +416,26 @@ select option{background:var(--gray-800);color:var(--white)}
 @keyframes robi-pulse{0%,100%{box-shadow:0 0 6px rgba(239,62,79,.3)}50%{box-shadow:0 0 20px rgba(239,62,79,.7)}}
 
 /* Mining animation overlay */
-.mining-overlay{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.85);opacity:0;pointer-events:none;transition:opacity .4s}
-.mining-overlay.active{opacity:1;pointer-events:auto}
-.mining-pickaxe{font-size:64px;animation:pickaxe-swing 0.5s ease-in-out 3}
-.mining-blocks-text{font-family:var(--font-h);font-size:clamp(28px,6vw,48px);font-weight:600;color:var(--accent);margin-top:16px;animation:mine-pop .6s ease .3s both}
-.mining-robi-text{font-family:var(--font-h);font-size:clamp(22px,5vw,36px);font-weight:600;color:#EF3E4F;margin-top:12px;animation:mine-pop .6s ease .8s both;text-shadow:0 0 30px rgba(239,62,79,.5)}
-@keyframes pickaxe-swing{0%{transform:rotate(0deg)}40%{transform:rotate(-30deg)}70%{transform:rotate(15deg)}100%{transform:rotate(0deg)}}
-@keyframes mine-pop{from{opacity:0;transform:scale(.5) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
-
-/* Confetti particles */
-.confetti-container{position:fixed;inset:0;z-index:10000;pointer-events:none;overflow:hidden}
-.confetti{position:absolute;top:40%;width:8px;height:8px;border-radius:2px;animation:confetti-fall 2s ease-out forwards}
-.confetti:nth-child(odd){background:#EF3E4F;width:6px;height:10px}
-.confetti:nth-child(even){background:var(--accent);width:10px;height:6px}
-.confetti:nth-child(3n){background:#49EACB;border-radius:50%;width:7px;height:7px}
-@keyframes confetti-fall{0%{transform:translateY(0) translateX(0) rotate(0deg) scale(1);opacity:1}100%{transform:translateY(60vh) translateX(var(--x)) rotate(720deg) scale(0);opacity:0}}
+/* ── REVEAL / UNBOXING (§5 cardine anti-gambling · prompt ROBI 8 lug) ──
+   Apertura blocchi in chiave ecommerce: pacco che si apre, transizione morbida,
+   esito sempre valorizzato. MAI slot/rullo/coriandoli/tremolii. */
+.unbox-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(15,20,23,.55);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s ease}
+.unbox-overlay.active{opacity:1;pointer-events:auto}
+.unbox-card{background:var(--card-bg,#fff);border:1px solid var(--gray-700);border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.35);padding:36px 40px 30px;text-align:center;max-width:360px;width:calc(100vw - 48px);transform:translateY(10px) scale(.97);transition:transform .45s cubic-bezier(.2,.7,.2,1)}
+.unbox-overlay.active .unbox-card{transform:translateY(0) scale(1)}
+.unbox-pack{width:84px;height:84px;margin:0 auto 6px;position:relative}
+.unbox-pack svg{width:100%;height:100%;stroke:var(--accent);fill:none;stroke-width:1.4}
+.unbox-lid{transform-origin:50% 62%;transition:transform .6s cubic-bezier(.2,.7,.2,1) .25s,opacity .6s ease .25s}
+.unbox-overlay.active .unbox-lid{transform:translateY(-16px) rotate(-8deg);opacity:.25}
+.unbox-result{opacity:0;transform:translateY(6px);transition:opacity .5s ease .55s,transform .5s cubic-bezier(.2,.7,.2,1) .55s}
+.unbox-overlay.active .unbox-result{opacity:1;transform:translateY(0)}
+.unbox-blocks{font-family:var(--font-h);font-size:22px;font-weight:600;color:var(--white);margin-top:10px}
+.unbox-robi{font-family:var(--font-m);font-size:14px;letter-spacing:.5px;color:var(--gold);margin-top:10px;padding:10px 14px;background:rgba(239,62,79,.06);border:1px solid rgba(239,62,79,.2);border-radius:10px}
+.unbox-note{font-size:12px;color:var(--gray-400);margin-top:10px;line-height:1.5}
+@media (prefers-reduced-motion: reduce){
+  .unbox-card,.unbox-lid,.unbox-result{transition:none}
+  .unbox-overlay.active .unbox-lid{transform:none;opacity:1}
+}
 
 /* Tower speed-up on mine */
 .mine-tower.mining{animation-duration:2s !important}
@@ -1170,3 +1175,7 @@ body.detail-open #cat-dashboard{display:none!important}
 .nav-airdrops-menu{display:none}
 .nav-airdrops-wrap:hover .nav-airdrops-menu,.nav-airdrops-wrap:focus-within .nav-airdrops-menu{display:block}
 .nav-airdrops-menu a:hover{background:rgba(239,62,79,.06);color:var(--white)}
+
+/* Gallery placeholder (airdrop senza foto · niente img rotta) */
+.gallery-slide-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:280px;background:var(--gray-800);color:var(--gray-500);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
+.gallery-slide-placeholder svg{stroke:var(--accent);opacity:.5}
