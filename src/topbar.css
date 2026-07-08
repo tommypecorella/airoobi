@@ -65,3 +65,27 @@ html,body{overflow-x:hidden}
   .topbar-right .topbar-auth-cta,.topbar-right a:not(.topbar-bal):not(.topbar-avatar),.topbar-right .lang-toggle{display:none}
   .topbar-right{gap:8px}
 }
+
+/* ── Brand symbol (stessa testata della dApp, ovunque) ── */
+.topbar-brand{display:inline-flex;align-items:center;flex:none;margin-right:2px}
+.topbar-brand img{height:26px;width:auto;display:block}
+html[data-theme="dark"] .topbar-brand img{filter:invert(1)}
+
+/* ── Dark theme: superfici hardcoded light → scure (parità con testata dApp) ── */
+html[data-theme="dark"] .topbar{background:rgba(15,18,22,.92);border-bottom-color:rgba(255,255,255,.08)}
+html[data-theme="dark"] .tb-user-menu,
+html[data-theme="dark"] .topbar-edu-menu,
+html[data-theme="dark"] .topbar-mobile-menu{background:#171B20;border-color:rgba(255,255,255,.1);box-shadow:0 12px 32px rgba(0,0,0,.5)}
+html[data-theme="dark"] .tb-user-menu-item:hover,
+html[data-theme="dark"] .topbar-edu-item:hover,
+html[data-theme="dark"] .topbar-mobile-menu a:hover{background:rgba(255,255,255,.06)}
+html[data-theme="dark"] .tb-user-menu-email{border-bottom-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] .tb-user-menu-sep{background:rgba(255,255,255,.1)}
+html[data-theme="dark"] .tb-user-menu-logout{border-top-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] .lang-toggle,
+html[data-theme="dark"] .topbar-mobile-auth a{border-color:rgba(255,255,255,.22)}
+html[data-theme="dark"] .topbar-mobile-auth{border-top-color:rgba(255,255,255,.1)}
+html[data-theme="dark"] .topbar-auth-cta,
+html[data-theme="dark"] .topbar-mobile-auth a.topbar-auth-cta{background:#EF3E4F;border-color:#EF3E4F}
+html[data-theme="dark"] .topbar-auth-cta:hover{background:#D6293A}
+html[data-theme="dark"] .topbar-mobile-menu a{color:#E8EDF2}

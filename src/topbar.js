@@ -91,6 +91,7 @@ function buildTopbar(active,links){
   navHtml+=eduDropdownHtml(active);
   return '<header class="topbar">'
     +'<button class="topbar-burger" id="topbar-burger" onclick="window._topbarToggle()"><span></span><span></span><span></span></button>'
+    +'<a class="topbar-brand" href="/" aria-label="AIROOBI — Dream Robe E-commerce"><img src="/public/images/AIROOBI_Symbol_Black.png?v=3.0.0" alt="AIROOBI"></a>'
     +'<nav class="topbar-nav" id="topbar-nav">'+navHtml+'</nav>'
     +'<div class="topbar-right" id="topbar-right">'
     +THEME_BTN
