@@ -921,7 +921,7 @@ function renderStreakCalendar(daysChecked,today){
 
     var bg,fg,border,topLine,bottomContent,weight;
     if(checked){
-      bg='linear-gradient(180deg,var(--gold) 0%,#9a7d0a 100%)';
+      bg='var(--gold)';
       fg='var(--black)';
       border='1px solid var(--gold)';
       weight='700';
@@ -964,7 +964,7 @@ function renderStreakCalendar(daysChecked,today){
   if(status){
     var count=daysChecked.length;
     var pct=Math.round((count/7)*100);
-    var bar='<div style="width:100%;height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin-bottom:6px"><div style="height:100%;width:'+pct+'%;background:linear-gradient(90deg,var(--gold) 0%,#d4ae22 100%);border-radius:2px;transition:width .4s ease"></div></div>';
+    var bar='<div style="width:100%;height:3px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden;margin-bottom:6px"><div style="height:100%;width:'+pct+'%;background:var(--gold);border-radius:2px;transition:width .4s ease"></div></div>';
     var text='';
     if(count===7){
       text='<span style="color:var(--gold);font-weight:600"><span class="it">&#9819; Settimana completa &middot; +1 ROBI assegnato</span><span class="en">&#9819; Week complete &middot; +1 ROBI awarded</span></span>';

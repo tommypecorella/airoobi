@@ -118,14 +118,18 @@ html:not([data-lang]) .it{display:inline}
 .exp-note{background:rgba(239,62,79,.04);border-left:3px solid var(--gold);padding:14px 18px;margin-bottom:32px;font-size:13px;color:var(--gray-300);line-height:1.6;border-radius:0 4px 4px 0}
 .exp-note strong{color:var(--gold)}
 </style>
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.3">
 <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
 <script src="/src/theme.js?v=4.48.0"></script>
 </head>
 <body>
 
+<!-- TOPBAR (shared component) -->
+<div id="topbar-mount" data-active="explorer"></div>
+<script src="/src/topbar.js?v=4.48.3"></script>
+
 <div class="exp-header">
   <div class="exp-header-inner">
-    <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" class="exp-logo">
     <h1 class="exp-title">ROBI Explorer</h1>
     <p class="exp-sub">
       <span class="it">Valore nominale ROBI in tempo reale — aggiornamento ogni 30 secondi</span>
@@ -133,10 +137,7 @@ html:not([data-lang]) .it{display:inline}
     </p>
     <div class="exp-badge">TESTNET ALPHA</div>
     <div class="exp-nav">
-      <a href="https://airoobi.app"><span class="it">APP</span><span class="en">APP</span></a>
-      <a href="https://airoobi.app/explorer"><span class="it">ARIA Explorer</span><span class="en">ARIA Explorer</span></a>
-      <a href="https://airoobi.com"><span class="it">Sito</span><span class="en">Site</span></a>
-      <button class="exp-lang" id="lang-btn" onclick="toggleLang()">EN</button>
+      <a href="/explorer"><span class="it">ARIA Explorer</span><span class="en">ARIA Explorer</span></a>
     </div>
   </div>
 </div>
@@ -230,7 +231,7 @@ html:not([data-lang]) .it{display:inline}
     &copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span>
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.05.25-4.37.0</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.07.08-4.37.1</div>
 </footer>
 
 <script>
