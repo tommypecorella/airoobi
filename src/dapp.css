@@ -1180,45 +1180,55 @@ body.detail-open #cat-dashboard{display:none!important}
 .gallery-slide-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:280px;background:var(--gray-800);color:var(--gray-500);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
 .gallery-slide-placeholder svg{stroke:var(--accent);opacity:.5}
 
-/* ══ LA SALITA (9 lug · brainstorm Skeezu+CCP) — la corsa verso la vetta ══
-   Sostituisce il rullo: metafora SPORT deterministica (anti-gambling by design).
-   Punteggio → posizione sul sentiero · vetta = oggetto · avatar = corridori.
-   Finestra corridori: top3 + i 5 davanti a te + TU + ultimi 3 (+N compressi). */
-.salita-wrap{position:relative;margin:20px 0 24px;border:1px solid var(--gray-700);border-radius:var(--radius);background:linear-gradient(180deg,rgba(74,158,255,.04) 0%,rgba(239,62,79,.03) 100%);overflow:hidden}
-.salita-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px 0}
-.salita-title{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:7px}
-.salita-volata{font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:#fff;background:var(--gold);padding:3px 10px;border-radius:999px;animation:salita-pulse 1.6s ease-in-out infinite}
-@keyframes salita-pulse{0%,100%{opacity:1}50%{opacity:.55}}
-.salita-field{position:relative;height:420px}
+/* ══ LA SALITA v2 (9-10 lug · mockup Claude Design "Corsa" + fuori-corsa) ══
+   Sentiero bezier con quote altimetriche in €, corridori posizionati via
+   getPointAtLength, bandierine ROBI, contatori (ROBI/distacco/fuori corsa).
+   Layout Skeezu: colonna DX = Salita + buy box · SX = titolo/posizione/foto. */
+.salita-wrap{position:relative;margin:0 0 4px;border:1px solid var(--gray-700);border-radius:var(--radius-lg);background:var(--card-bg);padding:20px 20px 16px;overflow:hidden}
+.salita-h1{font-family:var(--font-h);font-size:21px;font-weight:700;letter-spacing:-.01em;color:var(--white)}
+.salita-sub{display:flex;align-items:center;gap:8px;margin-top:4px;font-size:12.5px;color:var(--gray-400);font-variant-numeric:tabular-nums}
+.salita-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:6px}
+.salita-volata{font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:#fff;background:var(--gold);padding:4px 10px;border-radius:999px;flex:none;margin-top:2px;animation:volata-pulse 1.8s ease-in-out infinite}
+@keyframes volata-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,62,79,.45)}50%{box-shadow:0 0 0 7px rgba(239,62,79,0)}}
+.salita-field{position:relative;width:100%;aspect-ratio:480/520;margin-top:4px}
+.salita-quota{position:absolute;left:0;right:0;border-top:1px dashed var(--gray-700)}
+.salita-quota-label{position:absolute;left:2px;transform:translateY(-14px);font-family:var(--font-m);font-size:9.5px;color:var(--gray-500)}
 .salita-svg{position:absolute;inset:0;width:100%;height:100%}
-.salita-svg .salita-path{fill:none;stroke:var(--gray-600);stroke-width:2;stroke-dasharray:6 7;opacity:.55}
-.salita-vetta{position:absolute;transform:translate(-50%,-100%);display:flex;flex-direction:column;align-items:center;gap:4px;z-index:4}
-.salita-vetta-img{width:52px;height:52px;border-radius:12px;object-fit:cover;border:2px solid var(--gold);box-shadow:0 6px 18px rgba(239,62,79,.3);background:var(--gray-800)}
-.salita-vetta-ph{width:52px;height:52px;border-radius:12px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;background:var(--gray-800)}
-.salita-vetta-ph svg{width:26px;height:26px;stroke:var(--gold);fill:none;stroke-width:1.5}
-.salita-vetta-flag{font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;color:var(--gold);text-transform:uppercase}
-.salita-rider{position:absolute;transform:translate(-50%,-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:3px;transition:left .9s cubic-bezier(.2,.7,.2,1),top .9s cubic-bezier(.2,.7,.2,1)}
-.salita-rider-av{width:34px;height:34px;border-radius:50%;border:2px solid var(--gray-600);object-fit:cover;background:var(--gray-800);display:block}
-.salita-rider svg.salita-rider-av{padding:5px}
-.salita-rider-rank{font-family:var(--font-m);font-size:9px;color:var(--gray-400);background:var(--card-bg);border:1px solid var(--gray-700);border-radius:999px;padding:1px 7px;white-space:nowrap}
-.salita-rider.podio .salita-rider-av{border-color:var(--gold)}
-.salita-rider.me{z-index:5}
-.salita-rider.me .salita-rider-av{width:44px;height:44px;border:3px solid var(--gold);box-shadow:0 0 0 4px rgba(239,62,79,.18),0 8px 22px rgba(239,62,79,.35)}
-.salita-rider.me .salita-rider-rank{color:#fff;background:var(--gold);border-color:var(--gold);font-weight:700}
-.salita-rider.me.just-bought .salita-rider-av{animation:salita-step .9s cubic-bezier(.2,.7,.2,1)}
+.salita-path{fill:none;stroke:var(--gray-600);stroke-width:2;stroke-dasharray:1 7;stroke-linecap:round;opacity:.8}
+.salita-vetta{position:absolute;right:0;top:0;display:flex;flex-direction:column;align-items:center;gap:5px;z-index:4}
+.salita-vetta-img{width:62px;height:62px;border-radius:14px;object-fit:cover;border:2px solid var(--gold);box-shadow:0 4px 12px rgba(22,29,38,.14);background:var(--gray-800)}
+.salita-vetta-ph{width:62px;height:62px;border-radius:14px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;background:var(--gray-800);box-shadow:0 4px 12px rgba(22,29,38,.14)}
+.salita-vetta-ph svg{width:28px;height:28px;stroke:var(--gold);fill:none;stroke-width:1.5}
+.salita-vetta-flag{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--gold)}
+.salita-flagpin{position:absolute;transform:translate(-2px,-19px);z-index:1}
+.salita-rider{position:absolute;transform:translate(-50%,-50%);z-index:3;transition:left .9s cubic-bezier(.2,.7,.2,1),top .9s cubic-bezier(.2,.7,.2,1)}
+.salita-av{width:30px;height:30px;border-radius:50%;border:2px solid var(--card-bg);box-shadow:0 2px 6px rgba(22,29,38,.18);display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:8.5px;font-weight:500;color:#fff;object-fit:cover;background:var(--gray-700)}
+img.salita-av{display:block}
+.salita-rider.fuori{opacity:.38;filter:grayscale(.85)}
+.salita-rider.me{z-index:5;display:flex;flex-direction:column;align-items:center;gap:4px;transform:translate(-50%,-58%)}
+.salita-rider.me .salita-av{width:40px;height:40px;font-size:11px;border-width:2.5px;box-shadow:0 0 0 2.5px var(--gold),0 4px 10px rgba(22,29,38,.2)}
+.salita-rider.me.fuori{opacity:.6;filter:grayscale(.5)}
+.salita-me-badge{padding:2px 8px;border-radius:999px;background:var(--white);color:var(--black);font-size:9.5px;font-weight:600;letter-spacing:.04em;white-space:nowrap}
+.salita-rider.me.just-bought .salita-av{animation:salita-step .9s cubic-bezier(.2,.7,.2,1)}
 @keyframes salita-step{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
-.salita-boost{position:absolute;bottom:-4px;right:-8px;width:18px;height:18px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(239,62,79,.6)}
+.salita-boost{position:absolute;bottom:-3px;right:-7px;width:17px;height:17px;border-radius:50%;background:var(--gold);display:flex;align-items:center;justify-content:center;box-shadow:0 0 10px rgba(239,62,79,.6)}
 .salita-boost svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5}
-.salita-plus{position:absolute;transform:translate(-50%,-50%);z-index:2;font-family:var(--font-m);font-size:9px;letter-spacing:.5px;color:var(--gray-400);background:var(--card-bg);border:1px dashed var(--gray-600);border-radius:999px;padding:2px 8px;white-space:nowrap}
-.salita-flag{position:absolute;transform:translate(-50%,-90%);z-index:1}
-.salita-flag svg{width:14px;height:14px}
-.salita-flag.found svg{fill:var(--gold);stroke:var(--gold)}
-.salita-flag.hidden-f svg{fill:none;stroke:var(--gray-500);stroke-dasharray:2 2}
-.salita-caption{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px 14px;font-size:11px;color:var(--gray-400);flex-wrap:wrap}
-.salita-caption .sc-robi{font-family:var(--font-m);font-size:10px;letter-spacing:.5px;color:var(--gold)}
+.salita-plus{position:absolute;transform:translate(-50%,-50%);z-index:2;padding:3px 9px;border-radius:999px;background:var(--gray-800);color:var(--gray-400);font-family:var(--font-m);font-size:10px;font-weight:500;white-space:nowrap}
+.salita-counters{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;padding:12px 14px;background:var(--gray-800);border-radius:12px;font-size:12.5px;color:var(--gray-400);font-variant-numeric:tabular-nums}
+.salita-counters strong{color:var(--white)}
+.salita-counters .sc-item{display:flex;align-items:center;gap:7px}
+.salita-legal{margin:12px 0 0;font-size:11.5px;line-height:1.5;color:var(--gray-500)}
 @media (prefers-reduced-motion: reduce){
   .salita-rider{transition:none}
   .salita-volata{animation:none}
-  .salita-rider.me.just-bought .salita-rider-av{animation:none}
+  .salita-rider.me.just-bought .salita-av{animation:none}
 }
-@media(max-width:640px){.salita-field{height:360px}.salita-rider-av{width:30px;height:30px}.salita-rider.me .salita-rider-av{width:38px;height:38px}}
+
+/* Layout pagina airdrop (10 lug, richiesta Skeezu): DX = Salita + buy box (sticky),
+   SX = titolo/posizione/hint + GALLERIA + guida. */
+.detail-race-col{order:2;display:flex;flex-direction:column;gap:14px;width:100%}
+.detail-gallery-inline{order:0;position:relative;width:100%;max-width:none;aspect-ratio:4/3;height:auto;margin:6px 0;top:auto}
+@media(min-width:1024px){
+  .detail-race-col{width:45%;max-width:520px;flex-shrink:0;position:sticky;top:20px}
+  .detail-gallery-inline{position:relative;width:100%;max-width:none;height:auto;aspect-ratio:4/3;flex-shrink:1}
+}
