@@ -541,12 +541,7 @@ window.addEventListener('popstate',function(e){
   if(e.state&&e.state.detail){
     openDetail(e.state.detail);
   } else if(page==='explore'){
-    try{stopBubblePhysics();}catch(ex){}
-    document.getElementById('detail').classList.remove('active');
-    document.getElementById('detail').style.display='';
-    document.getElementById('list-view').classList.remove('hidden');
-    document.getElementById('list-view').style.display='';
-    document.getElementById('cat-filter').style.display='';
+    closeDetailView();
     loadValuationCount();
   }
 });
@@ -1469,6 +1464,9 @@ function navigateTo(page,event){
       return;
     }
   }
+  // Fix 10 lug: se un detail e' aperto, chiudilo — navigare dal topbar lasciava
+  // la vista detail montata con URL cambiato (lista/detail disallineati).
+  if(document.body.classList.contains('detail-open'))closeDetailView();
   showPage(page);
   var path=PAGE_PATHS[page]||'/esplora';
   if(location.pathname!==path)history.pushState({page:page},null,path);
@@ -2351,7 +2349,12 @@ async function openDetail(id){
       if(Array.isArray(_fetched)&&_fetched.length)a=_fetched[0];
     }
   }
-  if(!a)return;
+  if(!a){
+    // Fix 10 lug: niente return silenzioso — riallinea vista e URL alla lista
+    closeDetailView();
+    if(location.pathname.indexOf('/airdrop/')!==-1)history.replaceState({page:'explore'},null,_publicMode?'/airdrops':'/airdrops');
+    return;
+  }
   stopGalleryAutoplay();
   if(!_currentDetail||_currentDetail.id!==a.id){_salitaPrevRank=null;_rulloCounts=null;_lastScores=null;_salitaMyPrevT=null;}
   _currentDetail=a;
@@ -3674,14 +3677,17 @@ function goToAirdrop(id){
   history.pushState({page:'explore',detail:id},null,'/dapp/airdrop/'+id);
 }
 
-function backToList(){
+// Chiusura vista detail (fix 10 lug: unica via — riusata da backToList, navigateTo e fallback openDetail)
+function closeDetailView(){
   stopGalleryAutoplay();
   stopBubblePhysics();
-  document.getElementById('detail').classList.remove('active');
-  document.getElementById('detail').style.display='';
-  document.getElementById('list-view').classList.remove('hidden');
-  document.getElementById('list-view').style.display='';
-  document.getElementById('cat-filter').style.display='';
+  if(_positionInterval){clearInterval(_positionInterval);_positionInterval=null;}
+  var det=document.getElementById('detail');
+  if(det){det.classList.remove('active');det.style.display='';}
+  var lv=document.getElementById('list-view');
+  if(lv){lv.classList.remove('hidden');lv.style.display='';}
+  var cf=document.getElementById('cat-filter');
+  if(cf)cf.style.display='';
   // GS-9 #1 · ripristina elementi marketplace nascosti in openDetail.
   document.body.classList.remove('detail-open');
   var mbAlpha=document.querySelector('.marketplace-demo-banner');
@@ -3689,6 +3695,11 @@ function backToList(){
   var searchWrap=document.getElementById('etb-search-wrap')||document.getElementById('etb-search-input');
   if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='';}
   hideTopbarCR();
+  _currentDetail=null;
+}
+
+function backToList(){
+  closeDetailView();
   loadValuationCount();
   history.pushState({page:'explore'},null,'/airdrops');
 }
