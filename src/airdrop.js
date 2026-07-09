@@ -348,7 +348,7 @@ function playMiningAnimation(blocksBought,oldMyBlocks,miningRate){
   var overlay=document.createElement('div');
   overlay.className='mining-overlay';
   overlay.innerHTML='<div class="mining-pickaxe">⛏</div>'
-    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">blocchi minati!</span><span class="en">blocks mined!</span></div>'
+    +'<div class="mining-blocks-text">'+blocksBought+' <span class="it">Step fatti!</span><span class="en">Steps taken!</span></div>'
     +(foundRobi?'<div class="mining-robi-text">✦ ROBI <span class="it">TROVATO</span><span class="en">FOUND</span>! ✦</div>':'');
   document.body.appendChild(overlay);
 
@@ -405,14 +405,14 @@ function openMineInfo(){
       +'<button class="mine-info-close" onclick="closeMineInfo()" aria-label="Chiudi">'
         +'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       +'</button>'
-      +'<h3><span class="it">Cosa sono i blocchi e i ROBI nascosti</span><span class="en">What are blocks and hidden ROBI</span></h3>'
+      +'<h3><span class="it">Cosa sono gli Step e i fiori ROBI</span><span class="en">What are Steps and ROBI flowers</span></h3>'
       +'<div class="mine-info-section">'
-        +'<h4><span class="it">La griglia dei blocchi</span><span class="en">The block grid</span></h4>'
-        +'<p><span class="it">Ogni blocco colorato rappresenta un blocco dell\'airdrop. Blu = i tuoi, rosso = altri partecipanti, grigio = ancora disponibili.</span><span class="en">Each colored block represents one airdrop block. Blue = yours, red = others, gray = still available.</span></p>'
+        +'<h4><span class="it">Il percorso a Step</span><span class="en">The Step trail</span></h4>'
+        +'<p><span class="it">Ogni tassello è uno Step del percorso. Blu = i tuoi, rosso = altri corridori, grigio = ancora disponibili.</span><span class="en">Each tile is one Step of the trail. Blue = yours, red = other climbers, gray = still available.</span></p>'
       +'</div>'
       +'<div class="mine-info-section">'
         +'<h4><span class="it">I ROBI nascosti (puntini rossi)</span><span class="en">Hidden ROBI (red dots)</span></h4>'
-        +'<p><span class="it">Ogni blocco ti avvicina al 1&deg; posto. In pi&ugrave;, alcuni blocchi nascondono un ROBI: ogni acquisto apre un tassello della griglia. Se sotto c\'&egrave; un puntino rosso, hai trovato un ROBI. I ROBI scoperti sono tuoi a prescindere dall\'esito dell\'airdrop.</span><span class="en">Each block brings you closer to #1. In addition, some blocks hide a ROBI: every purchase opens a grid tile. If there\'s a red dot underneath, you found a ROBI. Found ROBI are yours regardless of airdrop outcome.</span></p>'
+        +'<p><span class="it">Ogni Step ti avvicina alla vetta. In pi&ugrave;, alcuni Step nascondono un fiore ROBI: avanzando lo raccogli. I ROBI raccolti sono tuoi a prescindere dall\'esito della corsa.</span><span class="en">Every Step brings you closer to the summit. Some Steps hide a ROBI flower: pick it up as you advance. Picked ROBI are yours regardless of the race outcome.</span></p>'
       +'</div>'
       +'<div class="mine-info-stats">'
         +'<div class="mis-row">'
@@ -587,7 +587,7 @@ function updateBuyDisplay(){
   var sharesStr=shares%1===0?shares:shares.toFixed(2);
   var countEl=document.getElementById('buy-display-count');
   var costEl=document.getElementById('buy-display-cost');
-  if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'blocco':'blocchi')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
+  if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'Step':'Step')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
   if(costEl)costEl.innerHTML='= '+cost+' '+tokIcon('ARIA')+' &middot; <span style="color:var(--gold)">'+sharesStr+' '+tokIcon('ROBI')+'</span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
 }
 
@@ -636,7 +636,7 @@ function initBuy(){
   var modalDesc=document.getElementById('modal-desc');
   var modalCost=document.getElementById('modal-cost');
   var modalBg=document.getElementById('modal-bg');
-  if(modalDesc)modalDesc.innerHTML='<span class="it">Stai per acquisire <strong>'+_buyQty+'</strong> '+(_buyQty===1?'blocco':'blocchi')+'.</span><span class="en">You are about to acquire <strong>'+_buyQty+'</strong> block'+(_buyQty===1?'':'s')+'.</span>';
+  if(modalDesc)modalDesc.innerHTML='<span class="it">Stai per acquisire <strong>'+_buyQty+'</strong> '+(_buyQty===1?'Step':'Step')+'.</span><span class="en">You are about to acquire <strong>'+_buyQty+'</strong> block'+(_buyQty===1?'':'s')+'.</span>';
   if(modalCost)modalCost.textContent=cost+' ARIA';
   if(modalBg)modalBg.classList.add('active');
 }
@@ -688,11 +688,11 @@ async function confirmBuy(){
     } else {
       var errMsg={
         'INSUFFICIENT_ARIA':'<span class="it">ARIA insufficienti (saldo: '+(data.balance||0)+', costo: '+(data.cost||0)+').</span><span class="en">Not enough ARIA (balance: '+(data.balance||0)+', cost: '+(data.cost||0)+').</span>',
-        'NOT_ENOUGH_BLOCKS':'<span class="it">Blocchi non disponibili.</span><span class="en">Blocks not available.</span>',
-        'BLOCKS_ALREADY_TAKEN':'<span class="it">Qualcuno ha preso quei blocchi. Riprova.</span><span class="en">Someone took those blocks. Try again.</span>',
+        'NOT_ENOUGH_BLOCKS':'<span class="it">Step non disponibili.</span><span class="en">Blocks not available.</span>',
+        'BLOCKS_ALREADY_TAKEN':'<span class="it">Qualcuno ha fatto quegli Step prima di te. Riprova.</span><span class="en">Someone took those blocks. Try again.</span>',
         'AIRDROP_NOT_ACTIVE':'<span class="it">Airdrop non attivo.</span><span class="en">Airdrop not active.</span>',
         'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>',
-        'INVALID_BLOCK_NUMBER':'<span class="it">Errore blocco.</span><span class="en">Block error.</span>'
+        'INVALID_BLOCK_NUMBER':'<span class="it">Errore Step.</span><span class="en">Block error.</span>'
       };
       // Round 13: parse PostgREST P0001 RAISE EXCEPTION (sbRpc returns HTTP_4xx
       // as object with .detail rawBody — never throws — so catch(e) at line ~700
@@ -707,7 +707,7 @@ async function confirmBuy(){
         if(btn){btn.disabled=true;btn.classList.add('loading');btn.innerHTML='<span class="it">Bloccato</span><span class="en">Blocked</span>';}
       } else {
         showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown')+(data.detail?' — '+data.detail:''));
-        if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';}
+        if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Avanza</span><span class="en">Advance</span>';}
       }
     }
   }catch(e){
@@ -718,7 +718,7 @@ async function confirmBuy(){
       if(btn){btn.disabled=true;btn.classList.add('loading');btn.innerHTML='<span class="it">Bloccato</span><span class="en">Blocked</span>';}
     } else {
       showMsg('err','<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>');
-      if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';}
+      if(btn){btn.disabled=false;btn.classList.remove('loading');btn.innerHTML='<span class="it">Avanza</span><span class="en">Advance</span>';}
     }
   }
   _pendingBuy=null;
@@ -872,7 +872,7 @@ function updateDetailPosition(airdropId,scores){
   if(_lastPosition!==null&&pos>_lastPosition){
     el.classList.add('shake');
     setTimeout(function(){el.classList.remove('shake')},600);
-    showToast('<span class="it">Sei stato superato — acquista altri blocchi per risalire</span><span class="en">You\'ve been overtaken — buy more blocks to climb back</span>');
+    showToast('<span class="it">Sei stato superato — fai altri Step per risalire</span><span class="en">You\'ve been overtaken — buy more blocks to climb back</span>');
     notifyPositionLost(airdropId);
   }
   _lastPosition=pos;
@@ -945,8 +945,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> (square-root), <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without winning yet. Fully deterministic: your score decides, not chance.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
-      +UI_ICONS.zap+' <span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti trovano i ROBI nascosti nei blocchi e minano ROBI frazionari.</span>'
-      +'<span class="en">Whoever is #1 at close gets the item. Everyone finds the ROBI hidden in the blocks and mines fractional ROBI.</span>'
+      +UI_ICONS.zap+' <span class="it">Chi &egrave; in vetta alla chiusura ottiene l\'oggetto. Tutti raccolgono fiori ROBI sul percorso, pi&ugrave; il ROBI di ringraziamento alla chiusura.</span>'
+      +'<span class="en">Whoever is at the summit at close gets the item. Everyone picks up ROBI flowers on the trail, plus a thank-you ROBI at close.</span>'
       +'</div>'
       +'</div>';
     return;
@@ -1127,12 +1127,12 @@ function updateStrategyGuide(scores,pos,total,myScore){
     +'<h4 class="scoring-breakdown-title"><span class="it">Breakdown del tuo punteggio</span><span class="en">Your score breakdown</span></h4>'
     // Metric 1 · Blocchi (peso 50%)
     +'<div class="scoring-metric scoring-metric-blocks">'
-    +'<div class="scoring-metric-header"><span class="scoring-metric-icon">'+UI_ICONS.trophy+'</span><span class="scoring-metric-name"><span class="it">Blocchi (peso 50%)</span><span class="en">Blocks (50% weight)</span></span></div>'
+    +'<div class="scoring-metric-header"><span class="scoring-metric-icon">'+UI_ICONS.trophy+'</span><span class="scoring-metric-name"><span class="it">Step (peso 50%)</span><span class="en">Blocks (50% weight)</span></span></div>'
     +'<div class="scoring-metric-value">'
     +'<span class="it">'+myBlocks+' '+blocksLabelIt+' &middot; contributo '+blocksContrib+'</span>'
     +'<span class="en">'+myBlocks+' '+blocksLabelEn+' &middot; contribution '+blocksContrib+'</span>'
     +'</div>'
-    +'<div class="scoring-metric-hint">'+UI_ICONS.bulb+' <span class="it">Pi&ugrave; blocchi = pi&ugrave; chance di ricevere l\'oggetto (con limite anti-spam).</span><span class="en">More blocks = more chance to receive the item (with anti-spam limit).</span></div>'
+    +'<div class="scoring-metric-hint">'+UI_ICONS.bulb+' <span class="it">Pi&ugrave; Step = pi&ugrave; in alto verso l\'oggetto (con limite anti-spam).</span><span class="en">More blocks = more chance to receive the item (with anti-spam limit).</span></div>'
     +'</div>'
     // Metric 2 · Fedeltà categoria (peso 30%)
     +'<div class="scoring-metric scoring-metric-loyalty">'
@@ -1230,7 +1230,7 @@ async function loadDetailStats(airdropId){
       +'</div>'
       +'<div class="mystats-cell">'
       +'<div class="mystats-val" style="color:var(--aria)">'+pctOwned.toFixed(1)+'%</div>'
-      +'<div class="mystats-label"><span class="it">Blocchi tuoi</span><span class="en">Your blocks</span></div>'
+      +'<div class="mystats-label"><span class="it">Step tuoi</span><span class="en">Your blocks</span></div>'
       +'</div>'
       +'<div class="mystats-cell">'
       +'<div class="mystats-val">'+presaleB+'<span style="font-size:10px;color:var(--gray-400)"> / '+saleB+'</span></div>'
@@ -1251,7 +1251,7 @@ async function loadDetailStats(airdropId){
       var d=new Date(p.date);
       var dateStr=d.toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       h+='<div class="mystats-history-row">'
-        +'<span>'+p.blocks+' <span class="it">blocchi</span><span class="en">blocks</span></span>'
+        +'<span>'+p.blocks+' <span>Step</span></span>'
         +'<span style="color:var(--aria)">'+p.aria+' ARIA</span>'
         +'<span style="color:var(--gray-500)">'+dateStr+'</span>'
         +'</div>';
@@ -1406,25 +1406,25 @@ async function renderDetail(){
     +'<div class="ap-price-main">'+currentPrice+' <span class="ap-price-unit">'+tokIcon('ARIA',18)+'</span></div>'
     +'<div class="ap-price-detail">'
     +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-500);margin-right:6px">'+a.block_price_aria+'</span>':'')
-    +'<span class="it">per blocco</span><span class="en">per block</span>'
+    +'<span>/ Step</span>'
     +(isPresale?' &middot; <span style="color:var(--aria);font-weight:600">PRESALE</span>':'')
     +'</div>'
-    +(isPresale?'<div class="ap-presale-boost"><strong>&#9935; 2x MINING</strong> — <span class="it">Ogni blocco presale guadagna il doppio dei ROBI</span><span class="en">Each presale block earns double ROBI</span></div>':'')
+    +(isPresale?'<div class="ap-presale-boost"><strong>&#9935; 2x MINING</strong> — <span class="it">Ogni Step in presale raccoglie il doppio dei ROBI</span><span class="en">Each presale block earns double ROBI</span></div>':'')
     +'</div>'
 
     // Progress bar
     +'<div class="ap-progress">'
     +'<div class="ap-progress-bar"><div class="ap-progress-fill" style="width:'+pct+'%"></div></div>'
     +'<div class="ap-progress-stats">'
-    +'<span>'+a.blocks_sold+' / '+a.total_blocks+' <span class="it">blocchi venduti</span><span class="en">blocks sold</span></span>'
+    +'<span>'+a.blocks_sold+' / '+a.total_blocks+' <span class="it">Step fatti</span><span class="en">Steps taken</span></span>'
     +'<span style="color:var(--accent)">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
     +'</div>'
     +'</div>'
 
     // Quick stats row
     +'<div class="ap-quick-stats">'
-    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--accent)">'+currentPrice+'</div><div class="ap-qstat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
-    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--gold)">'+miningRate+'</div><div class="ap-qstat-label"><span class="it">blocchi per</span><span class="en">blocks per</span> '+tokIcon('ROBI')+'</div></div>'
+    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--accent)">'+currentPrice+'</div><div class="ap-qstat-label">'+tokIcon('ARIA')+'/<span>Step</span></div></div>'
+    +'<div class="ap-qstat"><div class="ap-qstat-val" style="color:var(--gold)">'+miningRate+'</div><div class="ap-qstat-label"><span class="it">Step per</span><span class="en">Steps per</span> '+tokIcon('ROBI')+'</div></div>'
     +'<div class="ap-qstat"><div class="ap-qstat-val">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="ap-qstat-label"><span class="it">Totali</span><span class="en">Total</span></div></div>'
     +'</div>'
 
@@ -1438,16 +1438,16 @@ async function renderDetail(){
       // ── Non loggato: CTA registrazione ──
       ?'<div class="buy-box">'
       +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
-      +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi.</span><span class="en">Sign up free to earn ARIA every day and buy blocks.</span></p>'
+      +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e fare i tuoi Step.</span><span class="en">Sign up free to earn ARIA every day and take your Steps.</span></p>'
       +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>'
       +'<a href="/login?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" style="display:block;text-align:center;margin-top:10px;color:var(--gray-400);font-size:13px;text-decoration:none"><span class="it">Hai gi&agrave; un account? Accedi</span><span class="en">Already have an account? Log in</span></a>'
       +'</div>'
       // ── Loggato: buy box con slider ──
       :'<div class="buy-box">'
-      +'<div class="buy-box-label"><span class="it">Acquista blocchi</span><span class="en">Buy blocks</span></div>'
-      +(isPresale?'<div class="ap-presale-boost" style="margin-bottom:16px"><strong>&#9935; PRESALE 2x</strong> — <span class="it">Ogni blocco guadagna il doppio dei ROBI!</span><span class="en">Each block earns double ROBI!</span></div>':'')
+      +'<div class="buy-box-label"><span class="it">Avanza</span><span class="en">Advance</span></div>'
+      +(isPresale?'<div class="ap-presale-boost" style="margin-bottom:16px"><strong>&#9935; PRESALE 2x</strong> — <span class="it">Ogni Step raccoglie il doppio dei ROBI!</span><span class="en">Each block earns double ROBI!</span></div>':'')
       +'<div class="buy-display">'
-      +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
+      +'<div class="buy-display-count" id="buy-display-count">1 <span><span>Step</span></span></div>'
       +'<div class="buy-display-cost" id="buy-display-cost">= '+currentPrice+' '+tokIcon('ARIA')+'</div>'
       +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
       +'</div>'
@@ -1464,7 +1464,7 @@ async function renderDetail(){
       +'</div>'
       +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
       +(remaining>0&&maxBuy>=1
-        ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
+        ?'<span class="it">Avanza</span><span class="en">Advance</span>'
         :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
       +'</button>'
       +'<div class="buy-msg" id="buy-msg"></div>'
@@ -1483,7 +1483,7 @@ async function renderDetail(){
     +(myBlocks>0&&!_publicMode?
     '<div class="detail-mystats" id="detail-mystats">'
     +'<div class="mystats-header"><span class="it">Le tue statistiche</span><span class="en">Your stats</span></div>'
-    +'<div class="ap-myblocks-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> <strong>'+myBlocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+(myBlocks*currentPrice)+' ARIA <span class="it">investiti</span><span class="en">invested</span></div>'
+    +'<div class="ap-myblocks-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> <strong>'+myBlocks+'</strong> <span>Step</span> &middot; '+(myBlocks*currentPrice)+' ARIA <span class="it">investiti</span><span class="en">invested</span></div>'
     +'<div class="mystats-grid" id="mystats-grid"></div>'
     +'<div class="mystats-history" id="mystats-history"></div>'
     +'</div>'
@@ -1494,10 +1494,10 @@ async function renderDetail(){
     // └─────────────────────────────────────┘
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
-      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'
-      +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
-      +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
-      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' ogni '+miningRate+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(miningRate/2))+' blocchi)</span>':'')+'</li>'
+      +'<li><span class="it">Prezzo per Step:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+a.block_price_aria+' ARIA</strong></li>'
+      +'<li><span class="it">Lunghezza percorso:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
+      +'<li><span class="it">Step alla vetta:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
+      +'<li><span class="it">Raccolta ROBI:</span><span class="en">ROBI pickup:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' ogni '+miningRate+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(miningRate/2))+' blocchi)</span>':'')+'</li>'
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
 
@@ -1507,7 +1507,7 @@ async function renderDetail(){
     +(myBlocks>0&&!_publicMode?
     '<div class="auto-buy-box" id="auto-buy-box">'
     +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">'+UI_ICONS.zap+' AUTO-BUY</div>'
-    +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Compra automaticamente blocchi a intervalli regolari.</span><span class="en">Automatically buy blocks at regular intervals.</span></p>'
+    +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Step automatici a intervalli regolari — la tua marcia in salita.</span><span class="en">Automatically buy blocks at regular intervals.</span></p>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">BLOCCHI</span><span class="en">BLOCKS</span></label>'
     +'<select id="ab-qty" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px;border-radius:var(--radius-sm)"><option>1</option><option>2</option><option>3</option><option>5</option><option>10</option></select></div>'

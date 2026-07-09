@@ -37,6 +37,10 @@ var CAT_ICONS={
 
 // UI icons (Lucide-style, monochrome, currentColor). Never use colored emoji in UI.
 var UI_ICONS={
+  // Fiore-ROBI (Skeezu 10 lug): il ROBI che raccogli sul percorso — petali + R nel cuore
+  flower:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 13.5V21"/><path d="M12 18.2c-2.6-.3-4.1-1.6-4.5-3.8"/><circle cx="12" cy="4.6" r="1.8"/><circle cx="16.6" cy="8" r="1.8"/><circle cx="14.9" cy="12.6" r="1.8"/><circle cx="9.1" cy="12.6" r="1.8"/><circle cx="7.4" cy="8" r="1.8"/><circle cx="12" cy="8.8" r="2.7"/><text x="12" y="10.6" text-anchor="middle" font-size="4.6" font-weight="700" fill="currentColor" stroke="none" font-family="Inter,sans-serif">R</text></svg>',
+  // Orme-STEP: l'unità di misura della distanza dalla vetta
+  steps:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5.2" y="12.6" width="4.6" height="7.4" rx="2.3" transform="rotate(14 7.5 16.3)"/><rect x="14" y="3.8" width="4.6" height="7.4" rx="2.3" transform="rotate(14 16.3 7.5)"/></svg>',
   target:'<svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
   trophy:'<svg class="ico" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>',
   gem:'<svg class="ico" viewBox="0 0 24 24"><path d="M6 3h12l4 6-10 13L2 9Z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/></svg>',
@@ -1026,7 +1030,7 @@ async function claimFaucet(){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       btn.style.background='var(--kas)';btn.style.color='var(--black)';
       btn.textContent=lang==='it'?'+100 ARIA ricevuti!':'+100 ARIA received!';
-      showToast('<span style="color:var(--kas)">+100 ARIA</span> — <span class="it">più blocchi, più ROBI</span><span class="en">more blocks, more ROBI</span>');
+      showToast('<span style="color:var(--kas)">+100 ARIA</span> — <span class="it">più Step, più ROBI</span><span class="en">more blocks, more ROBI</span>');
       // Refresh dashboard stats
       var homeAria=document.getElementById('home-aria');
       if(homeAria)homeAria.innerHTML=_balance;
@@ -1415,12 +1419,12 @@ function playUnboxingReveal(blocksBought,revealedRobi){
     +'</svg>';
   overlay.innerHTML='<div class="unbox-card">'
     +'<div class="unbox-pack">'+boxSvg+'</div>'
-    +'<div class="unbox-blocks">'+blocksBought+' <span class="it">'+(blocksBought===1?'blocco tuo':'blocchi tuoi')+'</span><span class="en">block'+(blocksBought===1?'':'s')+' yours</span></div>'
+    +'<div class="unbox-blocks">+'+blocksBought+' Step</div>'
     +'<div class="unbox-result">'
     +(revealedRobi>0
-      ?'<div class="unbox-robi">+'+revealedRobi+' ROBI Reward <span class="it">trovati nei blocchi</span><span class="en">found in your blocks</span></div>'
+      ?'<div class="unbox-robi">'+UI_ICONS.flower+' +'+revealedRobi+' ROBI Reward <span class="it">raccolti sul percorso</span><span class="en">picked up on the trail</span></div>'
        +'<div class="unbox-note"><span class="it">Gi&agrave; sul tuo portafoglio.</span><span class="en">Already in your wallet.</span></div>'
-      :'<div class="unbox-note"><span class="it">La tua posizione in classifica sale. Altri ROBI restano nascosti nei blocchi.</span><span class="en">Your ranking position climbs. More ROBI remain hidden in the blocks.</span></div>')
+      :'<div class="unbox-note"><span class="it">La tua posizione in classifica sale. Altri fiori ROBI ti aspettano sul percorso.</span><span class="en">Your ranking position climbs. More ROBI flowers await on the trail.</span></div>')
     +'</div>'
     +'</div>';
   overlay.addEventListener('click',function(){
@@ -1446,7 +1450,7 @@ var PAGE_PATHS=_isApp
   :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/come-funziona-airdrop',profilo:'/profilo'};
 var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/come-funziona-airdrop':'learn','/profilo':'profilo'};
 var PAGE_HEADERS={
-  explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per partecipare. Ogni blocco acquistato ti avvicina all\'oggetto.',sub_en:'Use your ARIA to participate. Each block purchased brings you closer.'},
+  explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per correre. Ogni Step ti avvicina alla vetta.',sub_en:'Use your ARIA to climb. Every Step brings you closer to the summit.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
   submit:{it:'<b>Valuta</b> il tuo <em>oggetto</em>',en:'<b>Evaluate</b> your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
   referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e accumula ROBI insieme. +5 ROBI per ogni invito confermato.',sub_en:'Invite friends and accumulate ROBI together. +5 ROBI for every confirmed invite.'},
@@ -2204,7 +2208,7 @@ function renderGrid(){
 
     // Price display
     var currentPrice=isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria;
-    var priceHtml=currentPrice+' '+tokIcon('ARIA')+' / <span class="it">blocco</span><span class="en">block</span>';
+    var priceHtml=currentPrice+' '+tokIcon('ARIA')+' / <span>Step</span>';
     if(isPresale&&a.presale_block_price)priceHtml+='<span class="card-presale-price">'+a.block_price_aria+'</span>';
 
     var cd=fmtCountdown(a.deadline);
@@ -2248,7 +2252,7 @@ function renderGrid(){
       +'<span class="card-price">'+priceHtml+'</span>'
       +'<span class="card-remain">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
       +'</div>'
-      +'<div class="card-mining"><span style="color:var(--gold)">&#9935;</span> <span class="it">1 '+tokIcon('ROBI')+' ogni '+miningRate+' blocchi</span><span class="en">1 '+tokIcon('ROBI')+' per '+miningRate+' blocks</span></div>'
+      +'<div class="card-mining"><span style="color:var(--gold)">&#9935;</span> <span class="it">1 '+tokIcon('ROBI')+' ogni '+miningRate+' Step</span><span class="en">1 '+tokIcon('ROBI')+' per '+miningRate+' blocks</span></div>'
       +'</div></div>';
   }).join('');
 
@@ -2535,16 +2539,16 @@ async function openDetail(id){
     :_publicMode
     ?'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'
-    +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e acquistare blocchi in questo airdrop.</span><span class="en">Sign up free to earn ARIA every day and buy blocks in this airdrop.</span></p>'
+    +'<p class="buy-box-framing"><span class="it">Registrati gratis per ricevere ARIA ogni giorno e fare i tuoi Step in questa corsa.</span><span class="en">Sign up free to earn ARIA every day and take your Steps in this climb.</span></p>'
     +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a>'
     +'<a href="/login?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" style="display:block;text-align:center;margin-top:10px;color:var(--gray-400);font-size:13px;text-decoration:none"><span class="it">Hai gi&agrave; un account? Accedi</span><span class="en">Already have an account? Log in</span></a>'
     +'</div>'
     :'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-    +'<p class="buy-box-framing"><span class="it">Ogni blocco acquistato ti avvicina all\'oggetto e ti fa guadagnare ROBI Reward — reward reali, riscattabili in KAS.</span><span class="en">Each block brings you closer to the item and earns you ROBI Reward — real rewards, redeemable in KAS.</span></p>'
-    +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni blocco guadagna il doppio dei ROBI!</span><span class="en">In presale each block earns double ROBI!</span></div>':'')
+    +'<p class="buy-box-framing"><span class="it">Ogni Step ti avvicina alla vetta e lungo il percorso raccogli ROBI Reward — reward reali, riscattabili in KAS.</span><span class="en">Every Step brings you closer to the summit — and you pick up ROBI Reward along the trail, redeemable in KAS.</span></p>'
+    +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni Step raccoglie il doppio dei ROBI!</span><span class="en">In presale every Step picks up double ROBI!</span></div>':'')
     +'<div class="buy-display">'
-    +'<div class="buy-display-count" id="buy-display-count">1 <span><span class="it">blocco</span><span class="en">block</span></span></div>'
+    +'<div class="buy-display-count" id="buy-display-count">1 <span>Step</span></div>'
     +'<div class="buy-display-cost" id="buy-display-cost">= '+effectivePrice+' '+tokIcon('ARIA')+'</div>'
     +'<div class="buy-display-balance"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+'</div>'
     +'</div>'
@@ -2561,8 +2565,8 @@ async function openDetail(id){
     +'</div>'
     +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
     +(remaining>0&&maxBuy>=1
-      ?'<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>'
-      :(remaining<=0?'<span class="it">Esaurito</span><span class="en">Sold out</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
+      ?'<span class="it">Avanza</span><span class="en">Advance</span>'
+      :(remaining<=0?'<span class="it">Percorso completo</span><span class="en">Trail complete</span>':'<span class="it">ARIA insufficienti</span><span class="en">Not enough ARIA</span>'))
     +'</button>'
     +'<div class="buy-msg" id="buy-msg"></div>'
     +'</div>';
@@ -2616,7 +2620,7 @@ async function openDetail(id){
     +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' '+tokIcon('ARIA',18)+'</div>'
     +'<div class="product-price-aria">'
     +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-400);margin-right:6px">'+a.block_price_aria+'</span>':'')
-    +'<span class="it">per blocco</span><span class="en">per block</span> &middot; '+a.total_blocks.toLocaleString('it-IT')+' <span class="it">blocchi totali</span><span class="en">total blocks</span>'
+    +'<span class="it">per Step</span><span class="en">per Step</span> &middot; <span class="it">percorso di</span><span class="en">trail of</span> '+a.total_blocks.toLocaleString('it-IT')+' Step'
     +(isPresale?' &middot; <span style="color:var(--aria)">PRESALE</span>':'')
     +'</div>'
     +'</div>'
@@ -2637,23 +2641,23 @@ async function openDetail(id){
     // Accordion dettagli airdrop
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
-      +'<li><span class="it">Prezzo per blocco:</span><span class="en">Price per block:</span> <strong style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA')+'</strong></li>'
-      +'<li><span class="it">Blocchi totali:</span><span class="en">Total blocks:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+'</strong></li>'
-      +'<li><span class="it">Blocchi rimasti:</span><span class="en">Blocks left:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
-      +'<li><span class="it">Mining:</span><span class="en">Mining:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' ogni '+calcMiningRate(a)+' blocchi</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: ogni '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' blocchi)</span>':'')+'</li>'
+      +'<li><span class="it">Prezzo per Step:</span><span class="en">Price per Step:</span> <strong style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA')+'</strong></li>'
+      +'<li><span class="it">Lunghezza percorso:</span><span class="en">Trail length:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+' Step</strong></li>'
+      +'<li><span class="it">Step alla vetta:</span><span class="en">Steps to the summit:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
+      +'<li><span class="it">Raccolta ROBI:</span><span class="en">ROBI pickup:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' <span class="it">ogni</span><span class="en">every</span> '+calcMiningRate(a)+' Step</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' Step)</span>':'')+'</li>'
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
 
     // I tuoi blocchi (badge sintetico)
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">impiegati</span><span class="en">spent</span></div>':'')
+    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi Step:</span><span class="en">Your Steps:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">impiegati</span><span class="en">spent</span></div>':'')
 
     // Mine Tower 3D — sostituita da LA SALITA (9 lug); funzione conservata per rollback
 
     // Mini stats Rimasti/per blocco/per ROBI
     +'<div class="detail-stats">'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Rimasti</span><span class="en">Left</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+effectivePrice+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/<span class="it">blocco</span><span class="en">block</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">blocchi per</span><span class="en">blocks per</span> '+tokIcon('ROBI')+'</div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Step alla vetta</span><span class="en">Steps to summit</span></div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+effectivePrice+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/Step</div></div>'
+    +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">Step per</span><span class="en">Steps per</span> '+tokIcon('ROBI')+'</div></div>'
     +'</div>'
 
     // MY STATS panel (solo airdrop live)
@@ -2668,17 +2672,17 @@ async function openDetail(id){
     // AUTO-BUY config (solo airdrop live) — toggle attivazione resta in fondo (mini-spec §4.8)
     +(!isConcluded&&myBlocks>0?
     '<div class="auto-buy-box" id="auto-buy-box">'
-    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">'+UI_ICONS.zap+' AUTO-BUY</div>'
-    +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Compra automaticamente blocchi a intervalli regolari.</span><span class="en">Automatically buy blocks at regular intervals.</span></p>'
+    +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">'+UI_ICONS.steps+' <span class="it">MANTIENI IL PASSO</span><span class="en">KEEP THE PACE</span></div>'
+    +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Step automatici a intervalli regolari — la tua marcia in salita.</span><span class="en">Automatic Steps at regular intervals — your steady climbing pace.</span></p>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">'
-    +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">BLOCCHI</span><span class="en">BLOCKS</span></label>'
+    +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">STEP</span><span class="en">STEPS</span></label>'
     +'<select id="ab-qty" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option>1</option><option>2</option><option>3</option><option>5</option><option>10</option></select></div>'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px"><span class="it">OGNI</span><span class="en">EVERY</span></label>'
     +'<select id="ab-interval" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"><option value="0.25">15min</option><option value="0.5">30min</option><option value="1">1h</option><option value="2">2h</option><option value="4" selected>4h</option><option value="6">6h</option><option value="12">12h</option></select></div>'
     +'<div><label style="font-family:var(--font-m);font-size:8px;letter-spacing:1px;color:var(--gray-500);display:block;margin-bottom:3px">MAX</label>'
     +'<input type="number" id="ab-max" value="50" min="1" max="500" style="width:100%;padding:6px;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);font-size:12px"></div>'
     +'</div>'
-    +'<button id="ab-toggle" onclick="toggleAutoBuy(\''+a.id+'\')" style="width:100%;padding:8px;background:var(--aria);color:var(--white);border:none;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">ATTIVA AUTO-BUY</span><span class="en">ACTIVATE AUTO-BUY</span></button>'
+    +'<button id="ab-toggle" onclick="toggleAutoBuy(\''+a.id+'\')" style="width:100%;padding:8px;background:var(--aria);color:var(--white);border:none;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">MANTIENI IL PASSO</span><span class="en">KEEP THE PACE</span></button>'
     +'<div id="ab-status" style="margin-top:6px;font-size:10px;color:var(--gray-500);text-align:center"></div>'
     +'</div>'
     :'')
@@ -2744,8 +2748,8 @@ async function loadRulloHook(airdropId){
       ?'<strong>'+outstanding.toLocaleString('it-IT')+'</strong> <span class="it">ROBI ancora nascosti</span><span class="en">ROBI still hidden</span>'
       :'<span class="it">Tutti i ROBI nascosti sono stati trovati</span><span class="en">All hidden ROBI found</span>';
     el.innerHTML=''
-      +'<div class="rullo-hook-head">'+UI_ICONS.gem+' <span class="rullo-hook-title"><span class="it">ROBI nascosti nei blocchi</span><span class="en">Hidden ROBI</span></span></div>'
-      +'<p class="rullo-hook-copy"><span class="it">Alcuni blocchi nascondono un ROBI. Minali e scopri quali — il ROBI trovato è subito tuo, sul wallet.</span><span class="en">Some blocks hide a ROBI. Mine them and find out which — the ROBI you find is yours instantly, on your wallet.</span></p>'
+      +'<div class="rullo-hook-head">'+UI_ICONS.flower+' <span class="rullo-hook-title"><span class="it">Fiori ROBI sul percorso</span><span class="en">ROBI flowers on the trail</span></span></div>'
+      +'<p class="rullo-hook-copy"><span class="it">Lungo il percorso alcuni Step nascondono un fiore ROBI: raccoglilo avanzando — è subito tuo, sul portafoglio.</span><span class="en">Some Steps along the trail hide a ROBI flower: pick it up as you advance — instantly yours, in your wallet.</span></p>'
       +'<div class="rullo-hook-count">'+countLine+'</div>';
     _rulloCounts={total:total,outstanding:outstanding};
     if(_lastScores)renderSalita(_lastScores);
@@ -2893,20 +2897,21 @@ async function renderSalita(scores){
     var foundFlags=Math.round(flagsN*(robiFound/robiTotal));
     for(var f=0;f<flagsN;f++){
       var ft=0.08+0.8*(f+1)/(flagsN+1);
-      html+='<div class="salita-flagpin" data-t="'+ft.toFixed(3)+'"><svg width="14" height="20" viewBox="0 0 14 20"><line x1="2" y1="1" x2="2" y2="19" stroke="var(--gray-500)" stroke-width="1.5"/><path d="M3,2 L13,5.5 L3,9 Z" '+(f<foundFlags?'fill="var(--gold)"':'fill="none" stroke="var(--gray-500)" stroke-width="1.2" stroke-dasharray="2 2"')+'/></svg></div>';
+      // Fiori ROBI sul sentiero (Skeezu 10 lug): raccolti = fiore pieno · da raccogliere = tratteggiato
+      html+='<div class="salita-flagpin'+(f<foundFlags?' picked':'')+'" data-t="'+ft.toFixed(3)+'"><svg width="16" height="22" viewBox="0 0 24 24" fill="none" stroke="'+(f<foundFlags?'var(--gold)':'var(--gray-500)')+'" stroke-width="1.6"'+(f<foundFlags?'':' stroke-dasharray="2 2"')+'><path d="M12 13.5V22"/><circle cx="12" cy="4.6" r="1.8"/><circle cx="16.6" cy="8" r="1.8"/><circle cx="14.9" cy="12.6" r="1.8"/><circle cx="9.1" cy="12.6" r="1.8"/><circle cx="7.4" cy="8" r="1.8"/><circle cx="12" cy="8.8" r="2.7"'+(f<foundFlags?' fill="rgba(239,62,79,.15)"':'')+'/></svg></div>';
     }
   }
   // Stato limite: sentiero libero (2c)
   if(n===0){
     html+='<div class="salita-empty"><div class="salita-empty-t"><span class="it">Il sentiero è libero</span><span class="en">The trail is clear</span></div>'
-      +'<div class="salita-empty-s"><span class="it">Parti per primo: il primo blocco ti mette in vetta.</span><span class="en">Be the first: your first block puts you at the summit.</span></div></div>';
+      +'<div class="salita-empty-s"><span class="it">Parti per primo: il primo Step ti mette in vetta.</span><span class="en">Be the first: your first Step puts you at the summit.</span></div></div>';
   }
   // Chip distacco sul sentiero, accanto al corridore davanti a me (2c)
   var tMe=null;
   if(me){tMe=0.04+0.9*(leader>0?(parseFloat(me.score)||0)/leader:0);}
   if(myIdx>0&&needPrev){
     var tPrev=0.04+0.9*(leader>0?(parseFloat(scores[myIdx-1].score)||0)/leader:0);
-    html+='<div class="salita-gap-chip" data-t="'+tPrev.toFixed(3)+'"><span class="it">distacco ~'+needPrev.toLocaleString('it-IT')+' blocchi</span><span class="en">gap ~'+needPrev.toLocaleString('en-US')+' blocks</span></div>';
+    html+='<div class="salita-gap-chip" data-t="'+tPrev.toFixed(3)+'"><span class="it">distacco ~'+needPrev.toLocaleString('it-IT')+' Step</span><span class="en">gap ~'+needPrev.toLocaleString('en-US')+' Steps</span></div>';
   }
   // Corridori + gap compressi
   var prevShown=null;
@@ -2957,12 +2962,12 @@ async function renderSalita(scores){
   var inVetta=myIdx===0&&n>0;
   var counters='';
   if(robiTotal>0){
-    counters+='<span class="sc-item"><svg width="11" height="15" viewBox="0 0 14 20" aria-hidden="true"><line x1="2" y1="1" x2="2" y2="19" stroke="var(--gray-500)" stroke-width="1.5"/><path d="M3,2 L13,5.5 L3,9 Z" fill="var(--gold)"/></svg><span><strong>'+robiFound+'/'+robiTotal+' ROBI</strong> <span class="it">trovati sul percorso</span><span class="en">found on the trail</span></span></span>';
+    counters+='<span class="sc-item" style="color:var(--gold)">'+UI_ICONS.flower+'<span style="color:var(--gray-400)"><strong>'+robiFound+'/'+robiTotal+' ROBI</strong> <span class="it">raccolti sul percorso</span><span class="en">picked up on the trail</span></span></span>';
   }
   if(inVetta&&gap2nd){
-    counters+='<span class="sc-item"><span class="it">Il 2° è a <strong>~'+gap2nd.toLocaleString('it-IT')+' blocchi</strong> — difendi la posizione fino alla chiusura</span><span class="en">#2 is <strong>~'+gap2nd.toLocaleString('en-US')+' blocks</strong> away — defend until close</span></span>';
+    counters+='<span class="sc-item"><span class="it">Il 2° è a <strong>~'+gap2nd.toLocaleString('it-IT')+' Step</strong> — difendi la posizione fino alla chiusura</span><span class="en">#2 is <strong>~'+gap2nd.toLocaleString('en-US')+' Steps</strong> away — defend until close</span></span>';
   }else if(myIdx>0&&needPrev){
-    counters+='<span class="sc-item"><span class="it">distacco dal '+scores[myIdx-1].rank+'°: <strong>~'+needPrev.toLocaleString('it-IT')+' blocchi</strong></span><span class="en">gap to #'+scores[myIdx-1].rank+': <strong>~'+needPrev.toLocaleString('en-US')+' blocks</strong></span></span>';
+    counters+='<span class="sc-item"><span class="it">distacco dal '+scores[myIdx-1].rank+'°: <strong>~'+needPrev.toLocaleString('it-IT')+' Step</strong></span><span class="en">gap to #'+scores[myIdx-1].rank+': <strong>~'+needPrev.toLocaleString('en-US')+' Steps</strong></span></span>';
   }
   if(fuoriCount>0){
     counters+='<span class="sc-item"><span class="it"><strong>'+fuoriCount+'</strong> fuori corsa</span><span class="en"><strong>'+fuoriCount+'</strong> out of the race</span></span>';
@@ -2997,7 +3002,7 @@ async function renderSalita(scores){
     +'<div class="salita-mini">'+mini+'</div>'
     +(counters?'<div class="salita-counters">'+counters+'</div>':'')
     +cta
-    +'<p class="salita-legal"><span class="it">Posizione deterministica: punteggio = √blocchi × moltiplicatore fedeltà + boost di garanzia. Chi è in vetta alla chiusura ottiene l\'oggetto; tutti gli altri guadagnano comunque ROBI Reward.</span><span class="en">Deterministic position: score = √blocks × loyalty multiplier + guarantee boost. Whoever is at the summit at close gets the item; everyone else still earns ROBI Reward.</span></p>'
+    +'<p class="salita-legal"><span class="it">Posizione deterministica: punteggio = √Step × moltiplicatore fedeltà + boost di garanzia. Chi è in vetta alla chiusura ottiene l\'oggetto; a tutti gli altri, alla chiusura, va un ROBI Reward: il ringraziamento per aver corso.</span><span class="en">Deterministic position: score = √Steps × loyalty multiplier + guarantee boost. Whoever is at the summit at close gets the item; everyone else receives ROBI Reward at close — a thank-you for the climb.</span></p>'
     +'</div>';
 
   // Posizionamento sul sentiero via getPointAtLength
@@ -3067,7 +3072,7 @@ async function updateAutoBuyBanner(airdropId){
   banner.innerHTML=''
     +'<span class="ab-banner-icon">'+UI_ICONS.zap+'</span>'
     +'<span class="ab-banner-text"><strong><span class="it">AUTO-BUY ATTIVO</span><span class="en">AUTO-BUY ACTIVE</span></strong> · '
-    +'<span class="it">sta comprando '+rule.blocks_per_interval+' blocchi ogni '+intervalLabel+' per te</span>'
+    +'<span class="it">sta facendo '+rule.blocks_per_interval+' Step ogni '+intervalLabel+' per te</span>'
     +'<span class="en">buying '+rule.blocks_per_interval+' blocks every '+intervalLabel+' for you</span>'
     +' · <span class="ab-banner-prog">'+rule.total_bought+'/'+rule.max_blocks+'</span></span>'
     +'<a href="#auto-buy-box" class="ab-banner-link" onclick="event.preventDefault();scrollToAutoBuyBox();return false;"><span class="it">gestisci</span><span class="en">manage</span></a>';
@@ -3128,10 +3133,10 @@ async function loadHintSoglia(airdropId){
       +salitaStato
       +'</div>';
     if(isLeader){
-      html+='<div class="hint-row hint-leader">'+UI_ICONS.star+' <span class="it">Sei in testa — difendi il primato con altri blocchi</span><span class="en">You\'re leading — defend it with more blocks</span></div>';
+      html+='<div class="hint-row hint-leader">'+UI_ICONS.star+' <span class="it">Sei in testa — difendi il primato con altri Step</span><span class="en">You\'re leading — defend it with more Steps</span></div>';
     }else if(blocksToOvertake>0){
-      html+='<div class="hint-row hint-target">&#9658; <span class="it">~<strong>'+blocksToOvertake.toLocaleString('it-IT')+'</strong> blocchi per arrivare 1&deg;</span>'
-        +'<span class="en">~<strong>'+blocksToOvertake.toLocaleString('en-US')+'</strong> blocks to reach #1</span>'
+      html+='<div class="hint-row hint-target">&#9658; <span class="it">~<strong>'+blocksToOvertake.toLocaleString('it-IT')+'</strong> Step alla vetta</span>'
+        +'<span class="en">~<strong>'+blocksToOvertake.toLocaleString('en-US')+'</strong> Steps to the summit</span>'
         +(ariaCost>0?' <span class="hint-aria-cost">&middot; '+ariaCost.toLocaleString('it-IT')+' '+tokIcon('ARIA')+'</span>':'')
         +'</div>';
     }
@@ -3139,7 +3144,7 @@ async function loadHintSoglia(airdropId){
       if(threshold===-1){
         html+='<div class="hint-row hint-soglia hint-soglia-out">&#9888; <span class="it">Matematicamente fuori — il leader è irraggiungibile per te</span><span class="en">Mathematically out — leader unreachable</span></div>';
       }else if(threshold===0){
-        html+='<div class="hint-row hint-soglia hint-soglia-limite">&#9888; <span class="it">Sei al limite — solo comprando tutti i blocchi restanti puoi ancora aggiudicartelo</span><span class="en">At the edge — only buying all remaining blocks keeps you in</span></div>';
+        html+='<div class="hint-row hint-soglia hint-soglia-limite">&#9888; <span class="it">Sei al limite — solo facendo tutti gli Step rimasti puoi ancora arrivare in vetta</span><span class="en">At the edge — only buying all remaining blocks keeps you in</span></div>';
       }else if(threshold<=300){
         html+='<div class="hint-row hint-soglia">&#9888; <span class="it">Tra ~<strong>'+threshold.toLocaleString('it-IT')+'</strong> blocchi venduti ad altri non potrai più aggiudicartelo</span>'
           +'<span class="en">In ~<strong>'+threshold.toLocaleString('en-US')+'</strong> blocks sold to others you won\'t be able to win it anymore</span>'
@@ -3174,7 +3179,7 @@ function _renderOutcomePanel(a,myBlocks,myRobi){
   if(st==='waiting_seller_acknowledge'){
     body='<p class="buy-box-framing"><span class="it">L\'airdrop è concluso. Il venditore ha 72 ore per confermare la chiusura — l\'esito comparirà qui appena decide.</span><span class="en">The airdrop has closed. The seller has 72 hours to confirm — the outcome will appear here once decided.</span></p>';
   }else if(st==='annullato'){
-    body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; i ROBI già trovati nei blocchi restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI already found stay in the wallet.</span></p>';
+    body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; i fiori ROBI già raccolti sul percorso restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI flowers already picked stay in the wallet.</span></p>';
   }else if(isWinner){
     body='<p class="buy-box-framing"><span class="it">Hai ottenuto l\'oggetto: <strong>'+a.title+'</strong>. Inserisci l\'indirizzo di spedizione per riceverlo.</span><span class="en">You got the item: <strong>'+a.title+'</strong>. Submit your shipping address to receive it.</span></p>'
       +'<button class="buy-btn" onclick="openClaimModal(\''+a.id+'\',\''+titleSafe+'\')"><span class="it">Reclama l\'oggetto →</span><span class="en">Claim the item →</span></button>';
@@ -3199,15 +3204,15 @@ async function loadAutoBuyStatus(airdropId){
   var btn=document.getElementById('ab-toggle');
   var status=document.getElementById('ab-status');
   if(!rule||!rule.active){
-    if(btn)btn.innerHTML='<span class="it">ATTIVA AUTO-BUY</span><span class="en">ACTIVATE AUTO-BUY</span>';
+    if(btn)btn.innerHTML='<span class="it">MANTIENI IL PASSO</span><span class="en">KEEP THE PACE</span>';
     if(status)status.textContent='';
     return;
   }
-  if(btn){btn.innerHTML='<span class="it">DISATTIVA AUTO-BUY</span><span class="en">DISABLE AUTO-BUY</span>';btn.style.background='var(--red)';}
+  if(btn){btn.innerHTML='<span class="it">FERMA IL PASSO</span><span class="en">STOP THE PACE</span>';btn.style.background='var(--red)';}
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var h=parseFloat(rule.interval_hours);
   var intervalLabel=h<1?Math.round(h*60)+'min':h+'h';
-  if(status)status.textContent=(lang==='it'?'Attivo: ':'Active: ')+rule.blocks_per_interval+(lang==='it'?' blocchi ogni ':' blocks every ')+intervalLabel+' ('+rule.total_bought+'/'+rule.max_blocks+')';
+  if(status)status.textContent=(lang==='it'?'Attivo: ':'Active: ')+rule.blocks_per_interval+(lang==='it'?' Step ogni ':' Steps every ')+intervalLabel+' ('+rule.total_bought+'/'+rule.max_blocks+')';
   var qty=document.getElementById('ab-qty');if(qty)qty.value=rule.blocks_per_interval;
   var interval=document.getElementById('ab-interval');if(interval)interval.value=h;
   var max=document.getElementById('ab-max');if(max)max.value=rule.max_blocks;
@@ -3260,7 +3265,7 @@ function updateDetailPosition(airdropId,scores){
   if(_lastPosition!==null&&pos>_lastPosition){
     el.classList.add('shake');
     setTimeout(function(){el.classList.remove('shake')},600);
-    showToast('<span class="it">Sei stato superato — acquista altri blocchi per risalire</span><span class="en">You\'ve been overtaken — buy more blocks to climb back</span>');
+    showToast('<span class="it">Sei stato superato — fai altri Step per risalire</span><span class="en">You\'ve been overtaken — buy more blocks to climb back</span>');
     notifyPositionLost(airdropId);
   }
   _lastPosition=pos;
@@ -3284,12 +3289,12 @@ function updateStrategyGuide(scores,pos,total,myScore){
       +'<div class="strategy-box">'
       +'<div class="strategy-title"><span class="it">Come funziona il punteggio?</span><span class="en">How does scoring work?</span></div>'
       +'<div style="padding:14px 16px;background:rgba(239,62,79,.05);border:1px solid rgba(239,62,79,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
-      +'<span class="it">Il Punteggio combina tre cose: i <strong style="color:var(--gold)">blocchi</strong> che compri (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora ottenere un oggetto. Tutto deterministico: conta il punteggio, non il caso.</span>'
-      +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">blocks</strong> you buy (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without getting an item yet. Fully deterministic: your score decides, not chance.</span>'
+      +'<span class="it">Il Punteggio combina tre cose: gli <strong style="color:var(--gold)">Step</strong> che fai (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora ottenere un oggetto. Tutto deterministico: conta il punteggio, non il caso.</span>'
+      +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">Steps</strong> you take (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without getting an item yet. Fully deterministic: your score decides, not chance.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
-      +'<span class="it">Chi &egrave; al 1&deg; posto alla chiusura ottiene l\'oggetto. Tutti trovano i ROBI nascosti nei blocchi e minano ROBI frazionari.</span>'
-      +'<span class="en">Whoever is #1 at close gets the item. Everyone finds the ROBI hidden in the blocks and mines fractional ROBI.</span>'
+      +'<span class="it">Chi &egrave; in vetta alla chiusura ottiene l\'oggetto. Tutti raccolgono fiori ROBI sul percorso, e alla chiusura arriva il ROBI di ringraziamento per la corsa.</span>'
+      +'<span class="en">Whoever is at the summit at close gets the item. Everyone picks up ROBI flowers on the trail, plus a thank-you ROBI at close.</span>'
       +'</div>'
       +'</div>';
     return;
@@ -3407,11 +3412,11 @@ function updateStrategyGuide(scores,pos,total,myScore){
     // 1. Blocchi (radice quadrata)
     +'<div class="strategy-factor-block van">'
     +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Blocchi correnti</span><span class="en">Current blocks</span></span>'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Step correnti</span><span class="en">Current blocks</span></span>'
     +'<span class="strategy-factor-weight-badge">'+myBlocks+' &middot; &radic;='+Math.sqrt(Math.max(myBlocks,0)).toFixed(2)+'</span>'
     +'</div>'
     +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Contributo a radice quadrata: 100 blocchi valgono 10, non 100.</span>'
+    +' <span class="it">Contributo a radice quadrata: 100 Step valgono 10, non 100.</span>'
     +'<span class="en">Square-root contribution: 100 blocks count as 10, not 100.</span>'
     +'</div>'
     +'</div>'
@@ -3495,7 +3500,7 @@ async function loadDetailStats(airdropId){
       +'</div>'
       +'<div class="mystats-cell">'
       +'<div class="mystats-val" style="color:var(--aria)">'+pctOwned.toFixed(1)+'%</div>'
-      +'<div class="mystats-label"><span class="it">Blocchi tuoi</span><span class="en">Your blocks</span></div>'
+      +'<div class="mystats-label"><span class="it">Step tuoi</span><span class="en">Your blocks</span></div>'
       +'</div>'
       +'<div class="mystats-cell">'
       +'<div class="mystats-val">'+presaleB+'<span style="font-size:10px;color:var(--gray-400)"> / '+saleB+'</span></div>'
@@ -3517,7 +3522,7 @@ async function loadDetailStats(airdropId){
       var d=new Date(p.date);
       var dateStr=d.toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       h+='<div class="mystats-history-row">'
-        +'<span>'+p.blocks+' <span class="it">blocchi</span><span class="en">blocks</span></span>'
+        +'<span>'+p.blocks+' Step</span>'
         +'<span style="color:var(--aria)">'+p.aria+' ARIA</span>'
         +'<span style="color:var(--gray-500)">'+dateStr+'</span>'
         +'</div>';
@@ -3675,7 +3680,10 @@ function updateBuyDisplay(){
   var sharesStr=shares%1===0?shares:shares.toFixed(2);
   var countEl=document.getElementById('buy-display-count');
   var costEl=document.getElementById('buy-display-cost');
-  if(countEl)countEl.innerHTML=_buyQty+' <span><span class="it">'+(_buyQty===1?'blocco':'blocchi')+'</span><span class="en">block'+(_buyQty===1?'':'s')+'</span></span>';
+  if(countEl)countEl.innerHTML=_buyQty+' <span>Step</span>';
+  // CTA dinamica: «Avanza di N Step»
+  var btnEl=document.getElementById('buy-btn');
+  if(btnEl&&!btnEl.disabled&&!btnEl.classList.contains('loading'))btnEl.innerHTML='<span class="it">Avanza di '+_buyQty+' Step</span><span class="en">Advance '+_buyQty+' Step'+(_buyQty===1?'':'s')+'</span>';
   if(costEl)costEl.innerHTML='= '+cost+' '+tokIcon('ARIA')+' &middot; <span style="color:var(--gold)">'+sharesStr+' '+tokIcon('ROBI')+'</span>'+(isPresale?' <span style="color:var(--aria);font-size:10px">2x</span>':'');
 }
 
@@ -3769,7 +3777,7 @@ function initBuy(){
   var chosen=available.slice(0,_buyQty);
 
   _pendingBuy={airdropId:_currentDetail.id,blocks:chosen,cost:cost,qty:_buyQty};
-  document.getElementById('modal-desc').innerHTML='<span class="it">Stai per acquisire <strong>'+_buyQty+'</strong> '+(_buyQty===1?'blocco':'blocchi')+'.</span><span class="en">You are about to acquire <strong>'+_buyQty+'</strong> block'+(_buyQty===1?'':'s')+'.</span>';
+  document.getElementById('modal-desc').innerHTML='<span class="it">Stai per avanzare di <strong>'+_buyQty+'</strong> Step.</span><span class="en">You are about to advance <strong>'+_buyQty+'</strong> Step'+(_buyQty===1?'':'s')+'.</span>';
   document.getElementById('modal-cost').textContent=cost+' ARIA';
   document.getElementById('modal-bg').classList.add('active');
 }
@@ -3799,8 +3807,8 @@ async function confirmBuy(){
       // Toast conferma acquisto
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       showToast(lang==='it'
-        ?data.blocks_bought+' '+(data.blocks_bought===1?'blocco acquisito':'blocchi acquisiti')+' per '+data.aria_spent+' ARIA'
-        :data.blocks_bought+' block'+(data.blocks_bought===1?'':'s')+' purchased for '+data.aria_spent+' ARIA');
+        ?'+'+data.blocks_bought+' Step · '+data.aria_spent+' ARIA'
+        :'+'+data.blocks_bought+' Step'+(data.blocks_bought===1?'':'s')+' · '+data.aria_spent+' ARIA');
 
       // GS-16 · ROBI nascosti nei blocchi (accredito istantaneo backend Chunk 3)
       var revealedRobi=Number(data.revealed_robi_total||0);
@@ -3832,22 +3840,22 @@ async function confirmBuy(){
     } else {
       var errMsg={
         'INSUFFICIENT_ARIA':'<span class="it">ARIA insufficienti (saldo: '+(data.balance||0)+', costo: '+(data.cost||0)+').</span><span class="en">Not enough ARIA (balance: '+(data.balance||0)+', cost: '+(data.cost||0)+').</span>',
-        'NOT_ENOUGH_BLOCKS':'<span class="it">Blocchi non disponibili.</span><span class="en">Blocks not available.</span>',
-        'BLOCKS_ALREADY_TAKEN':'<span class="it">Qualcuno ha preso quei blocchi. Riprova.</span><span class="en">Someone took those blocks. Try again.</span>',
+        'NOT_ENOUGH_BLOCKS':'<span class="it">Step non disponibili.</span><span class="en">Steps not available.</span>',
+        'BLOCKS_ALREADY_TAKEN':'<span class="it">Qualcuno ha fatto quegli Step prima di te. Riprova.</span><span class="en">Someone took those Steps first. Try again.</span>',
         'AIRDROP_NOT_ACTIVE':'<span class="it">Airdrop non attivo.</span><span class="en">Airdrop not active.</span>',
         'AIRDROP_EXPIRED':'<span class="it">Airdrop scaduto.</span><span class="en">Airdrop expired.</span>',
-        'INVALID_BLOCK_NUMBER':'<span class="it">Errore blocco.</span><span class="en">Block error.</span>'
+        'INVALID_BLOCK_NUMBER':'<span class="it">Errore Step.</span><span class="en">Step error.</span>'
       };
       showMsg('err',errMsg[data.error]||'Errore: '+(data.error||'unknown')+(data.detail?' — '+data.detail:''));
       btn.disabled=false;
       btn.classList.remove('loading');
-      btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
+      btn.innerHTML='<span class="it">Avanza</span><span class="en">Advance</span>';
     }
   }catch(e){
     showMsg('err','<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>');
     btn.disabled=false;
     btn.classList.remove('loading');
-    btn.innerHTML='<span class="it">Acquista blocchi</span><span class="en">Buy blocks</span>';
+    btn.innerHTML='<span class="it">Avanza</span><span class="en">Advance</span>';
   }
   _pendingBuy=null;
 }
@@ -3964,7 +3972,7 @@ function _renderPartCard(item,isArchive){
     +'<div class="my-card-info">'
     +'<div class="my-card-title">'+a.title+'</div>'
     +'<div class="my-card-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+a.category+' &middot; '+badge+deadlineHtml+'</div>'
-    +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> <span class="it">blocchi</span><span class="en">blocks</span> &middot; '+item.spent+' ARIA</div>'
+    +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> Step &middot; '+item.spent+' ARIA</div>'
     +'</div></div>'
     +revealHtml
     +'<div style="display:flex;gap:8px;padding:8px 16px 12px;border-top:1px solid var(--gray-800);align-items:center">'
@@ -5008,8 +5016,8 @@ async function openCompleteEarlyClose(airdropId){
     +'<h3 style="font-family:var(--font-h);font-size:22px;font-weight:500;color:var(--white);margin:0 0 14px">'+escHtml(a.title)+'</h3>'
     +'<div style="padding:14px 16px;background:rgba(239,62,79,.05);border-left:3px solid var(--gold);border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;color:var(--gray-300);line-height:1.55"><span class="it">Motivo: '+reasonIt+'.</span><span class="en">Reason: '+reasonEn+'.</span></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-bottom:18px;font-size:13px">'
-    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Blocchi venduti</span><span class="en">Blocks sold</span></div><div style="color:var(--white);font-size:15px"><strong>'+blocksSold.toLocaleString('it-IT')+'</strong> / '+originalBlocks.toLocaleString('it-IT')+'</div></div>'
-    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Blocchi bruciati</span><span class="en">Burned</span></div><div style="color:var(--gray-400);font-size:15px">'+burned.toLocaleString('it-IT')+'</div></div>'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Step fatti</span><span class="en">Blocks sold</span></div><div style="color:var(--white);font-size:15px"><strong>'+blocksSold.toLocaleString('it-IT')+'</strong> / '+originalBlocks.toLocaleString('it-IT')+'</div></div>'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Step bruciati</span><span class="en">Burned</span></div><div style="color:var(--gray-400);font-size:15px">'+burned.toLocaleString('it-IT')+'</div></div>'
     +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Revenue lordo</span><span class="en">Gross revenue</span></div><div style="color:var(--aria);font-size:15px"><strong>'+revenueAria.toLocaleString('it-IT')+' ARIA</strong><br><span style="font-size:12px;color:var(--gray-400)">&asymp; &euro;'+revenueEur.toFixed(2)+'</span></div></div>'
     +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Tua quota stimata</span><span class="en">Your est. share</span></div><div style="color:var(--gold);font-size:15px"><strong>&euro;'+sellerShare.toFixed(2)+'</strong></div></div>'
     +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Il tuo minimo</span><span class="en">Your minimum</span></div><div style="color:'+(belowMin?'#ef4444':'var(--gray-300)')+';font-size:15px">&euro;'+sellerMin.toFixed(2)+'</div></div>'
