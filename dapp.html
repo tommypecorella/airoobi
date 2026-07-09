@@ -67,6 +67,10 @@
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
           <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
         </a>
+        <a href="/miei-airdrop#corse" data-page="my" onclick="goToMyCorse(event)" style="display:flex;align-items:center;gap:10px;padding:9px 12px;color:var(--gray-300);text-decoration:none;font-family:var(--font-b);font-size:13px;border-radius:var(--radius-sm)">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+          <span class="it">Le mie corse</span><span class="en">My climbs</span>
+        </a>
       </div>
     </div>
     <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
@@ -147,6 +151,10 @@
   <a href="/miei-airdrop" data-page="my" onclick="navigateTo('my',event)">
     <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
     <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
+  </a>
+  <a href="/miei-airdrop#corse" data-page="my" onclick="goToMyCorse(event)">
+    <svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+    <span class="it">Le mie corse</span><span class="en">My climbs</span>
   </a>
   <a href="/proponi" data-page="submit" class="nav-bold" onclick="navigateTo('submit',event)">
     <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
@@ -654,10 +662,10 @@
         </div>
       </div>
 
-      <!-- Le mie partecipazioni (attive) -->
-      <div>
+      <!-- Le mie corse (partecipazioni attive) -->
+      <div id="my-corse">
         <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:6px;display:flex;align-items:baseline;gap:10px">
-          <span class="it">Le mie partecipazioni</span><span class="en">My participations</span>
+          <span class="it">Le mie corse</span><span class="en">My climbs</span>
           <span id="my-parts-active-count" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);font-weight:500">0</span>
         </h3>
         <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase;margin-bottom:14px;border-bottom:1px solid var(--gray-800);padding-bottom:10px"><span class="it">Compro</span><span class="en">Buying</span></div>
@@ -690,7 +698,7 @@
       <!-- Partecipazioni concluse -->
       <div>
         <h3 style="font-family:var(--font-h);font-size:20px;font-weight:300;color:var(--white);margin-bottom:6px;display:flex;align-items:baseline;gap:10px">
-          <span class="it">Partecipazioni concluse</span><span class="en">Closed participations</span>
+          <span class="it">Corse concluse</span><span class="en">Closed climbs</span>
           <span id="my-parts-archive-count" style="font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-500);font-weight:500">0</span>
         </h3>
         <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-500);text-transform:uppercase;margin-bottom:14px;border-bottom:1px solid var(--gray-800);padding-bottom:10px"><span class="it">Storico acquisti</span><span class="en">Buying history</span></div>
@@ -1622,7 +1630,7 @@
   </div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-600);margin-top:6px"><span class="it">Piattaforma riservata ai maggiorenni (18+)</span><span class="en">Platform for adults only (18+)</span></div>
   <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);margin-top:10px"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>
-  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.07.09-4.51.3</div>
+  <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-600);margin-top:6px">alfa-2026.07.10-4.51.4</div>
 </div>
 
 <!-- ═══ SPLASH TOUR ═══ -->
@@ -1694,6 +1702,6 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.49.1"></script>
+<script src="/src/dapp.js?v=4.49.2"></script>
 </body>
 </html>

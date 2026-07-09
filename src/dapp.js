@@ -411,6 +411,9 @@ document.addEventListener('DOMContentLoaded',async function(){
     initialPage='explore';
   }
   showPage(initialPage);
+  if(initialPage==='my'&&location.hash==='#corse'){
+    setTimeout(function(){var el=document.getElementById('my-corse');if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},700);
+  }
   if(!urlId){
     history.replaceState({page:initialPage},null,PAGE_PATHS[initialPage]||'/dapp');
   }
@@ -3696,6 +3699,16 @@ function closeDetailView(){
   if(searchWrap){var w=searchWrap.closest('.etb-search-wrap, .search-wrap, .explore-search')||searchWrap;w.style.display='';}
   hideTopbarCR();
   _currentDetail=null;
+}
+
+// «Le mie corse» (10 lug, Skeezu PM): sezione partecipazioni su /miei-airdrop
+function goToMyCorse(event){
+  if(event){event.preventDefault();event.stopPropagation();}
+  navigateTo('my');
+  setTimeout(function(){
+    var el=document.getElementById('my-corse');
+    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+  },400);
 }
 
 function backToList(){

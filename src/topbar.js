@@ -58,7 +58,7 @@ var MY_LINK={href:'/miei-airdrop',page:'my',icon:ICONS.my,it:'I miei airdrop',en
 /* Dropdown AIRDROPS (solo da loggati): Esplora + I miei, apre su hover */
 function airdropsDropdownHtml(active){
   var trigger=linkHtml(PUBLIC_LINKS[1],active).replace('</a>',' '+ICONS.caret+'</a>');
-  var items=[{href:'/airdrops',page:'explore',icon:ICONS.explore,it:'Esplora airdrop',en:'Explore airdrops'},MY_LINK].map(function(l){
+  var items=[{href:'/airdrops',page:'explore',icon:ICONS.explore,it:'Esplora airdrop',en:'Explore airdrops'},MY_LINK,{href:'/miei-airdrop#corse',page:'my',icon:'<svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>',it:'Le mie corse',en:'My climbs'}].map(function(l){
     var ac=l.page===active?' active':'';
     return '<a href="'+l.href+'" data-page="'+l.page+'" class="topbar-edu-item'+ac+'">'
       +l.icon+' <span class="it">'+l.it+'</span><span class="en">'+l.en+'</span></a>';
