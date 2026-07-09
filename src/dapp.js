@@ -2353,7 +2353,7 @@ async function openDetail(id){
   }
   if(!a)return;
   stopGalleryAutoplay();
-  if(!_currentDetail||_currentDetail.id!==a.id){_salitaPrevRank=null;_rulloCounts=null;_lastScores=null;}
+  if(!_currentDetail||_currentDetail.id!==a.id){_salitaPrevRank=null;_rulloCounts=null;_lastScores=null;_salitaMyPrevT=null;}
   _currentDetail=a;
   _buyQty=1;
   document.getElementById('list-view').classList.add('hidden');
@@ -2747,6 +2747,7 @@ var _salitaAvatars={};
 var _salitaAvatarsFor=null;
 var _salitaPrevRank=null;
 var _salitaJustBought=false;
+var _salitaMyPrevT=null;
 var _rulloCounts=null;
 var _lastScores=null;
 
@@ -2810,7 +2811,7 @@ async function renderSalita(scores){
   var myIdx=-1,i;
   for(i=0;i<n;i++){if(uid&&scores[i].user_id===uid){myIdx=i;break;}}
 
-  // Sorpassi (tono spinta)
+  // Sorpassi (tono spinta · motion-spec 2e: mai suoni, mai coriandoli)
   var myRank=myIdx>=0?scores[myIdx].rank:null;
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   if(myRank&&_salitaPrevRank&&myRank!==_salitaPrevRank){
@@ -2831,6 +2832,18 @@ async function renderSalita(scores){
   }
   var fuoriCount=0;
   for(i=0;i<n;i++){if(isFuori(scores[i]))fuoriCount++;}
+
+  // Blocchi che servono a `who` per raggiungere il punteggio `target`
+  function blocksToReach(who,target){
+    if(!who)return null;
+    var L=parseFloat(who.loyalty_mult)||1,P=parseFloat(who.pity_bonus)||0,B=Number(who.blocks)||0;
+    return Math.max(1,Math.ceil(Math.pow(Math.max(0,target-P)/L,2)-B));
+  }
+  var me=myIdx>=0?scores[myIdx]:null;
+  var meFuori=me?isFuori(me):false;
+  var needTo1=me&&myIdx>0?blocksToReach(me,leader):null;                              // per superare il leader
+  var needPrev=me&&myIdx>0?blocksToReach(me,parseFloat(scores[myIdx-1].score)||0):null; // per il corridore davanti
+  var gap2nd=myIdx===0&&n>1?blocksToReach(scores[1],parseFloat(me.score)||0):null;     // quanto manca al 2° per prendermi
 
   // Finestra corridori: top3 + 5 davanti a me + me + ultimi 3
   var show={};
@@ -2854,10 +2867,11 @@ async function renderSalita(scores){
   // Sentiero
   html+='<svg class="salita-svg" viewBox="0 0 '+SALITA_VB_W+' '+SALITA_VB_H+'" preserveAspectRatio="none" aria-hidden="true"><path class="salita-path" d="'+SALITA_PATH_D+'" vector-effect="non-scaling-stroke"/></svg>';
   // Vetta (foto oggetto)
-  html+='<div class="salita-vetta">'
+  var vettaHtml='<div class="salita-vetta">'
     +(a.image_url?'<img class="salita-vetta-img" src="'+a.image_url+'" alt="">':'<div class="salita-vetta-ph"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')
     +'<span class="salita-vetta-flag"><span class="it">VETTA</span><span class="en">SUMMIT</span></span></div>';
-  // Bandierine ROBI (traguardi volanti: piene=trovate · tratteggiate=nascoste)
+  html+=vettaHtml;
+  // Bandierine ROBI (traguardi volanti)
   var robiFound=0,robiTotal=0;
   if(_rulloCounts&&_rulloCounts.total>0){
     robiTotal=_rulloCounts.total;robiFound=robiTotal-_rulloCounts.outstanding;
@@ -2868,27 +2882,41 @@ async function renderSalita(scores){
       html+='<div class="salita-flagpin" data-t="'+ft.toFixed(3)+'"><svg width="14" height="20" viewBox="0 0 14 20"><line x1="2" y1="1" x2="2" y2="19" stroke="var(--gray-500)" stroke-width="1.5"/><path d="M3,2 L13,5.5 L3,9 Z" '+(f<foundFlags?'fill="var(--gold)"':'fill="none" stroke="var(--gray-500)" stroke-width="1.2" stroke-dasharray="2 2"')+'/></svg></div>';
     }
   }
+  // Stato limite: sentiero libero (2c)
   if(n===0){
-    html+='<div class="salita-plus" style="left:30%;top:80%"><span class="it">Il sentiero è libero — parti per primo</span><span class="en">The trail is clear — be the first to climb</span></div>';
+    html+='<div class="salita-empty"><div class="salita-empty-t"><span class="it">Il sentiero è libero</span><span class="en">The trail is clear</span></div>'
+      +'<div class="salita-empty-s"><span class="it">Parti per primo: il primo blocco ti mette in vetta.</span><span class="en">Be the first: your first block puts you at the summit.</span></div></div>';
+  }
+  // Chip distacco sul sentiero, accanto al corridore davanti a me (2c)
+  var tMe=null;
+  if(me){tMe=0.04+0.9*(leader>0?(parseFloat(me.score)||0)/leader:0);}
+  if(myIdx>0&&needPrev){
+    var tPrev=0.04+0.9*(leader>0?(parseFloat(scores[myIdx-1].score)||0)/leader:0);
+    html+='<div class="salita-gap-chip" data-t="'+tPrev.toFixed(3)+'"><span class="it">distacco ~'+needPrev.toLocaleString('it-IT')+' blocchi</span><span class="en">gap ~'+needPrev.toLocaleString('en-US')+' blocks</span></div>';
   }
   // Corridori + gap compressi
   var prevShown=null;
+  var miniRiders=[];
   idxs.forEach(function(x,ord){
     var s=scores[x];
     var rel=leader>0?(parseFloat(s.score)||0)/leader:0;
     var t=0.04+0.9*rel;
     if(prevShown!==null&&x-prevShown>1){
       var gap=x-prevShown-1;
-      var tPrev=leader>0?0.04+0.9*((parseFloat(scores[prevShown].score)||0)/leader):0.04;
-      html+='<div class="salita-plus" data-t="'+((t+tPrev)/2).toFixed(3)+'">+'+gap+'</div>';
+      var tp=leader>0?0.04+0.9*((parseFloat(scores[prevShown].score)||0)/leader):0.04;
+      html+='<div class="salita-plus" data-t="'+((t+tp)/2).toFixed(3)+'">+'+gap+'</div>';
+      miniRiders.push({plus:gap,t:(t+tp)/2});
     }
     prevShown=x;
     var isMe=x===myIdx;
     var fuori=isFuori(s);
     var boost=isMe&&s.pity_phase&&s.pity_phase!=='normal';
     var aria=(isMe?(lang==='it'?'La tua posizione: ':'Your position: '):'')+s.rank+'ª';
+    miniRiders.push({uid:s.user_id,me:isMe,fuori:fuori,t:t});
     if(isMe){
-      html+='<div class="salita-rider me'+(fuori?' fuori':'')+(_salitaJustBought?' just-bought':'')+'" data-t="'+t.toFixed(3)+'" role="img" aria-label="'+aria+'">'
+      // Motion-spec 2e: al buy l'avatar parte dalla posizione precedente e AVANZA lungo il sentiero
+      var animate=_salitaJustBought&&_salitaMyPrevT!==null&&t>_salitaMyPrevT;
+      html+='<div class="salita-rider me'+(fuori?' fuori':'')+(_salitaJustBought?' just-bought':'')+'" data-t="'+(animate?_salitaMyPrevT.toFixed(3):t.toFixed(3))+'"'+(animate?' data-t-final="'+t.toFixed(3)+'"':'')+' role="img" aria-label="'+aria+'">'
         +'<span style="position:relative;display:inline-block">'+salitaAvatarHtml(s.user_id,true)
         +(boost?'<span class="salita-boost" title="Boost di garanzia attivo"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>':'')
         +'</span><span class="salita-me-badge"><span class="it">TU · '+s.rank+'°'+(fuori?' · fuori corsa':'')+'</span><span class="en">YOU · '+s.rank+'°'+(fuori?' · out':'')+'</span></span></div>';
@@ -2898,47 +2926,96 @@ async function renderSalita(scores){
     }
   });
   _salitaJustBought=false;
+  if(tMe!==null)_salitaMyPrevT=tMe;
 
-  // Header + contatori + nota legale
+  // ── Variante compatta (2d) — mobile: sparkline orizzontale ──
+  var mini='<svg viewBox="0 0 480 88" preserveAspectRatio="none" aria-hidden="true"><path d="M8,74 C130,66 330,42 452,14" fill="none" stroke="var(--gray-600)" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round"/></svg>';
+  mini+='<div class="salita-mini-vetta">'+(a.image_url?'<img src="'+a.image_url+'" alt="">':'<div class="salita-mini-ph"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')+'</div>';
+  miniRiders.forEach(function(r){
+    var mx=5+r.t*85, my=80-r.t*62;
+    if(r.plus){mini+='<span class="salita-plus" style="left:'+mx.toFixed(1)+'%;top:'+my.toFixed(1)+'%">+'+r.plus+'</span>';return;}
+    mini+='<div class="salita-rider mini'+(r.me?' me':'')+(r.fuori?' fuori':'')+'" style="left:'+mx.toFixed(1)+'%;top:'+my.toFixed(1)+'%">'+salitaAvatarHtml(r.uid,r.me)+'</div>';
+  });
+
+  // ── Header · badge · contatori · CTA (2c quick action) ──
   var cd=a.deadline?salitaCountdown(a.deadline):null;
   var volata=a.deadline&&(new Date(a.deadline).getTime()-Date.now())<86400000&&(new Date(a.deadline).getTime()-Date.now())>0;
+  var inVetta=myIdx===0&&n>0;
   var counters='';
   if(robiTotal>0){
     counters+='<span class="sc-item"><svg width="11" height="15" viewBox="0 0 14 20" aria-hidden="true"><line x1="2" y1="1" x2="2" y2="19" stroke="var(--gray-500)" stroke-width="1.5"/><path d="M3,2 L13,5.5 L3,9 Z" fill="var(--gold)"/></svg><span><strong>'+robiFound+'/'+robiTotal+' ROBI</strong> <span class="it">trovati sul percorso</span><span class="en">found on the trail</span></span></span>';
   }
-  if(myIdx>0){
-    var target=scores[myIdx-1];
-    var myS=scores[myIdx];
-    var L=parseFloat(myS.loyalty_mult)||1,P=parseFloat(myS.pity_bonus)||0,B=Number(myS.blocks)||0;
-    var needTot=Math.pow(Math.max(0,(parseFloat(target.score)||0)-P)/L,2);
-    var needBlocks=Math.max(1,Math.ceil(needTot-B));
-    counters+='<span class="sc-item"><span class="it">distacco dal '+target.rank+'°: <strong>~'+needBlocks.toLocaleString('it-IT')+' blocchi</strong></span><span class="en">gap to #'+target.rank+': <strong>~'+needBlocks.toLocaleString('en-US')+' blocks</strong></span></span>';
-  }else if(myIdx===0&&n>1){
-    counters+='<span class="sc-item"><span class="it"><strong>Sei in vetta</strong> — difendi la posizione</span><span class="en"><strong>You\'re at the summit</strong> — defend it</span></span>';
+  if(inVetta&&gap2nd){
+    counters+='<span class="sc-item"><span class="it">Il 2° è a <strong>~'+gap2nd.toLocaleString('it-IT')+' blocchi</strong> — difendi la posizione fino alla chiusura</span><span class="en">#2 is <strong>~'+gap2nd.toLocaleString('en-US')+' blocks</strong> away — defend until close</span></span>';
+  }else if(myIdx>0&&needPrev){
+    counters+='<span class="sc-item"><span class="it">distacco dal '+scores[myIdx-1].rank+'°: <strong>~'+needPrev.toLocaleString('it-IT')+' blocchi</strong></span><span class="en">gap to #'+scores[myIdx-1].rank+': <strong>~'+needPrev.toLocaleString('en-US')+' blocks</strong></span></span>';
   }
   if(fuoriCount>0){
     counters+='<span class="sc-item"><span class="it"><strong>'+fuoriCount+'</strong> fuori corsa</span><span class="en"><strong>'+fuoriCount+'</strong> out of the race</span></span>';
   }
+  // Quick action contestuale (2c): imposta lo slider ai blocchi giusti e porta al box acquisto
+  var cta='';
+  if(remaining>0){
+    if(!uid||_publicMode){
+      cta='<button class="salita-cta" onclick="salitaQuickBuy(1)"><span class="it">Entra in corsa</span><span class="en">Join the climb</span></button>';
+    }else if(n===0){
+      cta='<button class="salita-cta" onclick="salitaQuickBuy(1)"><span class="it">Parti per primo</span><span class="en">Be the first to climb</span></button>';
+    }else if(inVetta){
+      cta='<button class="salita-cta outline" onclick="salitaQuickBuy('+(gap2nd?Math.min(gap2nd,50):5)+')"><span class="it">Difendi la posizione</span><span class="en">Defend your position</span></button>';
+    }else if(myIdx<0){
+      cta='<button class="salita-cta" onclick="salitaQuickBuy(1)"><span class="it">Entra in corsa</span><span class="en">Join the climb</span></button>';
+    }else if(!meFuori&&needTo1){
+      cta='<button class="salita-cta" onclick="salitaQuickBuy('+needTo1+')"><span class="it">Attacca la 1ª posizione</span><span class="en">Attack the summit</span></button>';
+    }
+  }
   el.innerHTML='<div class="salita-wrap">'
     +'<div class="salita-head"><div><div class="salita-h1"><span class="it">La Salita</span><span class="en">The Climb</span></div>'
-    +'<div class="salita-sub"><span>'+n+' <span class="it">in corsa</span><span class="en">climbing</span></span>'
-    +(fuoriCount>0?'<span>·</span><span>'+fuoriCount+' <span class="it">fuori corsa</span><span class="en">out</span></span>':'')
-    +(cd?'<span>·</span><span><span class="it">chiusura tra</span><span class="en">closes in</span> '+cd+'</span>':'')
-    +'</div></div>'
-    +(volata?'<span class="salita-volata"><span class="it">VOLATA FINALE</span><span class="en">FINAL SPRINT</span></span>':'')
+    +(n>0?'<div class="salita-sub"><span>'+n+' <span class="it">in corsa</span><span class="en">climbing</span></span>'
+      +(fuoriCount>0?'<span>·</span><span>'+fuoriCount+' <span class="it">fuori corsa</span><span class="en">out</span></span>':'')
+      +(cd?'<span>·</span><span><span class="it">chiusura tra</span><span class="en">closes in</span> '+cd+'</span>':'')
+      +'</div>':'')
     +'</div>'
+    +'<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">'
+    +(inVetta?'<span class="salita-invetta"><span class="it">SEI IN VETTA</span><span class="en">AT THE SUMMIT</span></span>':'')
+    +(volata?'<span class="salita-volata"><span class="it">VOLATA FINALE</span><span class="en">FINAL SPRINT</span></span>':'')
+    +'</div></div>'
     +'<div class="salita-field">'+html+'</div>'
+    +'<div class="salita-mini">'+mini+'</div>'
     +(counters?'<div class="salita-counters">'+counters+'</div>':'')
+    +cta
     +'<p class="salita-legal"><span class="it">Posizione deterministica: punteggio = √blocchi × moltiplicatore fedeltà + boost di garanzia. Chi è in vetta alla chiusura ottiene l\'oggetto; tutti gli altri guadagnano comunque ROBI Reward.</span><span class="en">Deterministic position: score = √blocks × loyalty multiplier + guarantee boost. Whoever is at the summit at close gets the item; everyone else still earns ROBI Reward.</span></p>'
     +'</div>';
 
-  // Posizionamento sul sentiero via getPointAtLength (bezier reale, non approssimazione)
-  el.querySelectorAll('[data-t]').forEach(function(node){
+  // Posizionamento sul sentiero via getPointAtLength
+  el.querySelectorAll('.salita-field [data-t]').forEach(function(node){
     var p=salitaPointAt(parseFloat(node.getAttribute('data-t'))||0);
     var dx=parseFloat(node.getAttribute('data-dx'))||0;
     node.style.left=(p[0]+dx)+'%';
     node.style.top=p[1]+'%';
   });
+  // Motion-spec 2e: avanzamento lungo il sentiero (900ms emphasized via CSS transition)
+  var meNode=el.querySelector('.salita-rider.me[data-t-final]');
+  if(meNode){
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      var p=salitaPointAt(parseFloat(meNode.getAttribute('data-t-final'))||0);
+      meNode.style.left=p[0]+'%';meNode.style.top=p[1]+'%';
+    });});
+  }
+}
+
+// Quick action Salita (2c): preset dello slider + scroll al box acquisto
+function salitaQuickBuy(qty){
+  var slider=document.getElementById('buy-slider');
+  if(slider&&!slider.disabled&&qty){
+    var maxV=parseInt(slider.max||'1',10);
+    slider.value=Math.max(1,Math.min(qty,maxV));
+    if(typeof onSlider==='function')onSlider();
+  }
+  var box=document.querySelector('.buy-box');
+  if(box){
+    box.scrollIntoView({behavior:'smooth',block:'center'});
+    box.classList.remove('salita-flash');void box.offsetWidth;box.classList.add('salita-flash');
+  }
 }
 
 // GS-8 · Condividi airdrop (Web Share API native + clipboard fallback)

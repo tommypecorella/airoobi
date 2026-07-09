@@ -1232,3 +1232,32 @@ img.salita-av{display:block}
   .detail-race-col{width:45%;max-width:520px;flex-shrink:0;position:sticky;top:20px}
   .detail-gallery-inline{position:relative;width:100%;max-width:none;height:auto;aspect-ratio:4/3;flex-shrink:1}
 }
+
+/* ── Salita 2c/2d/2e (10 lug · tavole Claude Design): stati, quick action, mini mobile ── */
+.salita-cta{width:100%;height:46px;margin-top:12px;border-radius:12px;border:none;background:var(--gold);color:#fff;font-family:var(--font-b);font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s}
+.salita-cta:hover{opacity:.9;transform:translateY(-1px)}
+.salita-cta.outline{background:transparent;border:1.5px solid var(--gold);color:var(--gold)}
+.salita-empty{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%);text-align:center;z-index:2;width:82%}
+.salita-empty-t{font-family:var(--font-h);font-size:19px;font-weight:700;color:var(--white)}
+.salita-empty-s{font-size:13px;color:var(--gray-400);margin-top:4px;line-height:1.5}
+.salita-invetta{padding:4px 10px;border-radius:999px;background:rgba(34,197,94,.14);color:#16a34a;font-family:var(--font-m);font-size:9.5px;letter-spacing:1.2px;font-weight:700;white-space:nowrap}
+.salita-gap-chip{position:absolute;transform:translate(-50%,-165%);z-index:4;padding:3px 10px;border-radius:999px;background:rgba(74,158,255,.12);color:var(--aria);font-family:var(--font-m);font-size:10px;white-space:nowrap}
+.buy-box.salita-flash{animation:buybox-flash 1.2s ease}
+@keyframes buybox-flash{0%{box-shadow:0 0 0 0 rgba(239,62,79,.5)}60%{box-shadow:0 0 0 8px rgba(239,62,79,0)}100%{box-shadow:0 0 0 0 rgba(239,62,79,0)}}
+/* Motion-spec 2e: step scala 1→1.12→1 nei primi ~300ms del buy */
+@keyframes salita-step{0%{transform:scale(1)}33%{transform:scale(1.12)}100%{transform:scale(1)}}
+/* Mini-salita (2d) — sparkline compatta: sostituisce il campo alto su mobile */
+.salita-mini{display:none;position:relative;height:88px;margin-top:6px}
+.salita-mini svg{position:absolute;inset:0;width:100%;height:100%}
+.salita-mini-vetta{position:absolute;right:0;top:0}
+.salita-mini-vetta img,.salita-mini-ph{width:40px;height:40px;border-radius:10px;object-fit:cover;border:2px solid var(--gold);background:var(--gray-800)}
+.salita-mini-ph{display:flex;align-items:center;justify-content:center}
+.salita-mini-ph svg{width:18px;height:18px}
+.salita-mini .salita-rider{position:absolute;transform:translate(-50%,-50%)}
+.salita-mini .salita-av{width:22px;height:22px;font-size:7px;border-width:1.5px}
+.salita-mini .salita-rider.me .salita-av{width:30px;height:30px;font-size:8.5px;box-shadow:0 0 0 2px var(--gold),0 3px 8px rgba(22,29,38,.2)}
+.salita-mini .salita-plus{font-size:9px;padding:2px 7px}
+@media(max-width:767px){
+  .salita-field,.salita-quota,.salita-quota-label{display:none}
+  .salita-mini{display:block}
+}
