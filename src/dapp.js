@@ -3705,10 +3705,13 @@ function closeDetailView(){
 function goToMyCorse(event){
   if(event){event.preventDefault();event.stopPropagation();}
   navigateTo('my');
-  setTimeout(function(){
-    var el=document.getElementById('my-corse');
-    if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
-  },400);
+  // doppio tentativo: il render delle card è async e sposta il layout
+  [500,1200].forEach(function(ms){
+    setTimeout(function(){
+      var el=document.getElementById('my-corse');
+      if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+    },ms);
+  });
 }
 
 function backToList(){
