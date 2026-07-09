@@ -2353,6 +2353,7 @@ async function openDetail(id){
   }
   if(!a)return;
   stopGalleryAutoplay();
+  if(!_currentDetail||_currentDetail.id!==a.id){_salitaPrevRank=null;_rulloCounts=null;_lastScores=null;}
   _currentDetail=a;
   _buyQty=1;
   document.getElementById('list-view').classList.add('hidden');
@@ -2577,6 +2578,9 @@ async function openDetail(id){
     // §4.6 · Pannello acquisto above-the-fold (o outcome se concluded)
     +buyBoxHtml
 
+    // LA SALITA · la corsa verso la vetta (popolata da renderSalita via refreshPosition)
+    +(!isConcluded?'<div id="detail-salita"></div>':'')
+
     // GS-16 · aggancio "scopri ROBI nel rullo" (populated by loadRulloHook)
     +(!isConcluded?'<div class="detail-rullo-hook" id="detail-rullo-hook"></div>':'')
 
@@ -2631,8 +2635,7 @@ async function openDetail(id){
     // I tuoi blocchi (badge sintetico)
     +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi blocchi:</span><span class="en">Your blocks:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">impiegati</span><span class="en">spent</span></div>':'')
 
-    // Mine Tower 3D
-    +buildMineTower(a,myBlocks)
+    // Mine Tower 3D — sostituita da LA SALITA (9 lug); funzione conservata per rollback
 
     // Mini stats Rimasti/per blocco/per ROBI
     +'<div class="detail-stats">'
@@ -2732,7 +2735,165 @@ async function loadRulloHook(airdropId){
       +'<div class="rullo-hook-head">'+UI_ICONS.gem+' <span class="rullo-hook-title"><span class="it">ROBI nascosti nei blocchi</span><span class="en">Hidden ROBI</span></span></div>'
       +'<p class="rullo-hook-copy"><span class="it">Alcuni blocchi nascondono un ROBI. Minali e scopri quali — il ROBI trovato è subito tuo, sul wallet.</span><span class="en">Some blocks hide a ROBI. Mine them and find out which — the ROBI you find is yours instantly, on your wallet.</span></p>'
       +'<div class="rullo-hook-count">'+countLine+'</div>';
+    _rulloCounts={total:total,outstanding:outstanding};
+    if(_lastScores)renderSalita(_lastScores);
   }catch(e){el.innerHTML='';}
+}
+
+/* ══ LA SALITA · la corsa verso la vetta (9 lug · brainstorm Skeezu+CCP) ══
+   Sostituisce il rullo come visual: metafora SPORT deterministica.
+   Punteggio → posizione sul sentiero · vetta = oggetto · avatar = corridori.
+   Finestra (scelta Skeezu): top 3 + i 5 davanti a te + TU + ultimi 3, gap compressi (+N).
+   Tono "spinta": sorpassi via toast, Boost di garanzia = fiammella, VOLATA FINALE <24h. */
+var _salitaAvatars={};
+var _salitaAvatarsFor=null;
+var _salitaPrevRank=null;
+var _salitaJustBought=false;
+var _rulloCounts=null;
+var _lastScores=null;
+
+var SALITA_POINTS=[[10,90],[32,78],[20,64],[46,50],[32,36],[60,24],[80,13]];
+
+function salitaPointAt(t){
+  var pts=SALITA_POINTS,segs=[],tot=0,i;
+  for(i=0;i<pts.length-1;i++){
+    var dx=pts[i+1][0]-pts[i][0],dy=pts[i+1][1]-pts[i][1];
+    var len=Math.sqrt(dx*dx+dy*dy);segs.push(len);tot+=len;
+  }
+  var target=Math.max(0,Math.min(1,t))*tot,acc=0;
+  for(i=0;i<segs.length;i++){
+    if(acc+segs[i]>=target){
+      var f=segs[i]>0?(target-acc)/segs[i]:0;
+      return [pts[i][0]+(pts[i+1][0]-pts[i][0])*f,pts[i][1]+(pts[i+1][1]-pts[i][1])*f];
+    }
+    acc+=segs[i];
+  }
+  return pts[pts.length-1];
+}
+
+function salitaColor(uid){
+  var h=0;uid=String(uid||'');
+  for(var i=0;i<uid.length;i++){h=(h*31+uid.charCodeAt(i))>>>0;}
+  return 'hsl('+(h%360)+',68%,52%)';
+}
+
+function salitaAvatarHtml(uid){
+  var url=_salitaAvatars[uid];
+  if(url)return '<img class="salita-rider-av" src="'+url+'" alt="" loading="lazy">';
+  // Fallback: simbolo AIROOBI (OO) in colore deterministico dall'id utente
+  var c=salitaColor(uid);
+  var bg=c.replace('hsl','hsla').replace(')',',.14)');
+  return '<svg class="salita-rider-av" viewBox="0 0 44 28" style="background:'+bg+';border-color:'+c+'">'
+    +'<circle cx="16" cy="14" r="10" fill="none" stroke="'+c+'" stroke-width="4"/>'
+    +'<circle cx="33" cy="14" r="7" fill="none" stroke="'+c+'" stroke-width="4"/></svg>';
+}
+
+async function salitaLoadAvatars(airdropId,ids){
+  if(_salitaAvatarsFor===airdropId){
+    ids=ids.filter(function(id){return !(id in _salitaAvatars)});
+  }else{_salitaAvatars={};_salitaAvatarsFor=airdropId;}
+  if(!ids.length)return;
+  try{
+    var token=_publicMode?SB_KEY:await getValidToken();if(!token)return;
+    var rows=await sbGet('profiles?id=in.('+ids.join(',')+')&select=id,avatar_url',token)||[];
+    ids.forEach(function(id){if(!(id in _salitaAvatars))_salitaAvatars[id]=null});
+    if(Array.isArray(rows))rows.forEach(function(r){_salitaAvatars[r.id]=r.avatar_url||null});
+  }catch(e){}
+}
+
+async function renderSalita(scores){
+  var el=document.getElementById('detail-salita');if(!el)return;
+  var a=_currentDetail;if(!a)return;
+  scores=Array.isArray(scores)?scores:[];
+  _lastScores=scores;
+  var n=scores.length;
+  var uid=_session&&_session.user?_session.user.id:null;
+  var myIdx=-1,i;
+  for(i=0;i<n;i++){if(uid&&scores[i].user_id===uid){myIdx=i;break;}}
+
+  // Sorpassi (tono spinta): toast quando la posizione cambia
+  var myRank=myIdx>=0?scores[myIdx].rank:null;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(myRank&&_salitaPrevRank&&myRank!==_salitaPrevRank){
+    showToast(myRank<_salitaPrevRank
+      ?(lang==='it'?'Sorpasso! Ora sei '+myRank+'° in salita.':'Overtake! You are now #'+myRank+' on the climb.')
+      :(lang==='it'?'Ti hanno superato — ora sei '+myRank+'°. Riprenditi la posizione!':'You\'ve been passed — now #'+myRank+'. Take it back!'));
+  }
+  if(myRank)_salitaPrevRank=myRank;
+
+  // Finestra corridori: top3 + 5 davanti a me + me + ultimi 3
+  var show={};
+  [0,1,2].forEach(function(x){if(x<n)show[x]=true});
+  if(myIdx>=0){for(var k=Math.max(0,myIdx-5);k<=myIdx;k++)show[k]=true;}
+  [n-3,n-2,n-1].forEach(function(x){if(x>=0)show[x]=true});
+  var idxs=Object.keys(show).map(Number).sort(function(x,y){return x-y});
+
+  await salitaLoadAvatars(a.id,idxs.map(function(x){return scores[x].user_id}));
+  // Il DOM può cambiare durante l'await (re-render): ricontrolla
+  el=document.getElementById('detail-salita');if(!el||!_currentDetail||_currentDetail.id!==a.id)return;
+
+  var leader=n?parseFloat(scores[0].score)||0:0;
+  var html='';
+  var pts=SALITA_POINTS.map(function(p){return p[0]+','+p[1]}).join(' ');
+  html+='<svg class="salita-svg" viewBox="0 0 100 100" preserveAspectRatio="none"><polyline class="salita-path" points="'+pts+'" vector-effect="non-scaling-stroke"/></svg>';
+  var vx=SALITA_POINTS[SALITA_POINTS.length-1];
+  html+='<div class="salita-vetta" style="left:'+vx[0]+'%;top:'+vx[1]+'%">'
+    +(a.image_url?'<img class="salita-vetta-img" src="'+a.image_url+'" alt="">':'<div class="salita-vetta-ph"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')
+    +'<span class="salita-vetta-flag"><span class="it">VETTA</span><span class="en">SUMMIT</span></span></div>';
+
+  // Traguardi volanti: bandierine ROBI sul sentiero (trovati pieni · nascosti tratteggiati)
+  if(_rulloCounts&&_rulloCounts.total>0){
+    var found=_rulloCounts.total-_rulloCounts.outstanding;
+    var flagsN=Math.min(_rulloCounts.total,7);
+    var foundFlags=Math.round(flagsN*(found/_rulloCounts.total));
+    for(var f=0;f<flagsN;f++){
+      var fp=salitaPointAt(0.1+0.75*(f+1)/(flagsN+1));
+      html+='<div class="salita-flag '+(f<foundFlags?'found':'hidden-f')+'" style="left:'+fp[0]+'%;top:'+fp[1]+'%"><svg viewBox="0 0 24 24" stroke-width="2"><path d="M4 21V4l12 4-12 4"/></svg></div>';
+    }
+  }
+
+  if(n===0){
+    html+='<div class="salita-plus" style="left:24%;top:82%"><span class="it">Il sentiero è libero — parti per primo</span><span class="en">The trail is clear — be the first to climb</span></div>';
+  }
+
+  var prevShown=null;
+  idxs.forEach(function(x,ord){
+    if(prevShown!==null&&x-prevShown>1){
+      var gap=x-prevShown-1;
+      var t1=leader>0?(parseFloat(scores[prevShown].score)||0)/leader:0;
+      var t2=leader>0?(parseFloat(scores[x].score)||0)/leader:0;
+      var mp=salitaPointAt(0.06+0.82*((t1+t2)/2));
+      html+='<div class="salita-plus" style="left:'+mp[0]+'%;top:'+mp[1]+'%">+'+gap+'</div>';
+    }
+    prevShown=x;
+    var s=scores[x];
+    var rel=leader>0?(parseFloat(s.score)||0)/leader:0;
+    var p=salitaPointAt(0.06+0.82*rel);
+    var isMe=x===myIdx;
+    var dx=(ord%2===0?-1:1)*(isMe?0:3);
+    var boost=isMe&&s.pity_phase&&s.pity_phase!=='normal';
+    html+='<div class="salita-rider'+(s.rank<=3?' podio':'')+(isMe?' me':'')+(isMe&&_salitaJustBought?' just-bought':'')+'" style="left:'+(p[0]+dx)+'%;top:'+p[1]+'%">'
+      +'<span style="position:relative;display:inline-block">'+salitaAvatarHtml(s.user_id)
+      +(boost?'<span class="salita-boost" title="Boost di garanzia attivo"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg></span>':'')
+      +'</span>'
+      +'<span class="salita-rider-rank">'+(isMe?'<span class="it">TU · </span><span class="en">YOU · </span>':'')+s.rank+'°</span>'
+      +'</div>';
+  });
+  _salitaJustBought=false;
+
+  var volata=a.deadline&&(new Date(a.deadline).getTime()-Date.now())<86400000&&(new Date(a.deadline).getTime()-Date.now())>0;
+  var robiLine='';
+  if(_rulloCounts&&_rulloCounts.total>0){
+    var fnd=_rulloCounts.total-_rulloCounts.outstanding;
+    robiLine='<span class="sc-robi">'+fnd+'/'+_rulloCounts.total+' <span class="it">ROBI trovati sul percorso</span><span class="en">ROBI found on the trail</span></span>';
+  }
+  el.innerHTML='<div class="salita-wrap">'
+    +'<div class="salita-head"><span class="salita-title">'+UI_ICONS.target+' <span class="it">LA SALITA</span><span class="en">THE CLIMB</span> · '+n+' <span class="it">in corsa</span><span class="en">climbing</span></span>'
+    +(volata?'<span class="salita-volata"><span class="it">VOLATA FINALE</span><span class="en">FINAL SPRINT</span></span>':'')
+    +'</div>'
+    +'<div class="salita-field">'+html+'</div>'
+    +'<div class="salita-caption"><span><span class="it">Più blocchi = più in alto. Chi è in vetta alla chiusura ottiene l\'oggetto.</span><span class="en">More blocks = higher up. Whoever is at the summit at close gets the item.</span></span>'+robiLine+'</div>'
+    +'</div>';
 }
 
 // GS-8 · Condividi airdrop (Web Share API native + clipboard fallback)
@@ -2918,6 +3079,7 @@ async function loadAutoBuyStatus(airdropId){
 
 // ── Position Live ──
 function updateDetailPosition(airdropId,scores){
+  renderSalita(scores);
   var el=document.getElementById('detail-position');if(!el)return;
   if(!_session||!scores||scores.length===0){
     var total=scores?scores.length:0;
@@ -3498,6 +3660,7 @@ async function confirmBuy(){
 
       // §5 · Reveal unboxing con l'esito reale dal server (mai stima client)
       playUnboxingReveal(data.blocks_bought,revealedRobi);
+      _salitaJustBought=true; // step animato del tuo avatar al prossimo render della Salita
 
       _balance=data.new_balance;
       updateBalanceUI();
