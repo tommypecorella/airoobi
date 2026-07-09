@@ -1261,3 +1261,7 @@ img.salita-av{display:block}
   .salita-field,.salita-quota,.salita-quota-label{display:none}
   .salita-mini{display:block}
 }
+
+/* Contatore LIVE dentro le pill categoria (10 lug: fila unica, ex cat-dashboard) */
+.cat-pill-count{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:rgba(239,62,79,.1);color:var(--gold);font-family:var(--font-m);font-size:10px;font-weight:700;vertical-align:1px}
+.cat-pill.active .cat-pill-count{background:rgba(255,255,255,.25);color:#fff}

@@ -1722,15 +1722,18 @@ async function refreshTopbarBalances(){
 
 // ── Category filter ──
 function renderCategoryFilter(){
-  var cats=new Set();
-  _airdrops.forEach(function(a){if(a.category)cats.add(a.category)});
+  // 10 lug (Skeezu PM): fila unica — le pill assorbono i contatori LIVE
+  // del vecchio cat-dashboard (renderCatDashboard ora è no-op).
+  var counts={};
+  _airdrops.forEach(function(a){var c=a.category;if(!c)return;counts[c]=(counts[c]||0)+1;});
   var wrap=document.getElementById('cat-filter');
-  var html='<button class="cat-pill active" onclick="filterCat(\'all\')"><span class="it">Tutti</span><span class="en">All</span></button>';
+  function badge(n){return n>0?' <span class="cat-pill-count">'+n+'</span>':'';}
+  var html='<button class="cat-pill active" onclick="filterCat(\'all\')"><span class="it">Tutti</span><span class="en">All</span>'+badge(_airdrops.length)+'</button>';
   html+='<button class="cat-pill" onclick="filterCat(\'favorites\')">♡ <span class="it">Preferiti</span><span class="en">Favorites</span></button>';
   if(_session&&_session.user)html+='<button class="cat-pill" onclick="filterCat(\'mine\')"><span class="it">Solo miei</span><span class="en">My own</span></button>';
   var catLabels={mobile:'Mobile',tech:'Tech',luxury:'Luxury',ultra_luxury:'Ultra Luxury',smartphone:'Smartphone',tablet:'Tablet',computer:'Computer',gaming:'Gaming',audio:'Audio',fotografia:'Fotografia',orologi:'Orologi',gioielli:'Gioielli',borse:'Borse',moda:'Moda',biciclette:'Biciclette',arredamento:'Arredamento',sport:'Sport',strumenti:'Strumenti',arte:'Arte',vino:'Vini'};
-  cats.forEach(function(c){
-    html+='<button class="cat-pill" onclick="filterCat(\''+c+'\')">'+( catLabels[c]||c)+'</button>';
+  Object.keys(counts).sort(function(a,b){return counts[b]-counts[a]||a.localeCompare(b);}).forEach(function(c){
+    html+='<button class="cat-pill" onclick="filterCat(\''+c+'\')">'+( catLabels[c]||c)+badge(counts[c])+'</button>';
   });
   wrap.innerHTML=html;
   attachCatFilterNav();
@@ -1813,7 +1816,12 @@ function bindExploreSearch(){
 // ── Category Dashboard ──
 var _comingSoonItems=[];
 function renderCatDashboard(){
+  // 10 lug (Skeezu PM): fila B rimossa — diceva le stesse cose delle pill.
+  // I contatori LIVE vivono ora dentro le pill di renderCategoryFilter.
   var wrap=document.getElementById('cat-dashboard');
+  if(wrap){wrap.style.display='none';var row=document.getElementById('cat-dashboard-row');if(row)row.innerHTML='';}
+  return;
+  /* eslint-disable no-unreachable */
   var row=document.getElementById('cat-dashboard-row');
   if(!wrap||!row)return;
 
