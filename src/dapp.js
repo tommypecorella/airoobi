@@ -892,9 +892,9 @@ async function loadStreakState(){
     var res=await sbRpc('get_my_weekly_streak',{},token);
     if(!res||!res.ok){renderStreakCalendar([],null);return;}
     var days=res.days_checked||[];
-    var today=new Date();
-    var jsDow=today.getDay(); // 0=Sun..6=Sat
-    var isoDow=jsDow===0?7:jsDow; // 1=Mon..7=Sun
+    // il giorno lo decide il server (ora italiana); fallback locale se RPC vecchia
+    var isoDow=res.day_of_week;
+    if(!isoDow){var jsDow=new Date().getDay();isoDow=jsDow===0?7:jsDow;}
     renderStreakCalendar(days,isoDow);
     updateStreakButton(days.indexOf(isoDow)>=0);
   }catch(e){}
