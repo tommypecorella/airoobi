@@ -1030,7 +1030,7 @@ async function claimFaucet(){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       btn.style.background='var(--kas)';btn.style.color='var(--black)';
       btn.textContent=lang==='it'?'+100 ARIA ricevuti!':'+100 ARIA received!';
-      showToast('<span style="color:var(--kas)">+100 ARIA</span> — <span class="it">più Step, più ROBI</span><span class="en">more blocks, more ROBI</span>');
+      showToast('<span style="color:var(--kas)">+100 ARIA</span> — <span class="it">più Step, più ROBI</span><span class="en">more Steps, more ROBI</span>');
       // Refresh dashboard stats
       var homeAria=document.getElementById('home-aria');
       if(homeAria)homeAria.innerHTML=_balance;
@@ -1177,21 +1177,21 @@ function shareReferral(platform,event){
   var el=document.getElementById('dapp-ref-link');if(!el)return;
   var link=el.dataset.link||el.textContent.trim();if(!link)return;
   var lang=document.documentElement.getAttribute('data-lang')==='en'?'en':'it';
-  // Round 12 (11 May 2026) · outsider-friendly + seller hook · no jargon Alpha Brave/ROBI/airdrop
+  // Round 13 (12 lug 2026) · linea della corsa: Step, vetta, ringraziamento · outsider-friendly + seller hook
   var msgs={
     it:{
-      whatsapp:'AIROOBI: il primo negozio online dove gli oggetti non si comprano, si ottengono partecipando. Entra adesso e sfrutta questo primo periodo pre-lancio ufficiale della piattaforma. Per ogni partecipazione vieni premiato. Curioso?\n'+link+'\nRegistrati e potrai anche vendere un tuo oggetto e non dovrai aspettare anni, mesi o settimane per venderlo, solo ore',
-      telegram:'AIROOBI: il primo negozio online dove gli oggetti non si comprano, si ottengono partecipando. Entra adesso e sfrutta questo primo periodo pre-lancio ufficiale della piattaforma. Per ogni partecipazione vieni premiato. Curioso?\n'+link+'\nRegistrati e potrai anche vendere un tuo oggetto e non dovrai aspettare anni, mesi o settimane per venderlo, solo ore',
-      twitter:'Su AIROOBI gli oggetti non si comprano, si ottengono partecipando. Per ogni partecipazione vieni premiato. Curioso? Plus: se hai qualcosa da vendere, qui lo liquidi in ore, non mesi. '+link,
-      email_subject:'AIROOBI · negozio dove gli oggetti non si comprano',
-      email_body:'Ciao,\n\nvolevo consigliarti AIROOBI: è un negozio online dove gli oggetti (smartphone, orologi, tech) non si comprano direttamente — si ottengono partecipando. Per ogni partecipazione vieni premiato.\n\nPlus: se hai qualcosa di valore da vendere, qui lo liquidi in ore, non mesi come eBay/Subito.\n\nSiamo nel primo periodo pre-lancio ufficiale della piattaforma, è il momento giusto per entrare.\n\nProvalo: '+link+'\n\nFammi sapere cosa ne pensi!'
+      whatsapp:'AIROOBI: il negozio online dove ogni oggetto è una corsa. Entri gratis, ogni giorno ricevi ARIA e li usi per avanzare Step dopo Step verso l\'oggetto che vuoi: chi arriva in vetta se lo porta a casa, e chi ha corso viene comunque ringraziato. Curioso?\n'+link+'\nPlus: se hai un oggetto di valore da vendere, qui lo liquidi in ore, non mesi.',
+      telegram:'AIROOBI: il negozio online dove ogni oggetto è una corsa. Entri gratis, ogni giorno ricevi ARIA e li usi per avanzare Step dopo Step verso l\'oggetto che vuoi: chi arriva in vetta se lo porta a casa, e chi ha corso viene comunque ringraziato. Curioso?\n'+link+'\nPlus: se hai un oggetto di valore da vendere, qui lo liquidi in ore, non mesi.',
+      twitter:'Su AIROOBI ogni oggetto è una corsa: avanzi Step dopo Step, chi arriva in vetta lo porta a casa, chi ha corso viene ringraziato. E se vendi, liquidi in ore, non mesi. '+link,
+      email_subject:'AIROOBI · il negozio dove ogni oggetto è una corsa',
+      email_body:'Ciao,\n\nvolevo consigliarti AIROOBI: un negozio online dove gli oggetti (smartphone, orologi, tech) non si comprano a prezzo pieno — si raggiungono. Ogni oggetto è una corsa: entri gratis, ricevi ARIA ogni giorno e li usi per avanzare di Step verso la vetta. Chi arriva in cima si porta a casa l\'oggetto, chi ha corso riceve comunque un ringraziamento reale.\n\nPlus: se hai qualcosa di valore da vendere, qui lo liquidi in ore, non mesi come eBay/Subito.\n\nSiamo in pre-lancio, è il momento giusto per entrare.\n\nProvalo: '+link+'\n\nFammi sapere cosa ne pensi!'
     },
     en:{
-      whatsapp:'AIROOBI: the first online store where items aren\'t bought, they\'re earned by participating. Join now and take advantage of this pre-launch period of the platform. Every participation gets rewarded. Curious?\n'+link+'\nSign up and you can also sell your own item — no need to wait years, months or weeks to sell it. Only hours.',
-      telegram:'AIROOBI: the first online store where items aren\'t bought, they\'re earned by participating. Join now and take advantage of this pre-launch period of the platform. Every participation gets rewarded. Curious?\n'+link+'\nSign up and you can also sell your own item — no need to wait years, months or weeks to sell it. Only hours.',
-      twitter:'On AIROOBI items aren\'t bought, they\'re earned by participating. Every participation gets rewarded. Curious? Plus: if you have something to sell, here you liquidate it in hours, not months. '+link,
-      email_subject:'AIROOBI · the store where items aren\'t bought',
-      email_body:'Hi,\n\nI wanted to recommend AIROOBI: it\'s an online store where items (smartphones, watches, tech) aren\'t bought directly — they\'re earned by participating. Every participation gets rewarded.\n\nPlus: if you have something valuable to sell, here you liquidate it in hours, not months like eBay.\n\nWe\'re in the pre-launch period of the platform — perfect timing to join.\n\nTry it: '+link+'\n\nLet me know what you think!'
+      whatsapp:'AIROOBI: the online store where every item is a race. Join for free, get ARIA every day and use them to advance Step by Step toward the item you want: first to the summit takes it home, and everyone who ran gets thanked anyway. Curious?\n'+link+'\nPlus: if you have something valuable to sell, here you liquidate it in hours, not months.',
+      telegram:'AIROOBI: the online store where every item is a race. Join for free, get ARIA every day and use them to advance Step by Step toward the item you want: first to the summit takes it home, and everyone who ran gets thanked anyway. Curious?\n'+link+'\nPlus: if you have something valuable to sell, here you liquidate it in hours, not months.',
+      twitter:'On AIROOBI every item is a race: advance Step by Step, first to the summit takes it home, everyone who ran gets thanked. And if you sell, you liquidate in hours, not months. '+link,
+      email_subject:'AIROOBI · the store where every item is a race',
+      email_body:'Hi,\n\nI wanted to recommend AIROOBI: an online store where items (smartphones, watches, tech) aren\'t bought at full price — they\'re reached. Every item is a race: join for free, get ARIA every day and use them to advance Steps toward the summit. First to the top takes the item home, everyone who ran still receives a real thank-you.\n\nPlus: if you have something valuable to sell, here you liquidate it in hours, not months like eBay.\n\nWe\'re in pre-launch — perfect timing to join.\n\nTry it: '+link+'\n\nLet me know what you think!'
     }
   };
   var m=msgs[lang]||msgs.it;
@@ -1233,37 +1233,6 @@ async function loadAlphaCounterInvita(){
   }catch(e){}
 }
 
-function dappShareRef(platform){
-  var el=document.getElementById('dapp-ref-link');
-  var link=el.dataset.link;
-  var refCode=el.dataset.code||'';
-  if(!link)return;
-  var lang=document.documentElement.getAttribute('data-lang')||'it';
-  var msgs={
-    it:{
-      whatsapp:'Ho trovato *AIROOBI*.\n\nOggetti di valore — iPhone, orologi, borse — e blocchi di opportunità per portarseli a casa a un prezzo che non crederesti.\n\nEntri gratis, ogni giorno ricevi ARIA e con quelli acquisti i blocchi. Semplice.\n\nProva col mio codice *'+refCode+'*\n',
-      telegram:'Ho trovato AIROOBI.\n\nOggetti di valore — iPhone, orologi, borse — e blocchi di opportunità per portarseli a casa a un prezzo che non crederesti.\n\nEntri gratis, ogni giorno ricevi ARIA e con quelli acquisti i blocchi. Semplice.\n\nProva col mio codice '+refCode+'\n',
-      x:'Oggetti di valore. Blocchi di opportunità. Prezzi che non crederesti.\n\nEntri gratis, ricevi ARIA ogni giorno e partecipi. Semplice.\n\n@airoobi_com · codice: '+refCode+' ',
-      email_subject:'Devi vedere AIROOBI',
-      email_body:'Ciao,\n\nti giro una cosa che ho trovato: AIROOBI.\n\nFunziona così: ci sono oggetti di valore (iPhone, orologi, borse). Tu entri gratis, ogni giorno ricevi ARIA, e con quelli acquisti blocchi di opportunità per portarti a casa l\'oggetto che vuoi.\n\nPiù blocchi prendi, più sei vicino. E chi non porta a casa l\'oggetto guadagna comunque qualcosa di reale.\n\nProva col mio codice '+refCode+'\n\n'+link
-    },
-    en:{
-      whatsapp:'I found *AIROOBI*.\n\nValuable items — iPhones, watches, bags — and opportunity blocks to take them home at a price you wouldn\'t believe.\n\nJoin for free, get ARIA every day and use them to buy blocks. Simple.\n\nTry it with my code *'+refCode+'*\n',
-      telegram:'I found AIROOBI.\n\nValuable items — iPhones, watches, bags — and opportunity blocks to take them home at a price you wouldn\'t believe.\n\nJoin for free, get ARIA every day and use them to buy blocks. Simple.\n\nTry it with my code '+refCode+'\n',
-      x:'Valuable items. Opportunity blocks. Prices you won\'t believe.\n\nJoin free, get ARIA daily and participate. Simple.\n\n@airoobi_com · code: '+refCode+' ',
-      email_subject:'You need to see AIROOBI',
-      email_body:'Hey,\n\nsharing something I found: AIROOBI.\n\nHere\'s how it works: there are valuable items (iPhones, watches, bags). You join for free, get ARIA every day, and use them to buy opportunity blocks to take home the item you want.\n\nMore blocks you get, the closer you are. And those who don\'t take home the item still earn something real.\n\nTry it with my code '+refCode+'\n\n'+link
-    }
-  };
-  var m=msgs[lang]||msgs.it;
-  var urls={
-    whatsapp:'https://wa.me/?text='+encodeURIComponent(m.whatsapp+link),
-    telegram:'https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent(m.telegram),
-    x:'https://x.com/intent/tweet?text='+encodeURIComponent(m.x+link),
-    email:'mailto:?subject='+encodeURIComponent(m.email_subject)+'&body='+encodeURIComponent(m.email_body)
-  };
-  window.open(urls[platform],'_blank');
-}
 
 // ── Data loading ──
 async function loadBalance(){
@@ -1451,7 +1420,7 @@ var PAGE_PATHS=_isApp
 var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/come-funziona-airdrop':'learn','/profilo':'profilo'};
 var PAGE_HEADERS={
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per correre. Ogni Step ti avvicina alla vetta.',sub_en:'Use your ARIA to climb. Every Step brings you closer to the summit.'},
-  my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue partecipazioni e i blocchi acquistati.',sub_en:'Track your participations and purchased blocks.'},
+  my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue corse e gli Step acquistati.',sub_en:'Track your races and purchased Steps.'},
   submit:{it:'<b>Valuta</b> il tuo <em>oggetto</em>',en:'<b>Evaluate</b> your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
   referral:{it:'<em>Referral</em>',en:'<em>Referral</em>',sub_it:'Invita amici e accumula ROBI insieme. +5 ROBI per ogni invito confermato.',sub_en:'Invite friends and accumulate ROBI together. +5 ROBI for every confirmed invite.'},
   wallet:{it:'<em>Portafoglio</em>',en:'<em>Wallet</em>',sub_it:'I tuoi asset: ARIA, ROBI e KAS.',sub_en:'Your assets: ARIA, ROBI and KAS.'},
@@ -2252,7 +2221,7 @@ function renderGrid(){
       +'<span class="card-price">'+priceHtml+'</span>'
       +'<span class="card-remain">'+remaining+' <span class="it">rimasti</span><span class="en">left</span></span>'
       +'</div>'
-      +'<div class="card-mining"><span style="color:var(--gold)">&#9935;</span> <span class="it">1 '+tokIcon('ROBI')+' ogni '+miningRate+' Step</span><span class="en">1 '+tokIcon('ROBI')+' per '+miningRate+' blocks</span></div>'
+      +'<div class="card-mining"><span style="color:var(--gold)">&#9935;</span> <span class="it">1 '+tokIcon('ROBI')+' ogni '+miningRate+' Step</span><span class="en">1 '+tokIcon('ROBI')+' per '+miningRate+' Steps</span></div>'
       +'</div></div>';
   }).join('');
 
@@ -3040,7 +3009,7 @@ function salitaQuickBuy(qty){
 // GS-8 · Condividi airdrop (Web Share API native + clipboard fallback)
 async function shareAirdrop(airdropId,title){
   var url=location.origin+'/dapp/airdrop/'+airdropId;
-  var shareData={title:title?(title+' — AIROOBI'):'AIROOBI airdrop',text:'Guarda questo airdrop su AIROOBI',url:url};
+  var shareData={title:title?(title+' — AIROOBI'):'AIROOBI airdrop',text:'Guarda questa corsa su AIROOBI',url:url};
   try{
     if(navigator.share){await navigator.share(shareData);return;}
   }catch(e){if(e&&e.name==='AbortError')return;}
@@ -3073,7 +3042,7 @@ async function updateAutoBuyBanner(airdropId){
     +'<span class="ab-banner-icon">'+UI_ICONS.zap+'</span>'
     +'<span class="ab-banner-text"><strong><span class="it">AUTO-BUY ATTIVO</span><span class="en">AUTO-BUY ACTIVE</span></strong> · '
     +'<span class="it">sta facendo '+rule.blocks_per_interval+' Step ogni '+intervalLabel+' per te</span>'
-    +'<span class="en">buying '+rule.blocks_per_interval+' blocks every '+intervalLabel+' for you</span>'
+    +'<span class="en">advancing '+rule.blocks_per_interval+' Steps every '+intervalLabel+' for you</span>'
     +' · <span class="ab-banner-prog">'+rule.total_bought+'/'+rule.max_blocks+'</span></span>'
     +'<a href="#auto-buy-box" class="ab-banner-link" onclick="event.preventDefault();scrollToAutoBuyBox();return false;"><span class="it">gestisci</span><span class="en">manage</span></a>';
 }
@@ -3144,10 +3113,10 @@ async function loadHintSoglia(airdropId){
       if(threshold===-1){
         html+='<div class="hint-row hint-soglia hint-soglia-out">&#9888; <span class="it">Matematicamente fuori — il leader è irraggiungibile per te</span><span class="en">Mathematically out — leader unreachable</span></div>';
       }else if(threshold===0){
-        html+='<div class="hint-row hint-soglia hint-soglia-limite">&#9888; <span class="it">Sei al limite — solo facendo tutti gli Step rimasti puoi ancora arrivare in vetta</span><span class="en">At the edge — only buying all remaining blocks keeps you in</span></div>';
+        html+='<div class="hint-row hint-soglia hint-soglia-limite">&#9888; <span class="it">Sei al limite — solo facendo tutti gli Step rimasti puoi ancora arrivare in vetta</span><span class="en">At the edge — only taking all remaining Steps keeps you in</span></div>';
       }else if(threshold<=300){
-        html+='<div class="hint-row hint-soglia">&#9888; <span class="it">Tra ~<strong>'+threshold.toLocaleString('it-IT')+'</strong> blocchi venduti ad altri non potrai più aggiudicartelo</span>'
-          +'<span class="en">In ~<strong>'+threshold.toLocaleString('en-US')+'</strong> blocks sold to others you won\'t be able to win it anymore</span>'
+        html+='<div class="hint-row hint-soglia">&#9888; <span class="it">Tra ~<strong>'+threshold.toLocaleString('it-IT')+'</strong> Step fatti da altri non potrai più aggiudicartelo</span>'
+          +'<span class="en">In ~<strong>'+threshold.toLocaleString('en-US')+'</strong> Steps taken by others you won\'t be able to reach the summit anymore</span>'
           +'</div>';
       }
     }
@@ -3256,7 +3225,7 @@ function updateDetailPosition(airdropId,scores){
   el.innerHTML='<div class="pos-main"><span class="it">Sei <strong>'+pos+'°</strong> su '+total+' partecipanti</span>'
     +'<span class="en">You are <strong>#'+pos+'</strong> of '+total+' participants</span>'+pityBadge+'</div>'
     +'<div class="pos-breakdown">'
-    +'<span title="Tuo Punteggio (blocchi × fedeltà + boost)"><span class="pos-label"><span class="it">Punteggio</span><span class="en">Score</span></span> '+myScoreV.toFixed(2)+'</span>'
+    +'<span title="Tuo Punteggio (Step × fedeltà + boost)"><span class="pos-label"><span class="it">Punteggio</span><span class="en">Score</span></span> '+myScoreV.toFixed(2)+'</span>'
     +'<span title="Punteggio del primo in classifica"><span class="pos-label"><span class="it">Primo</span><span class="en">Leader</span></span> '+leaderScoreV.toFixed(2)+'</span>'
     +(scoreGap>0?'<span title="Distacco di Punteggio dal primo"><span class="pos-label"><span class="it">Gap</span><span class="en">Gap</span></span> '+scoreGap.toFixed(2)+'</span>':'')
     +'</div>';
@@ -3265,7 +3234,7 @@ function updateDetailPosition(airdropId,scores){
   if(_lastPosition!==null&&pos>_lastPosition){
     el.classList.add('shake');
     setTimeout(function(){el.classList.remove('shake')},600);
-    showToast('<span class="it">Sei stato superato — fai altri Step per risalire</span><span class="en">You\'ve been overtaken — buy more blocks to climb back</span>');
+    showToast('<span class="it">Sei stato superato — fai altri Step per risalire</span><span class="en">You\'ve been overtaken — take more Steps to climb back</span>');
     notifyPositionLost(airdropId);
   }
   _lastPosition=pos;
@@ -3329,7 +3298,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
   var pityStatusIt, pityStatusEn;
   if(myPityPhase==='hard'){
     pityStatusIt='Boost HARD attivo — il 1° posto è quasi sicuramente tuo, salvo altri utenti con pi&ugrave; partecipazioni di te in Hard';
-    pityStatusEn='HARD Boost active — you\'ll win almost certainly, unless others have more participations in Hard';
+    pityStatusEn='HARD Boost active — #1 is almost certainly yours, unless others have more participations in Hard';
   } else if(myPityPhase==='soft'){
     var softProg=Math.max(1,Math.round((myLosses-softPitySoglia)/Math.max(1,myPityThreshold-softPitySoglia)*100));
     pityStatusIt='Boost soft attivo ('+softProg+'%) — sei molto competitivo';
@@ -3343,8 +3312,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
   // Tips (sempre CTA partecipativo, mai "aspetta il pity")
   var tipsIt=[], tipsEn=[];
   if(isFirst){
-    tipsIt.push('Sei in testa! Compra altri blocchi e continua a partecipare in categoria per difendere il primato.');
-    tipsEn.push('You\'re leading! Buy more blocks and keep participating in category to defend #1.');
+    tipsIt.push('Sei in testa! Avanza di altri Step e continua a correre in categoria per difendere il primato.');
+    tipsEn.push('You\'re leading! Advance more Steps and keep running in category to defend #1.');
     if(total>1){
       var second=scores[1];
       var gap=second?myScoreV-(parseFloat(second.score)||0):0;
@@ -3355,22 +3324,22 @@ function updateStrategyGuide(scores,pos,total,myScore){
     }
   } else {
     if(myPityPhase==='hard'){
-      tipsIt.push('Il tuo <strong>Boost HARD</strong> &egrave; attivo: continua a comprare blocchi — il 1° posto è quasi sicuramente tuo.');
-      tipsEn.push('Your <strong>HARD Boost</strong> is active: keep buying blocks — you\'ll win almost certainly.');
+      tipsIt.push('Il tuo <strong>Boost HARD</strong> &egrave; attivo: continua ad avanzare di Step — il 1° posto è quasi sicuramente tuo.');
+      tipsEn.push('Your <strong>HARD Boost</strong> is active: keep advancing Steps — #1 is almost certainly yours.');
     } else if(myPityPhase==='soft'){
-      tipsIt.push('Sei nel <strong>Boost soft</strong>: molto competitivo. Compra altri blocchi per capitalizzare.');
-      tipsEn.push('You\'re in <strong>soft Boost</strong>: very competitive. Buy more blocks to capitalize.');
+      tipsIt.push('Sei nel <strong>Boost soft</strong>: molto competitivo. Avanza di altri Step per capitalizzare.');
+      tipsEn.push('You\'re in <strong>soft Boost</strong>: very competitive. Advance more Steps to capitalize.');
     } else {
       // stima blocchi per superare (approssimata; ignora crescita leader)
       var targetFBase=Math.max(0,leaderScoreV-myPityBonus);
       var targetBlocks=myLoyaltyMult>0.01?Math.ceil(Math.pow(targetFBase/myLoyaltyMult,2)):0;
       var blocksNeeded=Math.max(0,targetBlocks-myBlocks);
       if(blocksNeeded>0 && blocksNeeded<=300){
-        tipsIt.push('Stima: circa <strong>'+blocksNeeded+' blocchi</strong> in pi&ugrave; per raggiungere il 1&deg;.');
-        tipsEn.push('Estimate: about <strong>'+blocksNeeded+' more blocks</strong> to reach #1.');
+        tipsIt.push('Stima: circa <strong>'+blocksNeeded+' Step</strong> in pi&ugrave; per raggiungere il 1&deg;.');
+        tipsEn.push('Estimate: about <strong>'+blocksNeeded+' more Steps</strong> to reach #1.');
       } else if(blocksNeeded>300){
-        tipsIt.push('Il distacco dal 1&deg; &egrave; ampio. Partecipa comunque: <strong>trovi i ROBI nascosti nei blocchi</strong>, fai crescere il moltiplicatore fedelt&agrave;, e avvicinati al Boost.');
-        tipsEn.push('Gap to #1 is wide. Participate anyway: <strong>find the ROBI hidden in the blocks</strong>, grow your Loyalty Multiplier, and approach the Boost.');
+        tipsIt.push('Il distacco dal 1&deg; &egrave; ampio. Corri comunque: <strong>raccogli i fiori ROBI sul percorso</strong>, fai crescere il moltiplicatore fedelt&agrave;, e avvicinati al Boost.');
+        tipsEn.push('Gap to #1 is wide. Run anyway: <strong>pick up the ROBI flowers along the trail</strong>, grow your Loyalty Multiplier, and approach the Boost.');
       }
     }
     if(myHistoricAria>0 && loyaltyNext){
@@ -3382,8 +3351,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       tipsIt.push('Presale: prezzo ridotto e doppi ROBI dal mining.');
       tipsEn.push('Presale: lower price and double mining ROBI.');
     }
-    tipsIt.push('Anche se non arrivi 1°, <strong>trovi i ROBI nascosti nei blocchi</strong> e mini ROBI frazionari alla chiusura.');
-    tipsEn.push('Even if you don\'t finish #1, <strong>you find the ROBI hidden in the blocks</strong> and mine fractional ROBI at close.');
+    tipsIt.push('Anche se non arrivi 1°, <strong>raccogli i fiori ROBI sul percorso</strong> e ricevi i ROBI di ringraziamento alla chiusura.');
+    tipsEn.push('Even if you don\'t finish #1, <strong>you pick up the ROBI flowers along the trail</strong> and receive the thank-you ROBI at close.');
   }
 
   // Loyalty bar progress (visual, log10 scaled)
@@ -3412,12 +3381,12 @@ function updateStrategyGuide(scores,pos,total,myScore){
     // 1. Blocchi (radice quadrata)
     +'<div class="strategy-factor-block van">'
     +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Step correnti</span><span class="en">Current blocks</span></span>'
+    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Step correnti</span><span class="en">Current Steps</span></span>'
     +'<span class="strategy-factor-weight-badge">'+myBlocks+' &middot; &radic;='+Math.sqrt(Math.max(myBlocks,0)).toFixed(2)+'</span>'
     +'</div>'
     +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
     +' <span class="it">Contributo a radice quadrata: 100 Step valgono 10, non 100.</span>'
-    +'<span class="en">Square-root contribution: 100 blocks count as 10, not 100.</span>'
+    +'<span class="en">Square-root contribution: 100 Steps count as 10, not 100.</span>'
     +'</div>'
     +'</div>'
     // 2. Moltiplicatore Fedeltà
@@ -3500,7 +3469,7 @@ async function loadDetailStats(airdropId){
       +'</div>'
       +'<div class="mystats-cell">'
       +'<div class="mystats-val" style="color:var(--aria)">'+pctOwned.toFixed(1)+'%</div>'
-      +'<div class="mystats-label"><span class="it">Step tuoi</span><span class="en">Your blocks</span></div>'
+      +'<div class="mystats-label"><span class="it">Step tuoi</span><span class="en">Your Steps</span></div>'
       +'</div>'
       +'<div class="mystats-cell">'
       +'<div class="mystats-val">'+presaleB+'<span style="font-size:10px;color:var(--gray-400)"> / '+saleB+'</span></div>'
@@ -4128,8 +4097,8 @@ async function executeCancelParticipation(airdropId){
   if(data&&data.ok){
     var lang=document.documentElement.getAttribute('data-lang')||'it';
     showToast(lang==='it'
-      ?'Partecipazione ritirata. '+data.blocks_released+' blocchi rilasciati. '+data.aria_lost+' ARIA non rimborsati.'
-      :'Participation withdrawn. '+data.blocks_released+' blocks released. '+data.aria_lost+' ARIA not refunded.');
+      ?'Partecipazione ritirata. '+data.blocks_released+' Step rilasciati. '+data.aria_lost+' ARIA non rimborsati.'
+      :'Participation withdrawn. '+data.blocks_released+' Steps released. '+data.aria_lost+' ARIA not refunded.');
     // Refresh data
     await Promise.all([loadAirdrops(),loadMyParticipations(),loadMyRanks()]);
     renderGrid();
@@ -4279,7 +4248,7 @@ async function openControlRoom(airdropId){
   var scoresHtml='';
   if(preview.scores&&preview.scores.length){
     scoresHtml='<div class="cr-section"><div class="cr-section-title">Score Leaderboard</div>'
-      +'<div style="font-size:10px;color:var(--gray-500);margin-bottom:8px">F1 = Blocchi acquistati (70%) &middot; F2 = ARIA spesi nella categoria (30%)</div>'
+      +'<div style="font-size:10px;color:var(--gray-500);margin-bottom:8px">F1 = Step acquistati (70%) &middot; F2 = ARIA spesi nella categoria (30%)</div>'
       +'<table class="cr-table"><thead><tr><th>Rank</th><th style="text-align:center">F1</th><th style="text-align:center">F2</th><th style="text-align:center">Score</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th></tr></thead><tbody>';
     preview.scores.slice(0,8).forEach(function(s){
       scoresHtml+='<tr'+(s.rank===1?' class="winner"':'')+'>'
@@ -5016,7 +4985,7 @@ async function openCompleteEarlyClose(airdropId){
     +'<h3 style="font-family:var(--font-h);font-size:22px;font-weight:500;color:var(--white);margin:0 0 14px">'+escHtml(a.title)+'</h3>'
     +'<div style="padding:14px 16px;background:rgba(239,62,79,.05);border-left:3px solid var(--gold);border-radius:var(--radius-sm);margin-bottom:18px;font-size:13px;color:var(--gray-300);line-height:1.55"><span class="it">Motivo: '+reasonIt+'.</span><span class="en">Reason: '+reasonEn+'.</span></div>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 18px;margin-bottom:18px;font-size:13px">'
-    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Step fatti</span><span class="en">Blocks sold</span></div><div style="color:var(--white);font-size:15px"><strong>'+blocksSold.toLocaleString('it-IT')+'</strong> / '+originalBlocks.toLocaleString('it-IT')+'</div></div>'
+    +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Step fatti</span><span class="en">Steps taken</span></div><div style="color:var(--white);font-size:15px"><strong>'+blocksSold.toLocaleString('it-IT')+'</strong> / '+originalBlocks.toLocaleString('it-IT')+'</div></div>'
     +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Step bruciati</span><span class="en">Burned</span></div><div style="color:var(--gray-400);font-size:15px">'+burned.toLocaleString('it-IT')+'</div></div>'
     +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Revenue lordo</span><span class="en">Gross revenue</span></div><div style="color:var(--aria);font-size:15px"><strong>'+revenueAria.toLocaleString('it-IT')+' ARIA</strong><br><span style="font-size:12px;color:var(--gray-400)">&asymp; &euro;'+revenueEur.toFixed(2)+'</span></div></div>'
     +'<div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);text-transform:uppercase;margin-bottom:3px"><span class="it">Tua quota stimata</span><span class="en">Your est. share</span></div><div style="color:var(--gold);font-size:15px"><strong>&euro;'+sellerShare.toFixed(2)+'</strong></div></div>'
@@ -5280,7 +5249,7 @@ function openApprove(id){
   var val=Number(a.object_value_eur);
   var sugBlocks=Math.max(10,Math.round(val/4)*2);
   var sugPrice=Math.max(1,Math.round(val*1.43/sugBlocks));
-  document.getElementById('approve-info').innerHTML='<strong>'+a.title+'</strong><br>Categoria: '+a.category+' &middot; Valore: <strong>€'+val.toLocaleString('it-IT')+'</strong><br>Suggerimento: ~'+sugBlocks+' blocchi × '+sugPrice+' ARIA = €'+(sugBlocks*sugPrice*0.20).toLocaleString('it-IT')+' revenue';
+  document.getElementById('approve-info').innerHTML='<strong>'+a.title+'</strong><br>Categoria: '+a.category+' &middot; Valore: <strong>€'+val.toLocaleString('it-IT')+'</strong><br>Suggerimento: ~'+sugBlocks+' Step × '+sugPrice+' ARIA = €'+(sugBlocks*sugPrice*0.20).toLocaleString('it-IT')+' revenue';
   document.getElementById('approve-price').value=sugPrice;
   document.getElementById('approve-blocks').value=sugBlocks;
   document.getElementById('approve-presale').value='';
@@ -5296,7 +5265,7 @@ async function doApprove(){
   var presale=document.getElementById('approve-presale').value?parseInt(document.getElementById('approve-presale').value):null;
   var status=document.getElementById('approve-status').value;
   var deadline=document.getElementById('approve-deadline').value||null;
-  if(!price||price<1||!blocks||blocks<1){alert('Prezzo e blocchi obbligatori');return;}
+  if(!price||price<1||!blocks||blocks<1){alert('Prezzo e Step obbligatori');return;}
   var btn=document.getElementById('approve-ok');
   btn.disabled=true;
   var token=await getValidToken();
@@ -5453,7 +5422,7 @@ function txReasonLabel(kind,reason){
     referral_inviter:{it:'Referral (tu hai invitato)',en:'Referral (you invited)'},
     referral_welcome:{it:'Benvenuto referral',en:'Referral welcome'},
     valuation_request:{it:'Richiesta valutazione',en:'Valuation request'},
-    block_purchase:{it:'Acquisto blocchi',en:'Block purchase'},
+    block_purchase:{it:'Avanzamento Step',en:'Step advance'},
     refund:{it:'Rimborso',en:'Refund'},
     admin_grant:{it:'Assegnazione admin',en:'Admin grant'},
     admin_adjust:{it:'Admin adjust',en:'Admin adjust'}
@@ -5466,7 +5435,7 @@ function txReasonLabel(kind,reason){
     submission_accepted:{it:'Valutazione accettata',en:'Submission accepted'},
     airdrop_won:{it:'Airdrop vinto',en:'Airdrop won'},
     airdrop_seller:{it:'Airdrop completato (venditore)',en:'Airdrop completed (seller)'},
-    block_purchase:{it:'Blocchi acquistati',en:'Blocks purchased'}
+    block_purchase:{it:'Step acquistati',en:'Steps purchased'}
   };
   var m=kind==='aria'?mapAria:mapRobi;
   var r=m[reason];
@@ -6205,8 +6174,8 @@ function reopenSplash(){
 // ══════════════════════════════════════════════════════════
 var INFO_TIPS={
   'aria-balance':{
-    it:'Il tuo saldo ARIA. Ora siamo in fase testnet: li ricevi gratis dal faucet (100/gg) e dal check-in (50/gg). Li usi per acquistare blocchi negli airdrop.',
-    en:'Your ARIA balance. We\'re in testnet: get them free from the faucet (100/day) and check-in (50/day). Use them to buy blocks in airdrops.'
+    it:'Il tuo saldo ARIA. Ora siamo in fase testnet: li ricevi gratis dal faucet (100/gg) e dal check-in (50/gg). Li usi per avanzare di Step nelle corse.',
+    en:'Your ARIA balance. We\'re in testnet: get them free from the faucet (100/day) and check-in (50/day). Use them to advance Steps in the races.'
   },
   'robi-balance':{
     it:'I tuoi ROBI — il vero guadagno di AIROOBI. Le frazioni si accumulano (es. 2.3750 ROBI). Riscuoti quando vuoi in KAS. Ogni airdrop a cui partecipi ti fa guadagnare frazioni di ROBI reali.',
@@ -6225,8 +6194,8 @@ var INFO_TIPS={
     en:'The faucet gives you 100 free ARIA every day. Resets at midnight UTC. The amount will decrease over time — take advantage now.'
   },
   'robi-card-projection':{
-    it:'I ROBI che stai accumulando in questo airdrop in base ai blocchi acquistati. Sono tuoi a prescindere dall\'esito: li riscuoti in KAS al termine, anche se non ottieni l\'oggetto.',
-    en:'The ROBI you\'re accumulating in this airdrop based on your blocks. They\'re yours regardless of outcome: redeem them for KAS when it ends, even if you don\'t get the object.'
+    it:'I ROBI che stai accumulando in questa corsa in base agli Step acquistati. Sono tuoi a prescindere dall\'esito: li riscuoti in KAS al termine, anche se non ottieni l\'oggetto.',
+    en:'The ROBI you\'re accumulating in this race based on your Steps. They\'re yours regardless of outcome: redeem them for KAS when it ends, even if you don\'t get the object.'
   },
   // GS-1 · copy definitiva ROBY (ROBY_Reply_CCP_TrackA_Reopen_GO_2026-05-24.md §4)
   'evalobi':{
@@ -6387,11 +6356,11 @@ function shareFromBtn(btn,event){
 function buildShareText(title,lang){
   var t=title||'';
   if(lang==='en'){
-    return 'Look at this airdrop on AIROOBI: '+t+'\n\n'
-      +'Stack ARIA every day, buy blocks and earn real ROBI rewards (redeemable in KAS on-chain).';
+    return 'Check out this race on AIROOBI: '+t+'\n\n'
+      +'Stack ARIA every day, advance Step by Step toward the summit and pick up real ROBI along the trail (redeemable in KAS on-chain).';
   }
-  return 'Guarda questo airdrop su AIROOBI: '+t+'\n\n'
-    +'Accumula ARIA ogni giorno, compra blocchi e guadagna ROBI — il reward reale riscuotibile on-chain in KAS.';
+  return 'Guarda questa corsa su AIROOBI: '+t+'\n\n'
+    +'Accumula ARIA ogni giorno, avanza Step dopo Step verso la vetta e raccogli ROBI reali sul percorso (riscuotibili on-chain in KAS).';
 }
 async function shareAirdrop(id,title,imgUrl,event){
   if(event){event.stopPropagation();event.preventDefault();}
