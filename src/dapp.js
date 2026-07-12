@@ -6174,8 +6174,8 @@ function reopenSplash(){
 // ══════════════════════════════════════════════════════════
 var INFO_TIPS={
   'aria-balance':{
-    it:'Il tuo saldo ARIA. Ora siamo in fase testnet: li ricevi gratis dal faucet (100/gg) e dal check-in (50/gg). Li usi per avanzare di Step nelle corse.',
-    en:'Your ARIA balance. We\'re in testnet: get them free from the faucet (100/day) and check-in (50/day). Use them to advance Steps in the races.'
+    it:'Il tuo saldo ARIA. In fase testnet non si acquistano: li guadagni gratis dal faucet (100/gg) e dal check-in (50/gg) e li usi per avanzare di Step. Al mainnet si compreranno e i saldi testnet saranno azzerati: usali per correre — ciò che resta tuo sono i ROBI.',
+    en:'Your ARIA balance. In testnet you can\'t buy them: earn them free from the faucet (100/day) and check-in (50/day) and use them to advance Steps. At mainnet they\'ll be purchasable and testnet balances will reset: use them to run — what stays yours are the ROBI.'
   },
   'robi-balance':{
     it:'I tuoi ROBI — il vero guadagno di AIROOBI. Le frazioni si accumulano (es. 2.3750 ROBI). Riscuoti quando vuoi in KAS. Ogni airdrop a cui partecipi ti fa guadagnare frazioni di ROBI reali.',
