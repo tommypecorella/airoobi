@@ -46,5 +46,17 @@ Conseguenza concreta: il cap del draw usa €28,89 → conia ~**100× meno ROBI*
 ## Incidente risolto (trasparenza)
 Un `git add -A` ha temporaneamente pushato sul repo **pubblico** materiale di lavoro privato (pitch deck, LOI, docs interni). Nessun segreto reale (solo anon key già pubblica). History riscritta e force-push in pochi minuti, `.gitignore` aggiornato. Le copie potrebbero restare in cache GitHub per poco.
 
+## Verifica statistica fairness (18 draw completati)
+- Deterministico ✓: vincitore = sempre scores[0] di calculate_winner_score (v5.1); il candidato di detect_airdrop_end_event coincide col winner finale in tutti i giri. Zero estrazione, zero caso.
+- 16/18: vince chi ha percorso più Step (√blocchi domina a parità di storia).
+- 2/18: la loyalty di categoria (+ pity) SUPERA chi ha comprato più Step (8 vs 9 e 7 vs 8 blocchi) — i correttivi fairness incidono davvero.
+- Distribuzione vittorie: 7 utenti su 7 partecipanti hanno vinto almeno una volta (5/3/3/2/2/2/1) — nessun monopolio del top spender.
+
+## Findings minori aperti
+- `/classifica`: rewrite Vercel esiste ma la SPA non ha quella vista → fallback silenzioso su home (rotta morta, decidere: vista classifica o rimozione rewrite).
+- Banner "AGGIORNATO · MOTORE V2.5" negli articoli blog cita "ROBI Mining" (lessico vietato in UI) → sweep da fare.
+- Drift ROBI visibile in-page: topbar €0,41 vs card portafoglio €0,27/ROBI nella stessa schermata.
+- Snapshot price topbar è sceso 1,09→0,41 durante i test: il cron riconta un circulating che include i mint di test (fonte diversa da entrambe le altre).
+
 ## Prossimi (in corso)
 - Pagine loggate (numeri/grafici) · fairness spiegata in pagina + verifica statistica · mobile pass · video/slideshow · airoobi.com → hero page.
