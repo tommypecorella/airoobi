@@ -1,0 +1,7 @@
+-- ABO · get_draw_preview allineata alla realtà (test massivo CCP 14 lug 2026)
+-- Bug: il preview mostrava "ANNULLAMENTO" su airdrop realmente completed.
+-- Fix 1: draw già eseguito -> esito REALE (status/winner effettivi), non ricalcolato.
+-- Fix 2: predizione allineata a execute_draw PR-1: considera seller_acknowledge_decision
+--        e confronta il TAGLIO VENDITORE (split config) col prezzo minimo, non il lordo.
+-- Applicata al DB live via MCP il 14 lug 2026 (stesso contenuto).
+-- Vedi definizione completa nella migration history remota (draw_preview_esito_reale_e_logica_pr1).
