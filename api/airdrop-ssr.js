@@ -36,7 +36,7 @@ function renderHtml(data) {
   const productModel = data.product_info?.model || '';
   const image = data.image_url || 'https://www.airoobi.app/og-image.png?v=4.20.0';
   const title = `${escapeHtml(data.title)}${productBrand ? ' · ' + escapeHtml(productBrand) : ''} · AIROOBI Airdrop`;
-  const description = `${escapeHtml(data.title)}${value ? ' · valore stimato ' + value : ''}${blockPrice ? ' · blocco a ' + blockPrice : ''} · ${escapeHtml(data.description || '').slice(0, 140)}`;
+  const description = `${escapeHtml(data.title)}${value ? ' · valore stimato ' + value : ''}${blockPrice ? ' · Step a ' + blockPrice : ''} · ${escapeHtml(data.description || '').slice(0, 140)}`;
   const canonical = `https://www.airoobi.app/airdrops/${data.id}`;
 
   const schemaOrg = {
@@ -168,9 +168,9 @@ function renderHtml(data) {
 
     <div class="metrics">
       ${value ? `<div class="metric"><div class="label">Valore stimato</div><div class="value gold">${value}</div></div>` : ''}
-      ${blockPrice ? `<div class="metric"><div class="label">Costo blocco</div><div class="value">${blockPrice}</div></div>` : ''}
-      <div class="metric"><div class="label">Blocchi totali</div><div class="value">${total}</div></div>
-      <div class="metric"><div class="label">Blocchi venduti</div><div class="value">${sold}</div></div>
+      ${blockPrice ? `<div class="metric"><div class="label">Costo Step</div><div class="value">${blockPrice}</div></div>` : ''}
+      <div class="metric"><div class="label">Lunghezza percorso</div><div class="value">${total}</div></div>
+      <div class="metric"><div class="label">Step percorsi</div><div class="value">${sold}</div></div>
     </div>
 
     <div class="progress-section">
@@ -185,7 +185,7 @@ function renderHtml(data) {
 
     <section class="cta-section">
       <h2>Partecipa all'airdrop</h2>
-      <p>Acquista uno o più blocchi · partecipa all'airdrop equo · ottieni l'oggetto a una frazione del valore.</p>
+      <p>Avanza di Step · corri verso la vetta · l'oggetto a una frazione del valore, e per chi corre il ringraziamento in ROBI.</p>
       <a class="cta-btn" href="/signup">Inizia ora</a>
       <a class="cta-btn outline" href="/come-funziona-airdrop">Come funziona</a>
     </section>
