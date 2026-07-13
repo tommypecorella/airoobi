@@ -9,13 +9,13 @@
   <meta property="og:title" content="Contatti — AIROOBI">
   <meta property="og:description" content="Contatta AIROOBI per informazioni sulla piattaforma di airdrop equi su blockchain Kaspa.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://www.airoobi.com/contatti.html">
+  <meta property="og:url" content="https://www.airoobi.com/contatti">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:site" content="@airoobi_com">
   <meta name="twitter:title" content="Contatti — AIROOBI">
   <meta name="twitter:description" content="Contatta AIROOBI per informazioni sulla piattaforma di airdrop equi su blockchain Kaspa.">
   <meta name="twitter:image" content="https://airoobi.com/og-image.png?v=4.20.0">
-  <link rel="canonical" href="https://www.airoobi.com/contatti.html">
+  <link rel="canonical" href="https://www.airoobi.com/contatti">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght;500;600;700;800&family=JetBrains+Mono:wght;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
@@ -54,8 +54,7 @@
       -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--gray-800);
     }
-    .topbar-logo img { height: 32px; display: block; }
-    .topbar-back {
+        .topbar-back {
       color: var(--gray-300);
       text-decoration: none;
       font-size: 0.875rem;
@@ -68,12 +67,32 @@
       margin: 0 auto;
       padding: 4rem 1.5rem 5rem;
     }
+    .legal-eyebrow {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
     .legal-content h1 {
       font-family: 'Space Grotesk', 'Inter', sans-serif;
-      font-size: 32px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      margin-bottom: 32px;
+      font-size: clamp(30px, 5vw, 40px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+    .legal-content h1::after {
+      content: '';
+      display: block;
+      width: 44px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 2px;
+      margin-top: 18px;
+      margin-bottom: 26px;
     }
     .legal-content p {
       font-size: 14px;
@@ -97,13 +116,11 @@
 <body>
 
   <header class="topbar">
-    <a href="https://airoobi.com" class="topbar-logo">
-      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
-    </a>
-    <a href="https://airoobi.com" class="topbar-back">&larr; Torna ad AIROOBI</a>
+    <a href="/" class="topbar-back">&larr; Torna ad AIROOBI</a>
   </header>
 
   <main class="legal-content">
+    <div class="legal-eyebrow">AIROOBI · Contatti</div>
     <h1>Contatti</h1>
     <p>Per qualsiasi domanda o informazione su AIROOBI:</p>
     <p><strong>Info:</strong> <a href="mailto:info@airoobi.com">info@airoobi.com</a></p>
@@ -111,7 +128,8 @@
   </main>
 
   <footer class="legal-footer">
-    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a></p>
+    <p>&copy; 2026 AIROOBI — Dream Robe E-Commerce · <a href="https://airoobi.com">airoobi.com</a> · <a href="/tokens">Tokenomics</a></p>
+    <p style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;margin-top:8px;color:var(--gray-400)">alfa-14.07.2026-1.1.0</p>
   </footer>
 
 </body>
