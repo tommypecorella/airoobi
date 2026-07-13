@@ -106,6 +106,9 @@
     { "source": "/storie-vincitori/:id", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr?id=:id" },
     { "source": "/tokens", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/tokens.html" },
     { "source": "/tokens", "destination": "/tokens.html" },
+    { "source": "/privacy", "destination": "/privacy.html" },
+    { "source": "/termini", "destination": "/termini.html" },
+    { "source": "/contatti", "destination": "/contatti.html" },
 
     { "source": "/diventa-alpha-brave", "destination": "/diventa-alpha-brave.html" },
     { "source": "/treasury", "destination": "/treasury.html" },
