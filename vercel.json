@@ -85,6 +85,10 @@
     { "source": "/hub", "destination": "/lab", "statusCode": 301 },
     { "source": "/impara", "destination": "/come-funziona-airdrop", "statusCode": 301 },
     { "source": "/blog/perche-airoobi-non-e-gioco-azzardo.html", "destination": "/blog/airoobi-nuovo-modello-ecommerce.html", "statusCode": 301 },
+    { "source": "/blog/cose-robi-tessera-rendimento-airoobi.html", "destination": "/blog/cosa-sono-robi-reward-airoobi.html", "statusCode": 301 },
+    { "source": "/blog/tessera-rendimento-airoobi-come-funziona.html", "destination": "/blog/cosa-sono-robi-reward-airoobi.html", "statusCode": 301 },
+    { "source": "/blog/algoritmo-selezione-vincitore-airoobi.html", "destination": "/blog/algoritmo-classifica-deterministica-airoobi.html", "statusCode": 301 },
+    { "source": "/blog/guadagnare-crypto-gratis-senza-investire.html", "destination": "/blog/guadagnare-crypto-gratis-senza-spendere.html", "statusCode": 301 },
     { "source": "/blog.html", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog", "statusCode": 301 },
     { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "statusCode": 301 }
   ],
