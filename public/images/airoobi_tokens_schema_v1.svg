@@ -1,80 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" font-family="'Instrument Sans', 'DM Mono', system-ui, sans-serif" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 560" font-family="'Inter', system-ui, sans-serif" role="img" aria-labelledby="title desc">
   <title id="title">AIROOBI Token Economy Schema · ARIA · KAS · ROBI</title>
   <desc id="desc">Visual schema of AIROOBI token flows: KAS↔ARIA bidirectional swap, ROBI→ARIA and ROBI→KAS one-way (ROBI is earned not bought).</desc>
 
   <defs>
-    <marker id="arrow-gold" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
-      <path d="M 0 0 L 10 5 L 0 10 z" fill="#EF3E4F"/>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#FF5563"/>
     </marker>
-    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#4A9EFF"/>
     </marker>
-    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M 0 0 L 10 5 L 0 10 z" fill="#49EACB"/>
     </marker>
   </defs>
 
   <!-- background -->
-  <rect width="800" height="500" fill="#000000"/>
+  <rect width="800" height="560" fill="#0F1216"/>
 
   <!-- title bar -->
-  <text x="400" y="40" font-size="13" letter-spacing="3" fill="#8b8b8b" text-anchor="middle" font-family="'DM Mono', monospace">AIROOBI · TOKEN ECONOMY</text>
-  <text x="400" y="76" font-size="32" fill="#FFFFFF" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-weight="500">Tre asset · un ecosistema coerente</text>
-
-  <!-- ARIA · left -->
-  <g id="aria">
-    <circle cx="160" cy="260" r="80" fill="#000000" stroke="#4A9EFF" stroke-width="2.5"/>
-    <text x="160" y="245" font-size="36" fill="#4A9EFF" text-anchor="middle" font-weight="700">ARIA</text>
-    <text x="160" y="268" font-size="11" letter-spacing="2" fill="#8b8b8b" text-anchor="middle">UTILITY · TESTNET</text>
-    <text x="160" y="290" font-size="13" fill="#FFFFFF" text-anchor="middle">1 ARIA = €0,10</text>
-  </g>
-
-  <!-- KAS · right -->
-  <g id="kas">
-    <circle cx="640" cy="260" r="80" fill="#000000" stroke="#49EACB" stroke-width="2.5"/>
-    <text x="640" y="245" font-size="36" fill="#49EACB" text-anchor="middle" font-weight="700">KAS</text>
-    <text x="640" y="268" font-size="11" letter-spacing="2" fill="#8b8b8b" text-anchor="middle">KASPA · ON-CHAIN</text>
-    <text x="640" y="290" font-size="13" fill="#FFFFFF" text-anchor="middle">rate dinamico</text>
-  </g>
+  <text x="400" y="38" font-size="12" letter-spacing="3" fill="#7E8B9C" text-anchor="middle" font-family="'JetBrains Mono', monospace">AIROOBI · TOKEN ECONOMY</text>
+  <text x="400" y="70" font-size="26" fill="#E8EAED" text-anchor="middle" font-family="'Space Grotesk', 'Inter', sans-serif" font-weight="600">Tre asset · un ecosistema coerente</text>
 
   <!-- ROBI · center top -->
   <g id="robi">
-    <circle cx="400" cy="180" r="90" fill="#000000" stroke="#EF3E4F" stroke-width="3"/>
-    <text x="400" y="160" font-size="40" fill="#EF3E4F" text-anchor="middle" font-weight="700">ROBI</text>
-    <text x="400" y="184" font-size="11" letter-spacing="2" fill="#8b8b8b" text-anchor="middle">REWARD · TREASURY-BACKED</text>
-    <text x="400" y="206" font-size="13" fill="#FFFFFF" text-anchor="middle">earned · not bought</text>
-    <text x="400" y="224" font-size="11" fill="#EF3E4F" text-anchor="middle" font-family="'DM Mono', monospace">treasury_eur ÷ supply</text>
+    <circle cx="400" cy="170" r="82" fill="#171B21" stroke="#FF5563" stroke-width="3"/>
+    <text x="400" y="158" font-size="34" fill="#FF5563" text-anchor="middle" font-weight="700" font-family="'Space Grotesk', 'Inter', sans-serif">ROBI</text>
+    <text x="400" y="180" font-size="9.5" letter-spacing="0.8" fill="#AEB9C6" text-anchor="middle">REWARD · TREASURY-BACKED</text>
+    <text x="400" y="200" font-size="12" fill="#E8EAED" text-anchor="middle">earned · not bought</text>
+    <text x="400" y="218" font-size="9.5" fill="#FF9AA4" text-anchor="middle" font-family="'JetBrains Mono', monospace">treasury_eur ÷ supply</text>
   </g>
 
-  <!-- ARIA ↔ KAS bidirectional swap -->
-  <path d="M 245 250 L 555 250" stroke="#EF3E4F" stroke-width="1.5" fill="none" marker-end="url(#arrow-gold)"/>
-  <path d="M 555 280 L 245 280" stroke="#EF3E4F" stroke-width="1.5" fill="none" marker-end="url(#arrow-gold)"/>
-  <text x="400" y="240" font-size="11" letter-spacing="1.5" fill="#EF3E4F" text-anchor="middle" font-family="'DM Mono', monospace">SWAP BIDIREZIONALE</text>
+  <!-- ARIA · bottom left -->
+  <g id="aria">
+    <circle cx="150" cy="340" r="76" fill="#171B21" stroke="#4A9EFF" stroke-width="2.5"/>
+    <text x="150" y="330" font-size="30" fill="#4A9EFF" text-anchor="middle" font-weight="700" font-family="'Space Grotesk', 'Inter', sans-serif">ARIA</text>
+    <text x="150" y="351" font-size="10" letter-spacing="1" fill="#AEB9C6" text-anchor="middle">UTILITY · TESTNET</text>
+    <text x="150" y="371" font-size="12" fill="#E8EAED" text-anchor="middle">1 ARIA = €0,10</text>
+  </g>
+
+  <!-- KAS · bottom right -->
+  <g id="kas">
+    <circle cx="650" cy="340" r="76" fill="#171B21" stroke="#49EACB" stroke-width="2.5"/>
+    <text x="650" y="330" font-size="30" fill="#49EACB" text-anchor="middle" font-weight="700" font-family="'Space Grotesk', 'Inter', sans-serif">KAS</text>
+    <text x="650" y="351" font-size="10" letter-spacing="1" fill="#AEB9C6" text-anchor="middle">KASPA · ON-CHAIN</text>
+    <text x="650" y="371" font-size="12" fill="#E8EAED" text-anchor="middle">rate dinamico</text>
+  </g>
+
+  <!-- ARIA ↔ KAS bidirectional swap: passa SOTTO ROBI, tra le due bolle -->
+  <path d="M 232 325 L 568 325" stroke="#FF5563" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+  <path d="M 568 356 L 232 356" stroke="#FF5563" stroke-width="1.5" fill="none" marker-end="url(#arrow-red)"/>
+  <text x="400" y="311" font-size="11" letter-spacing="1.5" fill="#FF9AA4" text-anchor="middle" font-family="'JetBrains Mono', monospace">SWAP BIDIREZIONALE</text>
 
   <!-- ROBI → ARIA one-way -->
-  <path d="M 350 240 Q 280 250 218 215" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#arrow-blue)"/>
-  <text x="270" y="200" font-size="10" letter-spacing="1.2" fill="#4A9EFF" text-anchor="middle" font-family="'DM Mono', monospace">ROBI → ARIA</text>
+  <path d="M 330 220 Q 250 245 197 278" stroke="#4A9EFF" stroke-width="1.5" fill="none" marker-end="url(#arrow-blue)"/>
+  <text x="222" y="230" font-size="10" letter-spacing="1" fill="#4A9EFF" text-anchor="middle" font-family="'JetBrains Mono', monospace">ROBI → ARIA</text>
 
   <!-- ROBI → KAS one-way -->
-  <path d="M 450 240 Q 520 250 582 215" stroke="#49EACB" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
-  <text x="530" y="200" font-size="10" letter-spacing="1.2" fill="#49EACB" text-anchor="middle" font-family="'DM Mono', monospace">ROBI → KAS</text>
+  <path d="M 470 220 Q 550 245 603 278" stroke="#49EACB" stroke-width="1.5" fill="none" marker-end="url(#arrow-green)"/>
+  <text x="578" y="230" font-size="10" letter-spacing="1" fill="#49EACB" text-anchor="middle" font-family="'JetBrains Mono', monospace">ROBI → KAS</text>
 
-  <!-- Bottom: descriptions -->
-  <g font-size="12" fill="#d4d4d4">
-    <text x="160" y="380" text-anchor="middle">Utility coin in-app</text>
-    <text x="160" y="398" text-anchor="middle">faucet · login · check-in</text>
-    <text x="160" y="416" text-anchor="middle" fill="#8b8b8b">testnet phase · €0,10 stabile</text>
+  <!-- descrizioni: una colonna sotto ogni bolla, corridoi separati -->
+  <g font-size="12" fill="#C6CFD9">
+    <text x="150" y="452" text-anchor="middle">Utility coin in-app</text>
+    <text x="150" y="471" text-anchor="middle">faucet · sequenza · inviti</text>
+    <text x="150" y="490" text-anchor="middle" fill="#7E8B9C">testnet · €0,10 al mainnet</text>
 
-    <text x="400" y="350" text-anchor="middle">Reward NFT treasury-backed</text>
-    <text x="400" y="368" text-anchor="middle">si guadagna partecipando</text>
-    <text x="400" y="386" text-anchor="middle" fill="#8b8b8b">non comprabile · valore reale</text>
+    <text x="400" y="452" text-anchor="middle">Reward NFT treasury-backed</text>
+    <text x="400" y="471" text-anchor="middle">si guadagna correndo</text>
+    <text x="400" y="490" text-anchor="middle" fill="#7E8B9C">non comprabile · valore reale</text>
 
-    <text x="640" y="380" text-anchor="middle">Kaspa blockchain</text>
-    <text x="640" y="398" text-anchor="middle">incasso reale · settlement</text>
-    <text x="640" y="416" text-anchor="middle" fill="#8b8b8b">on-chain Stage 2</text>
+    <text x="650" y="452" text-anchor="middle">Kaspa blockchain</text>
+    <text x="650" y="471" text-anchor="middle">incasso reale · settlement</text>
+    <text x="650" y="490" text-anchor="middle" fill="#7E8B9C">on-chain Stage 2</text>
   </g>
 
-  <!-- bottom emphasis -->
-  <text x="400" y="466" font-size="14" fill="#EF3E4F" text-anchor="middle" font-family="'Cormorant Garamond', serif" font-style="italic">"ROBI cresce di valore al crescere del treasury · simile a un buono fruttifero"</text>
+  <!-- chiusa (canone MiCA: design, non promessa) -->
+  <text x="400" y="534" font-size="13" fill="#FF9AA4" text-anchor="middle" font-family="'Space Grotesk', 'Inter', sans-serif" font-style="italic">ROBI si guadagna correndo · coperto dal Fondo Comune · verificabile on-chain</text>
 </svg>
