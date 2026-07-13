@@ -19,7 +19,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght;500;600;700;800&family=JetBrains+Mono:wght;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
-  <style>
+  <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.5">
+<style>
     :root {
       --black: #FFFFFF;
       --white: #0F1417;
@@ -122,10 +124,9 @@
   </style>
 </head>
 <body>
+<div id="topbar-mount" data-active=""></div>
+<script src="/src/topbar.js?v=4.49.1"></script>
 
-  <header class="topbar">
-    <a href="/" class="topbar-back">&larr; Torna ad AIROOBI</a>
-  </header>
 
   <main class="legal-content">
     <div class="legal-eyebrow">AIROOBI · Privacy</div>
@@ -159,10 +160,8 @@
     <p>Per qualsiasi domanda sulla privacy: <a href="mailto:privacy@airoobi.com">privacy@airoobi.com</a></p>
   </main>
 
-  <footer class="legal-footer">
-    <p>&copy; 2026 AIROOBI — Dream Robe E-Commerce · <a href="https://airoobi.com">airoobi.com</a> · <a href="/tokens">Tokenomics</a></p>
-    <p style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.1em;margin-top:8px;color:var(--gray-400)">alfa-14.07.2026-1.1.0</p>
-  </footer>
+  <div id="footer-mount" data-version="alfa-14.07.2026-1.1.1"></div>
+<script src="/src/footer.js?v=1.0.0"></script>
 
 </body>
 </html>

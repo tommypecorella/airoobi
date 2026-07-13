@@ -14,15 +14,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
+  <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.5">
+<style>
     :root{--black:#000;--white:#FFF;--gold:#EF3E4F;--gray-900:#0d0d0d;--gray-800:#1a1a1a;--gray-700:#2a2a2a;--gray-600:#3a3a3a;--gray-400:#888;--gray-300:#aaa;--aria:#4A9EFF;--kas:#49EACB}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{font-size:16px;scroll-behavior:smooth}
     body{background:var(--black);color:var(--white);font-family:'Instrument Sans',sans-serif;line-height:1.6;min-height:100vh}
-    .topbar{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;height:60px;background:rgba(0,0,0,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--gray-800)}
+    
     .topbar-logo img{height:32px;display:block}
-    .topbar-back{color:var(--gray-300);text-decoration:none;font-size:.875rem;transition:color .2s}
-    .topbar-back:hover{color:var(--gold)}
+    
+    
     .breadcrumb{max-width:800px;margin:0 auto;padding:1.25rem 1.5rem 0;font-size:.8rem;color:var(--gray-400);display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
     .breadcrumb a{color:var(--gray-400);text-decoration:none}
     .breadcrumb a:hover{color:var(--gold)}
@@ -61,10 +63,9 @@
 <script src="/src/theme.js?v=4.48.0"></script>
 </head>
 <body>
-  <header class="topbar">
-    <a href="https://airoobi.com" class="topbar-logo"><img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32"></a>
-    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
-  </header>
+<div id="topbar-mount" data-active="blog"></div>
+<script src="/src/topbar.js?v=4.49.1"></script>
+
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <a href="https://airoobi.com">AIROOBI</a><span class="sep">›</span>
     <a href="/blog.html">Blog</a><span class="sep">›</span>
@@ -172,8 +173,7 @@
       </div>
     </article>
   </div>
-  <footer class="blog-footer">
-    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
-  </footer>
+  <div id="footer-mount" data-version="alfa-14.07.2026-1.0.0"></div>
+<script src="/src/footer.js?v=1.0.0"></script>
 </body>
 </html>

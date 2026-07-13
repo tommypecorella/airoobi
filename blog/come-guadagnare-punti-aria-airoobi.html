@@ -14,7 +14,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Instrument+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <style>
+  <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
+<link rel="stylesheet" href="/src/topbar.css?v=4.48.5">
+<style>
     :root {
       --black: #000;
       --white: #FFF;
@@ -172,13 +174,9 @@
 <script src="/src/theme.js?v=4.48.0"></script>
 </head>
 <body>
+<div id="topbar-mount" data-active="blog"></div>
+<script src="/src/topbar.js?v=4.49.1"></script>
 
-  <header class="topbar">
-    <a href="https://airoobi.com" class="topbar-logo">
-      <img src="/public/images/AIROOBI_Logo_White.png" alt="AIROOBI" height="32">
-    </a>
-    <a href="https://airoobi.com" class="topbar-back">← Torna ad AIROOBI</a>
-  </header>
 
   <nav class="breadcrumb" aria-label="Breadcrumb">
     <a href="https://airoobi.com">AIROOBI</a>
@@ -229,9 +227,8 @@
     </article>
   </div>
 
-  <footer class="blog-footer">
-    <p>AIROOBI · <a href="https://airoobi.com">airoobi.com</a> · <a href="/blog.html">Blog</a></p>
-  </footer>
+  <div id="footer-mount" data-version="alfa-14.07.2026-1.0.0"></div>
+<script src="/src/footer.js?v=1.0.0"></script>
 
 </body>
 </html>

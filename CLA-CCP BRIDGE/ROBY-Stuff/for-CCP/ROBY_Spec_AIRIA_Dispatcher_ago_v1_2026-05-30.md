@@ -49,6 +49,8 @@ Tutto il resto (chiacchiere, messaggi tra umani, system log) → ignorato. Conse
 ## 5. Cursore "handled" (anti ri-risveglio)
 Per non risvegliare in loop sugli stessi messaggi: marcare cosa è gestito. CCP fa la micro-migration (campo `handled_at`/`handled_by` su `agora.messages`, o un cursore last-seen per agente). Il dispatcher legge/scrive quel marcatore.
 
+**⚠️ AMENDMENT (1 giu 2026, post go-live test): handled-guard.** Il dispatcher NON deve marcare `handled` solo perché `claude -p` esce `rc=0` — **`rc=0 ≠ task fatto`** (un agente può uscire 0 senza fare nulla → messaggio perso a vuoto). Regola corretta: **il dispatcher marca handled SOLO gli id che l'agente stesso ha marcato** via il contratto bus (`roblock_bus.mjs handled`); l'agente è l'unica autorità su "l'ho gestito". Se l'agente non marca → il messaggio **resta pending** (verrà ri-tentato), non sparisce. Freni anti-loop: cap wake/ora + **timeout per-wake** (evita hang). Inoltre l'helper aggiorni `agents.last_seen`.
+
 ## 6. I freni (LOCK, da decisione Skeezu "account condiviso + freni")
 Tutti obbligatori, sono il motivo per cui l'autonomia non prosciuga la quota Max condivisa:
 - **(a) filtro deterministico** (§3) — sveglia solo a lavoro reale.

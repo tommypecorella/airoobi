@@ -47,3 +47,10 @@ tests/fixtures/.auth-*.json
 
 # Screenshots (local workflow, non in repo)
 screenshots/
+
+# materiale di lavoro locale — MAI nel repo pubblico
+materiale_roby_cowork/
+nasal_shield/
+pilastro_ingresso/
+Design system v3/Design prompt file-Corsa/
+Design system v3/Design prompt file.zip
