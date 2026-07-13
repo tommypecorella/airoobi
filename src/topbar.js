@@ -28,6 +28,7 @@ var ICONS={
   wallet:'<svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg>',
   login:'<svg viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>',
   faq:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',
+  tokens:'<svg viewBox="0 0 24 24"><circle cx="9" cy="9" r="6"/><circle cx="15" cy="15" r="6"/></svg>',
   rules:'<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>',
   edu:'<svg viewBox="0 0 24 24"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/><path d="M22 10v6"/></svg>',
   caret:'<svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>',
@@ -44,7 +45,8 @@ var PUBLIC_LINKS=[
 var EDU_LINKS=[
   {href:'/come-funziona-airdrop', page:'rules', icon:ICONS.rules, it:'Come funziona', en:'How it works'},
   {href:'/blog',    page:'blog',    icon:ICONS.blog,    it:'Blog',    en:'Blog'},
-  {href:'/faq',     page:'faq',     icon:ICONS.faq,     it:'FAQ',     en:'FAQ'}
+  {href:'/faq',     page:'faq',     icon:ICONS.faq,     it:'FAQ',     en:'FAQ'},
+  {href:'/tokens',  page:'tokens',  icon:ICONS.tokens,  it:'Tokenomics', en:'Tokenomics'}
 ];
 
 var AUTH_LINKS=[
