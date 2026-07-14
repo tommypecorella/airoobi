@@ -2656,12 +2656,8 @@ async function openDetail(id){
     +'</div>'
     :'')
 
-    // CTA "Hai un oggetto di valore?" (sotto-la-piega §4.8)
-    +(!_publicMode?'<div class="detail-cta-fai-valutare" style="margin-top:24px;padding:18px 20px;border:1px solid rgba(239,62,79,.25);background:rgba(239,62,79,.04);border-radius:var(--radius-sm);text-align:center">'
-    +'<div style="font-family:var(--font-h);font-size:18px;color:var(--white);margin-bottom:6px"><span class="it">Hai un oggetto di valore?</span><span class="en">Got a valuable item?</span></div>'
-    +'<p style="font-size:13px;color:var(--gray-400);margin-bottom:12px;line-height:1.5"><span class="it">Lo facciamo valutare gratis e, se rientra nei criteri, parte come airdrop.</span><span class="en">We evaluate it free and, if it qualifies, it becomes an airdrop.</span></p>'
-    +'<button onclick="navigateTo(\'submit\')" style="background:var(--gold);color:#000;border:none;padding:10px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">FAI VALUTARE →</span><span class="en">GET EVALUATED →</span></button>'
-    +'</div>':'')
+    // CTA 'Hai un oggetto di valore?' rimosso dal dettaglio (bug 5, 15 lug 2026):
+    // resta il box unico .explore-cta-valuta a fine pagina.
 
     +'</div>'; // close detail-below-v2
 

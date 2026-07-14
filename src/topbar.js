@@ -233,6 +233,9 @@ function getValidTokenFromSession(session){
 }
 
 function upgradeToLoggedIn(session){
+  // bug 9 (15 lug 2026): da loggato niente inviti a registrarsi in giro per le pagine
+  document.querySelectorAll('.hide-if-logged').forEach(function(el){el.style.display='none';});
+
   var email=session.user&&session.user.email?session.user.email:'';
   var letter=email?email.charAt(0).toUpperCase():'?';
   var uid=session.user?session.user.id:'';
