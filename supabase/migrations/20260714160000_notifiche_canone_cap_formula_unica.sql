@@ -1,0 +1,19 @@
+-- Notifiche a canone Step/salita/fiori + cap draw su FORMULA UNICA ABO
+-- GO Skeezu 14 lug 2026 (chat diretta: "il treasury deve valere un valore unico,
+-- quello che si imposta in ABO" + "le notifiche parlano ancora di blocchi").
+-- Applicata al DB live via MCP (notifiche_canone_cap_formula_unica_v2):
+-- patch chirurgica con replace sulle definizioni live via pg_get_functiondef.
+--
+-- 1. buy_blocks (notifiche): 'Blocchi acquisiti'->'Step percorsi',
+--    'Hai/ha acquisito N blocchi'->'Hai/ha percorso N Step',
+--    'ROBI trovato nel rullo'->'Fiore ROBI sulla salita',
+--    'Hai trovato N ROBI nascosto nel rullo di'->'Hai raccolto N fiori ROBI
+--    lungo la salita di' (fix anche del refuso '2 ROBI nascosto').
+-- 2. cancel_my_participation: 'blocchi rilasciati'->'Step rilasciati'.
+-- 3. execute_draw: cap anti-inflazione sulla FORMULA UNICA di ABO:
+--       treasury = SUM(treasury_funds.amount_eur x treasury_pct/100)
+--       circolante = SUM(nft_rewards.shares) per nft_type in (ROBI, NFT_REWARD)
+--    treasury_stats resta contatore di audit, non guida piu il cap.
+-- 4. Retroattivo su notifications esistenti + rename nft rullo.
+--
+-- Vedi la migration remota per lo script esatto (DO $do$ ... EXECUTE v_def).
