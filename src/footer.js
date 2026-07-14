@@ -87,6 +87,42 @@ function scheduleTokenize(){
   _tokTimer=setTimeout(function(){tokenizeCoins(document.body);},400);
 }
 
+
+/* ── punto 17 (15 lug 2026): PWA — proponi l'installazione, desktop e mobile ── */
+function initPwa(){
+  if('serviceWorker' in navigator){
+    try{navigator.serviceWorker.register('/sw.js');}catch(e){}
+  }
+  if(localStorage.getItem('airoobi_pwa_dismissed'))return;
+  if(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches)return;
+  var deferred=null;
+  function showBanner(onInstall){
+    if(document.getElementById('pwa-banner'))return;
+    var b=document.createElement('div');
+    b.id='pwa-banner';
+    b.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:12px;background:var(--black,#fff);color:var(--white,#0F1417);border:1px solid rgba(239,62,79,.35);border-radius:14px;padding:12px 16px;box-shadow:0 12px 40px rgba(0,0,0,.25);font-family:Inter,sans-serif;font-size:13px;max-width:92vw';
+    var isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
+    b.innerHTML='<span style="font-weight:600">AIR<span style="color:#EF3E4F">OO</span>BI</span>'
+      +'<span>'+(onInstall?'Installa l\'app sul tuo dispositivo':(isIos?'Aggiungi alla Home: Condividi &rarr; \u201cAggiungi alla schermata Home\u201d':''))+'</span>'
+      +(onInstall?'<button id="pwa-install-btn" style="background:#EF3E4F;color:#fff;border:none;border-radius:9px;padding:8px 16px;font-weight:700;font-size:12px;letter-spacing:.06em;cursor:pointer">INSTALLA</button>':'')
+      +'<button id="pwa-close-btn" style="background:none;border:none;color:inherit;opacity:.55;font-size:16px;cursor:pointer;padding:4px">\u2715</button>';
+    document.body.appendChild(b);
+    document.getElementById('pwa-close-btn').onclick=function(){b.remove();localStorage.setItem('airoobi_pwa_dismissed','1');};
+    if(onInstall)document.getElementById('pwa-install-btn').onclick=function(){
+      b.remove();
+      if(deferred){deferred.prompt();deferred.userChoice.then(function(){localStorage.setItem('airoobi_pwa_dismissed','1');});}
+    };
+  }
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault();deferred=e;
+    setTimeout(function(){showBanner(true);},2500);
+  });
+  // iOS: nessun beforeinstallprompt — hint manuale una tantum
+  if(/iphone|ipad|ipod/i.test(navigator.userAgent)&&!navigator.standalone){
+    setTimeout(function(){showBanner(false);},4000);
+  }
+}
+
 function init(){
   var st=document.createElement('style');
   st.textContent=CSS;
@@ -97,6 +133,7 @@ function init(){
   try{
     new MutationObserver(scheduleTokenize).observe(document.body,{childList:true,subtree:true});
   }catch(e){}
+  initPwa();
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
