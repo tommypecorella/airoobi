@@ -62,6 +62,35 @@ async function loadRobiPrice(){
   }catch(e){}
 }
 
+
+/* ── punto 7 (15 lug 2026): fase dell'airdrop chiara ed evidente ── */
+function buildPhaseStepper(a){
+  var st=a.status;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(st==='annullato'){
+    return '<div class="phase-strip cancelled"><span class="it">✕ AIRDROP ANNULLATO — ARIA dei partecipanti rimborsati</span><span class="en">✕ AIRDROP CANCELLED — participants refunded</span></div>';
+  }
+  var PH=[
+    {k:'val', it:'Valutazione', en:'Evaluation', match:['draft','in_valutazione','valutazione_completata','accettato']},
+    {k:'pre', it:'Presale',     en:'Presale',    match:['presale']},
+    {k:'run', it:'In corsa',    en:'Climbing',   match:['sale','active']},
+    {k:'chi', it:'Chiusura',    en:'Closing',    match:['waiting_seller_acknowledge','pending_seller_decision','dropped','closed']},
+    {k:'fin', it:'Completato',  en:'Completed',  match:['completed']}
+  ];
+  var idx=0;
+  for(var i=0;i<PH.length;i++){if(PH[i].match.indexOf(st)>-1){idx=i;break;}}
+  var html='<div class="phase-strip" role="list" aria-label="Fase airdrop">';
+  for(var j=0;j<PH.length;j++){
+    var cls=j<idx?'done':(j===idx?'now':'todo');
+    html+='<span class="phase-step '+cls+'" role="listitem">'
+      +(j<idx?'<span class="phase-check">✓</span>':'<span class="phase-dot"></span>')
+      +'<span class="it">'+PH[j].it+'</span><span class="en">'+PH[j].en+'</span></span>';
+    if(j<PH.length-1)html+='<span class="phase-sep '+(j<idx?'done':'')+'"></span>';
+  }
+  html+='</div>';
+  return html;
+}
+
 function calcMiningRate(a){
   // Treasury-based: blocchi per 1 ROBI
   if(_robiPrice>0&&a.total_blocks>0&&a.block_price_aria>0){
@@ -2543,6 +2572,7 @@ async function openDetail(id){
 
     // Titolo + chip fase (§4.3)
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
+    +buildPhaseStepper(a)
     +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
 
     // Box competitivo §4.4 (posizione live · populated by refreshPosition)

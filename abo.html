@@ -695,6 +695,18 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <!-- GESTIONE AIRDROP -->
   <div class="admin-section" id="sec-airdrops">
     <h2>Pipeline airdrop <span class="info-i" onclick="showAboTip(this,'sec-airdrops')">i</span></h2>
+    <details style="margin:10px 0 18px;border:1px solid var(--gray-700);background:var(--gray-900);padding:12px 16px">
+      <summary style="cursor:pointer;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold)">COME FUNZIONANO LE FASI · trigger e ciclo di vita</summary>
+      <div style="font-size:12px;color:var(--gray-300);line-height:1.7;margin-top:10px">
+        <p><strong style="color:var(--gold)">1 · in_valutazione</strong> — il venditore invia l'oggetto (paga subito 50 ARIA di servizio). <em>Trigger: submit_object_for_valuation.</em></p>
+        <p><strong style="color:var(--gold)">2 · valutazione_completata / rifiutato</strong> — l'admin decide da qui (Modifica → GO con quotazione, prezzo Step, N° Step, scadenza — oppure NO GO). <em>Trigger: manager_update_airdrop.</em></p>
+        <p><strong style="color:var(--gold)">3 · presale → sale</strong> — il venditore accetta la valutazione e la corsa parte (presale se attivata, con passaggio automatico a sale alla soglia % configurata in Engine Config). <em>Trigger: accept_airdrop_valuation · auto-transizione in buy_blocks.</em></p>
+        <p><strong style="color:var(--gold)">4 · waiting_seller_acknowledge</strong> — la corsa finisce per sold-out, scadenza timer o scacco matto; il cron rileva l'evento e chiede la decisione al venditore (SLA 24h, poi auto-accettazione). <em>Trigger: detect_airdrop_end_event (cron 5 min).</em></p>
+        <p><strong style="color:var(--gold)">5 · completed</strong> — il venditore accetta: draw deterministico, oggetto al 1° in classifica, ROBI Reward proporzionali a tutti i perdenti (cap formula unica), +5 ROBI a vincitore e venditore, split 67,99/22/10/0,01. <em>Trigger: seller_acknowledge_airdrop → execute_draw.</em></p>
+        <p><strong style="color:#f87171">5b · annullato</strong> — il venditore rifiuta (o ritiro pre-partenza): tutti gli ARIA dei partecipanti rimborsati, i fiori ROBI raccolti restano ai partecipanti, nessun draw. <em>Trigger: seller_acknowledge_airdrop('annulla') → refund_airdrop.</em></p>
+        <p style="color:var(--gray-500);font-size:11px;margin-top:8px">Ciclo verificato E2E il 14-15 lug 2026: 31 giri completi, esiti positivi e negativi, transizioni corrette in entrambi i casi.</p>
+      </div>
+    </details>
     <p class="admin-note" style="margin-bottom:16px;font-size:11px;color:var(--gray-500);letter-spacing:.5px">Una lista con tab di stato · KPI Statistiche subito sotto. Doppione Valutazioni eliminato (era la stessa lista filtrata, ora coperto dai tab).</p>
     <div style="margin-bottom:12px">
       <button onclick="loadAdminAirdrops()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>

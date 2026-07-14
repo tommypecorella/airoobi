@@ -1280,3 +1280,17 @@ img.salita-av{display:block}
 /* Contatore LIVE dentro le pill categoria (10 lug: fila unica, ex cat-dashboard) */
 .cat-pill-count{display:inline-block;margin-left:6px;padding:1px 7px;border-radius:999px;background:rgba(239,62,79,.1);color:var(--gold);font-family:var(--font-m);font-size:10px;font-weight:700;vertical-align:1px}
 .cat-pill.active .cat-pill-count{background:rgba(255,255,255,.25);color:#fff}
+
+/* punto 7: striscia fase airdrop */
+.phase-strip{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:14px 0 4px;padding:10px 14px;border:1px solid var(--gray-700);border-radius:12px;background:var(--card-bg)}
+.phase-strip.cancelled{border-color:rgba(185,28,28,.5);color:#f87171;font-family:var(--font-m);font-size:11px;letter-spacing:1px}
+.phase-step{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:var(--gray-500)}
+.phase-step .phase-dot{width:8px;height:8px;border-radius:50%;border:1.5px solid var(--gray-600);display:inline-block}
+.phase-step.now{color:var(--gold);font-weight:700}
+.phase-step.now .phase-dot{background:var(--gold);border-color:var(--gold);animation:phase-pulse 1.8s ease-in-out infinite}
+.phase-step.done{color:var(--gray-400)}
+.phase-check{color:#49b583;font-size:11px}
+.phase-sep{flex:1;min-width:12px;height:1px;background:var(--gray-700)}
+.phase-sep.done{background:#49b58366}
+@keyframes phase-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,62,79,.45)}50%{box-shadow:0 0 0 5px rgba(239,62,79,0)}}
+@media(max-width:480px){.phase-strip{gap:4px;padding:8px 10px}.phase-step{font-size:9px}}
