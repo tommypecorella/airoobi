@@ -54,6 +54,10 @@
     --font-b: "Inter", system-ui, sans-serif;
     --font-m: "JetBrains Mono", monospace;
   }
+/* CCP dark override 15 lug 2026: palette pagina in dark (toggle tema) */
+html[data-theme="dark"]{--black:#0F1417;--gray-900:#161D24;--gray-800:#202A34;--gray-700:#36424F;--gray-500:#A6B2C0;--gray-300:#8FA0B0;--white:#F2F5F8}
+
+
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: var(--black); color: var(--white);
@@ -560,7 +564,7 @@
 </section>
 
 <!-- FOOTER -->
-<div id="footer-mount" data-version="alfa-14.07.2026-1.1.4"></div>
+<div id="footer-mount" data-version="alfa-15.07.2026-1.1.5"></div>
 <script src="/src/footer.js?v=1.0.0"></script>
 
 <script>

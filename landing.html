@@ -67,6 +67,10 @@
   --glass-bg:rgba(15,20,23,0.03);
   --glass-border:rgba(15,20,23,0.12);
 }
+/* CCP dark override 15 lug 2026: palette pagina in dark (toggle tema) */
+html[data-theme="dark"]{--black:#0F1417;--bg-alt:#161D24;--white:#F2F5F8;--ink:#F2F5F8;--ink-soft:rgba(242,245,248,0.62);--ink-faint:rgba(242,245,248,0.45);--gray-900:#161D24;--gray-800:#202A34;--gray-700:#36424F;--line:rgba(242,245,248,0.14);--line-soft:rgba(242,245,248,0.09);--glass-border:rgba(242,245,248,0.14)}
+
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth;background:var(--black);color-scheme:light}
 body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-height:1.6;min-height:100vh;-webkit-font-smoothing:antialiased}
@@ -418,7 +422,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 </section>
 
 <!-- FOOTER -->
-<div id="footer-mount" data-version="alfa-14.07.2026-4.14.5"></div>
+<div id="footer-mount" data-version="alfa-15.07.2026-4.14.6"></div>
 <script src="/src/footer.js?v=1.0.0"></script>
 
 <script>

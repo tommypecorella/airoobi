@@ -32,6 +32,9 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--black: #FFFFFF;--white: #0F1417;--accent:#EF3E4F;--accent-dim:rgba(239,62,79,.25);--gray-300: #33404F;--gray-400: #5B6A7D;--gray-700: #D4DBE3;--gray-800: #F5F7FA;--aria:#4A9EFF;--kas:#49EACB;--font-h: 'Space Grotesk', 'Inter', system-ui, sans-serif;--font-b:'Inter','Helvetica Neue',sans-serif;--font-m:'JetBrains Mono','Courier New',monospace;--radius:12px;--radius-sm:8px}
+/* CCP dark override 15 lug 2026: palette pagina in dark (toggle tema) */
+html[data-theme="dark"]{--black:#0F1417;--white:#F2F5F8;--gray-300:#C9D2DC;--gray-400:#9AA7B6;--gray-700:#36424F;--gray-800:#1A222C}
+
 html{background:var(--black);color:var(--white);font-family:var(--font-b);-webkit-font-smoothing:antialiased;color-scheme:light}
 body{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px;background:var(--black)}
 .auth-logo-wrap{margin-bottom:32px;text-align:center}
@@ -72,6 +75,7 @@ body{padding:0;justify-content:flex-start}
 </head>
 <body>
 <div id="topbar-mount" data-active=""></div>
+<script src="/src/theme.js?v=4.48.0"></script>
 <script src="/src/topbar.js?v=4.49.2"></script>
 <main class="auth-main">
 
@@ -116,7 +120,7 @@ body{padding:0;justify-content:flex-start}
 </div>
 
 </main>
-<div id="footer-mount" data-version="alfa-14.07.2026-4.12.1"></div>
+<div id="footer-mount" data-version="alfa-15.07.2026-4.12.2"></div>
 <script src="/src/footer.js?v=1.0.0"></script>
 
 <script>

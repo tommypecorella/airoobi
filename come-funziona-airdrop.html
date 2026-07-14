@@ -40,6 +40,9 @@
   --font-m: 'JetBrains Mono', monospace;
   --radius:14px;--radius-sm:10px;
 }
+/* CCP dark override 15 lug 2026: palette pagina in dark (toggle tema) */
+html[data-theme="dark"]{--black:#0F1417;--white:#F2F5F8;--gray-900:#1A222C;--gray-800:#1A222C;--gray-700:#36424F;--gray-600:#E45563;--gray-400:#9AA7B6;--gray-300:#C9D2DC}
+
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html{font-size:16px;scroll-behavior:smooth;background:var(--black);color-scheme:dark}
 body{color:var(--white);background:var(--black);font-family:var(--font-b);line-height:1.65;min-height:100vh;-webkit-font-smoothing:antialiased}
@@ -410,7 +413,7 @@ a:hover{text-decoration:underline}
 </section>
 
 <!-- FOOTER -->
-<div id="footer-mount" data-version="alfa-14.07.2026-4.17.6"></div>
+<div id="footer-mount" data-version="alfa-15.07.2026-4.17.7"></div>
 <script src="/src/footer.js?v=1.0.0"></script>
 
 <script src="/src/topbar.js?v=4.49.2"></script>
