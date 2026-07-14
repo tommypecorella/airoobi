@@ -1,6 +1,19 @@
 # Test massivo AIROOBI — CCP, 14 lug 2026 (delega Skeezu, giro review)
 
-Stato: **COMPLETATO** — tutti i 16 compiti della lista eseguiti e verificati.
+Stato: **COMPLETATO ×2** — lista eseguita, poi ABO riorganizzato e RUN 2 di riverifica completato.
+
+## RUN 2 + ABO riorganizzato (secondo passaggio, stessa notte)
+- **ABO deep-dive**: 14 sezioni testate una per una, zero errori console. Riorganizzazione shipped:
+  - Dashboard con box **"DA FARE OGGI"** azionabile (valutazioni in attesa / ack venditore / richieste EVALOBI / dispute) — testato live: il contatore è passato a "1 in attesa del venditore" durante il run 3 e il click porta alla sezione giusta.
+  - Engine Config e Analisi & Fairness si caricano da sole (via "Clicca Aggiorna").
+  - Cost Tracker (vuoto) fuori dalla sidebar, raggiungibile da Treasury. Lessico canone anche in ABO (blocchi→Step, estrae→chiusura, nei testi e tooltip).
+- **Drift ROBI ridotto a 1 fonte**: il cron snapshot ora usa la formula unica di ABO (`treasury_funds × treasury_pct / shares reali`) → topbar, Portafoglio e ABO dicono tutti **€0,272**. Resta SOLO il cap di execute_draw su treasury_stats (2.998€ virtuali) = decisione economica per Skeezu.
+- **RUN 3 airdrop ×10**: 10/10 chiusi (8 accept + 1 annullo + 1 lasciato in waiting e chiuso dal venditore). Cap proporzionale confermato: **22 perdenti su 22 pagati**.
+- **Bonus milestone VERIFICATI LIVE**: +5 ROBI al vincitore (`airdrop_won`) e +5 al venditore (`airdrop_completed_seller`) per ogni chiusura, + VALUATION NFT — il circolante è salito 369→465 shares e il nominale si muove col treasury come da obiettivo.
+- **Fairness su 27 draw totali**: vincitore = scores[0] in **27/27** (100% deterministico), max-Step vince 23/27 (85%), Impegno/pity ribalta 4/27 (15%), 7 vincitori distinti su 7 profili.
+- Registrazione riverificata (skeezu+18, grant identico) · footer/topbar 57/57 file ✓ · video canone-clean live ✓ · .com hero+redirect ✓ · mobile ≤390px su dashboard/ABO/blog/treasury ✓.
+
+## Primo passaggio
 
 ## Chiusi anche (seconda metà del giro)
 - **Pagine loggate**: dashboard/esplora/portafoglio/guadagni verificate live, numeri e grafico ROBI ok. Finding: `/classifica` è rotta morta (fallback su home).
