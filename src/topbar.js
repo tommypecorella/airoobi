@@ -277,6 +277,7 @@ function upgradeToLoggedIn(session){
       +'<div class="tb-user-menu-sep"></div>'
       +'<a href="/come-funziona-airdrop" class="tb-user-menu-item">'+ICONS.rules+' <span class="it">Come funziona</span><span class="en">How it works</span></a>'
       +'<a href="/faq" class="tb-user-menu-item">'+ICONS.faq+' FAQ</a>'
+      +'<a href="/tokens" class="tb-user-menu-item">'+ICONS.tokens+' <span class="it">Tokenomics</span><span class="en">Tokenomics</span></a>'
       +'<button class="tb-user-menu-item tb-user-menu-logout" onclick="window._topbarLogout()">'+ICONS.logout+' Logout</button>';
     document.body.appendChild(menu);
   }
