@@ -27,6 +27,12 @@
 
   function apply(theme) {
     document.documentElement.setAttribute('data-theme', theme);
+    // dapp-v2-g3.css e' la skin LIGHT della dApp (palette forzata con !important):
+    // in dark va spenta, sotto vive la base dark + token theme-v3 (bug 4, 15 lug 2026)
+    try {
+      var g3 = document.querySelectorAll('link[href*="dapp-v2-g3"]');
+      for (var i = 0; i < g3.length; i++) g3[i].disabled = (theme === 'dark');
+    } catch (e) { /* ignore */ }
   }
 
   // Apply saved theme ASAP (avoid flash). Runs synchronously at script load.
