@@ -1196,7 +1196,20 @@ body.detail-open #cat-dashboard{display:none!important}
 .salita-quota{position:absolute;left:0;right:0;border-top:1px dashed var(--gray-700)}
 .salita-quota-label{position:absolute;left:2px;transform:translateY(-14px);font-family:var(--font-m);font-size:9.5px;color:var(--gray-500)}
 .salita-svg{position:absolute;inset:0;width:100%;height:100%}
-.salita-path{fill:none;stroke:var(--gray-600);stroke-width:2;stroke-dasharray:1 7;stroke-linecap:round;opacity:.8}
+.salita-path{fill:none;stroke:var(--gray-600);stroke-width:2;stroke-dasharray:1 7;stroke-linecap:round;opacity:.8;animation:salita-march 7s linear infinite}
+/* punto 16 (15 lug 2026): la salita prende vita */
+@keyframes salita-march{to{stroke-dashoffset:-64}}
+.salita-field{animation:salita-in .7s cubic-bezier(.2,.7,.2,1)}
+@keyframes salita-in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.salita-rider.me .salita-av{animation:salita-bob 2.8s ease-in-out infinite}
+@keyframes salita-bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.salita-vetta-img,.salita-vetta-ph{animation:vetta-float 4.5s ease-in-out infinite}
+@keyframes vetta-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.salita-flagpin.picked svg{animation:flag-bloom .7s cubic-bezier(.3,1.6,.4,1)}
+@keyframes flag-bloom{0%{transform:scale(.4);opacity:0}60%{transform:scale(1.25)}100%{transform:scale(1);opacity:1}}
+.salita-rider.just-bought .salita-av{animation:rider-hop .8s cubic-bezier(.3,1.6,.4,1)}
+@keyframes rider-hop{0%{transform:translateY(0) scale(1)}35%{transform:translateY(-9px) scale(1.12)}70%{transform:translateY(1px) scale(.98)}100%{transform:translateY(0) scale(1)}}
+@media (prefers-reduced-motion: reduce){.salita-path,.salita-field,.salita-rider.me .salita-av,.salita-vetta-img,.salita-vetta-ph,.salita-flagpin.picked svg,.salita-rider.just-bought .salita-av{animation:none !important}}
 .salita-vetta{position:absolute;right:0;top:0;display:flex;flex-direction:column;align-items:center;gap:5px;z-index:4}
 .salita-vetta-img{width:62px;height:62px;border-radius:14px;object-fit:cover;border:2px solid var(--gold);box-shadow:0 4px 12px rgba(22,29,38,.14);background:var(--gray-800)}
 .salita-vetta-ph{width:62px;height:62px;border-radius:14px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;background:var(--gray-800);box-shadow:0 4px 12px rgba(22,29,38,.14)}
