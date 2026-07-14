@@ -9,7 +9,7 @@ export const config = { runtime: 'edge' };
 
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://vuvlmlpuhovipfwtquux.supabase.co';
 const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
-const FALLBACK = 'https://www.airoobi.com/og-image.png?v=4.24.0';
+const FALLBACK = 'https://www.airoobi.com/og-image.png?v=5.0.0';
 
 function fallbackRedirect() {
   return Response.redirect(FALLBACK, 302);

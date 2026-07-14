@@ -44,7 +44,7 @@ function renderStory(d) {
   "@context":"https://schema.org","@type":"Article",
   "headline": d.title, "image": ogImage, "datePublished": d.draw_executed_at,
   "author": {"@type":"Organization","name":"AIROOBI"},
-  "publisher": {"@type":"Organization","name":"AIROOBI","logo":{"@type":"ImageObject","url":"https://www.airoobi.com/og-image.png"}},
+  "publisher": {"@type":"Organization","name":"AIROOBI","logo":{"@type":"ImageObject","url":"https://www.airoobi.com/og-image.png?v=5.0.0"}},
   "description": description
 })}</script>
 <style>
