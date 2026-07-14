@@ -1,0 +1,3 @@
+-- Punto 15 (15 lug 2026): codice univoco parlante per airdrop (PAROLA1-PAR2-HEX4),
+-- trigger su INSERT + backfill. Applicata live via MCP (airdrop_code_parlante).
+-- Vedi migration remota per il corpo completo (gen_airdrop_code, airdrop_code_trigger).

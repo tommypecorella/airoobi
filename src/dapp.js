@@ -2091,7 +2091,8 @@ function renderGrid(){
     var q=_searchQuery.toLowerCase();
     list=list.filter(function(a){
       return (a.title||'').toLowerCase().indexOf(q)>-1
-        || (a.category||'').toLowerCase().indexOf(q)>-1;
+        || (a.category||'').toLowerCase().indexOf(q)>-1
+        || (a.code||'').toLowerCase().indexOf(q)>-1;
     });
   }
 
@@ -2477,6 +2478,7 @@ async function openDetail(id){
     +'<div class="detail-header-v2">'
     +'<a href="#" class="detail-cat-v2" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false">'
     +(CAT_ICONS[a.category]||'')+' <span class="it">AIRDROP · '+a.category+'</span><span class="en">AIRDROP · '+a.category+'</span>'
+    +(a.code?' <span class="airdrop-code" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+a.code+'\');showToast(\'Codice copiato\',\'success\')" title="Codice airdrop — clicca per copiare" style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);border:1px solid var(--gray-700);border-radius:8px;padding:2px 8px;margin-left:8px;cursor:pointer;vertical-align:1px">#'+a.code+'</span>':'')
     +'</a>'
     +'<div class="detail-header-actions">'
     +'<button class="heart-btn-v2'+(isInWatchlist(a.id)?' active':'')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" title="Preferito" aria-label="Aggiungi ai preferiti">&#9825;</button>'
