@@ -46,6 +46,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .abo-avatar img{width:100%;height:100%;object-fit:cover}
 .admin-layout{display:contents}
 .admin-sidebar{grid-area:side;background:var(--gray-900);border-right:1px solid var(--gray-800);overflow-y:auto;overflow-x:hidden;padding:16px 0;min-width:0}
+.abo-todo-item{display:inline-flex;align-items:center;gap:7px;background:none;border:1px solid var(--gray-700);color:var(--gray-300);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;padding:8px 14px;cursor:pointer;transition:all .15s}
+.abo-todo-item b{color:var(--gold);font-size:14px}
+.abo-todo-item:hover{border-color:var(--gold);color:var(--white)}
+.abo-todo-item.zero b{color:var(--gray-600)}
 .admin-sidebar-group{margin-bottom:8px}
 .admin-sidebar-label{font-family:var(--font-m);font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--gray-600);padding:16px 20px 6px;display:block}
 .admin-sidebar-item{display:flex;align-items:center;gap:10px;padding:9px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:.3px;color:var(--gray-400);cursor:pointer;transition:all .15s;border-left:3px solid transparent;background:none;border-top:none;border-bottom:none;border-right:none;width:100%;max-width:100%;box-sizing:border-box;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -297,7 +301,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-treasury')"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span class="it">Treasury &amp; Fondi</span><span class="en">Treasury &amp; Funds</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-platform-aria')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12h8M12 8v8"/></svg><span class="it">Conto ARIA piattaforma</span><span class="en">Platform ARIA account</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-company-assets')"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><circle cx="16" cy="14" r="2"/></svg><span class="it">Patrimonio aziendale</span><span class="en">Company assets</span></div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-costs')"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Cost Tracker</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-coin')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M8 10h8M8 14h8"/></svg><span class="it">ARIA &amp; ROBI</span><span class="en">ARIA &amp; ROBI</span></div>
   </div>
   <div class="admin-sidebar-group">
@@ -318,6 +321,17 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <!-- OVERVIEW -->
   <div class="admin-section active" id="sec-overview">
     <h2>Dashboard <span class="info-i" onclick="showAboTip(this,'sec-overview')">i</span></h2>
+    <!-- DA FARE OGGI · riorganizzazione ABO 14 lug 2026 (praticità) -->
+    <div id="abo-todo" style="margin:0 0 22px;padding:16px 18px;border:1px solid var(--gray-700);background:var(--gray-900)">
+      <div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">DA FARE OGGI</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px">
+        <button class="abo-todo-item" onclick="adminNav('sec-airdrops')"><b id="todo-val">—</b> <span class="it">valutazioni in attesa</span><span class="en">pending valuations</span></button>
+        <button class="abo-todo-item" onclick="adminNav('sec-airdrops')"><b id="todo-ack">—</b> <span class="it">in attesa del venditore</span><span class="en">awaiting seller</span></button>
+        <button class="abo-todo-item" onclick="adminNav('sec-evalobi')"><b id="todo-evalreq">—</b> <span class="it">richieste EVALOBI</span><span class="en">EVALOBI requests</span></button>
+        <button class="abo-todo-item" onclick="adminNav('sec-analysis')"><b id="todo-disputes">—</b> <span class="it">dispute aperte</span><span class="en">open disputes</span></button>
+      </div>
+      <div id="abo-todo-clear" style="display:none;margin-top:10px;font-family:var(--font-m);font-size:10px;color:#49b583;letter-spacing:1px">✓ <span class="it">Tutto gestito — nessuna azione richiesta.</span><span class="en">All handled — nothing to do.</span></div>
+    </div>
     <div class="admin-grid">
       <div class="admin-card"><div class="admin-card-val" id="adm-users">—</div><div class="admin-card-label">Utenti registrati <span class="info-i" onclick="showAboTip(this,'ov-users')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-remaining">—</div><div class="admin-card-label">Posti rimasti (Alpha Brave) <span class="info-i" onclick="showAboTip(this,'ov-remaining')">i</span></div></div>
@@ -338,6 +352,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- TREASURY -->
   <div class="admin-section" id="sec-treasury">
+    <div style="float:right"><button class="abo-todo-item" onclick="adminNav('sec-costs')" style="font-size:10px"><span class="it">Cost Tracker →</span><span class="en">Cost Tracker →</span></button></div>
     <h2>Treasury <span class="info-i" onclick="showAboTip(this,'sec-treasury')">i</span></h2>
     <div class="admin-grid" style="margin-bottom:20px">
       <div class="admin-card" style="border-color:rgba(139,92,246,.4)"><div class="admin-card-val" id="adm-treasury-balance" style="color:var(--gold)">€0.00</div><div class="admin-card-label">Treasury Balance <span class="info-i" onclick="showAboTip(this,'tr-balance')">i</span></div></div>
@@ -631,8 +646,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <h3>Approva <em id="bo-approve-title" style="color:var(--gold);font-style:italic"></em></h3>
       <div id="bo-approve-info" style="font-size:12px;color:var(--gray-400);margin-bottom:14px;line-height:1.6;padding:10px;border:1px solid var(--gray-700)"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
-        <div><label>Prezzo blocco (ARIA) <span class="info-i" onclick="showAboTip(this,'bo-app-price')">i</span></label><input type="number" id="bo-approve-price" min="1" placeholder="20" oninput="boCalcPreview()"></div>
-        <div><label>Blocchi totali <span class="info-i" onclick="showAboTip(this,'bo-app-blocks')">i</span></label><input type="number" id="bo-approve-blocks" min="10" placeholder="500" oninput="boCalcPreview()"></div>
+        <div><label>Prezzo Step (ARIA) <span class="info-i" onclick="showAboTip(this,'bo-app-price')">i</span></label><input type="number" id="bo-approve-price" min="1" placeholder="20" oninput="boCalcPreview()"></div>
+        <div><label>Step totali <span class="info-i" onclick="showAboTip(this,'bo-app-blocks')">i</span></label><input type="number" id="bo-approve-blocks" min="10" placeholder="500" oninput="boCalcPreview()"></div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div><label>Presale price ARIA (opzionale) <span class="info-i" onclick="showAboTip(this,'bo-app-presale')">i</span></label><input type="number" id="bo-approve-presale" min="1" placeholder="—"></div>
@@ -692,7 +707,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <button class="bo-tab" data-filter="conclusi" onclick="pipelineFilter('conclusi')">Conclusi <span class="bo-tab-count" id="pipe-cnt-conclusi">0</span></button>
     </div>
     <table class="admin-table" id="adm-airdrop-table">
-      <thead><tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Desid.</th><th>Min.</th><th>Quotaz.</th><th>Blocchi</th><th></th></tr></thead>
+      <thead><tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Desid.</th><th>Min.</th><th>Quotaz.</th><th>Step</th><th></th></tr></thead>
       <tbody id="adm-airdrop-body"><tr><td colspan="8" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
     </table>
     <p class="admin-note" style="margin-top:12px">Lista completa degli airdrop sottomessi. Clicca "Modifica" per valutare e gestire.</p>
@@ -709,7 +724,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </div>
       <!-- ── SEZIONE PRICING ── -->
       <div style="border:1px solid var(--gray-700);padding:16px;margin-bottom:16px">
-        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">PRICING &amp; BLOCCHI
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:12px">PRICING &amp; STEP
           <button type="button" onclick="adSuggestValues()" style="background:var(--gold);color:#000;border:none;padding:3px 10px;font-size:9px;letter-spacing:1px;cursor:pointer;margin-left:8px;font-family:var(--font-m)">SUGGERISCI</button> <span class="info-i" onclick="showAboTip(this,'ad-suggest')">i</span>
         </div>
 
@@ -726,7 +741,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
             <input type="number" id="ad-presale-price" min="0" placeholder="opzionale" oninput="adAutoCalcBlocks()">
           </div>
           <div>
-            <label>% Blocchi presale <span class="info-i" onclick="showAboTip(this,'ad-ppct')">i</span></label>
+            <label>% Step presale <span class="info-i" onclick="showAboTip(this,'ad-ppct')">i</span></label>
             <select id="ad-presale-pct" onchange="adAutoCalcBlocks()">
               <option value="">—</option>
               <option value="5">5%</option>
@@ -756,14 +771,14 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
             <input type="number" id="ad-extra-pct" min="0" max="100" step="1" value="10" placeholder="10" oninput="adAutoCalcBlocks()">
           </div>
           <div>
-            <label>N&ordm; Blocchi <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(auto)</span> <span class="info-i" onclick="showAboTip(this,'ad-blocks')">i</span></label>
+            <label>N&ordm; Step <span style="color:var(--gray-400);text-transform:none;letter-spacing:0">(auto)</span> <span class="info-i" onclick="showAboTip(this,'ad-blocks')">i</span></label>
             <input type="number" id="ad-total-blocks" min="0" placeholder="Auto" oninput="adAutoCalcBlocks()">
           </div>
         </div>
 
         <!-- CALCOLATORE LIVE -->
         <div id="ad-calc-preview" style="display:none;margin-top:12px">
-          <!-- Breakdown blocchi -->
+          <!-- Breakdown Step -->
           <div id="ad-calc-breakdown" style="padding:8px 16px;border:1px solid var(--gray-700);background:var(--gray-900);font-family:var(--font-m);font-size:11px;color:var(--gray-300);margin-bottom:8px;letter-spacing:.3px"></div>
           <!-- Revenue summary -->
           <div style="padding:12px 16px;border:1px solid rgba(139,92,246,.2);background:rgba(139,92,246,.04);font-size:12px;line-height:1.8;margin-bottom:8px">
@@ -793,7 +808,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
             <table style="width:100%;border-collapse:collapse;font-size:11px">
               <thead><tr style="color:var(--gray-500)">
                 <th style="text-align:left;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Fill</th>
-                <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Blocchi</th>
+                <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Step</th>
                 <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">EUR</th>
                 <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Venditore</th>
                 <th style="text-align:right;padding:4px 8px;border-bottom:1px solid var(--gray-800)">Fee</th>
@@ -832,7 +847,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <div style="display:flex;align-items:center;gap:6px">
             <input type="number" id="ad-presale-threshold" min="5" max="100" style="width:70px;text-align:center;background:var(--gray-800);border:1px solid var(--gray-700);color:var(--white);padding:6px;font-family:var(--font-m);font-size:14px">
             <span style="color:var(--gray-400)">%</span>
-            <span style="font-size:10px;color:var(--gray-500)">dei blocchi venduti in presale</span>
+            <span style="font-size:10px;color:var(--gray-500)">degli Step percorsi in presale</span>
           </div>
         </div>
         <div id="ad-deadline-preview" style="display:flex;align-items:flex-end;padding-bottom:6px">
@@ -884,7 +899,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <button onclick="loadAirdropAnalysis()" style="background:var(--gold);color:var(--black);border:none;padding:8px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
     </div>
     <table class="admin-table">
-      <thead><tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Data draw</th><th>Vincitore</th><th>Blocchi</th><th>Score</th></tr></thead>
+      <thead><tr><th>Titolo</th><th>Categoria</th><th>Status</th><th>Data draw</th><th>Vincitore</th><th>Step</th><th>Score</th></tr></thead>
       <tbody id="analysis-body"><tr><td colspan="7" style="color:var(--gray-400)">Clicca "Aggiorna" per caricare</td></tr></tbody>
     </table>
   </div>
@@ -910,14 +925,14 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <h3 style="font-family:var(--font-h);font-size:18px;margin:24px 0 12px;color:var(--white)">Partecipazioni</h3>
     <div class="admin-grid">
       <div class="admin-card"><div class="admin-card-val" id="as-participations">—</div><div class="admin-card-label">Partecipazioni totali</div></div>
-      <div class="admin-card"><div class="admin-card-val" id="as-blocks-sold">—</div><div class="admin-card-label">Blocchi venduti</div></div>
-      <div class="admin-card"><div class="admin-card-val" style="color:var(--aria)" id="as-aria-spent">—</div><div class="admin-card-label">ARIA spesi in blocchi</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="as-blocks-sold">—</div><div class="admin-card-label">Step percorsi</div></div>
+      <div class="admin-card"><div class="admin-card-val" style="color:var(--aria)" id="as-aria-spent">—</div><div class="admin-card-label">ARIA spesi in Step</div></div>
       <div class="admin-card"><div class="admin-card-val" id="as-unique-buyers">—</div><div class="admin-card-label">Acquirenti unici</div></div>
     </div>
     <h3 style="font-family:var(--font-h);font-size:18px;margin:24px 0 12px;color:var(--white)">Dettaglio per airdrop</h3>
     <div class="admin-table-wrap">
       <table class="admin-table">
-        <thead><tr><th>Titolo</th><th>Status</th><th>Blocchi</th><th>Venduti</th><th>%</th><th>Partecipanti</th><th>ARIA</th></tr></thead>
+        <thead><tr><th>Titolo</th><th>Status</th><th>Step</th><th>Venduti</th><th>%</th><th>Partecipanti</th><th>ARIA</th></tr></thead>
         <tbody id="airdrop-stats-body"><tr><td colspan="7" style="color:var(--gray-400)">Clicca AGGIORNA</td></tr></tbody>
       </table>
     </div>
@@ -1073,7 +1088,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <!-- SOGLIE AUTO-TRANSIZIONE -->
     <div style="margin-top:32px;border:1px solid rgba(139,92,246,.2);padding:20px;background:rgba(139,92,246,.03)">
       <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin-bottom:4px">SOGLIE AUTO-TRANSIZIONE</div>
-      <p style="color:var(--gray-500);font-size:11px;margin-bottom:16px;line-height:1.5">Percentuale di blocchi venduti in presale per far scattare automaticamente il passaggio a Sale. Quando un airdrop raggiunge il 100% → auto-close + draw.</p>
+      <p style="color:var(--gray-500);font-size:11px;margin-bottom:16px;line-height:1.5">Percentuale di Step percorsi in presale per far scattare automaticamente il passaggio a Sale. Quando un airdrop raggiunge il 100% → auto-close + draw.</p>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
         <div style="text-align:center;padding:16px;border:1px solid rgba(255,107,107,.3);background:rgba(255,107,107,.04)">
           <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:#ff6b6b;margin-bottom:8px">⚡ FLASH (6h) <span class="info-i" onclick="showAboTip(this,'eng-thr-flash')">i</span></div>
@@ -1103,7 +1118,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
         <label style="display:flex;align-items:center;gap:8px;cursor:pointer;text-transform:none;letter-spacing:0;font-size:12px;color:var(--gray-300)">
           <input type="checkbox" id="threshold-auto-close" checked style="accent-color:var(--gold);width:14px;height:14px">
-          Auto-close + draw al 100% blocchi venduti <span class="info-i" onclick="showAboTip(this,'eng-autoclose')">i</span>
+          Auto-close + draw al 100% Step percorsi <span class="info-i" onclick="showAboTip(this,'eng-autoclose')">i</span>
         </label>
       </div>
       <button onclick="saveThresholds()" style="margin-top:14px;background:var(--gold);color:var(--black);border:none;padding:8px 20px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">SALVA SOGLIE</button> <span class="info-i" onclick="showAboTip(this,'eng-save-thr')">i</span>
@@ -1445,7 +1460,7 @@ async function aboLogin(){
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
     setAboAvatar(r.data);
-    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();aboRenderSidebarPermissions();});
+    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();aboRenderSidebarPermissions();loadAboTodo();});
     if(_adminRefreshInterval)clearInterval(_adminRefreshInterval);
     _adminRefreshInterval=setInterval(loadAdminData,60000);
   }else{
@@ -1490,7 +1505,7 @@ var _adminRefreshInterval=null;
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
     setAboAvatar(s);
-    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();aboRenderSidebarPermissions();});
+    loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();aboRenderSidebarPermissions();loadAboTodo();});
     _adminRefreshInterval=setInterval(loadAdminData,60000);
   }
 })();
@@ -1788,6 +1803,32 @@ function updatePipelineCounts(airdrops){
   });
 }
 
+async function loadAboTodo(){
+  var st=getSession();if(!st)return;
+  async function cnt(path){
+    try{
+      var r=await fetch(SB_URL+'/rest/v1/'+path,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+st.access_token,'Prefer':'count=exact','Range':'0-0'}});
+      var cr=r.headers.get('content-range');
+      return cr?parseInt(cr.split('/')[1],10)||0:0;
+    }catch(e){return 0;}
+  }
+  var vals=await Promise.all([
+    cnt('airdrops?select=id&status=eq.in_valutazione'),
+    cnt('airdrops?select=id&status=eq.waiting_seller_acknowledge'),
+    cnt('evaluation_requests?select=id&status=eq.submitted'),
+    cnt('airdrop_disputes?select=id')
+  ]);
+  var ids=['todo-val','todo-ack','todo-evalreq','todo-disputes'];
+  var tot=0;
+  ids.forEach(function(id,i){
+    var el=document.getElementById(id);
+    if(el){el.textContent=vals[i];el.parentElement.classList.toggle('zero',vals[i]===0);}
+    tot+=vals[i];
+  });
+  var clear=document.getElementById('abo-todo-clear');
+  if(clear)clear.style.display=tot===0?'block':'none';
+}
+
 function adminNav(sectionId){
   document.querySelectorAll('.admin-section').forEach(function(s){s.classList.remove('active')});
   document.querySelectorAll('.admin-sidebar-item').forEach(function(b){b.classList.remove('active');b.blur()});
@@ -1798,7 +1839,9 @@ function adminNav(sectionId){
   if(siblings){siblings.forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add('active');});}
   var btn=document.querySelector('.admin-sidebar-item[onclick*="\''+sectionId+'\'"]');
   if(btn){btn.classList.add('active');btn.blur();}
-  if(sectionId==='sec-engine')loadThresholds();
+  if(sectionId==='sec-overview')loadAboTodo();
+  if(sectionId==='sec-engine'){loadThresholds();if(typeof loadEngineConfig==='function')loadEngineConfig();}
+  if(sectionId==='sec-analysis'&&typeof loadAirdropAnalysis==='function')loadAirdropAnalysis();
   if(sectionId==='sec-airdrop-stats'||sectionId==='sec-airdrops')loadAirdropStats();
   if(sectionId==='sec-evalobi'&&typeof loadEvalobiTable==='function')loadEvalobiTable();
   var main=document.getElementById('admin-main');
@@ -2340,12 +2383,12 @@ async function adDrawPreview(airdropId){
     }
     if(d.scores&&d.scores.length){
       h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;font-family:var(--font-m);margin-bottom:4px">CLASSIFICA SCORE (v5)</div>';
-      h+='<div style="font-size:10px;color:var(--gray-500);margin-bottom:8px">f_base = √blocchi × loyalty_mult · pity = Boost garanzia · score = f_base + pity</div>';
+      h+='<div style="font-size:10px;color:var(--gray-500);margin-bottom:8px">f_base = √Step × loyalty_mult · pity = Boost garanzia · score = f_base + pity</div>';
       h+='<table style="width:100%;border-collapse:collapse;font-size:12px">';
       h+='<thead><tr style="border-bottom:1px solid var(--gray-700)">';
       h+='<th style="text-align:left;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">#</th>';
       h+='<th style="text-align:left;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">UTENTE</th>';
-      h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">BLOCCHI</th>';
+      h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">STEP</th>';
       h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">LOYALTY×</th>';
       h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">F_BASE</th>';
       h+='<th style="text-align:right;padding:6px 8px;color:var(--gold);font-family:var(--font-m);font-size:10px">PITY</th>';
@@ -2579,9 +2622,9 @@ async function toggleAnalysisDetail(row,airdropId){
     }else{h+='<div style="color:var(--gray-400);font-size:12px;margin-bottom:16px">Draw non ancora eseguito.</div>';}
     if(d.scores&&d.scores.length){
       h+='<div style="font-size:10px;color:var(--gold);letter-spacing:1.5px;font-family:var(--font-m);margin-bottom:4px">2. CLASSIFICA SCORE v5'+(d.scores.length>5?' (TOP 5 di '+d.scores.length+')':'')+'</div>';
-      h+='<div style="font-size:10px;color:var(--gray-500);margin-bottom:6px">f_base = √blocchi × loyalty_mult · pity = Boost garanzia · score = f_base + pity</div>';
+      h+='<div style="font-size:10px;color:var(--gray-500);margin-bottom:6px">f_base = √Step × loyalty_mult · pity = Boost garanzia · score = f_base + pity</div>';
       h+='<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px">';
-      h+='<thead><tr style="border-bottom:1px solid var(--gray-700)"><th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">RANK</th><th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">EMAIL</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">BLOCCHI</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">LOYALTY×</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F_BASE</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">PITY</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">SCORE</th></tr></thead><tbody>';
+      h+='<thead><tr style="border-bottom:1px solid var(--gray-700)"><th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">RANK</th><th style="text-align:left;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">EMAIL</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">STEP</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">LOYALTY×</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">F_BASE</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">PITY</th><th style="text-align:right;padding:6px;color:var(--gold);font-family:var(--font-m);font-size:9px">SCORE</th></tr></thead><tbody>';
       d.scores.slice(0,5).forEach(function(sc){
         var isWinner=sc.rank===1&&d.draw_executed;
         var rowBg=isWinner?'rgba(73,181,131,.1)':'transparent';
@@ -2642,7 +2685,7 @@ async function loadFairnessAirdrops(){
       if(a.blocks_sold>0){
         var opt=document.createElement('option');
         opt.value=a.id;
-        opt.textContent=a.title+' ('+a.status+', '+a.blocks_sold+'/'+a.total_blocks+' blocchi)';
+        opt.textContent=a.title+' ('+a.status+', '+a.blocks_sold+'/'+a.total_blocks+' Step)';
         sel.appendChild(opt);
       }
     });
@@ -2670,7 +2713,7 @@ async function loadFairnessAnalysis(){
     h+='<div style="display:flex;align-items:center;gap:24px;margin-bottom:20px;padding:20px;background:rgba(255,255,255,.02);border:1px solid var(--gray-800)">';
     h+='<div style="text-align:center"><div style="font-family:var(--font-m);font-size:48px;font-weight:300;color:'+gradeColor+';line-height:1">'+fs.value+'</div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gray-500);margin-top:4px">FAIRNESS SCORE</div></div>';
     h+='<div style="text-align:center"><div style="font-family:var(--font-h);font-size:36px;font-weight:300;color:'+gradeColor+'">'+fs.grade+'</div><div style="font-family:var(--font-m);font-size:10px;color:var(--gray-400)">'+fs.label+'</div></div>';
-    h+='<div style="flex:1;font-size:12px;color:var(--gray-400)"><strong>'+d.participants+'</strong> partecipanti · <strong>'+d.total_blocks_sold+'</strong> blocchi venduti<br>Gini: <strong>'+d.gini.value+'</strong> ('+d.gini.interpretation+')</div>';
+    h+='<div style="flex:1;font-size:12px;color:var(--gray-400)"><strong>'+d.participants+'</strong> partecipanti · <strong>'+d.total_blocks_sold+'</strong> Step percorsi<br>Gini: <strong>'+d.gini.value+'</strong> ('+d.gini.interpretation+')</div>';
     h+='</div>';
     var subs=d.sub_scores;
     var subLabels={gini:'Gini',conc_top1:'Top 1',conc_top5:'Top 5',conc_top10:'Top 10',gap_1_2:'Gap 1°-2°',factor_bal:'Factor Bal.',spread:'Spread',diversity:'Diversity'};
@@ -2689,12 +2732,12 @@ async function loadFairnessAnalysis(){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
     var c=d.concentration;
     h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)"><div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">CONCENTRAZIONE BLOCCHI</div>';
-    h+='<div style="font-size:12px;color:var(--gray-300)">Top 1: <strong>'+(c.top1_share*100).toFixed(1)+'%</strong> ('+c.top1_blocks+' blocchi)</div>';
-    h+='<div style="font-size:12px;color:var(--gray-300)">Top 5: <strong>'+(c.top5_share*100).toFixed(1)+'%</strong> ('+c.top5_blocks+' blocchi)</div>';
-    h+='<div style="font-size:12px;color:var(--gray-300)">Top 10: <strong>'+(c.top10_share*100).toFixed(1)+'%</strong> ('+c.top10_blocks+' blocchi)</div></div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Top 1: <strong>'+(c.top1_share*100).toFixed(1)+'%</strong> ('+c.top1_blocks+' Step)</div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Top 5: <strong>'+(c.top5_share*100).toFixed(1)+'%</strong> ('+c.top5_blocks+' Step)</div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Top 10: <strong>'+(c.top10_share*100).toFixed(1)+'%</strong> ('+c.top10_blocks+' Step)</div></div>';
     var fb=d.factor_balance;
     h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)"><div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">BILANCIAMENTO FATTORI (VINCITORE)</div>';
-    h+='<div style="font-size:12px;color:#4A9EFF">F1 Blocchi (70%): <strong>'+fb.f1_pct+'%</strong> (raw: '+fb.winner_f1+')</div>';
+    h+='<div style="font-size:12px;color:#4A9EFF">F1 Step (70%): <strong>'+fb.f1_pct+'%</strong> (raw: '+fb.winner_f1+')</div>';
     h+='<div style="font-size:12px;color:var(--gold)">F2 Categoria (30%): <strong>'+fb.f2_pct+'%</strong> (raw: '+fb.winner_f2+')</div>';
     h+='<div style="font-size:11px;color:var(--gray-400);margin-top:6px">Dominante: <strong style="color:var(--white)">'+fb.dominant+'</strong> · Sbilanciamento: '+(fb.imbalance*100).toFixed(1)+'%</div></div>';
     var ss=d.score_spread;
@@ -2705,7 +2748,7 @@ async function loadFairnessAnalysis(){
     var dv=d.diversity;
     h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)"><div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">DIVERSITÀ PARTECIPAZIONE</div>';
     h+='<div style="font-size:12px;color:var(--gray-300)">Acquirenti unici: <strong>'+dv.unique_buyers+'</strong></div>';
-    h+='<div style="font-size:12px;color:var(--gray-300)">Media blocchi/utente: <strong>'+dv.avg_blocks_per_buyer+'</strong></div>';
+    h+='<div style="font-size:12px;color:var(--gray-300)">Media Step/utente: <strong>'+dv.avg_blocks_per_buyer+'</strong></div>';
     h+='<div style="font-size:12px;color:var(--gray-300)">Rapporto diversità: <strong>'+(dv.ratio*100).toFixed(1)+'%</strong></div></div>';
     h+='</div>';
     resultEl.innerHTML=h;
@@ -3481,7 +3524,7 @@ function renderBoTable(){
   var wrap=document.getElementById('bo-table-wrap');
   if(!list||!list.length){wrap.innerHTML='<div class="bo-empty">Nessun airdrop in questa sezione</div>';return;}
   var catLabels={};(_categoriesCache||[]).forEach(function(c){catLabels[c.slug]=c.name_it;});
-  var html='<table class="bo-table"><thead><tr><th>Oggetto</th><th>Cat.</th><th>Desid.</th><th>Min.</th><th>Quotaz.</th><th>Status</th><th>Blocchi</th><th>Data</th><th>Azioni</th></tr></thead><tbody>';
+  var html='<table class="bo-table"><thead><tr><th>Oggetto</th><th>Cat.</th><th>Desid.</th><th>Min.</th><th>Quotaz.</th><th>Status</th><th>Step</th><th>Data</th><th>Azioni</th></tr></thead><tbody>';
   list.forEach(function(a){
     var date=new Date(a.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});
     var blocksInfo=a.total_blocks>0?(a.blocks_sold+'/'+a.total_blocks):'—';
@@ -3543,8 +3586,8 @@ function viewBoDetail(id){
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Desiderato</div><div class="bo-detail-item-val">€'+(a.seller_desired_price?parseFloat(a.seller_desired_price).toFixed(2):'—')+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Minimo</div><div class="bo-detail-item-val">€'+(a.seller_min_price?parseFloat(a.seller_min_price).toFixed(2):'—')+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Quotazione</div><div class="bo-detail-item-val" style="color:var(--gold)">€'+Number(a.object_value_eur).toLocaleString('it-IT')+'</div></div>'
-    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Prezzo blocco</div><div class="bo-detail-item-val" style="color:var(--aria)">'+(a.block_price_aria||'—')+' ARIA</div></div>'
-    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Blocchi</div><div class="bo-detail-item-val">'+(a.total_blocks>0?a.blocks_sold+'/'+a.total_blocks:'—')+'</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Prezzo Step</div><div class="bo-detail-item-val" style="color:var(--aria)">'+(a.block_price_aria||'—')+' ARIA</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Step</div><div class="bo-detail-item-val">'+(a.total_blocks>0?a.blocks_sold+'/'+a.total_blocks:'—')+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Deadline</div><div class="bo-detail-item-val">'+dl+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Creato</div><div class="bo-detail-item-val">'+date+'</div></div>'
     +'</div>';
@@ -3670,7 +3713,7 @@ async function doBoApprove(){
   var presaleEnabled=document.getElementById('bo-approve-presale-enabled').value==='yes';
   var status='valutazione_completata';
   var deadline=document.getElementById('bo-approve-deadline').value||null;
-  if(!price||price<1||!blocks||blocks<1){showToast('Prezzo e blocchi obbligatori','warning');return;}
+  if(!price||price<1||!blocks||blocks<1){showToast('Prezzo e Step obbligatori','warning');return;}
   if(presale&&presale>=price){showToast('Il prezzo presale ('+presale+') deve essere inferiore al prezzo pieno ('+price+')','error');return;}
   var sug=calcSuggestedValues(Number(_boTarget.seller_desired_price)||0,Number(_boTarget.seller_min_price)||0);
   var quotation=sug.quotation;
@@ -4305,7 +4348,7 @@ var ABO_TIPS={
   'sec-users':{it:'Gli ultimi utenti iscritti con saldo ARIA, sequenza, ROBI accumulati e stato profilo. Clicca una riga per il dettaglio utente.',en:'Recent signups with ARIA balance, streak, ROBI and profile status. Click a row for user detail.'},
   'sec-valutazioni':{it:'Coda delle submission utenti: foto oggetto + dati, da valutare e trasformare in draft airdrop. Solo admin ed evaluator (filtrati per categoria).',en:'User submission queue: photos + data, to review and convert into airdrop drafts. Admin and evaluators only (filtered by category).'},
   'sec-airdrops':{it:'Gestione airdrop in tutti gli stati: draft, accettato, presale, sale, closed, completed. Crea, modifica, blocca/sblocca e promuovi.',en:'Airdrop management across all states: draft, accepted, presale, sale, closed, completed. Create, edit, block/unblock and promote.'},
-  'sec-analysis':{it:'Analisi per airdrop: distribuzione blocchi, partecipanti, ROBI minati, fairness. Usa per capire se un airdrop sta funzionando.',en:'Per-airdrop analysis: blocks distribution, participants, mined ROBI, fairness. Use to gauge airdrop health.'},
+  'sec-analysis':{it:'Analisi per airdrop: distribuzione Step, partecipanti, ROBI raccolti, fairness. Usa per capire se un airdrop sta funzionando.',en:'Per-airdrop analysis: blocks distribution, participants, mined ROBI, fairness. Use to gauge airdrop health.'},
   'sec-airdrop-stats':{it:'KPI aggregati sugli airdrop: totali venduti, ARIA incassate, ROBI distribuiti, tasso completamento.',en:'Aggregate airdrop KPIs: total sold, ARIA collected, ROBI distributed, completion rate.'},
   'sec-messages':{it:'Messaggi inviati agli utenti (broadcast e per-airdrop) e chat operative. Usa per comunicazioni ufficiali.',en:'Messages sent to users (broadcast and per-airdrop) and ops chats. Use for official communications.'},
   'sec-treasury':{it:'Il cuore economico: Treasury balance, valore nominale ROBI, Service balance, revenue ads. Qui aggiungi fondi e vedi lo split automatico Treasury/Service.',en:'Economic core: Treasury balance, ROBI nominal value, Service balance, ad revenue. Add funds here and see automatic Treasury/Service split.'},
@@ -4325,7 +4368,7 @@ var ABO_TIPS={
   'sec-fairness':{it:'Fairness Index: misura quanto l\'engine è equo nei draw reali. Verifica che nessun utente sia penalizzato o privilegiato.',en:'Fairness Index: measures how fair the engine is across real draws. Checks no user is penalized or privileged.'},
   'sec-collaborators':{it:'Gestione ruoli: admin, evaluator (con categoria opzionale). Da qui assegni/rimuovi permessi operativi.',en:'Role management: admin, evaluator (optional category). Assign/remove operational permissions here.'},
   'sec-categories':{it:'Categorie merceologiche per airdrop: arredamento, tech, orologi, ecc. Usate per routing delle valutazioni agli evaluator dedicati.',en:'Product categories for airdrops: furniture, tech, watches, etc. Used to route reviews to dedicated evaluators.'},
-  'sec-engine':{it:'Engine Config: parametri algoritmo draw, split economica, mining rate, prezzi blocchi. Modifiche qui impattano TUTTI gli airdrop — massima attenzione.',en:'Engine Config: draw algorithm params, economic split, mining rate, block prices. Changes here impact ALL airdrops — handle with care.'},
+  'sec-engine':{it:'Engine Config: parametri algoritmo draw, split economica, raccolta ROBI, prezzi Step. Modifiche qui impattano TUTTI gli airdrop — massima attenzione.',en:'Engine Config: draw algorithm params, economic split, mining rate, block prices. Changes here impact ALL airdrops — handle with care.'},
   // Overview cards
   'ov-users':{it:'Numero totale di utenti registrati (con profilo creato). Include admin, evaluator, partecipanti.',en:'Total registered users (with profile). Includes admins, evaluators and participants.'},
   'ov-remaining':{it:'Posti rimanenti nel programma Alpha Brave (target 1.000 utenti prima dello Stage 1).',en:'Remaining slots in the Alpha Brave program (target 1,000 users before Stage 1).'},
@@ -4347,8 +4390,8 @@ var ABO_TIPS={
   'tr-ads':{it:'Ricavi da A-Ads (banner crypto). Confluiscono in Treasury + Service secondo lo split.',en:'A-Ads revenue (crypto banners). Goes into Treasury + Service per the split.'},
   'tr-adsense':{it:'Ricavi da Google AdSense (in attesa approvazione). Confluiscono in Treasury + Service secondo lo split.',en:'Google AdSense revenue (awaiting approval). Goes into Treasury + Service per the split.'},
   // Approve modal (Valutazioni) — rich format
-  'bo-app-price':{it:{i:'💰',t:'Prezzo blocco',d:'Quanti ARIA per 1 blocco.',ex:'500 blocchi × 10 ARIA = 5.000 ARIA totali',tip:'Più alto = airdrop esclusivo, meno gente'},en:{i:'💰',t:'Block price',d:'How many ARIA per 1 block.',ex:'500 blocks × 10 ARIA = 5,000 ARIA total',tip:'Higher = exclusive airdrop, fewer participants'}},
-  'bo-app-blocks':{it:{i:'🧱',t:'Blocchi totali',d:'Quanti blocchi metti in vendita.',ex:'Range tipico: 100-1000 blocchi',tip:'Più blocchi = più gente, ma vincere è più difficile'},en:{i:'🧱',t:'Total blocks',d:'How many blocks you put on sale.',ex:'Typical range: 100-1000 blocks',tip:'More blocks = more participants but harder to win'}},
+  'bo-app-price':{it:{i:'💰',t:'Prezzo Step',d:'Quanti ARIA per 1 Step.',ex:'500 Step × 10 ARIA = 5.000 ARIA totali',tip:'Più alto = airdrop esclusivo, meno gente'},en:{i:'💰',t:'Block price',d:'How many ARIA per 1 block.',ex:'500 blocks × 10 ARIA = 5,000 ARIA total',tip:'Higher = exclusive airdrop, fewer participants'}},
+  'bo-app-blocks':{it:{i:'🧱',t:'Step totali',d:'Quanti Step compongono il percorso.',ex:'Range tipico: 100-1000 Step',tip:'Più blocchi = più gente, ma vincere è più difficile'},en:{i:'🧱',t:'Total blocks',d:'How many blocks you put on sale.',ex:'Typical range: 100-1000 blocks',tip:'More blocks = more participants but harder to win'}},
   'bo-app-presale':{it:{i:'🎟️',t:'Prezzo presale',d:'ARIA per 1 blocco nei primi giorni (sconto).',ex:'Sale 10 ARIA → presale 7 ARIA (-30%)',tip:'Vuoto = niente sconto'},en:{i:'🎟️',t:'Presale price',d:'ARIA per block in early days (discount).',ex:'Sale 10 ARIA → presale 7 ARIA (-30%)',tip:'Empty = no discount'}},
   'bo-app-presale-en':{it:{i:'🔀',t:'Presale on/off',d:'Decidi se partire con uno sconto iniziale.',ex:'Sì = presale → sale · No = subito sale',tip:'Sì = premi chi crede subito nell\'airdrop'},en:{i:'🔀',t:'Presale on/off',d:'Choose if you start with an early discount.',ex:'Yes = presale → sale · No = sale only',tip:'Yes = rewards early believers'}},
   'bo-app-duration':{it:{i:'⏱️',t:'Durata',d:'Per quanto tempo è aperto.',ex:'6h flash · 24h standard · 72h extended',tip:'Breve = urgenza · Lungo = oggetti importanti'},en:{i:'⏱️',t:'Duration',d:'How long it stays open.',ex:'6h flash · 24h standard · 72h extended',tip:'Short = urgency · Long = important items'}},
@@ -4361,23 +4404,23 @@ var ABO_TIPS={
   'ad-min':{it:{i:'🔒',t:'Prezzo minimo',d:'Sotto questo, il venditore rifiuta.',ex:'Read-only — devi sempre garantirlo',tip:'Se la quotazione lo viola, salta l\'airdrop'},en:{i:'🔒',t:'Minimum price',d:'Below this, the seller refuses.',ex:'Read-only — must always be guaranteed',tip:'If valuation breaks it, skip the airdrop'}},
   'ad-suggest':{it:{i:'🪄',t:'Suggerisci valori',d:'La piattaforma riempie i campi sotto.',ex:'Calcola da quotazione + minimo venditore',tip:'Punto di partenza — controlla sempre'},en:{i:'🪄',t:'Suggest values',d:'The platform fills the fields below.',ex:'Computed from valuation + seller minimum',tip:'Starting point — always double-check'}},
   'ad-quotaz':{it:{i:'💎',t:'Quotazione AIROOBI',d:'Quanto vale l\'oggetto in EUR.',ex:'Submission €600 → quotazione €580 (mercato)',tip:'Da qui partono tutti gli altri calcoli'},en:{i:'💎',t:'AIROOBI valuation',d:'How much the item is worth in EUR.',ex:'Submission €600 → valuation €580 (market)',tip:'All other calculations start here'}},
-  'ad-bprice':{it:{i:'💰',t:'Block price (sale)',d:'ARIA per 1 blocco a prezzo pieno.',ex:'500 blocchi × 10 ARIA = 5.000 ARIA',tip:'Prezzo finale dopo l\'eventuale sconto'},en:{i:'💰',t:'Block price (sale)',d:'ARIA per block at full price.',ex:'500 blocks × 10 ARIA = 5,000 ARIA',tip:'Final price after the optional discount'}},
+  'ad-bprice':{it:{i:'💰',t:'Prezzo Step (sale)',d:'ARIA per 1 Step a prezzo pieno.',ex:'500 Step × 10 ARIA = 5.000 ARIA',tip:'Prezzo finale dopo l\'eventuale sconto'},en:{i:'💰',t:'Block price (sale)',d:'ARIA per block at full price.',ex:'500 blocks × 10 ARIA = 5,000 ARIA',tip:'Final price after the optional discount'}},
   'ad-pprice':{it:{i:'🎟️',t:'Presale price',d:'ARIA per 1 blocco con sconto iniziale.',ex:'Sale 10 → presale 7 (sconto ~30%)',tip:'Vuoto = niente fase presale'},en:{i:'🎟️',t:'Presale price',d:'ARIA per block with early discount.',ex:'Sale 10 → presale 7 (~30% off)',tip:'Empty = no presale phase'}},
-  'ad-ppct':{it:{i:'📊',t:'% blocchi presale',d:'Che fetta vendi a sconto.',ex:'20% di 500 = primi 100 a sconto',tip:'Range tipico: 10-30%'},en:{i:'📊',t:'% presale blocks',d:'What share you sell discounted.',ex:'20% of 500 = first 100 discounted',tip:'Typical range: 10-30%'}},
+  'ad-ppct':{it:{i:'📊',t:'% Step presale',d:'Che fetta vendi a sconto.',ex:'20% di 500 = primi 100 a sconto',tip:'Range tipico: 10-30%'},en:{i:'📊',t:'% presale blocks',d:'What share you sell discounted.',ex:'20% of 500 = first 100 discounted',tip:'Typical range: 10-30%'}},
   'ad-extra':{it:{i:'➕',t:'Margine extra',d:'% sopra la quotazione per coprire spese.',ex:'Quot €500 + 10% = airdrop incassa €550',tip:'Default 10% — alto = guadagni più, attiri meno'},en:{i:'➕',t:'Extra margin',d:'% above valuation to cover costs.',ex:'Val €500 + 10% = airdrop collects €550',tip:'Default 10% — high = more profit, less appeal'}},
-  'ad-blocks':{it:{i:'🧱',t:'N° Blocchi',d:'Totale blocchi in vendita.',ex:'Auto: quotazione + extra% / block-price',tip:'Sovrascrivi se vuoi un numero "tondo"'},en:{i:'🧱',t:'Block count',d:'Total blocks on sale.',ex:'Auto: valuation + extra% / block-price',tip:'Override for a "round" number'}},
+  'ad-blocks':{it:{i:'🧱',t:'N° Step',d:'Totale Step del percorso.',ex:'Auto: quotazione + extra% / block-price',tip:'Sovrascrivi se vuoi un numero "tondo"'},en:{i:'🧱',t:'Block count',d:'Total blocks on sale.',ex:'Auto: valuation + extra% / block-price',tip:'Override for a "round" number'}},
   'ad-dur':{it:{i:'⏱️',t:'Durata',d:'Per quanto tempo è aperto.',ex:'6h flash · 24h standard · 72h extended',tip:'Oggetti importanti = extended (72h)'},en:{i:'⏱️',t:'Duration',d:'How long it stays open.',ex:'6h flash · 24h standard · 72h extended',tip:'Important items = extended (72h)'}},
   'ad-dl':{it:{i:'📅',t:'Deadline',d:'Data e ora di chiusura.',ex:'Auto: prossima ora piena + durata',tip:'Modifica solo per casi eccezionali'},en:{i:'📅',t:'Deadline',d:'Closing date and time.',ex:'Auto: next full hour + duration',tip:'Only override in exceptional cases'}},
   'ad-autodraw':{it:{i:'🎲',t:'Auto-draw',d:'Estrazione automatica alla scadenza.',ex:'ON = sistema sceglie · OFF = decidi tu',tip:'ON in produzione, OFF per testare'},en:{i:'🎲',t:'Auto-draw',d:'Automatic draw at deadline.',ex:'ON = system picks · OFF = you decide',tip:'ON in production, OFF for testing'}},
-  'ad-thr':{it:{i:'🎯',t:'Soglia presale → sale',d:'% sotto cui chiude lo sconto e parte il pieno.',ex:'20% = al 20% blocchi venduti, fine sconto',tip:'Default per durata: 30/20/15%'},en:{i:'🎯',t:'Presale → sale threshold',d:'% at which discount ends and full price starts.',ex:'20% = at 20% sold the discount closes',tip:'Defaults by duration: 30/20/15%'}},
+  'ad-thr':{it:{i:'🎯',t:'Soglia presale → sale',d:'% sotto cui chiude lo sconto e parte il pieno.',ex:'20% = al 20% Step percorsi, fine sconto',tip:'Default per durata: 30/20/15%'},en:{i:'🎯',t:'Presale → sale threshold',d:'% at which discount ends and full price starts.',ex:'20% = at 20% sold the discount closes',tip:'Defaults by duration: 30/20/15%'}},
   'ad-status':{it:{i:'🚦',t:'Status',d:'Fase attuale dell\'airdrop.',ex:'in_valutazione → presale → sale → closed',tip:'Modifica a mano solo per casi strani'},en:{i:'🚦',t:'Status',d:'Current airdrop phase.',ex:'review → presale → sale → closed',tip:'Manual change only in unusual cases'}},
   'ad-reject':{it:{i:'❌',t:'Motivo rifiuto',d:'Cosa vede l\'utente quando rifiuti.',ex:'Compila solo se status = rifiutato_*',tip:'Sii chiaro, è il suo unico feedback'},en:{i:'❌',t:'Rejection reason',d:'What the user sees when you reject.',ex:'Only fill if status = rejected_*',tip:'Be clear — it\'s their only feedback'}},
   // Engine Config — rich format
   'eng-save-cfg':{it:{i:'⚠️',t:'Salva config engine',d:'Salva pesi, divisioni e premi.',ex:'Impatta TUTTI gli airdrop futuri',tip:'Sicuro di voler cambiare?'},en:{i:'⚠️',t:'Save engine config',d:'Saves weights, splits and rewards.',ex:'Affects ALL future airdrops',tip:'Sure you want to change this?'}},
-  'eng-thr-flash':{it:{i:'⚡',t:'Soglia FLASH (6h)',d:'% blocchi venduti che chiude lo sconto.',ex:'Default 30% — alto = sconto finisce presto',tip:'Flash = atmosfera urgente'},en:{i:'⚡',t:'FLASH threshold (6h)',d:'% of sold blocks that ends the discount.',ex:'Default 30% — high = discount ends fast',tip:'Flash = urgent vibe'}},
-  'eng-thr-std':{it:{i:'🕐',t:'Soglia STANDARD (24h)',d:'% blocchi venduti che chiude lo sconto.',ex:'Default 20% — bilanciamento normale',tip:'Il caso più comune'},en:{i:'🕐',t:'STANDARD threshold (24h)',d:'% of sold blocks that ends the discount.',ex:'Default 20% — normal balance',tip:'The most common case'}},
-  'eng-thr-ext':{it:{i:'🕒',t:'Soglia EXTENDED (72h)',d:'% blocchi venduti che chiude lo sconto.',ex:'Default 15% — basso = pieno ha più giorni',tip:'Extended = oggetti importanti'},en:{i:'🕒',t:'EXTENDED threshold (72h)',d:'% of sold blocks that ends the discount.',ex:'Default 15% — low = full price has more days',tip:'Extended = important items'}},
-  'eng-autoclose':{it:{i:'🏁',t:'Auto-close al 100%',d:'Chiude e estrae appena vendi tutto.',ex:'100% blocchi venduti = draw immediato',tip:'ON = niente attese inutili'},en:{i:'🏁',t:'Auto-close at 100%',d:'Closes and draws as soon as everything is sold.',ex:'100% sold = immediate draw',tip:'ON = no needless waiting'}},
+  'eng-thr-flash':{it:{i:'⚡',t:'Soglia FLASH (6h)',d:'% Step percorsi che chiude lo sconto.',ex:'Default 30% — alto = sconto finisce presto',tip:'Flash = atmosfera urgente'},en:{i:'⚡',t:'FLASH threshold (6h)',d:'% of sold blocks that ends the discount.',ex:'Default 30% — high = discount ends fast',tip:'Flash = urgent vibe'}},
+  'eng-thr-std':{it:{i:'🕐',t:'Soglia STANDARD (24h)',d:'% Step percorsi che chiude lo sconto.',ex:'Default 20% — bilanciamento normale',tip:'Il caso più comune'},en:{i:'🕐',t:'STANDARD threshold (24h)',d:'% of sold blocks that ends the discount.',ex:'Default 20% — normal balance',tip:'The most common case'}},
+  'eng-thr-ext':{it:{i:'🕒',t:'Soglia EXTENDED (72h)',d:'% Step percorsi che chiude lo sconto.',ex:'Default 15% — basso = pieno ha più giorni',tip:'Extended = oggetti importanti'},en:{i:'🕒',t:'EXTENDED threshold (72h)',d:'% of sold blocks that ends the discount.',ex:'Default 15% — low = full price has more days',tip:'Extended = important items'}},
+  'eng-autoclose':{it:{i:'🏁',t:'Auto-close al 100%',d:'Chiude la corsa appena il percorso è completo.',ex:'100% Step percorsi = chiusura immediato',tip:'ON = niente attese inutili'},en:{i:'🏁',t:'Auto-close at 100%',d:'Closes and draws as soon as everything is sold.',ex:'100% sold = immediate draw',tip:'ON = no needless waiting'}},
   'eng-save-thr':{it:{i:'💾',t:'Salva soglie',d:'Salva le 3 % sopra.',ex:'Effetto su tutti i nuovi airdrop',tip:'Modifica solo dopo simulazioni'},en:{i:'💾',t:'Save thresholds',d:'Saves the 3 percentages above.',ex:'Affects every new airdrop',tip:'Only change after simulations'}}
 };
 function _ttEsc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
