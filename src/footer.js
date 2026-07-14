@@ -21,6 +21,7 @@ var CSS=''
 +'.app-footer .en{display:none}'
 +'html[data-lang="en"] .app-footer .en{display:inline}'
 +'html[data-lang="en"] .app-footer .it{display:none}'
+/* punto 10 (15 lug 2026): box condivisione su tutte le pagine */+'.app-share{max-width:680px;margin:36px auto 0;padding:16px 20px;border:1px solid var(--gray-800,#E3E8EF);border-radius:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:center;font-family:var(--font-b,Inter,sans-serif)}'+'.app-share-label{font-family:var(--font-m,monospace);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-500,#8A97A8);width:100%;text-align:center;margin-bottom:2px}'+'.app-share a,.app-share button{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--gray-700,#D4DBE3);background:none;color:var(--gray-300,#33404F);font-size:12px;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;text-decoration:none;transition:all .15s}'+'.app-share a:hover,.app-share button:hover{border-color:var(--gold,#EF3E4F);color:var(--gold,#EF3E4F)}';
 /* punto 13 (15 lug 2026): simbolini (A)ria / (R)obi inline nei testi */+'.tok-coin{white-space:nowrap}'+'.tok-coin::before{content:"";display:inline-block;width:.92em;height:.92em;margin-right:.22em;vertical-align:-0.1em;background-size:contain;background-repeat:no-repeat}'+'.tok-aria::before{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%277%27 fill=%27none%27 stroke=%27%234A9EFF%27 stroke-width=%271.6%27/%3E%3Ctext x=%278%27 y=%2711.6%27 text-anchor=%27middle%27 fill=%27%234A9EFF%27 font-size=%279.5%27 font-weight=%27700%27 font-family=%27Inter,sans-serif%27%3EA%3C/text%3E%3C/svg%3E")}'+'.tok-robi::before{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%277%27 fill=%27none%27 stroke=%27%23EF3E4F%27 stroke-width=%271.6%27/%3E%3Ctext x=%278%27 y=%2711.6%27 text-anchor=%27middle%27 fill=%27%23EF3E4F%27 font-size=%279.5%27 font-weight=%27700%27 font-family=%27Inter,sans-serif%27%3ER%3C/text%3E%3C/svg%3E")}';
 
 var LINKS=[
@@ -89,6 +90,57 @@ function scheduleTokenize(){
 
 
 /* ── punto 17 (15 lug 2026): PWA — proponi l'installazione, desktop e mobile ── */
+
+/* ── punto 10: condivisione — quick share social da loggato, copia link da ospite ── */
+function buildShareBar(){
+  if(document.getElementById('app-share'))return;
+  var foot=document.querySelector('.app-footer');
+  if(!foot)return;
+  var logged=false;
+  try{logged=!!localStorage.getItem('airoobi_session');}catch(e){}
+  var url=location.origin+location.pathname;
+  var wrap=document.createElement('div');
+  wrap.id='app-share';wrap.className='app-share';
+  var label='<span class="app-share-label"><span class="it">Condividi AIROOBI</span><span class="en">Share AIROOBI</span></span>';
+  function finish(shareUrl){
+    var txt=encodeURIComponent('Ogni oggetto \u00e8 una corsa \u2014 AIROOBI');
+    var enc=encodeURIComponent(shareUrl);
+    if(logged){
+      wrap.innerHTML=label
+        +'<a href="https://wa.me/?text='+txt+'%20'+enc+'" target="_blank" rel="noopener">WhatsApp</a>'
+        +'<a href="https://t.me/share/url?url='+enc+'&text='+txt+'" target="_blank" rel="noopener">Telegram</a>'
+        +'<a href="https://twitter.com/intent/tweet?text='+txt+'&url='+enc+'" target="_blank" rel="noopener">X</a>'
+        +'<a href="mailto:?subject='+txt+'&body='+enc+'">Email</a>'
+        +'<button type="button" id="app-share-copy"><span class="it">Copia link</span><span class="en">Copy link</span></button>';
+    }else{
+      wrap.innerHTML=label
+        +'<button type="button" id="app-share-copy"><span class="it">Copia link</span><span class="en">Copy link</span></button>';
+    }
+    foot.parentNode.insertBefore(wrap,foot);
+    var cb=document.getElementById('app-share-copy');
+    if(cb)cb.onclick=function(){
+      (navigator.clipboard?navigator.clipboard.writeText(shareUrl):Promise.reject()).then(function(){
+        cb.innerHTML='<span class="it">Copiato ✓</span><span class="en">Copied ✓</span>';
+        setTimeout(function(){cb.innerHTML='<span class="it">Copia link</span><span class="en">Copy link</span>';},1800);
+      }).catch(function(){});
+    };
+  }
+  if(logged){
+    // link col referral personale, se recuperabile
+    try{
+      var sess=JSON.parse(localStorage.getItem('airoobi_session'));
+      fetch('https://vuvlmlpuhovipfwtquux.supabase.co/rest/v1/profiles?id=eq.'+sess.user.id+'&select=referral_code',{
+        headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co','Authorization':'Bearer '+sess.access_token}
+      }).then(function(r){return r.json()}).then(function(rows){
+        var ref=rows&&rows[0]&&rows[0].referral_code;
+        finish(ref?url+'?ref='+ref:url);
+      }).catch(function(){finish(url);});
+    }catch(e){finish(url);}
+  }else{
+    finish(url);
+  }
+}
+
 function initPwa(){
   if('serviceWorker' in navigator){
     try{navigator.serviceWorker.register('/sw.js');}catch(e){}
@@ -133,6 +185,7 @@ function init(){
   try{
     new MutationObserver(scheduleTokenize).observe(document.body,{childList:true,subtree:true});
   }catch(e){}
+  buildShareBar();
   initPwa();
 }
 
