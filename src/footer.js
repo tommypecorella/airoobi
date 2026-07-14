@@ -20,7 +20,8 @@ var CSS=''
 /* it/en self-contained: non dipende dal CSS della pagina */
 +'.app-footer .en{display:none}'
 +'html[data-lang="en"] .app-footer .en{display:inline}'
-+'html[data-lang="en"] .app-footer .it{display:none}';
++'html[data-lang="en"] .app-footer .it{display:none}'
+/* punto 13 (15 lug 2026): simbolini (A)ria / (R)obi inline nei testi */+'.tok-coin{white-space:nowrap}'+'.tok-coin::before{content:"";display:inline-block;width:.92em;height:.92em;margin-right:.22em;vertical-align:-0.1em;background-size:contain;background-repeat:no-repeat}'+'.tok-aria::before{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%277%27 fill=%27none%27 stroke=%27%234A9EFF%27 stroke-width=%271.6%27/%3E%3Ctext x=%278%27 y=%2711.6%27 text-anchor=%27middle%27 fill=%27%234A9EFF%27 font-size=%279.5%27 font-weight=%27700%27 font-family=%27Inter,sans-serif%27%3EA%3C/text%3E%3C/svg%3E")}'+'.tok-robi::before{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%277%27 fill=%27none%27 stroke=%27%23EF3E4F%27 stroke-width=%271.6%27/%3E%3Ctext x=%278%27 y=%2711.6%27 text-anchor=%27middle%27 fill=%27%23EF3E4F%27 font-size=%279.5%27 font-weight=%27700%27 font-family=%27Inter,sans-serif%27%3ER%3C/text%3E%3C/svg%3E")}';
 
 var LINKS=[
   {href:'https://airoobi.com', it:'airoobi.com', en:'airoobi.com'},
@@ -50,12 +51,52 @@ function render(mount){
     +'</footer>';
 }
 
+
+/* ── punto 13: simbolini ARIA/ROBI accanto alle citazioni nei testi ── */
+var TOK_SKIP='script,style,code,pre,textarea,input,svg,select,option,.tok-coin,.no-tok,.topbar,.topbar-bal,.dash-stat-label,.abo-todo-item,[contenteditable]';
+function tokenizeCoins(root){
+  if(!root||!root.querySelectorAll)return;
+  var walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){
+    if(!/\b(ARIA|ROBI)\b/.test(n.nodeValue))return NodeFilter.FILTER_REJECT;
+    var p=n.parentElement;
+    if(!p||p.closest(TOK_SKIP))return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;
+  }});
+  var nodes=[];var nd;
+  while((nd=walker.nextNode()))nodes.push(nd);
+  nodes.forEach(function(node){
+    var parts=node.nodeValue.split(/\b(ARIA|ROBI)\b/);
+    if(parts.length<2)return;
+    var frag=document.createDocumentFragment();
+    parts.forEach(function(part){
+      if(part==='ARIA'||part==='ROBI'){
+        var sp=document.createElement('span');
+        sp.className='tok-coin tok-'+(part==='ARIA'?'aria':'robi');
+        sp.textContent=part;
+        frag.appendChild(sp);
+      }else if(part){
+        frag.appendChild(document.createTextNode(part));
+      }
+    });
+    node.parentNode.replaceChild(frag,node);
+  });
+}
+var _tokTimer=null;
+function scheduleTokenize(){
+  if(_tokTimer)clearTimeout(_tokTimer);
+  _tokTimer=setTimeout(function(){tokenizeCoins(document.body);},400);
+}
+
 function init(){
   var st=document.createElement('style');
   st.textContent=CSS;
   document.head.appendChild(st);
   var mounts=document.querySelectorAll('#footer-mount,[data-footer-mount]');
   for(var i=0;i<mounts.length;i++)render(mounts[i]);
+  tokenizeCoins(document.body);
+  try{
+    new MutationObserver(scheduleTokenize).observe(document.body,{childList:true,subtree:true});
+  }catch(e){}
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
