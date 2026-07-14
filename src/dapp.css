@@ -146,7 +146,7 @@ select option{background:var(--gray-800);color:var(--white)}
 .ehs-count strong{font-family:var(--font-h);font-size:22px;color:var(--gold);font-weight:600;margin-right:6px;line-height:1}
 
 /* ── EXPLORE TOOLBAR (sticky) ── */
-.explore-toolbar{position:sticky;top:56px;z-index:50;background:rgba(6,11,24,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:12px 0 8px;margin:0 -24px 16px;padding-left:24px;padding-right:24px;border-bottom:1px solid rgba(255,255,255,.04)}
+.explore-toolbar{position:sticky;top:56px;z-index:50;background:rgba(6,11,24,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:12px 0 8px;margin:0 -20px 16px;padding-left:20px;padding-right:20px;border-bottom:1px solid rgba(255,255,255,.04)}
 .etb-row{display:flex;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
 .etb-search{flex:1;min-width:200px;position:relative;display:flex;align-items:center}
 .etb-search svg{position:absolute;left:12px;width:16px;height:16px;color:var(--gray-500);pointer-events:none}
@@ -762,6 +762,7 @@ select option{background:var(--gray-800);color:var(--white)}
 /* ── RESPONSIVE ── */
 @media(min-width:640px){
   .main{padding:36px 28px 100px}
+  .explore-toolbar{margin:0 -28px 16px;padding-left:28px;padding-right:28px}
 }
 @media(min-width:800px){
   .topbar{padding:0 36px}
@@ -1146,13 +1147,14 @@ body.detail-open #cat-dashboard{display:none!important}
 }
 /* Mobile nav bug fix (RS ROBY 24 May) · contenimento topbar a viewport stretti */
 @media(max-width:480px){
-  .topbar{padding:0 12px;gap:6px}
-  .topbar-right{gap:6px}
-  .topbar-bal{font-size:11px;padding:4px 9px;gap:4px}
-  .topbar-bal svg{width:14px;height:14px}
+  .topbar{padding:0 10px;gap:4px}
+  .topbar-right{gap:4px}
+  .topbar-bal{font-size:10px;padding:3px 7px;gap:3px}
+  .topbar-bal svg{width:13px;height:13px}
   .topbar-robi-inline{display:none !important}
-  .topbar-avatar{width:30px;height:30px;font-size:12px}
+  .topbar-avatar{width:28px;height:28px;font-size:11px;flex-shrink:0}
   .topbar-cr-btn{display:none !important}
+  .lang-toggle{padding:4px 8px;font-size:10px}
 }
 
 /* ── Chat bubbles (GS-13) — used by airdrop chat dApp + ABO ── */

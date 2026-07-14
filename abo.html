@@ -63,7 +63,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .admin-burger-sidebar{display:none;background:none;border:none;color:var(--gray-400);cursor:pointer;padding:6px;margin-right:8px}
 .admin-burger-sidebar span{display:block;width:16px;height:2px;background:currentColor;margin:3px 0}
 @media(max-width:768px){
-  .admin-overlay.active{grid-template-columns:1fr;grid-template-areas:"nav" "main"}
+  .admin-overlay.active{grid-template-columns:1fr;grid-template-areas:"nav" "main";grid-template-rows:auto 1fr}
+  .admin-nav{flex-wrap:wrap;height:auto;min-height:48px;padding:8px 10px;gap:8px}
+  #abo-sim-select{max-width:120px;font-size:9px;padding:3px 5px}
   .admin-sidebar{position:fixed;left:-250px;top:48px;bottom:0;z-index:300;transition:left .25s;width:240px}
   .admin-sidebar.open{left:0}
   .admin-burger-sidebar{display:block}
