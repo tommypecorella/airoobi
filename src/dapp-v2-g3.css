@@ -1446,3 +1446,49 @@ html:not([data-theme="light"]) .marketplace-demo-banner-content p strong { color
 .airdrop-detail-demo-note em { color: #0F1417; font-style: italic; }
 html:not([data-theme="light"]) .airdrop-detail-demo-note { color: rgba(255,255,255,0.7); }
 html:not([data-theme="light"]) .airdrop-detail-demo-note em { color: #FFFFFF; }
+
+/* ══ CCP DARK COUNTERPART · 15 lug 2026 (bug 4) ══
+   Generato dalle regole light hardcoded qui sopra: in dark inchiostri chiari
+   e superfici scure, layout invariato. NON editare a mano: rigenerare. */
+html[data-theme="dark"] .scoring-panel{background:#161D24 !important;border:1px solid rgba(242,245,248,0.08) !important;color:#F2F5F8 !important}
+html[data-theme="dark"] .scoring-status-label{color:#F2F5F8 !important}
+html[data-theme="dark"] .scoring-score-label{color:rgba(242,245,248,0.55) !important}
+html[data-theme="dark"] .scoring-score-leader{color:rgba(242,245,248,0.4) !important}
+html[data-theme="dark"] .scoring-action-box{background:#10161C !important}
+html[data-theme="dark"] .scoring-action-hint{color:#F2F5F8 !important}
+html[data-theme="dark"] .scoring-action-cta:hover{box-shadow:0 6px 18px rgba(242,245,248,0.18) !important}
+html[data-theme="dark"] .scoring-presale-banner{color:#F2F5F8 !important}
+html[data-theme="dark"] .scoring-breakdown{border-top:1px solid rgba(242,245,248,0.08) !important}
+html[data-theme="dark"] .scoring-breakdown-title{color:#F2F5F8 !important}
+html[data-theme="dark"] .scoring-metric{background:#10161C !important;border:1px solid rgba(242,245,248,0.08) !important}
+html[data-theme="dark"] .scoring-metric-name{color:#F2F5F8 !important}
+html[data-theme="dark"] .scoring-metric-value{color:#F2F5F8 !important}
+html[data-theme="dark"] .scoring-metric-hint{color:rgba(242,245,248,0.55) !important}
+html[data-theme="dark"] .scoring-metric-progress-eta{color:rgba(242,245,248,0.55) !important}
+html[data-theme="dark"] .invita-hero{background:#161D24 !important;border:1px solid rgba(242,245,248,0.06) !important}
+html[data-theme="dark"] .invita-hero-title{color:#F2F5F8 !important}
+html[data-theme="dark"] .invita-hero-subtitle{color:rgba(242,245,248,0.65) !important}
+html[data-theme="dark"] .invita-hero-subtitle strong{color:#F2F5F8 !important}
+html[data-theme="dark"] .invita-scarcity-title{color:#F2F5F8 !important}
+html[data-theme="dark"] .invita-scarcity-text{color:rgba(242,245,248,0.65) !important}
+html[data-theme="dark"] .invita-link-box{background:#10161C !important;border:1px solid rgba(242,245,248,0.08) !important}
+html[data-theme="dark"] .invita-link-title{color:rgba(242,245,248,0.55) !important}
+html[data-theme="dark"] .invita-link-url{background:#161D24 !important;color:#F2F5F8 !important}
+html[data-theme="dark"] .invita-share-title{color:rgba(242,245,248,0.55) !important}
+html[data-theme="dark"] .invita-share-btn{background:#10161C !important;border:1px solid rgba(242,245,248,0.08) !important;color:#F2F5F8 !important}
+html[data-theme="dark"] .invita-share-hint{color:rgba(242,245,248,0.5) !important}
+html[data-theme="dark"] .invita-stats-title{color:rgba(242,245,248,0.55) !important}
+html[data-theme="dark"] .invita-stat-card{background:#10161C !important;border:1px solid rgba(242,245,248,0.08) !important}
+html[data-theme="dark"] .invita-stat-tier{color:#F2F5F8 !important}
+html[data-theme="dark"] .invita-stat-label{color:rgba(242,245,248,0.55) !important}
+html[data-theme="dark"] .invita-tier-ladder{background:#161D24 !important;border:1px solid rgba(242,245,248,0.06) !important}
+html[data-theme="dark"] .invita-tier-step{color:rgba(242,245,248,0.5) !important}
+html[data-theme="dark"] .invita-tier-step.active{color:#F2F5F8 !important}
+html[data-theme="dark"] .invita-howitworks-title{color:rgba(242,245,248,0.55) !important}
+html[data-theme="dark"] .invita-howitworks-steps li{color:rgba(242,245,248,0.7) !important}
+html[data-theme="dark"] .invita-howitworks-steps strong{color:#F2F5F8 !important}
+html[data-theme="dark"] .marketplace-demo-banner-content > strong{color:#F2F5F8 !important}
+html[data-theme="dark"] .marketplace-demo-banner-content p{color:rgba(242,245,248,0.65) !important}
+html[data-theme="dark"] .marketplace-demo-banner-content p strong{color:#F2F5F8 !important}
+html[data-theme="dark"] .airdrop-detail-demo-note{color:rgba(242,245,248,0.6) !important}
+html[data-theme="dark"] .airdrop-detail-demo-note em{color:#F2F5F8 !important}
