@@ -64,6 +64,38 @@ async function loadRobiPrice(){
 
 
 /* ── punto 7 (15 lug 2026): fase dell'airdrop chiara ed evidente ── */
+
+/* ── punto 12 (15 lug 2026): estensione timer lato venditore ── */
+function buildExtendBox(a){
+  try{
+    var uid=_session&&_session.user&&_session.user.id;
+    if(!uid||(a.submitted_by!==uid&&a.created_by!==uid))return '';
+    if(['presale','sale','active'].indexOf(a.status)<0)return '';
+    var n=(a.extensions_count||0);
+    if(n>=5)return '<div style="margin:6px 0 4px;font-family:var(--font-m);font-size:10px;color:var(--gray-500)"><span class="it">Estensioni esaurite (5/5)</span><span class="en">Extensions used up (5/5)</span></div>';
+    var cost=n===0?5:(n===1?10:15);
+    var hours=n===0?72:24;
+    return '<div style="margin:6px 0 4px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">'
+      +'<button onclick="doExtendAirdrop(\''+a.id+'\')" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:8px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer;border-radius:10px;font-weight:700">&#8987; <span class="it">ESTENDI LA CORSA +'+hours+'H · '+cost+' ARIA</span><span class="en">EXTEND THE CLIMB +'+hours+'H · '+cost+' ARIA</span></button>'
+      +'<span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">'+(5-n)+'/5 <span class="it">disponibili</span><span class="en">left</span></span>'
+      +'</div>';
+  }catch(e){return '';}
+}
+async function doExtendAirdrop(id){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var token=await getValidToken();
+  var res=await fetch(SB_URL+'/rest/v1/rpc/extend_airdrop_deadline',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({p_airdrop_id:id})});
+  var d=await res.json().catch(function(){return {}});
+  if(d&&d.ok){
+    showToast((lang==='it'?'Corsa estesa di ':'Extended by ')+d.hours_added+'h · '+d.aria_spent+' ARIA','success');
+    if(typeof loadAirdropDetail==='function')loadAirdropDetail(id);
+    else location.reload();
+  }else{
+    var msg={MAX_EXTENSIONS:lang==='it'?'Hai già usato le 5 estensioni.':'All 5 extensions used.',INSUFFICIENT_ARIA:lang==='it'?'ARIA insufficienti.':'Not enough ARIA.',NOT_SELLER:lang==='it'?'Solo il venditore può estendere.':'Seller only.'}[d&&d.error]||(lang==='it'?'Estensione non riuscita.':'Extension failed.');
+    showToast(msg,'warning');
+  }
+}
+
 function buildPhaseStepper(a){
   var st=a.status;
   var lang=document.documentElement.getAttribute('data-lang')||'it';
@@ -2573,6 +2605,7 @@ async function openDetail(id){
     // Titolo + chip fase (§4.3)
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
     +buildPhaseStepper(a)
+    +buildExtendBox(a)
     +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
 
     // Box competitivo §4.4 (posizione live · populated by refreshPosition)

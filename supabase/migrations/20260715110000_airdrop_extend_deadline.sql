@@ -1,0 +1,4 @@
+-- Punto 12 (15 lug 2026): estensioni timer venditore — 1a +72h/5 ARIA, 2a +24h/10, 3a-5a +24h/15, max 5.
+-- extend_airdrop_deadline(uuid) + colonna airdrops.extensions_count.
+-- Applicata live via MCP (airdrop_extend_deadline) — vedi migration remota per il corpo.
+-- Collaudo live: 5 estensioni ok, 6a MAX_EXTENSIONS, non-seller NOT_SELLER.
