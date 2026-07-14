@@ -1,6 +1,13 @@
 # Test massivo AIROOBI — CCP, 14 lug 2026 (delega Skeezu, giro review)
 
-Rapporto vivo del giro di test massivo. Stato: IN CORSO.
+Stato: **COMPLETATO** — tutti i 16 compiti della lista eseguiti e verificati.
+
+## Chiusi anche (seconda metà del giro)
+- **Pagine loggate**: dashboard/esplora/portafoglio/guadagni verificate live, numeri e grafico ROBI ok. Finding: `/classifica` è rotta morta (fallback su home).
+- **Fairness in pagina**: nuova sezione "Come viene decisa la vetta — l'algoritmo, per esteso" su /come-funziona-airdrop (Vantaggio √Step + Impegno/Boost garanzia, cap 30%, risultati del test sul campo). +2 refusi sweep fixati.
+- **Mobile 390px**: 12 pagine + salita airdrop verificate via iframe-probe. Fix: glow hero /blog (overflow 436px), /treasury (tabella compare scrollabile, peg-widget a colonna, code a capo). Ora tutto ≤390.
+- **Video/slideshow ricostruiti**: video-intro, video-airdrop, airoobi-cards, airoobi-explainer nel canone (Step/corsa/ROBI Reward) e rosso v3 al posto dell'oro. Live.
+- **airoobi.com → hero page**: home.html sostituita da hero v3 (slogan immutabile + payoff + CTA airoobi.app); redirect `.com/* → www.airoobi.app/*` (esclusi root e asset SEO); sitemap-com = 1 URL; rotte storie-vincitori rimosse. Vecchia home: `home.html.pre-hero-backup-20260714` + git `1b3e768`.
 
 ## Fatto e verificato
 
