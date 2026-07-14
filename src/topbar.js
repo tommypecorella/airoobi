@@ -235,6 +235,9 @@ function getValidTokenFromSession(session){
 function upgradeToLoggedIn(session){
   // bug 9 (15 lug 2026): da loggato niente inviti a registrarsi in giro per le pagine
   document.querySelectorAll('.hide-if-logged').forEach(function(el){el.style.display='none';});
+  // punto 6 (15 lug 2026): da loggato il burger sparisce — il menu e' l'avatar
+  var burger=document.getElementById('topbar-burger');
+  if(burger)burger.style.display='none';
 
   var email=session.user&&session.user.email?session.user.email:'';
   var letter=email?email.charAt(0).toUpperCase():'?';
@@ -279,6 +282,7 @@ function upgradeToLoggedIn(session){
       +'<a href="/invita" class="tb-user-menu-item">'+ICONS.referral+' <span class="it">+Invita amici</span><span class="en">+Invite friends</span></a>'
       +'<div class="tb-user-menu-sep"></div>'
       +'<a href="/come-funziona-airdrop" class="tb-user-menu-item">'+ICONS.rules+' <span class="it">Come funziona</span><span class="en">How it works</span></a>'
+      +'<a href="/blog" class="tb-user-menu-item">'+ICONS.blog+' Blog</a>'
       +'<a href="/faq" class="tb-user-menu-item">'+ICONS.faq+' FAQ</a>'
       +'<a href="/tokens" class="tb-user-menu-item">'+ICONS.tokens+' <span class="it">Tokenomics</span><span class="en">Tokenomics</span></a>'
       +'<button class="tb-user-menu-item tb-user-menu-logout" onclick="window._topbarLogout()">'+ICONS.logout+' Logout</button>';

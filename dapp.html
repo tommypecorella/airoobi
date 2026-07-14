@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#FFFFFF">
 <meta name="robots" content="index, follow">
 <title>AIROOBI APP — Airdrop Marketplace</title>
+<style>/* menu redesign 15 lug 2026 (punto 6): loggato = solo avatar */ .topbar-burger{display:none !important} .user-menu{max-height:82vh;overflow-y:auto}</style>
 <meta name="description" content="Oggetti di valore, una corsa alla vetta. Ricevi ARIA gratis ogni giorno, avanza di Step e raccogli ROBI lungo il percorso.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="AIROOBI — Oggetti di valore. Una corsa alla vetta.">
@@ -196,6 +197,12 @@
   <button class="user-menu-item" onclick="navigateTo('home');toggleUserMenu()">
     <span class="it">Home</span><span class="en">Home</span>
   </button>
+  <button class="user-menu-item" onclick="navigateTo('explore');toggleUserMenu()">
+    <span class="it">Esplora airdrop</span><span class="en">Explore airdrops</span>
+  </button>
+  <button class="user-menu-item" onclick="navigateTo('my');toggleUserMenu()">
+    <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
+  </button>
   <button class="user-menu-item" onclick="navigateTo('profilo');toggleUserMenu()">
     <span class="it">Profilo</span><span class="en">Profile</span>
   </button>
@@ -214,6 +221,9 @@
   <a href="/come-funziona-airdrop" class="user-menu-item" style="display:block;text-decoration:none">
     <span class="it">Come funziona</span><span class="en">How it works</span>
   </a>
+  <a href="/blog" class="user-menu-item" style="display:block;text-decoration:none">Blog</a>
+  <a href="/faq" class="user-menu-item" style="display:block;text-decoration:none">FAQ</a>
+  <a href="/tokens" class="user-menu-item" style="display:block;text-decoration:none">Tokenomics</a>
   <button class="user-menu-item" id="dapp-admin-link" onclick="window.open('/abo','_blank')" style="display:none"><span class="it">Gestisci (ABO)</span><span class="en">Manage (ABO)</span></button>
   <button class="user-menu-item um-logout" onclick="doLogout()">Logout</button>
   <button class="user-menu-item" onclick="showDeleteAccount();toggleUserMenu()" style="color:var(--gray-600);font-size:12px;margin-top:4px;border-top:none">
@@ -1700,7 +1710,7 @@
 </div>
 
 <script src="/src/dapp.js?v=4.56.1"></script>
-<div id="footer-mount" data-version="alfa-14.07.2026-4.55.4"></div>
+<div id="footer-mount" data-version="alfa-15.07.2026-4.55.5"></div>
 <script src="/src/footer.js?v=1.0.0"></script>
 </body>
 </html>
