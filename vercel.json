@@ -5,177 +5,761 @@
     {
       "source": "/dapp.html",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-        { "key": "Pragma", "value": "no-cache" },
-        { "key": "Expires", "value": "0" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Pragma",
+          "value": "no-cache"
+        },
+        {
+          "key": "Expires",
+          "value": "0"
+        }
       ]
     },
     {
       "source": "/home.html",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" },
-        { "key": "Pragma", "value": "no-cache" },
-        { "key": "Expires", "value": "0" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Pragma",
+          "value": "no-cache"
+        },
+        {
+          "key": "Expires",
+          "value": "0"
+        }
       ]
     },
     {
       "source": "/abo.html",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
       ]
     },
     {
       "source": "/login.html",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
       ]
     },
     {
       "source": "/signup.html",
       "headers": [
-        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        }
       ]
     },
     {
       "source": "/landing.html",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=3600"
+        }
       ]
     },
     {
       "source": "/blog.html",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=3600"
+        }
       ]
     },
     {
       "source": "/faq.html",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=3600"
+        }
       ]
     },
     {
       "source": "/come-funziona-airdrop.html",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=3600"
+        }
       ]
     },
     {
       "source": "/airdrops-public.html",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=3600"
+        }
       ]
     },
     {
       "source": "/blog/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=300, s-maxage=3600" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=3600"
+        }
       ]
     },
     {
       "source": "/(.*)\\.(css|js|png|jpg|jpeg|svg|webp|woff2|woff|ico)",
       "headers": [
-        { "key": "Cache-Control", "value": "public, max-age=86400, s-maxage=604800" }
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, s-maxage=604800"
+        }
       ]
     }
   ],
   "redirects": [
-    { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.com"}], "destination": "https://www.airoobi.com/$1", "statusCode": 301 },
-    { "source": "/(.*)", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "https://www.airoobi.app/$1", "statusCode": 301 },
-    { "source": "/hub", "destination": "/lab", "statusCode": 301 },
-    { "source": "/impara", "destination": "/come-funziona-airdrop", "statusCode": 301 },
-    { "source": "/blog/perche-airoobi-non-e-gioco-azzardo.html", "destination": "/blog/airoobi-nuovo-modello-ecommerce.html", "statusCode": 301 },
-    { "source": "/blog/cose-robi-tessera-rendimento-airoobi.html", "destination": "/blog/cosa-sono-robi-reward-airoobi.html", "statusCode": 301 },
-    { "source": "/blog/tessera-rendimento-airoobi-come-funziona.html", "destination": "/blog/cosa-sono-robi-reward-airoobi.html", "statusCode": 301 },
-    { "source": "/blog/algoritmo-selezione-vincitore-airoobi.html", "destination": "/blog/algoritmo-classifica-deterministica-airoobi.html", "statusCode": 301 },
-    { "source": "/blog/guadagnare-crypto-gratis-senza-investire.html", "destination": "/blog/guadagnare-crypto-gratis-senza-spendere.html", "statusCode": 301 },
-    { "source": "/blog.html", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog", "statusCode": 301 },
-    { "source": "/blog/:path*", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "https://www.airoobi.app/blog/:path*", "statusCode": 301 }
+    {
+      "source": "/((?!$|sitemap\\.xml|ads\\.txt|robots\\.txt|og-image|favicon|apple-touch|public/).+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "airoobi.com"
+        }
+      ],
+      "destination": "https://www.airoobi.app/$1",
+      "permanent": false
+    },
+    {
+      "source": "/((?!$|sitemap\\.xml|ads\\.txt|robots\\.txt|og-image|favicon|apple-touch|public/).+)",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.com"
+        }
+      ],
+      "destination": "https://www.airoobi.app/$1",
+      "permanent": false
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "airoobi.com"
+        }
+      ],
+      "destination": "https://www.airoobi.com/$1",
+      "statusCode": 301
+    },
+    {
+      "source": "/(.*)",
+      "has": [
+        {
+          "type": "host",
+          "value": "airoobi.app"
+        }
+      ],
+      "destination": "https://www.airoobi.app/$1",
+      "statusCode": 301
+    },
+    {
+      "source": "/hub",
+      "destination": "/lab",
+      "statusCode": 301
+    },
+    {
+      "source": "/impara",
+      "destination": "/come-funziona-airdrop",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/perche-airoobi-non-e-gioco-azzardo.html",
+      "destination": "/blog/airoobi-nuovo-modello-ecommerce.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/cose-robi-tessera-rendimento-airoobi.html",
+      "destination": "/blog/cosa-sono-robi-reward-airoobi.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/tessera-rendimento-airoobi-come-funziona.html",
+      "destination": "/blog/cosa-sono-robi-reward-airoobi.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/algoritmo-selezione-vincitore-airoobi.html",
+      "destination": "/blog/algoritmo-classifica-deterministica-airoobi.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/guadagnare-crypto-gratis-senza-investire.html",
+      "destination": "/blog/guadagnare-crypto-gratis-senza-spendere.html",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog.html",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.com"
+        }
+      ],
+      "destination": "https://www.airoobi.app/blog",
+      "statusCode": 301
+    },
+    {
+      "source": "/blog/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.com"
+        }
+      ],
+      "destination": "https://www.airoobi.app/blog/:path*",
+      "statusCode": 301
+    }
   ],
   "rewrites": [
-    { "source": "/ads.txt", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/ads-app.txt" },
-    { "source": "/ads.txt", "has": [{"type": "host", "value": "airoobi.app"}], "destination": "/ads-app.txt" },
-    { "source": "/ads.txt", "destination": "/ads-com.txt" },
-    { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/sitemap-app.xml" },
-    { "source": "/sitemap.xml", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/sitemap-com.xml" },
-
-    { "source": "/evalobi/:token_id", "destination": "/api/evalobi-ssr?token_id=:token_id" },
-    { "source": "/sla", "destination": "/api/sla-ssr" },
-    { "source": "/storie-vincitori", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr" },
-    { "source": "/storie-vincitori/cat/:category", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr?category=:category" },
-    { "source": "/storie-vincitori/:id", "has": [{"type": "host", "value": "www.airoobi.com"}], "destination": "/api/winner-story-ssr?id=:id" },
-    { "source": "/tokens", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/tokens.html" },
-    { "source": "/tokens", "destination": "/tokens.html" },
-    { "source": "/privacy", "destination": "/privacy.html" },
-    { "source": "/termini", "destination": "/termini.html" },
-    { "source": "/contatti", "destination": "/contatti.html" },
-
-    { "source": "/diventa-alpha-brave", "destination": "/diventa-alpha-brave.html" },
-    { "source": "/treasury", "destination": "/treasury.html" },
-
-    { "source": "/", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/landing.html" },
-    { "source": "/dashboard", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/blog", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/blog.html" },
-    { "source": "/airdrops", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/airdrops-public.html" },
-    { "source": "/airdrops/:id", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/api/airdrop-ssr?id=:id" },
-    { "source": "/dapp/airdrop/:id", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/esplora", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/miei-airdrop", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/venditore", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/venditore.html" },
-    { "source": "/venditore/:rest*", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/venditore.html" },
-    { "source": "/proponi", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/invita", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/referral", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/portafoglio", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/archivio", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/referral-dapp", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/portafoglio-dapp", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/profilo", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/classifica", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/guadagni", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/vendi", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/dapp.html" },
-    { "source": "/login", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/login.html" },
-    { "source": "/signup", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/signup.html" },
-    { "source": "/abo", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/abo.html" },
-    { "source": "/admin", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/abo.html" },
-    { "source": "/faq", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/faq.html" },
-    { "source": "/come-funziona-airdrop", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
-    { "source": "/come-funziona", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
-    { "source": "/regolamento", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/come-funziona-airdrop.html" },
-    { "source": "/explorer", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/explorer.html" },
-    { "source": "/explorer-robi", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/explorer-robi.html" },
-    { "source": "/glassatore", "has": [{"type": "host", "value": "www.airoobi.app"}], "destination": "/glassatore/index.html" },
-
-    { "source": "/", "destination": "/home.html" },
-    { "source": "/dapp", "destination": "/dapp.html" },
-    { "source": "/airdrops", "destination": "/airdrops-public.html" },
-    { "source": "/airdrops/:id", "destination": "/api/airdrop-ssr?id=:id" },
-    { "source": "/dapp/airdrop/:id", "destination": "/dapp.html" },
-    { "source": "/esplora", "destination": "/dapp.html" },
-    { "source": "/miei-airdrop", "destination": "/dapp.html" },
-    { "source": "/proponi", "destination": "/dapp.html" },
-    { "source": "/invita", "destination": "/dapp.html" },
-    { "source": "/referral-dapp", "destination": "/dapp.html" },
-    { "source": "/portafoglio-dapp", "destination": "/dapp.html" },
-    { "source": "/archivio", "destination": "/dapp.html" },
-    { "source": "/dashboard", "destination": "/home.html" },
-    { "source": "/profilo", "destination": "/home.html" },
-    { "source": "/portafoglio", "destination": "/home.html" },
-    { "source": "/guadagni", "destination": "/home.html" },
-    { "source": "/referral", "destination": "/home.html" },
-    { "source": "/classifica", "destination": "/home.html" },
-    { "source": "/vendi", "destination": "/home.html" },
-    { "source": "/admin", "destination": "/home.html" },
-    { "source": "/abo", "destination": "/abo.html" },
-    { "source": "/faq", "destination": "/faq.html" },
-    { "source": "/come-funziona-airdrop", "destination": "/come-funziona-airdrop.html" },
-    { "source": "/come-funziona", "destination": "/come-funziona-airdrop.html" },
-    { "source": "/regolamento", "destination": "/come-funziona-airdrop.html" },
-    { "source": "/explorer", "destination": "/explorer.html" },
-    { "source": "/explorer-robi", "destination": "/explorer-robi.html" },
-    { "source": "/glassatore", "destination": "/glassatore/index.html" },
-    { "source": "/lab", "destination": "/api/hub" },
-    { "source": "/login", "destination": "/login.html" },
-    { "source": "/signup", "destination": "/signup.html" }
+    {
+      "source": "/ads.txt",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/ads-app.txt"
+    },
+    {
+      "source": "/ads.txt",
+      "has": [
+        {
+          "type": "host",
+          "value": "airoobi.app"
+        }
+      ],
+      "destination": "/ads-app.txt"
+    },
+    {
+      "source": "/ads.txt",
+      "destination": "/ads-com.txt"
+    },
+    {
+      "source": "/sitemap.xml",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/sitemap-app.xml"
+    },
+    {
+      "source": "/sitemap.xml",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.com"
+        }
+      ],
+      "destination": "/sitemap-com.xml"
+    },
+    {
+      "source": "/evalobi/:token_id",
+      "destination": "/api/evalobi-ssr?token_id=:token_id"
+    },
+    {
+      "source": "/sla",
+      "destination": "/api/sla-ssr"
+    },
+    {
+      "source": "/tokens",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/tokens.html"
+    },
+    {
+      "source": "/tokens",
+      "destination": "/tokens.html"
+    },
+    {
+      "source": "/privacy",
+      "destination": "/privacy.html"
+    },
+    {
+      "source": "/termini",
+      "destination": "/termini.html"
+    },
+    {
+      "source": "/contatti",
+      "destination": "/contatti.html"
+    },
+    {
+      "source": "/diventa-alpha-brave",
+      "destination": "/diventa-alpha-brave.html"
+    },
+    {
+      "source": "/treasury",
+      "destination": "/treasury.html"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/landing.html"
+    },
+    {
+      "source": "/dashboard",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/blog",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/blog.html"
+    },
+    {
+      "source": "/airdrops",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/airdrops-public.html"
+    },
+    {
+      "source": "/airdrops/:id",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/api/airdrop-ssr?id=:id"
+    },
+    {
+      "source": "/dapp/airdrop/:id",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/esplora",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/miei-airdrop",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/venditore",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/venditore.html"
+    },
+    {
+      "source": "/venditore/:rest*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/venditore.html"
+    },
+    {
+      "source": "/proponi",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/invita",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/referral",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/portafoglio",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/archivio",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/referral-dapp",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/portafoglio-dapp",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/profilo",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/classifica",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/guadagni",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/vendi",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/login",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/login.html"
+    },
+    {
+      "source": "/signup",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/signup.html"
+    },
+    {
+      "source": "/abo",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/abo.html"
+    },
+    {
+      "source": "/admin",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/abo.html"
+    },
+    {
+      "source": "/faq",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/faq.html"
+    },
+    {
+      "source": "/come-funziona-airdrop",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/come-funziona-airdrop.html"
+    },
+    {
+      "source": "/come-funziona",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/come-funziona-airdrop.html"
+    },
+    {
+      "source": "/regolamento",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/come-funziona-airdrop.html"
+    },
+    {
+      "source": "/explorer",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/explorer.html"
+    },
+    {
+      "source": "/explorer-robi",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/explorer-robi.html"
+    },
+    {
+      "source": "/glassatore",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/glassatore/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/dapp",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/airdrops",
+      "destination": "/airdrops-public.html"
+    },
+    {
+      "source": "/airdrops/:id",
+      "destination": "/api/airdrop-ssr?id=:id"
+    },
+    {
+      "source": "/dapp/airdrop/:id",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/esplora",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/miei-airdrop",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/proponi",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/invita",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/referral-dapp",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/portafoglio-dapp",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/archivio",
+      "destination": "/dapp.html"
+    },
+    {
+      "source": "/dashboard",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/profilo",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/portafoglio",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/guadagni",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/referral",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/classifica",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/vendi",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/home.html"
+    },
+    {
+      "source": "/abo",
+      "destination": "/abo.html"
+    },
+    {
+      "source": "/faq",
+      "destination": "/faq.html"
+    },
+    {
+      "source": "/come-funziona-airdrop",
+      "destination": "/come-funziona-airdrop.html"
+    },
+    {
+      "source": "/come-funziona",
+      "destination": "/come-funziona-airdrop.html"
+    },
+    {
+      "source": "/regolamento",
+      "destination": "/come-funziona-airdrop.html"
+    },
+    {
+      "source": "/explorer",
+      "destination": "/explorer.html"
+    },
+    {
+      "source": "/explorer-robi",
+      "destination": "/explorer-robi.html"
+    },
+    {
+      "source": "/glassatore",
+      "destination": "/glassatore/index.html"
+    },
+    {
+      "source": "/lab",
+      "destination": "/api/hub"
+    },
+    {
+      "source": "/login",
+      "destination": "/login.html"
+    },
+    {
+      "source": "/signup",
+      "destination": "/signup.html"
+    }
   ]
 }
