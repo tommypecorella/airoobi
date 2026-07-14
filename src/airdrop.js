@@ -192,14 +192,12 @@ function updateBalanceUI(){
 
 // ── ROBI price ──
 async function loadRobiPrice(){
+  // bug 2 (Mary, 15 lug 2026): treasury_funds e' leggibile solo dagli admin —
+  // per gli utenti normali il calcolo tornava 0 e il valore ROBI/KAS spariva.
+  // Fonte universale: snapshot orario (formula unica ABO), RPC aperta anche anon.
   try{
-    var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-    var treasuryBal=0;
-    if(tfRes.ok){var tf=await tfRes.json();if(tf)tf.forEach(function(r){var a=parseFloat(r.amount_eur)||0;var p=r.treasury_pct!=null?parseInt(r.treasury_pct):100;treasuryBal+=a*(p/100);});}
-    var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'}});
-    var totalRobi=0;
-    if(robiRes.ok){var rd=await robiRes.json();rd.forEach(function(r){totalRobi+=parseFloat(r.shares)||0;});}
-    if(totalRobi>0&&treasuryBal>0)_robiPrice=(treasuryBal*0.999)/totalRobi;
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_robi_snapshots_recent',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_limit:1})});
+    if(res.ok){var d=await res.json();var last=(d&&d.length)?d[0]:null;var p=last?parseFloat(last.price_eur):0;if(p>0)_robiPrice=p;}
   }catch(e){}
 }
 

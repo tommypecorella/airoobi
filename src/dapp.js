@@ -53,14 +53,12 @@ var UI_ICONS={
 };
 
 async function loadRobiPrice(){
+  // bug 2 (Mary, 15 lug 2026): treasury_funds e' leggibile solo dagli admin —
+  // per gli utenti normali il calcolo tornava 0 e il valore ROBI/KAS spariva.
+  // Fonte universale: snapshot orario (formula unica ABO), RPC aperta anche anon.
   try{
-    var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
-    var treasuryBal=0;
-    if(tfRes.ok){var tf=await tfRes.json();if(tf)tf.forEach(function(r){var a=parseFloat(r.amount_eur)||0;var p=r.treasury_pct!=null?parseInt(r.treasury_pct):100;treasuryBal+=a*(p/100);});}
-    var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'}});
-    var totalRobi=0;
-    if(robiRes.ok){var rd=await robiRes.json();rd.forEach(function(r){totalRobi+=parseFloat(r.shares)||0;});}
-    if(totalRobi>0&&treasuryBal>0)_robiPrice=(treasuryBal*0.999)/totalRobi;
+    var res=await fetch(SB_URL+'/rest/v1/rpc/get_robi_snapshots_recent',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_limit:1})});
+    if(res.ok){var d=await res.json();var last=(d&&d.length)?d[0]:null;var p=last?parseFloat(last.price_eur):0;if(p>0)_robiPrice=p;}
   }catch(e){}
 }
 
@@ -591,13 +589,9 @@ async function loadHomeDashboard(){
     document.getElementById('home-robi').textContent=robiCount%1===0?robiCount:robiCount.toFixed(4);
     // Potential KAS from ROBI value
     try{
-      var tfRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}});
-      var tBal=0;
-      if(tfRes.ok){var tf=await tfRes.json();tf.forEach(function(r){tBal+=(parseFloat(r.amount_eur)||0)*((r.treasury_pct!=null?parseInt(r.treasury_pct):100)/100);});}
-      var rrRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}});
-      var tRobi=0;
-      if(rrRes.ok){var rrd=await rrRes.json();rrd.forEach(function(r){tRobi+=parseFloat(r.shares)||0;});}
-      var uVal=tRobi>0?(tBal/tRobi):0;
+      var snRes=await fetch(SB_URL+'/rest/v1/rpc/get_robi_snapshots_recent',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({p_limit:1})});
+      var uVal=0;
+      if(snRes.ok){var sn=await snRes.json();if(sn&&sn.length)uVal=parseFloat(sn[0].price_eur)||0;}
       if(uVal>0&&robiCount>0){
         var myValEur=(uVal*robiCount).toFixed(2);
         fetch('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur').then(function(r){return r.json()}).then(function(d){
@@ -647,16 +641,9 @@ async function loadPortfolioChart(token,userRobi){
     // 1. Totale — calcolato e mostrato SEMPRE, indipendente dal layout del canvas
     var robiValEur=0,kasPrice=0;
     try{
-      var tfRes=await fetchWithTimeout(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}},3000);
-      var tBal=0;
-      if(tfRes.ok){var tf=await tfRes.json();tf.forEach(function(r){tBal+=(parseFloat(r.amount_eur)||0)*((r.treasury_pct!=null?parseInt(r.treasury_pct):100)/100);});}
-      console.log('[portfolio-chart] treasury EUR',tBal);
-      var rrRes=await fetchWithTimeout(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}},3000);
-      var tRobi=0;
-      if(rrRes.ok){var rrd=await rrRes.json();rrd.forEach(function(r){tRobi+=parseFloat(r.shares)||0;});}
-      else console.warn('[portfolio-chart] admin_get_all_robi HTTP',rrRes.status);
-      console.log('[portfolio-chart] totale ROBI circ',tRobi,'userRobi',userRobi);
-      if(tRobi>0)robiValEur=(tBal/tRobi)*userRobi;
+      var snRes=await fetchWithTimeout(SB_URL+'/rest/v1/rpc/get_robi_snapshots_recent',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({p_limit:1})},3000);
+      if(snRes.ok){var sn=await snRes.json();var uv=(sn&&sn.length)?parseFloat(sn[0].price_eur)||0:0;robiValEur=uv*userRobi;console.log('[portfolio-chart] snapshot unitVal',uv);}
+      else console.warn('[portfolio-chart] snapshot HTTP',snRes.status);
     }catch(e){console.warn('[portfolio-chart] treasury/rpc error',e);}
     try{
       var kRes=await fetchWithTimeout('https://api.coingecko.com/api/v3/simple/price?ids=kaspa&vs_currencies=eur',{},3000);
@@ -5581,23 +5568,9 @@ async function loadDappWallet(){
 
   // Treasury → valore nominale ROBI (da treasury_funds con split %)
   try{
-    var tRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=amount_eur,treasury_pct',{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
-    });
-    var treasuryBal=0;
-    if(tRes.ok){
-      var tRows=await tRes.json();
-      if(tRows)tRows.forEach(function(r){
-        var amt=parseFloat(r.amount_eur)||0;
-        var pct=r.treasury_pct!=null?parseInt(r.treasury_pct):100;
-        treasuryBal+=amt*(pct/100);
-      });
-    }
-    // Get total ROBI via RPC (bypasses RLS)
-    var robiRes=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'}});
-    var totalRobi=0;
-    if(robiRes.ok){var rd=await robiRes.json();rd.forEach(function(r){totalRobi+=parseFloat(r.shares)||0;});}
-    var unitVal=totalRobi>0?(treasuryBal/totalRobi):0;
+    var snRes=await fetch(SB_URL+'/rest/v1/rpc/get_robi_snapshots_recent',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({p_limit:1})});
+    var unitVal=0;
+    if(snRes.ok){var sn=await snRes.json();if(sn&&sn.length)unitVal=parseFloat(sn[0].price_eur)||0;}
     var valEl=document.getElementById('dapp-wcard-rend-value');
     if(valEl){
       if(hasRendimento&&unitVal>0){
