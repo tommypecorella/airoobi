@@ -93,3 +93,9 @@ Un `git add -A` ha temporaneamente pushato sul repo **pubblico** materiale di la
 - Movimento tracciato in `treasury_transactions` (`extension_contribution`, prima→dopo sul canonico, nota parlante) e visibile in **ABO → Treasury → MOVIMENTI TREASURY** (tabella nuova, con anche i contributi airdrop e le riscossioni).
 - Collaudo ×3 giri completi (2 accept + 1 annullo): 10 estensioni, fondo = Σ movimenti = 10,50€, catena contabile coerente, contributo trattenuto anche su annullo (fee di servizio), nominale che si muove. Dati di collaudo poi ripuliti (fondo→0, canonico→100,50€, nominale €0,7283, 9 profili, zero residui).
 - Nota di lettura: nella colonna "prima→dopo" i *Contributi airdrop* dei draw usano ancora il contatore legacy `treasury_stats` (~3.000 virtuali), le *Estensioni* il canonico — due pozzi diversi by design, da unificare se/quando si decide il destino di treasury_stats.
+
+## Freeze mobile — CAUSA TROVATA E RISOLTA (16 lug)
+- Colpa del tokenizer dei simbolini (mio, 15 lug): il MutationObserver rilanciava la scansione di TUTTO il body a ogni mutazione — e il countdown della dApp muta il DOM ogni secondo → scansione completa ogni 400ms per sempre → main thread saturo, tap morti ovunque (menu, header, footer, notifiche lente e pagina non cliccabile).
+- Fix: observer incrementale (solo addedNodes, disconnect durante il processing, coda cappata 80, diagnostica window.__tokStats). Misure post-fix sul dettaglio airdrop vivo: 17 micro-run/18s su nodini del countdown, event loop lag 0,1-0,2 ms.
+- Giro notifiche→airdrop riverificato live: campanella → VAI ALL'AIRDROP → dettaglio caricato e cliccabile.
+- EXTEND seller-only riverificato: NOT_SELLER sia per utente non-venditore sia per anon (test negativo con utente-cavia poi rimosso; 9 profili, zero residui). Il bottone UI appare solo al venditore.
