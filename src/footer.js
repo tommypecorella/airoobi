@@ -82,10 +82,33 @@ function tokenizeCoins(root){
     node.parentNode.replaceChild(frag,node);
   });
 }
-var _tokTimer=null;
-function scheduleTokenize(){
+/* FIX freeze mobile 16 lug 2026: l'observer rifaceva la scansione di TUTTO il
+   body a ogni mutazione (il countdown della dApp muta ogni secondo) — main
+   thread saturo, tap morti. Ora: solo i nodi AGGIUNTI, observer staccato
+   durante il lavoro, coda cappata. */
+var _tokQueue=[];var _tokTimer=null;var _tokObs=null;
+window.__tokStats={runs:0,nodes:0};
+function scheduleTokenize(muts){
+  for(var i=0;i<muts.length;i++){
+    var added=muts[i].addedNodes;
+    for(var j=0;j<added.length;j++){
+      var n=added[j];
+      if(n.nodeType!==1)continue;
+      if(n.closest&&n.closest('.tok-coin'))continue;
+      if(_tokQueue.length<80)_tokQueue.push(n);
+    }
+  }
+  if(!_tokQueue.length)return;
   if(_tokTimer)clearTimeout(_tokTimer);
-  _tokTimer=setTimeout(function(){tokenizeCoins(document.body);},400);
+  _tokTimer=setTimeout(function(){
+    var q=_tokQueue;_tokQueue=[];
+    if(_tokObs)_tokObs.disconnect();
+    for(var k=0;k<q.length;k++){
+      try{if(q[k].isConnected){tokenizeCoins(q[k]);window.__tokStats.nodes++;}}catch(e){}
+    }
+    window.__tokStats.runs++;
+    if(_tokObs)_tokObs.observe(document.body,{childList:true,subtree:true});
+  },350);
 }
 
 
@@ -183,7 +206,8 @@ function init(){
   for(var i=0;i<mounts.length;i++)render(mounts[i]);
   tokenizeCoins(document.body);
   try{
-    new MutationObserver(scheduleTokenize).observe(document.body,{childList:true,subtree:true});
+    _tokObs=new MutationObserver(scheduleTokenize);
+    _tokObs.observe(document.body,{childList:true,subtree:true});
   }catch(e){}
   buildShareBar();
   initPwa();
