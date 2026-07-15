@@ -1,0 +1,7 @@
+-- GO Skeezu 15 lug 2026: gli ARIA delle estensioni timer diventano EUR (x0,10)
+-- nel fondo 'Contributi estensioni' (treasury_pct 100 -> entra nella formula unica
+-- e quindi nel valore nominale ROBI), con movimento treasury_transactions
+-- type='extension_contribution' (before/after sul treasury canonico) e nota parlante.
+-- Applicata live via MCP (extend_aria_to_treasury) — vedi migration remota per il corpo.
+-- Collaudo: 3 giri (accept x2 + annullo), 10 estensioni, fondo = somma movimenti = 10,50 EUR,
+-- catena before/after coerente, nominale ricalcolato, contributo NON rimborsato su annullo.

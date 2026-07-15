@@ -87,3 +87,9 @@ Un `git add -A` ha temporaneamente pushato sul repo **pubblico** materiale di la
 - Integrità verificata: 9 profili reali, 12 airdrop (solo DEMO), zero orfani, Mary intatta (15 ROBI).
 - Circolante ROBI tornato onesto: 138 shares → valore nominale **€0,7283** (snapshot immediato; topbar/portafoglio/ABO si aggiornano da soli).
 - treasury_stats NON riavvolto (è solo contatore di audit dopo la formula unica): i suoi numeri storici includono i test.
+
+## Estensioni → Treasury (GO Skeezu, 15 lug sera)
+- Gli ARIA delle estensioni ora diventano EUR (×0,10) nel fondo **"Contributi estensioni"** (pct 100 → formula unica → alza il valore nominale ROBI).
+- Movimento tracciato in `treasury_transactions` (`extension_contribution`, prima→dopo sul canonico, nota parlante) e visibile in **ABO → Treasury → MOVIMENTI TREASURY** (tabella nuova, con anche i contributi airdrop e le riscossioni).
+- Collaudo ×3 giri completi (2 accept + 1 annullo): 10 estensioni, fondo = Σ movimenti = 10,50€, catena contabile coerente, contributo trattenuto anche su annullo (fee di servizio), nominale che si muove. Dati di collaudo poi ripuliti (fondo→0, canonico→100,50€, nominale €0,7283, 9 profili, zero residui).
+- Nota di lettura: nella colonna "prima→dopo" i *Contributi airdrop* dei draw usano ancora il contatore legacy `treasury_stats` (~3.000 virtuali), le *Estensioni* il canonico — due pozzi diversi by design, da unificare se/quando si decide il destino di treasury_stats.
