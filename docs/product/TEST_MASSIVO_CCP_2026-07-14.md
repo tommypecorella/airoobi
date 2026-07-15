@@ -81,3 +81,9 @@ Un `git add -A` ha temporaneamente pushato sul repo **pubblico** materiale di la
 
 ## Prossimi (in corso)
 - Pagine loggate (numeri/grafici) · fairness spiegata in pagina + verifica statistica · mobile pass · video/slideshow · airoobi.com → hero page.
+
+## Pulizia dati di test — ESEGUITA (GO Skeezu, 15 lug)
+- Cancellati in transazione unica: 11 utenti `skeezu+N@gmail.com` (auth+profili+ledger+NFT+notifiche+ruoli, incluso l'admin di test), 32 airdrop `[TEST-CCP]` con tutto l'indotto (742 blocchi, seeds, partecipazioni, treasury_transactions), waitlist e signup_attempts di test.
+- Integrità verificata: 9 profili reali, 12 airdrop (solo DEMO), zero orfani, Mary intatta (15 ROBI).
+- Circolante ROBI tornato onesto: 138 shares → valore nominale **€0,7283** (snapshot immediato; topbar/portafoglio/ABO si aggiornano da soli).
+- treasury_stats NON riavvolto (è solo contatore di audit dopo la formula unica): i suoi numeri storici includono i test.
