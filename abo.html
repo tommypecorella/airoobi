@@ -365,6 +365,15 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <div class="admin-card"><div class="admin-card-val" id="adm-revenue-adsense">—</div><div class="admin-card-label">Revenue AdSense <span class="info-i" onclick="showAboTip(this,'tr-adsense')">i</span></div></div>
     </div>
 
+    <!-- Movimenti treasury (GO Skeezu 15 lug: estensioni ARIA->EUR tracciabili) -->
+    <h3 style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin:22px 0 10px">MOVIMENTI TREASURY <span style="color:var(--gray-500);letter-spacing:0;text-transform:none;font-size:10px">· contributi airdrop, estensioni, riscossioni</span></h3>
+    <div class="admin-table-wrap">
+      <table class="admin-table" id="treasury-tx-table">
+        <thead><tr><th>Quando</th><th>Tipo</th><th style="text-align:right">€</th><th style="text-align:right">Prima → Dopo</th><th>Note</th></tr></thead>
+        <tbody id="treasury-tx-body"><tr><td colspan="5" style="color:var(--gray-500)">Caricamento…</td></tr></tbody>
+      </table>
+    </div>
+
     <!-- Treasury Fondi -->
     <div style="margin-top:24px;padding:20px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)">
       <h3 style="font-family:var(--font-h);font-size:16px;color:var(--gold);margin-bottom:16px;letter-spacing:1px"><span class="it">Treasury Fondi</span><span class="en">Treasury Funds</span></h3>
@@ -1843,6 +1852,28 @@ async function loadAboTodo(){
   if(clear)clear.style.display=tot===0?'block':'none';
 }
 
+
+async function loadTreasuryTx(){
+  var st=getSession();if(!st)return;
+  var tbody=document.getElementById('treasury-tx-body');
+  if(!tbody)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/treasury_transactions?select=created_at,type,amount_eur,treasury_before,treasury_after,notes&order=created_at.desc&limit=50',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+st.access_token}});
+    if(!res.ok){tbody.innerHTML='<tr><td colspan="5" style="color:#f87171">HTTP '+res.status+'</td></tr>';return;}
+    var rows=await res.json();
+    if(!rows.length){tbody.innerHTML='<tr><td colspan="5" style="color:var(--gray-500)">Nessun movimento ancora.</td></tr>';return;}
+    var TYPES={airdrop_contribution:'Contributo airdrop',extension_contribution:'Estensione corsa',redemption:'Riscossione'};
+    tbody.innerHTML=rows.map(function(r){
+      var d=new Date(r.created_at);
+      return '<tr><td style="white-space:nowrap">'+d.toLocaleDateString('it-IT')+' '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'})+'</td>'
+        +'<td>'+(TYPES[r.type]||r.type)+'</td>'
+        +'<td style="text-align:right;color:var(--gold);font-family:var(--font-m)">+'+Number(r.amount_eur).toFixed(2)+'</td>'
+        +'<td style="text-align:right;font-family:var(--font-m);font-size:11px;color:var(--gray-400)">'+(r.treasury_before!=null?Number(r.treasury_before).toFixed(2)+' → '+Number(r.treasury_after).toFixed(2):'—')+'</td>'
+        +'<td style="font-size:11px;color:var(--gray-400)">'+escHtml(r.notes||'')+'</td></tr>';
+    }).join('');
+  }catch(e){tbody.innerHTML='<tr><td colspan="5" style="color:#f87171">'+escHtml(String(e))+'</td></tr>';}
+}
+
 function adminNav(sectionId){
   document.querySelectorAll('.admin-section').forEach(function(s){s.classList.remove('active')});
   document.querySelectorAll('.admin-sidebar-item').forEach(function(b){b.classList.remove('active');b.blur()});
@@ -1854,6 +1885,7 @@ function adminNav(sectionId){
   var btn=document.querySelector('.admin-sidebar-item[onclick*="\''+sectionId+'\'"]');
   if(btn){btn.classList.add('active');btn.blur();}
   if(sectionId==='sec-overview')loadAboTodo();
+  if(sectionId==='sec-treasury')loadTreasuryTx();
   if(sectionId==='sec-engine'){loadThresholds();if(typeof loadEngineConfig==='function')loadEngineConfig();}
   if(sectionId==='sec-analysis'&&typeof loadAirdropAnalysis==='function')loadAirdropAnalysis();
   if(sectionId==='sec-airdrop-stats'||sectionId==='sec-airdrops')loadAirdropStats();
