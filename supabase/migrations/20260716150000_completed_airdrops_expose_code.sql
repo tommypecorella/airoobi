@@ -1,0 +1,3 @@
+-- 16 lug 2026: get_completed_airdrops espone anche a.code — il codice parlante
+-- è la chiave d'accesso al passato (ricerca in Esplora → ponte verso l'archivio).
+-- Applicata sul live via patch chirurgica (replace 'a.title,' -> 'a.title, a.code,').

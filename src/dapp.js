@@ -2191,6 +2191,7 @@ function renderGrid(){
         var qLbl=_searchQuery?'&laquo;'+escHtml(_searchQuery)+'&raquo;':'';
         et.innerHTML='<span class="it">Nessun risultato '+(qLbl?'per '+qLbl:'')+'</span><span class="en">No results '+(qLbl?'for '+qLbl:'')+'</span>';
         es.innerHTML='<span class="it">Prova con un altro termine oppure </span><span class="en">Try another term or </span><a style="color:var(--accent,#e05252);cursor:pointer;text-decoration:underline" onclick="var i=document.getElementById(\'etb-search-input\');if(i){i.value=\'\';i.dispatchEvent(new Event(\'input\',{bubbles:true}));}_searchQuery=\'\';filterCat(\'all\')"><span class="it">azzera la ricerca</span><span class="en">clear the search</span></a>';
+        if(_searchQuery)searchArchiveByQuery(_searchQuery,es);
       }else{
         et.innerHTML='<span class="it">Nessun airdrop attivo</span><span class="en">No active airdrops</span>';
         es.innerHTML='<span class="it">Torna presto — nuovi oggetti in arrivo.</span><span class="en">Come back soon — new items incoming.</span>';
@@ -6094,6 +6095,25 @@ async function deleteWishlistAlert(id){
 }
 
 // ── Archive tab ──
+// 16 lug 2026: il codice parlante è la chiave del passato — se la ricerca in
+// Esplora non trova attivi, si guarda nell'archivio (nessuna sezione nuova).
+var _archCache=null;
+async function searchArchiveByQuery(q,subEl){
+  try{
+    if(!_archCache){
+      var res=await fetch(SB_URL+'/rest/v1/rpc/get_completed_airdrops',{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:'{}'});
+      _archCache=await res.json()||[];
+    }
+    var qq=q.toLowerCase().replace(/^#/,'');
+    var hit=(_archCache||[]).find(function(a){return (a.code||'').toLowerCase().indexOf(qq)>-1||(a.title||'').toLowerCase().indexOf(qq)>-1});
+    if(!hit||!subEl||!subEl.isConnected)return;
+    if(_searchQuery.toLowerCase().replace(/^#/,'')!==qq)return; // query cambiata nel frattempo
+    var note=document.createElement('div');
+    note.style.cssText='margin-top:14px;font-size:13px';
+    note.innerHTML='<span class="it">Però c\'è nell\'archivio: </span><span class="en">But it\'s in the archive: </span><a style="color:var(--accent,#e05252);cursor:pointer;text-decoration:underline" onclick="navigateTo(\'my\');setTimeout(function(){if(typeof switchMyTab===\'function\')switchMyTab(\'archive\');},400)"><b>'+escHtml(hit.title)+'</b>'+(hit.code?' #'+escHtml(hit.code):'')+'</a>';
+    subEl.appendChild(note);
+  }catch(e){}
+}
 var ARCH_CAT_LABELS={mobile:'Mobile / Tech',tech:'Tech / Strumenti',luxury:'Luxury / 2 Ruote',ultra_luxury:'Ultra Luxury'};
 var _archiveLoaded=false;
 async function loadDappArchive(){
@@ -6124,11 +6144,11 @@ async function loadDappArchive(){
       html+='<div class="past-card">';
       html+=imgHtml;
       html+='<div class="past-card-body">';
-      html+='<div class="past-card-cat">'+esc(catLabel)+'</div>';
+      html+='<div class="past-card-cat">'+esc(catLabel)+(a.code?' <span style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:var(--gray-500)">#'+esc(a.code)+'</span>':'')+'</div>';
       html+='<div class="past-card-title">'+esc(a.title)+'</div>';
       html+='<div class="past-card-stats">';
       html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'PARTECIPANTI':'PARTICIPANTS')+'</span><span class="past-card-stat-value">'+((a.partecipanti||0).toLocaleString())+'</span></div>';
-      html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'BLOCCHI':'BLOCKS')+'</span><span class="past-card-stat-value">'+(a.blocks_sold||0)+'/'+(a.total_blocks||0)+'</span></div>';
+      html+='<div class="past-card-stat"><span class="past-card-stat-label">STEP</span><span class="past-card-stat-value">'+(a.blocks_sold||0)+'/'+(a.total_blocks||0)+'</span></div>';
       html+='<div class="past-card-stat"><span class="past-card-stat-label">'+(isIt?'VALORE RACCOLTO':'VALUE RAISED')+'</span><span class="past-card-stat-value" style="color:var(--kas)">&euro;'+parseFloat(a.eur_raccolti||0).toFixed(2)+'</span></div>';
       html+='<div class="past-card-stat"><span class="past-card-stat-label">DRAW</span><span class="past-card-stat-value">'+drawDate+'</span></div>';
       html+='</div>';

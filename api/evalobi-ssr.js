@@ -43,8 +43,9 @@ function renderHtml(data) {
   const photos = Array.isArray(data.object_photo_hashes) ? data.object_photo_hashes : [];
   const firstPhoto = photos.length > 0 ? photos[0] : null;
   const evaluatedDate = data.evaluated_at ? new Date(data.evaluated_at).toLocaleDateString('it-IT', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+  const certCode = data.cert_code || `EVALOBI #${data.token_id}`;
 
-  const title = `EVALOBI #${data.token_id} · ${escapeHtml(data.object_brand)} ${escapeHtml(data.object_model)} · AIROOBI`;
+  const title = `${certCode} · ${escapeHtml(data.object_brand)} ${escapeHtml(data.object_model)} · Certificato AIROOBI`;
   const description = `Certificato di valutazione AIROOBI per ${escapeHtml(data.object_title)} · esito ${outcome.label}${priceRange ? ' · ' + priceRange : ''}. Pollution layer: allegabile come prova di valutazione su Subito, Vinted, eBay.`;
   const ogImage = data.public_image_url || `https://www.airoobi.com/og-image.png?v=5.0.0`;
   const canonical = `https://www.airoobi.com/evalobi/${data.token_id}`;
@@ -66,6 +67,8 @@ function renderHtml(data) {
       availability: 'https://schema.org/InStock'
     } : undefined,
     additionalProperty: [
+      { '@type': 'PropertyValue', name: 'AIROOBI Certificate Code', value: data.cert_code },
+      { '@type': 'PropertyValue', name: 'AIROOBI Airdrop Code', value: data.airdrop_code },
       { '@type': 'PropertyValue', name: 'AIROOBI Token ID', value: String(data.token_id) },
       { '@type': 'PropertyValue', name: 'Evaluation Outcome', value: data.evaluation_outcome },
       { '@type': 'PropertyValue', name: 'Evaluated At', value: data.evaluated_at }
@@ -115,6 +118,14 @@ function renderHtml(data) {
     html, body { background: var(--black); color: var(--white); font-family: var(--font-b); line-height: 1.5; }
     body { min-height: 100vh; display: flex; flex-direction: column; }
     .container { max-width: 880px; margin: 0 auto; padding: 24px 20px; width: 100%; }
+    /* Certificato (16 lug 2026): cornice doppia + sigillo, l'artefatto permanente dell'oggetto */
+    .cert-frame { border: 2px solid var(--gold); border-radius: 6px; padding: 8px; margin-bottom: 32px; }
+    .cert-inner { border: 1px solid var(--gray-700); border-radius: 3px; padding: 36px 32px; background: var(--gray-900); position: relative; }
+    .cert-seal { position: absolute; top: 28px; right: 28px; width: 64px; height: 64px; border: 2px solid var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: var(--font-h); font-size: 26px; font-weight: 700; color: var(--gold); transform: rotate(-8deg); }
+    .cert-kicker { font-family: var(--font-m); font-size: 10px; letter-spacing: 3px; color: var(--gray-500); text-transform: uppercase; margin-bottom: 10px; }
+    .cert-code { font-family: var(--font-m); font-size: 20px; letter-spacing: 3px; color: var(--gold); font-weight: 600; margin-bottom: 18px; }
+    .cert-airdrop { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-m); font-size: 12px; letter-spacing: 1px; color: var(--gray-300); border: 1px dashed var(--gray-700); border-radius: 4px; padding: 8px 14px; margin: 4px 0 24px; }
+    .cert-airdrop b { color: var(--gold); letter-spacing: 2px; }
     header.brand { padding: 32px 0 24px; border-bottom: 1px solid var(--gray-700); margin-bottom: 32px; }
     header.brand .logo { font-family: var(--font-h); font-size: 32px; font-weight: 700; letter-spacing: 4px; color: var(--gold); text-decoration: none; }
     header.brand .tag { display: block; font-family: var(--font-m); font-size: 11px; letter-spacing: 2px; color: var(--gray-500); margin-top: 4px; text-transform: uppercase; }
@@ -155,9 +166,15 @@ function renderHtml(data) {
       <span class="tag">Certificato di valutazione · pollution layer</span>
     </header>
 
+    <div class="cert-frame"><div class="cert-inner">
+    <div class="cert-seal">Oo</div>
+    <div class="cert-kicker">Certificato di valutazione</div>
+    <div class="cert-code">${escapeHtml(certCode)}</div>
     <div class="token-id">EVALOBI #${data.token_id}${data.version > 1 ? ` · v${data.version}` : ''}</div>
     <h1 class="title">${escapeHtml(data.object_title)}</h1>
     <p class="brand-model">${escapeHtml(data.object_brand)} · ${escapeHtml(data.object_model)}${data.object_year ? ' · ' + data.object_year : ''}</p>
+
+    ${data.airdrop_code ? `<div class="cert-airdrop"><span>Realizzato per l'airdrop</span> <b>#${escapeHtml(data.airdrop_code)}</b></div>` : ''}
 
     <div class="outcome-badge">
       <span class="label">${outcome.label}</span>
@@ -190,8 +207,9 @@ function renderHtml(data) {
 
     <div class="meta-row">
       <span>Valutato il ${evaluatedDate}</span>
-      <span>Token #${data.token_id}</span>
+      <span>${escapeHtml(certCode)} · Token #${data.token_id}</span>
     </div>
+    </div></div><!-- /cert-inner /cert-frame -->
 
     <div class="cta-section">
       <h2>Scopri AIROOBI</h2>
@@ -202,7 +220,7 @@ function renderHtml(data) {
 
   <footer>
     AIROOBI &copy; 2026 · <a href="https://www.airoobi.com">airoobi.com</a> · <a href="https://www.airoobi.app">airoobi.app</a><br>
-    Certificato verificabile · alfa-2026.05.13-4.13.5
+    Certificato verificabile · alfa-16.07.2026-1.0.0
   </footer>
 </body>
 </html>`;

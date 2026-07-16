@@ -1,0 +1,14 @@
+-- 16 lug 2026 (CCP, GO Skeezu): ogni EVALOBI ha un riferimento univoco (cert_code
+-- EVA-XXXXXX) e il codice dell'airdrop realizzato per vendere l'oggetto
+-- (airdrop_code = snapshot testuale: sopravvive all'eliminazione dell'airdrop,
+-- a prescindere dall'esito GO/NO_GO). Applicata sul live via MCP.
+--
+-- Contenuto (vedi migration live per il testo completo):
+--   ALTER TABLE evalobi ADD cert_code text UNIQUE, airdrop_id uuid FK SET NULL, airdrop_code text;
+--   ALTER TABLE evaluation_requests ADD airdrop_id uuid FK SET NULL;
+--   TRIGGER trg_gen_evalobi_cert (BEFORE INSERT): genera cert_code + snapshot airdrop_code;
+--   mint_evalobi: + p_airdrop_id uuid DEFAULT NULL (patch chirurgica);
+--   admin_evaluate_request: propaga v_req.airdrop_id al mint (patch chirurgica);
+--   admin_mint_evalobi_for_airdrop(p_airdrop_id, p_outcome, p_price_range, p_reasoning):
+--     RPC admin che emette il certificato direttamente da un airdrop (usata da ABO);
+--   get_evalobi_public: DROP+CREATE con cert_code + airdrop_code in output (grant anon).

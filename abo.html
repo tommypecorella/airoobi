@@ -1192,8 +1192,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <option value="">Tutti outcomes</option><option value="GO">GO</option><option value="NO_GO">NO_GO</option><option value="NEEDS_REVIEW">NEEDS_REVIEW</option>
       </select>
       <button onclick="loadEvalobiTable()" class="ab-btn" style="padding:6px 14px">Refresh</button>
+      <button onclick="mintEvalobiFromAirdrop()" class="ab-btn ab-btn-primary" style="padding:6px 14px">+ Emetti da airdrop</button>
     </div>
-    <div style="overflow:auto"><table class="adm-tbl" id="evalobi-tbl"><thead><tr><th>Token</th><th>Outcome</th><th>Object</th><th>Categoria</th><th>Valore stimato</th><th>Motivazione</th><th>Seller</th><th>Emesso</th><th>Versione</th></tr></thead><tbody><tr><td colspan="9" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
+    <div style="overflow:auto"><table class="adm-tbl" id="evalobi-tbl"><thead><tr><th>Certificato</th><th>Airdrop</th><th>Outcome</th><th>Object</th><th>Categoria</th><th>Valore stimato</th><th>Motivazione</th><th>Seller</th><th>Emesso</th><th>Versione</th></tr></thead><tbody><tr><td colspan="10" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
   </div>
 
   <!-- ═══ W4 · sec-disputes ═══ -->
@@ -1253,12 +1254,12 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   const sb = window.aboSb;
   window.loadEvalobiTable = async function(){
     const tbody = document.querySelector('#evalobi-tbl tbody');
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
     const outcome = document.getElementById('evalobi-filter-outcome')?.value || '';
-    let q = sb.from('evalobi').select('token_id,evaluation_outcome,object_title,object_brand,object_category,evaluation_price_range,evaluation_reasoning,original_seller_id,evaluated_at,created_at,version').order('created_at',{ascending:false}).limit(100);
+    let q = sb.from('evalobi').select('token_id,cert_code,airdrop_code,evaluation_outcome,object_title,object_brand,object_category,evaluation_price_range,evaluation_reasoning,original_seller_id,evaluated_at,created_at,version').order('created_at',{ascending:false}).limit(100);
     if (outcome) q = q.eq('evaluation_outcome', outcome);
     const { data, error } = await q;
-    if (error) { tbody.innerHTML = '<tr><td colspan="9" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
+    if (error) { tbody.innerHTML = '<tr><td colspan="10" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
     function fmtPriceRange(pr){
       if(!pr) return '<span style="color:var(--gray-600)">—</span>';
       try{ var p = typeof pr === 'string' ? JSON.parse(pr) : pr;
@@ -1271,8 +1272,28 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     tbody.innerHTML = (data||[]).map(r => {
       var dateEv = r.evaluated_at ? new Date(r.evaluated_at).toLocaleDateString('it-IT') : (r.created_at?new Date(r.created_at).toLocaleDateString('it-IT'):'—');
       var reasoning = r.evaluation_reasoning || '';
-      return `<tr><td>#${r.token_id||'-'}</td><td><span class="tag">${r.evaluation_outcome||'?'}</span></td><td>${escHtml((r.object_brand||'')+' '+(r.object_title||''))}</td><td style="font-size:11px;color:var(--gray-400)">${escHtml(r.object_category||'—')}</td><td style="font-family:var(--font-m);font-size:11px;color:var(--gold)">${fmtPriceRange(r.evaluation_price_range)}</td><td style="font-size:11px;color:var(--gray-300);max-width:260px" title="${escHtml(reasoning)}">${escHtml(trunc(reasoning,80))}</td><td style="font-family:var(--font-m);font-size:10px">${(r.original_seller_id||'').slice(0,8)}</td><td style="font-size:11px;color:var(--gray-400)">${dateEv}</td><td style="text-align:center">v${r.version||1}</td></tr>`;
-    }).join('') || '<tr><td colspan="9" style="text-align:center;color:var(--gray-500);padding:18px">Nessun EVALOBI</td></tr>';
+      return `<tr><td style="font-family:var(--font-m);font-size:11px"><a href="/evalobi/${r.token_id}" target="_blank" style="color:var(--gold)">${escHtml(r.cert_code||('#'+(r.token_id||'-')))}</a></td><td style="font-family:var(--font-m);font-size:10px;color:var(--gray-300)">${escHtml(r.airdrop_code||'—')}</td><td><span class="tag">${r.evaluation_outcome||'?'}</span></td><td>${escHtml((r.object_brand||'')+' '+(r.object_title||''))}</td><td style="font-size:11px;color:var(--gray-400)">${escHtml(r.object_category||'—')}</td><td style="font-family:var(--font-m);font-size:11px;color:var(--gold)">${fmtPriceRange(r.evaluation_price_range)}</td><td style="font-size:11px;color:var(--gray-300);max-width:260px" title="${escHtml(reasoning)}">${escHtml(trunc(reasoning,80))}</td><td style="font-family:var(--font-m);font-size:10px">${(r.original_seller_id||'').slice(0,8)}</td><td style="font-size:11px;color:var(--gray-400)">${dateEv}</td><td style="text-align:center">v${r.version||1}</td></tr>`;
+    }).join('') || '<tr><td colspan="10" style="text-align:center;color:var(--gray-500);padding:18px">Nessun EVALOBI</td></tr>';
+  };
+  // 16 lug 2026 · emissione certificato EVALOBI direttamente da un airdrop (rif. codice)
+  window.mintEvalobiFromAirdrop = async function(){
+    const { data: ads, error: e1 } = await sb.from('airdrops').select('id,code,title,status').order('created_at',{ascending:false}).limit(30);
+    if (e1) { alert('Errore: '+e1.message); return; }
+    if (!ads || !ads.length) { alert('Nessun airdrop nel sistema: creane uno prima (il certificato nasce dal codice airdrop).'); return; }
+    const list = ads.map((a,i)=>`${i+1}. #${a.code||'—'} · ${a.title} [${a.status}]`).join('\n');
+    const pick = prompt('Da quale airdrop emetto il certificato?\n\n'+list+'\n\nNumero:');
+    const idx = parseInt(pick,10)-1;
+    if (isNaN(idx) || !ads[idx]) return;
+    const outcome = (prompt('Esito valutazione: GO / NO_GO / NEEDS_REVIEW','GO')||'').trim().toUpperCase();
+    if (!['GO','NO_GO','NEEDS_REVIEW'].includes(outcome)) { alert('Esito non valido.'); return; }
+    const mn = prompt('Valore minimo stimato € (vuoto = nessuno):','');
+    const mx = prompt('Valore massimo stimato € (vuoto = nessuno):','');
+    const reasoning = prompt('Motivazione (facoltativa):','')||null;
+    const pr = (mn||mx) ? {min_eur: mn?Number(mn):null, max_eur: mx?Number(mx):null} : null;
+    const { data, error } = await sb.rpc('admin_mint_evalobi_for_airdrop', { p_airdrop_id: ads[idx].id, p_outcome: outcome, p_price_range: pr, p_reasoning: reasoning });
+    if (error || !data?.ok) { alert('Errore: '+(error?.message||data?.error||'?')); return; }
+    alert('Certificato emesso: '+data.cert_code+' → airdrop #'+data.airdrop_code+'\nPagina pubblica: /evalobi/'+data.token_id);
+    loadEvalobiTable();
   };
   window.loadDisputesTable = async function(){
     const tbody = document.querySelector('#disputes-tbl tbody');
@@ -4515,7 +4536,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-14.07.2026-1.0.0"></div>
+<div id="footer-mount" data-version="alfa-16.07.2026-1.1.0"></div>
 <script src="/src/footer.js?v=1.4.0"></script>
 </body>
 </html>

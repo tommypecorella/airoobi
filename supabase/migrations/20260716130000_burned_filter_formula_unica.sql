@@ -1,0 +1,6 @@
+-- 16 lug 2026 (CCP): get_robi_market_data + snapshot_robi_price non filtravano i
+-- ROBI burned — il futuro riscatto KAS (burn) non avrebbe ridotto il circolante.
+-- Applicata sul live via MCP (get_robi_market_data riscritta con
+-- COALESCE(burned,false)=false; snapshot_robi_price patchata chirurgicamente).
+-- NB: restano SENZA filtro burned (non live-critical, da allineare al riscatto):
+-- execute_draw, _get_user_available_robi, get_robi_history, get_activity_feed.
