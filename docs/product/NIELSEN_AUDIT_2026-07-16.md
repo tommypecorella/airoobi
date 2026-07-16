@@ -16,7 +16,7 @@ light + dark, guest + loggato.
 | 4 | H9 Recupero errori | **404 = pagina raw Vercel** (inglese, zero brand, nessuna uscita) | `404.html` brandizzata IT, theme-aware, CTA Esplora/Home |
 | 5 | H1+H9 | **Empty-state ricerca fuorviante**: con query senza match diceva "Nessun airdrop attivo" (falso se ce ne sono) | "Nessun risultato per «q»" + link *azzera la ricerca* (IT/EN) |
 | 6 | H2 Linguaggio (canone) | 90 notifiche storiche con "blocchi"/"Acquista blocchi per risalire"; 13 notifiche citavano airdrop eliminati (click senza alcun effetto) | Bonifica DB: lessico → Step, orfane eliminate (0 residui) |
-| 7 | H2 canone (generatori vivi) | `send-push` ("Acquista blocchi…", "Sei il vincitore") e `process-auto-buy` ("+N blocchi acquistati automaticamente") emettono ancora lessico vietato | Sorgenti corretti nel repo ("Fai altri Step per risalire", "Sei arrivato in vetta", "+N Step percorsi in automatico"). **Redeploy edge function BLOCCATO dal gate di sicurezza in sessione autonoma → serve GO Skeezu** |
+| 7 | H2 canone (generatori vivi) | `send-push` ("Acquista blocchi…", "Sei il vincitore") e `process-auto-buy` ("+N blocchi acquistati automaticamente") emettono ancora lessico vietato | Sorgenti corretti nel repo ("Fai altri Step per risalire", "Sei arrivato in vetta", "+N Step percorsi in automatico"). **Rideployate al GO di Skeezu (16 lug): send-push v4 + process-auto-buy v5, sorgente live verificato** |
 | 8 | H6 Riconoscere vs ricordare | Login mostrava il form "muto" anche da già loggati (con topbar loggata: incoerente) | Banner "Sei già connesso come … → Continua" con returnTo sanificato |
 | 9 | H4/A11y | Select categoria (`#sub-cat`) senza label associata; thumb storico portafoglio senza alt | aria-label + alt |
 
@@ -31,5 +31,5 @@ light + dark, guest + loggato.
 - Nota tecnica: la cattura CDP su /blog va in timeout (layer blur pesante) ma la pagina è sana (lag 0,2 ms) — non impatta gli utenti.
 
 ## Pendenze
-- **Redeploy `send-push` + `process-auto-buy`** con i testi a canone (repo pronto, serve GO).
+- ~~Redeploy `send-push` + `process-auto-buy`~~ → **fatto al GO di Skeezu (16 lug)**: send-push v4, process-auto-buy v5.
 - Decisione aperta: colonna prima→dopo dei Movimenti treasury (contributi airdrop su treasury_stats vs estensioni su canonico).
