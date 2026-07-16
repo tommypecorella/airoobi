@@ -144,14 +144,14 @@ function buildNotification(
     case "position_lost":
       return {
         title: "AIROOBI",
-        body: `📈 Sei stato superato in ${t}. Acquista blocchi per risalire.`,
+        body: `📈 Sei stato superato in ${t}. Fai altri Step per risalire.`,
         tag: `position-${t}`,
         url: "/airdrops",
       };
     case "draw_winner":
       return {
         title: "AIROOBI",
-        body: `🎯 ${t} è tuo! Sei il vincitore dell'airdrop.`,
+        body: `🎯 ${t} è tuo! Sei arrivato in vetta.`,
         tag: `winner-${t}`,
         url: "/portafoglio",
       };

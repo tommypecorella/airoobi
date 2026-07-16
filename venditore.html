@@ -304,6 +304,23 @@ function statusBadge(s) {
 }
 
 async function bootstrap() {
+  // Nielsen audit 16 lug: la dApp salva la sessione in localStorage.airoobi_session
+  // (GoTrue custom), non nello storage di supabase-js — senza questo bridge la
+  // pagina rimbalzava al login anche da loggati.
+  try {
+    const stored = JSON.parse(localStorage.getItem('airoobi_session') || 'null');
+    if (stored?.access_token && stored?.refresh_token) {
+      await sb.auth.setSession({ access_token: stored.access_token, refresh_token: stored.refresh_token });
+      const { data: { session } } = await sb.auth.getSession();
+      if (session && session.access_token !== stored.access_token) {
+        // token ruotato: riallinea la sessione condivisa della dApp
+        stored.access_token = session.access_token;
+        stored.refresh_token = session.refresh_token;
+        stored.user = session.user;
+        localStorage.setItem('airoobi_session', JSON.stringify(stored));
+      }
+    }
+  } catch (e) { console.warn('session bridge', e); }
   const { data: { user } } = await sb.auth.getUser();
   if (!user) { location.href = '/login.html?returnTo=' + encodeURIComponent('/venditore'); return; }
   CURRENT_USER = user;
@@ -685,7 +702,7 @@ window.addEventListener('hashchange', () => {
 
 bootstrap();
 </script>
-<div id="footer-mount" data-version="alfa-14.07.2026-1.0.0"></div>
+<div id="footer-mount" data-version="alfa-16.07.2026-1.1.0"></div>
 <script src="/src/footer.js?v=1.4.0"></script>
 </body>
 </html>

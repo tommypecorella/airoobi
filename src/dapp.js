@@ -1985,23 +1985,26 @@ async function loadNotifications(){
   }).join('');
 }
 
-function toggleNotifPanel(){
+// Nielsen audit 16 lug: stato pannello+backdrop SEMPRE sincronizzati da un
+// unico punto — chiusure sparse lasciavano il backdrop attivo sopra la pagina
+// (click morti ovunque finché non ricaricavi).
+function setNotifPanel(open){
+  _notifOpen=!!open;
   var panel=document.getElementById('notif-panel');
-  if(!panel)return;
-  _notifOpen=!_notifOpen;
-  panel.style.display=_notifOpen?'block':'none';
-  // ISSUE-27 · backdrop overlay (lazy create)
+  if(panel)panel.style.display=_notifOpen?'block':'none';
   var bd=document.getElementById('notif-panel-backdrop');
-  if(!bd){
+  if(!bd&&_notifOpen){
     bd=document.createElement('div');
     bd.id='notif-panel-backdrop';
     bd.className='notif-panel-backdrop';
-    bd.addEventListener('click',function(){toggleNotifPanel()});
+    bd.addEventListener('click',function(){setNotifPanel(false)});
     document.body.appendChild(bd);
   }
-  bd.classList.toggle('active',_notifOpen);
+  if(bd)bd.classList.toggle('active',_notifOpen);
   if(_notifOpen)loadNotifications();
 }
+function toggleNotifPanel(){setNotifPanel(!_notifOpen);}
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&_notifOpen)setNotifPanel(false);});
 
 async function markNotifRead(id){
   var token=await getValidToken();if(!token)return;
@@ -2022,17 +2025,13 @@ async function markNotifRead(id){
 
 function notifGoToChat(notifId){
   markNotifRead(notifId);
-  _notifOpen=false;
-  var panel=document.getElementById('notif-panel');
-  if(panel)panel.style.display='none';
+  setNotifPanel(false);
   // Navigate to miei-airdrop and open all chats
   navigateTo('my');
 }
 
 function notifGoToAirdrop(airdropId){
-  _notifOpen=false;
-  var panel=document.getElementById('notif-panel');
-  if(panel)panel.style.display='none';
+  setNotifPanel(false);
   goToAirdrop(airdropId);
 }
 
@@ -2085,8 +2084,7 @@ setInterval(pollNotifications,30000);
 // Close notif panel on outside click
 document.addEventListener('click',function(e){
   if(_notifOpen&&!e.target.closest('#notif-panel')&&!e.target.closest('#notif-bell')){
-    document.getElementById('notif-panel').style.display='none';
-    _notifOpen=false;
+    setNotifPanel(false);
   }
 });
 
@@ -2184,6 +2182,20 @@ function renderGrid(){
 
   if(!list||list.length===0){
     grid.innerHTML='';
+    // Nielsen audit 16 lug: con una ricerca/filtro attivo il messaggio deve dire
+    // "nessun risultato", non "nessun airdrop attivo" (che sarebbe falso).
+    var et=empty.querySelector('.empty-title');var es=empty.querySelector('.empty-sub');
+    var hasFilter=_searchQuery||(_currentFilter&&_currentFilter!=='all');
+    if(et&&es){
+      if(hasFilter){
+        var qLbl=_searchQuery?'&laquo;'+escHtml(_searchQuery)+'&raquo;':'';
+        et.innerHTML='<span class="it">Nessun risultato '+(qLbl?'per '+qLbl:'')+'</span><span class="en">No results '+(qLbl?'for '+qLbl:'')+'</span>';
+        es.innerHTML='<span class="it">Prova con un altro termine oppure </span><span class="en">Try another term or </span><a style="color:var(--accent,#e05252);cursor:pointer;text-decoration:underline" onclick="var i=document.getElementById(\'etb-search-input\');if(i){i.value=\'\';i.dispatchEvent(new Event(\'input\',{bubbles:true}));}_searchQuery=\'\';filterCat(\'all\')"><span class="it">azzera la ricerca</span><span class="en">clear the search</span></a>';
+      }else{
+        et.innerHTML='<span class="it">Nessun airdrop attivo</span><span class="en">No active airdrops</span>';
+        es.innerHTML='<span class="it">Torna presto — nuovi oggetti in arrivo.</span><span class="en">Come back soon — new items incoming.</span>';
+      }
+    }
     empty.style.display='block';
     return;
   }
@@ -6430,7 +6442,7 @@ function openShareMenu(url,text,title,imgUrl){
   ov.id='share-overlay';
   ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
   ov.onclick=function(e){if(e.target===ov)ov.remove();};
-  var thumbHtml=imgUrl?'<img src="'+imgUrl.replace(/"/g,'&quot;')+'" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:12px">':'';
+  var thumbHtml=imgUrl?'<img src="'+imgUrl.replace(/"/g,'&quot;')+'" alt="" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:12px">':'';
   var titleHtml=title?'<div style="font-family:var(--font-h);font-size:15px;color:var(--white);line-height:1.3;margin-bottom:14px">'+escHtml(title)+'</div>':'';
   ov.innerHTML='<div style="background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:20px;max-width:360px;width:100%">'
     +thumbHtml+titleHtml

@@ -122,7 +122,7 @@ body{padding:0;justify-content:flex-start}
 </div>
 
 </main>
-<div id="footer-mount" data-version="alfa-15.07.2026-4.12.2"></div>
+<div id="footer-mount" data-version="alfa-16.07.2026-4.13.0"></div>
 <script src="/src/footer.js?v=1.4.0"></script>
 
 <script>
@@ -158,6 +158,22 @@ async function sbAuth(endpoint,body){
 
 function saveSession(s){localStorage.setItem('airoobi_session',JSON.stringify(s))}
 function getSession(){try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch(e){return null}}
+
+// Nielsen audit 16 lug: se arrivi qui già connesso, la pagina lo dice e offre
+// la via breve, invece di presentarti un form di login "muto".
+document.addEventListener('DOMContentLoaded',function(){
+  var s=getSession();
+  if(!s||!s.user)return;
+  var box=document.querySelector('.auth-box');
+  if(!box)return;
+  var ret=new URLSearchParams(location.search).get('returnTo')||'/esplora';
+  if(!/^\/[a-zA-Z0-9\-_\/#?=&]*$/.test(ret))ret='/esplora';
+  var email=String(s.user.email||'').replace(/[<>&"]/g,'');
+  var note=document.createElement('div');
+  note.style.cssText='margin:0 0 16px;padding:10px 14px;border:1px solid var(--accent);border-radius:10px;font-size:13px;line-height:1.5';
+  note.innerHTML='<span class="it">Sei già connesso come <b>'+email+'</b>. </span><span class="en">You are already signed in as <b>'+email+'</b>. </span><a href="'+ret+'" style="color:var(--accent);font-weight:700"><span class="it">Continua →</span><span class="en">Continue →</span></a>';
+  box.insertBefore(note,box.firstChild);
+});
 
 // ── Tracking ──
 async function track(event,props){

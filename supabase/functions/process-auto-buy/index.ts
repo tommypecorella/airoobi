@@ -168,7 +168,7 @@ serve(async (req: Request) => {
         body: JSON.stringify({
           type: "position_lost", // reuse type for notification
           user_id: rule.user_id,
-          title: `+${available.length} blocchi acquistati automaticamente su ${airdrop.title}`,
+          title: `+${available.length} Step percorsi in automatico su ${airdrop.title}`,
         }),
       });
 
