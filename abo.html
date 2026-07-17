@@ -1627,6 +1627,8 @@ async function aboLogin(){
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
     setAboAvatar(r.data);
+    var _rt=_aboRouteFromPath();
+    if(_rt)adminNav(_rt,true);else history.replaceState(null,null,'/abo/dashboard.html');
     loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();aboRenderSidebarPermissions();loadAboTodo();});
     if(_adminRefreshInterval)clearInterval(_adminRefreshInterval);
     _adminRefreshInterval=setInterval(loadAdminData,60000);
@@ -1672,6 +1674,8 @@ var _adminRefreshInterval=null;
     document.getElementById('abo-login').classList.add('hidden');
     document.getElementById('admin-overlay').classList.add('active');
     setAboAvatar(s);
+    var _rt=_aboRouteFromPath();
+    if(_rt)adminNav(_rt,true);else history.replaceState(null,null,'/abo/dashboard.html');
     loadAdminData().then(function(){refreshAriaCircolante();refreshNftCircolante();loadAdminMessages();aboRenderSidebarPermissions();loadAboTodo();});
     _adminRefreshInterval=setInterval(loadAdminData,60000);
   }
@@ -2019,7 +2023,39 @@ async function loadTreasuryTx(){
   }catch(e){tbody.innerHTML='<tr><td colspan="5" style="color:#f87171">'+escHtml(String(e))+'</td></tr>';}
 }
 
-function adminNav(sectionId){
+// 18 lug (Skeezu): ogni voce di menu è una PAGINA — /abo/dashboard.html,
+// /abo/pipeline-airdrop.html, … (rewrite Vercel /abo/* → abo.html). URL veri:
+// refresh resta dove sei, back del browser funziona, bookmark per sezione.
+var ABO_PAGE_SLUGS={
+  'sec-overview':'dashboard',
+  'sec-airdrops':'pipeline-airdrop',
+  'sec-evalobi':'evalobi-registry',
+  'sec-analysis':'analisi-fairness',
+  'sec-messages':'messaggi',
+  'sec-reports':'segnalazioni',
+  'sec-users':'utenti',
+  'sec-treasury':'treasury-fondi',
+  'sec-platform-aria':'conto-aria-piattaforma',
+  'sec-company-assets':'patrimonio-aziendale',
+  'sec-coin':'aria-robi',
+  'sec-collaborators':'collaboratori-permessi',
+  'sec-categories':'categorie',
+  'sec-engine':'engine-config',
+  'sec-costs':'cost-tracker'
+};
+function _aboSlugToSection(slug){
+  for(var k in ABO_PAGE_SLUGS){if(ABO_PAGE_SLUGS[k]===slug)return k;}
+  return document.getElementById('sec-'+slug)?('sec-'+slug):null;
+}
+function _aboRouteFromPath(){
+  var m=location.pathname.match(/^\/abo\/([a-z0-9-]+?)(?:\.html)?\/?$/);
+  return m?_aboSlugToSection(m[1]):null;
+}
+window.addEventListener('popstate',function(){
+  var sec=_aboRouteFromPath();
+  if(sec)adminNav(sec,true);
+});
+function adminNav(sectionId,skipPush){
   document.querySelectorAll('.admin-section').forEach(function(s){s.classList.remove('active')});
   document.querySelectorAll('.admin-sidebar-item').forEach(function(b){b.classList.remove('active');b.blur()});
   var sec=document.getElementById(sectionId);
@@ -2040,6 +2076,11 @@ function adminNav(sectionId){
   if(main){main.scrollTop=0;main.focus();}
   var sb=document.getElementById('admin-sidebar');
   if(sb)sb.classList.remove('open');
+  if(!skipPush){
+    var slug=ABO_PAGE_SLUGS[sectionId]||sectionId.replace(/^sec-/,'');
+    var path='/abo/'+slug+'.html';
+    if(location.pathname!==path)history.pushState({abo:sectionId},null,path);
+  }
 }
 
 // GS-1 reopen-3 · loadEvalobiTable standalone (l'IIFE riga 1210 con `if(!window.aboSb)return` è dead-code: window.aboSb non è mai inizializzato in abo.html, quindi loadEvalobiTable e altri loader non venivano installati). Riscritto con fetch raw, pattern allineato a loadAdminMessages.
@@ -4792,7 +4833,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.5.1"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.6.0"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>
