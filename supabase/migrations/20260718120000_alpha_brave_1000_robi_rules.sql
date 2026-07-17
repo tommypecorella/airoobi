@@ -1,0 +1,21 @@
+-- 18 lug 2026 · REGOLE ALPHA BRAVE 1000 (GO Skeezu da chat diretta — flag audit-trail CCP)
+-- Applicate sul live via MCP in due migration (alpha_brave_1000_robi_rules +
+-- alpha_rules_dedup_winner_grant). Contenuto:
+--
+-- Regole (valide SOLO in Alpha Brave 1000, interruttore airdrop_config.alpha_brave_rules_active):
+--   1) Richiesta valutazione (spendendo ARIA)   -> +1 ROBI  [submit_object_for_valuation, source alpha_valuation_request]
+--   2) Valutazione accettata dal venditore      -> +1 ROBI  [accept_airdrop_valuation, source alpha_valuation_accepted]
+--   3) L'airdrop gira con le regole mainnet     (motore invariato)
+--   4) Vetta raggiunta                          -> +5 ROBI  [già nel motore: trigger tf_airdrop_completed_robi,
+--      source airdrop_won — ora sotto interruttore alpha + nome a canone «Vetta raggiunta — Alpha Brave 1000»;
+--      un primo grant duplicato alpha_summit_winner in execute_draw è stato rimosso: il totale è 5, non 10]
+--   Bonus preesistente mantenuto: +5 ROBI al venditore a corsa completata (airdrop_completed_seller),
+--   anch'esso sotto interruttore alpha, nome «Corsa completata (venditore) — Alpha Brave 1000».
+--
+-- Config: alpha_brave_rules_active='true' · alpha_robi_valuation_request='1'
+--         · alpha_robi_valuation_accepted='1' · alpha_robi_summit_winner='5'
+-- Helper: public.alpha_rules_active() returns boolean.
+-- Ogni grant scrive notifica in campanella («Regola Alpha Brave 1000»).
+-- Collaudo: ciclo completo submit→quota→accept→run→ack→draw in transazione ROLLBACK:
+--   grants = alpha_valuation_request 1 + alpha_valuation_accepted 1 + airdrop_won 5
+--   + airdrop_completed_seller 5 ✓ · interruttore off -> 0 grant ✓
