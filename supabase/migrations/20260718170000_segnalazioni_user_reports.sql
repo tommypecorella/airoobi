@@ -1,0 +1,11 @@
+-- 18 lug 2026 (GO Skeezu): SEGNALAZIONI — applicata sul live via MCP.
+-- Tabella user_reports (user_id nullable, page, message, status open/in_review/
+-- resolved/rejected, admin_notes, robi_reward, rewarded_at, resolved_by) RLS admin-only.
+-- RPC submit_user_report(message,page,ua): cattura auth.uid() (ospite=null), min 5
+-- char, cap 2000, rate-limit 10/24h per utente — grant anon+authenticated.
+-- RPC admin_resolve_report(id,status,notes,robi): gate is_admin, premio ROBI
+-- 0-100 una sola volta (mint nft_rewards source 'segnalazione_reward',
+-- nome «Grazie della segnalazione») + notifica in campanella.
+-- Frontend: widget flottante in footer.js (tutte le pagine, IT/EN, esclusa ABO);
+-- ABO: sezione Segnalazioni (filtri stato, PRENDI/RISOLVI+premio/RESPINGI) +
+-- contatore in DA FARE OGGI.

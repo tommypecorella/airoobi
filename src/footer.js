@@ -53,6 +53,75 @@ function render(mount){
     +'</footer>';
 }
 
+/* ── SEGNALAZIONI (18 lug 2026, GO Skeezu) ──
+   Bottone flottante identico su ogni pagina (desktop+mobile): form minimale,
+   il ticket porta con sé utente e pagina in automatico. Gestione in ABO. */
+var SB_URL_F='https://vuvlmlpuhovipfwtquux.supabase.co';
+var SB_KEY_F='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+function initSegnala(){
+  if(location.pathname.indexOf('abo.html')!==-1)return;
+  if(document.getElementById('segnala-fab'))return;
+  var st=document.createElement('style');
+  st.textContent='#segnala-fab{position:fixed;right:16px;bottom:16px;z-index:9990;width:46px;height:46px;border-radius:50%;border:none;background:#EF3E4F;color:#fff;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .15s}'
+    +'#segnala-fab:hover{transform:scale(1.08)}'
+    +'#segnala-fab svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}'
+    +'#segnala-modal{display:none;position:fixed;right:16px;bottom:72px;z-index:9991;width:min(330px,calc(100vw - 32px));background:var(--gray-800,#1D2630);border:1px solid #EF3E4F;border-radius:14px;padding:16px;box-shadow:0 10px 32px rgba(0,0,0,.45);color:var(--white,#F2F5F8)}'
+    +'#segnala-modal.open{display:block}'
+    +'#segnala-modal h4{font-size:14px;margin:0 0 4px;font-family:inherit}'
+    +'#segnala-modal p{font-size:11px;color:var(--gray-400,#9AA7B2);margin:0 0 10px}'
+    +'#segnala-modal textarea{width:100%;min-height:92px;background:rgba(0,0,0,.25);border:1px solid var(--gray-700,#36424F);border-radius:8px;color:inherit;font:inherit;font-size:13px;padding:8px;resize:vertical;box-sizing:border-box}'
+    +'#segnala-send{margin-top:10px;width:100%;background:#EF3E4F;color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;letter-spacing:1.5px;font-weight:700;cursor:pointer;text-transform:uppercase}'
+    +'#segnala-send:disabled{opacity:.5}'
+    +'#segnala-msg{font-size:12px;margin-top:8px;display:none}';
+  document.head.appendChild(st);
+  var fab=document.createElement('button');
+  fab.id='segnala-fab';
+  fab.setAttribute('aria-label','Segnala un problema');
+  fab.title='Segnala un problema';
+  fab.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>';
+  var modal=document.createElement('div');
+  modal.id='segnala-modal';
+  modal.innerHTML='<h4><span class="it">Segnala un problema</span><span class="en">Report an issue</span></h4>'
+    +'<p><span class="it">Racconta cosa non va: pagina e utente li alleghiamo noi. Le segnalazioni utili vengono ringraziate in ROBI.</span><span class="en">Tell us what\'s wrong: page and user are attached automatically. Useful reports get thanked in ROBI.</span></p>'
+    +'<textarea id="segnala-text" maxlength="2000" placeholder="Cosa non funziona? / What\'s wrong?"></textarea>'
+    +'<button id="segnala-send"><span class="it">Invia segnalazione</span><span class="en">Send report</span></button>'
+    +'<div id="segnala-msg"></div>';
+  document.body.appendChild(fab);
+  document.body.appendChild(modal);
+  fab.addEventListener('click',function(){modal.classList.toggle('open');if(modal.classList.contains('open'))document.getElementById('segnala-text').focus();});
+  document.addEventListener('click',function(e){
+    if(modal.classList.contains('open')&&!modal.contains(e.target)&&e.target!==fab&&!fab.contains(e.target))modal.classList.remove('open');
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')modal.classList.remove('open');});
+  document.getElementById('segnala-send').addEventListener('click',function(){
+    var btn=this,txt=document.getElementById('segnala-text'),msg=document.getElementById('segnala-msg');
+    var v=(txt.value||'').trim();
+    if(v.length<5){msg.style.display='block';msg.style.color='#f87171';msg.innerHTML='<span class="it">Scrivi almeno qualche parola.</span><span class="en">Write at least a few words.</span>';return;}
+    btn.disabled=true;
+    var tok=SB_KEY_F;
+    try{var sess=JSON.parse(localStorage.getItem('airoobi_session'));if(sess&&sess.access_token)tok=sess.access_token;}catch(e){}
+    fetch(SB_URL_F+'/rest/v1/rpc/submit_user_report',{
+      method:'POST',
+      headers:{'apikey':SB_KEY_F,'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+      body:JSON.stringify({p_message:v,p_page:location.pathname+location.search,p_user_agent:(navigator.userAgent||'').slice(0,250)})
+    }).then(function(r){return r.json()}).then(function(d){
+      btn.disabled=false;
+      msg.style.display='block';
+      if(d&&d.ok){
+        msg.style.color='var(--kas,#49EACB)';
+        msg.innerHTML='<span class="it">Grazie! Il team AIROOBI la legger&agrave; presto.</span><span class="en">Thanks! The AIROOBI team will read it soon.</span>';
+        txt.value='';
+        setTimeout(function(){modal.classList.remove('open');msg.style.display='none';},2600);
+      }else{
+        msg.style.color='#f87171';
+        msg.innerHTML=(d&&d.error==='RATE_LIMIT')
+          ?'<span class="it">Hai gi&agrave; inviato molte segnalazioni oggi — grazie! Riprova domani.</span><span class="en">You\'ve sent many reports today — thanks! Try again tomorrow.</span>'
+          :'<span class="it">Invio non riuscito. Riprova.</span><span class="en">Send failed. Try again.</span>';
+      }
+    }).catch(function(){btn.disabled=false;msg.style.display='block';msg.style.color='#f87171';msg.innerHTML='<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>';});
+  });
+}
+
 /* 17 lug 2026 · battito della piattaforma: quante valutazioni in corso
    (= i prossimi airdrop). Solo il numero, mai quali. */
 function loadFooterCounters(){
@@ -235,6 +304,7 @@ function init(){
   buildShareBar();
   initPwa();
   loadFooterCounters();
+  initSegnala();
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
