@@ -3549,10 +3549,13 @@ async function deleteTreasuryFund(id){
 
 function recalcNFTValue(){
   var treasury=parseFloat(document.getElementById('adm-treasury-input')?.value)||0;
-  var aria=parseInt(document.getElementById('adm-aico-input')?.value)||0;
-  var cs=document.getElementById('adm-coin-supply');if(cs)cs.textContent=aria.toLocaleString();
-  var minted=parseInt(document.getElementById('adm-input-minted')?.value)||0;
-  var nr=document.getElementById('adm-coin-nft-ratio');if(nr)nr.textContent=minted>0?Math.round(aria/minted):'—';
+  // 18 lug (Skeezu): fallback ai totali live — l'input legacy adm-input-minted era
+  // vuoto e questa funzione sovrascriveva il ratio con '—' pur avendo i dati.
+  var aria=parseInt(document.getElementById('adm-aico-input')?.value)||window._totalAria||0;
+  var cs=document.getElementById('adm-coin-supply');if(cs&&aria>0)cs.textContent=aria.toLocaleString();
+  var minted=parseFloat(document.getElementById('adm-input-minted')?.value)||window._robiTotal||0;
+  var nr=document.getElementById('adm-coin-nft-ratio');
+  if(nr&&aria>0&&minted>0)nr.textContent=Math.round(aria/minted).toLocaleString('it-IT');
   var nt=document.getElementById('adm-nft-treasury');if(nt)nt.textContent='€'+treasury.toFixed(2);
 }
 
@@ -4789,7 +4792,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.5.0"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.5.1"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>
