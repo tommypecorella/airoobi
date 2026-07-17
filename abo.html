@@ -84,6 +84,11 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .admin-table th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--gray-700);color:var(--gold);font-family:var(--font-m);font-size:11px;letter-spacing:1px;text-transform:uppercase}
 .admin-table td{padding:10px 12px;border-bottom:1px solid var(--gray-800);color:var(--gray-300)}
 .admin-table tr:hover td{background:rgba(139,92,246,.03)}
+/* 18 lug: adm-tbl (EVALOBI/dispute/swap) allineata allo stile ABO standard */
+.adm-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.adm-tbl th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--gray-700);color:var(--gold);font-family:var(--font-m);font-size:11px;letter-spacing:1px;text-transform:uppercase;white-space:nowrap}
+.adm-tbl td{padding:10px 12px;border-bottom:1px solid var(--gray-800);color:var(--gray-300);vertical-align:top}
+.adm-tbl tr:hover td{background:rgba(139,92,246,.03)}
 .admin-table tr.adm-user-row{cursor:pointer}
 .admin-table tr.adm-user-row td:first-child::before{content:'▸ ';color:var(--gold);font-size:11px}
 .admin-table tr.adm-user-row.expanded td:first-child::before{content:'▾ '}
@@ -1250,16 +1255,28 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 </div><!-- /admin-content -->
   <!-- ═══ W4 · sec-evalobi · EVALOBI registry admin view (GS-1 reopen-2: rimosso inline style:display:none che bloccava .active da adminNav) ═══ -->
   <div class="admin-section" id="sec-evalobi">
-    <h2>EVALOBI Registry</h2>
-    <p style="font-size:12px;color:var(--gray-400);margin-bottom:16px">Tutti i certificati EVALOBI emessi · pollution layer monitoring.</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
-      <select id="evalobi-filter-outcome" onchange="loadEvalobiTable()" style="background:var(--gray-900);color:var(--white);border:1px solid var(--gray-700);padding:6px 10px;border-radius:6px;font-size:12px">
-        <option value="">Tutti outcomes</option><option value="GO">GO</option><option value="NO_GO">NO_GO</option><option value="NEEDS_REVIEW">NEEDS_REVIEW</option>
-      </select>
-      <button onclick="loadEvalobiTable()" class="ab-btn" style="padding:6px 14px">Refresh</button>
-      <button onclick="mintEvalobiFromAirdrop()" class="ab-btn ab-btn-primary" style="padding:6px 14px">+ Emetti da airdrop</button>
+    <h2>EVALOBI Registry <span class="info-i" onclick="showAboTip(this,'sec-evalobi')">i</span></h2>
+    <p style="font-size:12px;color:var(--gray-400);margin-bottom:20px"><span class="it">Tutti i certificati di valutazione emessi, col riferimento univoco EVA- e il codice dell'airdrop. Il certificato &egrave; l'artefatto permanente dell'oggetto (pollution layer).</span><span class="en">All issued evaluation certificates, with unique EVA- reference and airdrop code.</span></p>
+
+    <div class="admin-grid" style="margin-bottom:22px">
+      <div class="admin-card"><div class="admin-card-val" id="ev-kpi-total">—</div><div class="admin-card-label"><span class="it">Certificati emessi</span><span class="en">Certificates issued</span></div></div>
+      <div class="admin-card" style="border-color:rgba(73,234,203,.35)"><div class="admin-card-val" id="ev-kpi-go" style="color:var(--kas)">—</div><div class="admin-card-label">GO</div></div>
+      <div class="admin-card" style="border-color:rgba(248,113,113,.3)"><div class="admin-card-val" id="ev-kpi-nogo" style="color:#f87171">—</div><div class="admin-card-label">NO GO</div></div>
+      <div class="admin-card"><div class="admin-card-val" id="ev-kpi-review" style="color:#f0a030">—</div><div class="admin-card-label"><span class="it">Da rivedere</span><span class="en">Needs review</span></div></div>
     </div>
-    <div style="overflow:auto"><table class="adm-tbl" id="evalobi-tbl"><thead><tr><th>Certificato</th><th>Airdrop</th><th>Outcome</th><th>Object</th><th>Categoria</th><th>Valore stimato</th><th>Motivazione</th><th>Seller</th><th>Emesso</th><th>Versione</th></tr></thead><tbody><tr><td colspan="10" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+      <select id="evalobi-filter-outcome" onchange="loadEvalobiTable()" style="background:var(--gray-900);color:var(--white);border:1px solid var(--gray-700);padding:8px 12px;border-radius:var(--radius-sm);font-family:var(--font-m);font-size:12px">
+        <option value="">Tutti gli esiti</option><option value="GO">GO</option><option value="NO_GO">NO GO</option><option value="NEEDS_REVIEW">Da rivedere</option>
+      </select>
+      <button onclick="loadEvalobiTable()" class="ab-btn" style="padding:8px 16px">Refresh</button>
+      <button onclick="mintEvalobiFromAirdrop()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:9px 18px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm)"><span class="it">+ EMETTI DA AIRDROP</span><span class="en">+ ISSUE FROM AIRDROP</span></button>
+    </div>
+
+    <div class="admin-table-wrap">
+      <table class="admin-table" id="evalobi-tbl"><thead><tr><th><span class="it">Certificato</span><span class="en">Certificate</span></th><th>Airdrop</th><th><span class="it">Esito</span><span class="en">Outcome</span></th><th><span class="it">Oggetto</span><span class="en">Object</span></th><th><span class="it">Categoria</span><span class="en">Category</span></th><th><span class="it">Valore stimato</span><span class="en">Est. value</span></th><th><span class="it">Motivazione</span><span class="en">Reasoning</span></th><th>Seller</th><th><span class="it">Emesso</span><span class="en">Issued</span></th><th>v.</th></tr></thead><tbody><tr><td colspan="10" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table>
+    </div>
+    <p class="admin-note" style="margin-top:12px"><span class="it">Click sul codice EVA- per aprire la pagina-certificato pubblica. L'emissione richiede un airdrop esistente: il certificato nasce col suo codice, a prescindere dall'esito.</span><span class="en">Click the EVA- code to open the public certificate page.</span></p>
   </div>
 
   <!-- ═══ W4 · sec-disputes ═══ -->
@@ -1321,10 +1338,15 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     const tbody = document.querySelector('#evalobi-tbl tbody');
     tbody.innerHTML = '<tr><td colspan="10" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
     const outcome = document.getElementById('evalobi-filter-outcome')?.value || '';
-    let q = sb.from('evalobi').select('token_id,cert_code,airdrop_code,evaluation_outcome,object_title,object_brand,object_category,evaluation_price_range,evaluation_reasoning,original_seller_id,evaluated_at,created_at,version').order('created_at',{ascending:false}).limit(100);
-    if (outcome) q = q.eq('evaluation_outcome', outcome);
-    const { data, error } = await q;
+    const { data: all, error } = await sb.from('evalobi').select('token_id,cert_code,airdrop_code,evaluation_outcome,object_title,object_brand,object_category,evaluation_price_range,evaluation_reasoning,original_seller_id,evaluated_at,created_at,version').order('created_at',{ascending:false}).limit(200);
     if (error) { tbody.innerHTML = '<tr><td colspan="10" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
+    // KPI (sempre sul totale, non sul filtro)
+    const kpi=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+    kpi('ev-kpi-total',(all||[]).length);
+    kpi('ev-kpi-go',(all||[]).filter(r=>r.evaluation_outcome==='GO').length);
+    kpi('ev-kpi-nogo',(all||[]).filter(r=>r.evaluation_outcome==='NO_GO').length);
+    kpi('ev-kpi-review',(all||[]).filter(r=>r.evaluation_outcome==='NEEDS_REVIEW').length);
+    const data = outcome ? (all||[]).filter(r=>r.evaluation_outcome===outcome) : all;
     function fmtPriceRange(pr){
       if(!pr) return '<span style="color:var(--gray-600)">—</span>';
       try{ var p = typeof pr === 'string' ? JSON.parse(pr) : pr;
@@ -4833,7 +4855,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.6.0"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.6.1"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>
