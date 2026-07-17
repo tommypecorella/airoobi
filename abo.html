@@ -222,6 +222,16 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 .chat-msg-body{color:var(--white);line-height:1.5;font-size:13px;font-family:var(--font-b)}
 @media(max-width:640px){
   .chat-msg-bubble{max-width:88%;font-size:12.5px}
+  /* 17 lug 2026 · validazione da mobile: modale gestione airdrop leggibile,
+     niente griglie a 3-5 colonne che sbordano dal viewport */
+  .ct-modal{padding:20px 14px;max-height:94vh}
+  .ct-modal [style*="grid-template-columns:1fr 1fr 1fr"]{grid-template-columns:1fr 1fr !important}
+  .ct-modal [style*="display:flex;gap:12px"]{flex-wrap:wrap}
+  .admin-nav{padding:6px 8px;gap:6px}
+  .admin-nav span{font-size:9px;letter-spacing:1px}
+  .admin-nav select{max-width:132px;font-size:10px}
+  .admin-nav a.btn,.admin-nav button{padding:6px 10px;font-size:10px}
+  .adm-tbl td,.adm-tbl th{padding:8px 8px;font-size:12px}
 }
 </style>
 <link rel="manifest" href="/manifest.json?v=2.0.0">
@@ -2145,7 +2155,9 @@ async function loadAdminAirdrops(){
       var statusColor=a.status==='sale'?'#49b583':a.status==='presale'?'var(--gold)':a.status==='completed'?'#4A9EFF':a.status==='annullato'?'#ef4444':a.status.indexOf('rifiutato')===0?'#ef4444':'var(--gray-400)';
       var canDraw=(['sale','presale','active'].indexOf(a.status)!==-1)&&!a.draw_executed_at;
       var isDone=a.draw_executed_at!=null;
-      html+='<tr data-status="'+escHtml(a.status||'')+'">';
+      // 17 lug: riga tappabile — su mobile il bottone MODIFICA finiva fuori
+      // schermo nello scroll orizzontale della tabella
+      html+='<tr data-status="'+escHtml(a.status||'')+'" onclick="if(!event.target.closest(\'button\'))adOpenModal(\''+a.id+'\')" style="cursor:pointer" title="Apri gestione">';
       html+='<td style="font-weight:600">'+escHtml(a.title)+'</td>';
       html+='<td>'+escHtml(a.category||'—')+'</td>';
       html+='<td style="color:'+statusColor+'">'+escHtml(a.status)+(isDone?' ✓':'')+'</td>';
@@ -4536,7 +4548,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-16.07.2026-1.1.0"></div>
-<script src="/src/footer.js?v=1.4.0"></script>
+<div id="footer-mount" data-version="alfa-17.07.2026-1.2.0"></div>
+<script src="/src/footer.js?v=1.5.0"></script>
 </body>
 </html>

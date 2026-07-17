@@ -1,0 +1,7 @@
+-- 17 lug 2026 (CCP): flusso valutazione utente reale — applicata sul live via MCP.
+-- 1) submit_object_for_valuation: la foto principale non viene più duplicata in
+--    extra_photos (extra = tutte le foto tranne la main, dedupe con IS DISTINCT FROM).
+-- 2) get_public_counters(): jsonb {valutazioni_in_corso, airdrop_attivi} — quante
+--    (mai quali) valutazioni in corso, grant anon+authenticated. Consumata da
+--    footer.js (tutte le pagine), banner Esplora, empty-state, pagina Fai valutare.
+-- 3) Data-fix GARP-MAR-789A: rimossa la main duplicata dagli extra (7→6).

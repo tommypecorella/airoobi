@@ -2194,7 +2194,10 @@ function renderGrid(){
         if(_searchQuery)searchArchiveByQuery(_searchQuery,es);
       }else{
         et.innerHTML='<span class="it">Nessun airdrop attivo</span><span class="en">No active airdrops</span>';
-        es.innerHTML='<span class="it">Torna presto — nuovi oggetti in arrivo.</span><span class="en">Come back soon — new items incoming.</span>';
+        var _vc=window._pubCounters&&window._pubCounters.valutazioni_in_corso;
+        es.innerHTML=_vc
+          ?'<span class="it">Per&ograve; '+(_vc===1?'1 oggetto &egrave;':_vc+' oggetti sono')+' gi&agrave; in valutazione: i prossimi airdrop stanno arrivando.</span><span class="en">But '+(_vc===1?'1 item is':_vc+' items are')+' already under evaluation: the next airdrops are on their way.</span>'
+          :'<span class="it">Torna presto — nuovi oggetti in arrivo.</span><span class="en">Come back soon — new items incoming.</span>';
       }
     }
     empty.style.display='block';
@@ -4712,25 +4715,45 @@ function promptPhotoUrl(){
   renderSubPhotos();
 }
 
-async function uploadSubPhotos(token){
+// 17 lug 2026 (flusso valutazione): le foto da fotocamera arrivano anche a 3-4 MB
+// l'una — 7 foto = ~25 MB e su mobile il salvataggio sembrava congelato.
+// Ricompressione client (max 1600px, JPEG .82) prima dell'upload: ~10-15x più leggero.
+async function compressSubPhoto(file){
+  try{
+    if(!file.type||file.type.indexOf('image/')!==0)return {body:file,type:file.type,ext:(file.name||'').split('.').pop()||'jpg'};
+    var bmp=await createImageBitmap(file);
+    var MAX=1600;
+    var scale=Math.min(1,MAX/Math.max(bmp.width,bmp.height));
+    var w=Math.max(1,Math.round(bmp.width*scale)),h=Math.max(1,Math.round(bmp.height*scale));
+    var c=document.createElement('canvas');c.width=w;c.height=h;
+    c.getContext('2d').drawImage(bmp,0,0,w,h);
+    var blob=await new Promise(function(r){c.toBlob(r,'image/jpeg',0.82)});
+    if(blob&&blob.size<file.size)return {body:blob,type:'image/jpeg',ext:'jpg'};
+    return {body:file,type:file.type,ext:(file.name||'').split('.').pop()||'jpg'};
+  }catch(e){return {body:file,type:file.type,ext:(file.name||'').split('.').pop()||'jpg'};}
+}
+
+async function uploadSubPhotos(token,onProgress){
   // Ritorna {urls:[], photosBySlot:{}} per la nuova struttura
   var urls=[]; // legacy flat array per image_url / extra_photos
   var photosBySlot={};
   var others=[];
+  var failed=0;
   for(var i=0;i<_subPhotos.length;i++){
     var p=_subPhotos[i];
+    if(onProgress)onProgress(i+1,_subPhotos.length);
     var finalUrl;
     if(p.type==='url'){
       finalUrl=p.url;
     } else {
-      var ext=(p.file.name||'').split('.').pop()||'jpg';
-      var path=_session.user.id+'/'+Date.now()+'_'+(p.slot||'x')+'_'+i+'.'+ext;
+      var packed=await compressSubPhoto(p.file);
+      var path=_session.user.id+'/'+Date.now()+'_'+(p.slot||'x')+'_'+i+'.'+packed.ext;
       var upRes=await fetch(SB_URL+'/storage/v1/object/submissions/'+path,{
         method:'POST',
-        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':p.file.type,'x-upsert':'true'},
-        body:p.file
+        headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':packed.type,'x-upsert':'true'},
+        body:packed.body
       });
-      if(!upRes.ok)continue;
+      if(!upRes.ok){failed++;continue;}
       finalUrl=SB_URL+'/storage/v1/object/public/submissions/'+path;
     }
     urls.push(finalUrl);
@@ -4741,7 +4764,7 @@ async function uploadSubPhotos(token){
     }
   }
   if(others.length)photosBySlot.others=others;
-  return {urls:urls,photosBySlot:photosBySlot};
+  return {urls:urls,photosBySlot:photosBySlot,failed:failed};
 }
 
 async function submitObject(){
@@ -4789,7 +4812,18 @@ async function submitObject(){
   try{
     var token=await getValidToken();
     // Upload file photos to storage — returns {urls, photosBySlot}
-    var upload=await uploadSubPhotos(token);
+    // feedback live: senza, su mobile il salvataggio sembrava congelato
+    msgEl.className='submit-msg';
+    var upload=await uploadSubPhotos(token,function(i,n){
+      msgEl.innerHTML='<span class="it">Carico le foto&hellip; '+i+'/'+n+'</span><span class="en">Uploading photos&hellip; '+i+'/'+n+'</span>';
+    });
+    if(upload.failed){
+      msgEl.innerHTML='<span class="it">'+upload.failed+' foto non caricate — controlla la connessione e riprova.</span><span class="en">'+upload.failed+' photos failed to upload — check your connection and retry.</span>';
+      msgEl.className='submit-msg err';subErrFocus(msgEl);
+      btn.disabled=false;btn.classList.remove('loading');
+      return;
+    }
+    msgEl.innerHTML='<span class="it">Invio la richiesta&hellip;</span><span class="en">Sending request&hellip;</span>';
     // Ordine canonico dell'array per il valutatore ABO (preserva info di slot
     // anche senza migrazione DB): front, back, left, right, top, bottom,
     // brand, box, certificate, accessories, defects, others...
@@ -4822,7 +4856,7 @@ async function submitObject(){
         _balance=result.new_balance;
         updateBalanceUI();
         updateSubmitCostUI();
-        msgEl.innerHTML='<span class="it">Valutazione acquistata! '+result.aria_spent+' ARIA dedotti. Riceverai un riscontro entro 24-48h.</span><span class="en">Valuation purchased! '+result.aria_spent+' ARIA deducted. You\'ll hear back within 24-48h.</span>';
+        msgEl.innerHTML='<span class="it">Valutazione acquistata! '+result.aria_spent+' ARIA dedotti. Riceverai un riscontro entro 24-48h. </span><span class="en">Valuation purchased! '+result.aria_spent+' ARIA deducted. You\'ll hear back within 24-48h. </span><a style="color:var(--accent,#e05252);font-weight:700;cursor:pointer;text-decoration:underline" onclick="navigateTo(\'my\')"><span class="it">Segui la tua valutazione &rarr;</span><span class="en">Track your valuation &rarr;</span></a>';
         msgEl.className='submit-msg ok';
         document.getElementById('sub-title').value='';document.getElementById('sub-desc').value='';
         document.getElementById('sub-cat').value='';document.getElementById('sub-desired').value='';
@@ -6093,6 +6127,23 @@ async function deleteWishlistAlert(id){
   await sbRpc('delete_wishlist_alert',{p_id:id},token);
   loadWishlistAlerts();
 }
+
+// ── Battito valutazioni (17 lug 2026) ──
+// footer.js carica get_public_counters e chiama questo hook: quante (mai quali)
+// valutazioni in corso — sono i futuri airdrop. Punti UI: banner Esplora,
+// pagina Fai valutare, empty-state (via _pubCounters), footer (in footer.js).
+window._onPubCounters=function(c){
+  try{
+    var n=c&&c.valutazioni_in_corso;
+    if(!n)return;
+    var it='In questo momento '+(n===1?'1 oggetto è':n+' oggetti sono')+' in valutazione: sono i prossimi airdrop.';
+    var en='Right now '+(n===1?'1 item is':n+' items are')+' under evaluation: the next airdrops.';
+    var b=document.getElementById('banner-vals');
+    if(b){b.innerHTML='<span class="it">'+it+'</span><span class="en">'+en+'</span>';b.style.display='block';}
+    var p=document.getElementById('proponi-vals');
+    if(p){p.innerHTML='<span class="it">&#9203; '+it+' Il tuo pu&ograve; essere il prossimo.</span><span class="en">&#9203; '+en+' Yours can be next.</span>';p.style.display='block';}
+  }catch(e){}
+};
 
 // ── Archive tab ──
 // 16 lug 2026: il codice parlante è la chiave del passato — se la ricerca in

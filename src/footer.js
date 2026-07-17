@@ -48,8 +48,31 @@ function render(mount){
     +'<div class="app-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>'
     +'<div class="app-footer-18"><span class="it">Piattaforma riservata ai maggiorenni (18+).</span><span class="en">Platform for adults only (18+).</span></div>'
     +'<div class="app-footer-motto"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>'
+    +'<div class="app-footer-vals" id="footer-vals" style="display:none;font-family:var(--font-m,\'JetBrains Mono\',monospace);font-size:10px;letter-spacing:1px;color:var(--gray-400,#5B6A7D);margin-top:8px"></div>'
     +(ver?'<div class="app-footer-ver">'+ver+'</div>':'')
     +'</footer>';
+}
+
+/* 17 lug 2026 · battito della piattaforma: quante valutazioni in corso
+   (= i prossimi airdrop). Solo il numero, mai quali. */
+function loadFooterCounters(){
+  try{
+    fetch('https://vuvlmlpuhovipfwtquux.supabase.co/rest/v1/rpc/get_public_counters',{
+      method:'POST',
+      headers:{'apikey':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co','Content-Type':'application/json'},
+      body:'{}'
+    }).then(function(r){return r.json()}).then(function(c){
+      var n=c&&c.valutazioni_in_corso;
+      window._pubCounters=c||null;
+      if(!n)return;
+      var el=document.getElementById('footer-vals');
+      if(!el)return;
+      el.innerHTML='<span class="it">In questo momento: '+n+(n===1?' oggetto':' oggetti')+' in valutazione &mdash; i prossimi airdrop.</span>'
+        +'<span class="en">Right now: '+n+(n===1?' item':' items')+' under evaluation &mdash; the next airdrops.</span>';
+      el.style.display='block';
+      try{if(typeof window._onPubCounters==='function')window._onPubCounters(c);}catch(e){}
+    }).catch(function(){});
+  }catch(e){}
 }
 
 
@@ -211,6 +234,7 @@ function init(){
   }catch(e){}
   buildShareBar();
   initPwa();
+  loadFooterCounters();
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);
