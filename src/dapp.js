@@ -2440,6 +2440,9 @@ async function openDetail(id){
   var isPresale=a.status==='presale';
   // PR-5 F7/F8: stati post-live · niente buy box, render del pannello esito.
   var isConcluded=['completed','annullato','closed','dropped','waiting_seller_acknowledge'].indexOf(a.status)!==-1;
+  // 17 lug (Skeezu): dettaglio di una PROPOSTA in valutazione — niente inviti a
+  // correre (Entra ora / salita / Step) su una corsa che non esiste ancora.
+  var isValuation=['in_valutazione','valutazione_completata'].indexOf(a.status)!==-1;
   var myBlocks=_publicMode?0:_gridData.filter(function(b){return b.is_mine}).length;
   var myPct=a.total_blocks>0?(myBlocks/a.total_blocks*100):0;
   var othersPct=pct-myPct;
@@ -2566,10 +2569,17 @@ async function openDetail(id){
     +'</div>';
 
   // Hint + soglia (GS-15 §4.5) · async populated
-  var hintSogliaStub=!isConcluded?'<div id="detail-hint-soglia" class="detail-hint-soglia"></div>':'';
+  var hintSogliaStub=(!isConcluded&&!isValuation)?'<div id="detail-hint-soglia" class="detail-hint-soglia"></div>':'';
 
   // Buy box (acquisto subito sotto soglia — §4.6 above-the-fold)
-  var buyBoxHtml=isConcluded
+  var _isMineVal=!_publicMode&&_session&&_session.user&&(a.submitted_by===_session.user.id||a.created_by===_session.user.id);
+  var buyBoxHtml=isValuation
+    ?'<div class="buy-box">'
+    +'<div class="buy-box-label"><span class="it">Proposta in valutazione</span><span class="en">Proposal under evaluation</span></div>'
+    +'<p class="buy-box-framing"><span class="it">Il team AIROOBI sta preparando la quotazione (24&ndash;48h). '+(a.status==='valutazione_completata'?'Quotazione pronta: attende la decisione del venditore. ':'')+'Appena il venditore d&agrave; l\'OK, la corsa parte da qui.</span><span class="en">The AIROOBI team is preparing the quotation (24&ndash;48h). Once the seller gives the OK, the climb starts here.</span></p>'
+    +(_isMineVal?'<button class="buy-btn" onclick="navigateTo(\'my\')" style="display:block;width:100%"><span class="it">&Egrave; il tuo oggetto — segui lo stato &rarr;</span><span class="en">It\'s your item — track the status &rarr;</span></button>':'')
+    +'</div>'
+    :isConcluded
     ?_renderOutcomePanel(a,myBlocks,_outcomeRobi)
     :_publicMode
     ?'<div class="buy-box">'
@@ -2625,7 +2635,7 @@ async function openDetail(id){
     +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
 
     // Box competitivo §4.4 (posizione live · populated by refreshPosition)
-    +(!isConcluded?'<div class="detail-position" id="detail-position"></div>':'')
+    +(!isConcluded&&!isValuation?'<div class="detail-position" id="detail-position"></div>':'')
 
     // Hint "~X blocchi per il 1°" + soglia GS-15 (§4.5 · populated by loadHintSoglia)
     +hintSogliaStub
@@ -2741,7 +2751,13 @@ async function openDetail(id){
   startCountdowns();
 
   // Position / ROBI projection / auto-buy: solo airdrop live (PR-5 F7/F8).
-  if(!isConcluded){
+  if(isValuation){
+    // Salita in quiete: la corsa non è ancora partita
+    var salEl=document.getElementById('detail-salita');
+    if(salEl)salEl.innerHTML='<div class="salita-empty"><div class="salita-empty-t"><span class="it">La corsa non &egrave; ancora partita</span><span class="en">The climb hasn\'t started yet</span></div>'
+      +'<div style="font-size:12px;color:var(--gray-400);margin-top:6px"><span class="it">Prima la quotazione, poi l\'OK del venditore — e la salita si apre.</span><span class="en">First the quotation, then the seller\'s OK — and the climb opens.</span></div></div>';
+  }
+  if(!isConcluded&&!isValuation){
     // Position live — initial + polling (uses calculate_winner_score for real rank)
     refreshPosition(a.id);
     if(_positionInterval)clearInterval(_positionInterval);
