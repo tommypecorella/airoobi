@@ -1,0 +1,11 @@
+-- 18 lug 2026: la voce sidebar SEGNALAZIONI spariva — il modulo non era registrato
+-- nel RBAC. Applicate sul live (via MCP, 2 migration):
+-- 1) role_permissions: admin view+edit+manage · community_manager view+edit
+--    (check actions ammesse: view/edit/approve/draw/reply/manage — 'reward' non esiste,
+--    il premio ROBI resta sotto 'manage').
+-- 2) get_user_visible_modules: la lista moduli è CABLATA nella funzione — aggiunto
+--    'segnalazioni' all'array v_all_modules (patch chirurgica).
+-- Frontend (commit 4e2a314): ABO_MODULE_TO_SEC + PERM_MODULES + PERM_MODULE_LABELS.
+-- Collaudo: get_user_visible_modules() per ceo → 15 moduli, segnalazioni=true ✓.
+-- GOTCHA per il prossimo modulo ABO: registrarlo in TRE posti — role_permissions,
+-- v_all_modules della funzione, e le tre mappe frontend.
