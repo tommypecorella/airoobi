@@ -427,6 +427,30 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </div>
 
     <p class="admin-note" style="margin-top:12px"><span class="it">Ogni fondo inserito viene diviso: la % Treasury va al Treasury Balance (copre i ROBI), il resto va al Service Balance (costi operativi AIROOBI).</span><span class="en">Each fund is split: the Treasury % goes to Treasury Balance (backs ROBI), the rest goes to Service Balance (AIROOBI operating costs).</span></p>
+
+    <!-- ═══ GESTIONE SERVICE BALANCE (18 lug 2026, GO Skeezu) ═══ -->
+    <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--gray-800)">
+      <h3 style="font-family:var(--font-h);font-size:16px;color:var(--white);margin-bottom:4px;letter-spacing:1px"><span class="it">Gestione Service Balance (AIROOBI)</span><span class="en">Service Balance management (AIROOBI)</span></h3>
+      <p style="font-size:12px;color:var(--gray-400);margin-bottom:14px"><span class="it">Saldo = quota Service dei fondi + movimenti qui sotto. Registra le spese operative (importo negativo), entrate extra (positivo) o gira fondi al Treasury.</span><span class="en">Balance = Service share of funds + movements below. Log operating expenses (negative), extra income (positive) or move funds to the Treasury.</span></p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px">
+        <div>
+          <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Importo (&euro;, &plusmn;)</span><span class="en">Amount (&euro;, &plusmn;)</span></label>
+          <input type="number" id="sl-amount" step="0.01" placeholder="-25.00" style="width:130px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-m);font-size:13px;padding:8px 10px">
+        </div>
+        <div style="flex:1;min-width:200px">
+          <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Descrizione</span><span class="en">Description</span></label>
+          <input type="text" id="sl-desc" placeholder="Es. Dominio annuale, hosting, rimborso…" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--white);font-family:var(--font-b);font-size:13px;padding:8px 10px">
+        </div>
+        <button onclick="addServiceMove()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:9px 16px;cursor:pointer;font-weight:700"><span class="it">REGISTRA</span><span class="en">SAVE</span></button>
+        <button onclick="serviceToTreasury()" style="background:transparent;border:1px solid var(--kas);color:var(--kas);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:9px 16px;cursor:pointer;font-weight:700"><span class="it">GIRA AL TREASURY &rarr;</span><span class="en">MOVE TO TREASURY &rarr;</span></button>
+      </div>
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead><tr><th><span class="it">Data</span><span class="en">Date</span></th><th><span class="it">Importo</span><span class="en">Amount</span></th><th><span class="it">Descrizione</span><span class="en">Description</span></th><th></th></tr></thead>
+          <tbody id="sl-body"><tr><td colspan="4" style="color:var(--gray-400)"><span class="it">Nessun movimento</span><span class="en">No movements</span></td></tr></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <!-- CONTO AIROOBI (ARIA) -->
@@ -3372,8 +3396,26 @@ async function loadTreasuryFunds(){
     if(typeof updateNftMetrics==='function')updateNftMetrics();
     var tb=document.getElementById('adm-treasury-balance');
     if(tb)tb.textContent='€'+treasuryTotal.toFixed(2);
+    // 18 lug (Skeezu): Service Balance gestibile — saldo = quota fondi + service_ledger
+    var slRows=[];var slSum=0;
+    try{
+      var slRes=await fetch(SB_URL+'/rest/v1/service_ledger?select=*&order=created_at.desc',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
+      if(slRes.ok){slRows=await slRes.json();(slRows||[]).forEach(function(m){slSum+=parseFloat(m.amount_eur)||0;});}
+    }catch(e){}
+    var slBody=document.getElementById('sl-body');
+    if(slBody){
+      slBody.innerHTML=(slRows&&slRows.length)?slRows.map(function(m){
+        var d=new Date(m.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+        var amt=parseFloat(m.amount_eur)||0;
+        return '<tr><td style="font-family:var(--font-m);font-size:12px">'+d+'</td>'
+          +'<td style="font-family:var(--font-m);color:'+(amt<0?'#f87171':'var(--kas)')+'">'+(amt>0?'+':'')+'€'+amt.toFixed(2)+'</td>'
+          +'<td>'+(m.description||'')+(m.kind==='to_treasury'?' <span style="background:rgba(73,234,203,.12);color:var(--kas);border:1px solid rgba(73,234,203,.4);font-family:var(--font-m);font-size:9px;letter-spacing:1px;padding:2px 7px;border-radius:10px">&rarr; TREASURY</span>':'')+'</td>'
+          +'<td><button class="ct-btn-del" onclick="delServiceMove(\''+m.id+'\')" style="background:transparent;border:1px solid #c0392b;color:#e74c3c;font-family:var(--font-m);font-size:10px;padding:4px 10px;cursor:pointer;letter-spacing:1px">DEL</button></td></tr>';
+      }).join(''):'<tr><td colspan="4" style="color:var(--gray-400)"><span class="it">Nessun movimento</span><span class="en">No movements</span></td></tr>';
+    }
+    serviceTotal+=slSum;
     var sb=document.getElementById('adm-service-balance');
-    if(sb)sb.textContent='€'+serviceTotal.toFixed(2);
+    if(sb)sb.innerHTML='€'+serviceTotal.toFixed(2)+(slSum!==0?' <span style="font-size:10px;color:var(--gray-500)">(fondi €'+(serviceTotal-slSum).toFixed(2)+' '+(slSum>0?'+':'−')+' €'+Math.abs(slSum).toFixed(2)+')</span>':'');
     // ROBI circolanti nella sezione fondi
     var rcf=document.getElementById('adm-robi-circ-funds');
     if(rcf)rcf.textContent=window._robiTotal!=null?(window._robiTotal%1===0?window._robiTotal:window._robiTotal.toFixed(2)):'—';
@@ -3445,6 +3487,55 @@ async function addTreasuryFund(){
     document.getElementById('tf-add-form').style.display='none';
     loadTreasuryFunds();
   }catch(e){console.error('Treasury fund add error:',e);alert('Errore: '+e.message);}
+}
+
+// ═══ Gestione Service Balance (18 lug 2026) ═══
+async function addServiceMove(){
+  if(!await aboCheckPermission('treasury_fondi','edit')){return aboPermDenied('registrare movimenti Service');}
+  var s=getSession();if(!s)return;
+  var amt=parseFloat(document.getElementById('sl-amount').value);
+  var desc=(document.getElementById('sl-desc').value||'').trim();
+  if(!amt||amt===0){alert('Inserisci un importo (negativo per le spese).');return;}
+  if(!desc){alert('Inserisci una descrizione.');return;}
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/service_ledger',{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({amount_eur:amt,description:desc,created_by:s.user.id})
+    });
+    if(!res.ok)throw new Error('HTTP '+res.status+' — '+await res.text());
+    document.getElementById('sl-amount').value='';document.getElementById('sl-desc').value='';
+    loadTreasuryFunds();
+  }catch(e){alert('Errore: '+e.message);}
+}
+async function delServiceMove(id){
+  if(!confirm('Eliminare questo movimento Service?'))return;
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/service_ledger?id=eq.'+id,{
+      method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Prefer':'return=minimal'}
+    });
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    loadTreasuryFunds();
+  }catch(e){alert('Errore: '+e.message);}
+}
+async function serviceToTreasury(){
+  if(!await aboCheckPermission('treasury_fondi','edit')){return aboPermDenied('girare fondi al Treasury');}
+  var s=getSession();if(!s)return;
+  var v=prompt('Quanto giri dal Service al Treasury (€)?','');
+  if(v===null)return;
+  var amt=parseFloat(v);
+  if(!amt||amt<=0){alert('Importo non valido.');return;}
+  var desc=prompt('Descrizione (facoltativa):','Giroconto Service → Treasury')||null;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/service_to_treasury',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_amount:amt,p_description:desc})
+    });
+    var d=await res.json();
+    if(!d||!d.ok)throw new Error(d&&d.error||('HTTP '+res.status));
+    loadTreasuryFunds();
+  }catch(e){alert('Errore: '+e.message);}
 }
 
 async function deleteTreasuryFund(id){
@@ -4698,7 +4789,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.4.0"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.5.0"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>

@@ -1,0 +1,6 @@
+-- 18 lug 2026 (GO Skeezu): gestione Service Balance (AIROOBI) — applicata via MCP.
+-- Tabella service_ledger (movimenti ± con descrizione, kind manual/to_treasury,
+-- RLS admin-only) + RPC service_to_treasury(amount, desc): giroconto atomico
+-- (riga negativa nel ledger + fondo treasury pct=100 flag team).
+-- ABO sec-treasury: saldo Service = quota fondi + ledger, form REGISTRA (±),
+-- storico con DEL, bottone GIRA AL TREASURY. Card mostra breakdown fondi±movimenti.
