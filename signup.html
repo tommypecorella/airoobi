@@ -136,7 +136,7 @@ body{padding:0;justify-content:flex-start}
 </div>
 
 </main>
-<div id="footer-mount" data-version="alfa-15.07.2026-4.15.3"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-4.16.0"></div>
 <script src="/src/footer.js?v=1.5.0"></script>
 
 <script>
@@ -192,6 +192,14 @@ async function sbPost(table,data){
 
 function saveSession(s){localStorage.setItem('airoobi_session',JSON.stringify(s))}
 function getSession(){try{return JSON.parse(localStorage.getItem('airoobi_session'))}catch(e){return null}}
+
+// 18 lug (Skeezu): il form di registrazione mostrato a un utente già connesso è
+// un controsenso — da loggato si torna dritti alla dashboard. (Il login invece
+// resta accessibile col banner "Sei già connesso": cambiare account è legittimo.)
+(function(){
+  var s=getSession();
+  if(s&&s.user&&s.access_token)location.replace('/dashboard');
+})();
 
 // ── Tracking ──
 async function track(event,props){
