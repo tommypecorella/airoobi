@@ -371,8 +371,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <div class="admin-card" style="border-color:rgba(139,92,246,.3)"><div class="admin-card-val" id="adm-robi-circ-funds" style="color:var(--gold)">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'tr-robi-circ')">i</span></div></div>
       <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI <span class="info-i" onclick="showAboTip(this,'tr-robi-nominal')">i</span></div></div>
       <div class="admin-card"><div class="admin-card-val" id="adm-service-balance" style="color:var(--white)">€0.00</div><div class="admin-card-label"><span class="it">Service Balance (AIROOBI)</span><span class="en">Service Balance (AIROOBI)</span> <span class="info-i" onclick="showAboTip(this,'tr-service')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-revenue-ads">—</div><div class="admin-card-label">Revenue Ads (A-Ads) <span class="info-i" onclick="showAboTip(this,'tr-ads')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-revenue-adsense">—</div><div class="admin-card-label">Revenue AdSense <span class="info-i" onclick="showAboTip(this,'tr-adsense')">i</span></div></div>
+      <div class="admin-card" style="border-color:rgba(73,234,203,.35)"><div class="admin-card-val" id="adm-team-treasury" style="color:var(--kas)">—</div><div class="admin-card-label"><span class="it">Dal team AIROOBI</span><span class="en">From AIROOBI team</span> <span class="info-i" onclick="showAboTip(this,'tr-team')">i</span></div></div>
     </div>
 
     <!-- Movimenti treasury (GO Skeezu 15 lug: estensioni ARIA->EUR tracciabili) -->
@@ -402,6 +401,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <div>
             <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">% Treasury</span><span class="en">% Treasury</span></label>
             <input type="number" id="tf-treasury-pct" value="20" min="0" max="100" step="1" style="width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:var(--gold);font-family:var(--font-m);font-size:13px;padding:8px 10px" oninput="tfPreviewSplit()">
+          </div>
+          <div>
+            <label style="display:block;font-family:var(--font-m);font-size:10px;color:var(--gray-400);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px"><span class="it">Origine</span><span class="en">Origin</span></label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--kas);cursor:pointer;padding:8px 0"><input type="checkbox" id="tf-team" style="accent-color:var(--kas)"> <span class="it">Team AIROOBI</span><span class="en">AIROOBI Team</span></label>
           </div>
           <div style="display:flex;gap:8px">
             <button onclick="addTreasuryFund()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:8px 16px;cursor:pointer;font-weight:700"><span class="it">SALVA</span><span class="en">SAVE</span></button>
@@ -470,9 +473,10 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-section" id="sec-users">
     <h2>Ultimi utenti <span id="adm-users-total" style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gray-400);font-weight:400"></span> <span class="info-i" onclick="showAboTip(this,'sec-users')">i</span></h2>
     <table class="admin-table" id="adm-users-table">
-      <thead><tr><th>Email</th><th>ARIA</th><th>ROBI</th><th>Sequenza</th><th>Referral</th><th>Registrato</th></tr></thead>
+      <thead><tr><th>Email</th><th>ARIA</th><th>ROBI</th><th><span class="it">Ingressi (sett.)</span><span class="en">Entries (wk)</span></th><th>Referral</th><th>Registrato</th></tr></thead>
       <tbody id="adm-users-body"><tr><td colspan="6" style="color:var(--gray-400)">Caricamento...</td></tr></tbody>
     </table>
+    <div id="adm-robi-dist"></div>
   </div>
 
   <!-- COIN METRICS ARIA -->
@@ -580,6 +584,9 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </table>
     </div>
     <p class="admin-note" style="margin-top:12px">Gestisci i possedimenti AIROOBI: fiat, crypto e NFT. Ogni modifica è salvata in tempo reale su Supabase.</p>
+    <div style="margin-top:14px;padding:12px 16px;border:1px solid var(--gray-700);border-left:3px solid var(--kas);font-size:12px;color:var(--gray-300);line-height:1.6">
+      <strong style="color:var(--kas)">Il Treasury NON è patrimonio AIROOBI.</strong> AIROOBI lo custodisce e lo gestisce a copertura dei ROBI di tutti — non lo possiede. Nel patrimonio entrano solo gli asset del conto aziendale (CEO): i suoi ARIA e i suoi ROBI, valorizzati alla stessa formula unica di qualunque utente. Stesse regole, sempre, per tutti.
+    </div>
   </div>
 
   <!-- ASSET MODAL -->
@@ -2069,13 +2076,42 @@ async function loadAdminData(){
     }catch(e){}
     var robiMap={};
     window._robiTotal=0;
+    // 18 lug (Skeezu): distribuzione ROBI per fonte + per utente (troppi in circolazione?)
+    var srcAgg={},userSrc={};
     robiData.forEach(function(r){
       if(r.shares){
         var s=parseFloat(r.shares)||0;
         robiMap[r.user_id]=(robiMap[r.user_id]||0)+s;
         window._robiTotal+=s;
+        var k=r.source||'?';
+        if(!srcAgg[k])srcAgg[k]={tot:0,n:0};
+        srcAgg[k].tot+=s;srcAgg[k].n++;
+        if(!userSrc[r.user_id])userSrc[r.user_id]={};
+        userSrc[r.user_id][k]=(userSrc[r.user_id][k]||0)+s;
       }
     });
+    window._robiUserSources=userSrc;
+    var distEl=document.getElementById('adm-robi-dist');
+    if(distEl){
+      var SRC_IT={alphanet_welcome:'Welcome testnet',alpha_live_welcome:'Welcome live (2º!)',referral_welcome:'Referral — accolto',referral_inviter:'Referral — invitante',streak_week:'Settimana completa ingressi',gs16_rullo_block:'Fiori sulla salita',airdrop_won:'Vetta raggiunta',airdrop_completed_seller:'Corsa completata (venditore)',alpha_valuation_request:'Valutazione richiesta (AB1000)',alpha_valuation_accepted:'Valutazione accettata (AB1000)',evaluation_bonus:'Bonus valutazione GO'};
+      var keys=Object.keys(srcAgg).sort(function(a,b){return srcAgg[b].tot-srcAgg[a].tot});
+      distEl.innerHTML='<h3 style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin:22px 0 10px">DISTRIBUZIONE ROBI PER FONTE <span style="color:var(--gray-500);letter-spacing:0;font-size:10px">· circolanti: '+(window._robiTotal%1===0?window._robiTotal:window._robiTotal.toFixed(2))+'</span></h3>'
+        +'<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Fonte</th><th>Grant</th><th>ROBI</th><th>% del circolante</th></tr></thead><tbody>'
+        +keys.map(function(k){var pc=window._robiTotal>0?(srcAgg[k].tot/window._robiTotal*100):0;return '<tr><td>'+(SRC_IT[k]||k)+' <span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">'+k+'</span></td><td>'+srcAgg[k].n+'</td><td style="color:var(--gold);font-family:var(--font-m)">'+(srcAgg[k].tot%1===0?srcAgg[k].tot:srcAgg[k].tot.toFixed(2))+'</td><td style="font-family:var(--font-m)">'+pc.toFixed(1)+'%</td></tr>'}).join('')
+        +'</tbody></table></div>';
+    }
+    // valori del conto CEO per Patrimonio aziendale (18 lug: il patrimonio è solo di AIROOBI)
+    var ceoU=(users||[]).find(function(u){return u.email==='ceo@airoobi.com'});
+    window._ceoAria=ceoU?(ceoU.total_points||0):null;
+    window._ceoRobi=ceoU?(robiMap[ceoU.id]||0):null;
+    // Ingressi settimana corrente (lun-dom) da weekly_checkins
+    var _mon=new Date();_mon.setDate(_mon.getDate()-((_mon.getDay()+6)%7));
+    var _monStr=_mon.toISOString().split('T')[0];
+    var ingMap={};
+    try{
+      var wk=await sbGet('weekly_checkins?week_start=eq.'+_monStr+'&select=user_id,days_checked',t);
+      (wk||[]).forEach(function(w){ingMap[w.user_id]=(w.days_checked&&w.days_checked.length)||0});
+    }catch(e){}
     document.getElementById('adm-nft-circulating-ov').textContent=window._robiTotal%1===0?window._robiTotal:window._robiTotal.toFixed(2);
     if(users&&users.length>0){
       var tbody=document.getElementById('adm-users-body');
@@ -2083,7 +2119,7 @@ async function loadAdminData(){
         var d=new Date(u.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
         var uRobi=robiMap[u.id]||0;
         var robiStr=uRobi%1===0?uRobi:uRobi.toFixed(2);
-        return '<tr class="adm-user-row" onclick="toggleUserDetail(this,\''+u.id+'\')" data-uid="'+u.id+'"><td>'+u.email+'</td><td>'+(u.total_points||0)+'</td><td style="color:var(--gold)">'+robiStr+'</td><td>'+(u.current_streak||0)+'</td><td>'+(refMap[u.id]||0)+'</td><td>'+d+'</td></tr>';
+        return '<tr class="adm-user-row" onclick="toggleUserDetail(this,\''+u.id+'\')" data-uid="'+u.id+'"><td>'+u.email+'</td><td>'+(u.total_points||0)+'</td><td style="color:var(--gold)">'+robiStr+'</td><td>'+(ingMap[u.id]||0)+'/7</td><td>'+(refMap[u.id]||0)+'</td><td>'+d+'</td></tr>';
       }).join('');
     }
     if(users&&users.length>0){
@@ -3055,8 +3091,6 @@ async function loadAdminTreasury(){
     // (fonte autoritativa = treasury_funds); treasury_stats.balance_eur resta legacy.
     var i2=document.getElementById('adm-input-minted');if(i2)i2.value=t.nft_minted||0;
     var i4=document.getElementById('adm-input-maxsupply');if(i4)i4.value=t.nft_max_supply||1000;
-    var ra=document.getElementById('adm-revenue-ads');if(ra)ra.textContent='$'+(parseFloat(t.revenue_ads)||0).toFixed(2);
-    var rs=document.getElementById('adm-revenue-adsense');if(rs)rs.textContent='$'+(parseFloat(t.revenue_adsense)||0).toFixed(2);
     // Treasury balance now sourced from treasury_funds table (see loadTreasuryFunds)
     try{
       var nfts=await sbGet('nft_rewards?select=id,nft_type,user_id,shares',tk);
@@ -3224,7 +3258,7 @@ async function loadPlatformAriaAccount(){
 async function loadTreasuryFunds(){
   var s=await ensureFreshToken();if(!s)return;
   try{
-    var rRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=id,amount_eur,treasury_pct,description,created_at&order=created_at.desc',{
+    var rRes=await fetch(SB_URL+'/rest/v1/treasury_funds?select=id,amount_eur,treasury_pct,description,created_at,source_team&order=created_at.desc',{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}
     });
     var rows=[];
@@ -3232,13 +3266,17 @@ async function loadTreasuryFunds(){
     else console.warn('[treasury_funds] HTTP',rRes.status);
     if(!Array.isArray(rows))rows=[];
     console.log('[treasury_funds] rows',rows.length);
-    var treasuryTotal=0,serviceTotal=0;
+    var treasuryTotal=0,serviceTotal=0,teamTotal=0;
     for(var i=0;i<rows.length;i++){
       var amt=parseFloat(rows[i].amount_eur)||0;
       var pct=rows[i].treasury_pct!=null?parseInt(rows[i].treasury_pct):100;
       treasuryTotal+=amt*(pct/100);
       serviceTotal+=amt*((100-pct)/100);
+      if(rows[i].source_team)teamTotal+=amt*(pct/100);
     }
+    // 18 lug (Skeezu): quanto treasury proviene dal team AIROOBI (fondi flag Team)
+    var teamEl=document.getElementById('adm-team-treasury');
+    if(teamEl)teamEl.innerHTML='€'+teamTotal.toFixed(2)+' <span style="font-size:11px;color:var(--gray-500)">/ €'+treasuryTotal.toFixed(2)+'</span>';
     // Prefill Treasury input (AUTO) nella sezione ROBI Valuation
     var tIn=document.getElementById('adm-treasury-input');
     if(tIn)tIn.value=treasuryTotal.toFixed(2);
@@ -3280,7 +3318,7 @@ async function loadTreasuryFunds(){
         '<td style="font-family:var(--font-m)">€'+amt.toFixed(2)+'</td>'+
         '<td style="font-family:var(--font-m);color:var(--gold)">€'+toTreasury.toFixed(2)+' <span style="font-size:10px;color:var(--gray-500)">('+pct+'%)</span></td>'+
         '<td style="font-family:var(--font-m);color:var(--white)">€'+toService.toFixed(2)+' <span style="font-size:10px;color:var(--gray-500)">('+(100-pct)+'%)</span></td>'+
-        '<td>'+(r.description||'')+'</td>'+
+        '<td>'+(r.description||'')+(r.source_team?' <span style="background:rgba(73,234,203,.12);color:var(--kas);border:1px solid rgba(73,234,203,.4);font-family:var(--font-m);font-size:9px;letter-spacing:1px;padding:2px 7px;border-radius:10px">TEAM</span>':'')+'</td>'+
         '<td><button class="ct-btn-del" onclick="deleteTreasuryFund(\''+r.id+'\')" style="background:transparent;border:1px solid #c0392b;color:#e74c3c;font-family:var(--font-m);font-size:10px;padding:4px 10px;cursor:pointer;letter-spacing:1px">DEL</button></td>'+
       '</tr>';
     }).join('');
@@ -3313,7 +3351,7 @@ async function addTreasuryFund(){
     var res=await fetch(SB_URL+'/rest/v1/treasury_funds',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json','Prefer':'return=minimal'},
-      body:JSON.stringify({amount_eur:amount,description:desc,created_by:s.user.id,treasury_pct:pct})
+      body:JSON.stringify({amount_eur:amount,description:desc,created_by:s.user.id,treasury_pct:pct,source_team:!!document.getElementById('tf-team')?.checked})
     });
     if(!res.ok){var errBody=await res.text();console.error('Treasury POST error:',res.status,errBody);throw new Error('POST failed: '+res.status+' — '+errBody);}
     document.getElementById('tf-amount').value='';
@@ -4154,17 +4192,46 @@ async function loadCompanyAssets(){
     });
     _companyAssets=res.ok?await res.json():[];
   }catch(e){_companyAssets=[];}
+  // 18 lug (Skeezu): il patrimonio è SOLO ciò che appartiene ad AIROOBI.
+  // Il Treasury NON è patrimonio: AIROOBI lo custodisce e gestisce per i ROBI.
+  // Servono: nominale ROBI (formula unica) + saldi del conto CEO (ARIA/ROBI aziendali).
+  try{
+    var mdRes=await fetch(SB_URL+'/rest/v1/rpc/get_robi_market_data',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:'{}'});
+    if(mdRes.ok){var md=await mdRes.json();window._robiNominal=md&&md.price_eur!=null?parseFloat(md.price_eur):0;}
+  }catch(e){}
+  if(window._ceoAria==null||window._ceoRobi==null){
+    try{
+      var pr=await sbGet('profiles?email=eq.'+encodeURIComponent('ceo@airoobi.com')+'&select=id,total_points',s.access_token);
+      if(pr&&pr[0]){
+        window._ceoAria=pr[0].total_points||0;
+        var rr=await fetch(SB_URL+'/rest/v1/rpc/admin_get_all_robi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'}});
+        if(rr.ok){
+          var rows=await rr.json();var tot=0;
+          (rows||[]).forEach(function(r){if(r.user_id===pr[0].id&&r.shares)tot+=parseFloat(r.shares)||0;});
+          window._ceoRobi=tot;
+        }
+      }
+    }catch(e){}
+  }
   renderCompanyAssets();
 }
 
 function renderCompanyAssets(){
   // Stats
   var fiatTotal=0,cryptoTotal=0,nftCount=0,grandTotal=0;
-  _companyAssets.forEach(function(a){
-    // F1.c: ARIA circolante riga · valore LIVE da Σ profiles.total_points (no stale registry)
+  // 18 lug: riga virtuale ROBI AIROOBI (conto CEO) valorizzata alla formula unica —
+  // stesse regole per tutti: i ROBI aziendali valgono quanto quelli di chiunque.
+  var assets=_companyAssets.slice();
+  if(window._ceoRobi!=null){
+    assets.push({_virtual:true,category:'crypto',name:'ROBI AIROOBI (conto CEO) · auto',symbol:'ROBI',amount:window._ceoRobi,value_eur:(window._ceoRobi||0)*(window._robiNominal||0),is_active:true,notes:'Nominale €'+(window._robiNominal||0).toFixed(4)+'/ROBI (formula unica)'});
+  }
+  assets.forEach(function(a){
+    // 18 lug (Skeezu): in Patrimonio aziendale l'ARIA è SOLO quello del conto CEO —
+    // gli ARIA degli utenti non appartengono ad AIROOBI.
     if((a.symbol||'').toUpperCase()==='ARIA' || /aria\s+circolant/i.test(a.name||'')){
-      a.amount=window._totalAria||0;
-      a.value_eur=(window._totalAria||0)*0.10;
+      a.name='ARIA AIROOBI (conto CEO) · auto';
+      a.amount=window._ceoAria||0;
+      a.value_eur=(window._ceoAria||0)*0.10;
     }
     var v=parseFloat(a.value_eur)||0;
     if(a.category==='fiat')fiatTotal+=v;
@@ -4178,7 +4245,7 @@ function renderCompanyAssets(){
   document.getElementById('ca-nft-count').textContent=nftCount;
 
   // Filter
-  var filtered=_caFilter==='all'?_companyAssets:_companyAssets.filter(function(a){return a.category===_caFilter});
+  var filtered=_caFilter==='all'?assets:assets.filter(function(a){return a.category===_caFilter});
 
   // Table
   var body=document.getElementById('ca-body');
@@ -4197,7 +4264,7 @@ function renderCompanyAssets(){
       +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(a.wallet_address||'—')+'</td>'
       +'<td style="font-size:12px;color:var(--gray-300)">'+(a.notes||'—')+'</td>'
       +'<td>'+(a.is_active?'<span style="color:var(--kas)">✓</span>':'<span style="color:var(--gray-600)">✗</span>')+'</td>'
-      +'<td><div class="ct-actions"><button onclick="caEditAsset(\''+a.id+'\')">EDIT</button></div></td>'
+      +'<td>'+(a._virtual?'<span style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">AUTO</span>':'<div class="ct-actions"><button onclick="caEditAsset(\''+a.id+'\')">EDIT</button></div>')+'</td>'
       +'</tr>';
   }).join('');
 }
@@ -4466,8 +4533,7 @@ var ABO_TIPS={
   'tr-robi-circ':{it:'ROBI totali in circolazione (identico a Overview). Denominatore del valore nominale.',en:'Total ROBI in circulation (same as Overview). Denominator of the nominal value.'},
   'tr-robi-nominal':{it:'Valore nominale 1 ROBI = Treasury / ROBI circolanti. Cresce all\'aumentare del Treasury.',en:'Nominal value of 1 ROBI = Treasury / circulating ROBI. Grows as the Treasury grows.'},
   'tr-service':{it:'Service balance: parte delle entrate destinata a coprire costi operativi (hosting, team, legal).',en:'Service balance: share of revenue covering opex (hosting, team, legal).'},
-  'tr-ads':{it:'Ricavi da A-Ads (banner crypto). Confluiscono in Treasury + Service secondo lo split.',en:'A-Ads revenue (crypto banners). Goes into Treasury + Service per the split.'},
-  'tr-adsense':{it:'Ricavi da Google AdSense (in attesa approvazione). Confluiscono in Treasury + Service secondo lo split.',en:'Google AdSense revenue (awaiting approval). Goes into Treasury + Service per the split.'},
+  'tr-team':{it:'Quota del Treasury versata direttamente dal team AIROOBI (fondi con flag Team, es. Alpha Base). Il resto arriva dal motore: contributi airdrop, estensioni.',en:'Treasury share funded directly by the AIROOBI team (Team-flagged funds, e.g. Alpha Base). The rest comes from the engine: airdrop contributions, extensions.'},
   // Approve modal (Valutazioni) — rich format
   'bo-app-price':{it:{i:'💰',t:'Prezzo Step',d:'Quanti ARIA per 1 Step.',ex:'500 Step × 10 ARIA = 5.000 ARIA totali',tip:'Più alto = airdrop esclusivo, meno gente'},en:{i:'💰',t:'Block price',d:'How many ARIA per 1 block.',ex:'500 blocks × 10 ARIA = 5,000 ARIA total',tip:'Higher = exclusive airdrop, fewer participants'}},
   'bo-app-blocks':{it:{i:'🧱',t:'Step totali',d:'Quanti Step compongono il percorso.',ex:'Range tipico: 100-1000 Step',tip:'Più blocchi = più gente, ma vincere è più difficile'},en:{i:'🧱',t:'Total blocks',d:'How many blocks you put on sale.',ex:'Typical range: 100-1000 blocks',tip:'More blocks = more participants but harder to win'}},
@@ -4548,7 +4614,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-17.07.2026-1.2.0"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.3.0"></div>
 <script src="/src/footer.js?v=1.5.0"></script>
 </body>
 </html>

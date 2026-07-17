@@ -1,0 +1,8 @@
+-- 18 lug 2026 (batch ABO Skeezu) — applicata sul live via MCP.
+-- 1) treasury_funds.source_team boolean: quota treasury versata dal team AIROOBI
+--    (Alpha Base flaggata true). ABO: checkbox all'inserimento + badge TEAM + card totale.
+-- 2) admin_get_all_robi RIFATTA: ritornava colonna 'id' ma il client legge 'user_id'
+--    -> tabella Ultimi utenti mostrava ROBI=0 per tutti. Ora: user_id + source
+--    (distribuzione ROBI per fonte in ABO) + filtro burned + gate is_admin().
+-- 3) get_my_evalobi(): certificati EVALOBI dell'utente con cert_code/airdrop_code
+--    per la sezione "Le tue Valutazioni" del Portafoglio (grant authenticated).

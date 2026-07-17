@@ -5755,7 +5755,27 @@ async function loadDappWallet(){
   // Valuation badges
   try{
     var valCards=cards.filter(function(c){return c.nft_type==='VALUATION'});
+    // 18 lug (Skeezu): certificati EVALOBI veri col codice univoco EVA-XXXXXX,
+    // mostrati PRIMA dei badge di richiesta (che non sono certificati).
+    var _certs=[];
+    try{
+      var certRes=await fetch(SB_URL+'/rest/v1/rpc/get_my_evalobi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'});
+      if(certRes.ok)_certs=await certRes.json()||[];
+    }catch(e){}
+    var _certHtml=(_certs||[]).map(function(c){
+      var oc=c.evaluation_outcome==='GO'?{t:'Approvato',col:'var(--kas)'}:c.evaluation_outcome==='NO_GO'?{t:'Non idoneo',col:'#ef4444'}:{t:'Da rivedere',col:'#f0a030'};
+      var cDate=c.evaluated_at?new Date(c.evaluated_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'}):'';
+      return '<a href="/evalobi/'+c.token_id+'" target="_blank" style="text-decoration:none;border:1px solid var(--gold);border-radius:var(--radius-sm);overflow:hidden;display:block;background:rgba(239,62,79,.04)">'
+        +'<div style="padding:12px">'
+        +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:6px">CERTIFICATO EVALOBI</div>'
+        +'<div style="font-family:var(--font-m);font-size:14px;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:4px">'+escHtml(c.cert_code||('#'+c.token_id))+'</div>'
+        +'<div style="font-family:var(--font-h);font-size:13px;color:var(--white);margin-bottom:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+escHtml(c.object_title||'')+'</div>'
+        +(c.airdrop_code?'<div style="font-family:var(--font-m);font-size:9px;color:var(--gray-400);margin-bottom:6px">airdrop #'+escHtml(c.airdrop_code)+'</div>':'')
+        +'<div style="font-family:var(--font-m);font-size:9px;letter-spacing:1px;padding:3px 8px;display:inline-block;color:'+oc.col+';border:1px solid '+oc.col+'44">'+oc.t+(cDate?' · '+cDate:'')+'</div>'
+        +'</div></a>';
+    }).join('');
     var valGrid=document.getElementById('dapp-valuation-grid');
+    if(valGrid&&_certHtml&&valCards.length===0){valGrid.innerHTML=_certHtml;}
     if(valGrid&&valCards.length>0){
       var lang=document.documentElement.getAttribute('data-lang')||'it';
       var statusLabels={
@@ -5768,7 +5788,7 @@ async function loadDappWallet(){
         'rifiutato_generico':{it:'Rifiutato',en:'Rejected',color:'#ef4444'},
         'closed':{it:'Chiuso',en:'Closed',color:'var(--gray-400)'}
       };
-      valGrid.innerHTML=valCards.map(function(v,i){
+      valGrid.innerHTML=_certHtml+valCards.map(function(v,i){
         var m=v.metadata||{};
         var st=m.status||'in_valutazione';
         var sl=statusLabels[st]||{it:st,en:st,color:'var(--gray-400)'};
