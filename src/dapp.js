@@ -3725,6 +3725,11 @@ function goToAirdrop(id){
     window.location.href='/airdrops/'+id;
     return;
   }
+  // 17 lug (Skeezu): la vista detail vive dentro il tab Esplora — arrivando da
+  // "I miei Airdrop" (ENTRA) o da altre pagine il tab restava nascosto: URL
+  // aggiornato ma schermata ferma. Prima si porta in primo piano Esplora.
+  var exploreTab=document.getElementById('tab-explore');
+  if(exploreTab&&exploreTab.style.display==='none')showPage('explore');
   openDetail(id);
   history.pushState({page:'explore',detail:id},null,'/dapp/airdrop/'+id);
 }
