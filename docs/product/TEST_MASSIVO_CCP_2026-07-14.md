@@ -99,3 +99,11 @@ Un `git add -A` ha temporaneamente pushato sul repo **pubblico** materiale di la
 - Fix: observer incrementale (solo addedNodes, disconnect durante il processing, coda cappata 80, diagnostica window.__tokStats). Misure post-fix sul dettaglio airdrop vivo: 17 micro-run/18s su nodini del countdown, event loop lag 0,1-0,2 ms.
 - Giro notifiche→airdrop riverificato live: campanella → VAI ALL'AIRDROP → dettaglio caricato e cliccabile.
 - EXTEND seller-only riverificato: NOT_SELLER sia per utente non-venditore sia per anon (test negativo con utente-cavia poi rimosso; 9 profili, zero residui). Il bottone UI appare solo al venditore.
+
+## 17 lug — Flusso valutazione utente reale CHIUSO (segnalazione Skeezu su Garpez)
+- **Il salvataggio non era rotto**: GARP-MAR-789A era in DB con tutte le 7 foto. Il problema era percepito: foto da fotocamera 3,4-3,9 MB l'una senza ricompressione → ~25 MB di upload su mobile SENZA alcun feedback = "congelato".
+- Fix wizard: **compressione client** (max 1600px, JPEG .82 → 18 KB su foto di collaudo, ~15-20x su foto reali), **progresso visibile** ("Carico le foto… i/N" → "Invio la richiesta…"), errore esplicito se un upload fallisce, **CTA "Segui la tua valutazione →"** nel messaggio di successo → I miei Airdrop (elenco con badge stato già esistente, verificato).
+- Fix RPC `submit_object_for_valuation`: la foto principale non è più duplicata dentro extra_photos (+ data-fix su Garpez 7→6).
+- **ABO mobile (validazione)**: righe pipeline tappabili (MODIFICA finiva fuori viewport nello scroll orizzontale), modale gestione a 2 colonne (era 5), nav compatta — collaudato in viewport 375px: 0 elementi fuori schermo.
+- **Contatore pubblico** `get_public_counters()` (quante, mai quali): footer su tutte le pagine, banner Esplora, empty-state ("Però N oggetti sono già in valutazione…"), pagina Fai valutare.
+- E2E collaudo completo eseguito e ripulito (submission COLL-CCP-43A1: progresso 1/6→6/6 ✓, dedupe ✓, elenco ✓, contatore 1→2→1 ✓, storage+ledger+50 ARIA ripristinati; scoperto e gestito il badge VALUATION auto-mintato per submission).
