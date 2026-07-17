@@ -2752,10 +2752,12 @@ async function openDetail(id){
 
   // Position / ROBI projection / auto-buy: solo airdrop live (PR-5 F7/F8).
   if(isValuation){
-    // Salita in quiete: la corsa non è ancora partita
+    // Salita in quiete: la corsa non è ancora partita (markup statico —
+    // .salita-empty è position:absolute e collasserebbe il contenitore)
     var salEl=document.getElementById('detail-salita');
-    if(salEl)salEl.innerHTML='<div class="salita-empty"><div class="salita-empty-t"><span class="it">La corsa non &egrave; ancora partita</span><span class="en">The climb hasn\'t started yet</span></div>'
-      +'<div style="font-size:12px;color:var(--gray-400);margin-top:6px"><span class="it">Prima la quotazione, poi l\'OK del venditore — e la salita si apre.</span><span class="en">First the quotation, then the seller\'s OK — and the climb opens.</span></div></div>';
+    if(salEl)salEl.innerHTML='<div style="position:static;padding:18px 4px;text-align:center">'
+      +'<div style="font-family:var(--font-h);font-size:17px;font-weight:600;margin-bottom:6px"><span class="it">La corsa non &egrave; ancora partita</span><span class="en">The climb hasn\'t started yet</span></div>'
+      +'<div style="font-size:12px;color:var(--gray-400)"><span class="it">Prima la quotazione, poi l\'OK del venditore — e la salita si apre.</span><span class="en">First the quotation, then the seller\'s OK — and the climb opens.</span></div></div>';
   }
   if(!isConcluded&&!isValuation){
     // Position live — initial + polling (uses calculate_winner_score for real rank)
