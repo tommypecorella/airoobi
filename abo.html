@@ -1729,7 +1729,8 @@ var ABO_MODULE_TO_SEC={
   collaboratori_permessi:'sec-collaborators',
   categorie:'sec-categories',
   engine_config:'sec-engine',
-  evalobi:'sec-evalobi'
+  evalobi:'sec-evalobi',
+  segnalazioni:'sec-reports'
 };
 
 window._aboSimulating=null; // null = no sim · role string = simulazione attiva
@@ -1785,9 +1786,9 @@ function aboSimulateRole(role){
 }
 
 // FASE 3 PR-C2b · Matrice "Collaboratori & Permessi" + gating azioni
-var PERM_MODULES=['dashboard','pipeline_airdrop','analisi_fairness','messaggi','utenti','treasury_fondi','conto_aria_piattaforma','patrimonio_aziendale','cost_tracker','aria_robi','collaboratori_permessi','categorie','engine_config','evalobi'];
+var PERM_MODULES=['dashboard','pipeline_airdrop','analisi_fairness','messaggi','segnalazioni','utenti','treasury_fondi','conto_aria_piattaforma','patrimonio_aziendale','cost_tracker','aria_robi','collaboratori_permessi','categorie','engine_config','evalobi'];
 var PERM_ACTIONS=['view','edit','approve','draw','reply','manage'];
-var PERM_MODULE_LABELS={dashboard:'Dashboard',pipeline_airdrop:'Pipeline airdrop',analisi_fairness:'Analisi & Fairness',messaggi:'Messaggi',utenti:'Utenti',treasury_fondi:'Treasury & Fondi',conto_aria_piattaforma:'Conto ARIA piattaforma',patrimonio_aziendale:'Patrimonio aziendale',cost_tracker:'Cost Tracker',aria_robi:'ARIA & ROBI',collaboratori_permessi:'Collaboratori & Permessi',categorie:'Categorie',engine_config:'Engine Config',evalobi:'EVALOBI Registry'};
+var PERM_MODULE_LABELS={dashboard:'Dashboard',pipeline_airdrop:'Pipeline airdrop',analisi_fairness:'Analisi & Fairness',messaggi:'Messaggi',utenti:'Utenti',treasury_fondi:'Treasury & Fondi',conto_aria_piattaforma:'Conto ARIA piattaforma',patrimonio_aziendale:'Patrimonio aziendale',cost_tracker:'Cost Tracker',aria_robi:'ARIA & ROBI',collaboratori_permessi:'Collaboratori & Permessi',categorie:'Categorie',engine_config:'Engine Config',evalobi:'EVALOBI Registry',segnalazioni:'Segnalazioni'};
 var ABO_CEO_EMAILS=['ceo@airoobi.com','tommaso.pecorella+ceo@outlook.com'];
 
 window._permCurrentUser=null;
@@ -4880,7 +4881,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.7.0"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.7.1"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>
