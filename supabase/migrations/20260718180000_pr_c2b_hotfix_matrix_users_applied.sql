@@ -1,0 +1,9 @@
+-- 18 lug 2026: applicata sul live (via MCP) la migration repo
+-- 20260523150000_abo_v2_pr_c2b_hotfix_matrix_users.sql che era rimasta SOLO nel
+-- repo dal 23 maggio (W5 "migration non applicate"). Senza admin_list_role_holders
+-- il dropdown Collaboratore della matrice permessi restava vuoto e l'intera
+-- sezione Collaboratori & Permessi sembrava morta.
+-- Collaudo: admin_list_role_holders -> ceo (admin+evaluator) ✓ ·
+-- admin_search_user ✓ · admin_add_evaluator/admin_list_evaluators ✓ (rollback).
+-- Resto dell'impianto RBAC verificato già a posto: role_permissions 63 righe,
+-- RLS admin su user_roles/user_permission_overrides, admin_search_user presente.
