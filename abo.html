@@ -1390,64 +1390,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     alert('Certificato emesso: '+data.cert_code+' → airdrop #'+data.airdrop_code+'\nPagina pubblica: /evalobi/'+data.token_id);
     loadEvalobiTable();
   };
-  // ═══ SEGNALAZIONI (18 lug 2026) · easy ticket management ═══
-  window.loadReportsTable = async function(){
-    const tbody = document.querySelector('#rep-tbl tbody');
-    if(!tbody)return;
-    tbody.innerHTML = '<tr><td colspan="7" style="color:var(--gray-500);padding:18px;text-align:center">Caricamento…</td></tr>';
-    const st = document.getElementById('rep-filter')?.value ?? 'open';
-    let q = sb.from('user_reports').select('*').order('created_at',{ascending:false}).limit(200);
-    if (st) q = q.eq('status', st);
-    const { data, error } = await q;
-    if (error) { tbody.innerHTML = '<tr><td colspan="7" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
-    const cntEl=document.getElementById('rep-count');
-    if(cntEl)cntEl.textContent='('+(data||[]).length+(st?' '+st:'')+')';
-    // mappa email utenti
-    let emap={};
-    const uids=[...new Set((data||[]).map(r=>r.user_id).filter(Boolean))];
-    if(uids.length){
-      const { data: profs } = await sb.from('profiles').select('id,email').in('id',uids);
-      (profs||[]).forEach(p=>emap[p.id]=p.email);
-    }
-    const stBadge={open:'<span class="tag" style="color:#f0a030;border-color:#f0a03055">APERTA</span>',in_review:'<span class="tag" style="color:var(--aria);border-color:var(--aria)">IN LAVORAZIONE</span>',resolved:'<span class="tag tag-ok">RISOLTA</span>',rejected:'<span class="tag" style="color:var(--gray-500)">RESPINTA</span>'};
-    tbody.innerHTML=(data||[]).map(r=>{
-      const d=new Date(r.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-      const who=r.user_id?(emap[r.user_id]||r.user_id.slice(0,8)):'<span style="color:var(--gray-500)">ospite</span>';
-      const acts=[];
-      if(r.status==='open')acts.push('<button class="ab-btn" style="padding:3px 8px;font-size:10px" onclick="aboReportAct(\''+r.id+'\',\'in_review\')">PRENDI</button>');
-      if(r.status!=='resolved')acts.push('<button class="ab-btn ab-btn-primary" style="padding:3px 8px;font-size:10px" onclick="aboReportResolve(\''+r.id+'\','+(r.user_id?'true':'false')+')">RISOLVI</button>');
-      if(r.status!=='rejected'&&r.status!=='resolved')acts.push('<button class="ab-btn" style="padding:3px 8px;font-size:10px;color:#f87171;border-color:#f8717155" onclick="aboReportAct(\''+r.id+'\',\'rejected\')">RESPINGI</button>');
-      return '<tr>'
-        +'<td style="font-family:var(--font-m);font-size:11px;white-space:nowrap">'+d+'</td>'
-        +'<td style="font-size:12px">'+who+'</td>'
-        +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escHtml(r.page||'')+'">'+escHtml(r.page||'—')+'</td>'
-        +'<td style="font-size:12px;max-width:320px" title="'+escHtml(r.message)+'">'+escHtml(r.message.length>140?r.message.slice(0,139)+'…':r.message)+(r.admin_notes?'<div style="font-size:10px;color:var(--gray-500);margin-top:3px">note: '+escHtml(r.admin_notes)+'</div>':'')+'</td>'
-        +'<td>'+(stBadge[r.status]||r.status)+'</td>'
-        +'<td style="font-family:var(--font-m);color:var(--gold)">'+(parseFloat(r.robi_reward)>0?'+'+parseFloat(r.robi_reward):'—')+'</td>'
-        +'<td style="white-space:nowrap;display:flex;gap:4px">'+acts.join('')+'</td>'
-        +'</tr>';
-    }).join('')||'<tr><td colspan="7" style="color:var(--gray-500);text-align:center;padding:24px">Nessuna segnalazione</td></tr>';
-  };
-  window.aboReportAct = async function(id, status){
-    const { data, error } = await sb.rpc('admin_resolve_report',{p_report_id:id,p_status:status,p_admin_notes:null,p_robi:0});
-    if(error||!data?.ok){alert('Errore: '+(error?.message||data?.error||'?'));return;}
-    loadReportsTable(); if(typeof loadAboTodo==='function')loadAboTodo();
-  };
-  window.aboReportResolve = async function(id, hasUser){
-    const notes = prompt('Note (facoltative):','')||null;
-    let robi = 0;
-    if(hasUser){
-      const v = prompt('ROBI di ringraziamento per la segnalazione (0 = nessuno, max 100):','0');
-      if(v===null)return;
-      robi = parseFloat(v)||0;
-      if(robi<0||robi>100){alert('Importo ROBI tra 0 e 100.');return;}
-    }
-    const { data, error } = await sb.rpc('admin_resolve_report',{p_report_id:id,p_status:'resolved',p_admin_notes:notes,p_robi:robi});
-    if(error||!data?.ok){alert('Errore: '+(error?.message||data?.error||'?'));return;}
-    if(robi>0)alert('Risolta ✓ · +'+robi+' ROBI assegnati con notifica all\'utente.');
-    loadReportsTable(); if(typeof loadAboTodo==='function')loadAboTodo();
-  };
-
   window.loadDisputesTable = async function(){
     const tbody = document.querySelector('#disputes-tbl tbody');
     tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
@@ -2136,37 +2078,45 @@ async function loadEvalobiTable(){
   var s=getSession();if(!s)return;
   var tbody=document.querySelector('#evalobi-tbl tbody');
   if(!tbody)return;
-  tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
+  tbody.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr>';
   var outcome=(document.getElementById('evalobi-filter-outcome')&&document.getElementById('evalobi-filter-outcome').value)||'';
-  var url=SB_URL+'/rest/v1/evalobi?select=token_id,evaluation_outcome,object_title,object_brand,object_category,evaluation_price_range,evaluation_reasoning,original_seller_id,evaluated_at,created_at,version&order=created_at.desc&limit=100';
-  if(outcome)url+='&evaluation_outcome=eq.'+encodeURIComponent(outcome);
+  var url=SB_URL+'/rest/v1/evalobi?select=token_id,cert_code,airdrop_code,evaluation_outcome,object_title,object_brand,object_category,evaluation_price_range,evaluation_reasoning,original_seller_id,evaluated_at,created_at,version&order=created_at.desc&limit=200';
   try{
     var res=await fetch(url,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
     if(!res.ok){
       var errTxt=await res.text();
-      tbody.innerHTML='<tr><td colspan="9" style="color:#f87171;padding:18px">'+escHtml(errTxt||('HTTP '+res.status))+'</td></tr>';
+      tbody.innerHTML='<tr><td colspan="10" style="color:#f87171;padding:18px">'+escHtml(errTxt||('HTTP '+res.status))+'</td></tr>';
       return;
     }
-    var data=await res.json();
+    var all=await res.json()||[];
+    // KPI sempre sul totale
+    var kpi=function(id,v){var el=document.getElementById(id);if(el)el.textContent=v;};
+    kpi('ev-kpi-total',all.length);
+    kpi('ev-kpi-go',all.filter(function(r){return r.evaluation_outcome==='GO'}).length);
+    kpi('ev-kpi-nogo',all.filter(function(r){return r.evaluation_outcome==='NO_GO'}).length);
+    kpi('ev-kpi-review',all.filter(function(r){return r.evaluation_outcome==='NEEDS_REVIEW'}).length);
+    var data=outcome?all.filter(function(r){return r.evaluation_outcome===outcome}):all;
     function fmtPriceRange(pr){
       if(!pr)return '<span style="color:var(--gray-600)">—</span>';
       try{
         var p=typeof pr==='string'?JSON.parse(pr):pr;
-        if(p&&(p.min!=null||p.max!=null)){var mn=p.min!=null?'€'+Number(p.min).toFixed(0):'—';var mx=p.max!=null?'€'+Number(p.max).toFixed(0):'—';return mn+' – '+mx;}
+        if(p&&(p.min_eur!=null||p.max_eur!=null)){var mn=p.min_eur!=null?'€'+Number(p.min_eur).toFixed(0):'—';var mx=p.max_eur!=null?'€'+Number(p.max_eur).toFixed(0):'—';return mn+' – '+mx;}
+        if(p&&(p.min!=null||p.max!=null)){var mn2=p.min!=null?'€'+Number(p.min).toFixed(0):'—';var mx2=p.max!=null?'€'+Number(p.max).toFixed(0):'—';return mn2+' – '+mx2;}
         if(p&&p.value!=null)return '€'+Number(p.value).toFixed(0);
         return escHtml(JSON.stringify(p));
       }catch(e){return escHtml(String(pr));}
     }
     function trunc(x,n){if(!x)return '';var v=String(x);return v.length>n?v.slice(0,n-1)+'…':v;}
     if(!data||data.length===0){
-      tbody.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--gray-500);padding:18px">Nessun EVALOBI emesso</td></tr>';
+      tbody.innerHTML='<tr><td colspan="10" style="text-align:center;color:var(--gray-500);padding:18px">Nessun certificato emesso</td></tr>';
       return;
     }
     tbody.innerHTML=data.map(function(r){
       var dateEv=r.evaluated_at?new Date(r.evaluated_at).toLocaleDateString('it-IT'):(r.created_at?new Date(r.created_at).toLocaleDateString('it-IT'):'—');
       var reasoning=r.evaluation_reasoning||'';
       return '<tr>'
-        +'<td>#'+escHtml(String(r.token_id||'-'))+'</td>'
+        +'<td style="font-family:var(--font-m);font-size:11px"><a href="/evalobi/'+escHtml(String(r.token_id))+'" target="_blank" style="color:var(--gold)">'+escHtml(r.cert_code||('#'+(r.token_id||'-')))+'</a></td>'
+        +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-300)">'+escHtml(r.airdrop_code||'—')+'</td>'
         +'<td><span class="tag">'+escHtml(r.evaluation_outcome||'?')+'</span></td>'
         +'<td>'+escHtml((r.object_brand||'')+' '+(r.object_title||''))+'</td>'
         +'<td style="font-size:11px;color:var(--gray-400)">'+escHtml(r.object_category||'—')+'</td>'
@@ -2178,8 +2128,106 @@ async function loadEvalobiTable(){
         +'</tr>';
     }).join('');
   }catch(e){
-    tbody.innerHTML='<tr><td colspan="9" style="color:#f87171;padding:18px">'+escHtml(e.message||String(e))+'</td></tr>';
+    tbody.innerHTML='<tr><td colspan="10" style="color:#f87171;padding:18px">'+escHtml(e.message||String(e))+'</td></tr>';
   }
+}
+
+// 18 lug · standalone (l'IIFE aboSb è dead-code): emissione certificato da airdrop
+async function mintEvalobiFromAirdrop(){
+  var s=getSession();if(!s)return;
+  try{
+    var aRes=await fetch(SB_URL+'/rest/v1/airdrops?select=id,code,title,status&order=created_at.desc&limit=30',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
+    var ads=aRes.ok?await aRes.json():[];
+    if(!ads||!ads.length){alert('Nessun airdrop nel sistema: creane uno prima (il certificato nasce dal codice airdrop).');return;}
+    var list=ads.map(function(a,i){return (i+1)+'. #'+(a.code||'—')+' · '+a.title+' ['+a.status+']';}).join('\n');
+    var pick=prompt('Da quale airdrop emetto il certificato?\n\n'+list+'\n\nNumero:');
+    var idx=parseInt(pick,10)-1;
+    if(isNaN(idx)||!ads[idx])return;
+    var outcome=(prompt('Esito valutazione: GO / NO_GO / NEEDS_REVIEW','GO')||'').trim().toUpperCase();
+    if(['GO','NO_GO','NEEDS_REVIEW'].indexOf(outcome)===-1){alert('Esito non valido.');return;}
+    var mn=prompt('Valore minimo stimato € (vuoto = nessuno):','');
+    var mx=prompt('Valore massimo stimato € (vuoto = nessuno):','');
+    var reasoning=prompt('Motivazione (facoltativa):','')||null;
+    var pr=(mn||mx)?{min_eur:mn?Number(mn):null,max_eur:mx?Number(mx):null}:null;
+    var res=await fetch(SB_URL+'/rest/v1/rpc/admin_mint_evalobi_for_airdrop',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:ads[idx].id,p_outcome:outcome,p_price_range:pr,p_reasoning:reasoning})
+    });
+    var d=await res.json();
+    if(!d||!d.ok){alert('Errore: '+(d&&d.error||('HTTP '+res.status)));return;}
+    alert('Certificato emesso: '+d.cert_code+' → airdrop #'+d.airdrop_code+'\nPagina pubblica: /evalobi/'+d.token_id);
+    loadEvalobiTable();
+  }catch(e){alert('Errore: '+e.message);}
+}
+
+// 18 lug · SEGNALAZIONI standalone (fetch raw, pattern ABO)
+async function loadReportsTable(){
+  var s=getSession();if(!s)return;
+  var tbody=document.querySelector('#rep-tbl tbody');
+  if(!tbody)return;
+  tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-500);padding:18px;text-align:center">Caricamento…</td></tr>';
+  var st=(document.getElementById('rep-filter')&&document.getElementById('rep-filter').value);
+  if(st===undefined||st===null)st='open';
+  var url=SB_URL+'/rest/v1/user_reports?select=*&order=created_at.desc&limit=200';
+  if(st)url+='&status=eq.'+encodeURIComponent(st);
+  try{
+    var res=await fetch(url,{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
+    if(!res.ok){tbody.innerHTML='<tr><td colspan="7" style="color:#f87171;padding:18px">'+escHtml(await res.text())+'</td></tr>';return;}
+    var data=await res.json()||[];
+    var cntEl=document.getElementById('rep-count');
+    if(cntEl)cntEl.textContent='('+data.length+(st?' '+st:'')+')';
+    var emap={};
+    var uids=[];data.forEach(function(r){if(r.user_id&&uids.indexOf(r.user_id)===-1)uids.push(r.user_id);});
+    if(uids.length){
+      var pRes=await fetch(SB_URL+'/rest/v1/profiles?select=id,email&id=in.('+uids.join(',')+')',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
+      if(pRes.ok){(await pRes.json()||[]).forEach(function(p){emap[p.id]=p.email;});}
+    }
+    var stBadge={open:'<span class="tag" style="color:#f0a030;border-color:#f0a03055">APERTA</span>',in_review:'<span class="tag" style="color:var(--aria);border-color:var(--aria)">IN LAVORAZIONE</span>',resolved:'<span class="tag tag-ok">RISOLTA</span>',rejected:'<span class="tag" style="color:var(--gray-500)">RESPINTA</span>'};
+    tbody.innerHTML=data.map(function(r){
+      var d=new Date(r.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+      var who=r.user_id?(emap[r.user_id]||r.user_id.slice(0,8)):'<span style="color:var(--gray-500)">ospite</span>';
+      var acts=[];
+      if(r.status==='open')acts.push('<button class="ab-btn" style="padding:3px 8px;font-size:10px" onclick="aboReportAct(\''+r.id+'\',\'in_review\')">PRENDI</button>');
+      if(r.status!=='resolved')acts.push('<button class="ab-btn ab-btn-primary" style="padding:3px 8px;font-size:10px" onclick="aboReportResolve(\''+r.id+'\','+(r.user_id?'true':'false')+')">RISOLVI</button>');
+      if(r.status!=='rejected'&&r.status!=='resolved')acts.push('<button class="ab-btn" style="padding:3px 8px;font-size:10px;color:#f87171;border-color:#f8717155" onclick="aboReportAct(\''+r.id+'\',\'rejected\')">RESPINGI</button>');
+      return '<tr>'
+        +'<td style="font-family:var(--font-m);font-size:11px;white-space:nowrap">'+d+'</td>'
+        +'<td style="font-size:12px">'+who+'</td>'
+        +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escHtml(r.page||'')+'">'+escHtml(r.page||'—')+'</td>'
+        +'<td style="font-size:12px;max-width:320px" title="'+escHtml(r.message)+'">'+escHtml(r.message.length>140?r.message.slice(0,139)+'…':r.message)+(r.admin_notes?'<div style="font-size:10px;color:var(--gray-500);margin-top:3px">note: '+escHtml(r.admin_notes)+'</div>':'')+'</td>'
+        +'<td>'+(stBadge[r.status]||escHtml(r.status))+'</td>'
+        +'<td style="font-family:var(--font-m);color:var(--gold)">'+(parseFloat(r.robi_reward)>0?'+'+parseFloat(r.robi_reward):'—')+'</td>'
+        +'<td style="white-space:nowrap"><div style="display:flex;gap:4px">'+acts.join('')+'</div></td>'
+        +'</tr>';
+    }).join('')||'<tr><td colspan="7" style="color:var(--gray-500);text-align:center;padding:24px">Nessuna segnalazione</td></tr>';
+  }catch(e){tbody.innerHTML='<tr><td colspan="7" style="color:#f87171;padding:18px">'+escHtml(e.message||String(e))+'</td></tr>';}
+}
+async function _aboReportRpc(id,status,notes,robi){
+  var s=getSession();if(!s)return null;
+  var res=await fetch(SB_URL+'/rest/v1/rpc/admin_resolve_report',{
+    method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
+    body:JSON.stringify({p_report_id:id,p_status:status,p_admin_notes:notes,p_robi:robi})
+  });
+  return res.json();
+}
+async function aboReportAct(id,status){
+  var d=await _aboReportRpc(id,status,null,0);
+  if(!d||!d.ok){alert('Errore: '+(d&&d.error||'?'));return;}
+  loadReportsTable();if(typeof loadAboTodo==='function')loadAboTodo();
+}
+async function aboReportResolve(id,hasUser){
+  var notes=prompt('Note (facoltative):','')||null;
+  var robi=0;
+  if(hasUser){
+    var v=prompt('ROBI di ringraziamento per la segnalazione (0 = nessuno, max 100):','0');
+    if(v===null)return;
+    robi=parseFloat(v)||0;
+    if(robi<0||robi>100){alert('Importo ROBI tra 0 e 100.');return;}
+  }
+  var d=await _aboReportRpc(id,'resolved',notes,robi);
+  if(!d||!d.ok){alert('Errore: '+(d&&d.error||'?'));return;}
+  if(robi>0)alert('Risolta ✓ · +'+robi+' ROBI assegnati con notifica all\'utente.');
+  loadReportsTable();if(typeof loadAboTodo==='function')loadAboTodo();
 }
 
 function toggleAdminSidebar(){
@@ -4881,7 +4929,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.7.1"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.8.0"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>
