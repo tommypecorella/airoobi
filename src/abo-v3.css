@@ -102,3 +102,52 @@ body{background:var(--color-bg);color:var(--color-text)}
 .dash-bar{flex:1;border-radius:3px 3px 0 0;background:var(--color-accent);min-height:2px;transition:height .3s}
 .dash-bar.below{background:var(--color-warning,#E5820B)}
 .dash-bar.today{background:var(--color-primary)}
+
+/* ── Gap-closure vs ABO Prototype (19 lug) · componenti Design Sheet ── */
+
+/* 1 · Tag di stato: pill mono con dot, toni subtle+text; pieni SOLO per i verdetti */
+.tag,.tag-ok,.tag-warn,.tag-err,.tag-info{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-family:var(--font-m);font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-surface-3);color:var(--color-text-secondary);border:none}
+.tag::before,.tag-ok::before,.tag-warn::before,.tag-err::before,.tag-info::before{content:'';width:6px;height:6px;border-radius:999px;background:currentColor;flex-shrink:0}
+.tag-ok{background:var(--color-success-subtle);color:var(--color-success-text)}
+.tag-warn{background:var(--color-warning-subtle);color:var(--color-warning-text)}
+.tag-err{background:var(--color-error-subtle);color:var(--color-error-text)}
+.tag-info{background:var(--color-info-subtle);color:var(--color-info-text)}
+.tag-solid-go{background:var(--color-success);color:#fff}
+.tag-solid-nogo{background:var(--color-error);color:#fff}
+html[data-theme="dark"] .tag-solid-go{color:#0F1216}
+
+/* 2 · Bottoni: gerarchia primario/secondario (un primario per schermata) */
+.ab-btn{height:36px;display:inline-flex;align-items:center;justify-content:center;padding:0 16px;font-family:var(--font-b);font-size:13px;font-weight:600;background:var(--color-primary);color:var(--color-primary-fg);border:none;cursor:pointer;letter-spacing:.2px}
+.ab-btn:hover{background:var(--color-primary-hover)}
+.ab-btn:disabled{opacity:.45;cursor:default}
+.ab-btn.ab-sec{background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border)}
+.ab-btn.ab-sec:hover{background:var(--color-surface-3)}
+
+/* 3 · Tabelle: thead sticky + prima colonna pinnata (pattern-firma mobile del prototipo) */
+:root, html:not([data-theme="dark"]), html[data-theme="light"]{--abo-sticky-col-shadow:8px 0 8px -8px rgba(22,29,38,.18)}
+html[data-theme="dark"]{--abo-sticky-col-shadow:8px 0 8px -8px rgba(0,0,0,.6)}
+.admin-table-wrap{overflow-x:auto;border:1px solid var(--color-border);border-radius:12px;background:var(--color-surface)}
+.admin-table{border-collapse:separate;border-spacing:0;min-width:640px;width:100%}
+.admin-table thead th{position:sticky;top:0;z-index:2}
+.admin-table th:first-child,.admin-table td:first-child{position:sticky;left:0;z-index:1;background:var(--abo-sticky-col-bg);box-shadow:var(--abo-sticky-col-shadow)}
+.admin-table thead th:first-child{z-index:3;background:var(--abo-table-head-bg)}
+@media(max-width:768px){.admin-table td,.admin-table th{height:52px}}
+
+/* 6 · Tab interne a chip pill */
+.bo-tab{height:32px;display:inline-flex;align-items:center;gap:6px;padding:0 14px;border-radius:999px;border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-text-secondary);font-size:12px;font-weight:600;cursor:pointer}
+.bo-tab.active{background:var(--color-secondary);color:var(--color-bg);border-color:var(--color-secondary)}
+
+/* 7 · Skeleton shimmer + empty state a bordo tratteggiato */
+.abo-skel{display:inline-block;height:14px;width:120px;border-radius:6px;background:linear-gradient(90deg,var(--color-surface-2) 25%,var(--color-surface-3) 50%,var(--color-surface-2) 75%);background-size:520px 100%;animation:abo-shimmer 1.2s linear infinite}
+@keyframes abo-shimmer{0%{background-position:-520px 0}100%{background-position:520px 0}}
+.abo-empty,.bo-empty{border:1px dashed var(--color-border-strong);border-radius:12px;padding:26px;text-align:center;color:var(--color-text-muted);font-size:12.5px;background:none}
+
+/* 8 · Toast in basso al centro */
+.notif-toast-container{top:auto!important;bottom:24px!important;left:50%!important;right:auto!important;transform:translateX(-50%)}
+.notif-toast{border-radius:10px;background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);box-shadow:var(--shadow-lg)}
+
+/* 9 (parziale) · Item sidebar attivo a inset, non border full-bleed */
+.admin-sidebar-item.active{border-left-color:transparent;box-shadow:inset 2px 0 0 var(--color-primary)}
+
+/* 12 · Motion: riduzione movimento */
+@media(prefers-reduced-motion:reduce){#admin-overlay *,#admin-overlay *::before,#admin-overlay *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

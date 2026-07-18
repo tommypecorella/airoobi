@@ -2608,6 +2608,9 @@ async function openDetail(id){
     +(maxBuy>=50?'<button class="buy-preset" onclick="setSlider(50)">50</button>':'')
     +(maxBuy>0?'<button class="buy-preset" onclick="setSlider('+maxBuy+')">Max</button>':'')
     +'</div>'
+    // Mockup v3: la nota soglia vive DOVE si decide (populated by loadHintSoglia)
+    +hintSogliaStub
+    +'<button class="bb-toggle" onclick="this.closest(\'.buy-box\').classList.toggle(\'bb-min\')" aria-label="Espandi/comprimi" title="Espandi/comprimi">&#8963;</button>'
     +'<button class="buy-btn" id="buy-btn" onclick="initBuy()"'+(remaining<=0||maxBuy<1?' disabled':'')+'>'
     +(remaining>0&&maxBuy>=1
       ?'<span class="it">Avanza</span><span class="en">Advance</span>'
@@ -2621,11 +2624,16 @@ async function openDetail(id){
   var extendHtml=buildExtendBox(a);
   var hasSetTab=(!isConcluded&&myBlocks>0)||!!extendHtml;
   var _mrate=calcMiningRate(a);
+  // Mockup v3 (19 lug): I TUOI NUMERI = unica casa dei dati personali, 4 valori con POSIZIONE
   var mystripHtml=(!isConcluded&&!isValuation&&!_publicMode)
     ?'<div class="detail-mystrip" id="detail-mystrip">'
-    +'<div class="mystrip-cell"><b id="mystrip-aria">'+(myBlocks*effectivePrice)+'</b><span>'+tokIcon('ARIA')+' <span class="it">spesi</span><span class="en">spent</span></span></div>'
-    +'<div class="mystrip-cell"><b id="mystrip-steps">'+myBlocks+'</b><span><span class="it">Step percorsi</span><span class="en">Steps taken</span></span></div>'
-    +'<div class="mystrip-cell"><b id="mystrip-robi">'+(_mrate>0?(myBlocks/_mrate).toFixed(2):'0')+'</b><span>'+tokIcon('ROBI')+' <span class="it">in arrivo</span><span class="en">incoming</span></span></div>'
+    +'<div class="mystrip-eyebrow"><span class="it">I TUOI NUMERI</span><span class="en">YOUR NUMBERS</span></div>'
+    +'<div class="mystrip-grid">'
+    +'<div class="mystrip-cell"><b id="mystrip-aria" class="ms-aria">'+(myBlocks*effectivePrice)+'</b><span>'+tokIcon('ARIA')+' <span class="it">spesi</span><span class="en">spent</span></span></div>'
+    +'<div class="mystrip-cell"><b id="mystrip-steps">'+myBlocks+'</b><span>Step</span></div>'
+    +'<div class="mystrip-cell"><b id="mystrip-robi" class="ms-robi">'+(_mrate>0?(myBlocks/_mrate).toFixed(2):'0')+'</b><span>'+tokIcon('ROBI')+' <span class="it">in arrivo</span><span class="en">incoming</span></span></div>'
+    +'<div class="mystrip-cell"><b id="mystrip-pos">&mdash;</b><span><span class="it">posizione</span><span class="en">position</span></span></div>'
+    +'</div>'
     +'</div>'
     :'';
   var _dtbIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">';
@@ -2637,9 +2645,6 @@ async function openDetail(id){
     +'</nav>';
 
   var html=''
-    // GS-12 · Banner AUTO-BUY attivo on-top (populated by updateAutoBuyBanner)
-    +'<div id="detail-autobuy-banner" class="detail-autobuy-banner" style="display:none"></div>'
-
     // Layout 10 lug (richiesta Skeezu): SX = titolo/posizione/FOTO · DX = SALITA + buy box
     +'<div class="detail-split detail-split-v2">'
 
@@ -2655,19 +2660,17 @@ async function openDetail(id){
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
     +'<div class="dtab-info">'+buildPhaseStepper(a)+'</div>'
     +(extendHtml?'<div class="dtab-set">'+extendHtml+'</div>':'')
-    +(phaseChip?'<div class="detail-phase-row dtab-salita">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
 
-    // Box competitivo §4.4 (posizione live · populated by refreshPosition)
-    +(!isConcluded&&!isValuation?'<div class="detail-position dtab-salita" id="detail-position"></div>':'')
-
-    // Hint "~X blocchi per il 1°" + soglia GS-15 (§4.5 · populated by loadHintSoglia)
-    +hintSogliaStub
+    // Mockup v3 (19 lug) · HUD DI CORSA: fase+countdown, distacchi e chip auto-step in UNA card
+    +(phaseChip||(!isConcluded&&!isValuation)?
+      '<div class="detail-hud dtab-salita">'
+      +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
+      +(!isConcluded&&!isValuation?'<div class="detail-position" id="detail-position"></div>':'')
+      +'<div id="detail-autobuy-banner" class="detail-autobuy-banner" style="display:none"></div>'
+      +'</div>':'')
 
     // Galleria immagini sotto la posizione (spostata dalla colonna DX · 10 lug)
     +galleryHtml
-
-    // GS-10 §4.7 · Come arrivare 1° A/B collapsible (populated by updateStrategyGuide)
-    +(!isConcluded?'<div class="detail-strategy detail-strategy-ab dtab-salita" id="detail-strategy"></div>':'')
 
     +'</div>' // close detail-right
 
@@ -2720,17 +2723,12 @@ async function openDetail(id){
       +'</ul>',false)
     +'</div>'
 
-    // I tuoi blocchi (badge sintetico)
-    +(myBlocks>0?'<div class="detail-myblocks dtab-info"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi Step:</span><span class="en">Your Steps:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">impiegati</span><span class="en">spent</span></div>':'')
-
+    // Mockup v3 (mappa di consolidamento): detail-myblocks e detail-stats ELIMINATI —
+    // i numeri personali vivono SOLO nel mystrip, i parametri SOLO nei Dettagli airdrop.
     // Mine Tower 3D — sostituita da LA SALITA (9 lug); funzione conservata per rollback
 
-    // Mini stats Rimasti/per blocco/per ROBI
-    +'<div class="detail-stats dtab-info">'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Step alla vetta</span><span class="en">Steps to summit</span></div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+effectivePrice+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/Step</div></div>'
-    +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">Step per</span><span class="en">Steps per</span> '+tokIcon('ROBI')+'</div></div>'
-    +'</div>'
+    // Come arrivare 1° → tab Info come da mockup (populated by updateStrategyGuide)
+    +(!isConcluded?'<div class="detail-strategy detail-strategy-ab dtab-info" id="detail-strategy"></div>':'')
 
     // MY STATS panel (solo airdrop live)
     +(!isConcluded&&myBlocks>0&&!_publicMode?
@@ -2770,6 +2768,11 @@ async function openDetail(id){
   document.getElementById('detail-content').innerHTML=html;
   var _dEl=document.getElementById('detail');
   if(_dEl)_dEl.setAttribute('data-dtab','salita');
+  // Mockup v3: su mobile il buy box parte compresso (pannello sticky sopra la tab bar)
+  if(window.innerWidth<=768){
+    var _bb=document.querySelector('#detail .buy-box');
+    if(_bb)_bb.classList.add('bb-min');
+  }
 
   // Start gallery auto-play
   if(galleryImgs.length>1) startGalleryAutoplay();
@@ -3313,6 +3316,14 @@ async function loadAutoBuyStatus(airdropId){
 // ── Position Live ──
 function updateDetailPosition(airdropId,scores){
   renderSalita(scores);
+  // Mockup v3: la POSIZIONE vive anche nel mystrip (rossa se 1°)
+  var _msp=document.getElementById('mystrip-pos');
+  if(_msp&&_session&&scores&&scores.length>0){
+    var _mp=0;
+    for(var _i=0;_i<scores.length;_i++){if(scores[_i].user_id===_session.user.id){_mp=scores[_i].rank;break;}}
+    _msp.textContent=_mp>0?(_mp+'°'):'—';
+    _msp.classList.toggle('ms-first',_mp===1);
+  }
   var el=document.getElementById('detail-position');if(!el)return;
   if(!_session||!scores||scores.length===0){
     var total=scores?scores.length:0;

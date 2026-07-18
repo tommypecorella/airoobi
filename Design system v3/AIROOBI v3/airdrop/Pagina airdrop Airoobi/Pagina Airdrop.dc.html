@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><meta name="design_doc_mode" content="canvas"><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"><style>
+body{margin:0;background:#eef0f4;font-family:Inter,system-ui,sans-serif}
+a{color:#2F6BFF}a:hover{color:#EF3E4F}
+.dv-turn{padding:40px 44px 32px;border-bottom:1px solid rgba(0,0,0,.08);scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:600 10px 'JetBrains Mono',monospace;padding:3px 7px;background:#1C2430;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:700 15px/1.2 'Space Grotesk',sans-serif;color:#1C2430}
+.dv-opts{display:flex;flex-wrap:wrap;gap:36px;align-items:flex-start;margin-top:22px}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:10px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px 'JetBrains Mono',monospace;padding:3px 7px;background:rgba(28,36,48,.09);color:#1C2430;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:400 11.5px/1.4 Inter,sans-serif;color:rgba(28,36,48,.6);max-width:840px}
+.dv-opt:target .dv-oid{background:#2F6BFF;color:#fff}
+.dv-next{margin:26px 0 0;font:12px/1.5 Inter,sans-serif;color:rgba(28,36,48,.55)}
+.dv-note{max-width:860px;background:#fff;border:1px solid rgba(28,36,48,.1);border-radius:10px;padding:16px 18px;font:13px/1.55 Inter,sans-serif;color:#33404F}
+.dv-note b{color:#1C2430}
+.dv-table{border-collapse:collapse;background:#fff;border:1px solid rgba(28,36,48,.12);border-radius:10px;overflow:hidden;font:12.5px/1.45 Inter,sans-serif;color:#33404F}
+.dv-table th{font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#5C6878;text-align:left;padding:10px 14px;background:#f6f7fa;border-bottom:1px solid rgba(28,36,48,.12)}
+.dv-table td{padding:9px 14px;border-bottom:1px solid rgba(28,36,48,.07);vertical-align:top}
+.dv-table tr:last-child td{border-bottom:none}
+.dv-table code{font:600 11.5px 'JetBrains Mono',monospace;color:#1C2430}
+.bd{display:inline-block;font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.05em;padding:2px 7px;border-radius:999px;white-space:nowrap}
+.bd-keep{background:rgba(42,174,111,.14);color:#1e7a4e}
+.bd-fuse{background:rgba(47,107,255,.12);color:#2F6BFF}
+.bd-move{background:rgba(51,64,79,.12);color:#33404F}
+.bd-kill{background:rgba(239,62,79,.12);color:#EF3E4F}
+.bd-redo{background:#fff;border:1px solid #EF3E4F;color:#EF3E4F}
+</style></helmet>
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Dettaglio airdrop — 3 concetti mobile 390 + desktop</span></div>
+<div class="dv-note"><b>Diagnosi → sistema.</b> La confusione nasce da 4 box pari-grado prima della Salita e dai numeri personali sparsi in 4 case. Regole comuni ai 3 concetti: <b>(1)</b> la striscia I TUOI NUMERI diventa l'<b>unica casa dei dati personali</b> e guadagna la <b>posizione</b> (risponde a «come sto andando io?» in un colpo); <b>(2)</b> position + soglia + fase + countdown si fondono in <b>un solo livello di corsa</b> (la forma cambia per concetto); <b>(3)</b> UNA azione primaria rossa per schermo; <b>(4)</b> due soli livelli di contenitore. Ogni telefono ha i <b>selettori di stato</b> sopra la cornice (Attiva · Senza Step · Presale · Valutazione · Vetta · Conclusa · Ospite · Venditore) ed è interattivo: tab, slider, preset, accordion, galleria. La Salita è riprodotta dal riferimento, non riprogettata.</div>
+<div class="dv-opts">
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a><span><b>HUD di corsa + CTA sticky.</b> Fase, countdown, posizione e soglia fusi in un'unica card HUD sopra la Salita. Il buy box vive in un pannello sticky sopra la tab bar: compresso è stepper+AVANZA, si espande con slider e preset.</span></div>
+<div style="display:flex;gap:20px;align-items:flex-start" data-screen-label="1a HUD + sticky">
+<dc-import name="AirdropPhone" theme="dark" concept="hud" state="active" hint-size="406px,960px"></dc-import>
+<dc-import name="AirdropPhone" theme="light" concept="hud" state="active" hint-size="406px,960px"></dc-import>
+</div></div>
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a><span><b>Passo in tab bar + ticker.</b> L'azione primaria È la tab bar: tasto STEP rosso rialzato al centro, sempre raggiungibile da ogni tab; apre un foglio con il buy box completo. La corsa si legge in un ticker di una riga — il resto dello schermo è tutto Salita.</span></div>
+<div style="display:flex;gap:20px;align-items:flex-start" data-screen-label="1b tab bar CTA">
+<dc-import name="AirdropPhone" theme="dark" concept="tabcta" state="active" hint-size="406px,960px"></dc-import>
+<dc-import name="AirdropPhone" theme="light" concept="tabcta" state="active" hint-size="406px,960px"></dc-import>
+</div></div>
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a><span><b>Palcoscenico alla Salita.</b> La Salita subito sotto il titolo, quasi full-bleed; posizione e soglia sono chip sospesi DENTRO la scena (l'informazione di corsa vive nella corsa). Il buy box è una card inline dominante subito sotto — l'unico elemento con peso rosso.</span></div>
+<div style="display:flex;gap:20px;align-items:flex-start" data-screen-label="1c palcoscenico">
+<dc-import name="AirdropPhone" theme="dark" concept="stage" state="active" hint-size="406px,960px"></dc-import>
+<dc-import name="AirdropPhone" theme="light" concept="stage" state="active" hint-size="406px,960px"></dc-import>
+</div></div>
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a><span><b>Desktop 1280 — stato principale</b> (impianto di <a class="dv-oid" href="#1a">1a</a>). Pagina unica senza tab: colonna corsa a SX (HUD + Salita), colonna di supporto a DX con buy box sticky in alto — l'azione resta sempre visibile — poi scheda prodotto, iter e impostazioni in accordion.</span></div>
+<div data-screen-label="1d desktop"><dc-import name="AirdropDesktop" theme="dark" hint-size="1280px,900px"></dc-import></div></div>
+</div>
+<p class="dv-next">Prova: «porta <a class="dv-oid" href="#1b">1b</a> in tutti gli stati» · «mixa l'HUD di <a class="dv-oid" href="#1a">1a</a> con il tasto STEP di <a class="dv-oid" href="#1b">1b</a>» · «desktop anche light»</p>
+</section>
+<section class="dv-turn" id="map">
+<div class="dv-thd"><a class="dv-tid" href="#map">M</a><span class="dv-tname">Mappa di consolidamento — i 18 blocchi del censimento</span></div>
+<div class="dv-note" style="margin-bottom:18px">Principio: <b>ogni dato una casa</b>. Numeri personali → striscia I TUOI NUMERI. Stato della corsa → HUD (o ticker/chip in scena). Parametri dell'airdrop → accordion «Dettagli airdrop» in Info. Il prezzo/Step appare una volta sola come parametro + dentro la CTA come costo dell'azione.</div>
+<table class="dv-table"><tr><th>Blocco (classe live)</th><th>Destino</th><th>Dove finisce</th><th>Perché</th></tr>
+<tr><td><code>detail-autobuy-banner</code></td><td><span class="bd bd-fuse">FUSO</span></td><td>Chip «⚡ auto-step 2/50» nell'HUD; gestione in Impostazioni</td><td>Un banner full-width per uno stato secondario rubava il primo schermo</td></tr>
+<tr><td><code>detail-header-v2</code></td><td><span class="bd bd-keep">TENUTO</span></td><td>Sticky, snellito: categoria+#codice, ♡, condividi (mai a capo)</td><td>Vincolo di struttura; già funziona</td></tr>
+<tr><td><code>detail-mystrip</code></td><td><span class="bd bd-redo">PROMOSSO</span></td><td>Sempre in cima; 4 valori: A spesi · Step · R in arrivo · <b>posizione</b></td><td>Unica casa dei numeri personali — «come sto andando io?» in un colpo d'occhio</td></tr>
+<tr><td><code>detail-title-v2</code></td><td><span class="bd bd-keep">TENUTO</span></td><td>Primo elemento del contenuto scorrevole</td><td>Identità dell'oggetto; non serve sticky</td></tr>
+<tr><td><code>detail-phase-row</code></td><td><span class="bd bd-fuse">FUSO</span></td><td>Chip fase + countdown = prima riga dell'HUD (1a), del ticker (1b), header Salita (1c)</td><td>Fase e tempo sono stato della corsa, non una card a sé</td></tr>
+<tr><td><code>detail-position</code></td><td><span class="bd bd-fuse">FUSO</span></td><td>Posizione → mystrip (dato mio); distacco dal 1° → HUD (dato di corsa)</td><td>Era il duplicato più visibile; ora ogni metà vive nella casa giusta</td></tr>
+<tr><td><code>detail-hint-soglia</code></td><td><span class="bd bd-fuse">FUSO</span></td><td>Microcopy dentro il buy box: «con ~40 Step passi 1°»</td><td>La soglia serve nel momento della decisione, non prima</td></tr>
+<tr><td><code>detail-strategy</code></td><td><span class="bd bd-move">SPOSTATO</span></td><td>Tab Info, collapsible «Come arrivare 1°»</td><td>Guida = supporto; non deve stare tra utente e Salita</td></tr>
+<tr><td><code>detail-race-col</code></td><td><span class="bd bd-redo">RIDISEGNATO</span></td><td>Salita intatta e protagonista; buy box estratto e promosso ad azione primaria (sticky / tab bar / inline per concetto)</td><td>«Fare uno Step» deve dominare, non essere un box tra i box</td></tr>
+<tr><td><code>phase-stepper</code></td><td><span class="bd bd-keep">TENUTO</span></td><td>Tab Info, card «Iter dell'airdrop»</td><td>Contesto utile, consultazione occasionale</td></tr>
+<tr><td><code>detail-gallery</code></td><td><span class="bd bd-keep">TENUTO</span></td><td>Hero della tab Info</td><td>La foto reale è il premio: apre la scheda</td></tr>
+<tr><td><code>product-info-v2</code></td><td><span class="bd bd-redo">RIDISEGNATO</span></td><td>Info: brand eyebrow → descrizione breve → highlights a chip → dimensioni in accordion</td><td>Il muro di testo diventa ritmo: 1 paragrafo + chip scansionabili</td></tr>
+<tr><td><code>accordion «Dettagli airdrop»</code></td><td><span class="bd bd-keep">TENUTO</span></td><td>Info; unica casa dei parametri: prezzo/Step, percorso, tasso ✿, chiusura</td><td>Dedup: qui e solo qui i numeri dell'airdrop</td></tr>
+<tr><td><code>detail-myblocks</code></td><td><span class="bd bd-kill">ELIMINATO</span></td><td>—</td><td>Duplicava al 100% la striscia I TUOI NUMERI</td></tr>
+<tr><td><code>detail-stats</code></td><td><span class="bd bd-kill">ELIMINATO</span></td><td>—</td><td>I 3 mini-numeri vivono già nell'accordion «Dettagli airdrop»</td></tr>
+<tr><td><code>auto-buy-box</code></td><td><span class="bd bd-keep">TENUTO</span></td><td>Impostazioni, «MANTIENI IL PASSO»; stato riflesso nel chip HUD</td><td>Configurazione = tab Impostazioni; lo stato vive dove si guarda la corsa</td></tr>
+<tr><td><code>detail-mystats</code></td><td><span class="bd bd-move">SNELLITO</span></td><td>Impostazioni: solo % Step tuoi + storico movimenti</td><td>ROBI e Step correnti già nel mystrip; resta ciò che è archivio</td></tr>
+<tr><td><code>extend box</code></td><td><span class="bd bd-keep">TENUTO</span></td><td>Impostazioni, visibile solo nello stato Venditore</td><td>Strumento raro, pubblico ristretto</td></tr>
+<tr><td><code>buy box (slider+preset)</code></td><td><span class="bd bd-redo">PROMOSSO</span></td><td>Pattern per concetto: sticky espandibile (<a class="dv-oid" href="#1a">1a</a>) · foglio dal tasto STEP (<a class="dv-oid" href="#1b">1b</a>) · card inline dominante (<a class="dv-oid" href="#1c">1c</a>)</td><td>UNA azione primaria per schermo, sempre a portata di pollice</td></tr>
+</table>
+</section>
+<section class="dv-turn" id="hier">
+<div class="dv-thd"><a class="dv-tid" href="#hier">H</a><span class="dv-tname">Gerarchia tipografica e spaziatura</span></div>
+<div class="dv-note">
+<b>Contenitori — 2 livelli, stop.</b> L1 card: superficie, bordo 1px, radius 16, padding 16. L2 inset: superficie scura/chiara secondaria, radius 10, <b>senza bordo</b>. Mai un L2 dentro un L2; gli sticky (header, CTA) sono L1 con blur e bordo solo sul lato di contatto. Oggi i box pari-grado sono 6+; così l'occhio ha una sola scala.<br><br>
+<b>Tipografia.</b> Display <b>Space Grotesk 700</b>: 26px titolo pagina · 19px titolo card. Body <b>Inter</b>: 14px testo · 12.5px secondario. Numeri <b>JetBrains Mono</b> <code>tabular-nums</code>: 22px valori HUD/mystrip · 13px dati · 11px etichette UPPERCASE +0.08em. Nessun altro corpo.<br><br>
+<b>Spaziatura.</b> Scala 4·8·12·16·24: 12 tra card, 16 padding card, 24 tra gruppi, 8 dentro gli inset.<br><br>
+<b>Colore = gerarchia.</b> Il rosso #EF3E4F appartiene SOLO a primato e azione primaria (1 per schermo). Bluette = gestione e link. Verde = stato positivo. ✿ ROBI = rosa/KAS. Tutto il resto è ardesia/neutro — è questo che fa «leggere in 3 secondi».
+</div>
+</section>
+<section class="dv-turn" id="copy">
+<div class="dv-thd"><a class="dv-tid" href="#copy">C</a><span class="dv-tname">Micro-copy a canone — IT / EN</span></div>
+<table class="dv-table"><tr><th>Contesto</th><th>IT</th><th>EN</th></tr>
+<tr><td>Striscia personale</td><td>I TUOI NUMERI · A spesi · Step percorsi · R in arrivo · Posizione</td><td>YOUR NUMBERS · A spent · Steps taken · R incoming · Position</td></tr>
+<tr><td>HUD posizione</td><td>Sei 3° su 3 · a 4 Step dal 1°</td><td>You're 3rd of 3 · 4 Steps off the lead</td></tr>
+<tr><td>Soglia (nel buy box)</td><td>Con ~40 Step passi in 1ª posizione</td><td>~40 Steps to take the lead</td></tr>
+<tr><td>CTA primaria</td><td>AVANZA · 5 Step · 50 A</td><td>STEP UP · 5 Steps · 50 A</td></tr>
+<tr><td>CTA in vetta</td><td>Difendi la posizione</td><td>Defend your lead</td></tr>
+<tr><td>Auto-step (chip)</td><td>⚡ auto-step 2/50 · gestisci</td><td>⚡ auto-step 2/50 · manage</td></tr>
+<tr><td>Auto-step (card)</td><td>MANTIENI IL PASSO — Step automatici</td><td>KEEP THE PACE — Automatic Steps</td></tr>
+<tr><td>Presale</td><td>Raccolta ✿ 2x — parti prima, raccogli di più</td><td>2x ✿ collection — start early, gather more</td></tr>
+<tr><td>Valutazione</td><td>La corsa non è ancora partita — ti avvisiamo alla partenza</td><td>The race hasn't started yet — we'll let you know</td></tr>
+<tr><td>Conclusa · vetta</td><td>L'oggetto è tuo — eri in vetta alla chiusura</td><td>The item is yours — you held the summit at close</td></tr>
+<tr><td>Conclusa · non vetta</td><td>Grazie per aver corso — i tuoi ✿ sono nel portafoglio</td><td>Thanks for running — your ✿ are in your wallet</td></tr>
+<tr><td>Ospite</td><td>Registrati per fare Step · Accedi</td><td>Sign up to take Steps · Log in</td></tr>
+<tr><td>Venditore</td><td>Il tuo airdrop · Estendi la corsa (2/5)</td><td>Your airdrop · Extend the race (2/5)</td></tr>
+<tr><td>Tab bar</td><td>Salita · Info · Impostazioni</td><td>Climb · Info · Settings</td></tr>
+</table>
+</section>
+</x-dc>
+</body>
+</html>

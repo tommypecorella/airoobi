@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&amp;family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"><style>body{margin:0}a{color:#2F6BFF}a:hover{color:#EF3E4F}</style></helmet>
+<div style="{{rootStyle}}" data-screen-label="telefono {{concept}} {{theme}}">
+<div style="display:flex;flex-wrap:wrap;gap:6px;padding:0 8px">
+<sc-for list="{{chips}}" as="ch" hint-placeholder-count="8"><button onClick="{{ch.pick}}" style="{{ch.st}}">{{ch.label}}</button></sc-for>
+</div>
+<div style="width:390px;height:844px;margin:0 8px;border-radius:34px;border:1px solid var(--line);background:var(--bg,#0B0E14);color:var(--ink,#EDF1F7);overflow:hidden;display:flex;flex-direction:column;position:relative;box-shadow:var(--shadow)">
+<div style="height:36px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font:600 12px 'JetBrains Mono',monospace;color:var(--mut)"><span>11:32</span><span>5G · 45</span></div>
+<div style="flex:none;padding:6px 14px 10px;border-bottom:1px solid var(--line);background:var(--bg,#0B0E14)">
+  <div style="display:flex;align-items:center;gap:8px;white-space:nowrap">
+    <button style="width:30px;height:30px;flex:none;border:1px solid var(--line);background:none;border-radius:999px;color:var(--mut);font:600 14px Inter;cursor:pointer">‹</button>
+    <span style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.1em;color:var(--mut)">AIRDROP · ARREDAMENTO</span>
+    <span style="font:600 10.5px 'JetBrains Mono',monospace;padding:2px 7px;border:1px solid var(--line);border-radius:6px;color:var(--dim)">#AST-042</span>
+    <span style="flex:1"></span>
+    <button style="width:32px;height:32px;border:none;background:var(--sur2);border-radius:999px;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="15" height="15"><path d="M12 21C6 16.5 2.5 13 2.5 9.3 2.5 6.4 4.7 4.5 7.2 4.5c1.8 0 3.5.9 4.8 2.6 1.3-1.7 3-2.6 4.8-2.6 2.5 0 4.7 1.9 4.7 4.8 0 3.7-3.5 7.2-9.5 11.7z" fill="var(--pri)"></path></svg></button>
+    <button style="width:32px;height:32px;border:none;background:var(--sur2);border-radius:999px;cursor:pointer;display:flex;align-items:center;justify-content:center"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="var(--mut)" stroke-width="2" stroke-linecap="round"><path d="M12 15V4"></path><path d="M8 7.5 12 3.5l4 4"></path><path d="M5 13v7h14v-7"></path></svg></button>
+  </div>
+  <sc-if value="{{showStrip}}" hint-placeholder-val="{{ true }}">
+  <div style="margin-top:10px;background:var(--sur);border:1px solid var(--line);border-radius:12px;padding:9px 12px 8px">
+    <div style="font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--dim);margin-bottom:5px">I TUOI NUMERI · YOUR NUMBERS</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px">
+      <div><div style="font:600 17px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--aria)">{{me.aria}}</div><div style="font:11px Inter;color:var(--mut)">A spesi</div></div>
+      <div><div style="font:600 17px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--ink)">{{me.step}}</div><div style="font:11px Inter;color:var(--mut)">Step</div></div>
+      <div><div style="font:600 17px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:#F06A8A">{{me.robi}}</div><div style="font:11px Inter;color:var(--mut)">✿ in arrivo</div></div>
+      <div><div style="font:600 17px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:{{posColor}}">{{me.pos}}</div><div style="font:11px Inter;color:var(--mut)">posizione</div></div>
+    </div>
+  </div>
+  </sc-if>
+  <sc-if value="{{isGuest}}" hint-placeholder-val="{{ false }}">
+  <div style="margin-top:10px;background:var(--sur);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font:12.5px/1.5 Inter;color:var(--mut)">Stai guardando da ospite. Correre costa <b style="color:var(--aria)">10 A per Step</b> — i tuoi numeri appariranno qui.</div>
+  </sc-if>
+  <sc-if value="{{isSeller}}" hint-placeholder-val="{{ false }}">
+  <div style="margin-top:10px;background:var(--sur);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px">
+    <span style="font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.1em;padding:3px 8px;border-radius:999px;background:rgba(47,107,255,.14);color:var(--blu)">IL TUO AIRDROP</span>
+    <span style="font:600 12px 'JetBrains Mono',monospace;color:var(--mut)">3 in corsa · 47 Step · 470 A</span>
+  </div>
+  </sc-if>
+</div>
+<div style="flex:1;overflow-y:auto;scrollbar-width:none;padding:14px 14px 26px;display:flex;flex-direction:column;gap:12px">
+  <h1 style="margin:0;font:700 24px/1.12 'Space Grotesk',sans-serif;letter-spacing:-.01em;color:var(--ink)">Astrolab 2.0 — Roche Bobois</h1>
+  <sc-if value="{{onSalita}}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{won}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--sur);border:1px solid var(--grn);border-radius:16px;padding:16px;display:flex;gap:14px">
+      <img src="uploads/fronte.jpeg" alt="Astrolab 2.0" style="width:72px;height:72px;object-fit:cover;border-radius:10px;flex:none">
+      <div style="display:flex;flex-direction:column;gap:5px">
+        <span style="align-self:flex-start;font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.1em;padding:3px 8px;border-radius:999px;background:rgba(53,198,126,.16);color:var(--grn)">AGGIUDICAZIONE</span>
+        <div style="font:700 19px 'Space Grotesk',sans-serif;color:var(--ink)">L'oggetto è tuo</div>
+        <div style="font:12.5px/1.5 Inter;color:var(--mut)">Eri in vetta alla chiusura. L'Astrolab 2.0 è in preparazione per la consegna; i 2.08 ✿ raccolti sono nel portafoglio.</div>
+        <button style="align-self:flex-start;margin-top:4px;border:none;background:var(--blu);color:#fff;font:600 12.5px Inter;padding:9px 14px;border-radius:10px;cursor:pointer">Organizza la consegna</button>
+      </div>
+    </div>
+    </sc-if>
+    <sc-if value="{{lost}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:5px">
+      <span style="align-self:flex-start;font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.1em;padding:3px 8px;border-radius:999px;background:var(--sur2);color:var(--mut)">CORSA CONCLUSA</span>
+      <div style="font:700 19px 'Space Grotesk',sans-serif;color:var(--ink)">Grazie per aver corso</div>
+      <div style="font:12.5px/1.5 Inter;color:var(--mut)">Il tavolo è andato a MV, in vetta alla chiusura. I <b style="color:#F06A8A">0.27 ✿</b> raccolti sul percorso sono nel tuo portafoglio.</div>
+      <button style="align-self:flex-start;margin-top:4px;border:1px solid var(--line);background:none;color:var(--blu);font:600 12.5px Inter;padding:9px 14px;border-radius:10px;cursor:pointer">Scopri altri airdrop</button>
+    </div>
+    </sc-if>
+    <sc-if value="{{isReview}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:5px">
+      <span style="align-self:flex-start;font:600 9.5px 'JetBrains Mono',monospace;letter-spacing:.1em;padding:3px 8px;border-radius:999px;background:var(--sur2);color:var(--mut)">IN VALUTAZIONE</span>
+      <div style="font:700 19px 'Space Grotesk',sans-serif;color:var(--ink)">La corsa non è ancora partita</div>
+      <div style="font:12.5px/1.5 Inter;color:var(--mut)">La proposta è al vaglio. Niente Step per ora — ti avvisiamo alla partenza.</div>
+      <button style="align-self:flex-start;margin-top:4px;border:1px solid var(--blu);background:none;color:var(--blu);font:600 12.5px Inter;padding:9px 14px;border-radius:10px;cursor:pointer">Avvisami alla partenza</button>
+    </div>
+    </sc-if>
+    <sc-if value="{{isPresale}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px">
+      <span style="font:20px Inter;color:#F06A8A">✿</span>
+      <div style="flex:1"><div style="font:700 14px 'Space Grotesk',sans-serif;color:var(--ink)">Raccolta ✿ 2x in presale</div><div style="font:12px/1.5 Inter;color:var(--mut)">Ogni Step fatto ora raccoglie il doppio dei fiori. Dalla partenza della sale il tasso torna 1x.</div></div>
+      <span style="font:600 11px 'JetBrains Mono',monospace;color:var(--kas);white-space:nowrap">sale tra 3g 02h</span>
+    </div>
+    </sc-if>
+    <sc-if value="{{showHud}}" hint-placeholder-val="{{ true }}">
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="{{phaseSt}}">{{phaseLabel}}</span>
+        <span style="flex:1"></span>
+        <span style="font:600 12px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--mut)">{{countdown}}</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap">
+        <span style="font:700 22px 'Space Grotesk',sans-serif;color:var(--ink)">{{hudMain}}</span>
+        <span style="font:12.5px Inter;color:var(--mut)">{{hudSub}}</span>
+      </div>
+      <sc-if value="{{showAutoChip}}" hint-placeholder-val="{{ false }}"><div><button onClick="{{goSet}}" style="border:1px solid rgba(47,107,255,.4);background:rgba(47,107,255,.08);color:var(--blu);font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.04em;padding:4px 10px;border-radius:999px;cursor:pointer">⚡ AUTO-STEP 2/50 · GESTISCI</button></div></sc-if>
+    </div>
+    </sc-if>
+    <sc-if value="{{showTicker}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:flex;align-items:center;gap:8px;overflow:hidden;white-space:nowrap">
+      <span style="{{phaseSt}}">{{phaseLabel}}</span>
+      <span style="font:600 11.5px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--mut)">{{tickerText}}</span>
+    </div>
+    </sc-if>
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font:700 19px 'Space Grotesk',sans-serif;color:var(--ink)">La Salita</span>
+        <span style="flex:1"></span>
+        <span style="{{badgeSt}}">{{badgeLabel}}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font:12.5px Inter;color:var(--mut)">
+        <sc-if value="{{isStage}}" hint-placeholder-val="{{ false }}"><span style="{{phaseSt}}">{{phaseLabel}}</span></sc-if>
+        <span>{{salitaMeta}}</span>
+      </div>
+      <div style="position:relative;height:378px;margin-top:2px">
+        <svg viewBox="0 0 358 378" style="position:absolute;inset:0;width:100%;height:100%">
+          <line x1="4" y1="84" x2="354" y2="84" stroke="var(--line)" stroke-dasharray="4 5"></line>
+          <line x1="4" y1="186" x2="354" y2="186" stroke="var(--line)" stroke-dasharray="4 5"></line>
+          <line x1="4" y1="288" x2="354" y2="288" stroke="var(--line)" stroke-dasharray="4 5"></line>
+          <text x="6" y="78" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--dim)">q. €1876</text>
+          <text x="6" y="180" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--dim)">q. €1251</text>
+          <text x="6" y="282" font-family="JetBrains Mono, monospace" font-size="10" fill="var(--dim)">q. €625</text>
+          <polyline points="16,344 322,290 34,236 322,182 44,128 302,60" fill="none" stroke="var(--dim)" stroke-width="2" stroke-dasharray="1.5 8" stroke-linecap="round" opacity="0.8"></polyline>
+          <text x="120" y="328" font-size="11" fill="{{fl1}}">✿</text>
+          <text x="240" y="306" font-size="11" fill="{{fl1}}">✿</text>
+          <text x="82" y="252" font-size="11" fill="{{fl0}}">✿</text>
+          <text x="200" y="222" font-size="11" fill="{{fl0}}">✿</text>
+          <text x="298" y="198" font-size="11" fill="{{fl0}}">✿</text>
+          <text x="122" y="154" font-size="11" fill="{{fl0}}">✿</text>
+          <text x="222" y="106" font-size="11" fill="{{fl0}}">✿</text>
+          <text x="272" y="82" font-size="11" fill="{{fl0}}">✿</text>
+        </svg>
+        <div style="position:absolute;top:0;right:2px;display:flex;flex-direction:column;align-items:center;gap:3px">
+          <img src="uploads/fronte.jpeg" alt="vetta" style="width:68px;height:50px;object-fit:cover;border-radius:10px;border:2px solid {{vettaRing}};background:#fff">
+          <span style="font:600 10px 'JetBrains Mono',monospace;letter-spacing:.18em;color:{{vettaRing}}">VETTA</span>
+        </div>
+        <sc-if value="{{showRiders}}" hint-placeholder-val="{{ true }}">
+        <sc-for list="{{riders}}" as="r" hint-placeholder-count="3">
+          <div style="{{r.wrap}}"><div style="{{r.circ}}">{{r.txt}}</div><span style="{{r.pill}}">{{r.lab}}</span></div>
+        </sc-for>
+        </sc-if>
+        <sc-if value="{{isReview}}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">
+          <span style="background:var(--sur);border:1px solid var(--line);border-radius:999px;padding:8px 16px;font:600 11px 'JetBrains Mono',monospace;letter-spacing:.08em;color:var(--mut)">SALITA IN QUIETE</span>
+        </div>
+        </sc-if>
+      </div>
+      <div style="background:var(--sur2);border-radius:10px;padding:10px 12px;font:12.5px/1.55 Inter;color:var(--mut)"><b style="color:#F06A8A">✿ {{robiLine}}</b><br>{{robiSub}}</div>
+    </div>
+    <sc-if value="{{showInlineBuy}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--sur);border:1px solid rgba(239,62,79,.45);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px;box-shadow:0 10px 30px rgba(239,62,79,.08)">
+      <div style="display:flex;align-items:center"><span style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--dim)">FAI UNO STEP</span><span style="flex:1"></span><span style="font:600 11px 'JetBrains Mono',monospace;color:var(--mut)">Saldo 8.255 <b style="color:var(--aria)">A</b></span></div>
+      <input type="range" min="1" max="50" value="{{steps}}" onInput="{{onSteps}}" style="width:100%;accent-color:var(--pri);height:26px">
+      <div style="display:flex;gap:6px"><sc-for list="{{presets}}" as="p" hint-placeholder-count="5"><button onClick="{{p.pick}}" style="{{p.st}}">{{p.label}}</button></sc-for></div>
+      <div style="font:11.5px/1.5 Inter;color:var(--mut)">{{sogliaNote}}</div>
+      <button style="border:none;background:var(--pri);color:#fff;font:700 15px 'Space Grotesk',sans-serif;letter-spacing:.02em;padding:15px;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px rgba(239,62,79,.3)">{{ctaLabel}}</button>
+    </div>
+    </sc-if>
+  </sc-if>
+  <sc-if value="{{onInfo}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:12px;display:flex;flex-direction:column;gap:8px">
+      <img src="{{mainSrc}}" alt="Astrolab 2.0" style="width:100%;height:225px;object-fit:cover;border-radius:10px;background:#fff">
+      <div style="display:flex;gap:6px"><sc-for list="{{thumbs}}" as="t" hint-placeholder-count="5"><img src="{{t.src}}" alt="foto" onClick="{{t.pick}}" style="{{t.st}}"></sc-for></div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:9px">
+      <div style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--dim)">ROCHE BOBOIS · TAVOLO DA PRANZO</div>
+      <div style="font:700 18px 'Space Grotesk',sans-serif;color:var(--ink)">Il meccanismo a vista</div>
+      <div style="font:13px/1.6 Inter;color:var(--mut);text-wrap:pretty">Prolunga da 80 cm motorizzata con meccanismo tipo orologio a vista: basta il telecomando per aprirla e accogliere più invitati. Piani in vetro temperato da 12 mm, trave in acciaio e alluminio laccato Champagne, base in acciaio nickel satinato.</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <span style="font:600 11px Inter;padding:5px 10px;border-radius:999px;background:var(--sur2);color:var(--mut)">Prolunga motorizzata 80 cm</span>
+        <span style="font:600 11px Inter;padding:5px 10px;border-radius:999px;background:var(--sur2);color:var(--mut)">Vetro temperato 12 mm</span>
+        <span style="font:600 11px Inter;padding:5px 10px;border-radius:999px;background:var(--sur2);color:var(--mut)">Telecomando incluso</span>
+        <span style="font:600 11px Inter;padding:5px 10px;border-radius:999px;background:var(--sur2);color:var(--mut)">L 200 → 280 cm</span>
+        <span style="font:600 11px Inter;padding:5px 10px;border-radius:999px;background:var(--sur2);color:var(--mut)">Fabbricazione europea</span>
+      </div>
+      <button onClick="{{togglePack}}" style="display:flex;align-items:center;border:none;background:none;padding:8px 0 0;border-top:1px solid var(--line);margin-top:4px;cursor:pointer;font:600 12.5px Inter;color:var(--ink)"><span>Dimensioni e dettagli</span><span style="flex:1"></span><span style="color:var(--dim)">{{caretPack}}</span></button>
+      <sc-if value="{{accPack}}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:5px;font:600 12px 'JetBrains Mono',monospace;color:var(--mut)">
+        <div style="display:flex;justify-content:space-between"><span style="font:12px Inter">Lunghezza</span><span>200 → 280 cm</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font:12px Inter">Altezza · Profondità</span><span>75,3 · 100 cm</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font:12px Inter">Alimentazione</span><span>batteria + telecomando</span></div>
+      </div>
+      </sc-if>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px">
+      <div style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--dim)">ITER DELL'AIRDROP</div>
+      <div style="display:flex;align-items:flex-start;gap:0">
+        <sc-for list="{{iter}}" as="it" hint-placeholder-count="4">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative">
+            <div style="{{it.bar}}"></div>
+            <div style="{{it.dot}}"></div>
+            <span style="{{it.lab}}">{{it.name}}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:4px">
+      <button onClick="{{toggleDett}}" style="display:flex;align-items:center;border:none;background:none;padding:0;cursor:pointer;font:700 15px 'Space Grotesk',sans-serif;color:var(--ink)"><span>Dettagli airdrop</span><span style="flex:1"></span><span style="color:var(--dim);font:600 13px Inter">{{caretDett}}</span></button>
+      <sc-if value="{{accDett}}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:7px;margin-top:8px;font:600 12.5px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--ink)">
+        <div style="display:flex;justify-content:space-between"><span style="font:12.5px Inter;color:var(--mut)">Prezzo per Step</span><span>10 <b style="color:var(--aria)">A</b></span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font:12.5px Inter;color:var(--mut)">Lunghezza percorso</span><span>500 Step</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font:12.5px Inter;color:var(--mut)">Soglia 1ª posizione oggi</span><span>~40 Step</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font:12.5px Inter;color:var(--mut)">Tasso raccolta</span><span style="color:#F06A8A">1 ✿ / 25 Step</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font:12.5px Inter;color:var(--mut)">Chiusura</span><span>20 lug · 18:00</span></div>
+      </div>
+      </sc-if>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:4px">
+      <button onClick="{{toggleStrat}}" style="display:flex;align-items:center;border:none;background:none;padding:0;cursor:pointer;font:700 15px 'Space Grotesk',sans-serif;color:var(--ink)"><span>Come arrivare 1°</span><span style="flex:1"></span><span style="color:var(--dim);font:600 13px Inter">{{caretStrat}}</span></button>
+      <sc-if value="{{accStrat}}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;font:12.5px/1.55 Inter;color:var(--mut)">
+        <div><b style="color:var(--ink)">A · Passo costante.</b> Attiva l'auto-step: mantieni il ritmo e raccogli ✿ lungo tutto il percorso.</div>
+        <div><b style="color:var(--ink)">B · Scatto finale.</b> Accumula A e fai un blocco di Step vicino alla chiusura — ma la soglia sale col traffico.</div>
+      </div>
+      </sc-if>
+    </div>
+  </sc-if>
+  <sc-if value="{{onSet}}" hint-placeholder-val="{{ false }}">
+    <sc-if value="{{showMyTools}}" hint-placeholder-val="{{ true }}">
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div><div style="font:700 15px 'Space Grotesk',sans-serif;color:var(--ink)">Mantieni il passo</div><div style="font:11.5px Inter;color:var(--mut)">Step automatici · Keep the pace</div></div>
+        <span style="flex:1"></span>
+        <button onClick="{{toggleAuto}}" style="{{togSt}}"><span style="{{knobSt}}"></span></button>
+      </div>
+      <div style="background:var(--sur2);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:7px;font:600 12.5px 'JetBrains Mono',monospace;color:var(--ink)">
+        <div style="display:flex;justify-content:space-between"><span style="font:12.5px Inter;color:var(--mut)">Quanti Step per volta</span><span>1</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font:12.5px Inter;color:var(--mut)">Ogni</span><span>1 h</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="font:12.5px Inter;color:var(--mut)">Massimo</span><span>50 Step</span></div>
+      </div>
+      <div style="font:600 11.5px 'JetBrains Mono',monospace;color:{{autoLineColor}}">{{autoLine}}</div>
+      <div style="font:11.5px/1.5 Inter;color:var(--dim)">Si mette in pausa quando sei in 1ª posizione.</div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+      <div style="font:700 15px 'Space Grotesk',sans-serif;color:var(--ink)">Le tue statistiche</div>
+      <div style="display:flex;justify-content:space-between;font:600 12.5px 'JetBrains Mono',monospace;color:var(--ink)"><span style="font:12.5px Inter;color:var(--mut)">Step tuoi sul totale</span><span>7 / 47 · 15%</span></div>
+      <div style="height:6px;border-radius:999px;background:var(--sur2);overflow:hidden"><div style="width:15%;height:100%;background:var(--aria);border-radius:999px"></div></div>
+      <div style="display:flex;justify-content:space-between;font:600 12.5px 'JetBrains Mono',monospace;color:var(--ink)"><span style="font:12.5px Inter;color:var(--mut)">Da presale · da sale</span><span>2 · 5</span></div>
+      <div style="border-top:1px solid var(--line);padding-top:9px;display:flex;flex-direction:column;gap:6px;font:600 11.5px 'JetBrains Mono',monospace;color:var(--mut)">
+        <div style="display:flex;gap:10px"><span style="color:var(--dim);width:74px">OGGI 12:04</span><span style="color:var(--ink)">+5 Step</span><span style="flex:1"></span><span>−50 A</span></div>
+        <div style="display:flex;gap:10px"><span style="color:var(--dim);width:74px">OGGI 09:31</span><span style="color:var(--ink)">+1 ⚡</span><span style="flex:1"></span><span>−10 A</span></div>
+        <div style="display:flex;gap:10px"><span style="color:var(--dim);width:74px">IERI 22:12</span><span style="color:var(--ink)">+1 ⚡</span><span style="flex:1"></span><span>−10 A</span></div>
+        <div style="display:flex;gap:10px"><span style="color:var(--dim);width:74px">17 LUG</span><span style="color:var(--ink)">+2 Step · ✿2x</span><span style="flex:1"></span><span>−20 A</span></div>
+      </div>
+    </div>
+    </sc-if>
+    <sc-if value="{{isSeller}}" hint-placeholder-val="{{ false }}">
+    <div style="background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:9px">
+      <div style="font:700 15px 'Space Grotesk',sans-serif;color:var(--ink)">Estendi la corsa</div>
+      <div style="font:12.5px/1.5 Inter;color:var(--mut)">Ogni estensione sposta la chiusura di 24 h e tiene aperta la raccolta.</div>
+      <div style="font:600 12.5px 'JetBrains Mono',monospace;color:var(--ink)">2 / 5 estensioni usate</div>
+      <button style="align-self:flex-start;border:1px solid var(--pri);background:none;color:var(--pri);font:600 12.5px Inter;padding:9px 14px;border-radius:10px;cursor:pointer">Estendi +24 h</button>
+    </div>
+    <div style="font:12px/1.5 Inter;color:var(--dim);padding:0 4px">Non partecipi alla corsa del tuo oggetto: vedi la Salita, non fai Step.</div>
+    </sc-if>
+    <sc-if value="{{isGuest}}" hint-placeholder-val="{{ false }}">
+    <div style="font:12.5px/1.5 Inter;color:var(--mut);background:var(--sur);border:1px solid var(--line);border-radius:16px;padding:16px">Le impostazioni personali — auto-step, statistiche, storico — compaiono dopo l'accesso.</div>
+    </sc-if>
+  </sc-if>
+</div>
+<sc-if value="{{showStickyBuy}}" hint-placeholder-val="{{ true }}">
+<div style="flex:none;border-top:1px solid var(--line);background:var(--sur);padding:10px 14px;display:flex;flex-direction:column;gap:10px">
+  <sc-if value="{{buyOpen}}" hint-placeholder-val="{{ false }}">
+  <div style="display:flex;flex-direction:column;gap:9px;padding-top:2px">
+    <div style="display:flex;align-items:center"><span style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--dim)">FAI UNO STEP</span><span style="flex:1"></span><span style="font:600 11px 'JetBrains Mono',monospace;color:var(--mut)">Saldo 8.255 <b style="color:var(--aria)">A</b></span></div>
+    <input type="range" min="1" max="50" value="{{steps}}" onInput="{{onSteps}}" style="width:100%;accent-color:var(--pri);height:26px">
+    <div style="display:flex;gap:6px"><sc-for list="{{presets}}" as="p" hint-placeholder-count="5"><button onClick="{{p.pick}}" style="{{p.st}}">{{p.label}}</button></sc-for></div>
+    <div style="font:11.5px/1.5 Inter;color:var(--mut)">{{sogliaNote}}</div>
+  </div>
+  </sc-if>
+  <div style="display:flex;align-items:stretch;gap:8px">
+    <div style="display:flex;align-items:center;background:var(--sur2);border-radius:12px;overflow:hidden">
+      <button onClick="{{decSteps}}" style="width:36px;height:48px;border:none;background:none;color:var(--mut);font:600 17px Inter;cursor:pointer">−</button>
+      <span style="width:30px;text-align:center;font:700 15px 'JetBrains Mono',monospace;font-variant-numeric:tabular-nums;color:var(--ink)">{{steps}}</span>
+      <button onClick="{{incSteps}}" style="width:36px;height:48px;border:none;background:none;color:var(--mut);font:600 17px Inter;cursor:pointer">+</button>
+    </div>
+    <button style="flex:1;border:none;background:var(--pri);color:#fff;font:700 14px 'Space Grotesk',sans-serif;letter-spacing:.02em;border-radius:12px;cursor:pointer;box-shadow:0 6px 16px rgba(239,62,79,.3)">{{ctaLabel}}</button>
+    <button onClick="{{toggleBuy}}" style="width:40px;border:1px solid var(--line);background:none;border-radius:12px;color:var(--mut);font:600 13px Inter;cursor:pointer">{{buyCaret}}</button>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{isGuest}}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;border-top:1px solid var(--line);background:var(--sur);padding:12px 14px;display:flex;gap:8px">
+  <button style="flex:1;border:none;background:var(--pri);color:#fff;font:700 14px 'Space Grotesk',sans-serif;padding:14px;border-radius:12px;cursor:pointer">Registrati per fare Step</button>
+  <button style="border:1px solid var(--line);background:none;color:var(--ink);font:600 13px Inter;padding:0 18px;border-radius:12px;cursor:pointer">Accedi</button>
+</div>
+</sc-if>
+<div style="flex:none;border-top:1px solid var(--line);background:var(--sur);padding:6px 10px 16px;display:flex;align-items:flex-end">
+  <sc-if value="{{isTabcta}}" hint-placeholder-val="{{ false }}">
+    <sc-for list="{{tabsL}}" as="tb" hint-placeholder-count="2"><button onClick="{{tb.pick}}" style="{{tb.st}}"><span style="{{tb.bar}}"></span>{{tb.label}}</button></sc-for>
+    <div style="flex:1;display:flex;justify-content:center"><button onClick="{{toggleSheet}}" style="{{fabSt}}"><span style="font:700 15px Inter">↑</span><span style="font:700 9px 'JetBrains Mono',monospace;letter-spacing:.14em">STEP</span></button></div>
+    <sc-for list="{{tabsR}}" as="tb" hint-placeholder-count="1"><button onClick="{{tb.pick}}" style="{{tb.st}}"><span style="{{tb.bar}}"></span>{{tb.label}}</button></sc-for>
+  </sc-if>
+  <sc-if value="{{notTabcta}}" hint-placeholder-val="{{ true }}">
+    <sc-for list="{{tabs3}}" as="tb" hint-placeholder-count="3"><button onClick="{{tb.pick}}" style="{{tb.st}}"><span style="{{tb.bar}}"></span>{{tb.label}}</button></sc-for>
+  </sc-if>
+</div>
+<sc-if value="{{sheetOn}}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;inset:0;z-index:40">
+  <div onClick="{{closeSheet}}" style="position:absolute;inset:0;background:rgba(6,9,14,.55)"></div>
+  <div style="position:absolute;left:0;right:0;bottom:0;background:var(--sur);border-radius:20px 20px 0 0;border-top:1px solid var(--line);padding:10px 16px 26px;display:flex;flex-direction:column;gap:10px">
+    <div style="width:36px;height:4px;border-radius:999px;background:var(--line);align-self:center"></div>
+    <div style="display:flex;align-items:center"><span style="font:600 10.5px 'JetBrains Mono',monospace;letter-spacing:.12em;color:var(--dim)">FAI UNO STEP</span><span style="flex:1"></span><span style="font:600 11px 'JetBrains Mono',monospace;color:var(--mut)">Saldo 8.255 <b style="color:var(--aria)">A</b></span></div>
+    <input type="range" min="1" max="50" value="{{steps}}" onInput="{{onSteps}}" style="width:100%;accent-color:var(--pri);height:26px">
+    <div style="display:flex;gap:6px"><sc-for list="{{presets}}" as="p" hint-placeholder-count="5"><button onClick="{{p.pick}}" style="{{p.st}}">{{p.label}}</button></sc-for></div>
+    <div style="font:11.5px/1.5 Inter;color:var(--mut)">{{sogliaNote}}</div>
+    <button onClick="{{closeSheet}}" style="border:none;background:var(--pri);color:#fff;font:700 15px 'Space Grotesk',sans-serif;padding:15px;border-radius:12px;cursor:pointer;box-shadow:0 8px 20px rgba(239,62,79,.3)">{{ctaLabel}}</button>
+  </div>
+</div>
+</sc-if>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:430,&quot;height&quot;:990},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Vista&quot;},&quot;concept&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;hud&quot;,&quot;tabcta&quot;,&quot;stage&quot;],&quot;default&quot;:&quot;hud&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Vista&quot;},&quot;state&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;active&quot;,&quot;zero&quot;,&quot;presale&quot;,&quot;review&quot;,&quot;won&quot;,&quot;lost&quot;,&quot;guest&quot;,&quot;seller&quot;],&quot;default&quot;:&quot;active&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Vista&quot;}}">
+class Component extends DCLogic {
+  state = { pg: null, tab: 'salita', steps: 5, buyOpen: false, sheet: false, img: 0, accPack: false, accDett: true, accStrat: false, autoOn: true };
+  renderVals() {
+    const P = this.props, S = this.state;
+    const theme = P.theme ?? 'dark', concept = P.concept ?? 'hud';
+    const pg = S.pg ?? (P.state ?? 'active');
+    const themes = {
+      dark: { bg:'#0B0E14', sur:'#121826', sur2:'#1A2232', line:'rgba(255,255,255,.09)', ink:'#EDF1F7', mut:'#8A94A6', dim:'#5C6878', aria:'#4A9EFF', kas:'#49EACB', grn:'#35C67E', shadow:'0 24px 60px rgba(0,0,0,.45)' },
+      light:{ bg:'#F3F5F8', sur:'#FFFFFF', sur2:'#ECEFF4', line:'rgba(28,36,48,.13)', ink:'#1C2430', mut:'#5C6878', dim:'#97A1B0', aria:'#2B7FD9', kas:'#0FA88C', grn:'#1E8F5C', shadow:'0 24px 60px rgba(28,36,48,.16)' }
+    };
+    const t = themes[theme] ?? themes.dark;
+    const pri = '#EF3E4F', blu = '#2F6BFF';
+    const rootStyle = { width:'406px', fontFamily:'Inter,system-ui,sans-serif', display:'flex', flexDirection:'column', gap:'10px',
+      '--bg':t.bg,'--sur':t.sur,'--sur2':t.sur2,'--line':t.line,'--ink':t.ink,'--mut':t.mut,'--dim':t.dim,'--pri':pri,'--blu':blu,'--aria':t.aria,'--kas':t.kas,'--grn':t.grn,'--shadow':t.shadow };
+    const canBuy = ['active','zero','presale'].includes(pg);
+    const isGuest = pg==='guest', isSeller = pg==='seller', isReview = pg==='review', won = pg==='won', lost = pg==='lost', isEnded = won||lost, isZero = pg==='zero', isPresale = pg==='presale';
+    const tab = S.tab, onSalita = tab==='salita', onInfo = tab==='info', onSet = tab==='set';
+    const meMap = { active:{aria:'70',step:'7',robi:'0.27',pos:'3°'}, zero:{aria:'0',step:'0',robi:'0',pos:'—'}, presale:{aria:'20',step:'2',robi:'0.16',pos:'2°'}, review:{aria:'0',step:'0',robi:'0',pos:'—'}, won:{aria:'520',step:'52',robi:'2.08',pos:'1°'}, lost:{aria:'70',step:'7',robi:'0.27',pos:'3°'} };
+    const me = meMap[pg] ?? meMap.active;
+    const posColor = (me.pos==='1°') ? pri : 'var(--ink)';
+    const chipBase = { border:'1px solid rgba(28,36,48,.18)', background:'#fff', color:'#5C6878', font:"600 10px 'JetBrains Mono',monospace", letterSpacing:'.04em', padding:'4px 9px', borderRadius:'999px', cursor:'pointer' };
+    const chipDefs = [['active','ATTIVA'],['zero','SENZA STEP'],['presale','PRESALE'],['review','VALUTAZIONE'],['won','VETTA'],['lost','CONCLUSA'],['guest','OSPITE'],['seller','VENDITORE']];
+    const chips = chipDefs.map(([k,label]) => ({ label, pick: () => this.setState({pg:k, tab:'salita', sheet:false, buyOpen:false}),
+      st: k===pg ? {...chipBase, background:'#1C2430', color:'#fff', border:'1px solid #1C2430'} : chipBase }));
+    const phaseMap = { active:['● ATTIVO','rgba(53,198,126,.15)',t.grn], zero:['● ATTIVO','rgba(53,198,126,.15)',t.grn], presale:['PRESALE','rgba(47,107,255,.14)',blu], review:['IN VALUTAZIONE', t.sur2, t.mut], won:['CONCLUSA', t.sur2, t.mut], lost:['CONCLUSA', t.sur2, t.mut], guest:['● ATTIVO','rgba(53,198,126,.15)',t.grn], seller:['● ATTIVO','rgba(53,198,126,.15)',t.grn] };
+    const ph = phaseMap[pg];
+    const phaseLabel = ph[0];
+    const phaseSt = { font:"600 9.5px 'JetBrains Mono',monospace", letterSpacing:'.1em', padding:'3px 9px', borderRadius:'999px', background:ph[1], color:ph[2], whiteSpace:'nowrap' };
+    const cdMap = { active:'chiusura tra 1g 16h 27m', zero:'chiusura tra 1g 16h 27m', presale:'sale tra 3g 02h', review:'partenza da definire', won:'chiusa il 20 lug', lost:'chiusa il 20 lug', guest:'chiusura tra 1g 16h 27m', seller:'chiusura tra 1g 16h 27m' };
+    const countdown = cdMap[pg];
+    const hudMap = { active:['Sei 3° su 3','a 4 Step dal 1° · il 2° ti segue a 2'], zero:['Non sei in corsa','3 in corsa · il 1° ha 21 Step — parti quando vuoi'], presale:['Sei 2° su 2','ogni Step ora raccoglie ✿ doppi'], guest:['3 in corsa','il 1° ha 21 Step · si entra con 10 A'], seller:['3 in corsa','47 Step totali · 470 A raccolti'] };
+    const hud = hudMap[pg] ?? hudMap.active;
+    const hudMain = hud[0], hudSub = hud[1];
+    const showHud = concept==='hud' && !isEnded && !isReview;
+    const showTicker = concept==='tabcta' && !isEnded && !isReview;
+    const showAutoChip = S.autoOn && (pg==='active');
+    const tickerMap = { active:'1g 16h · 3° su 3 · −4 dal 1° · ⚡ 2/50', zero:'1g 16h · 3 in corsa · 1° a 21 Step', presale:'sale tra 3g 02h · 2° su 2 · ✿ 2x', guest:'1g 16h · 3 in corsa · 1° a 21 Step', seller:'1g 16h · 47 Step totali · 470 A' };
+    const tickerText = tickerMap[pg] ?? tickerMap.active;
+    const badgeMap = { active:['A 4 STEP DAL 1°','rgba(239,62,79,.12)',pri], zero:['PARTI QUANDO VUOI',t.sur2,t.mut], presale:['✿ RACCOLTA 2X','rgba(73,234,203,.13)',t.kas], review:['IN QUIETE',t.sur2,t.mut], won:['SEI IN VETTA','rgba(53,198,126,.15)',t.grn], lost:['CONCLUSA',t.sur2,t.mut], guest:['3 IN CORSA',t.sur2,t.mut], seller:['IL TUO OGGETTO','rgba(47,107,255,.12)',blu] };
+    const bd = badgeMap[pg];
+    const badgeLabel = bd[0];
+    const badgeSt = { font:"600 9.5px 'JetBrains Mono',monospace", letterSpacing:'.1em', padding:'3px 9px', borderRadius:'999px', background:bd[1], color:bd[2], whiteSpace:'nowrap' };
+    const metaMap = { active:'3 in corsa · chiusura tra 1g 16h', zero:'3 in corsa · chiusura tra 1g 16h', presale:'2 in corsa · la sale parte tra 3g 02h', review:'la corsa parte dopo la valutazione', won:'47 Step percorsi · chiusa il 20 lug', lost:'47 Step percorsi · chiusa il 20 lug', guest:'3 in corsa · chiusura tra 1g 16h', seller:'3 in corsa · chiusura tra 1g 16h' };
+    const salitaMeta = metaMap[pg];
+    const vettaRing = won ? t.grn : pri;
+    const showRiders = !isReview;
+    const mkWrap = (pos) => ({ position:'absolute', display:'flex', flexDirection:'column', alignItems:'center', gap:'4px', ...pos });
+    const mkCirc = (d, mine) => ({ width:d+'px', height:d+'px', borderRadius:'50%', display:'flex', alignItems:'center', justifyContent:'center', font:"700 12px 'JetBrains Mono',monospace",
+      background: mine?pri:t.sur2, color: mine?'#fff':t.mut, border: mine?'2px solid rgba(255,255,255,.75)':'2px solid '+t.line, boxShadow: mine?'0 6px 16px rgba(239,62,79,.35)':'none' });
+    const mkPill = (mine) => ({ font:"600 10px 'JetBrains Mono',monospace", padding:'2px 8px', borderRadius:'999px', background: mine?'#1C2430':t.sur2, color: mine?'#fff':t.mut, whiteSpace:'nowrap' });
+    const spots = [ {top:'56px', right:'88px'}, {top:'136px', left:'116px'}, {top:'198px', left:'214px'} ];
+    let order;
+    if (won) order = [ {txt:'TU', lab:'TU · 1°', mine:true}, {txt:'MV', lab:'2°'}, {txt:'GL', lab:'3°'} ];
+    else if (isPresale) order = [ {txt:'MV', lab:'1°'}, {txt:'TU', lab:'TU · 2°', mine:true}, null ];
+    else if (pg==='active' || lost) order = [ {txt:'MV', lab:'1°'}, {txt:'GL', lab:'2°'}, {txt:'TU', lab:'TU · 3°', mine:true} ];
+    else order = [ {txt:'MV', lab:'1°'}, {txt:'GL', lab:'2°'}, {txt:'LB', lab:'3°'} ];
+    const riders = order.map((r,i) => r ? { wrap: mkWrap(spots[i]), circ: mkCirc(r.mine?42:(i===0?36:28), !!r.mine), txt:r.txt, lab:r.lab, pill: mkPill(!!r.mine) } : null).filter(Boolean);
+    const hasSteps = !['zero','review','guest','seller'].includes(pg);
+    const fl1 = hasSteps ? '#F06A8A' : t.dim, fl0 = t.dim;
+    const robiMap = { active:['0.27 / 2 ✿ possibili raccolti finora','Raccogli 1 ✿ ogni 25 Step: più percorso fai, più fiori porti a casa — comunque vada la corsa.'], zero:['I fiori ✿ si raccolgono correndo','1 ✿ ogni 25 Step. Si raccolgono dal primo Step, comunque vada la corsa.'], presale:['✿ 2x attivo: 0.16 raccolti','In presale ogni Step raccoglie il doppio. Alla partenza della sale si torna 1x.'], review:['Qui crescerà la raccolta ✿','Quando la corsa parte, ogni 25 Step raccogli 1 fiore.'], won:['2.08 ✿ raccolti sul percorso','Sono già nel tuo portafoglio, insieme all\u2019oggetto in vetta.'], lost:['0.27 ✿ raccolti sul percorso','Sono già nel tuo portafoglio: il ringraziamento per aver corso.'], guest:['Correndo si raccolgono fiori ✿','1 ✿ ogni 25 Step, dal primo Step, comunque vada la corsa.'], seller:['I corridori hanno raccolto 1.9 ✿','Il tasso di raccolta di questa corsa è 1 ✿ ogni 25 Step.'] };
+    const robiLine = robiMap[pg][0], robiSub = robiMap[pg][1];
+    const steps = S.steps, cost = steps*10;
+    const onSteps = (e) => this.setState({ steps: +e.target.value });
+    const decSteps = () => this.setState(s => ({ steps: Math.max(1, s.steps-1) }));
+    const incSteps = () => this.setState(s => ({ steps: Math.min(50, s.steps+1) }));
+    const ctaLabel = (isZero ? 'PARTI' : 'AVANZA') + ' · ' + steps + ' Step · ' + cost + ' A';
+    const preBase = { flex:'1', border:'1px solid var(--line)', background:'none', color:'var(--mut)', font:"600 11.5px 'JetBrains Mono',monospace", padding:'7px 0', borderRadius:'8px', cursor:'pointer' };
+    const presets = [5,10,25,50,'MAX'].map(v => { const val = v==='MAX'?50:v; const on = steps===val && !(v==='MAX'&&steps!==50);
+      return { label:String(v), pick:()=>this.setState({steps:val}), st: (steps===val && (v!=='MAX' || steps===50)) ? {...preBase, background:'var(--sur2)', color:'var(--ink)', border:'1px solid var(--ink)'} : preBase }; });
+    const sogliaMap = { active:'Con ~40 Step passi in 1ª posizione — il 1° è a 4 Step da te.', zero:'Primo Step: 10 A. Il 1° ha 21 Step; la soglia della 1ª posizione oggi è ~40.', presale:'✿ 2x su ogni Step fino alla partenza della sale. Il 1° è a 3 Step.' };
+    const sogliaNote = sogliaMap[pg] ?? sogliaMap.active;
+    const showInlineBuy = concept==='stage' && canBuy;
+    const showStickyBuy = (concept==='hud' || concept==='stage') && canBuy && concept==='hud';
+    const buyOpen = S.buyOpen, toggleBuy = () => this.setState(s=>({buyOpen:!s.buyOpen}));
+    const buyCaret = buyOpen ? '⌄' : '⌃';
+    const sheetOn = S.sheet && concept==='tabcta' && canBuy;
+    const toggleSheet = canBuy ? (() => this.setState(s=>({sheet:!s.sheet}))) : (()=>{});
+    const closeSheet = () => this.setState({sheet:false});
+    const imgs = ['uploads/dettaglio.jpeg','uploads/fronte.jpeg','uploads/lato%20sx.jpeg','uploads/alto.jpeg','uploads/altro.jpeg'];
+    const mainSrc = imgs[S.img];
+    const thumbs = imgs.map((src,i) => ({ src, pick:()=>this.setState({img:i}), st:{ width:'62px', height:'46px', objectFit:'cover', borderRadius:'8px', cursor:'pointer', background:'#fff', border: i===S.img ? '2px solid var(--pri)' : '2px solid transparent', opacity: i===S.img?1:.75 } }));
+    const stageIdx = isReview ? 0 : (isPresale ? 1 : (isEnded ? 3 : 2));
+    const iterNames = ['Valutazione','Presale','Sale','Chiusura'];
+    const iter = iterNames.map((name,i) => { const done = i<stageIdx, cur = i===stageIdx;
+      return { name, bar: { position:'absolute', top:'5px', left: i===0?'50%':'-50%', width: i===0?'0':'100%', height:'2px', background: (i<=stageIdx)?blu:t.line },
+        dot: { width:'12px', height:'12px', borderRadius:'50%', position:'relative', zIndex:1, background: cur?blu:(done?blu:t.sur2), border: cur?'3px solid rgba(47,107,255,.3)':'2px solid '+(done?blu:t.line), opacity: done&&!cur?0.55:1 },
+        lab: { font: cur?'700 10.5px Inter':'600 10.5px Inter', color: cur?'var(--ink)':'var(--dim)', textAlign:'center' } }; });
+    const accPack = S.accPack, accDett = S.accDett, accStrat = S.accStrat;
+    const togglePack = () => this.setState(s=>({accPack:!s.accPack}));
+    const toggleDett = () => this.setState(s=>({accDett:!s.accDett}));
+    const toggleStrat = () => this.setState(s=>({accStrat:!s.accStrat}));
+    const caretPack = accPack?'−':'+', caretDett = accDett?'−':'+', caretStrat = accStrat?'−':'+';
+    const autoOn = S.autoOn, toggleAuto = () => this.setState(s=>({autoOn:!s.autoOn}));
+    const togSt = { width:'46px', height:'27px', borderRadius:'999px', border:'none', cursor:'pointer', position:'relative', background: autoOn?blu:t.sur2, transition:'background .2s', flex:'none' };
+    const knobSt = { position:'absolute', top:'3px', left: autoOn?'22px':'3px', width:'21px', height:'21px', borderRadius:'50%', background:'#fff', transition:'left .2s', boxShadow:'0 1px 3px rgba(0,0,0,.3)', display:'block' };
+    const autoLine = autoOn ? '2/50 eseguiti · prossimo tra 41 min' : 'in pausa — il passo è manuale';
+    const autoLineColor = autoOn ? blu : t.dim;
+    const showMyTools = !isGuest && !isSeller;
+    const showStrip = !isGuest && !isSeller;
+    const tabBase = { flex:'1', border:'none', background:'none', cursor:'pointer', display:'flex', flexDirection:'column', alignItems:'center', gap:'6px', font:"600 10.5px 'JetBrains Mono',monospace", letterSpacing:'.1em', padding:'4px 0 0' };
+    const mkTab = (key,label) => ({ label, pick:()=>this.setState({tab:key}),
+      st: {...tabBase, color: tab===key?'var(--ink)':'var(--dim)'},
+      bar: { width:'18px', height:'3px', borderRadius:'999px', background: tab===key?pri:'transparent', display:'block' } });
+    const tabs3 = [mkTab('salita','SALITA'), mkTab('info','INFO'), mkTab('set','IMPOSTAZIONI')];
+    const tabsL = [mkTab('salita','SALITA'), mkTab('info','INFO')];
+    const tabsR = [mkTab('set','IMPOSTA')];
+    const isTabcta = concept==='tabcta', notTabcta = !isTabcta;
+    const fabSt = { width:'58px', height:'58px', borderRadius:'50%', border:'none', cursor: canBuy?'pointer':'default', background:pri, color:'#fff', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:'0px', transform:'translateY(-18px)', boxShadow:'0 10px 24px rgba(239,62,79,.4)', opacity: canBuy?1:.35 };
+    const goSet = () => this.setState({tab:'set'});
+    return { rootStyle, theme, concept, chips, me, posColor, showStrip, isGuest, isSeller, isReview, won, lost, isPresale, onSalita, onInfo, onSet,
+      phaseLabel, phaseSt, countdown, hudMain, hudSub, showHud, showTicker, showAutoChip, tickerText, badgeLabel, badgeSt, salitaMeta, vettaRing, showRiders, riders, fl1, fl0, robiLine, robiSub,
+      steps, onSteps, decSteps, incSteps, ctaLabel, presets, sogliaNote, showInlineBuy, showStickyBuy, buyOpen, toggleBuy, buyCaret, sheetOn, toggleSheet, closeSheet,
+      mainSrc, thumbs, iter, accPack, accDett, accStrat, togglePack, toggleDett, toggleStrat, caretPack, caretDett, caretStrat,
+      autoOn, toggleAuto, togSt, knobSt, autoLine, autoLineColor, showMyTools, tabs3, tabsL, tabsR, isTabcta, notTabcta, fabSt, goSet, isStage: concept==='stage' };
+  }
+}
+</script>
+</body>
+</html>
