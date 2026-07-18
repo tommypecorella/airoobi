@@ -1315,11 +1315,15 @@ img.salita-av{display:block}
   #detail[data-dtab="salita"] .dtab-info,#detail[data-dtab="salita"] .dtab-set{display:none!important}
   #detail[data-dtab="info"] .dtab-salita,#detail[data-dtab="info"] .dtab-set{display:none!important}
   #detail[data-dtab="set"] .dtab-salita,#detail[data-dtab="set"] .dtab-info{display:none!important}
-  /* header sticky: categoria + codice su UNA riga (mai a capo), azioni fisse */
+  /* header sticky: categoria + codice su UNA riga (mai a capo), azioni fisse.
+     Si accorcia la LABEL categoria (ellipsis), MAI il #codice (flex-shrink:0). */
   .detail-header-v2{position:sticky;top:62px;z-index:60;background:var(--black);padding:8px 0;margin:0 0 4px;flex-wrap:nowrap}
-  .detail-cat-v2{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex}
-  .detail-cat-v2 .airdrop-code{flex-shrink:0}
+  .detail-cat-v2{flex:1;min-width:0;white-space:nowrap;display:flex;align-items:center;gap:6px}
+  .detail-cat-label{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .detail-cat-v2 .airdrop-code{flex-shrink:0;margin-left:0!important}
   .detail-header-actions{flex-shrink:0;display:flex;gap:8px}
+  /* fab segnalazioni nel dettaglio: sopra tab bar E buy box sticky, mai su IMPOSTAZIONI/AVANZA */
+  body.detail-open #segnala-fab{bottom:calc(196px + env(safe-area-inset-bottom))!important;width:40px;height:40px}
 }
 
 /* ══ 19 lug · Pagina airdrop v3 (mockup Claude Design "HUD di corsa + CTA sticky") ══
@@ -1352,8 +1356,8 @@ img.salita-av{display:block}
 .detail-hud .detail-position{border:none;background:none;padding:0;margin:0}
 .detail-hud .pos-main{font-family:var(--font-h);font-size:21px;font-weight:700;color:var(--white)}
 .detail-hud .pos-breakdown{font-size:12.5px;color:var(--color-text-secondary,var(--gray-400))}
-/* banner auto-step → chip */
-.detail-hud .detail-autobuy-banner{display:inline-flex!important;align-items:center;gap:6px;align-self:flex-start;border:1px solid rgba(47,107,255,.4);background:rgba(47,107,255,.08);color:var(--color-accent,#2F6BFF);font-family:var(--font-m);font-size:10.5px;letter-spacing:.04em;padding:4px 10px;border-radius:999px;margin:0}
+/* banner auto-step → chip (reset del vecchio sticky: si sovrapponeva al buy box) */
+.detail-hud .detail-autobuy-banner{position:static;top:auto;z-index:auto;backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;flex-wrap:nowrap;display:inline-flex!important;align-items:center;gap:6px;align-self:flex-start;border:1px solid rgba(47,107,255,.4);background:rgba(47,107,255,.08);color:var(--color-accent,#2F6BFF);font-family:var(--font-m);font-size:10.5px;letter-spacing:.04em;padding:4px 10px;border-radius:999px;margin:0}
 .detail-hud .detail-autobuy-banner[style*="display: none"],.detail-hud .detail-autobuy-banner[style*="display:none"]{display:none!important}
 .detail-hud .ab-banner-link{color:var(--color-accent,#2F6BFF);font-weight:700}
 
@@ -1384,7 +1388,8 @@ img.salita-av{display:block}
   .buy-box.bb-min .buy-display{display:flex;align-items:baseline;gap:10px;margin:0 44px 8px 0}
   .buy-box.bb-min .buy-display-count{font-size:16px}
   .buy-box.bb-min .buy-display-cost{font-size:13px}
-  .buy-box.bb-min .bb-toggle{transform:rotate(180deg)}
+  /* caret: compresso = ⌃ (espandi verso l'alto) · espanso = ⌄ (comprimi) */
+  .buy-box:not(.bb-min) .bb-toggle{transform:rotate(180deg)}
   #detail[data-dtab="salita"] .buy-box .buy-btn{font-family:var(--font-h);font-weight:700;letter-spacing:.02em;border-radius:12px;box-shadow:0 6px 16px rgba(239,62,79,.3)}
 }
 

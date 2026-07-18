@@ -2557,7 +2557,7 @@ async function openDetail(id){
   var headerV2=''
     +'<div class="detail-header-v2">'
     +'<a href="#" class="detail-cat-v2" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false">'
-    +(CAT_ICONS[a.category]||'')+' <span class="it">AIRDROP · '+a.category+'</span><span class="en">AIRDROP · '+a.category+'</span>'
+    +(CAT_ICONS[a.category]||'')+'<span class="detail-cat-label"><span class="it">AIRDROP · '+a.category+'</span><span class="en">AIRDROP · '+a.category+'</span></span>'
     +(a.code?' <span class="airdrop-code" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+a.code+'\');showToast(\'Codice copiato\',\'success\')" title="Codice airdrop — clicca per copiare" style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);border:1px solid var(--gray-700);border-radius:8px;padding:2px 8px;margin-left:8px;cursor:pointer;vertical-align:1px">#'+a.code+'</span>':'')
     +'</a>'
     +'<div class="detail-header-actions">'
@@ -2766,6 +2766,7 @@ async function openDetail(id){
     +tabbarHtml;
 
   document.getElementById('detail-content').innerHTML=html;
+  document.body.classList.add('detail-open'); // il fab segnalazioni si alza sopra tab bar + buy box
   var _dEl=document.getElementById('detail');
   if(_dEl)_dEl.setAttribute('data-dtab','salita');
   // Mockup v3: su mobile il buy box parte compresso (pannello sticky sopra la tab bar)
@@ -3820,6 +3821,7 @@ function closeDetailView(){
   stopGalleryAutoplay();
   stopBubblePhysics();
   if(_positionInterval){clearInterval(_positionInterval);_positionInterval=null;}
+  document.body.classList.remove('detail-open'); // fab segnalazioni torna in basso
   var det=document.getElementById('detail');
   if(det){det.classList.remove('active');det.style.display='';}
   var lv=document.getElementById('list-view');
