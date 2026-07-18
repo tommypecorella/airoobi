@@ -73,3 +73,32 @@ body{background:var(--color-bg);color:var(--color-text)}
 #admin-overlay ::-webkit-scrollbar{width:8px;height:8px}
 #admin-overlay ::-webkit-scrollbar-thumb{background:var(--color-border-strong);border-radius:4px}
 #admin-overlay ::-webkit-scrollbar-track{background:transparent}
+
+/* ── Dashboard a prototipo v3 (ABO Prototype · Claude Design 18 lug) ── */
+.dash-sub{font-size:13px;color:var(--color-text-muted);margin:-12px 0 18px}
+.admin-card-sub{font-family:var(--font-m);font-size:10px;color:var(--color-text-muted);margin-top:5px;min-height:13px}
+.dash-kpis .admin-card-label{margin-bottom:6px}
+.dash-kpis .admin-card-val{font-family:var(--font-m);font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+.kpi-nominal{border-color:var(--color-primary)!important}
+.kpi-nominal .admin-card-val{color:var(--color-primary)}
+
+/* DA FARE OGGI: chips-card con conteggio rosso e chevron */
+#abo-todo{border-radius:10px;background:var(--color-surface);border-color:var(--color-border)}
+.abo-todo-item{background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:12px 16px;font-family:var(--font-b);font-size:12px;letter-spacing:.2px;text-transform:none;color:var(--color-text);box-shadow:var(--shadow-xs)}
+.abo-todo-item b{color:var(--color-primary);font-family:var(--font-m);font-size:15px;margin-right:2px}
+.abo-todo-item::after{content:'›';margin-left:8px;color:var(--color-text-muted);font-size:14px}
+.abo-todo-item:hover{border-color:var(--color-primary)}
+.abo-todo-item.zero{opacity:.55}
+.abo-todo-item.zero b{color:var(--color-text-muted)}
+
+/* Badge contatori in sidebar */
+.sb-badge{display:none;margin-left:auto;background:var(--color-primary-subtle);color:var(--color-primary);font-family:var(--font-m);font-size:9px;font-weight:700;border-radius:999px;padding:1px 7px;line-height:1.6}
+
+/* Pannelli economici */
+.dash-econ{display:grid;grid-template-columns:1fr 1.7fr 1fr;gap:12px;margin-top:12px}
+@media(max-width:1100px){.dash-econ{grid-template-columns:1fr 1fr}}
+@media(max-width:700px){.dash-econ{grid-template-columns:1fr}}
+.dash-bars{display:flex;align-items:flex-end;gap:4px;height:88px}
+.dash-bar{flex:1;border-radius:3px 3px 0 0;background:var(--color-accent);min-height:2px;transition:height .3s}
+.dash-bar.below{background:var(--color-warning,#E5820B)}
+.dash-bar.today{background:var(--color-primary)}

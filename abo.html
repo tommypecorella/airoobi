@@ -253,7 +253,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 <meta name="apple-mobile-web-app-title" content="ABO">
 <!-- Skin ABO v3 (Design Sheet 18 lug): token layer, skin-not-rewrite -->
 <link rel="stylesheet" href="/src/theme-v3.css?v=1.1.0">
-<link rel="stylesheet" href="/src/abo-v3.css?v=1.0.0">
+<link rel="stylesheet" href="/src/abo-v3.css?v=1.1.0">
 <script>
 /* Tema ABO prima del primo paint: salvato → preferenza di sistema */
 (function(){try{
@@ -332,11 +332,11 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <div class="admin-sidebar-group">
     <span class="admin-sidebar-label"><span class="it">Operations</span><span class="en">Operations</span></span>
     <div class="admin-sidebar-item active" onclick="adminNav('sec-overview')"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-airdrops')"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg><span class="it">Pipeline airdrop</span><span class="en">Airdrop pipeline</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-airdrops')"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg><span class="it">Pipeline airdrop</span><span class="en">Airdrop pipeline</span><span class="sb-badge" id="sb-badge-pip"></span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-evalobi')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg>EVALOBI Registry</div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-analysis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span class="it">Analisi &amp; Fairness</span><span class="en">Analysis &amp; Fairness</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="it">Messaggi</span><span class="en">Messages</span></div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-reports')"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span class="it">Segnalazioni</span><span class="en">Reports</span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-reports')"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span class="it">Segnalazioni</span><span class="en">Reports</span><span class="sb-badge" id="sb-badge-rep"></span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-users')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="it">Utenti</span><span class="en">Users</span></div>
   </div>
   <div class="admin-sidebar-group">
@@ -365,6 +365,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <!-- OVERVIEW -->
   <div class="admin-section active" id="sec-overview">
     <h2>Dashboard <span class="info-i" onclick="showAboTip(this,'sec-overview')">i</span></h2>
+    <div class="dash-sub" id="dash-sub"></div>
     <!-- DA FARE OGGI · riorganizzazione ABO 14 lug 2026 (praticità) -->
     <div id="abo-todo" style="margin:0 0 22px;padding:16px 18px;border:1px solid var(--gray-700);background:var(--gray-900)">
       <div style="font-family:var(--font-m);font-size:9px;letter-spacing:2px;color:var(--gold);margin-bottom:10px">DA FARE OGGI</div>
@@ -377,21 +378,44 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       </div>
       <div id="abo-todo-clear" style="display:none;margin-top:10px;font-family:var(--font-m);font-size:10px;color:#49b583;letter-spacing:1px">✓ <span class="it">Tutto gestito — nessuna azione richiesta.</span><span class="en">All handled — nothing to do.</span></div>
     </div>
-    <div class="admin-grid">
-      <div class="admin-card"><div class="admin-card-val" id="adm-users">—</div><div class="admin-card-label">Utenti registrati <span class="info-i" onclick="showAboTip(this,'ov-users')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-remaining">—</div><div class="admin-card-label">Posti rimasti (Alpha Brave) <span class="info-i" onclick="showAboTip(this,'ov-remaining')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-points">—</div><div class="admin-card-label">ARIA in circolazione <span class="info-i" onclick="showAboTip(this,'ov-points')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-checkins">—</div><div class="admin-card-label">Check-in oggi <span class="info-i" onclick="showAboTip(this,'ov-checkins')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-videos">—</div><div class="admin-card-label">Video visti oggi <span class="info-i" onclick="showAboTip(this,'ov-videos')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-referrals">—</div><div class="admin-card-label">Referral confermati <span class="info-i" onclick="showAboTip(this,'ov-referrals')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-avatars">—</div><div class="admin-card-label">Foto profilo impostata <span class="info-i" onclick="showAboTip(this,'ov-avatars')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-nft-circulating-ov">—</div><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'ov-nft-circulating')">i</span></div></div>
-      <div class="admin-card" style="border:2px solid var(--gold)"><div class="admin-card-val" id="adm-robi-nominal-ov" style="color:var(--gold);font-size:24px">—</div><div class="admin-card-label" style="color:var(--gold)">Valore nominale ROBI <span class="info-i" onclick="showAboTip(this,'ov-robi-nominal')">i</span></div></div>
+    <!-- Griglia KPI a prototipo v3 (18 lug): label sopra, valore mono grande, sub-riga -->
+    <div class="admin-grid dash-kpis">
+      <div class="admin-card"><div class="admin-card-label">Utenti registrati <span class="info-i" onclick="showAboTip(this,'ov-users')">i</span></div><div class="admin-card-val" id="adm-users">—</div><div class="admin-card-sub" id="adm-users-sub">&nbsp;</div></div>
+      <div class="admin-card"><div class="admin-card-label"><span class="it">Airdrop attivi</span><span class="en">Active airdrops</span></div><div class="admin-card-val" id="adm-live-air">—</div><div class="admin-card-sub" id="adm-live-air-sub">&nbsp;</div></div>
+      <div class="admin-card"><div class="admin-card-label"><span class="it">Valutazioni in corso</span><span class="en">Valuations in progress</span></div><div class="admin-card-val" id="adm-vals-live">—</div><div class="admin-card-sub" id="adm-vals-live-sub">&nbsp;</div></div>
+      <div class="admin-card"><div class="admin-card-label"><span class="it">Segnalazioni aperte</span><span class="en">Open reports</span></div><div class="admin-card-val" id="adm-reports-live">—</div><div class="admin-card-sub" id="adm-reports-live-sub">&nbsp;</div></div>
+      <div class="admin-card"><div class="admin-card-label">ARIA in circolazione <span class="info-i" onclick="showAboTip(this,'ov-points')">i</span></div><div class="admin-card-val" id="adm-points">—</div><div class="admin-card-sub">&nbsp;</div></div>
+      <div class="admin-card"><div class="admin-card-label">ROBI in circolazione <span class="info-i" onclick="showAboTip(this,'ov-nft-circulating')">i</span></div><div class="admin-card-val" id="adm-nft-circulating-ov">—</div><div class="admin-card-sub" id="adm-robi-sub">&nbsp;</div></div>
+      <div class="admin-card"><div class="admin-card-label"><span class="it">Ingressi oggi</span><span class="en">Check-ins today</span> <span class="info-i" onclick="showAboTip(this,'ov-checkins')">i</span></div><div class="admin-card-val" id="adm-checkins">—</div><div class="admin-card-sub">&nbsp;</div></div>
+      <div class="admin-card kpi-nominal"><div class="admin-card-label">Nominale ROBI <span class="info-i" onclick="showAboTip(this,'ov-robi-nominal')">i</span></div><div class="admin-card-val" id="adm-robi-nominal-ov">—</div><div class="admin-card-sub"><span class="it">cifra interna — mai pubblica</span><span class="en">internal figure</span></div></div>
     </div>
-    <div class="admin-grid" style="margin-top:8px">
-      <div class="admin-card"><div class="admin-card-val" id="adm-avg-points">—</div><div class="admin-card-label">ARIA media/utente <span class="info-i" onclick="showAboTip(this,'ov-avg-points')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-max-streak">—</div><div class="admin-card-label">Sequenza massima <span class="info-i" onclick="showAboTip(this,'ov-max-streak')">i</span></div></div>
-      <div class="admin-card"><div class="admin-card-val" id="adm-inv-leads">—</div><div class="admin-card-label">Investor leads <span class="info-i" onclick="showAboTip(this,'ov-inv-leads')">i</span></div></div>
+
+    <!-- Pannelli economici (prototipo v3): break-even giornaliero + inflow 14 giorni -->
+    <div class="dash-econ">
+      <div class="admin-card">
+        <div class="admin-card-label"><span class="it">BREAK-EVEN GIORNALIERO</span><span class="en">DAILY BREAK-EVEN</span></div>
+        <div id="dash-bep-gauge" style="text-align:center;padding:6px 0 0">—</div>
+        <div class="admin-card-sub" id="dash-bep-sub">&nbsp;</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-label"><span class="it">INFLOW € · ULTIMI 14 GIORNI</span><span class="en">€ INFLOW · LAST 14 DAYS</span> <span id="dash-inflow-bep" style="float:right;color:var(--gray-500);letter-spacing:0;text-transform:none"></span></div>
+        <div id="dash-inflow" style="padding:10px 0 2px">—</div>
+        <div class="admin-card-sub" id="dash-inflow-sub">&nbsp;</div>
+      </div>
+      <div class="admin-card">
+        <div class="admin-card-label"><span class="it">Airdrop/settimana per BEP</span><span class="en">Airdrops/week for BEP</span></div>
+        <div class="admin-card-val" id="dash-bep-week">—</div>
+        <div class="admin-card-sub" id="dash-bep-week-sub">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="admin-grid" style="margin-top:12px">
+      <div class="admin-card"><div class="admin-card-label">Posti rimasti (Alpha Brave) <span class="info-i" onclick="showAboTip(this,'ov-remaining')">i</span></div><div class="admin-card-val" id="adm-remaining">—</div></div>
+      <div class="admin-card"><div class="admin-card-label">Referral confermati <span class="info-i" onclick="showAboTip(this,'ov-referrals')">i</span></div><div class="admin-card-val" id="adm-referrals">—</div></div>
+      <div class="admin-card"><div class="admin-card-label">Foto profilo impostata <span class="info-i" onclick="showAboTip(this,'ov-avatars')">i</span></div><div class="admin-card-val" id="adm-avatars">—</div></div>
+      <div class="admin-card"><div class="admin-card-label">ARIA media/utente <span class="info-i" onclick="showAboTip(this,'ov-avg-points')">i</span></div><div class="admin-card-val" id="adm-avg-points">—</div></div>
+      <div class="admin-card"><div class="admin-card-label"><span class="it">Ingressi di fila (max)</span><span class="en">Longest check-in run</span> <span class="info-i" onclick="showAboTip(this,'ov-max-streak')">i</span></div><div class="admin-card-val" id="adm-max-streak">—</div></div>
+      <div class="admin-card"><div class="admin-card-label">Investor leads <span class="info-i" onclick="showAboTip(this,'ov-inv-leads')">i</span></div><div class="admin-card-val" id="adm-inv-leads">—</div></div>
     </div>
   </div>
 
@@ -2025,6 +2049,136 @@ async function loadAboTodo(){
   });
   var clear=document.getElementById('abo-todo-clear');
   if(clear)clear.style.display=tot===0?'block':'none';
+  // Prototipo v3 (18 lug): badge sidebar, sottotitolo con data, KPI e pannelli economici
+  var bp=document.getElementById('sb-badge-pip');
+  if(bp){var pt=vals[0]+vals[1];bp.textContent=pt;bp.style.display=pt>0?'inline-block':'none';}
+  var br=document.getElementById('sb-badge-rep');
+  if(br){br.textContent=vals[4];br.style.display=vals[4]>0?'inline-block':'none';}
+  var ds=document.getElementById('dash-sub');
+  if(ds){
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    var dTxt=new Date().toLocaleDateString(lang==='it'?'it-IT':'en-GB',{weekday:'long',day:'numeric',month:'long'});
+    ds.textContent=dTxt+(lang==='it'?' · prima cosa serve oggi, poi i numeri.':' · what needs you today, then the numbers.');
+  }
+  var rl=document.getElementById('adm-reports-live');if(rl)rl.textContent=vals[4];
+  var vl=document.getElementById('adm-vals-live');if(vl)vl.textContent=vals[0];
+  if(typeof loadDashKpis==='function')loadDashKpis();
+  if(typeof loadDashEcon==='function')loadDashEcon();
+}
+
+// ── Prototipo v3 (18 lug) · KPI dashboard con delta e sub-righe ──
+async function loadDashKpis(){
+  var st=getSession();if(!st)return;
+  var H={'apikey':SB_KEY,'Authorization':'Bearer '+st.access_token};
+  function iso(d){return new Date(Date.now()-d*86400000).toISOString();}
+  async function cnt(path){
+    try{
+      var r=await fetch(SB_URL+'/rest/v1/'+path,{headers:Object.assign({'Prefer':'count=exact','Range':'0-0'},H)});
+      var cr=r.headers.get('content-range');
+      return cr?parseInt(cr.split('/')[1],10)||0:0;
+    }catch(e){return 0;}
+  }
+  function ageTxt(ts){
+    if(!ts)return '';
+    var h=Math.floor((Date.now()-new Date(ts).getTime())/3600000);
+    return h<24?('la più vecchia da '+h+'h'):('la più vecchia da '+Math.floor(h/24)+'g');
+  }
+  function put(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
+  try{
+    var res=await Promise.all([
+      cnt('profiles?select=id&created_at=gte.'+iso(7)),                                   // 0 nuovi utenti 7g
+      cnt('airdrops?select=id&status=in.(presale,sale)'),                                 // 1 airdrop attivi
+      cnt('airdrops?select=id&status=eq.sale&deadline=lte.'+new Date(Date.now()+86400000).toISOString()), // 2 in chiusura <24h
+      fetch(SB_URL+'/rest/v1/airdrops?select=created_at&status=eq.in_valutazione&order=created_at.asc&limit=1',{headers:H}).then(function(r){return r.json()}).catch(function(){return[]}),
+      fetch(SB_URL+'/rest/v1/user_reports?select=created_at&status=eq.open&order=created_at.asc&limit=1',{headers:H}).then(function(r){return r.json()}).catch(function(){return[]}),
+      fetch(SB_URL+'/rest/v1/nft_rewards?select=shares&created_at=gte.'+iso(7)+'&nft_type=in.(ROBI,NFT_REWARD)',{headers:H}).then(function(r){return r.json()}).catch(function(){return[]})
+    ]);
+    put('adm-users-sub',res[0]>0?('+'+res[0]+' · 7g'):'· 7g invariato');
+    put('adm-live-air',res[1]);
+    put('adm-live-air-sub',res[2]>0?(res[2]+' in chiusura'):' ');
+    put('adm-vals-live-sub',(res[3]&&res[3][0])?ageTxt(res[3][0].created_at):' ');
+    put('adm-reports-live-sub',(res[4]&&res[4][0])?ageTxt(res[4][0].created_at):' ');
+    var robi7=(res[5]||[]).reduce(function(s,r){return s+(Number(r.shares)||0)},0);
+    put('adm-robi-sub',robi7>0?('+'+(Math.round(robi7*100)/100)+' · 7g'):' ');
+  }catch(e){}
+}
+
+// ── Prototipo v3 (18 lug) · Break-even giornaliero + inflow 14 giorni (dati veri) ──
+async function loadDashEcon(){
+  var st=getSession();if(!st)return;
+  var H={'apikey':SB_KEY,'Authorization':'Bearer '+st.access_token};
+  var gauge=document.getElementById('dash-bep-gauge');
+  var bepSub=document.getElementById('dash-bep-sub');
+  var inflowEl=document.getElementById('dash-inflow');
+  var inflowSub=document.getElementById('dash-inflow-sub');
+  try{
+    var since=new Date(Date.now()-14*86400000);since.setHours(0,0,0,0);
+    var rs=await Promise.all([
+      fetch(SB_URL+'/rest/v1/cost_tracker?select=amount,frequency',{headers:H}).then(function(r){return r.json()}).catch(function(){return[]}),
+      fetch(SB_URL+'/rest/v1/treasury_transactions?select=amount_eur,created_at&created_at=gte.'+since.toISOString()+'&order=created_at.asc',{headers:H}).then(function(r){return r.json()}).catch(function(){return[]}),
+      fetch(SB_URL+'/rest/v1/airdrops?select=airoobi_fee_eur&status=eq.completed&airoobi_fee_eur=gt.0',{headers:H}).then(function(r){return r.json()}).catch(function(){return[]})
+    ]);
+    // BEP €/giorno dal Cost Tracker: mensili + annuali/12 (una tantum escluse)
+    var monthly=(rs[0]||[]).reduce(function(s,c){
+      var a=Number(c.amount)||0;var f=String(c.frequency||'').toLowerCase();
+      if(f.indexOf('ann')===0||f==='yearly')return s+a/12;
+      if(f.indexOf('mens')===0||f==='monthly')return s+a;
+      return s;
+    },0);
+    var bep=monthly/30;
+    // Inflow per giorno (solo entrate)
+    var days=[];var todayKey=new Date().toISOString().slice(0,10);
+    for(var i=13;i>=0;i--){days.push(new Date(Date.now()-i*86400000).toISOString().slice(0,10));}
+    var byDay={};days.forEach(function(d){byDay[d]=0;});
+    (rs[1]||[]).forEach(function(t){
+      var a=Number(t.amount_eur)||0;if(a<=0)return;
+      var k=String(t.created_at).slice(0,10);
+      if(byDay[k]!=null)byDay[k]+=a;
+    });
+    var today=byDay[todayKey]||0;
+    // Gauge semicerchio
+    if(bep>0){
+      var pct=today/bep*100;
+      var arcLen=157;var fill=Math.min(1,today/bep)*arcLen;
+      var col=pct>=100?'var(--color-success,#2FBE6E)':'var(--color-warning,#E5820B)';
+      gauge.innerHTML='<svg viewBox="0 0 120 68" width="160" style="max-width:100%">'
+        +'<path d="M10 60 A50 50 0 0 1 110 60" stroke="var(--gray-700)" stroke-width="9" fill="none" stroke-linecap="round"/>'
+        +'<path d="M10 60 A50 50 0 0 1 110 60" stroke="'+col+'" stroke-width="9" fill="none" stroke-linecap="round" stroke-dasharray="'+fill.toFixed(1)+' '+arcLen+'"/>'
+        +'<text x="60" y="50" text-anchor="middle" style="font-family:var(--font-m);font-size:17px;font-weight:600" fill="var(--white)">'+Math.round(pct)+'%</text>'
+        +'<text x="60" y="63" text-anchor="middle" style="font-family:var(--font-b);font-size:7px" fill="var(--gray-400)">del BEP giornaliero</text>'
+        +'</svg>';
+      if(bepSub)bepSub.textContent='€ '+today.toFixed(2)+' incassati oggi · BEP € '+bep.toFixed(2)+'/giorno';
+    }else{
+      gauge.innerHTML='<div style="font-family:var(--font-m);font-size:22px;color:var(--gray-500);padding:14px 0">—</div>';
+      if(bepSub)bepSub.textContent='Registra i costi ricorrenti nel Cost Tracker per calcolare il break-even.';
+    }
+    // Barre inflow
+    var max=Math.max.apply(null,days.map(function(d){return byDay[d]}).concat([bep,1]));
+    inflowEl.innerHTML='<div class="dash-bars">'+days.map(function(d){
+      var v=byDay[d];var h=Math.max(2,Math.round(v/max*84));
+      var cls=d===todayKey?' today':(bep>0&&v<bep?' below':'');
+      var lbl=new Date(d+'T00:00:00').toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit'});
+      return '<div class="dash-bar'+cls+'" style="height:'+h+'px" title="'+lbl+' · € '+v.toFixed(2)+'"></div>';
+    }).join('')+'</div>';
+    var aboveN=bep>0?days.filter(function(d){return byDay[d]>=bep}).length:0;
+    var bepLbl=document.getElementById('dash-inflow-bep');
+    if(bepLbl)bepLbl.textContent=bep>0?('BEP € '+bep.toFixed(2)):'';
+    if(inflowSub)inflowSub.textContent=bep>0?(aboveN+' giorni su 14 sopra il BEP · ambra = sotto · rosso = oggi'):'Movimenti treasury degli ultimi 14 giorni (oggi in rosso).';
+    // Airdrop/settimana per BEP
+    var fees=rs[2]||[];
+    var wEl=document.getElementById('dash-bep-week');
+    var wSub=document.getElementById('dash-bep-week-sub');
+    if(bep>0&&fees.length>0){
+      var avg=fees.reduce(function(s,f){return s+(Number(f.airoobi_fee_eur)||0)},0)/fees.length;
+      if(wEl)wEl.textContent=(bep*7/avg).toFixed(1);
+      if(wSub)wSub.textContent='margine medio di servizio € '+avg.toFixed(0)+'/airdrop';
+    }else{
+      if(wEl)wEl.textContent='—';
+      if(wSub)wSub.textContent=fees.length===0?'serve almeno un airdrop concluso con fee di servizio':'serve il BEP dal Cost Tracker';
+    }
+  }catch(e){
+    if(gauge)gauge.textContent='—';
+  }
 }
 
 
@@ -2479,7 +2633,7 @@ async function loadAdminData(){
     const cks=await sbGet('checkins?checked_at=eq.'+today+'&select=id',t);
     document.getElementById('adm-checkins').textContent=cks?cks.length:0;
     const vids=await sbGet('video_views?viewed_at=gte.'+today+'T00:00:00&select=id',t);
-    document.getElementById('adm-videos').textContent=vids?vids.length:0;
+    var _vidsEl=document.getElementById('adm-videos');if(_vidsEl)_vidsEl.textContent=vids?vids.length:0; // card rimossa (video-earn non esiste più)
     // GS-2 fix: fetch referrer_id per build live count map (vs profiles.referral_count denorm desync)
     const refs=await sbGet('referral_confirmations?status=eq.confirmed&select=referrer_id',t);
     document.getElementById('adm-referrals').textContent=refs?refs.length:0;
@@ -5103,7 +5257,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.9.0"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.10.0"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>
