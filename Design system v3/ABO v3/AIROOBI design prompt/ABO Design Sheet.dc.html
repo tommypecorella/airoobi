@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#E9EDF2;color:#161D26;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#1E54E6;text-decoration:none}a:hover{color:#1741B4;text-decoration:underline}
+:focus-visible{outline:2px solid #2F6BFF;outline-offset:2px}
+[data-th="light"]{
+--color-bg:#FFFFFF;--color-bg-subtle:#F5F7FA;--color-surface:#FFFFFF;--color-surface-2:#F5F7FA;--color-surface-3:#E9EDF2;
+--color-overlay:rgba(22,29,38,0.55);--color-text:#161D26;--color-text-secondary:#455364;--color-text-muted:#5B6A7D;--color-text-inverse:#FFFFFF;
+--color-border:#D4DBE3;--color-border-strong:#AEB9C6;
+--color-primary:#EF3E4F;--color-primary-hover:#D91F32;--color-primary-active:#B4192A;--color-primary-fg:#FFFFFF;--color-primary-subtle:#FFF1F2;
+--color-secondary:#33404F;--color-accent:#2F6BFF;--color-link:#1E54E6;--color-focus:#2F6BFF;
+--color-success:#0E8A44;--color-success-subtle:#E7F6EE;--color-success-text:#0B6B37;
+--color-warning:#E5820B;--color-warning-subtle:#FDF0DF;--color-warning-text:#9A5405;
+--color-error:#D91F32;--color-error-subtle:#FFF1F2;--color-error-text:#B4192A;
+--color-info:#1E54E6;--color-info-subtle:#EDF2FF;--color-info-text:#1741B4;
+--aria:#4A9EFF;--kas:#49EACB;
+--shadow-md:0 4px 12px rgba(22,29,38,0.08);--shadow-lg:0 12px 28px rgba(22,29,38,0.12);--shadow-xl:0 24px 48px rgba(22,29,38,0.16);
+--abo-table-head-bg:#F5F7FA;--abo-row-hover:rgba(22,29,38,.035);--abo-sticky-col-bg:#FFFFFF;--abo-sticky-col-shadow:8px 0 8px -8px rgba(22,29,38,.18)}
+[data-th="dark"]{
+--color-bg:#0F1216;--color-bg-subtle:#12161B;--color-surface:#171B21;--color-surface-2:#1E242C;--color-surface-3:#262E38;
+--color-overlay:rgba(0,0,0,0.62);--color-text:#E8EAED;--color-text-secondary:#AEB9C6;--color-text-muted:#7E8B9C;--color-text-inverse:#0F1216;
+--color-border:#2A313A;--color-border-strong:#3A434F;
+--color-primary:#FF5563;--color-primary-hover:#FF6E79;--color-primary-active:#E23A48;--color-primary-fg:#FFFFFF;--color-primary-subtle:rgba(255,85,99,0.14);
+--color-secondary:#AEB9C6;--color-accent:#6284FF;--color-link:#8AA3FF;--color-focus:#6284FF;
+--color-success:#2FBE6E;--color-success-subtle:rgba(47,190,110,0.14);--color-success-text:#7BE0AC;
+--color-warning:#F5A524;--color-warning-subtle:rgba(245,165,36,0.14);--color-warning-text:#F6C97A;
+--color-error:#FF5563;--color-error-subtle:rgba(255,85,99,0.14);--color-error-text:#FF9AA4;
+--color-info:#6284FF;--color-info-subtle:rgba(98,132,255,0.14);--color-info-text:#BAC8FF;
+--aria:#4A9EFF;--kas:#49EACB;
+--shadow-md:0 4px 12px rgba(0,0,0,0.45);--shadow-lg:0 12px 28px rgba(0,0,0,0.55);--shadow-xl:0 24px 48px rgba(0,0,0,0.60);
+--abo-table-head-bg:#1E242C;--abo-row-hover:rgba(255,255,255,.045);--abo-sticky-col-bg:#171B21;--abo-sticky-col-shadow:8px 0 8px -8px rgba(0,0,0,.6)}
+@keyframes abo-shimmer{0%{background-position:-260px 0}100%{background-position:260px 0}}
+@keyframes abo-spin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+
+<div style="max-width:1560px;margin:0 auto;padding:0 0 80px">
+
+<!-- ═══ HEADER ═══ -->
+<div style="padding:44px 48px 32px;display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap">
+  <div style="width:64px;height:64px;flex:none;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:16px;display:flex;align-items:center;justify-content:center">
+    <img src="assets/airoobi-logo.png" alt="AIROOBI" style="width:44px;height:44px">
+  </div>
+  <div style="flex:1;min-width:420px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:6px">AIROOBI · Theme v3 skin · 18 Jul 2026</div>
+    <h1 style="font-family:'Space Grotesk',sans-serif;font-size:30px;font-weight:600;margin:0 0 8px;letter-spacing:-.3px">ABO — Token &amp; Component Sheet</h1>
+    <p style="font-size:13.5px;line-height:1.55;color:#455364;max-width:760px;margin:0 0 14px;text-wrap:pretty">Restyle of the AIROOBI Back Office as a <b>skin, not a rewrite</b>: a token layer + component CSS mapped onto the existing classes (<span style="font-family:'JetBrains Mono',monospace;font-size:12px">admin-sidebar, admin-nav, admin-card, admin-table/adm-tbl, tag, ab-btn, ct-modal, abo-todo-item</span>) — IDs, JS and flows untouched. Mobile-first at 390px, full light + dark from the <span style="font-family:'JetBrains Mono',monospace;font-size:12px">theme-v3.css</span> tokens already in production. Table strategy: <b>horizontal scroll + sticky first column</b> (your pick). Red primary used sparingly; no gold, no purple, no gambling/trading visuals.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;font-family:'JetBrains Mono',monospace;font-size:10.5px">
+      <a href="#tokens" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">01 Tokens</a>
+      <a href="#type" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">02 Type</a>
+      <a href="#components" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">03 Components</a>
+      <a href="#shell" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">04 Shell</a>
+      <a href="#tables" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">05 Tables</a>
+      <a href="#overlays" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">06 Overlays</a>
+      <a href="#nav" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">07 Mobile nav <b style="color:#EF3E4F">3 options</b></a>
+      <a href="#motion" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">08 Motion</a>
+      <a href="#migration" style="padding:5px 10px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:999px;color:#455364">09 Migration</a>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 01 TOKENS ═══ -->
+<section id="tokens" style="padding:28px 48px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">01 · Color tokens</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 4px">Palette v3 — locked</h2>
+  <p style="font-size:12.5px;color:#5B6A7D;margin:0 0 18px">Verbatim from <span style="font-family:'JetBrains Mono',monospace;font-size:11.5px">src/theme-v3.css</span>. Dark is a dedicated set, not an invert.</p>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:stretch">
+    <div data-th="light" style="flex:1;min-width:440px;background:var(--color-bg);border:1px solid #D4DBE3;border-radius:14px;padding:20px 22px;color:var(--color-text)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:14px">LIGHT (DEFAULT)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 24px">
+        <sc-for list="{{ lightTokens }}" as="grp" hint-placeholder-count="4">
+          <div style="grid-column:{{ grp.col }};padding:6px 0 2px">
+            <div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin:6px 0 6px">{{ grp.g }}</div>
+            <sc-for list="{{ grp.items }}" as="tk" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:9px;padding:2.5px 0">
+                <span style="width:20px;height:20px;flex:none;border-radius:6px;border:1px solid rgba(22,29,38,.14);background:{{ tk.v }}"></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text)">{{ tk.n }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted);margin-left:auto">{{ tk.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div data-th="dark" style="flex:1;min-width:440px;background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:20px 22px;color:var(--color-text)">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:14px">DARK · [data-theme="dark"]</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 24px">
+        <sc-for list="{{ darkTokens }}" as="grp" hint-placeholder-count="4">
+          <div style="grid-column:{{ grp.col }};padding:6px 0 2px">
+            <div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin:6px 0 6px">{{ grp.g }}</div>
+            <sc-for list="{{ grp.items }}" as="tk" hint-placeholder-count="3">
+              <div style="display:flex;align-items:center;gap:9px;padding:2.5px 0">
+                <span style="width:20px;height:20px;flex:none;border-radius:6px;border:1px solid rgba(255,255,255,.16);background:{{ tk.v }}"></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text)">{{ tk.n }}</span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted);margin-left:auto">{{ tk.v }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:20px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:14px;padding:20px 22px;max-width:1020px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:#5B6A7D;margin-bottom:12px">NEW · ABO ADMIN LAYER (added on top of v3 — table &amp; shell specifics)</div>
+    <div style="display:grid;grid-template-columns:230px 1fr 1fr 1.4fr;gap:0;font-size:12px">
+      <div style="padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:#5B6A7D;border-bottom:1px solid #E9EDF2">TOKEN</div>
+      <div style="padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:#5B6A7D;border-bottom:1px solid #E9EDF2">LIGHT</div>
+      <div style="padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:#5B6A7D;border-bottom:1px solid #E9EDF2">DARK</div>
+      <div style="padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;color:#5B6A7D;border-bottom:1px solid #E9EDF2">USE</div>
+      <sc-for list="{{ aboTokens }}" as="r" hint-placeholder-count="7">
+        <div style="display:contents">
+          <div style="padding:7px 8px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#161D26;border-bottom:1px solid #F0F3F7">{{ r.n }}</div>
+          <div style="padding:7px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#455364;border-bottom:1px solid #F0F3F7">{{ r.l }}</div>
+          <div style="padding:7px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#455364;border-bottom:1px solid #F0F3F7">{{ r.d }}</div>
+          <div style="padding:7px 8px;color:#5B6A7D;border-bottom:1px solid #F0F3F7">{{ r.u }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 02 TYPE ═══ -->
+<section id="type" style="padding:28px 48px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">02 · Typography &amp; geometry</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 18px">Cormorant is out</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap">
+    <div style="flex:2;min-width:480px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:14px;padding:22px 24px">
+      <div style="display:flex;gap:24px;flex-wrap:wrap">
+        <div style="flex:1;min-width:200px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#5B6A7D;margin-bottom:8px">DISPLAY · --font-h</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:600;letter-spacing:-.3px">Space Grotesk</div>
+          <div style="font-size:12px;color:#5B6A7D;margin-top:6px;line-height:1.5">Section h2 (20/600), card titles (15/600), modal titles (16/600). Never below 500 weight in the admin.</div>
+        </div>
+        <div style="flex:1;min-width:200px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#5B6A7D;margin-bottom:8px">BODY / UI · --font-b</div>
+          <div style="font-size:24px;font-weight:500">Inter</div>
+          <div style="font-size:12px;color:#5B6A7D;margin-top:6px;line-height:1.5">Body 13px/1.5 · table cells 13px · labels 11px/600 uppercase +0.4px · captions 12px muted.</div>
+        </div>
+        <div style="flex:1;min-width:220px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#5B6A7D;margin-bottom:8px">DATA · --font-m</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums">JetBrains Mono</div>
+          <div style="font-size:12px;color:#5B6A7D;margin-top:6px;line-height:1.5">KPI values, € / ARIA / ROBI amounts, codes (<span style="font-family:'JetBrains Mono',monospace;font-size:11px">EVA-004821</span>), table headers. <b>tabular-nums, right-aligned</b> in every numeric column.</div>
+          <div style="margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:14px;font-variant-numeric:tabular-nums;color:#161D26;line-height:1.6;text-align:right;max-width:130px">€ 12,480.00<br>€ 1,062.50<br>€ 118,209.14</div>
+        </div>
+      </div>
+    </div>
+    <div style="flex:1;min-width:280px;background:#FFFFFF;border:1px solid #D4DBE3;border-radius:14px;padding:22px 24px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#5B6A7D;margin-bottom:12px">GEOMETRY &amp; MOTION TOKENS</div>
+      <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:14px">
+        <div style="width:52px;height:36px;border:1.5px solid #AEB9C6;border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#5B6A7D">8 sm</div>
+        <div style="width:52px;height:40px;border:1.5px solid #AEB9C6;border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#5B6A7D">12</div>
+        <div style="width:52px;height:44px;border:1.5px solid #AEB9C6;border-radius:16px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#5B6A7D">16 lg</div>
+        <div style="width:52px;height:28px;border:1.5px solid #AEB9C6;border-radius:999px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#5B6A7D">pill</div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#455364;line-height:1.9">--dur-fast: 120ms<br>--dur-base: 200ms<br>--dur-slow: 320ms<br>--ease-standard: cubic-bezier(.2,0,0,1)<br>--ease-decelerate: cubic-bezier(0,0,0,1)</div>
+      <div style="font-size:12px;color:#5B6A7D;margin-top:10px;line-height:1.5">Focus ring 2px <span style="font-family:'JetBrains Mono',monospace;font-size:11px">--color-focus</span>, offset 2px, both themes. Hit targets ≥44px on mobile.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 03 COMPONENTS ═══ -->
+<section id="components" style="padding:28px 48px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">03 · Core components</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 18px">Buttons · status tags · KPI · chips · forms</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:20px">
+
+    <!-- Buttons light -->
+    <div data-th="light" style="background:var(--color-bg);border:1px solid #D4DBE3;border-radius:14px;padding:20px 22px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;margin-bottom:16px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">BUTTONS · LIGHT</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">.ab-btn</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button style="height:36px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">Publish airdrop</button>
+        <button style="height:36px;padding:0 16px;background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer" style-hover="border-color:var(--color-border-strong)">Issue certificate</button>
+        <button style="height:36px;padding:0 14px;background:transparent;color:var(--color-text-secondary);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer" style-hover="background:var(--color-surface-2)">Cancel</button>
+        <button style="height:36px;padding:0 16px;background:var(--color-error);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="opacity:.9">Reject</button>
+        <button style="height:36px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;opacity:.45;cursor:not-allowed" disabled="{{ true }}">Disabled</button>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px">
+        <button style="height:28px;padding:0 11px;background:var(--color-surface-2);color:var(--color-text-secondary);border:1px solid var(--color-border);border-radius:7px;font-family:Inter,sans-serif;font-size:12px;font-weight:500;cursor:pointer">Small · rows</button>
+        <button style="height:44px;padding:0 20px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:10px;font-family:Inter,sans-serif;font-size:14px;font-weight:600;cursor:pointer">Mobile ≥44px</button>
+        <button style="height:36px;padding:0 14px;display:inline-flex;align-items:center;gap:7px;background:transparent;color:var(--color-error-text);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer" style-hover="background:var(--color-error-subtle);border-color:var(--color-error)">Quiet destructive</button>
+      </div>
+      <div style="font-size:11.5px;color:var(--color-text-muted);margin-top:14px;line-height:1.5">Primary red only for the main action of a view — one per screen. Everything else secondary/ghost.</div>
+    </div>
+
+    <!-- Buttons dark -->
+    <div data-th="dark" style="background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:20px 22px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;margin-bottom:16px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">BUTTONS · DARK</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">.ab-btn</span></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button style="height:36px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">Publish airdrop</button>
+        <button style="height:36px;padding:0 16px;background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border-strong);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Issue certificate</button>
+        <button style="height:36px;padding:0 14px;background:transparent;color:var(--color-text-secondary);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer" style-hover="background:var(--color-surface-2)">Cancel</button>
+        <button style="height:36px;padding:0 16px;background:var(--color-error);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer">Reject</button>
+      </div>
+      <div style="display:flex;gap:14px;align-items:center;margin-top:14px">
+        <span style="display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 12px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-secondary)"><span style="width:12px;height:12px;border:2px solid var(--color-text-muted);border-top-color:var(--color-accent);border-radius:50%;animation:abo-spin .8s linear infinite"></span>Saving…</span>
+        <span style="font-size:11.5px;color:var(--color-text-muted)">async state on every write action</span>
+      </div>
+    </div>
+
+    <!-- Tags light -->
+    <div data-th="light" style="background:var(--color-bg);border:1px solid #D4DBE3;border-radius:14px;padding:20px 22px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">STATUS TAGS · LIGHT</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">.tag</span></div>
+      <div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px">Airdrop pipeline</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-surface-3);color:var(--color-text-secondary)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Draft</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-info-subtle);color:var(--color-info-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Valuation</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-warning-subtle);color:var(--color-warning-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Acceptance</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-success-subtle);color:var(--color-success-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Active</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-primary-subtle);color:var(--color-primary-active)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Closing</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:transparent;border:1px solid var(--color-border);color:var(--color-text-muted)">✓ Completed</span>
+      </div>
+      <div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px">Tickets · EVALOBI · roles</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-warning-subtle);color:var(--color-warning-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Open</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-info-subtle);color:var(--color-info-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>In review</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-success-subtle);color:var(--color-success-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Resolved</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-error-subtle);color:var(--color-error-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Rejected</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;background:var(--color-success);color:#fff">GO</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;background:var(--color-error);color:#fff">NO-GO</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:transparent;border:1px solid var(--color-border);color:var(--color-text-secondary)">CEO</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:transparent;border:1px solid var(--color-border);color:var(--color-text-secondary)">Evaluator</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--color-text-muted);margin-top:14px;line-height:1.5">One language for every state in ABO: semantic color + label, never color alone. Solid fill reserved for final verdicts (GO / NO-GO).</div>
+    </div>
+
+    <!-- Tags dark -->
+    <div data-th="dark" style="background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:20px 22px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">STATUS TAGS · DARK</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">.tag</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-surface-3);color:var(--color-text-secondary)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Draft</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-info-subtle);color:var(--color-info-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Valuation</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-warning-subtle);color:var(--color-warning-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Acceptance</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-success-subtle);color:var(--color-success-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Active</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-primary-subtle);color:var(--color-error-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Closing</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:transparent;border:1px solid var(--color-border);color:var(--color-text-muted)">✓ Completed</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;background:var(--color-success);color:#0F1216">GO</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;background:var(--color-error);color:#0F1216">NO-GO</span>
+      </div>
+      <div style="font-size:11px;font-weight:600;color:var(--color-text-secondary);margin-bottom:8px">Entity colors (preserved)</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;background:rgba(74,158,255,.14);color:var(--aria)">1,240 ARIA</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;background:rgba(73,234,203,.12);color:var(--kas)">0.42 KAS</span>
+        <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;background:var(--color-primary-subtle);color:var(--color-primary)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5.5" stroke="currentColor" stroke-width="3"></circle><circle cx="17.5" cy="12" r="3.6" stroke="currentColor" stroke-width="2.6"></circle></svg>36 ROBI</span>
+      </div>
+      <div style="font-size:11.5px;color:var(--color-text-muted);margin-top:14px;line-height:1.5">ROBI symbol = the «OO» monogram, never ♦ or emoji. ROBI amounts use primary red as entity color.</div>
+    </div>
+
+    <!-- KPI light -->
+    <div data-th="light" style="background:var(--color-bg);border:1px solid #D4DBE3;border-radius:14px;padding:20px 22px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">KPI CARDS · LIGHT</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">.admin-card / .admin-grid</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px">
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-muted);letter-spacing:.3px;margin-bottom:5px">Registered users</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1">2,847</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-success-text);margin-top:6px">+38 · 7d</div>
+        </div>
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-muted);letter-spacing:.3px;margin-bottom:5px">Active airdrops</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1">6</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-muted);margin-top:6px">2 closing</div>
+        </div>
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-muted);letter-spacing:.3px;margin-bottom:5px">Open reports</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;color:var(--color-warning-text)">3</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-muted);margin-top:6px">oldest 2d</div>
+        </div>
+        <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px;position:relative">
+          <div style="font-size:11px;font-weight:500;color:var(--color-text-muted);letter-spacing:.3px;margin-bottom:5px;display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5.5" stroke="#EF3E4F" stroke-width="3"></circle><circle cx="17.5" cy="12" r="3.6" stroke="#EF3E4F" stroke-width="2.6"></circle></svg>ROBI nominal</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1">€ 1.0625</div>
+          <div style="font-size:10.5px;color:var(--color-text-muted);margin-top:6px">internal figure — not a market price</div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--color-text-muted);margin-top:14px;line-height:1.5">Sober: big mono number + label + discreet delta. No sparklines, no trend arrows, no candles (MiCA). The old gold-border “hero card” becomes the monogram-marked nominal card.</div>
+    </div>
+
+    <!-- Chips + forms dark -->
+    <div data-th="dark" style="background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:20px 22px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;margin-bottom:14px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">“TO DO TODAY” CHIPS + FORMS · DARK</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">.abo-todo-item</span></div>
+      <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:18px">
+        <button style="display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 15px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;font-family:Inter,sans-serif;font-size:13px;color:var(--color-text-secondary);cursor:pointer" style-hover="border-color:var(--color-border-strong);color:var(--color-text)"><b style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--color-primary)">4</b> pending valuations <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg></button>
+        <button style="display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 15px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;font-family:Inter,sans-serif;font-size:13px;color:var(--color-text-secondary);cursor:pointer"><b style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--color-primary)">3</b> open reports <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg></button>
+        <button style="display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 15px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;font-family:Inter,sans-serif;font-size:13px;color:var(--color-text-muted);cursor:pointer"><b style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:var(--color-text-muted)">0</b> open disputes</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:520px">
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:5px">Amount (€)</label>
+          <input value="1,250.00" style="width:100%;box-sizing:border-box;height:40px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;padding:0 12px;text-align:right;font-variant-numeric:tabular-nums">
+        </div>
+        <div>
+          <label style="display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:5px">Outcome</label>
+          <div style="position:relative"><select style="width:100%;height:40px;appearance:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:0 12px;cursor:pointer"><option>GO</option><option>NO-GO</option><option>In review</option></select><span style="position:absolute;right:12px;top:13px;pointer-events:none;color:var(--color-text-muted)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></span></div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:22px;margin-top:14px;flex-wrap:wrap">
+        <label style="display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--color-text-secondary);cursor:pointer"><span style="width:36px;height:20px;flex:none;border-radius:999px;background:var(--color-success);position:relative"><span style="position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:#fff"></span></span>alpha_brave_rules_active</label>
+        <label style="display:inline-flex;align-items:center;gap:9px;font-size:13px;color:var(--color-text-muted);cursor:pointer"><span style="width:36px;height:20px;flex:none;border-radius:999px;background:var(--color-surface-3);border:1px solid var(--color-border);position:relative"><span style="position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;background:var(--color-text-muted)"></span></span>maintenance_mode</label>
+      </div>
+      <div style="font-size:11.5px;color:var(--color-text-muted);margin-top:14px;line-height:1.5">Dangerous toggles (engine-config) require a typed confirm in a dialog before flipping.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 04 SHELL ═══ -->
+<section id="shell" style="padding:28px 48px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">04 · App shell</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 18px">Topbar · sidebar (.admin-nav / .admin-sidebar)</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+    <div style="flex:2;min-width:560px;display:flex;flex-direction:column;gap:14px">
+      <div data-th="light" style="background:var(--color-surface);border:1px solid #D4DBE3;border-radius:12px;overflow:hidden;color:var(--color-text);font-family:Inter,sans-serif">
+        <div style="height:56px;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid var(--color-border)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5.5" stroke="#161D26" stroke-width="3"></circle><circle cx="17.5" cy="12" r="3.6" stroke="#EF3E4F" stroke-width="2.6"></circle></svg>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;letter-spacing:.5px">ABO</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;padding:2px 7px;border-radius:999px;background:var(--color-success-subtle);color:var(--color-success-text)">LIVE</span>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+            <span style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 11px;border:1px solid var(--color-border);border-radius:8px;font-size:12px;color:var(--color-text-secondary);cursor:pointer">View as… (CEO) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></span>
+            <span style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-secondary);cursor:pointer" title="Theme"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"></path></svg></span>
+            <span style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-secondary);cursor:pointer;position:relative"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg><span style="position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--color-primary);border:1.5px solid var(--color-surface)"></span></span>
+            <span style="width:32px;height:32px;border-radius:50%;background:var(--color-secondary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">S</span>
+          </div>
+        </div>
+        <div style="padding:10px 16px;font-size:11.5px;color:var(--color-text-muted)">Topbar 56px · theme toggle persists to <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px">localStorage abo_theme</span> + <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px">data-theme</span> on root · default follows system</div>
+      </div>
+      <div data-th="dark" style="background:var(--color-surface);border:1px solid #0F1216;border-radius:12px;overflow:hidden;color:var(--color-text);font-family:Inter,sans-serif">
+        <div style="height:56px;display:flex;align-items:center;gap:12px;padding:0 16px;border-bottom:1px solid var(--color-border)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5.5" stroke="#E8EAED" stroke-width="3"></circle><circle cx="17.5" cy="12" r="3.6" stroke="#FF5563" stroke-width="2.6"></circle></svg>
+          <span style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;letter-spacing:.5px">ABO</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;padding:2px 7px;border-radius:999px;background:var(--color-warning-subtle);color:var(--color-warning-text)">VIEWING AS: EVALUATOR</span>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+            <span style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-secondary);cursor:pointer"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></span>
+            <span style="width:32px;height:32px;border-radius:50%;background:var(--color-surface-3);color:var(--color-text-secondary);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">M</span>
+          </div>
+        </div>
+        <div style="padding:10px 16px;font-size:11.5px;color:var(--color-text-muted)">“View as” simulation state = warning tag in the topbar, replacing the purple banner. Exit action inside the tag’s menu.</div>
+      </div>
+    </div>
+    <div data-th="dark" style="flex:1;min-width:300px;display:flex;gap:14px;align-items:flex-start;background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:16px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="width:232px;flex:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:10px 0 6px">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--color-text-muted);padding:8px 16px 5px">OPERATIONS</div>
+        <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px;margin:0 6px;border-radius:8px;background:var(--color-surface-3);color:var(--color-text);font-size:12.5px;font-weight:500;box-shadow:inset 2px 0 0 var(--color-primary)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>Dashboard</div>
+        <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12.5px;cursor:pointer" style-hover="background:var(--color-surface-2);color:var(--color-text)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg>Airdrop pipeline<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;padding:1px 7px;border-radius:999px;background:var(--color-surface-3);color:var(--color-text-secondary)">4</span></div>
+        <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12.5px;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"></path><path d="M9 15l2 2 4-4"></path></svg>EVALOBI Registry</div>
+        <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12.5px;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>Reports<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;padding:1px 7px;border-radius:999px;background:var(--color-primary-subtle);color:var(--color-primary)">3</span></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--color-text-muted);padding:12px 16px 5px">TREASURY</div>
+        <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12.5px;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>Treasury &amp; Funds</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--color-text-muted);padding:12px 16px 5px">SYSTEM</div>
+        <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 14px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12.5px;cursor:pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>Collaborators &amp; RBAC</div>
+      </div>
+      <div style="flex:1;min-width:120px">
+        <div style="width:52px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:10px 0;display:flex;flex-direction:column;align-items:center;gap:4px">
+          <span style="width:36px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;background:var(--color-surface-3);color:var(--color-text);box-shadow:inset 2px 0 0 var(--color-primary)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg></span>
+          <span style="width:36px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--color-text-secondary);position:relative"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg><span style="position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:var(--color-primary)"></span></span>
+          <span style="width:36px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--color-text-secondary)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg></span>
+        </div>
+        <div style="font-size:11px;color:var(--color-text-muted);margin-top:10px;line-height:1.5">Desktop collapse via <span style="font-family:'JetBrains Mono',monospace;font-size:10px">#sb-toggle</span> now goes to a 52px icon rail (tooltips on hover) instead of 0px — orientation is never lost. State stays in <span style="font-family:'JetBrains Mono',monospace;font-size:10px">abo_sb_collapsed</span>.</div>
+        <div style="font-size:11px;color:var(--color-text-muted);margin-top:8px;line-height:1.5">RBAC: items the role can’t access are removed, groups with zero items disappear — sidebar shortens by itself.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 05 TABLES ═══ -->
+<section id="tables" style="padding:28px 48px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">05 · Data tables</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 18px">Desktop density + the 390px strategy (.admin-table / .adm-tbl)</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+    <div data-th="light" style="flex:2;min-width:600px;background:var(--color-bg);border:1px solid #D4DBE3;border-radius:14px;padding:20px 22px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">DESKTOP ≥1280 · 40PX ROWS · LIGHT</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">rows are tappable → modal</span></div>
+      <div style="border:1px solid var(--color-border);border-radius:12px;overflow:hidden">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr>
+            <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Airdrop</th>
+            <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Object</th>
+            <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Status</th>
+            <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Entries</th>
+            <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Range €</th>
+            <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Updated</th>
+            <th style="width:36px;background:var(--abo-table-head-bg);border-bottom:1px solid var(--color-border)"></th>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{ pipelineRows }}" as="r" hint-placeholder-count="4">
+              <tr style="cursor:pointer" style-hover="background:var(--abo-row-hover)">
+                <td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3)"><span style="display:inline-flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--color-text)">{{ r.code }}<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="opacity:.45;cursor:copy"><rect x="9" y="9" width="13" height="13" rx="2"></rect><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"></path></svg></span></td>
+                <td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3);color:var(--color-text)">{{ r.obj }}</td>
+                <td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3)"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-{{ r.tone }}-subtle);color:var(--color-{{ r.tone }}-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>{{ r.status }}</span></td>
+                <td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-variant-numeric:tabular-nums">{{ r.entries }}</td>
+                <td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-variant-numeric:tabular-nums">{{ r.range }}</td>
+                <td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3);color:var(--color-text-muted);font-size:12px">{{ r.when }}</td>
+                <td style="height:40px;padding:0 10px;border-bottom:1px solid var(--color-surface-3);color:var(--color-text-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="font-size:11.5px;color:var(--color-text-muted);margin-top:12px;line-height:1.5">Mono uppercase headers · numeric columns right-aligned tabular · codes copy-on-tap · sticky <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px">thead</span> inside the scroll container · chevron = tappable-row affordance.</div>
+    </div>
+    <div data-th="dark" style="flex:1;min-width:420px;background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:20px 22px;color:var(--color-text);font-family:Inter,sans-serif">
+      <div style="display:flex;justify-content:space-between;margin-bottom:12px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">MOBILE 390 · STICKY FIRST COLUMN · DARK</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">scroll →</span></div>
+      <div style="width:358px;margin:0 auto;border:1px solid var(--color-border);border-radius:14px;overflow:hidden;background:var(--color-surface)">
+        <div style="overflow-x:auto">
+          <table style="border-collapse:separate;border-spacing:0;font-size:12.5px;min-width:620px">
+            <thead><tr>
+              <th style="position:sticky;left:0;z-index:2;background:var(--abo-table-head-bg);text-align:left;height:38px;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border);box-shadow:var(--abo-sticky-col-shadow)">User</th>
+              <th style="text-align:right;height:38px;padding:0 12px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">ARIA</th>
+              <th style="text-align:right;height:38px;padding:0 12px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">ROBI</th>
+              <th style="text-align:right;height:38px;padding:0 12px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Entries/wk</th>
+              <th style="text-align:right;height:38px;padding:0 12px;background:var(--abo-table-head-bg);font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Referrals</th>
+              <th style="height:38px;padding:0 12px;background:var(--abo-table-head-bg);border-bottom:1px solid var(--color-border)"></th>
+            </tr></thead>
+            <tbody>
+              <sc-for list="{{ userRows }}" as="u" hint-placeholder-count="4">
+                <tr>
+                  <td style="position:sticky;left:0;z-index:1;background:var(--abo-sticky-col-bg);height:52px;padding:0 12px;border-bottom:1px solid var(--color-surface-3);box-shadow:var(--abo-sticky-col-shadow);max-width:150px"><div style="font-size:12.5px;color:var(--color-text);font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:126px">{{ u.mail }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">{{ u.id }}</div></td>
+                  <td style="text-align:right;padding:0 12px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;color:var(--aria)">{{ u.aria }}</td>
+                  <td style="text-align:right;padding:0 12px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;color:var(--color-primary)">{{ u.robi }}</td>
+                  <td style="text-align:right;padding:0 12px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums">{{ u.wk }}</td>
+                  <td style="text-align:right;padding:0 12px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums">{{ u.ref }}</td>
+                  <td style="padding:0 12px;border-bottom:1px solid var(--color-surface-3)"><button style="height:30px;padding:0 12px;background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);border-radius:7px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:500;cursor:pointer;white-space:nowrap">Manage</button></td>
+                </tr>
+              </sc-for>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:var(--color-text-muted);margin-top:12px;line-height:1.5;max-width:360px;margin-left:auto;margin-right:auto">Identity column pinned with a scroll-cue shadow; row height 52px; tapping the pinned cell opens the full record as a bottom sheet, so actions are never off-screen even before scrolling.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 06 OVERLAYS ═══ -->
+<section id="overlays" style="padding:28px 48px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">06 · Overlays &amp; states</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 18px">Modal → bottom sheet · toast · empty · skeleton (.ct-modal)</h2>
+  <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start">
+    <div data-th="light" style="flex:2;min-width:540px;background:var(--color-overlay);border-radius:14px;padding:36px;display:flex;align-items:center;justify-content:center;font-family:Inter,sans-serif">
+      <div style="width:100%;max-width:640px;background:var(--color-surface);color:var(--color-text);border-radius:14px;box-shadow:var(--shadow-xl);overflow:hidden">
+        <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid var(--color-border)">
+          <div><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600">Manage airdrop</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-muted);margin-top:2px">#AD-0142 · Fuji X100V</div></div>
+          <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.6px;text-transform:uppercase;background:var(--color-info-subtle);color:var(--color-info-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>Valuation</span>
+          <span style="width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--color-text-secondary);cursor:pointer;border:1px solid var(--color-border)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg></span>
+        </div>
+        <div style="padding:18px 20px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:5px">Valuation range (€)</label>
+            <input value="1,150 – 1,300" style="width:100%;box-sizing:border-box;height:40px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;padding:0 12px;text-align:right">
+          </div>
+          <div>
+            <label style="display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:5px">Step price (ARIA)</label>
+            <input value="120" style="width:100%;box-sizing:border-box;height:40px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;padding:0 12px;text-align:right">
+          </div>
+          <div style="grid-column:1/-1;background:var(--color-bg-subtle);border:1px solid var(--color-border);border-radius:10px;padding:12px 14px;font-size:12.5px;color:var(--color-text-secondary);display:flex;gap:18px;flex-wrap:wrap"><span>Steps: <b style="font-family:'JetBrains Mono',monospace">96</b></span><span>Summit at: <b style="font-family:'JetBrains Mono',monospace">11,520 ARIA</b></span><span>Cover: <b style="font-family:'JetBrains Mono',monospace;color:var(--color-success-text)">104%</b></span></div>
+        </div>
+        <div style="display:flex;gap:10px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--color-border);background:var(--color-bg-subtle)">
+          <button style="height:36px;padding:0 14px;background:transparent;color:var(--color-text-secondary);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Cancel</button>
+          <button style="height:36px;padding:0 16px;background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Save draft</button>
+          <button style="height:36px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer">Send to seller →</button>
+        </div>
+      </div>
+    </div>
+    <div data-th="dark" style="flex:1;min-width:300px;display:flex;flex-direction:column;gap:14px;font-family:Inter,sans-serif">
+      <div style="background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:16px;color:var(--color-text)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:10px">TOAST · DARK</div>
+        <div style="display:flex;align-items:center;gap:10px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:10px;padding:11px 14px;box-shadow:var(--shadow-lg);max-width:340px">
+          <span style="width:20px;height:20px;flex:none;border-radius:50%;background:var(--color-success-subtle);color:var(--color-success-text);display:inline-flex;align-items:center;justify-content:center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg></span>
+          <span style="font-size:12.5px;color:var(--color-text)">Ticket resolved · 40 ROBI awarded</span>
+          <a href="#overlays" style="margin-left:auto;font-size:12px;font-weight:600;color:var(--color-link)">Undo</a>
+        </div>
+      </div>
+      <div style="background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:16px;color:var(--color-text)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:10px">EMPTY STATE</div>
+        <div style="border:1px dashed var(--color-border-strong);border-radius:12px;padding:24px;text-align:center">
+          <div style="width:38px;height:38px;margin:0 auto 10px;border-radius:50%;background:var(--color-surface-3);color:var(--color-text-muted);display:flex;align-items:center;justify-content:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg></div>
+          <div style="font-size:13.5px;font-weight:600">No open reports</div>
+          <div style="font-size:12px;color:var(--color-text-muted);margin:4px 0 12px">New tickets land here with page context.</div>
+          <button style="height:32px;padding:0 13px;background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:500;cursor:pointer">View resolved</button>
+        </div>
+      </div>
+      <div style="background:var(--color-bg);border:1px solid #0F1216;border-radius:14px;padding:16px;color:var(--color-text)">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:10px">SKELETON (replaces bare “Caricamento…”)</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="height:14px;border-radius:6px;width:62%;background:linear-gradient(90deg,var(--color-surface-2) 25%,var(--color-surface-3) 50%,var(--color-surface-2) 75%);background-size:520px 100%;animation:abo-shimmer 1.2s linear infinite"></div>
+          <div style="height:14px;border-radius:6px;width:88%;background:linear-gradient(90deg,var(--color-surface-2) 25%,var(--color-surface-3) 50%,var(--color-surface-2) 75%);background-size:520px 100%;animation:abo-shimmer 1.2s linear infinite"></div>
+          <div style="height:14px;border-radius:6px;width:74%;background:linear-gradient(90deg,var(--color-surface-2) 25%,var(--color-surface-3) 50%,var(--color-surface-2) 75%);background-size:520px 100%;animation:abo-shimmer 1.2s linear infinite"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 07 MOBILE NAV OPTIONS ═══ -->
+<section id="nav" style="padding:28px 48px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">07 · Mobile navigation ≤768px — 3 explorations</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 18px">Today the sidebar is simply hidden. Pick a pattern:</h2>
+  <div style="display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start">
+
+    <div id="1a" style="flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px">
+      <div style="display:flex;align-items:baseline;gap:8px;font-size:11.5px;color:#455364"><a href="#1a" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:5px;text-decoration:none">1a</a><b>Bottom nav + “More” sheet</b></div>
+      <div data-th="light" style="width:300px;height:480px;background:var(--color-bg-subtle);border:1px solid #C9D1DA;border-radius:22px;overflow:hidden;position:relative;color:var(--color-text);font-family:Inter,sans-serif">
+        <div style="height:44px;display:flex;align-items:center;gap:8px;padding:0 14px;background:var(--color-surface);border-bottom:1px solid var(--color-border)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5.5" stroke="#161D26" stroke-width="3"></circle><circle cx="17.5" cy="12" r="3.6" stroke="#EF3E4F" stroke-width="2.6"></circle></svg><span style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600">Dashboard</span><span style="margin-left:auto;width:26px;height:26px;border-radius:50%;background:var(--color-secondary);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:600">S</span></div>
+        <div style="padding:12px;display:flex;flex-direction:column;gap:8px">
+          <div style="height:52px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px"></div>
+          <div style="display:flex;gap:8px"><div style="flex:1;height:64px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px"></div><div style="flex:1;height:64px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px"></div></div>
+          <div style="height:140px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px"></div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:60px;background:var(--color-surface);border-top:1px solid var(--color-border);display:grid;grid-template-columns:repeat(5,1fr)">
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;font-weight:600;color:var(--color-primary)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>Home</span>
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;color:var(--color-text-muted);position:relative"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg>Pipeline<span style="position:absolute;top:8px;right:22px;min-width:15px;height:15px;padding:0 4px;border-radius:999px;background:var(--color-primary);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;display:flex;align-items:center;justify-content:center">4</span></span>
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;color:var(--color-text-muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>Reports</span>
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;color:var(--color-text-muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>Treasury</span>
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;color:var(--color-text-muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="5" cy="12" r="1.6"></circle><circle cx="12" cy="12" r="1.6"></circle><circle cx="19" cy="12" r="1.6"></circle></svg>More</span>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:#5B6A7D;max-width:300px;line-height:1.5">+ Fastest for the CEO’s 4 daily flows, thumb-reach, badges.<br>− 15 modules don’t fit: “More” sheet is a second hop; RBAC roles may not need 4 fixed tabs.</div>
+    </div>
+
+    <div id="1b" style="flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px">
+      <div style="display:flex;align-items:baseline;gap:8px;font-size:11.5px;color:#455364"><a href="#1b" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:5px;text-decoration:none">1b</a><b>Drawer (full tree)</b></div>
+      <div data-th="dark" style="width:300px;height:480px;background:var(--color-bg);border:1px solid #0F1216;border-radius:22px;overflow:hidden;position:relative;color:var(--color-text);font-family:Inter,sans-serif">
+        <div style="height:44px;display:flex;align-items:center;gap:10px;padding:0 14px;background:var(--color-surface);border-bottom:1px solid var(--color-border)"><span style="display:flex;flex-direction:column;gap:3.5px;cursor:pointer"><span style="width:16px;height:1.8px;background:var(--color-text)"></span><span style="width:16px;height:1.8px;background:var(--color-text)"></span><span style="width:16px;height:1.8px;background:var(--color-text)"></span></span><span style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600">Pipeline</span></div>
+        <div style="position:absolute;inset:44px 0 0;background:var(--color-overlay)"></div>
+        <div style="position:absolute;top:44px;bottom:0;left:0;width:224px;background:var(--color-surface);border-right:1px solid var(--color-border);padding:8px 0;box-shadow:var(--shadow-xl)">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;color:var(--color-text-muted);padding:8px 14px 4px">OPERATIONS</div>
+          <div style="display:flex;align-items:center;gap:9px;height:38px;padding:0 12px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12px">Dashboard</div>
+          <div style="display:flex;align-items:center;gap:9px;height:38px;padding:0 12px;margin:0 6px;border-radius:8px;background:var(--color-surface-3);color:var(--color-text);font-size:12px;font-weight:500;box-shadow:inset 2px 0 0 var(--color-primary)">Airdrop pipeline<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:1px 6px;border-radius:999px;background:var(--color-primary-subtle);color:var(--color-primary)">4</span></div>
+          <div style="display:flex;align-items:center;gap:9px;height:38px;padding:0 12px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12px">EVALOBI Registry</div>
+          <div style="display:flex;align-items:center;gap:9px;height:38px;padding:0 12px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12px">Reports<span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:9.5px;padding:1px 6px;border-radius:999px;background:var(--color-surface-3);color:var(--color-text-secondary)">3</span></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;color:var(--color-text-muted);padding:10px 14px 4px">TREASURY</div>
+          <div style="display:flex;align-items:center;gap:9px;height:38px;padding:0 12px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12px">Treasury &amp; Funds</div>
+          <div style="display:flex;align-items:center;gap:9px;height:38px;padding:0 12px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12px">ARIA &amp; ROBI</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;color:var(--color-text-muted);padding:10px 14px 4px">SYSTEM</div>
+          <div style="display:flex;align-items:center;gap:9px;height:38px;padding:0 12px;margin:0 6px;border-radius:8px;color:var(--color-text-secondary);font-size:12px">Collaborators &amp; RBAC</div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:#5B6A7D;max-width:300px;line-height:1.5">+ One pattern for all 15 modules and all roles; zero relearning vs desktop.<br>− Every navigation costs 2 taps; no persistent badges while browsing.</div>
+    </div>
+
+    <div id="1c" style="flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px">
+      <div style="display:flex;align-items:baseline;gap:8px;font-size:11.5px;color:#455364"><a href="#1c" style="font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:5px;text-decoration:none">1c</a><b>Hybrid — bottom nav + module grid ★ recommended</b></div>
+      <div data-th="light" style="width:300px;height:480px;background:var(--color-bg-subtle);border:1px solid #C9D1DA;border-radius:22px;overflow:hidden;position:relative;color:var(--color-text);font-family:Inter,sans-serif">
+        <div style="height:44px;display:flex;align-items:center;gap:8px;padding:0 14px;background:var(--color-surface);border-bottom:1px solid var(--color-border)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5.5" stroke="#161D26" stroke-width="3"></circle><circle cx="17.5" cy="12" r="3.6" stroke="#EF3E4F" stroke-width="2.6"></circle></svg><span style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600">Menu</span></div>
+        <div style="position:absolute;inset:44px 0 60px;background:var(--color-overlay)"></div>
+        <div style="position:absolute;left:0;right:0;bottom:60px;background:var(--color-surface);border-radius:16px 16px 0 0;box-shadow:var(--shadow-xl);padding:14px 14px 10px">
+          <div style="width:36px;height:4px;border-radius:999px;background:var(--color-border-strong);margin:0 auto 12px"></div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:8.5px;letter-spacing:2px;color:var(--color-text-muted);margin:0 2px 8px">ALL MODULES · BY AREA</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 20V10M12 20V4M6 20v-6"></path></svg>Analysis</div>
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"></path></svg>Messages</div>
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>Users</div>
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M8 12h8M12 8v8"></path></svg>ARIA acct</div>
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="M2 10h20"></path></svg>Assets</div>
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary);position:relative"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"></path><circle cx="9" cy="7" r="4"></circle></svg>RBAC</div>
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"></path></svg>Categories</div>
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.5 4.5l2 2M17.5 17.5l2 2M4.5 19.5l2-2M17.5 6.5l2-2"></path></svg>Engine</div>
+            <div style="height:58px;border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:9.5px;color:var(--color-text-secondary)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>Costs</div>
+          </div>
+        </div>
+        <div style="position:absolute;left:0;right:0;bottom:0;height:60px;background:var(--color-surface);border-top:1px solid var(--color-border);display:grid;grid-template-columns:repeat(5,1fr)">
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;color:var(--color-text-muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect></svg>Home</span>
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;color:var(--color-text-muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path></svg>Pipeline</span>
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;color:var(--color-text-muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path><line x1="4" y1="22" x2="4" y2="15"></line></svg>Reports</span>
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;color:var(--color-text-muted)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"></path></svg>Treasury</span>
+          <span style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:9.5px;font-weight:600;color:var(--color-primary)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><path d="M17.5 14v7M14 17.5h7"></path></svg>Menu</span>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:#5B6A7D;max-width:300px;line-height:1.5">+ 4 daily flows one tap away; “Menu” grid covers all 15 modules grouped by area; tabs configurable per role (RBAC picks the first 4 visible).<br>− Two nav surfaces to keep consistent.</div>
+    </div>
+  </div>
+  <p style="margin:20px 0 0;font-size:12px;color:#5B6A7D">Try next: “build the prototype with <a href="#1c">1c</a>” · “swap Treasury for EVALOBI in the tab bar” · “show <a href="#1b">1b</a> in light mode”.</p>
+</section>
+
+<!-- ═══ 08 MOTION ═══ -->
+<section id="motion" style="padding:28px 48px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">08 · Motion spec</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 16px">A work tool: micro-transitions only</h2>
+  <div style="background:#FFFFFF;border:1px solid #D4DBE3;border-radius:14px;padding:8px 22px;max-width:900px">
+    <sc-for list="{{ motionRows }}" as="m" hint-placeholder-count="6">
+      <div style="display:grid;grid-template-columns:220px 1fr 220px;gap:16px;padding:11px 0;border-bottom:1px solid #F0F3F7;font-size:12.5px;align-items:baseline">
+        <div style="font-weight:600;color:#161D26">{{ m.n }}</div>
+        <div style="color:#455364">{{ m.s }}</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#5B6A7D">{{ m.t }}</div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<!-- ═══ 09 MIGRATION ═══ -->
+<section id="migration" style="padding:28px 48px 8px;border-top:1px solid #D8DEE6">
+  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2.5px;color:#EF3E4F;text-transform:uppercase;margin-bottom:4px">09 · CSS migration note</div>
+  <h2 style="font-family:'Space Grotesk',sans-serif;font-size:20px;font-weight:600;margin:0 0 16px">Skin order — zero JS edits</h2>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;max-width:1100px">
+    <sc-for list="{{ migration }}" as="st" hint-placeholder-count="6">
+      <div style="background:#FFFFFF;border:1px solid #D4DBE3;border-radius:12px;padding:16px 18px">
+        <div style="display:flex;gap:10px;align-items:baseline;margin-bottom:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:#EF3E4F">{{ st.k }}</span><b style="font-size:13px">{{ st.t }}</b></div>
+        <div style="font-size:12px;color:#455364;line-height:1.55">{{ st.d }}</div>
+      </div>
+    </sc-for>
+  </div>
+  <p style="margin:26px 0 0;font-size:12.5px;color:#5B6A7D;max-width:820px;line-height:1.6"><b style="color:#161D26">Next step:</b> the interactive prototype (theme toggle, sidebar collapse, working modals/tabs/filters) for the 4 key pages — dashboard, pipeline + manage sheet, reports, RBAC matrix — using the mobile nav option you pick above (my recommendation: <a href="#1c">1c</a>).</p>
+</section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const G = (g, col, arr) => ({ g, col, items: arr.map(([n, v]) => ({ n, v })) });
+    return {
+      lightTokens: [
+        G('Background & surfaces', '1', [['bg', '#FFFFFF'], ['bg-subtle', '#F5F7FA'], ['surface', '#FFFFFF'], ['surface-2', '#F5F7FA'], ['surface-3', '#E9EDF2'], ['overlay', 'rgba(22,29,38,.55)']]),
+        G('Text', '1', [['text', '#161D26'], ['text-secondary', '#455364'], ['text-muted', '#5B6A7D'], ['text-inverse', '#FFFFFF']]),
+        G('Border', '1', [['border', '#D4DBE3'], ['border-strong', '#AEB9C6']]),
+        G('Primary · ROBI red', '2', [['primary', '#EF3E4F'], ['primary-hover', '#D91F32'], ['primary-active', '#B4192A'], ['primary-subtle', '#FFF1F2']]),
+        G('Secondary · accent', '2', [['secondary', '#33404F'], ['accent', '#2F6BFF'], ['link', '#1E54E6'], ['focus', '#2F6BFF']]),
+        G('Semantic', '2', [['success', '#0E8A44'], ['warning', '#E5820B'], ['error', '#D91F32'], ['info', '#1E54E6']]),
+        G('Entities', '2', [['aria', '#4A9EFF'], ['kas', '#49EACB'], ['robi = primary', '#EF3E4F']]),
+      ],
+      darkTokens: [
+        G('Background & surfaces', '1', [['bg', '#0F1216'], ['bg-subtle', '#12161B'], ['surface', '#171B21'], ['surface-2', '#1E242C'], ['surface-3', '#262E38'], ['overlay', 'rgba(0,0,0,.62)']]),
+        G('Text', '1', [['text', '#E8EAED'], ['text-secondary', '#AEB9C6'], ['text-muted', '#7E8B9C'], ['text-inverse', '#0F1216']]),
+        G('Border', '1', [['border', '#2A313A'], ['border-strong', '#3A434F']]),
+        G('Primary · ROBI red', '2', [['primary', '#FF5563'], ['primary-hover', '#FF6E79'], ['primary-active', '#E23A48'], ['primary-subtle', 'rgba(255,85,99,.14)']]),
+        G('Secondary · accent', '2', [['secondary', '#AEB9C6'], ['accent', '#6284FF'], ['link', '#8AA3FF'], ['focus', '#6284FF']]),
+        G('Semantic', '2', [['success', '#2FBE6E'], ['warning', '#F5A524'], ['error', '#FF5563'], ['info', '#6284FF']]),
+        G('Entities', '2', [['aria', '#4A9EFF'], ['kas', '#49EACB'], ['robi = primary', '#FF5563']]),
+      ],
+      aboTokens: [
+        { n: '--abo-topbar-h', l: '56px', d: '56px', u: 'Topbar height (52px ≤768px)' },
+        { n: '--abo-sidebar-w', l: '248px', d: '248px', u: 'Sidebar expanded · 52px icon rail collapsed (#sb-toggle)' },
+        { n: '--abo-row-h', l: '40px', d: '40px', u: 'Table row height desktop · 52px mobile' },
+        { n: '--abo-table-head-bg', l: '#F5F7FA', d: '#1E242C', u: 'Sticky table header background' },
+        { n: '--abo-row-hover', l: 'rgba(22,29,38,.035)', d: 'rgba(255,255,255,.045)', u: 'Row hover wash (replaces purple rgba(139,92,246,.03))' },
+        { n: '--abo-sticky-col-bg', l: '#FFFFFF', d: '#171B21', u: 'Pinned first column background (mobile tables)' },
+        { n: '--abo-sticky-col-shadow', l: '8px 0 8px -8px rgba(22,29,38,.18)', d: '8px 0 8px -8px rgba(0,0,0,.6)', u: 'Scroll cue on the pinned column' },
+      ],
+      pipelineRows: [
+        { code: '#AD-0142', obj: 'Fuji X100V · mint', status: 'Valuation', tone: 'info', entries: '—', range: '1,150–1,300', when: '2h ago' },
+        { code: '#AD-0141', obj: 'iPhone 15 Pro 256GB', status: 'Acceptance', tone: 'warning', entries: '—', range: '780–860', when: '5h ago' },
+        { code: '#AD-0139', obj: 'PS5 Slim + 2 pads', status: 'Active', tone: 'success', entries: '3,412', range: '420–470', when: '1d ago' },
+        { code: '#AD-0137', obj: 'Dyson V15 Detect', status: 'Closing', tone: 'error', entries: '8,940', range: '540–590', when: '1d ago' },
+      ],
+      userRows: [
+        { mail: 'marta.riva@gmail.com', id: 'U-2841', aria: '12,480', robi: '36', wk: '14', ref: '3' },
+        { mail: 'luca.b@outlook.com', id: 'U-2712', aria: '9,120', robi: '22', wk: '9', ref: '1' },
+        { mail: 'sof.ferri@icloud.com', id: 'U-2688', aria: '21,050', robi: '61', wk: '18', ref: '7' },
+        { mail: 'g.marchetti@pm.me', id: 'U-2534', aria: '4,310', robi: '8', wk: '4', ref: '0' },
+      ],
+      motionRows: [
+        { n: 'Section switch (pushState)', s: 'content fade + translateY 8px→0', t: '200ms · ease-standard' },
+        { n: 'Bottom sheet open/close', s: 'translateY 100%→0 · scrim fade in parallel', t: '320ms · ease-decelerate' },
+        { n: 'Modal open (desktop)', s: 'scale .98→1 + fade', t: '160ms · ease-standard' },
+        { n: 'Toast', s: 'slide up 12px + fade · auto-dismiss 4s (persistent for errors)', t: '200ms · ease-standard' },
+        { n: 'Sidebar collapse / drawer', s: 'width (grid column) / translateX', t: '200ms · ease-standard' },
+        { n: 'Hover (rows, buttons, chips)', s: 'background + border-color only', t: '120ms · linear' },
+        { n: 'Theme switch', s: 'instant swap — no cross-fade (avoids half-themed frames)', t: '0ms' },
+        { n: 'Skeleton shimmer', s: 'gradient sweep', t: '1.2s · linear · infinite' },
+        { n: 'prefers-reduced-motion', s: 'all transitions & animations collapsed', t: '→ 0.01ms' },
+      ],
+      migration: [
+        { k: '1', t: 'Add the skin layer', d: 'Ship abo-skin.css (tokens above + component rules) loaded after the current styles, plus theme-v3.css if abo.html doesn’t already import it. Cascade only — no markup or JS edits yet.' },
+        { k: '2', t: 'Theme bootstrap', d: 'Tiny inline head script: data-theme = localStorage abo_theme ?? prefers-color-scheme; topbar toggle writes the same key (mirrors abo_sb_collapsed). color-scheme set per theme.' },
+        { k: '3', t: 'Kill the legacy tokens', d: '--gold → --color-primary · --black/--white → --color-bg/--color-text · --gray-900/800/700 → surface-2/3/border · --gray-500/400/300 → text-muted/secondary. Then grep the purple: every literal rgba(139,92,246,…) → --color-primary-subtle or --abo-row-hover.' },
+        { k: '4', t: 'Font swap', d: 'Remove Cormorant Garamond link; add Space Grotesk + Inter + JetBrains Mono (preconnect + display=swap). --font-h/--font-display → Space Grotesk. Add tabular-nums to td and all amount classes.' },
+        { k: '5', t: 'Component pass', d: 'In order: admin-nav → admin-sidebar (+ chosen mobile nav) → admin-card/admin-grid → admin-table & adm-tbl (sticky head, pinned first column wrap) → tag → ab-btn → ct-modal (bottom sheet ≤768px) → abo-todo-item → forms & abo-login-box → skeleton/empty states.' },
+        { k: '6', t: 'Verify & purge', d: 'AA contrast audit on both themes, focus rings, 44px hit targets at 390px; delete dead gold/purple vars and the Cormorant @font-face. File stays single, no-cache, no build step.' },
+      ],
+    };
+  }
+}
+</script>
+</body>
+</html>

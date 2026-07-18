@@ -1,0 +1,75 @@
+/* ══════════════════════════════════════════════════════════════════
+   ABO v3 — skin "Dashboard & Gestionale" (Design Sheet 18 lug 2026)
+   Layer sopra src/theme-v3.css (che già rimappa i token legacy
+   --gold/--black/--white/--gray-* sui token v3, light+dark).
+   Regola: SKIN, NON RISCRITTURA — solo colori, superfici, radius,
+   ombre e tipografia; nessun cambiamento a layout/ID/JS.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Token ABO-specifici del Design Sheet */
+:root, html:not([data-theme="dark"]), html[data-theme="light"]{
+  --abo-table-head-bg:#F5F7FA;
+  --abo-row-hover:rgba(22,29,38,.035);
+  --abo-sticky-col-bg:#FFFFFF;
+}
+html[data-theme="dark"]{
+  --abo-table-head-bg:#1E242C;
+  --abo-row-hover:rgba(255,255,255,.045);
+  --abo-sticky-col-bg:#171B21;
+}
+
+body{background:var(--color-bg);color:var(--color-text)}
+
+/* Topbar */
+.admin-nav{background:var(--color-surface);border-bottom:1px solid var(--color-border)}
+.admin-nav span{color:var(--color-primary)}
+.admin-close{border-radius:8px;border-color:var(--color-border);color:var(--color-text-secondary)}
+.admin-close:hover{border-color:var(--color-primary);color:var(--color-primary)}
+
+/* Sidebar */
+.admin-sidebar{background:var(--color-surface);border-right:1px solid var(--color-border)}
+.admin-sidebar-label{color:var(--color-text-muted)}
+.admin-sidebar-item{color:var(--color-text-secondary)}
+.admin-sidebar-item:hover{background:var(--abo-row-hover);color:var(--color-text)}
+.admin-sidebar-item.active{color:var(--color-primary);border-left-color:var(--color-primary);background:var(--color-primary-subtle)}
+#sb-toggle{background:var(--color-surface);border:1px solid var(--color-border);color:var(--color-text-secondary)}
+#sb-toggle:hover{color:var(--color-primary);border-color:var(--color-primary)}
+
+/* Titoli sezione — Space Grotesk da gestionale, non serif editoriale */
+.admin-section h2{font-weight:600;letter-spacing:-.01em;border-bottom-color:var(--color-border)}
+.admin-section h3{font-weight:600}
+
+/* Card */
+.admin-card{background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;box-shadow:var(--shadow-xs)}
+.admin-note{border-radius:8px}
+
+/* Tabelle dati: testata dedicata, hover riga, numeri tabellari */
+.admin-table th,.adm-tbl th{background:var(--abo-table-head-bg);color:var(--color-text-muted)}
+.admin-table td,.adm-tbl td{border-color:var(--color-border);font-variant-numeric:tabular-nums}
+.admin-table tbody tr:hover td,.adm-tbl tbody tr:hover td{background:var(--abo-row-hover)}
+
+/* Bottoni, badge, chips */
+.ab-btn{border-radius:8px}
+.tag{border-radius:999px}
+.abo-todo-item{border-radius:999px;border-color:var(--color-border);color:var(--color-text-secondary)}
+.abo-todo-item:hover{border-color:var(--color-primary);color:var(--color-primary)}
+
+/* Form: focus ring accessibile (bluette v3) */
+#admin-overlay input:focus,#admin-overlay select:focus,#admin-overlay textarea:focus,
+.abo-login-box input:focus{border-color:var(--color-focus);box-shadow:var(--shadow-focus);outline:none}
+
+/* Login */
+.abo-login-box{background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;box-shadow:var(--shadow-lg)}
+
+/* Pannello notifiche campanella + modali */
+.abo-notif-panel{background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;box-shadow:var(--shadow-lg)}
+.ct-modal{border-radius:12px}
+
+/* Banner "Vedi come": era viola pre-v3 → primary subtle */
+#abo-sim-banner{background:var(--color-primary-subtle)!important;border-bottom:1px solid var(--color-primary)!important;color:var(--color-primary)!important}
+#abo-sim-banner button{color:var(--color-primary)!important}
+
+/* Scrollbar discreta da strumento di lavoro */
+#admin-overlay ::-webkit-scrollbar{width:8px;height:8px}
+#admin-overlay ::-webkit-scrollbar-thumb{background:var(--color-border-strong);border-radius:4px}
+#admin-overlay ::-webkit-scrollbar-track{background:transparent}

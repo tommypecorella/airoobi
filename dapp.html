@@ -1197,6 +1197,16 @@
       <button onclick="saveAlertPreferences()" style="margin-top:12px;background:var(--gold);color:var(--black);border:none;padding:8px 20px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;font-weight:700"><span class="it">SALVA PREFERENZE</span><span class="en">SAVE PREFERENCES</span></button>
     </div>
 
+    <!-- GESTIONE NOTIFICHE (18 lug · censimento) -->
+    <div style="margin-top:24px;padding:20px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
+      <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);text-transform:uppercase;margin-bottom:12px"><span class="it">Gestione notifiche</span><span class="en">Notification settings</span></div>
+      <p style="font-size:12px;color:var(--gray-400);margin-bottom:12px;line-height:1.5"><span class="it">Le notifiche <b>di sistema</b> — esiti delle tue corse, cambi di stato dei tuoi airdrop, movimenti del conto — sono sempre attive. Qui gestisci le altre.</span><span class="en">System notifications — race outcomes, your airdrop status changes, account movements — are always on. Manage the rest here.</span></p>
+      <div id="notif-prefs-list" style="font-size:13px;color:var(--gray-400)">…</div>
+      <div id="notif-push-row" style="margin-top:14px">
+        <button onclick="requestPushPermission().then(function(){renderNotifPrefsUI()})" style="background:none;border:1px solid var(--gold);color:var(--gold);padding:8px 20px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer"><span class="it">ATTIVA NOTIFICHE SU QUESTO DISPOSITIVO</span><span class="en">ENABLE NOTIFICATIONS ON THIS DEVICE</span></button>
+      </div>
+    </div>
+
     <!-- WISHLIST AVANZATA -->
     <div style="margin-top:24px;padding:20px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02)">
       <div style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--aria);text-transform:uppercase;margin-bottom:12px"><span class="it">Wishlist avanzata</span><span class="en">Advanced wishlist</span></div>
@@ -1721,8 +1731,8 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.65.0"></script>
-<div id="footer-mount" data-version="alfa-18.07.2026-4.62.0"></div>
+<script src="/src/dapp.js?v=4.66.0"></script>
+<div id="footer-mount" data-version="alfa-18.07.2026-4.63.0"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>

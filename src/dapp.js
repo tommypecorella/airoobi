@@ -5812,10 +5812,46 @@ async function loadDappWallet(){
     }
   }catch(e){}
 
-  // Category alerts + ROBI history + Wishlist
+  // Category alerts + ROBI history + Wishlist + gestione notifiche
   renderCategoryAlertsUI(token);
   loadRobiHistory(token);
   loadWishlistAlerts();
+  renderNotifPrefsUI();
+}
+
+// ── Gestione notifiche (censimento 18 lug): di sistema obbligatorie, le altre spegnibili ──
+async function renderNotifPrefsUI(){
+  var el=document.getElementById('notif-prefs-list');
+  if(!el||!_session)return;
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  try{
+    var token=await getValidToken();if(!token)return;
+    var rows=await sbRpc('get_my_notification_settings',{},token)||[];
+    var conf=rows.filter(function(r){return !r.is_system});
+    var sys=rows.filter(function(r){return r.is_system});
+    var h=conf.map(function(r){
+      return '<label style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--gray-800);cursor:pointer">'
+        +'<span style="color:var(--white)">'+escHtml(r.event_label)+'</span>'
+        +'<input type="checkbox" '+(r.enabled_user?'checked':'')+' onchange="toggleNotifPref(\''+r.key+'\',this.checked)" style="accent-color:var(--gold);width:16px;height:16px">'
+        +'</label>';
+    }).join('');
+    h+='<div style="font-size:11px;color:var(--gray-500);padding-top:10px">'
+      +(lang==='it'?'Sempre attive (di sistema): ':'Always on (system): ')
+      +escHtml(sys.map(function(r){return r.event_label}).join(' · '))
+      +'</div>';
+    el.innerHTML=h;
+    var pr=document.getElementById('notif-push-row');
+    if(pr&&('Notification' in window)&&Notification.permission==='granted'){
+      pr.innerHTML='<div style="font-size:12px;color:var(--kas)">&#10003; <span class="it">Notifiche attive su questo dispositivo</span><span class="en">Notifications active on this device</span></div>';
+    }
+  }catch(e){el.textContent='—';}
+}
+async function toggleNotifPref(key,en){
+  try{
+    var token=await getValidToken();if(!token)return;
+    await sbRpc('set_notification_pref',{p_key:key,p_enabled:en},token);
+    showToast('<span class="it">Preferenza salvata</span><span class="en">Preference saved</span>');
+  }catch(e){}
 }
 
 async function renderCategoryAlertsUI(token){

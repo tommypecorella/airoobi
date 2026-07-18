@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;height:100%}
+body{font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:#F5F7FA}
+a{color:var(--color-link,#1E54E6);text-decoration:none}a:hover{color:#1741B4;text-decoration:underline}
+:focus-visible{outline:2px solid var(--color-focus,#2F6BFF);outline-offset:2px}
+:root{
+--color-bg:#FFFFFF;--color-bg-subtle:#F5F7FA;--color-surface:#FFFFFF;--color-surface-2:#F5F7FA;--color-surface-3:#E9EDF2;
+--color-overlay:rgba(22,29,38,0.55);--color-text:#161D26;--color-text-secondary:#455364;--color-text-muted:#5B6A7D;
+--color-border:#D4DBE3;--color-border-strong:#AEB9C6;
+--color-primary:#EF3E4F;--color-primary-hover:#D91F32;--color-primary-active:#B4192A;--color-primary-fg:#FFFFFF;--color-primary-subtle:#FFF1F2;
+--color-secondary:#33404F;--color-accent:#2F6BFF;--color-link:#1E54E6;--color-focus:#2F6BFF;
+--color-success:#0E8A44;--color-success-subtle:#E7F6EE;--color-success-text:#0B6B37;
+--color-warning:#E5820B;--color-warning-subtle:#FDF0DF;--color-warning-text:#9A5405;
+--color-error:#D91F32;--color-error-subtle:#FFF1F2;--color-error-text:#B4192A;
+--color-info:#1E54E6;--color-info-subtle:#EDF2FF;--color-info-text:#1741B4;
+--aria:#4A9EFF;--kas:#49EACB;
+--shadow-md:0 4px 12px rgba(22,29,38,0.08);--shadow-lg:0 12px 28px rgba(22,29,38,0.12);--shadow-xl:0 24px 48px rgba(22,29,38,0.16);
+--abo-head-bg:#F5F7FA;--abo-row-hover:rgba(22,29,38,.035);--abo-sticky-bg:#FFFFFF;--abo-sticky-sh:8px 0 8px -8px rgba(22,29,38,.18)}
+[data-theme="dark"]{
+--color-bg:#0F1216;--color-bg-subtle:#12161B;--color-surface:#171B21;--color-surface-2:#1E242C;--color-surface-3:#262E38;
+--color-overlay:rgba(0,0,0,0.62);--color-text:#E8EAED;--color-text-secondary:#AEB9C6;--color-text-muted:#7E8B9C;
+--color-border:#2A313A;--color-border-strong:#3A434F;
+--color-primary:#FF5563;--color-primary-hover:#FF6E79;--color-primary-active:#E23A48;--color-primary-fg:#FFFFFF;--color-primary-subtle:rgba(255,85,99,0.14);
+--color-secondary:#AEB9C6;--color-accent:#6284FF;--color-link:#8AA3FF;--color-focus:#6284FF;
+--color-success:#2FBE6E;--color-success-subtle:rgba(47,190,110,0.14);--color-success-text:#7BE0AC;
+--color-warning:#F5A524;--color-warning-subtle:rgba(245,165,36,0.14);--color-warning-text:#F6C97A;
+--color-error:#FF5563;--color-error-subtle:rgba(255,85,99,0.14);--color-error-text:#FF9AA4;
+--color-info:#6284FF;--color-info-subtle:rgba(98,132,255,0.14);--color-info-text:#BAC8FF;
+--shadow-md:0 4px 12px rgba(0,0,0,0.45);--shadow-lg:0 12px 28px rgba(0,0,0,0.55);--shadow-xl:0 24px 48px rgba(0,0,0,0.60);
+--abo-head-bg:#1E242C;--abo-row-hover:rgba(255,255,255,.045);--abo-sticky-bg:#171B21;--abo-sticky-sh:8px 0 8px -8px rgba(0,0,0,.6)}
+@keyframes abo-spin{to{transform:rotate(360deg)}}
+@keyframes abo-up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" ref="{{ rootRef }}" style="height:{{ ui.rootH }};min-height:420px;position:relative;display:flex;flex-direction:column;background:var(--color-bg-subtle);color:var(--color-text);font-family:Inter,system-ui,sans-serif;overflow:hidden">
+
+  <!-- TOPBAR -->
+  <div style="height:56px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px;background:var(--color-surface);border-bottom:1px solid var(--color-border);z-index:20">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5.5" stroke="var(--color-text)" stroke-width="3"></circle><circle cx="17.5" cy="12" r="3.6" stroke="var(--color-primary)" stroke-width="2.6"></circle></svg>
+    <span style="font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;letter-spacing:.5px">ABO</span>
+    <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;padding:2px 7px;border-radius:999px;background:var(--color-success-subtle);color:var(--color-success-text)">LIVE</span>
+    <sc-if value="{{ simOn }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ exitSim }}" style="display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:1px;padding:3px 8px;border-radius:999px;background:var(--color-warning-subtle);color:var(--color-warning-text);border:1px solid var(--color-warning);cursor:pointer">VIEWING AS: {{ simLabel }} · EXIT ✕</button>
+    </sc-if>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+      <div style="display:{{ ui.deskOnly }};position:relative"><select onChange="{{ setSim }}" value="{{ simRole }}" style="height:32px;appearance:none;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-secondary);font-family:Inter,sans-serif;font-size:12px;padding:0 26px 0 11px;cursor:pointer"><option value="">View as… (CEO)</option><option value="evaluator">Evaluator</option><option value="community">Community Manager</option><option value="treasurer">Treasurer</option><option value="analyst">Analyst</option></select><span style="position:absolute;right:9px;top:10px;pointer-events:none;color:var(--color-text-muted)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></span></div>
+      <button onClick="{{ toggleTheme }}" aria-label="Toggle theme" title="Toggle theme" style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-secondary);cursor:pointer" style-hover="border-color:var(--color-border-strong)">
+        <sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg></sc-if>
+        <sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1111.2 3 7 7 0 0021 12.8z"></path></svg></sc-if>
+      </button>
+      <button onClick="{{ toggleNotif }}" aria-label="Notifications" style="width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;background:var(--color-surface);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-secondary);cursor:pointer;position:relative" style-hover="border-color:var(--color-border-strong)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 01-3.46 0"></path></svg><sc-if value="{{ unreadOn }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--color-primary);border:1.5px solid var(--color-surface)"></span></sc-if></button>
+      <span style="width:32px;height:32px;border-radius:50%;background:var(--color-secondary);color:var(--color-bg);display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">S</span>
+    </div>
+  </div>
+
+  <!-- NOTIFICATIONS PANEL -->
+  <sc-if value="{{ notifOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeNotif }}" style="position:absolute;inset:0;z-index:44;background:{{ ui.nfScrim }}"></div>
+    <div style="position:absolute;z-index:45;{{ ui.nfPos }};display:flex;flex-direction:column;background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border);box-shadow:var(--shadow-xl);overflow:hidden;animation:abo-up .2s cubic-bezier(.2,0,0,1)">
+      <div style="flex:none;display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--color-border)">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:2px;color:var(--color-text-muted)">NOTIFICATIONS</span>
+        <sc-if value="{{ unreadOn }}" hint-placeholder-val="{{ false }}"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.5px;padding:2px 7px;border-radius:999px;background:var(--color-primary-subtle);color:var(--color-primary)">{{ unreadN }} NEW</span></sc-if>
+        <button onClick="{{ markAll }}" style="margin-left:auto;height:26px;padding:0 10px;background:none;border:1px solid var(--color-border);border-radius:7px;color:var(--color-text-secondary);font-family:Inter,sans-serif;font-size:11px;font-weight:500;cursor:pointer" style-hover="color:var(--color-text)">Mark all read</button>
+        <button onClick="{{ closeNotif }}" aria-label="Close notifications" style="width:26px;height:26px;display:inline-flex;align-items:center;justify-content:center;background:none;border:1px solid var(--color-border);border-radius:7px;color:var(--color-text-secondary);cursor:pointer;padding:0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
+      </div>
+      <div style="flex:1;overflow-y:auto;min-height:0">
+        <sc-for list="{{ notifItems }}" as="n" hint-placeholder-count="4">
+          <button onClick="{{ n.go }}" style="display:flex;gap:10px;width:100%;text-align:left;background:none;border:none;border-bottom:1px solid var(--color-surface-3);padding:12px 14px;cursor:pointer;align-items:flex-start;font-family:Inter,sans-serif" style-hover="background:var(--abo-row-hover)">
+            <span style="width:7px;height:7px;flex:none;border-radius:50%;background:{{ n.dot }};margin-top:5px"></span>
+            <span style="flex:1;min-width:0"><span style="display:block;font-size:12.5px;color:{{ n.fg }};line-height:1.45">{{ n.x }}</span><span style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted);margin-top:3px">{{ n.t }} · {{ n.dest }} →</span></span>
+          </button>
+        </sc-for>
+      </div>
+      <div style="flex:none;padding:9px 14px;border-top:1px solid var(--color-border);font-size:11px;color:var(--color-text-muted);background:var(--color-bg-subtle)">Tap a notification to jump to its module — it is marked read.</div>
+    </div>
+  </sc-if>
+
+  <div style="flex:1;display:flex;min-height:0">
+    <!-- SIDEBAR (desktop) -->
+    <nav style="display:{{ ui.sideDisp }};width:{{ ui.sbW }};flex:none;flex-direction:column;background:var(--color-surface);border-right:1px solid var(--color-border);overflow-y:auto;overflow-x:hidden;padding:8px 0;transition:width .2s cubic-bezier(.2,0,0,1)">
+      <sc-for list="{{ sideGroups }}" as="g" hint-placeholder-count="3">
+        <div style="margin-bottom:4px">
+          <span style="display:{{ ui.labDisp }};font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--color-text-muted);padding:12px 16px 5px">{{ g.label }}</span>
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="4">
+            <button onClick="{{ it.go }}" title="{{ it.label }}" style="display:flex;align-items:center;gap:10px;width:calc(100% - 12px);height:36px;padding:0 {{ ui.itemPad }};margin:1px 6px;border-radius:8px;border:none;text-align:left;background:{{ it.bg }};color:{{ it.fg }};font-family:Inter,sans-serif;font-size:12.5px;font-weight:{{ it.w }};cursor:pointer;box-shadow:{{ it.mark }};white-space:nowrap" style-hover="background:var(--color-surface-2)">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex:none"><path d="{{ it.d }}"></path></svg>
+              <span style="display:{{ ui.labDisp }};overflow:hidden;text-overflow:ellipsis">{{ it.label }}</span>
+              <sc-if value="{{ it.badge }}" hint-placeholder-val="{{ false }}"><span style="display:{{ ui.labDisp }};margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;padding:1px 7px;border-radius:999px;background:var(--color-primary-subtle);color:var(--color-primary)">{{ it.badge }}</span></sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+      <button onClick="{{ toggleSb }}" style="margin:auto 6px 4px;height:32px;display:flex;align-items:center;justify-content:center;gap:8px;background:none;border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-muted);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;cursor:pointer" style-hover="color:var(--color-text)">{{ ui.sbGlyph }}</button>
+    </nav>
+
+    <!-- MAIN -->
+    <main style="flex:1;min-width:0;overflow-y:auto;background:var(--color-bg-subtle)">
+      <div style="max-width:1200px;margin:0 auto;padding:{{ ui.pad }}">
+
+        <!-- DASHBOARD -->
+        <sc-if value="{{ vis.dash }}" hint-placeholder-val="{{ true }}">
+          <section data-screen-label="Dashboard">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Dashboard</h2>
+            <p style="font-size:12.5px;color:var(--color-text-muted);margin:0 0 18px">Friday 18 Jul · what needs you today, then the numbers.</p>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:15px 16px;margin-bottom:16px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-primary);margin-bottom:10px">TO DO TODAY</div>
+              <div style="display:flex;flex-wrap:wrap;gap:9px">
+                <sc-for list="{{ todos }}" as="t" hint-placeholder-count="4">
+                  <button onClick="{{ t.go }}" style="display:inline-flex;align-items:center;gap:9px;height:44px;padding:0 15px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:10px;font-family:Inter,sans-serif;font-size:13px;color:{{ t.fg }};cursor:pointer" style-hover="border-color:var(--color-border-strong)"><b style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;color:{{ t.cfg }}">{{ t.n }}</b>{{ t.label }}<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg></button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px;margin-bottom:16px">
+              <sc-for list="{{ kpis }}" as="k" hint-placeholder-count="8">
+                <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px">
+                  <div style="font-size:11px;font-weight:500;color:var(--color-text-muted);margin-bottom:5px">{{ k.label }}</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1">{{ k.v }}</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:{{ k.dfg }};margin-top:6px">{{ k.delta }}</div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:stretch;margin-bottom:16px">
+              <div style="flex:1;min-width:240px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:15px 16px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted)">DAILY BREAK-EVEN</div>
+                <svg viewBox="0 0 200 112" style="width:100%;max-width:210px;display:block;margin:6px auto 0">
+                  <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="var(--color-surface-3)" stroke-width="13" stroke-linecap="round"></path>
+                  <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="var(--color-success)" stroke-width="13" stroke-linecap="round" stroke-dasharray="225 999"></path>
+                  <text x="100" y="80" text-anchor="middle" fill="var(--color-text)" font-size="27" font-weight="600" font-family="JetBrains Mono, monospace">224%</text>
+                  <text x="100" y="99" text-anchor="middle" fill="var(--color-text-muted)" font-size="10" font-family="Inter, sans-serif">of daily BEP</text>
+                </svg>
+                <div style="text-align:center;font-size:11px;color:var(--color-text-muted);margin-top:4px">€ 96.00 collected today · BEP <b style="font-family:'JetBrains Mono',monospace;color:var(--color-text-secondary)">€ 42.83/day</b></div>
+              </div>
+              <div style="flex:2;min-width:320px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:15px 16px;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted)">AIRDROP € INFLOW · LAST 14 DAYS</span><span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">┄ BEP € 42.83</span></div>
+                <div style="position:relative;flex:1;min-height:92px;margin-top:12px">
+                  <div style="position:absolute;left:0;right:0;bottom:25px;border-top:1px dashed var(--color-border-strong);z-index:1"></div>
+                  <div style="position:absolute;inset:0;display:flex;align-items:flex-end;gap:5px">
+                    <span title="€ 38" style="flex:1;height:22px;background:var(--color-warning);opacity:.75;border-radius:3px 3px 0 0"></span>
+                    <span title="€ 96" style="flex:1;height:55px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 52" style="flex:1;height:30px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 0" style="flex:1;height:3px;background:var(--color-surface-3);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 71" style="flex:1;height:41px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 44" style="flex:1;height:25px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 120" style="flex:1;height:69px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 63" style="flex:1;height:36px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 0" style="flex:1;height:3px;background:var(--color-surface-3);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 88" style="flex:1;height:51px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 41" style="flex:1;height:24px;background:var(--color-warning);opacity:.75;border-radius:3px 3px 0 0"></span>
+                    <span title="€ 57" style="flex:1;height:33px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 149" style="flex:1;height:86px;background:var(--color-accent);border-radius:3px 3px 0 0"></span>
+                    <span title="€ 96" style="flex:1;height:55px;background:var(--color-primary);border-radius:3px 3px 0 0"></span>
+                  </div>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--color-text-muted);margin-top:6px"><span>05 Jul</span><span>9 of 14 days above BEP · amber = below</span><span>today</span></div>
+              </div>
+              <div style="flex:1;min-width:210px;display:flex;flex-direction:column;gap:10px">
+                <div style="flex:1;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:11px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:3px">Airdrops/week for BEP</div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums">2.6</div><div style="font-size:10.5px;color:var(--color-text-muted);margin-top:2px">avg service margin € 118/airdrop</div></div>
+                <div style="flex:1;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:11px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:3px">Ops burn</div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums">€ 1,285<span style="font-size:12px;color:var(--color-text-muted)">/mo</span></div><div style="font-size:10.5px;color:var(--color-text-muted);margin-top:2px">= € 42.83/day to break even</div></div>
+                <div style="flex:1;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:11px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:3px">Runway at zero inflow</div><div style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--color-success-text)">9.7 mo</div><div style="font-size:10.5px;color:var(--color-text-muted);margin-top:2px">service balance ÷ burn</div></div>
+              </div>
+            </div>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:15px 16px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:8px">RECENT ACTIVITY</div>
+              <sc-for list="{{ activity }}" as="a" hint-placeholder-count="4">
+                <div style="display:flex;gap:12px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--color-surface-3);font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted);flex:none;width:52px">{{ a.t }}</span><span style="color:var(--color-text-secondary)">{{ a.x }}</span></div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- PIPELINE -->
+        <sc-if value="{{ vis.pipe }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Airdrop pipeline">
+            <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+              <div style="flex:1;min-width:200px"><h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Airdrop pipeline</h2><p style="font-size:12.5px;color:var(--color-text-muted);margin:0">draft → valuation → acceptance → active → closing → completed</p></div>
+              <button style="height:38px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">+ New airdrop</button>
+            </div>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+              <sc-for list="{{ pipeTabs }}" as="tb" hint-placeholder-count="5">
+                <button onClick="{{ tb.go }}" style="height:32px;padding:0 12px;display:inline-flex;align-items:center;gap:7px;background:{{ tb.bg }};color:{{ tb.fg }};border:1px solid {{ tb.bc }};border-radius:999px;font-family:Inter,sans-serif;font-size:12px;font-weight:500;cursor:pointer">{{ tb.label }}<span style="font-family:'JetBrains Mono',monospace;font-size:10px">{{ tb.n }}</span></button>
+              </sc-for>
+            </div>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden">
+              <div style="overflow-x:auto">
+                <table style="border-collapse:separate;border-spacing:0;font-size:13px;width:100%;min-width:640px">
+                  <thead><tr>
+                    <th style="position:sticky;left:0;z-index:2;background:var(--abo-head-bg);text-align:left;height:36px;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border);box-shadow:var(--abo-sticky-sh)">Airdrop</th>
+                    <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Object</th>
+                    <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Status</th>
+                    <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Entries</th>
+                    <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Range €</th>
+                    <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Updated</th>
+                    <th style="width:34px;background:var(--abo-head-bg);border-bottom:1px solid var(--color-border)"></th>
+                  </tr></thead>
+                  <tbody>
+                    <sc-for list="{{ pipeRows }}" as="r" hint-placeholder-count="5">
+                      <tr onClick="{{ r.open }}" style="cursor:pointer" style-hover="background:var(--abo-row-hover)">
+                        <td style="position:sticky;left:0;z-index:1;background:var(--abo-sticky-bg);height:{{ ui.rowH }};padding:0 14px;border-bottom:1px solid var(--color-surface-3);box-shadow:var(--abo-sticky-sh);font-family:'JetBrains Mono',monospace;font-size:12px;white-space:nowrap">{{ r.code }}</td>
+                        <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);white-space:nowrap">{{ r.obj }}</td>
+                        <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3)"><span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-{{ r.tone }}-subtle);color:var(--color-{{ r.tone }}-text);white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>{{ r.status }}</span></td>
+                        <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-variant-numeric:tabular-nums">{{ r.entries }}</td>
+                        <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap">{{ r.range }}</td>
+                        <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);color:var(--color-text-muted);font-size:12px;white-space:nowrap">{{ r.when }}</td>
+                        <td style="padding:0 10px;border-bottom:1px solid var(--color-surface-3);color:var(--color-text-muted)"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"></path></svg></td>
+                      </tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <p style="font-size:11.5px;color:var(--color-text-muted);margin-top:10px">Tap a row to open the manage sheet · identity column pinned on scroll.</p>
+          </section>
+        </sc-if>
+
+        <!-- EVALOBI -->
+        <sc-if value="{{ vis.eval }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="EVALOBI Registry">
+            <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+              <div style="flex:1;min-width:200px"><h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">EVALOBI Registry</h2><p style="font-size:12.5px;color:var(--color-text-muted);margin:0">Valuation certificates issued by the engine.</p></div>
+              <button onClick="{{ toastIssue }}" style="height:38px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">+ Issue from airdrop</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;margin-bottom:14px">
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:12px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:4px">Total</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600">128</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:12px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:4px">GO</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--color-success-text)">97</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:12px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:4px">NO-GO</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--color-error-text)">18</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:12px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:4px">In review</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;color:var(--color-info-text)">13</div></div>
+            </div>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+              <sc-for list="{{ evalTabs }}" as="tb" hint-placeholder-count="4">
+                <button onClick="{{ tb.go }}" style="height:32px;padding:0 12px;background:{{ tb.bg }};color:{{ tb.fg }};border:1px solid {{ tb.bc }};border-radius:999px;font-family:Inter,sans-serif;font-size:12px;font-weight:500;cursor:pointer">{{ tb.label }}</button>
+              </sc-for>
+            </div>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden"><div style="overflow-x:auto">
+              <table style="border-collapse:separate;border-spacing:0;font-size:13px;width:100%;min-width:700px">
+                <thead><tr>
+                  <th style="position:sticky;left:0;z-index:2;background:var(--abo-head-bg);text-align:left;height:36px;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border);box-shadow:var(--abo-sticky-sh)">Certificate</th>
+                  <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Airdrop</th>
+                  <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Object</th>
+                  <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Range €</th>
+                  <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Outcome</th>
+                  <th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Issued</th>
+                </tr></thead>
+                <tbody>
+                  <sc-for list="{{ evalRows }}" as="e" hint-placeholder-count="4">
+                    <tr style-hover="background:var(--abo-row-hover)">
+                      <td style="position:sticky;left:0;z-index:1;background:var(--abo-sticky-bg);height:{{ ui.rowH }};padding:0 14px;border-bottom:1px solid var(--color-surface-3);box-shadow:var(--abo-sticky-sh);white-space:nowrap"><a href="#eval" style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ e.cert }}</a></td>
+                      <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;white-space:nowrap">{{ e.ad }}</td>
+                      <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);white-space:nowrap">{{ e.obj }}</td>
+                      <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-size:12.5px;font-variant-numeric:tabular-nums;white-space:nowrap">{{ e.range }}</td>
+                      <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3)"><span style="display:inline-flex;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.6px;background:{{ e.obg }};color:{{ e.ofg }}">{{ e.out }}</span></td>
+                      <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);color:var(--color-text-muted);font-size:12px;white-space:nowrap">{{ e.date }}</td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div></div>
+          </section>
+        </sc-if>
+
+        <!-- ANALYSIS -->
+        <sc-if value="{{ vis.anal }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Analysis & Fairness">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Analysis &amp; Fairness</h2>
+            <p style="font-size:12.5px;color:var(--color-text-muted);margin:0 0 16px">Equity metrics of the engine — distributions and guarantee boosts. Management data, not market data.</p>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-bottom:16px">
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px">Median entries to summit</div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600">96</div><div style="font-size:10.5px;color:var(--color-text-muted);margin-top:5px">target ≤ 110</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px">Fairness index</div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600;color:var(--color-success-text)">0.94</div><div style="font-size:10.5px;color:var(--color-text-muted);margin-top:5px">1.0 = perfectly even</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px">Guarantee boosts active</div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600">2</div><div style="font-size:10.5px;color:var(--color-text-muted);margin-top:5px">long-climb protection</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px">Open disputes</div><div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:600">0</div><div style="font-size:10.5px;color:var(--color-success-text);margin-top:5px">all clear</div></div>
+            </div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:stretch">
+            <div style="flex:2;min-width:300px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px 18px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:12px">ENTRIES PER PARTICIPANT · LAST 30 DAYS</div>
+              <sc-for list="{{ fairBars }}" as="b" hint-placeholder-count="5">
+                <div style="display:grid;grid-template-columns:90px 1fr 46px;gap:10px;align-items:center;padding:4px 0">
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-secondary)">{{ b.label }}</span>
+                  <span style="height:10px;border-radius:999px;background:var(--color-surface-3);overflow:hidden;display:block"><span style="display:block;height:100%;width:{{ b.w }};background:var(--color-accent);border-radius:999px"></span></span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-muted);text-align:right;font-variant-numeric:tabular-nums">{{ b.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="flex:1;min-width:250px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px 18px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:10px">PIPELINE BY STAGE · 9 OPEN</div>
+              <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+                <svg viewBox="0 0 100 100" style="width:108px;height:108px;flex:none;transform:rotate(-90deg)">
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-surface-3)" stroke-width="12"></circle>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-text-muted)" stroke-width="12" stroke-dasharray="53.9 197.4" stroke-dashoffset="0"></circle>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-info)" stroke-width="12" stroke-dasharray="53.9 197.4" stroke-dashoffset="-55.9"></circle>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-warning)" stroke-width="12" stroke-dasharray="25.9 225.4" stroke-dashoffset="-111.7"></circle>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-success)" stroke-width="12" stroke-dasharray="53.9 197.4" stroke-dashoffset="-139.6"></circle>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-error)" stroke-width="12" stroke-dasharray="25.9 225.4" stroke-dashoffset="-195.5"></circle>
+                  <circle cx="50" cy="50" r="40" fill="none" stroke="var(--color-border-strong)" stroke-width="12" stroke-dasharray="25.9 225.4" stroke-dashoffset="-223.4"></circle>
+                </svg>
+                <div style="display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:var(--color-text-secondary)">
+                  <span style="display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:2px;background:var(--color-text-muted)"></span>Draft <b style="font-family:'JetBrains Mono',monospace;margin-left:auto;padding-left:10px">2</b></span>
+                  <span style="display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:2px;background:var(--color-info)"></span>Valuation <b style="font-family:'JetBrains Mono',monospace;margin-left:auto;padding-left:10px">2</b></span>
+                  <span style="display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:2px;background:var(--color-warning)"></span>Acceptance <b style="font-family:'JetBrains Mono',monospace;margin-left:auto;padding-left:10px">1</b></span>
+                  <span style="display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:2px;background:var(--color-success)"></span>Active <b style="font-family:'JetBrains Mono',monospace;margin-left:auto;padding-left:10px">2</b></span>
+                  <span style="display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:2px;background:var(--color-error)"></span>Closing <b style="font-family:'JetBrains Mono',monospace;margin-left:auto;padding-left:10px">1</b></span>
+                  <span style="display:flex;align-items:center;gap:7px"><span style="width:8px;height:8px;border-radius:2px;background:var(--color-border-strong)"></span>Completed <b style="font-family:'JetBrains Mono',monospace;margin-left:auto;padding-left:10px">1</b></span>
+                </div>
+              </div>
+              <div style="font-size:11px;color:var(--color-text-muted);margin-top:10px;line-height:1.5">Median time in valuation: <b style="font-family:'JetBrains Mono',monospace;color:var(--color-text-secondary)">31h</b> · target ≤ 48h</div>
+            </div>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- MESSAGES -->
+        <sc-if value="{{ vis.msg }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Messages">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Messages</h2>
+            <p style="font-size:12.5px;color:var(--color-text-muted);margin:0 0 16px">Platform notifications sent to users.</p>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px;margin-bottom:16px;display:flex;flex-direction:column;gap:10px;max-width:680px">
+              <input placeholder="Title — e.g. New airdrop live: Fuji X100V" style="height:40px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:0 12px">
+              <textarea placeholder="Message body…" style="height:64px;resize:vertical;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:10px 12px"></textarea>
+              <div style="display:flex;gap:10px;align-items:center">
+                <div style="position:relative"><select style="height:36px;appearance:none;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:12.5px;padding:0 26px 0 11px;cursor:pointer"><option>All users</option><option>Active participants</option><option>Sellers</option></select><span style="position:absolute;right:9px;top:12px;pointer-events:none;color:var(--color-text-muted)"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></span></div>
+                <button onClick="{{ toastSend }}" style="margin-left:auto;height:36px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">Send</button>
+              </div>
+            </div>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:6px 16px;max-width:680px">
+              <sc-for list="{{ messages }}" as="m" hint-placeholder-count="4">
+                <div style="padding:11px 0;border-bottom:1px solid var(--color-surface-3)">
+                  <div style="display:flex;gap:10px;align-items:baseline"><b style="font-size:13px">{{ m.t }}</b><span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted);flex:none">{{ m.d }}</span></div>
+                  <div style="font-size:12.5px;color:var(--color-text-secondary);margin-top:3px">{{ m.b }}</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted);margin-top:4px">→ {{ m.aud }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- REPORTS -->
+        <sc-if value="{{ vis.rep }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Reports">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Reports</h2>
+            <p style="font-size:12.5px;color:var(--color-text-muted);margin:0 0 14px">User tickets — take, resolve with a ROBI reward (0–100), or reject.</p>
+            <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px">
+              <sc-for list="{{ repTabs }}" as="tb" hint-placeholder-count="5">
+                <button onClick="{{ tb.go }}" style="height:32px;padding:0 12px;display:inline-flex;align-items:center;gap:7px;background:{{ tb.bg }};color:{{ tb.fg }};border:1px solid {{ tb.bc }};border-radius:999px;font-family:Inter,sans-serif;font-size:12px;font-weight:500;cursor:pointer">{{ tb.label }}<span style="font-family:'JetBrains Mono',monospace;font-size:10px">{{ tb.n }}</span></button>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px;max-width:860px">
+              <sc-for list="{{ repRows }}" as="r" hint-placeholder-count="4">
+                <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:14px 16px">
+                  <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+                    <b style="font-size:13px">{{ r.user }}</b>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted)">{{ r.page }}</span>
+                    <span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;background:var(--color-{{ r.tone }}-subtle);color:var(--color-{{ r.tone }}-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>{{ r.status }}</span>
+                  </div>
+                  <div style="font-size:13px;color:var(--color-text-secondary);margin:8px 0 10px;line-height:1.5">{{ r.text }}</div>
+                  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted)">{{ r.date }}</span>
+                    <div style="margin-left:auto;display:{{ r.actDisp }};gap:8px;align-items:center;flex-wrap:wrap">
+                      <button onClick="{{ r.take }}" style="display:{{ r.takeDisp }};height:32px;padding:0 13px;background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:500;cursor:pointer">Take</button>
+                      <span style="display:{{ r.resDisp }};align-items:center;gap:6px"><input value="40" aria-label="ROBI reward" style="width:52px;height:32px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right;padding:0 8px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-primary)">ROBI</span></span>
+                      <button onClick="{{ r.resolve }}" style="display:{{ r.resDisp }};height:32px;padding:0 13px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">Resolve + reward</button>
+                      <button onClick="{{ r.reject }}" style="display:{{ r.resDisp }};height:32px;padding:0 13px;background:transparent;color:var(--color-error-text);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:500;cursor:pointer" style-hover="background:var(--color-error-subtle);border-color:var(--color-error)">Reject</button>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+              <sc-if value="{{ repEmpty }}" hint-placeholder-val="{{ false }}">
+                <div style="border:1px dashed var(--color-border-strong);border-radius:12px;padding:28px;text-align:center;background:var(--color-surface)">
+                  <div style="font-size:13.5px;font-weight:600">Nothing here</div>
+                  <div style="font-size:12px;color:var(--color-text-muted);margin-top:4px">No tickets match this filter.</div>
+                </div>
+              </sc-if>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- USERS -->
+        <sc-if value="{{ vis.usr }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Users">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 14px">Users</h2>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+              <div style="flex:2;min-width:320px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden"><div style="overflow-x:auto">
+                <table style="border-collapse:separate;border-spacing:0;font-size:13px;width:100%;min-width:620px">
+                  <thead><tr>
+                    <th style="position:sticky;left:0;z-index:2;background:var(--abo-head-bg);text-align:left;height:36px;padding:0 14px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border);box-shadow:var(--abo-sticky-sh)">User</th>
+                    <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">ARIA</th>
+                    <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">ROBI</th>
+                    <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Entries/wk</th>
+                    <th style="text-align:right;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Referrals</th>
+                    <th style="height:36px;background:var(--abo-head-bg);border-bottom:1px solid var(--color-border)"></th>
+                  </tr></thead>
+                  <tbody>
+                    <sc-for list="{{ userRows }}" as="u" hint-placeholder-count="5">
+                      <tr style-hover="background:var(--abo-row-hover)">
+                        <td style="position:sticky;left:0;z-index:1;background:var(--abo-sticky-bg);height:52px;padding:0 14px;border-bottom:1px solid var(--color-surface-3);box-shadow:var(--abo-sticky-sh);max-width:170px"><div style="font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px">{{ u.mail }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">{{ u.id }}</div></td>
+                        <td style="text-align:right;padding:0 14px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;color:var(--aria)">{{ u.aria }}</td>
+                        <td style="text-align:right;padding:0 14px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;color:var(--color-primary)">{{ u.robi }}</td>
+                        <td style="text-align:right;padding:0 14px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums">{{ u.wk }}</td>
+                        <td style="text-align:right;padding:0 14px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums">{{ u.ref }}</td>
+                        <td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3)"><button style="height:30px;padding:0 12px;background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);border-radius:7px;font-family:Inter,sans-serif;font-size:11.5px;font-weight:500;cursor:pointer;white-space:nowrap">Manage</button></td>
+                      </tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </div></div>
+              <div style="flex:1;min-width:260px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px 18px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:12px">ROBI DISTRIBUTED · BY SOURCE</div>
+                <sc-for list="{{ robiSources }}" as="s" hint-placeholder-count="5">
+                  <div style="display:grid;grid-template-columns:86px 1fr 40px;gap:10px;align-items:center;padding:4px 0">
+                    <span style="font-size:11.5px;color:var(--color-text-secondary)">{{ s.label }}</span>
+                    <span style="height:10px;border-radius:999px;background:var(--color-surface-3);overflow:hidden;display:block"><span style="display:block;height:100%;width:{{ s.w }};background:var(--color-primary);border-radius:999px;opacity:.85"></span></span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-muted);text-align:right">{{ s.v }}</span>
+                  </div>
+                </sc-for>
+                <div style="font-size:11px;color:var(--color-text-muted);margin-top:10px;line-height:1.5">1,318 ROBI in circulation across 2,847 users.</div>
+              </div>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- TREASURY -->
+        <sc-if value="{{ vis.trea }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Treasury & Funds">
+            <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+              <div style="flex:1;min-width:200px"><h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Treasury &amp; Funds</h2><p style="font-size:12.5px;color:var(--color-text-muted);margin:0">Each fund is split: Treasury % backs ROBI, the rest is Service Balance.</p></div>
+              <button onClick="{{ goCosts }}" style="height:34px;padding:0 13px;background:var(--color-surface);color:var(--color-text-secondary);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:12.5px;font-weight:500;cursor:pointer">Cost tracker →</button>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px;margin-bottom:16px">
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px">Treasury balance</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums">€ 118,209.14</div><div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-success-text);margin-top:5px">104% cover</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px">ROBI in circulation</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums">1,318</div><div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted);margin-top:5px">+24 · 7d</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px;display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none"><circle cx="9" cy="12" r="5.5" stroke="var(--color-primary)" stroke-width="3"></circle><circle cx="17.5" cy="12" r="3.6" stroke="var(--color-primary)" stroke-width="2.6"></circle></svg>ROBI nominal</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums">€ 1.0625</div><div style="font-size:10px;color:var(--color-text-muted);margin-top:5px">internal — not a market price</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px;display:flex;align-items:center;gap:12px">
+                <svg viewBox="0 0 200 112" style="width:86px;flex:none">
+                  <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="var(--color-surface-3)" stroke-width="16" stroke-linecap="round"></path>
+                  <path d="M20 100 A80 80 0 0 1 180 100" fill="none" stroke="var(--color-success)" stroke-width="16" stroke-linecap="round" stroke-dasharray="174 999"></path>
+                  <text x="100" y="92" text-anchor="middle" fill="var(--color-text)" font-size="34" font-weight="600" font-family="JetBrains Mono, monospace">104%</text>
+                </svg>
+                <div><div style="font-size:11px;color:var(--color-text-muted)">ROBI cover</div><div style="font-size:10.5px;color:var(--color-text-secondary);margin-top:3px;line-height:1.45">treasury ÷ (circulating × nominal)<br><b style="color:var(--color-success-text)">above the 100% floor</b></div></div>
+              </div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px">Service balance</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums">€ 12,480.30</div><div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted);margin-top:5px">operating costs</div></div>
+              <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:5px">From the AIROOBI team</div><div style="font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--kas)">€ 25,000.00</div><div style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted);margin-top:5px">TEAM flag</div></div>
+            </div>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px;margin-bottom:16px">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px"><span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted)">TREASURY FUNDS</span><button onClick="{{ toggleFundForm }}" style="margin-left:auto;height:32px;padding:0 13px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">+ Add funds</button></div>
+              <sc-if value="{{ fundFormOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;background:var(--color-bg-subtle);border:1px solid var(--color-border);border-radius:10px;padding:12px;margin-bottom:12px">
+                  <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Amount €</label><input placeholder="0.00" style="width:110px;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;padding:0 10px"></div>
+                  <div style="flex:1;min-width:160px"><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Description</label><input placeholder="e.g. Revenue Q3" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:0 10px"></div>
+                  <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">% Treasury</label><input value="20" style="width:64px;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;padding:0 10px"></div>
+                  <label style="display:inline-flex;align-items:center;gap:7px;height:38px;font-size:12.5px;color:var(--kas);cursor:pointer"><input type="checkbox" style="accent-color:var(--kas)">Team AIROOBI</label>
+                  <button onClick="{{ saveFund }}" style="height:38px;padding:0 15px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer">Save</button>
+                </div>
+              </sc-if>
+              <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12.5px;width:100%;min-width:560px">
+                <thead><tr><th style="text-align:left;height:32px;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Date</th><th style="text-align:right;height:32px;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Total</th><th style="text-align:right;height:32px;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Treasury</th><th style="text-align:right;height:32px;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Service</th><th style="text-align:left;height:32px;padding:0 12px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Description</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{ funds }}" as="f" hint-placeholder-count="3">
+                    <tr style-hover="background:var(--abo-row-hover)"><td style="height:38px;padding:0 12px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--color-text-muted);white-space:nowrap">{{ f.d }}</td><td style="padding:0 12px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ f.tot }}</td><td style="padding:0 12px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ f.tr }}</td><td style="padding:0 12px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ f.sv }}</td><td style="padding:0 12px;border-bottom:1px solid var(--color-surface-3)">{{ f.desc }}<sc-if value="{{ f.team }}" hint-placeholder-val="{{ false }}"><span style="margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.5px;padding:2px 6px;border-radius:999px;background:rgba(73,234,203,.14);color:var(--kas)">TEAM</span></sc-if></td></tr>
+                  </sc-for>
+                </tbody>
+              </table></div>
+            </div>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:4px">SERVICE BALANCE (AIROOBI)</div>
+              <p style="font-size:12px;color:var(--color-text-muted);margin:0 0 12px">Log operating expenses (negative), extra income (positive) or move funds to the Treasury.</p>
+              <div style="display:flex;gap:9px;flex-wrap:wrap;align-items:center">
+                <input placeholder="-25.00" style="width:100px;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;padding:0 10px">
+                <input placeholder="e.g. annual domain, hosting…" style="flex:1;min-width:160px;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:0 10px">
+                <button onClick="{{ saveMove }}" style="height:38px;padding:0 14px;background:var(--color-surface-2);color:var(--color-text);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer">Log</button>
+                <button onClick="{{ giroTreasury }}" style="height:38px;padding:0 14px;background:transparent;color:var(--kas);border:1px solid var(--kas);border-radius:8px;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer">Move to Treasury →</button>
+              </div>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- ARIA ACCOUNT -->
+        <sc-if value="{{ vis.aria }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Platform ARIA account">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 14px">Platform ARIA account</h2>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+              <div style="min-width:220px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px 18px"><div style="font-size:11px;color:var(--color-text-muted);margin-bottom:6px">Balance</div><div style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--aria)">184,220 ARIA</div><div style="font-size:11px;color:var(--color-text-muted);margin-top:6px">testnet · platform-held</div></div>
+              <div style="flex:1;min-width:320px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:6px 16px">
+                <sc-for list="{{ ariaMoves }}" as="m" hint-placeholder-count="4">
+                  <div style="display:grid;grid-template-columns:64px 1fr auto;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid var(--color-surface-3);font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted)">{{ m.d }}</span><span style="color:var(--color-text-secondary)">{{ m.x }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-variant-numeric:tabular-nums;color:{{ m.fg }}">{{ m.v }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- COMPANY ASSETS -->
+        <sc-if value="{{ vis.asset }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Company assets">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Company assets</h2>
+            <p style="font-size:12.5px;color:var(--color-text-muted);margin:0 0 14px">Manual rows + AUTO rows computed from CEO balances × nominal. The treasury is custodied, not owned.</p>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden;max-width:760px"><div style="overflow-x:auto">
+              <table style="border-collapse:collapse;font-size:13px;width:100%;min-width:520px">
+                <thead><tr><th style="text-align:left;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Asset</th><th style="text-align:right;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Value €</th><th style="text-align:left;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Type</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{ assets }}" as="a" hint-placeholder-count="5">
+                    <tr style-hover="background:var(--abo-row-hover)"><td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3)">{{ a.n }}</td><td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ a.v }}</td><td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3)"><sc-if value="{{ a.auto }}" hint-placeholder-val="{{ false }}"><span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.5px;padding:2px 7px;border-radius:999px;background:var(--color-info-subtle);color:var(--color-info-text)">AUTO · computed</span></sc-if><sc-if value="{{ a.manual }}" hint-placeholder-val="{{ true }}"><span style="font-size:11.5px;color:var(--color-text-muted)">manual</span></sc-if></td></tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div></div>
+          </section>
+        </sc-if>
+
+        <!-- ARIA & ROBI -->
+        <sc-if value="{{ vis.coin }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="ARIA & ROBI">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">ARIA &amp; ROBI</h2>
+            <p style="font-size:12.5px;color:var(--color-text-muted);margin:0 0 14px">Monetary parameters — a settings panel, not an exchange.</p>
+            <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+              <div style="flex:1;min-width:280px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:16px 18px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted);margin-bottom:10px">ROBI NOMINAL · SINGLE FORMULA</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--color-bg-subtle);border:1px solid var(--color-border);border-radius:10px;padding:12px 14px;font-variant-numeric:tabular-nums">treasury / shares = € 118,209.14 / 111,255 = <b>€ 1.0625</b></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+                  <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">ARIA per ROBI</label><input value="320" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;padding:0 10px"></div>
+                  <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Shares outstanding</label><input value="111,255" disabled="{{ true }}" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text-muted);font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;padding:0 10px"></div>
+                </div>
+                <button onClick="{{ saveParams }}" style="margin-top:12px;height:36px;padding:0 15px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:12.5px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">Save parameters</button>
+              </div>
+              <div style="flex:1;min-width:300px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:6px 16px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:2px;color:var(--color-text-muted);padding:12px 0 6px">SNAPSHOTS</div>
+                <sc-for list="{{ snaps }}" as="s" hint-placeholder-count="4">
+                  <div style="display:grid;grid-template-columns:74px 1fr auto;gap:12px;align-items:baseline;padding:9px 0;border-bottom:1px solid var(--color-surface-3);font-size:12.5px"><span style="font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--color-text-muted)">{{ s.d }}</span><span style="color:var(--color-text-secondary)">nominal {{ s.n }} · circ {{ s.c }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-muted)">{{ s.by }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- RBAC -->
+        <sc-if value="{{ vis.rbac }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Collaborators & Permissions">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Collaborators &amp; Permissions</h2>
+            <p style="font-size:12.5px;color:var(--color-text-muted);margin:0 0 14px">Role defaults + per-user overrides. Use “View as” in the topbar to simulate any role.</p>
+            <div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:16px">
+              <sc-for list="{{ collabs }}" as="c" hint-placeholder-count="4">
+                <div style="display:inline-flex;align-items:center;gap:10px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:10px;padding:8px 12px">
+                  <span style="width:28px;height:28px;border-radius:50%;background:var(--color-surface-3);color:var(--color-text-secondary);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600">{{ c.ini }}</span>
+                  <span><span style="display:block;font-size:12.5px;font-weight:500">{{ c.name }}</span><span style="display:block;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--color-text-muted)">{{ c.mail }}</span></span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:999px;border:1px solid var(--color-border);color:var(--color-text-secondary)">{{ c.role }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <!-- desktop matrix -->
+            <div style="display:{{ ui.deskOnly }};background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden">
+              <div style="overflow-x:auto"><table style="border-collapse:collapse;font-size:12.5px;width:100%;min-width:760px">
+                <thead><tr><th style="text-align:left;height:36px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Module · role: {{ rbacRoleName }}</th>
+                <sc-for list="{{ rbacActs }}" as="h"><th style="text-align:center;height:36px;padding:0 8px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">{{ h.n }}</th></sc-for>
+                </tr></thead>
+                <tbody>
+                  <sc-for list="{{ rbacMods }}" as="m" hint-placeholder-count="6">
+                    <tr style-hover="background:var(--abo-row-hover)">
+                      <td style="height:38px;padding:0 14px;border-bottom:1px solid var(--color-surface-3);font-weight:500;white-space:nowrap">{{ m.name }}<sc-if value="{{ m.ovr }}" hint-placeholder-val="{{ false }}"><span style="margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;padding:1px 6px;border-radius:999px;background:var(--color-warning-subtle);color:var(--color-warning-text)">OVERRIDE</span></sc-if></td>
+                      <sc-for list="{{ m.cells }}" as="c">
+                        <td style="text-align:center;border-bottom:1px solid var(--color-surface-3);padding:0 8px"><button onClick="{{ c.tgl }}" aria-label="toggle" style="width:20px;height:20px;border-radius:6px;border:1px solid {{ c.bc }};background:{{ c.bg }};color:{{ c.fg }};cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="display:{{ c.disp }}"><path d="M20 6L9 17l-5-5"></path></svg></button></td>
+                      </sc-for>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table></div>
+            </div>
+            <!-- mobile matrix: module → actions -->
+            <div style="display:{{ ui.mobOnly }};background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:14px">
+              <label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:5px">Module</label>
+              <div style="position:relative;margin-bottom:12px"><select onChange="{{ setRbacMod }}" value="{{ rbacModIdx }}" style="width:100%;height:44px;appearance:none;background:var(--color-bg);border:1px solid var(--color-border);border-radius:10px;color:var(--color-text);font-family:Inter,sans-serif;font-size:14px;padding:0 32px 0 12px;cursor:pointer">
+                <sc-for list="{{ rbacModOpts }}" as="o"><option value="{{ o.i }}">{{ o.n }}</option></sc-for>
+              </select><span style="position:absolute;right:12px;top:16px;pointer-events:none;color:var(--color-text-muted)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></span></div>
+              <sc-for list="{{ rbacMobCells }}" as="c" hint-placeholder-count="6">
+                <button onClick="{{ c.tgl }}" style="display:flex;align-items:center;width:100%;gap:10px;height:48px;padding:0 4px;background:none;border:none;border-bottom:1px solid var(--color-surface-3);font-family:Inter,sans-serif;font-size:14px;color:var(--color-text);cursor:pointer;text-align:left">
+                  {{ c.n }}
+                  <span style="margin-left:auto;width:38px;height:22px;flex:none;border-radius:999px;background:{{ c.tbg }};border:1px solid {{ c.tbc }};position:relative;transition:background .12s"><span style="position:absolute;top:2px;left:{{ c.knob }};width:16px;height:16px;border-radius:50%;background:#fff;transition:left .12s;box-shadow:0 1px 2px rgba(0,0,0,.3)"></span></span>
+                </button>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- CATEGORIES -->
+        <sc-if value="{{ vis.cat }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Categories">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 14px">Categories</h2>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden;max-width:680px"><div style="overflow-x:auto">
+              <table style="border-collapse:collapse;font-size:13px;width:100%;min-width:460px">
+                <thead><tr><th style="text-align:left;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Category</th><th style="text-align:right;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">V_cat</th><th style="text-align:right;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Active airdrops</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{ cats }}" as="c" hint-placeholder-count="4">
+                    <tr style-hover="background:var(--abo-row-hover)"><td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3)">{{ c.n }}</td><td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ c.v }}</td><td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ c.a }}</td></tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div></div>
+          </section>
+        </sc-if>
+
+        <!-- ENGINE -->
+        <sc-if value="{{ vis.eng }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Engine config">
+            <h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Engine config</h2>
+            <p style="font-size:12.5px;color:var(--color-text-muted);margin:0 0 14px">Dangerous switches ask for confirmation before flipping.</p>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;padding:4px 16px;max-width:680px">
+              <sc-for list="{{ engine }}" as="e" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:12px;min-height:56px;padding:8px 0;border-bottom:1px solid var(--color-surface-3)">
+                  <div style="flex:1;min-width:0"><div style="font-family:'JetBrains Mono',monospace;font-size:12.5px">{{ e.k }}<sc-if value="{{ e.danger }}" hint-placeholder-val="{{ false }}"><span style="margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.5px;padding:1px 6px;border-radius:999px;background:var(--color-error-subtle);color:var(--color-error-text)">GUARDED</span></sc-if></div><div style="font-size:11.5px;color:var(--color-text-muted);margin-top:2px">{{ e.desc }}</div></div>
+                  <button onClick="{{ e.tgl }}" aria-label="toggle {{ e.k }}" style="width:44px;height:24px;flex:none;border-radius:999px;background:{{ e.tbg }};border:1px solid {{ e.tbc }};position:relative;cursor:pointer;padding:0"><span style="position:absolute;top:2px;left:{{ e.knob }};width:18px;height:18px;border-radius:50%;background:#fff;transition:left .12s;box-shadow:0 1px 2px rgba(0,0,0,.3)"></span></button>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <!-- COSTS -->
+        <sc-if value="{{ vis.cost }}" hint-placeholder-val="{{ false }}">
+          <section data-screen-label="Cost tracker">
+            <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px">
+              <div style="flex:1;min-width:200px"><h2 style="font-family:'Space Grotesk',sans-serif;font-size:21px;font-weight:600;margin:0 0 3px">Cost tracker</h2><p style="font-size:12.5px;color:var(--color-text-muted);margin:0">July 2026 · € 1,284.90 total</p></div>
+              <button onClick="{{ openCost }}" style="height:38px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">+ Add cost</button>
+            </div>
+            <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:12px;overflow:hidden;max-width:760px"><div style="overflow-x:auto">
+              <table style="border-collapse:collapse;font-size:13px;width:100%;min-width:520px">
+                <thead><tr><th style="text-align:left;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Date</th><th style="text-align:left;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Category</th><th style="text-align:left;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">Description</th><th style="text-align:right;height:34px;padding:0 14px;background:var(--abo-head-bg);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-muted);border-bottom:1px solid var(--color-border)">€</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{ costs }}" as="c" hint-placeholder-count="4">
+                    <tr style-hover="background:var(--abo-row-hover)"><td style="height:40px;padding:0 14px;border-bottom:1px solid var(--color-surface-3);font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--color-text-muted);white-space:nowrap">{{ c.d }}</td><td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.5px;text-transform:uppercase;padding:2px 8px;border-radius:999px;background:var(--color-surface-3);color:var(--color-text-secondary)">{{ c.cat }}</span></td><td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3)">{{ c.desc }}</td><td style="padding:0 14px;border-bottom:1px solid var(--color-surface-3);text-align:right;font-family:'JetBrains Mono',monospace;font-variant-numeric:tabular-nums">{{ c.v }}</td></tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div></div>
+          </section>
+        </sc-if>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- BOTTOM NAV (mobile, option 1c) -->
+  <div style="display:{{ ui.botDisp }};flex:none;height:62px;background:var(--color-surface);border-top:1px solid var(--color-border);grid-template-columns:repeat(5,1fr);z-index:25">
+    <sc-for list="{{ botNav }}" as="b">
+      <button onClick="{{ b.go }}" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;font-family:Inter,sans-serif;font-size:9.5px;font-weight:{{ b.w }};color:{{ b.fg }};cursor:pointer;position:relative">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="{{ b.d }}"></path></svg>{{ b.label }}
+        <sc-if value="{{ b.badge }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:7px;right:24%;min-width:15px;height:15px;padding:0 4px;border-radius:999px;background:var(--color-primary);color:#fff;font-family:'JetBrains Mono',monospace;font-size:9px;display:flex;align-items:center;justify-content:center">{{ b.badge }}</span></sc-if>
+      </button>
+    </sc-for>
+  </div>
+
+  <!-- MOBILE MENU SHEET -->
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenu }}" style="position:{{ ui.fixPos }};inset:0;background:var(--color-overlay);z-index:40"></div>
+    <div style="position:{{ ui.fixPos }};left:0;right:0;bottom:62px;background:var(--color-surface);color:var(--color-text);border-radius:16px 16px 0 0;box-shadow:var(--shadow-xl);padding:14px 14px 12px;z-index:41;animation:abo-up .32s cubic-bezier(0,0,0,1)">
+      <div style="width:36px;height:4px;border-radius:999px;background:var(--color-border-strong);margin:0 auto 12px"></div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--color-text-muted);margin:0 2px 8px">ALL MODULES</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-height:52vh;overflow-y:auto">
+        <sc-for list="{{ menuMods }}" as="m" hint-placeholder-count="9">
+          <button onClick="{{ m.go }}" style="height:62px;background:{{ m.bg }};border:1px solid var(--color-border);border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font-family:Inter,sans-serif;font-size:10px;color:{{ m.fg }};cursor:pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="{{ m.d }}"></path></svg>{{ m.label }}</button>
+        </sc-for>
+      </div>
+      <div style="margin-top:12px;position:relative"><select onChange="{{ setSim }}" value="{{ simRole }}" style="width:100%;height:44px;appearance:none;background:var(--color-bg);border:1px solid var(--color-border);border-radius:10px;color:var(--color-text-secondary);font-family:Inter,sans-serif;font-size:13px;padding:0 32px 0 12px;cursor:pointer"><option value="">View as… (CEO)</option><option value="evaluator">Evaluator</option><option value="community">Community Manager</option><option value="treasurer">Treasurer</option><option value="analyst">Analyst</option></select><span style="position:absolute;right:12px;top:16px;pointer-events:none;color:var(--color-text-muted)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"></path></svg></span></div>
+    </div>
+  </sc-if>
+
+  <!-- MANAGE AIRDROP SHEET / MODAL -->
+  <sc-if value="{{ mgOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:{{ ui.fixPos }};inset:0;background:var(--color-overlay);z-index:50;display:flex;align-items:{{ ui.mgAlign }};justify-content:center;padding:{{ ui.mgPad }}">
+      <div style="width:100%;max-width:{{ ui.mgW }};max-height:{{ ui.mgMaxH }};height:{{ ui.mgH }};display:flex;flex-direction:column;background:var(--color-surface);color:var(--color-text);border-radius:{{ ui.mgR }};box-shadow:var(--shadow-xl);overflow:hidden;animation:abo-up .32s cubic-bezier(0,0,0,1)">
+        <div style="flex:none;display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--color-border)">
+          <div style="min-width:0"><div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Manage airdrop</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--color-text-muted);margin-top:2px">{{ mg.code }} · {{ mg.obj }}</div></div>
+          <span style="margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.6px;text-transform:uppercase;background:var(--color-{{ mg.tone }}-subtle);color:var(--color-{{ mg.tone }}-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>{{ mg.status }}</span>
+          <button onClick="{{ closeManage }}" aria-label="Close" style="flex:none;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:8px;color:var(--color-text-secondary);cursor:pointer;border:1px solid var(--color-border);background:none"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"></path></svg></button>
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:16px 18px;display:flex;flex-direction:column;gap:12px">
+          <div>
+            <button onClick="{{ tglS1 }}" style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:0 0 8px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--color-text-muted);cursor:pointer">Object data<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;transform:rotate({{ ui.s1rot }})"><path d="M6 9l6 6 6-6"></path></svg></button>
+            <div style="display:{{ ui.s1disp }};gap:12px;flex-wrap:wrap">
+              <div style="width:92px;height:92px;flex:none;border:1px dashed var(--color-border-strong);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--color-text-muted);font-size:10px;text-align:center">photo<br>placeholder</div>
+              <div style="flex:1;min-width:200px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Object</label><input value="{{ mg.obj }}" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:0 10px"></div>
+                <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Category</label><input value="Electronics" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:0 10px"></div>
+                <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Seller</label><input value="marta.riva@gmail.com" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:0 10px"></div>
+                <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Condition</label><input value="Mint · boxed" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:Inter,sans-serif;font-size:13px;padding:0 10px"></div>
+              </div>
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--color-surface-3);padding-top:12px">
+            <button onClick="{{ tglS2 }}" style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:0 0 8px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--color-text-muted);cursor:pointer">Price &amp; steps calculator<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;transform:rotate({{ ui.s2rot }})"><path d="M6 9l6 6 6-6"></path></svg></button>
+            <div style="display:{{ ui.s2disp }}">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Valuation range €</label><input value="{{ mg.range }}" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;padding:0 10px"></div>
+                <div><label style="display:block;font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--color-text-muted);margin-bottom:4px">Step price (ARIA)</label><input value="120" style="width:100%;box-sizing:border-box;height:38px;background:var(--color-bg);border:1px solid var(--color-border);border-radius:8px;color:var(--color-text);font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;padding:0 10px"></div>
+              </div>
+              <div style="margin-top:10px;background:var(--color-bg-subtle);border:1px solid var(--color-border);border-radius:10px;padding:11px 13px;font-size:12.5px;color:var(--color-text-secondary);display:flex;gap:16px;flex-wrap:wrap"><span>Steps: <b style="font-family:'JetBrains Mono',monospace">96</b></span><span>Summit at: <b style="font-family:'JetBrains Mono',monospace">11,520 ARIA</b></span><span>Cover: <b style="font-family:'JetBrains Mono',monospace;color:var(--color-success-text)">104%</b></span></div>
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--color-surface-3);padding-top:12px">
+            <button onClick="{{ tglS3 }}" style="display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;padding:0 0 8px;font-family:Inter,sans-serif;font-size:12px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--color-text-muted);cursor:pointer">Status &amp; seller decision<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left:auto;transform:rotate({{ ui.s3rot }})"><path d="M6 9l6 6 6-6"></path></svg></button>
+            <div style="display:{{ ui.s3disp }};flex-direction:column;gap:10px">
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--color-text-secondary)">Current: <span style="display:inline-flex;align-items:center;gap:6px;padding:3px 9px;border-radius:999px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.6px;text-transform:uppercase;background:var(--color-{{ mg.tone }}-subtle);color:var(--color-{{ mg.tone }}-text)"><span style="width:6px;height:6px;border-radius:50%;background:currentColor"></span>{{ mg.status }}</span> → next: <b>{{ mg.next }}</b></div>
+              <div style="font-size:12px;color:var(--color-text-muted)">Seller decision: <b style="color:var(--color-text-secondary)">awaiting response</b> · sent 5h ago · reminder available in 19h</div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:none;display:flex;gap:10px;justify-content:flex-end;padding:12px 18px;border-top:1px solid var(--color-border);background:var(--color-bg-subtle)">
+          <button onClick="{{ closeManage }}" style="height:40px;padding:0 14px;background:transparent;color:var(--color-text-secondary);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Cancel</button>
+          <button onClick="{{ mgSave }}" style="height:40px;padding:0 16px;background:var(--color-surface);color:var(--color-text);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Save</button>
+          <button onClick="{{ mgAdvance }}" style="height:40px;padding:0 16px;background:var(--color-primary);color:var(--color-primary-fg);border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer" style-hover="background:var(--color-primary-hover)">{{ mg.cta }}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- CONFIRM DIALOG (engine) -->
+  <sc-if value="{{ confirmOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:{{ ui.fixPos }};inset:0;background:var(--color-overlay);z-index:60;display:flex;align-items:center;justify-content:center;padding:20px">
+      <div style="width:100%;max-width:400px;background:var(--color-surface);color:var(--color-text);border-radius:14px;box-shadow:var(--shadow-xl);padding:20px">
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;margin-bottom:6px">Flip a guarded switch?</div>
+        <div style="font-size:13px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:16px">You are about to change <b style="font-family:'JetBrains Mono',monospace;font-size:12px">{{ confirmKey }}</b>. This affects the live engine for all users.</div>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+          <button onClick="{{ confirmNo }}" style="height:38px;padding:0 14px;background:transparent;color:var(--color-text-secondary);border:1px solid var(--color-border);border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:500;cursor:pointer">Cancel</button>
+          <button onClick="{{ confirmYes }}" style="height:38px;padding:0 16px;background:var(--color-error);color:#fff;border:none;border-radius:8px;font-family:Inter,sans-serif;font-size:13px;font-weight:600;cursor:pointer">Confirm change</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- TOAST -->
+  <sc-if value="{{ toastOn }}" hint-placeholder-val="{{ false }}">
+    <div style="position:{{ ui.fixPos }};left:50%;transform:translateX(-50%);bottom:{{ ui.toastB }};z-index:70;display:flex;align-items:center;gap:10px;background:var(--color-surface-2);border:1px solid var(--color-border);color:var(--color-text);border-radius:10px;padding:11px 14px;box-shadow:var(--shadow-lg);animation:abo-up .2s cubic-bezier(.2,0,0,1);max-width:88vw">
+      <span style="width:20px;height:20px;flex:none;border-radius:50%;background:var(--color-success-subtle);color:var(--color-success-text);display:inline-flex;align-items:center;justify-content:center"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5"></path></svg></span>
+      <span style="font-size:12.5px">{{ toastMsg }}</span>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  state = {
+    theme: 'light', mobile: false, sb: false, page: 'dash', menu: false,
+    sim: '', pipeTab: 'all', evalTab: 'all', repTab: 'all',
+    mg: null, s1: true, s2: true, s3: true,
+    fundForm: false, toast: '', confirm: null, notifOpen: false,
+    notifs: [
+      { id: 1, x: 'New EVALOBI request for #AD-0142 (Fuji X100V)', t: '09:41', page: 'eval', dest: 'EVALOBI Registry', read: false },
+      { id: 2, x: 'Report from marta.riva — step counter mismatch on #AD-0139', t: '09:12', page: 'rep', dest: 'Reports', read: false },
+      { id: 3, x: 'Seller accepted the valuation on #AD-0141 (iPhone 15 Pro)', t: '08:30', page: 'pipe', dest: 'Airdrop pipeline', read: false },
+      { id: 4, x: '#AD-0137 (Dyson V15) entered closing — adjudication window opens in 48h', t: '08:55', page: 'pipe', dest: 'Airdrop pipeline', read: true },
+      { id: 5, x: 'Treasury fund logged: € 3,200.00 · 20/80 split applied', t: '07:58', page: 'trea', dest: 'Treasury & Funds', read: true },
+    ],
+    tickets: [
+      { id: 1, user: 'marta.riva@gmail.com', page: '/airdrop/AD-0139', text: 'The step counter on the summit page shows 95/96 but my receipt says 96 entries. Can you check?', date: '18 Jul · 09:12', st: 'open' },
+      { id: 2, user: 'luca.b@outlook.com', page: '/wallet', text: 'ROBI rewards from last week’s report are not visible in my wallet yet.', date: '17 Jul · 18:40', st: 'open' },
+      { id: 3, user: 'sof.ferri@icloud.com', page: '/airdrop/AD-0137', text: 'Photo gallery does not load on Android Chrome.', date: '17 Jul · 11:05', st: 'in_review' },
+      { id: 4, user: 'g.marchetti@pm.me', page: '/profile', text: 'Typo in the referral banner (“invitra”).', date: '16 Jul · 15:22', st: 'resolved' },
+      { id: 5, user: 'd.colombo@gmail.com', page: '/airdrop/AD-0140', text: 'Asking to increase my valuation — duplicate of a seller request.', date: '15 Jul · 10:48', st: 'rejected' },
+    ],
+    engine: [
+      { k: 'alpha_brave_rules_active', desc: 'Alpha Brave cohort ruleset for new signups', on: true, danger: true },
+      { k: 'maintenance_mode', desc: 'Freezes all user-facing writes', on: false, danger: true },
+      { k: 'guarantee_boost_enabled', desc: 'Long-climb protection on slow airdrops', on: true, danger: false },
+      { k: 'evalobi_auto_issue', desc: 'Auto-issue certificate on GO outcome', on: false, danger: false },
+      { k: 'weekly_entry_cap', desc: 'Cap entries per user per week (25)', on: true, danger: false },
+    ],
+    perm: null, rbacMod: 0,
+  };
+  setRoot = (el) => { if (el && el !== this._root) { this._root = el; if (this._ro) this._ro.observe(el); if (this._applyW) this._applyW(); } };
+  componentDidMount() {
+    const saved = localStorage.getItem('abo_proto_theme');
+    const sysDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const perm = this.mods().map((m, i) => this.acts().map((a, j) => (i + j) % 3 !== 1));
+    this._applyW = () => { const w = this._root ? this._root.clientWidth : window.innerWidth; const mob = w <= 768; if (mob !== this.state.mobile) this.setState({ mobile: mob }); };
+    this.setState({ theme: saved || (sysDark ? 'dark' : 'light'), perm });
+    this._rs = () => this._applyW();
+    window.addEventListener('resize', this._rs);
+    if (window.ResizeObserver) { this._ro = new ResizeObserver(this._rs); if (this._root) this._ro.observe(this._root); }
+    this._applyW();
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._rs); if (this._ro) this._ro.disconnect(); if (this._tt) clearTimeout(this._tt); }
+  mods() { return ['Dashboard', 'Airdrop pipeline', 'EVALOBI Registry', 'Analysis & Fairness', 'Messages', 'Reports', 'Users', 'Treasury & Funds', 'Platform ARIA', 'Company assets', 'ARIA & ROBI', 'Collaborators', 'Categories', 'Engine config', 'Cost tracker']; }
+  acts() { return ['view', 'edit', 'approve', 'draw', 'reply', 'manage']; }
+  toast(msg) { if (this._tt) clearTimeout(this._tt); this.setState({ toast: msg }); this._tt = setTimeout(() => this.setState({ toast: '' }), 3200); }
+  nav(p) { this.setState({ page: p, menu: false }); }
+  roleMods() {
+    const all = { dash: 1, pipe: 1, eval: 1, anal: 1, msg: 1, rep: 1, usr: 1, trea: 1, aria: 1, asset: 1, coin: 1, rbac: 1, cat: 1, eng: 1, cost: 1 };
+    const r = this.state.sim;
+    if (r === 'evaluator') return { dash: 1, pipe: 1, eval: 1, anal: 1 };
+    if (r === 'community') return { dash: 1, msg: 1, rep: 1, usr: 1 };
+    if (r === 'treasurer') return { dash: 1, trea: 1, aria: 1, asset: 1, coin: 1, cost: 1 };
+    if (r === 'analyst') return { dash: 1, anal: 1, usr: 1 };
+    return all;
+  }
+  renderVals() {
+    const s = this.state, m = s.mobile, dark = s.theme === 'dark';
+    const emb = !!this.props.embed;
+    const allowed = this.roleMods();
+    const page = allowed[s.page] ? s.page : 'dash';
+    const vis = {}; ['dash','pipe','eval','anal','msg','rep','usr','trea','aria','asset','coin','rbac','cat','eng','cost'].forEach(p => vis[p] = p === page);
+    const I = {
+      dash: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z',
+      pipe: 'M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z',
+      eval: 'M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6zM9 15l2 2 4-4',
+      anal: 'M18 20V10M12 20V4M6 20v-6',
+      msg: 'M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z',
+      rep: 'M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1zM4 22v-7',
+      usr: 'M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2M13 7a4 4 0 11-8 0 4 4 0 018 0z',
+      trea: 'M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6',
+      aria: 'M12 22a10 10 0 100-20 10 10 0 000 20zM8 12h8M12 8v8',
+      asset: 'M2 6a2 2 0 012-2h16a2 2 0 012 2v12a2 2 0 01-2 2H4a2 2 0 01-2-2zM2 10h20',
+      coin: 'M12 22a10 10 0 100-20 10 10 0 000 20zM12 6v12M8 10h8M8 14h8',
+      rbac: 'M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2M13 7a4 4 0 11-8 0 4 4 0 018 0zM22 21v-2a4 4 0 00-3-3.87',
+      cat: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',
+      eng: 'M12 15a3 3 0 100-6 3 3 0 000 6zM12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1',
+      cost: 'M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1zM8 7h8M8 11h8M8 15h5',
+      menu: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM17.5 14v7M14 17.5h7',
+    };
+    const item = (id, label, badge) => ({
+      id, label, badge: badge || false, d: I[id],
+      go: () => this.nav(id),
+      bg: page === id ? 'var(--color-surface-3)' : 'transparent',
+      fg: page === id ? 'var(--color-text)' : 'var(--color-text-secondary)',
+      w: page === id ? '600' : '400',
+      mark: page === id ? 'inset 2px 0 0 var(--color-primary)' : 'none',
+    });
+    const groupsAll = [
+      { label: 'OPERATIONS', items: [item('dash', 'Dashboard'), item('pipe', 'Airdrop pipeline', '4'), item('eval', 'EVALOBI Registry'), item('anal', 'Analysis & Fairness'), item('msg', 'Messages'), item('rep', 'Reports', '2'), item('usr', 'Users')] },
+      { label: 'TREASURY', items: [item('trea', 'Treasury & Funds'), item('aria', 'Platform ARIA account'), item('asset', 'Company assets'), item('coin', 'ARIA & ROBI'), item('cost', 'Cost tracker')] },
+      { label: 'SYSTEM', items: [item('rbac', 'Collaborators & RBAC'), item('cat', 'Categories'), item('eng', 'Engine config')] },
+    ];
+    const sideGroups = groupsAll.map(g => ({ ...g, items: g.items.filter(it => allowed[it.id]) })).filter(g => g.items.length);
+    const pipeAll = [
+      { code: '#AD-0144', obj: 'Leica Q2 · black', status: 'Draft', tone: 'info', st: 'draft', entries: '—', range: '3,900–4,300', when: '30m ago', next: 'Valuation', cta: 'Start valuation →' },
+      { code: '#AD-0143', obj: 'Vespa GTS 300 (2022)', status: 'Draft', tone: 'info', st: 'draft', entries: '—', range: '—', when: '1h ago', next: 'Valuation', cta: 'Start valuation →' },
+      { code: '#AD-0142', obj: 'Fuji X100V · mint', status: 'Valuation', tone: 'info', st: 'valuation', entries: '—', range: '1,150–1,300', when: '2h ago', next: 'Acceptance', cta: 'Send to seller →' },
+      { code: '#AD-0141', obj: 'iPhone 15 Pro 256GB', status: 'Acceptance', tone: 'warning', st: 'acceptance', entries: '—', range: '780–860', when: '5h ago', next: 'Active', cta: 'Publish airdrop →' },
+      { code: '#AD-0140', obj: 'MacBook Air M3', status: 'Valuation', tone: 'info', st: 'valuation', entries: '—', range: '980–1,100', when: '6h ago', next: 'Acceptance', cta: 'Send to seller →' },
+      { code: '#AD-0139', obj: 'PS5 Slim + 2 pads', status: 'Active', tone: 'success', st: 'active', entries: '3,412', range: '420–470', when: '1d ago', next: 'Closing', cta: 'Begin closing →' },
+      { code: '#AD-0138', obj: 'KitchenAid Artisan', status: 'Active', tone: 'success', st: 'active', entries: '1,207', range: '380–420', when: '1d ago', next: 'Closing', cta: 'Begin closing →' },
+      { code: '#AD-0137', obj: 'Dyson V15 Detect', status: 'Closing', tone: 'error', st: 'closing', entries: '8,940', range: '540–590', when: '2d ago', next: 'Completed', cta: 'Adjudicate summit →' },
+      { code: '#AD-0135', obj: 'Nintendo Switch OLED', status: 'Completed', tone: 'success', st: 'completed', entries: '6,118', range: '290–330', when: '4d ago', next: '—', cta: 'View summary' },
+    ];
+    const tabDef = [['all', 'All'], ['draft', 'Draft'], ['valuation', 'Valuation'], ['acceptance', 'Acceptance'], ['active', 'Active'], ['closing', 'Closing'], ['completed', 'Completed']];
+    const pipeTabs = tabDef.map(([k, label]) => ({
+      label, n: k === 'all' ? pipeAll.length : pipeAll.filter(r => r.st === k).length,
+      go: () => this.setState({ pipeTab: k }),
+      bg: s.pipeTab === k ? 'var(--color-secondary)' : 'var(--color-surface)',
+      fg: s.pipeTab === k ? 'var(--color-bg)' : 'var(--color-text-secondary)',
+      bc: s.pipeTab === k ? 'var(--color-secondary)' : 'var(--color-border)',
+    }));
+    const pipeRows = pipeAll.filter(r => s.pipeTab === 'all' || r.st === s.pipeTab).map(r => ({ ...r, open: () => this.setState({ mg: r, s1: true, s2: true, s3: true }) }));
+    const evalAll = [
+      { cert: 'EVA-004821', ad: '#AD-0142', obj: 'Fuji X100V', range: '1,150–1,300', out: 'IN REVIEW', k: 'review', obg: 'var(--color-info-subtle)', ofg: 'var(--color-info-text)', date: '18 Jul 26' },
+      { cert: 'EVA-004820', ad: '#AD-0140', obj: 'MacBook Air M3', range: '980–1,100', out: 'GO', k: 'go', obg: 'var(--color-success)', ofg: dark ? '#0F1216' : '#fff', date: '17 Jul 26' },
+      { cert: 'EVA-004818', ad: '#AD-0138', obj: 'KitchenAid Artisan', range: '380–420', out: 'GO', k: 'go', obg: 'var(--color-success)', ofg: dark ? '#0F1216' : '#fff', date: '15 Jul 26' },
+      { cert: 'EVA-004815', ad: '#AD-0134', obj: 'Rolex Datejust (declined)', range: '—', out: 'NO-GO', k: 'nogo', obg: 'var(--color-error)', ofg: dark ? '#0F1216' : '#fff', date: '12 Jul 26' },
+      { cert: 'EVA-004812', ad: '#AD-0133', obj: 'iPad Pro 11” M4', range: '820–900', out: 'GO', k: 'go', obg: 'var(--color-success)', ofg: dark ? '#0F1216' : '#fff', date: '10 Jul 26' },
+    ];
+    const evalTabs = [['all', 'All'], ['go', 'GO'], ['nogo', 'NO-GO'], ['review', 'In review']].map(([k, label]) => ({
+      label, go: () => this.setState({ evalTab: k }),
+      bg: s.evalTab === k ? 'var(--color-secondary)' : 'var(--color-surface)',
+      fg: s.evalTab === k ? 'var(--color-bg)' : 'var(--color-text-secondary)',
+      bc: s.evalTab === k ? 'var(--color-secondary)' : 'var(--color-border)',
+    }));
+    const evalRows = evalAll.filter(e => s.evalTab === 'all' || e.k === s.evalTab);
+    const stMap = { open: ['Open', 'warning'], in_review: ['In review', 'info'], resolved: ['Resolved', 'success'], rejected: ['Rejected', 'error'] };
+    const repTabs = [['all', 'All'], ['open', 'Open'], ['in_review', 'In review'], ['resolved', 'Resolved'], ['rejected', 'Rejected']].map(([k, label]) => ({
+      label, n: k === 'all' ? s.tickets.length : s.tickets.filter(t => t.st === k).length,
+      go: () => this.setState({ repTab: k }),
+      bg: s.repTab === k ? 'var(--color-secondary)' : 'var(--color-surface)',
+      fg: s.repTab === k ? 'var(--color-bg)' : 'var(--color-text-secondary)',
+      bc: s.repTab === k ? 'var(--color-secondary)' : 'var(--color-border)',
+    }));
+    const setT = (id, st, msg) => { this.setState({ tickets: s.tickets.map(t => t.id === id ? { ...t, st } : t) }); this.toast(msg); };
+    const repRowsAll = s.tickets.filter(t => s.repTab === 'all' || t.st === s.repTab);
+    const repRows = repRowsAll.map(t => ({
+      ...t, status: stMap[t.st][0], tone: stMap[t.st][1],
+      actDisp: (t.st === 'open' || t.st === 'in_review') ? 'flex' : 'none',
+      takeDisp: t.st === 'open' ? 'inline-flex' : 'none',
+      resDisp: t.st === 'in_review' ? 'inline-flex' : 'none',
+      take: () => setT(t.id, 'in_review', 'Ticket taken — assigned to you'),
+      resolve: () => setT(t.id, 'resolved', 'Resolved · 40 ROBI awarded to ' + t.user.split('@')[0]),
+      reject: () => setT(t.id, 'rejected', 'Ticket rejected'),
+    }));
+    const acts = this.acts();
+    const perm = s.perm || this.mods().map(() => acts.map(() => true));
+    const tglCell = (i, j) => () => { const p = perm.map(r => r.slice()); p[i][j] = !p[i][j]; this.setState({ perm: p }); };
+    const rbacMods = this.mods().map((name, i) => ({
+      name, ovr: i === 5,
+      cells: acts.map((a, j) => ({
+        tgl: tglCell(i, j), disp: perm[i][j] ? 'block' : 'none',
+        bg: perm[i][j] ? 'var(--color-success)' : 'var(--color-bg)',
+        bc: perm[i][j] ? 'var(--color-success)' : 'var(--color-border-strong)',
+        fg: dark && perm[i][j] ? '#0F1216' : '#fff',
+      })),
+    }));
+    const mi = Math.min(s.rbacMod, this.mods().length - 1);
+    const rbacMobCells = acts.map((a, j) => ({
+      n: a, tgl: tglCell(mi, j),
+      tbg: perm[mi][j] ? 'var(--color-success)' : 'var(--color-surface-3)',
+      tbc: perm[mi][j] ? 'var(--color-success)' : 'var(--color-border)',
+      knob: perm[mi][j] ? '18px' : '2px',
+    }));
+    const engine = s.engine.map((e, i) => ({
+      ...e,
+      tgl: () => { if (e.danger) this.setState({ confirm: i }); else { const en = s.engine.map((x, k) => k === i ? { ...x, on: !x.on } : x); this.setState({ engine: en }); this.toast(e.k + ' → ' + (!e.on ? 'ON' : 'OFF')); } },
+      tbg: e.on ? 'var(--color-success)' : 'var(--color-surface-3)',
+      tbc: e.on ? 'var(--color-success)' : 'var(--color-border)',
+      knob: e.on ? '22px' : '2px',
+    }));
+    const simLabels = { evaluator: 'EVALUATOR', community: 'COMMUNITY MGR', treasurer: 'TREASURER', analyst: 'ANALYST' };
+    const botNav = [
+      { id: 'dash', label: 'Home' }, { id: 'pipe', label: 'Pipeline', badge: '4' }, { id: 'rep', label: 'Reports', badge: '2' }, { id: 'trea', label: 'Treasury' },
+    ].filter(b => allowed[b.id]).slice(0, 4).map(b => ({
+      ...b, d: I[b.id], go: () => this.nav(b.id), badge: b.badge || false,
+      fg: page === b.id && !s.menu ? 'var(--color-primary)' : 'var(--color-text-muted)', w: page === b.id ? '600' : '400',
+    }));
+    botNav.push({ id: 'menu', label: 'Menu', d: I.menu, badge: false, go: () => this.setState({ menu: !s.menu }), fg: s.menu ? 'var(--color-primary)' : 'var(--color-text-muted)', w: s.menu ? '600' : '400' });
+    const menuMods = groupsAll.flatMap(g => g.items).filter(it => allowed[it.id]).map(it => ({
+      label: it.label.replace(' & Fairness', '').replace(' & RBAC', '').replace(' account', '').replace('Platform ', '').replace(' Registry', ''),
+      d: it.d, go: it.go, bg: page === it.id ? 'var(--color-surface-3)' : 'var(--color-bg)', fg: page === it.id ? 'var(--color-text)' : 'var(--color-text-secondary)',
+    }));
+    const mg = s.mg || {};
+    return {
+      theme: s.theme, isDark: dark, isLight: !dark, vis, rootRef: this.setRoot,
+      toggleTheme: () => { const t = dark ? 'light' : 'dark'; localStorage.setItem('abo_proto_theme', t); this.setState({ theme: t }); },
+      toggleSb: () => this.setState({ sb: !s.sb }),
+      simOn: !!s.sim, simRole: s.sim, simLabel: simLabels[s.sim] || '',
+      setSim: (e) => { this.setState({ sim: e.target.value, menu: false }); if (e.target.value) this.toast('Simulating role — sidebar filtered'); },
+      exitSim: () => this.setState({ sim: '' }),
+      sideGroups, botNav, menuMods, menuOpen: s.menu, closeMenu: () => this.setState({ menu: false }),
+      todos: [
+        { n: '4', label: 'pending valuations', go: () => this.nav('pipe'), fg: 'var(--color-text-secondary)', cfg: 'var(--color-primary)' },
+        { n: '2', label: 'awaiting seller', go: () => this.nav('pipe'), fg: 'var(--color-text-secondary)', cfg: 'var(--color-primary)' },
+        { n: '1', label: 'EVALOBI request', go: () => this.nav('eval'), fg: 'var(--color-text-secondary)', cfg: 'var(--color-primary)' },
+        { n: '2', label: 'open reports', go: () => this.nav('rep'), fg: 'var(--color-text-secondary)', cfg: 'var(--color-primary)' },
+        { n: '0', label: 'open disputes', go: () => this.nav('anal'), fg: 'var(--color-text-muted)', cfg: 'var(--color-text-muted)' },
+      ],
+      kpis: [
+        { label: 'Registered users', v: '2,847', delta: '+38 · 7d', dfg: 'var(--color-success-text)' },
+        { label: 'Active airdrops', v: '6', delta: '2 closing', dfg: 'var(--color-text-muted)' },
+        { label: 'Valuations in progress', v: '4', delta: 'oldest 2h', dfg: 'var(--color-text-muted)' },
+        { label: 'Open reports', v: '2', delta: 'oldest 1d', dfg: 'var(--color-text-muted)' },
+        { label: 'ARIA in circulation', v: '1.24M', delta: '+2.1% · 7d', dfg: 'var(--color-text-muted)' },
+        { label: 'ROBI in circulation', v: '1,318', delta: '+24 · 7d', dfg: 'var(--color-text-muted)' },
+        { label: 'Check-ins today', v: '412', delta: 'peak 09:00', dfg: 'var(--color-text-muted)' },
+        { label: 'ROBI nominal', v: '€ 1.0625', delta: 'internal figure', dfg: 'var(--color-text-muted)' },
+      ],
+      activity: [
+        { t: '09:41', x: 'EVALOBI EVA-004821 requested for #AD-0142 (Fuji X100V)' },
+        { t: '09:12', x: 'New report from marta.riva — step counter mismatch on #AD-0139' },
+        { t: '08:55', x: '#AD-0137 (Dyson V15) entered closing — 8,940 entries' },
+        { t: '08:30', x: 'Seller accepted valuation on #AD-0141 (iPhone 15 Pro)' },
+        { t: '07:58', x: 'Treasury fund logged: € 3,200.00 (Revenue · 20% split)' },
+      ],
+      pipeTabs, pipeRows, evalTabs, evalRows, repTabs, repRows, repEmpty: repRowsAll.length === 0,
+      toastIssue: () => this.toast('Certificate draft created from #AD-0142'),
+      toastSend: () => this.toast('Message queued to all users'),
+      fairBars: [
+        { label: '1–10', w: '86%', v: '1,204' }, { label: '11–25', w: '64%', v: '892' }, { label: '26–50', w: '38%', v: '531' }, { label: '51–100', w: '18%', v: '249' }, { label: '100+', w: '6%', v: '84' },
+      ],
+      messages: [
+        { t: 'New airdrop live: Dyson V15 Detect', b: 'The climb is open — 96 steps to the summit.', aud: 'All users', d: '16 Jul' },
+        { t: 'EVALOBI certificate issued', b: 'Your object was valued at €980–1,100. Review and decide within 72h.', aud: 'Seller · m.rossi', d: '15 Jul' },
+        { t: 'Weekly summit recap', b: '2 adjudications this week. Congratulations to the climbers.', aud: 'Active participants', d: '13 Jul' },
+        { t: 'Scheduled maintenance', b: 'ABO writes frozen 02:00–03:00 CEST.', aud: 'All users', d: '11 Jul' },
+      ],
+      userRows: [
+        { mail: 'marta.riva@gmail.com', id: 'U-2841', aria: '12,480', robi: '36', wk: '14', ref: '3' },
+        { mail: 'luca.b@outlook.com', id: 'U-2712', aria: '9,120', robi: '22', wk: '9', ref: '1' },
+        { mail: 'sof.ferri@icloud.com', id: 'U-2688', aria: '21,050', robi: '61', wk: '18', ref: '7' },
+        { mail: 'g.marchetti@pm.me', id: 'U-2534', aria: '4,310', robi: '8', wk: '4', ref: '0' },
+        { mail: 'd.colombo@gmail.com', id: 'U-2490', aria: '15,780', robi: '44', wk: '11', ref: '2' },
+      ],
+      robiSources: [
+        { label: 'Summit', w: '78%', v: '409' }, { label: 'Valuations', w: '46%', v: '241' }, { label: 'Welcome', w: '55%', v: '288' }, { label: 'Referrals', w: '50%', v: '263' }, { label: 'Reports', w: '22%', v: '117' },
+      ],
+      goCosts: () => this.nav('cost'),
+      fundFormOpen: s.fundForm, toggleFundForm: () => this.setState({ fundForm: !s.fundForm }),
+      saveFund: () => { this.setState({ fundForm: false }); this.toast('Fund logged · split 20/80 applied'); },
+      saveMove: () => this.toast('Service movement logged'),
+      giroTreasury: () => this.toast('€ 2,000.00 moved to Treasury'),
+      funds: [
+        { d: '15 Jul 26', tot: '€ 3,200.00', tr: '€ 640.00', sv: '€ 2,560.00', desc: 'Revenue · sponsorships', team: false },
+        { d: '02 Jul 26', tot: '€ 25,000.00', tr: '€ 20,000.00', sv: '€ 5,000.00', desc: 'Capital injection Q3', team: true },
+        { d: '28 Jun 26', tot: '€ 1,850.00', tr: '€ 370.00', sv: '€ 1,480.00', desc: 'Revenue · ads June', team: false },
+      ],
+      ariaMoves: [
+        { d: '18 Jul', x: 'Entries collected · #AD-0139', v: '+4,080', fg: 'var(--color-success-text)' },
+        { d: '17 Jul', x: 'Welcome grants (38 users)', v: '-1,900', fg: 'var(--color-text-secondary)' },
+        { d: '16 Jul', x: 'Entries collected · #AD-0137', v: '+9,320', fg: 'var(--color-success-text)' },
+        { d: '15 Jul', x: 'Guarantee boost payouts', v: '-2,400', fg: 'var(--color-text-secondary)' },
+      ],
+      assets: [
+        { n: 'Hardware & office', v: '4,120.00', auto: false, manual: true },
+        { n: 'AIROOBI brand & domains', v: '2,600.00', auto: false, manual: true },
+        { n: 'Prepaid services (hosting, tools)', v: '1,140.00', auto: false, manual: true },
+        { n: 'ROBI · CEO account × nominal (214 × 1.0625)', v: '227.38', auto: true, manual: false },
+        { n: 'ARIA · CEO account', v: '61.20', auto: true, manual: false },
+      ],
+      saveParams: () => this.toast('Parameters saved · snapshot created'),
+      snaps: [
+        { d: '18 Jul 26', n: '€ 1.0625', c: '1,318', by: 'auto' },
+        { d: '11 Jul 26', n: '€ 1.0580', c: '1,294', by: 'auto' },
+        { d: '04 Jul 26', n: '€ 1.0410', c: '1,270', by: 'skeezu' },
+        { d: '27 Jun 26', n: '€ 1.0395', c: '1,244', by: 'auto' },
+      ],
+      collabs: [
+        { ini: 'SK', name: 'Skeezu', mail: 'ceo@airoobi.com', role: 'CEO' },
+        { ini: 'MV', name: 'M. Valenti', mail: 'm.valenti@airoobi.com', role: 'Evaluator' },
+        { ini: 'CP', name: 'C. Paoli', mail: 'c.paoli@airoobi.com', role: 'Community' },
+        { ini: 'RT', name: 'R. Tanzi', mail: 'r.tanzi@airoobi.com', role: 'Treasurer' },
+      ],
+      rbacRoleName: 'Evaluator', rbacActs: acts.map(n => ({ n })), rbacMods,
+      rbacModIdx: String(mi), rbacModOpts: this.mods().map((n, i) => ({ n, i: String(i) })),
+      setRbacMod: (e) => this.setState({ rbacMod: Number(e.target.value) }),
+      rbacMobCells,
+      cats: [
+        { n: 'Electronics', v: '1.00', a: '4' }, { n: 'Home & kitchen', v: '0.85', a: '1' }, { n: 'Vehicles', v: '1.30', a: '0' }, { n: 'Watches & jewelry', v: '1.45', a: '0' }, { n: 'Gaming', v: '0.90', a: '1' },
+      ],
+      engine,
+      confirmOpen: s.confirm !== null, confirmKey: s.confirm !== null ? s.engine[s.confirm].k : '',
+      confirmNo: () => this.setState({ confirm: null }),
+      confirmYes: () => { const i = s.confirm; const en = s.engine.map((x, k) => k === i ? { ...x, on: !x.on } : x); this.setState({ engine: en, confirm: null }); this.toast(s.engine[i].k + ' → ' + (!s.engine[i].on ? 'ON' : 'OFF')); },
+      openCost: () => this.toast('Add-cost modal — same pattern as manage sheet'),
+      costs: [
+        { d: '16 Jul', cat: 'Hosting', desc: 'VPS monthly', v: '89.00' }, { d: '12 Jul', cat: 'Ads', desc: 'Meta campaign — summit recap', v: '450.00' }, { d: '08 Jul', cat: 'Tools', desc: 'Design suite annual', v: '228.90' }, { d: '03 Jul', cat: 'Legal', desc: 'MiCA compliance review', v: '517.00' },
+      ],
+      mgOpen: !!s.mg, mg: { code: mg.code || '', obj: mg.obj || '', status: mg.status || '', tone: mg.tone || 'info', next: mg.next || '', range: mg.range || '', cta: mg.cta || 'Advance →' },
+      closeManage: () => this.setState({ mg: null }),
+      mgSave: () => { this.toast('Saved'); },
+      mgAdvance: () => { this.toast((mg.code || '') + ' → ' + (mg.next || 'next step')); this.setState({ mg: null }); },
+      tglS1: () => this.setState({ s1: !s.s1 }), tglS2: () => this.setState({ s2: !s.s2 }), tglS3: () => this.setState({ s3: !s.s3 }),
+      toastOn: !!s.toast, toastMsg: s.toast,
+      notifOpen: s.notifOpen,
+      toggleNotif: () => this.setState({ notifOpen: !s.notifOpen, menu: false }),
+      closeNotif: () => this.setState({ notifOpen: false }),
+      markAll: () => { this.setState({ notifs: s.notifs.map(n => ({ ...n, read: true })) }); this.toast('All notifications marked read'); },
+      unreadN: s.notifs.filter(n => !n.read).length,
+      unreadOn: s.notifs.some(n => !n.read),
+      notifItems: s.notifs.map(n => ({
+        ...n,
+        dot: n.read ? 'transparent' : 'var(--color-primary)',
+        fg: n.read ? 'var(--color-text-muted)' : 'var(--color-text)',
+        go: () => { this.setState({ notifs: s.notifs.map(x => x.id === n.id ? { ...x, read: true } : x), notifOpen: false }); if (allowed[n.page]) this.nav(n.page); else this.toast('Your role has no access to ' + n.dest); },
+      })),
+      ui: {
+        rootH: emb ? '100%' : '100vh', fixPos: emb ? 'absolute' : 'fixed',
+        nfScrim: m ? 'var(--color-overlay)' : 'transparent',
+        nfPos: m ? 'left:0;right:0;bottom:0;border-radius:16px 16px 0 0;max-height:72%' : 'top:62px;right:12px;width:372px;max-width:calc(100% - 24px);max-height:min(480px, calc(100% - 80px));border-radius:12px',
+        pad: m ? '16px 14px 24px' : '26px 30px 60px',
+        sideDisp: m ? 'none' : 'flex', botDisp: m ? 'grid' : 'none',
+        deskOnly: m ? 'none' : 'block', mobOnly: m ? 'block' : 'none',
+        sbW: s.sb ? '54px' : '236px', labDisp: s.sb ? 'none' : 'block',
+        itemPad: s.sb ? '11px' : '13px', sbGlyph: s.sb ? '»' : '« collapse',
+        rowH: m ? '52px' : '40px',
+        mgAlign: m ? 'stretch' : 'center', mgW: m ? '100%' : '680px', mgH: m ? '100%' : 'auto', mgMaxH: m ? '100%' : '88vh', mgR: m ? '0' : '14px', mgPad: m ? '0' : '20px',
+        toastB: m ? '76px' : '24px',
+        s1disp: s.s1 ? 'flex' : 'none', s2disp: s.s2 ? 'block' : 'none', s3disp: s.s3 ? 'flex' : 'none',
+        s1rot: s.s1 ? '180deg' : '0deg', s2rot: s.s2 ? '180deg' : '0deg', s3rot: s.s3 ? '180deg' : '0deg',
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

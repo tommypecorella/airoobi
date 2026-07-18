@@ -8,7 +8,7 @@
 <title>ABO — AIROOBI Back Office</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Instrument+Sans:wght@400;500;600;700&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -246,24 +246,8 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   .adm-tbl td,.adm-tbl th{padding:8px 8px;font-size:12px}
 }
 </style>
-<link rel="manifest" href="/manifest-abo.json?v=1.0.0">
+<link rel="manifest" href="/manifest.json?v=2.0.0">
 <link rel="apple-touch-icon" href="/public/images/pwa-icon-180.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ABO">
-<!-- Skin ABO v3 (Design Sheet 18 lug): token layer, skin-not-rewrite -->
-<link rel="stylesheet" href="/src/theme-v3.css?v=1.1.0">
-<link rel="stylesheet" href="/src/abo-v3.css?v=1.0.0">
-<script>
-/* Tema ABO prima del primo paint: salvato → preferenza di sistema */
-(function(){try{
-  var t=localStorage.getItem('abo_theme');
-  if(!t)t=(window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)?'dark':'light';
-  document.documentElement.setAttribute('data-theme',t);
-  var m=document.querySelector('meta[name="theme-color"]');
-  if(m)m.setAttribute('content',t==='dark'?'#0F1216':'#FFFFFF');
-}catch(e){}})();
-</script>
 </head>
 <body>
 
@@ -301,7 +285,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
       <option value="treasurer">Tesoriere</option>
       <option value="analyst">Analista</option>
     </select>
-    <button class="admin-close" id="abo-theme-btn" onclick="aboToggleTheme()" title="Tema chiaro/scuro" aria-label="Tema chiaro/scuro">&#9789;</button>
     <a href="https://www.airoobi.app/" class="admin-close" style="text-decoration:none;color:inherit">APP &rarr;</a>
     <button class="admin-close" onclick="aboLogout()">Logout</button>
     <button class="abo-bell" id="abo-bell" onclick="toggleAboNotifPanel()" title="Notifiche">
@@ -351,7 +334,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-collaborators')"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="it">Collaboratori &amp; Permessi</span><span class="en">Collaborators &amp; Permissions</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-categories')"><svg viewBox="0 0 24 24"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span class="it">Categorie</span><span class="en">Categories</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-engine')"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>Engine Config</div>
-    <div class="admin-sidebar-item" onclick="adminNav('sec-notifications')"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg><span class="it">Notifiche</span><span class="en">Notifications</span></div>
   </div>
   <div style="padding:12px 16px;border-top:1px solid var(--gray-800)">
     <button onclick="aboToggleLang()" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;padding:6px 12px;cursor:pointer;width:100%;text-align:center" id="abo-lang-btn">EN</button>
@@ -695,40 +677,6 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   </div>
 
   <!-- COST TRACKER -->
-  <!-- 18 lug (Skeezu) · Censimento notifiche: cosa notifica chi, con quale testo e link -->
-  <div class="admin-section" id="sec-notifications">
-    <h2><span class="it">Notifiche</span><span class="en">Notifications</span></h2>
-    <div class="admin-note" style="margin-bottom:16px"><span class="it">Censimento di tutte le notifiche della piattaforma: evento, chi la riceve, canale, testo e dove porta. Le notifiche <b>DI SISTEMA sono obbligatorie</b>: non si spengono, né qui né dal profilo utente. Le altre hanno l'interruttore globale qui sotto e un interruttore personale nel profilo di ogni utente.</span><span class="en">Census of all platform notifications. System notifications are mandatory and cannot be switched off.</span></div>
-
-    <div class="admin-card" style="margin-bottom:20px">
-      <h3 style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px"><span class="it">Questo dispositivo</span><span class="en">This device</span></h3>
-      <div id="abo-push-status" style="font-size:13px;color:var(--gray-400);margin-bottom:12px">—</div>
-      <button class="ab-btn" id="abo-push-btn" onclick="aboEnablePush()"><span class="it">ATTIVA NOTIFICHE SU QUESTO DISPOSITIVO</span><span class="en">ENABLE NOTIFICATIONS ON THIS DEVICE</span></button>
-      <div style="font-size:12px;color:var(--gray-500);margin-top:10px"><span class="it">ABO è installabile come app: dal menu del browser scegli «Aggiungi a schermata Home» (iPhone) o «Installa app» (Android/desktop). Da app installata le notifiche arrivano sul telefono come qualsiasi altra app.</span><span class="en">ABO is installable as an app from the browser menu; installed, notifications arrive on your phone like any other app.</span></div>
-    </div>
-
-    <div class="admin-table-wrap">
-      <table class="admin-table" id="notif-cat-tbl">
-        <thead><tr>
-          <th><span class="it">Evento</span><span class="en">Event</span></th>
-          <th><span class="it">Chi la riceve</span><span class="en">Audience</span></th>
-          <th><span class="it">Canale</span><span class="en">Channel</span></th>
-          <th><span class="it">Testo</span><span class="en">Text</span></th>
-          <th>Link</th>
-          <th><span class="it">Origine</span><span class="en">Emitter</span></th>
-          <th><span class="it">Stato</span><span class="en">State</span></th>
-        </tr></thead>
-        <tbody><tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Caricamento…</td></tr></tbody>
-      </table>
-    </div>
-    <div class="admin-note" style="margin-top:14px"><span class="it">L'interruttore qui è <b>globale</b> (spegne l'invio per tutti). Le preferenze personali si gestiscono nel profilo: qui in ABO valgono per il tuo account admin, su airoobi.app per ogni utente.</span><span class="en">The switch here is global; personal preferences live in each profile.</span></div>
-
-    <div class="admin-card" style="margin-top:20px">
-      <h3 style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:10px"><span class="it">Le tue preferenze (questo account)</span><span class="en">Your preferences (this account)</span></h3>
-      <div id="abo-my-prefs" style="font-size:13px;color:var(--gray-400)">Caricamento…</div>
-    </div>
-  </div>
-
   <div class="admin-section" id="sec-costs">
     <h2>Cost Tracker <span class="info-i" onclick="showAboTip(this,'sec-costs')">i</span></h2>
     <div class="admin-grid" style="margin-bottom:20px">
@@ -1724,8 +1672,7 @@ var ABO_MODULE_TO_SEC={
   categorie:'sec-categories',
   engine_config:'sec-engine',
   evalobi:'sec-evalobi',
-  segnalazioni:'sec-reports',
-  notifiche:'sec-notifications'
+  segnalazioni:'sec-reports'
 };
 
 window._aboSimulating=null; // null = no sim · role string = simulazione attiva
@@ -1781,9 +1728,9 @@ function aboSimulateRole(role){
 }
 
 // FASE 3 PR-C2b · Matrice "Collaboratori & Permessi" + gating azioni
-var PERM_MODULES=['dashboard','pipeline_airdrop','analisi_fairness','messaggi','segnalazioni','notifiche','utenti','treasury_fondi','conto_aria_piattaforma','patrimonio_aziendale','cost_tracker','aria_robi','collaboratori_permessi','categorie','engine_config','evalobi'];
+var PERM_MODULES=['dashboard','pipeline_airdrop','analisi_fairness','messaggi','segnalazioni','utenti','treasury_fondi','conto_aria_piattaforma','patrimonio_aziendale','cost_tracker','aria_robi','collaboratori_permessi','categorie','engine_config','evalobi'];
 var PERM_ACTIONS=['view','edit','approve','draw','reply','manage'];
-var PERM_MODULE_LABELS={dashboard:'Dashboard',pipeline_airdrop:'Pipeline airdrop',analisi_fairness:'Analisi & Fairness',messaggi:'Messaggi',utenti:'Utenti',treasury_fondi:'Treasury & Fondi',conto_aria_piattaforma:'Conto ARIA piattaforma',patrimonio_aziendale:'Patrimonio aziendale',cost_tracker:'Cost Tracker',aria_robi:'ARIA & ROBI',collaboratori_permessi:'Collaboratori & Permessi',categorie:'Categorie',engine_config:'Engine Config',evalobi:'EVALOBI Registry',segnalazioni:'Segnalazioni',notifiche:'Notifiche'};
+var PERM_MODULE_LABELS={dashboard:'Dashboard',pipeline_airdrop:'Pipeline airdrop',analisi_fairness:'Analisi & Fairness',messaggi:'Messaggi',utenti:'Utenti',treasury_fondi:'Treasury & Fondi',conto_aria_piattaforma:'Conto ARIA piattaforma',patrimonio_aziendale:'Patrimonio aziendale',cost_tracker:'Cost Tracker',aria_robi:'ARIA & ROBI',collaboratori_permessi:'Collaboratori & Permessi',categorie:'Categorie',engine_config:'Engine Config',evalobi:'EVALOBI Registry',segnalazioni:'Segnalazioni'};
 var ABO_CEO_EMAILS=['ceo@airoobi.com','tommaso.pecorella+ceo@outlook.com'];
 
 window._permCurrentUser=null;
@@ -2067,8 +2014,7 @@ var ABO_PAGE_SLUGS={
   'sec-collaborators':'collaboratori-permessi',
   'sec-categories':'categorie',
   'sec-engine':'engine-config',
-  'sec-costs':'cost-tracker',
-  'sec-notifications':'notifiche'
+  'sec-costs':'cost-tracker'
 };
 function _aboSlugToSection(slug){
   for(var k in ABO_PAGE_SLUGS){if(ABO_PAGE_SLUGS[k]===slug)return k;}
@@ -2099,125 +2045,6 @@ function toggleAboSidebar(){
     }
   }catch(e){}
 })();
-// ── 18 lug (Skeezu) · Tema light/dark ABO (skin v3) ──
-function aboToggleTheme(){
-  var next=document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark';
-  document.documentElement.setAttribute('data-theme',next);
-  try{localStorage.setItem('abo_theme',next);}catch(e){}
-  var m=document.querySelector('meta[name="theme-color"]');
-  if(m)m.setAttribute('content',next==='dark'?'#0F1216':'#FFFFFF');
-  var b=document.getElementById('abo-theme-btn');
-  if(b)b.innerHTML=next==='dark'?'&#9789;':'&#9728;';
-}
-(function(){
-  var b=document.getElementById('abo-theme-btn');
-  if(b)b.innerHTML=document.documentElement.getAttribute('data-theme')==='dark'?'&#9789;':'&#9728;';
-})();
-// ── 18 lug (Skeezu) · ABO come APP: service worker + push su questo dispositivo ──
-(function(){
-  if('serviceWorker' in navigator){try{navigator.serviceWorker.register('/sw.js');}catch(e){}}
-})();
-var ABO_VAPID_PUBLIC='BOsfShhrYnISvRhpbCIlDvG1HuHMNDfggNKgyEFV_LATdT2-ocHOkmYPMexED0-yCv_z9uuPqlDCGYxVXOzQxko';
-function _aboB64ToU8(b64){
-  var pad='='.repeat((4-b64.length%4)%4);
-  var s=(b64+pad).replace(/-/g,'+').replace(/_/g,'/');
-  var raw=atob(s);var arr=new Uint8Array(raw.length);
-  for(var i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);
-  return arr;
-}
-function aboPushStatusRefresh(){
-  var el=document.getElementById('abo-push-status');var btn=document.getElementById('abo-push-btn');
-  if(!el)return;
-  if(!('Notification' in window)||!('PushManager' in window)){
-    el.textContent='Push non supportate da questo browser. Su iPhone: prima installa ABO dalla schermata Home.';
-    if(btn)btn.style.display='none';return;
-  }
-  if(Notification.permission==='granted'){el.innerHTML='<span style="color:var(--color-success,#2FBE6E)">✓ Notifiche attive su questo dispositivo.</span>';if(btn)btn.style.display='none';}
-  else if(Notification.permission==='denied'){el.textContent='Notifiche bloccate dal browser: sbloccale dalle impostazioni del sito.';if(btn)btn.style.display='none';}
-  else{el.textContent='Notifiche non ancora attivate su questo dispositivo.';if(btn)btn.style.display='';}
-}
-async function aboEnablePush(){
-  var s=getSession();if(!s)return;
-  try{
-    var perm=await Notification.requestPermission();
-    if(perm!=='granted'){aboPushStatusRefresh();return;}
-    var reg=await navigator.serviceWorker.register('/sw.js');
-    await navigator.serviceWorker.ready;
-    var sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:_aboB64ToU8(ABO_VAPID_PUBLIC)});
-    var key=sub.toJSON();
-    await fetch(SB_URL+'/rest/v1/rpc/save_push_subscription',{
-      method:'POST',
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
-      body:JSON.stringify({p_endpoint:key.endpoint,p_keys_p256dh:key.keys.p256dh,p_keys_auth:key.keys.auth})
-    });
-  }catch(e){console.error('abo push:',e);}
-  aboPushStatusRefresh();
-}
-// ── 18 lug (Skeezu) · Censimento notifiche: catalogo + interruttori globali + preferenze account ──
-async function loadNotifCenter(){
-  aboPushStatusRefresh();
-  var s=getSession();if(!s)return;
-  var tbody=document.querySelector('#notif-cat-tbl tbody');
-  var myEl=document.getElementById('abo-my-prefs');
-  try{
-    var res=await fetch(SB_URL+'/rest/v1/rpc/get_my_notification_settings',{
-      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:'{}'
-    });
-    if(!res.ok)throw new Error('HTTP '+res.status);
-    var rows=await res.json()||[];
-    if(tbody){
-      tbody.innerHTML=rows.map(function(r){
-        var stato=r.is_system
-          ?'<span class="tag" style="opacity:.75" title="Obbligatoria: non spegnibile">SISTEMA</span>'
-          :'<button class="ab-btn" style="padding:3px 12px;font-size:10px'+(r.enabled_global?'':';opacity:.45')+'" onclick="aboToggleCatalog(\''+r.key+'\','+(!r.enabled_global)+')">'+(r.enabled_global?'ON':'OFF')+'</button>';
-        return '<tr>'
-          +'<td style="font-weight:600">'+escHtml(r.event_label)+'<div style="font-family:var(--font-m);font-size:9px;color:var(--gray-500)">'+escHtml(r.key)+'</div></td>'
-          +'<td style="font-size:12px">'+escHtml(r.audience)+'</td>'
-          +'<td style="font-family:var(--font-m);font-size:10px;white-space:nowrap">'+escHtml(r.channel)+'</td>'
-          +'<td style="font-size:12px;color:var(--gray-300);max-width:320px">'+escHtml(r.sample_text)+'</td>'
-          +'<td style="font-family:var(--font-m);font-size:10px">'+(r.link?'<a href="'+escHtml(r.link)+'" style="color:var(--gold)">'+escHtml(r.link)+'</a>':'—')+'</td>'
-          +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-500)">'+escHtml(r.emitter)+'</td>'
-          +'<td>'+stato+'</td>'
-          +'</tr>';
-      }).join('');
-    }
-    if(myEl){
-      var conf=rows.filter(function(r){return !r.is_system;});
-      if(!conf.length){myEl.textContent='Nessuna notifica configurabile.';}
-      else{
-        myEl.innerHTML=conf.map(function(r){
-          return '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--gray-800)">'
-            +'<span>'+escHtml(r.event_label)+'</span>'
-            +'<button class="ab-btn" style="padding:3px 12px;font-size:10px'+(r.enabled_user?'':';opacity:.45')+'" onclick="aboTogglePref(\''+r.key+'\','+(!r.enabled_user)+')">'+(r.enabled_user?'ON':'OFF')+'</button>'
-            +'</div>';
-        }).join('')
-        +'<div style="font-size:11px;color:var(--gray-500);padding-top:8px">Le notifiche di sistema sono sempre attive.</div>';
-      }
-    }
-  }catch(e){
-    if(tbody)tbody.innerHTML='<tr><td colspan="7" style="color:#f87171;padding:18px">'+escHtml(String(e))+'</td></tr>';
-  }
-}
-async function aboToggleCatalog(key,enable){
-  var s=getSession();if(!s)return;
-  try{
-    await fetch(SB_URL+'/rest/v1/rpc/admin_set_catalog_enabled',{
-      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
-      body:JSON.stringify({p_key:key,p_enabled:enable})
-    });
-  }catch(e){}
-  loadNotifCenter();
-}
-async function aboTogglePref(key,enable){
-  var s=getSession();if(!s)return;
-  try{
-    await fetch(SB_URL+'/rest/v1/rpc/set_notification_pref',{
-      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
-      body:JSON.stringify({p_key:key,p_enabled:enable})
-    });
-  }catch(e){}
-  loadNotifCenter();
-}
 function adminNav(sectionId,skipPush){
   document.querySelectorAll('.admin-section').forEach(function(s){s.classList.remove('active')});
   document.querySelectorAll('.admin-sidebar-item').forEach(function(b){b.classList.remove('active');b.blur()});
@@ -2235,7 +2062,6 @@ function adminNav(sectionId,skipPush){
   if(sectionId==='sec-airdrop-stats'||sectionId==='sec-airdrops')loadAirdropStats();
   if(sectionId==='sec-evalobi'&&typeof loadEvalobiTable==='function')loadEvalobiTable();
   if(sectionId==='sec-reports'&&typeof loadReportsTable==='function')loadReportsTable();
-  if(sectionId==='sec-notifications'&&typeof loadNotifCenter==='function')loadNotifCenter();
   var main=document.getElementById('admin-main');
   if(main){main.scrollTop=0;main.focus();}
   var sb=document.getElementById('admin-sidebar');
@@ -5103,7 +4929,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.9.0"></div>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.8.0"></div>
 <script src="/src/footer.js?v=1.6.0"></script>
 </body>
 </html>

@@ -9,6 +9,10 @@
 //                    usato dal trigger DB trg_airdrop_status_notify che scrive
 //                    già le notifiche in-app: passare skip_db=true
 //
+// Enforcement censimento (notification_catalog + user_notification_prefs):
+//   le notifiche NON di sistema rispettano l'interruttore globale ABO e le
+//   preferenze per utente; quelle di sistema sono obbligatorie.
+//
 // Invocazione: POST /functions/v1/send-push
 // Body: { type, airdrop_id, user_id?, user_ids?, title?, body_text?, category?, skip_db? }
 
@@ -245,6 +249,31 @@ serve(async (req: Request) => {
       userIds = [...new Set((parts || []).map((p: { user_id: string }) => p.user_id))].filter(
         (id) => id !== winnerId
       );
+    }
+
+    // Censimento notifiche: interruttore globale ABO + preferenze utente
+    // (solo per le non-system; le notifiche di sistema sono obbligatorie)
+    const { data: cat } = await sb
+      .from("notification_catalog")
+      .select("is_system, enabled")
+      .eq("key", type)
+      .maybeSingle();
+    if (cat && !cat.is_system) {
+      if (!cat.enabled) {
+        return new Response(JSON.stringify({ ok: true, sent: 0, skipped: "catalog_disabled" }), {
+          headers: { "Content-Type": "application/json" },
+        });
+      }
+      if (userIds.length > 0) {
+        const { data: offs } = await sb
+          .from("user_notification_prefs")
+          .select("user_id")
+          .eq("key", type)
+          .eq("enabled", false)
+          .in("user_id", userIds);
+        const offSet = new Set((offs || []).map((r: { user_id: string }) => r.user_id));
+        userIds = userIds.filter((id) => !offSet.has(id));
+      }
     }
 
     if (userIds.length === 0) {

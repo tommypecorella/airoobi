@@ -1,0 +1,201 @@
+/*
+ * AIROOBI · theme v3 — "Dream Robe E-commerce" (8 Jul 2026)
+ * Palette CONFERMATA Skeezu (Albo 07/07 + 08/07): ROSSO primary · ARDESIA slate ·
+ * BLUETTE accent · sfondo BIANCO in light · dark mode reale · NIENTE ORO (legge di brand).
+ * Fonte: DESIGN SYSTEM v3 — prompt unico ROBI §4 (canale digithon).
+ *
+ * Caricare DOPO tokens.css e dapp-v2-g3.css: questo layer ridefinisce sia gli
+ * alias semantici v3 (--color-*) sia TUTTI i token legacy (v1 dapp.css + v2
+ * tokens.css) — la cascata riveste l'intera app, come fece il pivot v2.
+ * Gli !important servono a vincere sui flip !important di dapp-v2-g3.css.
+ */
+
+/* ========== ALIAS SEMANTICI v3 · LIGHT (default) ========== */
+:root {
+  --color-bg:#FFFFFF; --color-bg-subtle:#F5F7FA;
+  --color-surface:#FFFFFF; --color-surface-2:#F5F7FA; --color-surface-3:#E9EDF2;
+  --color-overlay:rgba(22,29,38,0.55);
+  --color-text:#161D26; --color-text-secondary:#455364; --color-text-muted:#5B6A7D; --color-text-inverse:#FFFFFF;
+  --color-border:#D4DBE3; --color-border-strong:#AEB9C6;
+  --color-primary:#EF3E4F; --color-primary-hover:#D91F32; --color-primary-active:#B4192A;
+  --color-primary-fg:#FFFFFF; --color-primary-subtle:#FFF1F2;
+  --color-secondary:#33404F; --color-secondary-hover:#232D39; --color-secondary-fg:#FFFFFF;
+  --color-accent:#2F6BFF; --color-link:#1E54E6; --color-link-hover:#1741B4; --color-focus:#2F6BFF;
+  --color-success:#0E8A44; --color-success-subtle:#E7F6EE; --color-success-text:#0B6B37;
+  --color-warning:#E5820B; --color-warning-subtle:#FDF0DF; --color-warning-text:#9A5405;
+  --color-error:#D91F32; --color-error-subtle:#FFF1F2; --color-error-text:#B4192A;
+  --color-info:#1E54E6; --color-info-subtle:#EDF2FF; --color-info-text:#1741B4;
+  --shadow-xs:0 1px 2px rgba(22,29,38,0.06);
+  --shadow-sm:0 1px 3px rgba(22,29,38,0.08),0 1px 2px rgba(22,29,38,0.06);
+  --shadow-md:0 4px 12px rgba(22,29,38,0.08);
+  --shadow-lg:0 12px 28px rgba(22,29,38,0.12);
+  --shadow-xl:0 24px 48px rgba(22,29,38,0.16);
+  --shadow-focus:0 0 0 3px rgba(47,107,255,0.35);
+  --ease-standard:cubic-bezier(0.2,0,0,1); --ease-decelerate:cubic-bezier(0,0,0,1);
+  --dur-fast:120ms; --dur-base:200ms; --dur-slow:320ms;
+}
+
+/* ========== ALIAS SEMANTICI v3 · DARK (set dedicato, non un invert) ========== */
+[data-theme="dark"] {
+  --color-bg:#0F1216; --color-bg-subtle:#12161B;
+  --color-surface:#171B21; --color-surface-2:#1E242C; --color-surface-3:#262E38;
+  --color-overlay:rgba(0,0,0,0.62);
+  --color-text:#E8EAED; --color-text-secondary:#AEB9C6; --color-text-muted:#7E8B9C; --color-text-inverse:#0F1216;
+  --color-border:#2A313A; --color-border-strong:#3A434F;
+  --color-primary:#FF5563; --color-primary-hover:#FF6E79; --color-primary-active:#E23A48;
+  --color-primary-fg:#FFFFFF; --color-primary-subtle:rgba(255,85,99,0.14);
+  --color-secondary:#AEB9C6; --color-secondary-hover:#C6CFD9; --color-secondary-fg:#0F1216;
+  --color-accent:#6284FF; --color-link:#8AA3FF; --color-link-hover:#A9BCFF; --color-focus:#6284FF;
+  --color-success:#2FBE6E; --color-success-subtle:rgba(47,190,110,0.14); --color-success-text:#7BE0AC;
+  --color-warning:#F5A524; --color-warning-subtle:rgba(245,165,36,0.14); --color-warning-text:#F6C97A;
+  --color-error:#FF5563; --color-error-subtle:rgba(255,85,99,0.14); --color-error-text:#FF9AA4;
+  --color-info:#6284FF; --color-info-subtle:rgba(98,132,255,0.14); --color-info-text:#BAC8FF;
+  --shadow-xs:0 1px 2px rgba(0,0,0,0.30);
+  --shadow-sm:0 1px 3px rgba(0,0,0,0.40),0 1px 2px rgba(0,0,0,0.30);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.45);
+  --shadow-lg:0 12px 28px rgba(0,0,0,0.55);
+  --shadow-xl:0 24px 48px rgba(0,0,0,0.60);
+  --shadow-focus:0 0 0 3px rgba(98,132,255,0.45);
+}
+
+/* ========== REMAP LEGACY (v1 dapp.css + v2 tokens.css) → v3 ==========
+   Tutto ciò che consuma i vecchi nomi si riveste da solo. NIENTE ORO:
+   gold/accent → PRIMARY rosso; coral → PRIMARY (azione); grigi → ardesia. */
+:root, html:not([data-theme="dark"]), html[data-theme="light"] {
+  /* superfici e testo */
+  --black:var(--color-bg) !important;
+  --white:var(--color-text) !important;
+  --bg-primary:var(--color-bg) !important;
+  --bg-alt:var(--color-bg-subtle) !important;
+  --ink:var(--color-text) !important;
+  --ink-soft:var(--color-text-secondary) !important;
+  --ink-faint:var(--color-text-muted) !important;
+  --espresso:#161D26 !important;
+  /* accento di brand: era oro/blu → ROSSO v3 */
+  --gold:var(--color-primary) !important;
+  --gold-light:#FB6675 !important;
+  --gold-deep:var(--color-primary-active) !important;
+  --gold-dim:rgba(239,62,79,0.28) !important;
+  --gold-glow:rgba(239,62,79,0.07) !important;
+  --accent:var(--color-primary) !important;
+  --accent-dim:rgba(239,62,79,0.28) !important;
+  --accent-glow:rgba(239,62,79,0.07) !important;
+  --accent-soft:var(--color-primary-subtle) !important;
+  --coral:var(--color-primary) !important;
+  --coral-night:#FF5563 !important;
+  /* scala grigi → ardesia (light) */
+  --gray-900:var(--color-bg-subtle) !important;
+  --gray-800:var(--color-surface-2) !important;
+  --gray-700:var(--color-surface-3) !important;
+  --gray-600:var(--color-border) !important;
+  --gray-500:var(--color-text-muted) !important;
+  --gray-400:#5B6A7D !important;
+  --gray-300:var(--color-text-secondary) !important;
+  --line:var(--color-border) !important;
+  --line-soft:#E9EDF2 !important;
+  --glass-bg:rgba(22,29,38,0.03) !important;
+  --glass-border:rgba(22,29,38,0.09) !important;
+  --card-bg:var(--color-surface) !important;
+  /* funzionali */
+  --red:var(--color-error) !important;
+  --red-error:var(--color-error) !important;
+  --red-alert:var(--color-error) !important;
+  --red-soft:#FF9AA4 !important;
+  /* asset identifiers — PRESERVATI (non sono colori di brand) */
+  --aria:#4A9EFF !important; --aria-blue:#4A9EFF !important; --kas:#49EACB !important;
+  /* tipografia v3: Space Grotesk display · Inter body · JetBrains Mono */
+  --font-h:'Space Grotesk','Inter',system-ui,sans-serif !important;
+  --font-display:'Space Grotesk','Inter',system-ui,sans-serif !important;
+  --font-b:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif !important;
+  --font-body:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif !important;
+  --font-m:'JetBrains Mono','IBM Plex Mono',ui-monospace,monospace !important;
+  --font-mono:'JetBrains Mono','IBM Plex Mono',ui-monospace,monospace !important;
+  /* geometria v3 */
+  --radius:12px !important; --radius-sm:8px !important; --radius-lg:16px !important; --radius-pill:999px !important;
+}
+
+/* stesso remap per il DARK (set dedicato) */
+html[data-theme="dark"] {
+  --black:var(--color-bg) !important;
+  --white:var(--color-text) !important;
+  --bg-primary:var(--color-bg) !important;
+  --bg-alt:var(--color-bg-subtle) !important;
+  --ink:var(--color-text) !important;
+  --ink-soft:var(--color-text-secondary) !important;
+  --ink-faint:var(--color-text-muted) !important;
+  --espresso:#0F1216 !important;
+  --gold:var(--color-primary) !important;
+  --gold-light:#FF9AA4 !important;
+  --gold-deep:var(--color-primary-active) !important;
+  --gold-dim:rgba(255,85,99,0.30) !important;
+  --gold-glow:rgba(255,85,99,0.08) !important;
+  --accent:var(--color-primary) !important;
+  --accent-dim:rgba(255,85,99,0.30) !important;
+  --accent-glow:rgba(255,85,99,0.08) !important;
+  --accent-soft:var(--color-primary-subtle) !important;
+  --coral:var(--color-primary) !important;
+  --coral-night:#FF6E79 !important;
+  --gray-900:var(--color-bg-subtle) !important;
+  --gray-800:var(--color-surface-2) !important;
+  --gray-700:var(--color-surface-3) !important;
+  --gray-600:var(--color-border-strong) !important;
+  --gray-500:var(--color-text-muted) !important;
+  --gray-400:var(--color-text-secondary) !important;
+  --gray-300:#C6CFD9 !important;
+  --line:var(--color-border) !important;
+  --line-soft:rgba(255,255,255,0.06) !important;
+  --glass-bg:rgba(255,255,255,0.04) !important;
+  --glass-border:rgba(255,255,255,0.08) !important;
+  --card-bg:var(--color-surface) !important;
+  --red:var(--color-error) !important;
+  --red-error:var(--color-error) !important;
+  --red-alert:var(--color-error) !important;
+  --red-soft:#FF9AA4 !important;
+  --aria:#4A9EFF !important; --aria-blue:#4A9EFF !important; --kas:#49EACB !important;
+  --font-h:'Space Grotesk','Inter',system-ui,sans-serif !important;
+  --font-display:'Space Grotesk','Inter',system-ui,sans-serif !important;
+  --font-b:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif !important;
+  --font-body:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif !important;
+  --font-m:'JetBrains Mono','IBM Plex Mono',ui-monospace,monospace !important;
+  --font-mono:'JetBrains Mono','IBM Plex Mono',ui-monospace,monospace !important;
+  --radius:12px !important; --radius-sm:8px !important; --radius-lg:16px !important; --radius-pill:999px !important;
+}
+
+/* ========== FONDAMENTA v3 (poche regole globali, il resto è cascata) ========== */
+html { color-scheme: light dark; }
+html:not([data-theme="dark"]) { color-scheme: light; }
+html[data-theme="dark"] { color-scheme: dark; }
+
+/* focus ring 2px SEMPRE visibile — invariante a11y (§7) */
+:focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 2px; }
+
+/* numeri tabellari su saldi/prezzi/classifiche (§3) */
+.card-stat-value, .balance-value, .wallet-balance, .tb-balance, td, .price, .stat-value,
+[class*="saldo"], [class*="amount"] { font-variant-numeric: tabular-nums; }
+
+/* link = BLUETTE, mai rossi (§2) — solo i link testuali veri */
+a.text-link, .prose a, p > a[href], li > a[href] { color: var(--color-link); }
+a.text-link:hover, .prose a:hover, p > a[href]:hover, li > a[href]:hover {
+  color: var(--color-link-hover); text-decoration: underline; }
+
+/* toggle tema: UNA sola icona per tema — regole qui nel layer v3 perché
+   vivevano solo in tokens.css e le pagine EDU/blog non lo caricano */
+.theme-toggle{appearance:none;background:transparent;border:1px solid var(--line);color:var(--ink);
+  width:36px;height:36px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;
+  justify-content:center;transition:background .2s ease,border-color .2s ease}
+.theme-toggle:hover{background:var(--bg-alt);border-color:var(--gold)}
+.theme-toggle .icon-sun{display:none}
+.theme-toggle .icon-moon{display:inline}
+[data-theme="dark"] .theme-toggle .icon-sun{display:inline}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+/* marchio in topbar + Symbol theme-aware (PNG b/n: l'invert fa il lavoro) */
+.topbar-brand{display:inline-flex;align-items:center;flex:none;margin-right:2px}
+.topbar-brand img{height:26px;width:auto;display:block}
+html[data-theme="dark"] .topbar-brand img{filter:invert(1)}
+html:not([data-theme="dark"]) img[src*="AIROOBI_Symbol_White"]{filter:invert(1)}
+
+/* riduzione movimento (§7) */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
