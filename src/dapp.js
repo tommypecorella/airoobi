@@ -6109,7 +6109,14 @@ async function loadActivityFeed(){
       el.innerHTML='<div style="color:var(--gray-500);font-size:12px;text-align:center;padding:16px">'+(lang==='it'?'Nessuna attività recente':'No recent activity')+'</div>';
       return;
     }
-    var icons={purchase:'◆',new_airdrop:'⚡',activity:'👥',robi:'🏆'};
+    // Icone flat currentColor (regola: mai emoji colorate)
+    var _fi='<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px">';
+    var icons={
+      purchase:_fi+'<path d="M6 20l4-6 4 3 4-8"/></svg>',
+      new_airdrop:_fi+'<path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>',
+      activity:_fi+'<path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>',
+      robi:_fi+'<circle cx="9" cy="12" r="5"/><circle cx="15" cy="12" r="5"/></svg>'
+    };
     el.innerHTML=data.slice(0,6).map(function(item){
       var text=lang==='it'?(item.text_it||item.text_en):(item.text_en||item.text_it);
       var time=item.time?new Date(item.time).toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}):'';
