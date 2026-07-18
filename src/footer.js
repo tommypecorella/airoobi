@@ -64,7 +64,8 @@ function initQuickNav(){
   var _i=function(paths){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+paths+'</svg>';};
   var items=[
     {href:logged?'/dashboard':'/',act:(p==='/'||p.indexOf('/dashboard')===0||p==='/home'),ic:_i('<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>'),it:'Home',en:'Home'},
-    {href:'/airdrops',act:(p.indexOf('/airdrops')===0||p.indexOf('/dapp')===0||p.indexOf('/airdrop')===0),ic:_i('<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>'),it:'Airdrop',en:'Airdrops'},
+    // Loggato → /esplora (marketplace in-app): /airdrops è la pagina pubblica che rimbalza i loggati
+    {href:logged?'/esplora':'/airdrops',act:(p.indexOf('/airdrops')===0||p.indexOf('/esplora')===0||p.indexOf('/airdrop')===0),ic:_i('<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>'),it:'Airdrop',en:'Airdrops'},
     {href:'/portafoglio',act:(p.indexOf('/portafoglio')===0),ic:_i('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01M2 9h20"/>'),it:'Portafoglio',en:'Wallet'},
     {href:'/invita',act:(p.indexOf('/invita')===0||p.indexOf('/referral')===0),ic:_i('<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>'),it:'Invita',en:'Invite'}
   ];
@@ -119,7 +120,10 @@ function initSegnala(){
   fab.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>';
   var modal=document.createElement('div');
   modal.id='segnala-modal';
-  modal.innerHTML='<h4><span class="it">Segnala un problema</span><span class="en">Report an issue</span></h4>'
+  modal.innerHTML='<div id="segnala-head" style="display:flex;align-items:center;gap:8px;margin:-2px 0 4px;cursor:grab;touch-action:none">'
+    +'<h4 style="flex:1;margin:0"><span class="it">Segnala un problema</span><span class="en">Report an issue</span></h4>'
+    +'<button id="segnala-close" aria-label="Chiudi" style="width:26px;height:26px;flex:none;background:none;border:1px solid var(--gray-700,#36424F);border-radius:8px;color:inherit;font-size:14px;line-height:1;cursor:pointer">&times;</button>'
+    +'</div>'
     +'<p><span class="it">Racconta cosa non va: pagina e utente li alleghiamo noi. Le segnalazioni utili vengono ringraziate in ROBI.</span><span class="en">Tell us what\'s wrong: page and user are attached automatically. Useful reports get thanked in ROBI.</span></p>'
     +'<textarea id="segnala-text" maxlength="2000" placeholder="Cosa non funziona? / What\'s wrong?"></textarea>'
     +'<button id="segnala-send"><span class="it">Invia segnalazione</span><span class="en">Send report</span></button>'
@@ -131,6 +135,29 @@ function initSegnala(){
     if(modal.classList.contains('open')&&!modal.contains(e.target)&&e.target!==fab&&!fab.contains(e.target))modal.classList.remove('open');
   });
   document.addEventListener('keydown',function(e){if(e.key==='Escape')modal.classList.remove('open');});
+  document.getElementById('segnala-close').addEventListener('click',function(e){e.stopPropagation();modal.classList.remove('open');});
+  // Balloon trascinabile dalla testata (pointer events: mouse + touch)
+  (function(){
+    var head=document.getElementById('segnala-head');
+    var sx=0,sy=0,ox=0,oy=0,drag=false;
+    head.addEventListener('pointerdown',function(e){
+      if(e.target.id==='segnala-close')return;
+      drag=true;sx=e.clientX;sy=e.clientY;
+      var r=modal.getBoundingClientRect();ox=r.left;oy=r.top;
+      modal.style.right='auto';modal.style.bottom='auto';
+      modal.style.left=ox+'px';modal.style.top=oy+'px';
+      head.setPointerCapture(e.pointerId);
+      head.style.cursor='grabbing';
+    });
+    head.addEventListener('pointermove',function(e){
+      if(!drag)return;
+      var nx=Math.min(Math.max(0,ox+e.clientX-sx),window.innerWidth-modal.offsetWidth);
+      var ny=Math.min(Math.max(0,oy+e.clientY-sy),window.innerHeight-60);
+      modal.style.left=nx+'px';modal.style.top=ny+'px';
+    });
+    head.addEventListener('pointerup',function(){drag=false;head.style.cursor='grab';});
+    head.addEventListener('pointercancel',function(){drag=false;head.style.cursor='grab';});
+  })();
   document.getElementById('segnala-send').addEventListener('click',function(){
     var btn=this,txt=document.getElementById('segnala-text'),msg=document.getElementById('segnala-msg');
     var v=(txt.value||'').trim();

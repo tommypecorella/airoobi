@@ -253,7 +253,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 <meta name="apple-mobile-web-app-title" content="ABO">
 <!-- Skin ABO v3 (Design Sheet 18 lug): token layer, skin-not-rewrite -->
 <link rel="stylesheet" href="/src/theme-v3.css?v=1.1.0">
-<link rel="stylesheet" href="/src/abo-v3.css?v=1.2.0">
+<link rel="stylesheet" href="/src/abo-v3.css?v=1.3.0">
 <script>
 /* Tema ABO prima del primo paint: salvato → preferenza di sistema */
 (function(){try{
@@ -2054,6 +2054,10 @@ async function loadAboTodo(){
   if(bp){var pt=vals[0]+vals[1];bp.textContent=pt;bp.style.display=pt>0?'inline-block':'none';}
   var br=document.getElementById('sb-badge-rep');
   if(br){br.textContent=vals[4];br.style.display=vals[4]>0?'inline-block':'none';}
+  var bnp=document.getElementById('bn-badge-pip');
+  if(bnp){var _pt2=vals[0]+vals[1];bnp.textContent=_pt2;bnp.style.display=_pt2>0?'inline-block':'none';}
+  var bnr=document.getElementById('bn-badge-rep');
+  if(bnr){bnr.textContent=vals[4];bnr.style.display=vals[4]>0?'inline-block':'none';}
   var ds=document.getElementById('dash-sub');
   if(ds){
     var lang=document.documentElement.getAttribute('data-lang')||'it';
@@ -2267,6 +2271,53 @@ function aboToggleTheme(){
   var b=document.getElementById('abo-theme-btn');
   if(b)b.innerHTML=document.documentElement.getAttribute('data-theme')==='dark'?'&#9789;':'&#9728;';
 })();
+// ── 19 lug (Skeezu) · ABO mobile: bottom nav 5 slot + menu a griglia (prototipo 1c) ──
+function aboMenuSheet(open){
+  var s=document.getElementById('abo-menu-sheet');if(!s)return;
+  if(open){
+    var grid=document.getElementById('abo-menu-grid');
+    grid.innerHTML='';
+    document.querySelectorAll('.admin-sidebar-item').forEach(function(it){
+      if(it.style.display==='none')return;
+      var m=(it.getAttribute('onclick')||'').match(/adminNav\('([^']+)'\)/);
+      if(!m)return;
+      var b=document.createElement('button');
+      b.className='abo-menu-cell'+(it.classList.contains('active')?' act':'');
+      b.innerHTML=it.innerHTML.replace(/<span class="sb-badge"[\s\S]*?<\/span>/,'');
+      b.onclick=function(){adminNav(m[1]);aboMenuSheet(false);};
+      grid.appendChild(b);
+    });
+    s.classList.add('open');
+  }else{s.classList.remove('open');}
+}
+(function(){
+  if(document.getElementById('abo-bnav'))return;
+  var ov=document.getElementById('admin-overlay');if(!ov)return;
+  var I=function(p){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';};
+  var mk=function(sec,label,svg,badgeId){return '<button class="abo-bnav-item" data-sec="'+sec+'" onclick="adminNav(\''+sec+'\')">'+svg+'<span>'+label+'</span>'+(badgeId?'<i class="bn-badge" id="'+badgeId+'"></i>':'')+'</button>';};
+  var nav=document.createElement('nav');
+  nav.id='abo-bnav';
+  nav.setAttribute('aria-label','ABO navigazione mobile');
+  nav.innerHTML=
+    mk('sec-overview','Home',I('<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>'))
+    +mk('sec-airdrops','Pipeline',I('<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>'),'bn-badge-pip')
+    +mk('sec-reports','Segnala',I('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>'),'bn-badge-rep')
+    +mk('sec-treasury','Treasury',I('<path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>'))
+    +'<button class="abo-bnav-item" onclick="aboMenuSheet(true)">'+I('<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>')+'<span>Menu</span></button>';
+  ov.appendChild(nav);
+  var sheet=document.createElement('div');
+  sheet.id='abo-menu-sheet';
+  sheet.innerHTML='<div class="abo-sheet-scrim" onclick="aboMenuSheet(false)"></div>'
+    +'<div class="abo-sheet-body"><div class="abo-sheet-handle"></div>'
+    +'<div id="abo-menu-grid" class="abo-menu-grid"></div>'
+    +'<div class="abo-sheet-foot">'
+    +'<button class="admin-close" onclick="aboToggleTheme()"><span class="it">Tema</span><span class="en">Theme</span></button>'
+    +'<button class="admin-close" onclick="aboToggleLang()">IT/EN</button>'
+    +'<a class="admin-close" href="https://www.airoobi.app/" style="text-decoration:none;color:inherit">APP &rarr;</a>'
+    +'<button class="admin-close" onclick="aboLogout()">Logout</button>'
+    +'</div></div>';
+  ov.appendChild(sheet);
+})();
 // ── 18 lug (Skeezu) · ABO come APP: service worker + push su questo dispositivo ──
 (function(){
   if('serviceWorker' in navigator){try{navigator.serviceWorker.register('/sw.js');}catch(e){}}
@@ -2382,6 +2433,7 @@ function adminNav(sectionId,skipPush){
   if(siblings){siblings.forEach(function(id){var el=document.getElementById(id);if(el)el.classList.add('active');});}
   var btn=document.querySelector('.admin-sidebar-item[onclick*="\''+sectionId+'\'"]');
   if(btn){btn.classList.add('active');btn.blur();}
+  document.querySelectorAll('.abo-bnav-item[data-sec]').forEach(function(b){b.classList.toggle('act',b.getAttribute('data-sec')===sectionId);});
   if(sectionId==='sec-overview')loadAboTodo();
   if(sectionId==='sec-treasury')loadTreasuryTx();
   if(sectionId==='sec-engine'){loadThresholds();if(typeof loadEngineConfig==='function')loadEngineConfig();}
@@ -5257,7 +5309,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.11.0"></div>
-<script src="/src/footer.js?v=1.7.0"></script>
+<div id="footer-mount" data-version="alfa-18.07.2026-1.12.0"></div>
+<script src="/src/footer.js?v=1.8.0"></script>
 </body>
 </html>

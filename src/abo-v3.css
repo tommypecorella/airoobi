@@ -151,3 +151,30 @@ html[data-theme="dark"]{--abo-sticky-col-shadow:8px 0 8px -8px rgba(0,0,0,.6)}
 
 /* 12 · Motion: riduzione movimento */
 @media(prefers-reduced-motion:reduce){#admin-overlay *,#admin-overlay *::before,#admin-overlay *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+
+/* ── ABO mobile (19 lug · Skeezu): bottom nav 1c + menu sheet + testata snella + niente sbordi ── */
+#abo-bnav{display:none}
+#abo-menu-sheet{display:none}
+@media(max-width:768px){
+  #abo-bnav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:90;background:var(--color-surface);border-top:1px solid var(--color-border);padding:4px 6px calc(6px + env(safe-area-inset-bottom))}
+  .abo-bnav-item{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:var(--color-text-muted);font-family:var(--font-m);font-size:9px;letter-spacing:.06em;text-transform:uppercase;padding:6px 2px;min-height:48px;cursor:pointer}
+  .abo-bnav-item svg{width:18px;height:18px}
+  .abo-bnav-item.act{color:var(--color-primary);font-weight:600}
+  .bn-badge{position:absolute;top:2px;right:calc(50% - 18px);background:var(--color-primary);color:#fff;font-style:normal;font-family:var(--font-m);font-size:8.5px;font-weight:700;border-radius:999px;padding:1px 5px;min-width:15px;text-align:center;display:none}
+  #abo-menu-sheet.open{display:block;position:fixed;inset:0;z-index:95}
+  .abo-sheet-scrim{position:absolute;inset:0;background:rgba(6,9,14,.55)}
+  .abo-sheet-body{position:absolute;left:0;right:0;bottom:0;background:var(--color-surface);border-radius:16px 16px 0 0;border-top:1px solid var(--color-border);padding:8px 14px calc(24px + env(safe-area-inset-bottom));max-height:78%;overflow-y:auto}
+  .abo-sheet-handle{width:36px;height:4px;border-radius:999px;background:var(--color-border-strong);margin:2px auto 12px}
+  .abo-menu-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .abo-menu-cell{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:62px;background:var(--color-surface-2);border:1px solid var(--color-border);border-radius:10px;color:var(--color-text-secondary);font-size:10px;line-height:1.25;padding:8px 4px;cursor:pointer;text-align:center}
+  .abo-menu-cell svg{width:16px;height:16px;flex-shrink:0}
+  .abo-menu-cell.act{color:var(--color-primary);border-color:var(--color-primary)}
+  .abo-sheet-foot{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+  /* Testata snella: Vedi come / APP / Logout / burger vivono nel Menu */
+  .admin-nav #abo-sim-select,.admin-nav a.admin-close,.admin-nav button.admin-close[onclick="aboLogout()"],.admin-burger-sidebar{display:none!important}
+  /* Le pagine non sbordano: tabelle nude scrollano da sole, form grid impilati */
+  .admin-content{padding:14px 12px 100px!important;max-width:100vw}
+  .admin-section{overflow-x:hidden}
+  .adm-tbl{display:block;overflow-x:auto;max-width:100%;white-space:nowrap;-webkit-overflow-scrolling:touch}
+  #admin-overlay [style*="grid-template-columns:130px 1fr 100px auto"]{grid-template-columns:1fr 1fr!important}
+}
