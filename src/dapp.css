@@ -1294,3 +1294,30 @@ img.salita-av{display:block}
 .phase-sep.done{background:#49b58366}
 @keyframes phase-pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,62,79,.45)}50%{box-shadow:0 0 0 5px rgba(239,62,79,0)}}
 @media(max-width:480px){.phase-strip{gap:4px;padding:8px 10px}.phase-step{font-size:9px}}
+
+/* ══ 18 lug (Skeezu) · Dettaglio airdrop MOBILE a tab ══
+   Barra fissa in basso (Salita / Info / Impostazioni) che spezza la pagina;
+   header categoria+codice sticky su una riga con ♡/condividi sempre a portata;
+   striscia I TUOI NUMERI (ARIA spesi · Step · ROBI in arrivo) sempre in cima.
+   Desktop: tab bar nascosta, pagina intera come prima. */
+.detail-mystrip{display:flex;gap:8px;margin:10px 0 14px;padding:10px 12px;border:1px solid var(--gray-700);background:var(--gray-900);border-radius:10px}
+.mystrip-cell{flex:1;text-align:center;min-width:0}
+.mystrip-cell b{display:block;font-family:var(--font-m);font-size:16px;font-weight:600;color:var(--white);font-variant-numeric:tabular-nums}
+.mystrip-cell span{font-size:10px;color:var(--gray-400);white-space:nowrap}
+.detail-tabbar{display:none}
+@media(max-width:768px){
+  .detail-tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:80;background:var(--black);border-top:1px solid var(--gray-700);padding:4px max(8px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));box-shadow:0 -4px 16px rgba(0,0,0,.25)}
+  .dtb-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:var(--gray-400);font-family:var(--font-m);font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:7px 4px;min-height:48px;cursor:pointer}
+  .dtb-btn svg{width:19px;height:19px}
+  .dtb-btn.active{color:var(--gold)}
+  #detail{padding-bottom:84px}
+  /* visibilità sezioni per tab */
+  #detail[data-dtab="salita"] .dtab-info,#detail[data-dtab="salita"] .dtab-set{display:none!important}
+  #detail[data-dtab="info"] .dtab-salita,#detail[data-dtab="info"] .dtab-set{display:none!important}
+  #detail[data-dtab="set"] .dtab-salita,#detail[data-dtab="set"] .dtab-info{display:none!important}
+  /* header sticky: categoria + codice su UNA riga (mai a capo), azioni fisse */
+  .detail-header-v2{position:sticky;top:62px;z-index:60;background:var(--black);padding:8px 0;margin:0 0 4px;flex-wrap:nowrap}
+  .detail-cat-v2{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:flex}
+  .detail-cat-v2 .airdrop-code{flex-shrink:0}
+  .detail-header-actions{flex-shrink:0;display:flex;gap:8px}
+}

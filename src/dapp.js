@@ -2546,7 +2546,7 @@ async function openDetail(id){
 
   // Build pezzi riusabili (riordinati per nuova gerarchia)
   var galleryHtml=''
-    +'<div class="detail-gallery detail-gallery-v2 detail-gallery-inline" id="detail-gallery">'
+    +'<div class="detail-gallery detail-gallery-v2 detail-gallery-inline dtab-info" id="detail-gallery">'
     +'<div class="gallery-track" id="gallery-track">'+slidesHtml+'</div>'
     +playerHtml
     +'<div class="product-badge" style="position:absolute;top:14px;left:14px;z-index:2">Airdrop</div>'
@@ -2569,7 +2569,7 @@ async function openDetail(id){
     +'</div>';
 
   // Hint + soglia (GS-15 §4.5) · async populated
-  var hintSogliaStub=(!isConcluded&&!isValuation)?'<div id="detail-hint-soglia" class="detail-hint-soglia"></div>':'';
+  var hintSogliaStub=(!isConcluded&&!isValuation)?'<div id="detail-hint-soglia" class="detail-hint-soglia dtab-salita"></div>':'';
 
   // Buy box (acquisto subito sotto soglia — §4.6 above-the-fold)
   var _isMineVal=!_publicMode&&_session&&_session.user&&(a.submitted_by===_session.user.id||a.created_by===_session.user.id);
@@ -2616,6 +2616,26 @@ async function openDetail(id){
     +'<div class="buy-msg" id="buy-msg"></div>'
     +'</div>';
 
+  // 18 lug (Skeezu) · Mobile a tab: la pagina si spezza in Salita/Info/Impostazioni
+  // via classi dtab-* + attributo data-dtab su #detail (CSS media ≤768px). Desktop invariato.
+  var extendHtml=buildExtendBox(a);
+  var hasSetTab=(!isConcluded&&myBlocks>0)||!!extendHtml;
+  var _mrate=calcMiningRate(a);
+  var mystripHtml=(!isConcluded&&!isValuation&&!_publicMode)
+    ?'<div class="detail-mystrip" id="detail-mystrip">'
+    +'<div class="mystrip-cell"><b id="mystrip-aria">'+(myBlocks*effectivePrice)+'</b><span>'+tokIcon('ARIA')+' <span class="it">spesi</span><span class="en">spent</span></span></div>'
+    +'<div class="mystrip-cell"><b id="mystrip-steps">'+myBlocks+'</b><span><span class="it">Step percorsi</span><span class="en">Steps taken</span></span></div>'
+    +'<div class="mystrip-cell"><b id="mystrip-robi">'+(_mrate>0?(myBlocks/_mrate).toFixed(2):'0')+'</b><span>'+tokIcon('ROBI')+' <span class="it">in arrivo</span><span class="en">incoming</span></span></div>'
+    +'</div>'
+    :'';
+  var _dtbIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">';
+  var tabbarHtml=''
+    +'<nav class="detail-tabbar" id="detail-tabbar">'
+    +'<button class="dtb-btn active" data-dt="salita" onclick="detailTab(\'salita\')">'+_dtbIco+'<path d="M3 20l6-9 4 5 5-8 3 4"/></svg><span class="it">Salita</span><span class="en">Climb</span></button>'
+    +'<button class="dtb-btn" data-dt="info" onclick="detailTab(\'info\')">'+_dtbIco+'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span class="it">Info</span><span class="en">Info</span></button>'
+    +(hasSetTab?'<button class="dtb-btn" data-dt="set" onclick="detailTab(\'set\')">'+_dtbIco+'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="it">Impostazioni</span><span class="en">Settings</span></button>':'')
+    +'</nav>';
+
   var html=''
     // GS-12 · Banner AUTO-BUY attivo on-top (populated by updateAutoBuyBanner)
     +'<div id="detail-autobuy-banner" class="detail-autobuy-banner" style="display:none"></div>'
@@ -2628,14 +2648,17 @@ async function openDetail(id){
 
     +headerV2
 
+    // 18 lug · I TUOI NUMERI sempre in cima: ARIA spesi · Step percorsi · ROBI in arrivo
+    +mystripHtml
+
     // Titolo + chip fase (§4.3)
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
-    +buildPhaseStepper(a)
-    +buildExtendBox(a)
-    +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
+    +'<div class="dtab-info">'+buildPhaseStepper(a)+'</div>'
+    +(extendHtml?'<div class="dtab-set">'+extendHtml+'</div>':'')
+    +(phaseChip?'<div class="detail-phase-row dtab-salita">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
 
     // Box competitivo §4.4 (posizione live · populated by refreshPosition)
-    +(!isConcluded&&!isValuation?'<div class="detail-position" id="detail-position"></div>':'')
+    +(!isConcluded&&!isValuation?'<div class="detail-position dtab-salita" id="detail-position"></div>':'')
 
     // Hint "~X blocchi per il 1°" + soglia GS-15 (§4.5 · populated by loadHintSoglia)
     +hintSogliaStub
@@ -2644,12 +2667,12 @@ async function openDetail(id){
     +galleryHtml
 
     // GS-10 §4.7 · Come arrivare 1° A/B collapsible (populated by updateStrategyGuide)
-    +(!isConcluded?'<div class="detail-strategy detail-strategy-ab" id="detail-strategy"></div>':'')
+    +(!isConcluded?'<div class="detail-strategy detail-strategy-ab dtab-salita" id="detail-strategy"></div>':'')
 
     +'</div>' // close detail-right
 
     // ── COL DX: LA SALITA in cima + pannello acquisto sotto ──
-    +'<div class="detail-race-col">'
+    +'<div class="detail-race-col dtab-salita">'
     +(!isConcluded?'<div id="detail-salita"></div>':'')
     +buyBoxHtml
     +(!isConcluded?'<div class="detail-rullo-hook" id="detail-rullo-hook"></div>':'')
@@ -2661,7 +2684,7 @@ async function openDetail(id){
     +'<div class="detail-below-v2">'
 
     // Prezzo + presale info (resta accessibile, ora sotto-piega come "scheda prodotto")
-    +'<div class="product-info-v2">'
+    +'<div class="product-info-v2 dtab-info">'
     +(brand?'<div class="product-brand">'+brand+'</div>':'')
     +'<div class="product-price-row">'
     +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' '+tokIcon('ARIA',18)+'</div>'
@@ -2686,6 +2709,7 @@ async function openDetail(id){
     +'</div>'
 
     // Accordion dettagli airdrop
+    +'<div class="dtab-info">'
     +acc('airdrop','Dettagli airdrop','Airdrop details',
       '<ul class="acc-list neutral">'
       +'<li><span class="it">Prezzo per Step:</span><span class="en">Price per Step:</span> <strong style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA')+'</strong></li>'
@@ -2694,14 +2718,15 @@ async function openDetail(id){
       +'<li><span class="it">Raccolta ROBI:</span><span class="en">ROBI pickup:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' <span class="it">ogni</span><span class="en">every</span> '+calcMiningRate(a)+' Step</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' Step)</span>':'')+'</li>'
       +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
       +'</ul>',false)
+    +'</div>'
 
     // I tuoi blocchi (badge sintetico)
-    +(myBlocks>0?'<div class="detail-myblocks"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi Step:</span><span class="en">Your Steps:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">impiegati</span><span class="en">spent</span></div>':'')
+    +(myBlocks>0?'<div class="detail-myblocks dtab-info"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span class="it">I tuoi Step:</span><span class="en">Your Steps:</span> <strong>'+myBlocks+'</strong> &middot; '+(myBlocks*effectivePrice)+' '+tokIcon('ARIA')+' <span class="it">impiegati</span><span class="en">spent</span></div>':'')
 
     // Mine Tower 3D — sostituita da LA SALITA (9 lug); funzione conservata per rollback
 
     // Mini stats Rimasti/per blocco/per ROBI
-    +'<div class="detail-stats">'
+    +'<div class="detail-stats dtab-info">'
     +'<div class="detail-stat"><div class="detail-stat-val">'+remaining+'</div><div class="detail-stat-label"><span class="it">Step alla vetta</span><span class="en">Steps to summit</span></div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+effectivePrice+'</div><div class="detail-stat-label">'+tokIcon('ARIA')+'/Step</div></div>'
     +'<div class="detail-stat"><div class="detail-stat-val">'+calcMiningRate(a)+'</div><div class="detail-stat-label"><span class="it">Step per</span><span class="en">Steps per</span> '+tokIcon('ROBI')+'</div></div>'
@@ -2709,7 +2734,7 @@ async function openDetail(id){
 
     // MY STATS panel (solo airdrop live)
     +(!isConcluded&&myBlocks>0&&!_publicMode?
-    '<div class="detail-mystats" id="detail-mystats">'
+    '<div class="detail-mystats dtab-set" id="detail-mystats">'
     +'<div class="mystats-header"><span class="it">Le tue statistiche</span><span class="en">Your stats</span></div>'
     +'<div class="mystats-grid" id="mystats-grid"></div>'
     +'<div class="mystats-history" id="mystats-history"></div>'
@@ -2718,7 +2743,7 @@ async function openDetail(id){
 
     // AUTO-BUY config (solo airdrop live) — toggle attivazione resta in fondo (mini-spec §4.8)
     +(!isConcluded&&myBlocks>0?
-    '<div class="auto-buy-box" id="auto-buy-box">'
+    '<div class="auto-buy-box dtab-set" id="auto-buy-box">'
     +'<div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);margin-bottom:8px">'+UI_ICONS.steps+' <span class="it">MANTIENI IL PASSO</span><span class="en">KEEP THE PACE</span></div>'
     +'<p style="font-size:11px;color:var(--gray-400);margin-bottom:10px;line-height:1.4"><span class="it">Step automatici a intervalli regolari — la tua marcia in salita.</span><span class="en">Automatic Steps at regular intervals — your steady climbing pace.</span></p>'
     +'<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px">'
@@ -2737,9 +2762,14 @@ async function openDetail(id){
     // CTA 'Hai un oggetto di valore?' rimosso dal dettaglio (bug 5, 15 lug 2026):
     // resta il box unico .explore-cta-valuta a fine pagina.
 
-    +'</div>'; // close detail-below-v2
+    +'</div>' // close detail-below-v2
+
+    // 18 lug · Tab bar fissa mobile (Salita / Info / Impostazioni)
+    +tabbarHtml;
 
   document.getElementById('detail-content').innerHTML=html;
+  var _dEl=document.getElementById('detail');
+  if(_dEl)_dEl.setAttribute('data-dtab','salita');
 
   // Start gallery auto-play
   if(galleryImgs.length>1) startGalleryAutoplay();
@@ -3133,7 +3163,18 @@ async function updateAutoBuyBanner(airdropId){
 // Reopen-2: smooth scroll era no-op su questa pagina (ROBY measured). Scroll istantaneo
 // window.scrollTo(0, targetY) — instant è UX accettabile, smooth lo verifichi una volta
 // trovato il conflitto (scroll-behavior CSS o altro che annulla il smooth).
+// 18 lug (Skeezu) · Tab mobile del dettaglio airdrop: Salita / Info / Impostazioni
+function detailTab(t){
+  var d=document.getElementById('detail');if(!d)return;
+  d.setAttribute('data-dtab',t);
+  document.querySelectorAll('#detail-tabbar .dtb-btn').forEach(function(b){
+    b.classList.toggle('active',b.getAttribute('data-dt')===t);
+  });
+  window.scrollTo(0,0);
+}
 function scrollToAutoBuyBox(){
+  // Su mobile l'auto-buy vive nel tab Impostazioni: prima cambia tab
+  if(window.innerWidth<=768&&typeof detailTab==='function')detailTab('set');
   var el=document.getElementById('auto-buy-box');
   if(!el)return;
   var rect=el.getBoundingClientRect();
@@ -3540,6 +3581,17 @@ async function loadDetailStats(airdropId){
   // Earned ROBI so far: from nft_rewards would need another RPC, use projection
   var miningRate=calcMiningRate(a);
   var robiNow=miningRate>0?totalMyBlocks/miningRate:0;
+
+  // 18 lug · aggiorna la striscia I TUOI NUMERI (sempre in cima) coi dati veri
+  var _stripSteps=document.getElementById('mystrip-steps');
+  var _stripRobi=document.getElementById('mystrip-robi');
+  var _stripAria=document.getElementById('mystrip-aria');
+  if(_stripSteps)_stripSteps.textContent=totalMyBlocks;
+  if(_stripRobi)_stripRobi.textContent=projectedRobi.toFixed(2);
+  if(_stripAria&&Array.isArray(data.history)&&data.history.length>0){
+    var _sumAria=data.history.reduce(function(s,p){return s+(Number(p.aria)||0)},0);
+    if(_sumAria>0)_stripAria.textContent=Math.round(_sumAria);
+  }
 
   var gridEl=document.getElementById('mystats-grid');
   if(gridEl){
