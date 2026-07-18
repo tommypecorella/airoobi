@@ -53,16 +53,54 @@ function render(mount){
     +'</footer>';
 }
 
+/* ── QUICK NAV MOBILE (19 lug, Skeezu): Home · Airdrop · Portafoglio · Invita ──
+   Su tutte le pagine .app tranne ABO. Nel dettaglio airdrop (body.detail-open)
+   si nasconde: lì comanda la tab bar del dettaglio, che ha la sua voce HOME. */
+function initQuickNav(){
+  if(_isAboPage())return;
+  if(document.getElementById('aqn'))return;
+  var logged=false;try{logged=!!localStorage.getItem('airoobi_session');}catch(e){}
+  var p=location.pathname;
+  var _i=function(paths){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+paths+'</svg>';};
+  var items=[
+    {href:logged?'/dashboard':'/',act:(p==='/'||p.indexOf('/dashboard')===0||p==='/home'),ic:_i('<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>'),it:'Home',en:'Home'},
+    {href:'/airdrops',act:(p.indexOf('/airdrops')===0||p.indexOf('/dapp')===0||p.indexOf('/airdrop')===0),ic:_i('<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>'),it:'Airdrop',en:'Airdrops'},
+    {href:'/portafoglio',act:(p.indexOf('/portafoglio')===0),ic:_i('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01M2 9h20"/>'),it:'Portafoglio',en:'Wallet'},
+    {href:'/invita',act:(p.indexOf('/invita')===0||p.indexOf('/referral')===0),ic:_i('<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>'),it:'Invita',en:'Invite'}
+  ];
+  var st=document.createElement('style');
+  st.textContent='#aqn{display:none}'
+    +'@media(max-width:768px){'
+    +'#aqn{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:9980;background:var(--color-surface,#171B21);border-top:1px solid var(--color-border,#2A313A);padding:4px 8px calc(6px + env(safe-area-inset-bottom))}'
+    +'html:not([data-theme="dark"]) #aqn{background:var(--color-surface,#FFFFFF);border-top-color:var(--color-border,#D4DBE3)}'
+    +'#aqn a{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:6px 2px;min-height:46px;text-decoration:none;color:var(--color-text-muted,#8A94A6);font-family:\'JetBrains Mono\',monospace;font-size:9.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}'
+    +'#aqn a.act{color:var(--color-primary,#EF3E4F)}'
+    +'#aqn svg{width:19px;height:19px}'
+    +'body{padding-bottom:calc(64px + env(safe-area-inset-bottom))}'
+    +'body.detail-open #aqn{display:none}'
+    +'}';
+  document.head.appendChild(st);
+  var nav=document.createElement('nav');
+  nav.id='aqn';
+  nav.setAttribute('aria-label','Navigazione rapida');
+  nav.innerHTML=items.map(function(x){
+    return '<a href="'+x.href+'"'+(x.act?' class="act"':'')+'>'+x.ic+'<span class="it">'+x.it+'</span><span class="en">'+x.en+'</span></a>';
+  }).join('');
+  document.body.appendChild(nav);
+}
+
 /* ── SEGNALAZIONI (18 lug 2026, GO Skeezu) ──
    Bottone flottante identico su ogni pagina (desktop+mobile): form minimale,
    il ticket porta con sé utente e pagina in automatico. Gestione in ABO. */
 var SB_URL_F='https://vuvlmlpuhovipfwtquux.supabase.co';
 var SB_KEY_F='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
+function _isAboPage(){return location.pathname.indexOf('abo.html')!==-1||location.pathname.indexOf('/abo')===0}
 function initSegnala(){
-  if(location.pathname.indexOf('abo.html')!==-1)return;
+  if(_isAboPage())return; // vale anche per /abo/<pagina>.html (rewrite 18 lug)
   if(document.getElementById('segnala-fab'))return;
   var st=document.createElement('style');
   st.textContent='#segnala-fab{position:fixed;right:16px;bottom:16px;z-index:9990;width:46px;height:46px;border-radius:50%;border:none;background:#EF3E4F;color:#fff;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .15s}'
+    +'@media(max-width:768px){#segnala-fab{bottom:calc(72px + env(safe-area-inset-bottom))}}'
     +'#segnala-fab:hover{transform:scale(1.08)}'
     +'#segnala-fab svg{width:21px;height:21px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}'
     +'#segnala-modal{display:none;position:fixed;right:16px;bottom:72px;z-index:9991;width:min(330px,calc(100vw - 32px));background:var(--gray-800,#1D2630);border:1px solid #EF3E4F;border-radius:14px;padding:16px;box-shadow:0 10px 32px rgba(0,0,0,.45);color:var(--white,#F2F5F8)}'
@@ -305,6 +343,7 @@ function init(){
   initPwa();
   loadFooterCounters();
   initSegnala();
+  initQuickNav();
 }
 
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);

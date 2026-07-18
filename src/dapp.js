@@ -2639,6 +2639,8 @@ async function openDetail(id){
   var _dtbIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">';
   var tabbarHtml=''
     +'<nav class="detail-tabbar" id="detail-tabbar">'
+    // 19 lug (Skeezu): voce HOME nella tab bar del dettaglio — torna alla dashboard
+    +'<button class="dtb-btn" onclick="location.href=\'/dashboard\'">'+_dtbIco+'<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span class="it">Home</span><span class="en">Home</span></button>'
     +'<button class="dtb-btn active" data-dt="salita" onclick="detailTab(\'salita\')">'+_dtbIco+'<path d="M3 20l6-9 4 5 5-8 3 4"/></svg><span class="it">Salita</span><span class="en">Climb</span></button>'
     +'<button class="dtb-btn" data-dt="info" onclick="detailTab(\'info\')">'+_dtbIco+'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span class="it">Info</span><span class="en">Info</span></button>'
     +(hasSetTab?'<button class="dtb-btn" data-dt="set" onclick="detailTab(\'set\')">'+_dtbIco+'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="it">Impostazioni</span><span class="en">Settings</span></button>':'')
