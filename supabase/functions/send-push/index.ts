@@ -5,9 +5,12 @@
 //   deadline_2h   → utenti in watchlist per airdrop a <2h
 //   draw_winner   → vincitore dell'airdrop
 //   draw_robi     → tutti i partecipanti non vincitori
+//   airdrop_status → destinatari espliciti (user_ids) con testo dal chiamante;
+//                    usato dal trigger DB trg_airdrop_status_notify che scrive
+//                    già le notifiche in-app: passare skip_db=true
 //
 // Invocazione: POST /functions/v1/send-push
-// Body: { type, airdrop_id, user_id?, title?, category? }
+// Body: { type, airdrop_id, user_id?, user_ids?, title?, body_text?, category?, skip_db? }
 
 import { serve } from "https://deno.land/std@0.177.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -185,19 +188,31 @@ serve(async (req: Request) => {
       type,
       airdrop_id,
       user_id,
+      user_ids,
       title,
+      body_text,
       category,
       position,
       robi_earned,
+      skip_db,
     } = await req.json();
 
     const sb = createClient(SB_URL, SB_KEY);
     const notif = buildNotification(type, title, category, position, robi_earned);
 
+    if (type === "airdrop_status") {
+      notif.body = body_text || notif.body;
+      notif.tag = `status-${airdrop_id || "x"}`;
+      notif.url = "/airdrops";
+    }
+
     // Determine target users
     let userIds: string[] = [];
 
-    if (user_id) {
+    if (Array.isArray(user_ids) && user_ids.length > 0) {
+      // Explicit recipient list (airdrop_status)
+      userIds = user_ids;
+    } else if (user_id) {
       // Single user (position_lost, draw_winner)
       userIds = [user_id];
     } else if (type === "new_airdrop" && category) {
@@ -252,14 +267,16 @@ serve(async (req: Request) => {
       if (ok) sent++;
     }
 
-    // Also save to notifications table for in-app
-    const notifRows = userIds.map((uid) => ({
-      user_id: uid,
-      title: notif.title,
-      body: notif.body,
-      type: type,
-    }));
-    await sb.from("notifications").insert(notifRows);
+    // Also save to notifications table for in-app (skip_db: il chiamante le ha già scritte)
+    if (!skip_db) {
+      const notifRows = userIds.map((uid) => ({
+        user_id: uid,
+        title: notif.title,
+        body: notif.body,
+        type: type,
+      }));
+      await sb.from("notifications").insert(notifRows);
+    }
 
     return new Response(JSON.stringify({ ok: true, sent, total: (subs || []).length }), {
       headers: { "Content-Type": "application/json" },
