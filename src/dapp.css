@@ -1379,7 +1379,10 @@ img.salita-av{display:block}
 /* Buy box sticky mobile: compresso di default (bb-min), caret per espandere */
 .bb-toggle{display:none}
 @media(max-width:768px){
-  #detail[data-dtab="salita"] .buy-box{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));z-index:75;border-radius:16px 16px 0 0;border-left:none;border-right:none;border-bottom:none;padding:10px 14px;box-shadow:0 -8px 24px rgba(0,0,0,.28);margin:0}
+  #detail[data-dtab="salita"] .buy-box{position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));z-index:75;border-radius:16px 16px 0 0;border-left:none;border-right:none;border-bottom:none;padding:10px 14px;box-shadow:0 -8px 24px rgba(0,0,0,.28);margin:0;background:var(--color-surface-2,var(--gray-800))}
+  /* Espanso = bottom sheet vero: scrim dietro, il resto della pagina si spegne */
+  #detail[data-dtab="salita"] .buy-box:not(.bb-min)::before{content:'';position:fixed;inset:0;background:rgba(6,9,14,.55);z-index:-1}
+  html:not([data-theme="dark"]) #detail[data-dtab="salita"] .buy-box:not(.bb-min)::before{background:rgba(22,29,38,.45)}
   #detail[data-dtab="info"] .buy-box,#detail[data-dtab="set"] .buy-box{display:none}
   #detail[data-dtab="salita"]{padding-bottom:230px}
   .bb-toggle{display:flex;align-items:center;justify-content:center;position:absolute;top:10px;right:12px;width:34px;height:30px;border:1px solid var(--color-border,var(--gray-700));background:none;border-radius:8px;color:var(--color-text-secondary,var(--gray-400));font-size:14px;cursor:pointer}
