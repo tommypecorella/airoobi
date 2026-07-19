@@ -1550,3 +1550,6 @@ body.detail-open .dash-alpha-fixed{display:none}
 .rm-chip{height:30px;line-height:1}
 .rm-chip.urgent{border-color:rgba(239,62,79,.5);color:var(--gold)}
 .rm-chip b{font-weight:600}
+/* Badge fase + TUO + chip meta: una sola riga viva sopra il titolo */
+.detail-badges .rm-chip{height:26px;font-size:10.5px;padding:4px 10px}
+.detail-badges .detail-chip-fase,.detail-badges .do-badge-btn{height:26px;display:inline-flex;align-items:center}

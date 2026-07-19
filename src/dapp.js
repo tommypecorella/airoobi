@@ -2123,7 +2123,7 @@ function startCountdowns(){
       var cd=fmtCountdown(dc.dataset.deadline);
       if(cd){
         var lang=document.documentElement.getAttribute('data-lang')||'it';
-        if(dc.closest('.race-meta')){
+        if(dc.closest('.rm-chip')){
           // 19 lug: nel chip compatto solo il tempo, niente pillola dentro la pillola
           dc.textContent=cd.expired?(lang==='it'?'chiusa':'closed'):(lang==='it'?cd.text:cd.en);
           if(dc.parentElement)dc.parentElement.classList.toggle('urgent',!!cd.urgent&&!cd.expired);
@@ -2714,10 +2714,13 @@ async function openDetail(id){
 
     // ═ Rifinitura 19 lug sera (Skeezu): badge fase + badge TUO prima del titolo,
     //   B fasi → meta compatta (ovunque) → Salita subito; numeri e posizione in colonna corsa ═
-    +((phaseChip||(_isMineVal&&!isValuation))?
+    +((phaseChip||(_isMineVal&&!isValuation)||!isConcluded)?
       '<div class="detail-badges">'
       +(phaseChip||'')
       +(_isMineVal&&!isValuation?'<button class="do-badge do-badge-btn" onclick="showOwnerPop()"><span class="it">IL TUO AIRDROP</span><span class="en">YOUR AIRDROP</span> ▾</button>':'')
+      // meta di corsa in riga coi badge: tempo + in corsa (visibili in tutti i tab)
+      +(!isConcluded&&a.deadline?'<span class="rm-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="detail-countdown" data-deadline="'+a.deadline+'"></span></span>':'')
+      +(!isConcluded?'<span class="rm-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><b id="race-meta-n">—</b>&nbsp;<span class="it">in corsa</span><span class="en">racing</span></span>':'')
       +'</div>':'')
 
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
@@ -2727,13 +2730,6 @@ async function openDetail(id){
 
     // B · Fasi subito
     +buildPhaseStepper(a)
-
-    // Meta di corsa compatta: countdown + in corsa — visibile in TUTTI i tab
-    +(!isConcluded?
-      '<div class="race-meta">'
-      +(a.deadline?'<span class="rm-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="detail-countdown" data-deadline="'+a.deadline+'"></span></span>':'')
-      +'<span class="rm-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><b id="race-meta-n">—</b>&nbsp;<span class="it">in corsa</span><span class="en">racing</span></span>'
-      +'</div>':'')
 
     // F · Scheda prodotto (tab Info su mobile)
     +galleryHtml
