@@ -2718,9 +2718,9 @@ async function openDetail(id){
       '<div class="detail-badges">'
       +(phaseChip||'')
       +(_isMineVal&&!isValuation?'<button class="do-badge do-badge-btn" onclick="showOwnerPop()"><span class="it">IL TUO AIRDROP</span><span class="en">YOUR AIRDROP</span> ▾</button>':'')
-      // meta di corsa in riga coi badge: tempo + in corsa (visibili in tutti i tab)
-      +(!isConcluded&&a.deadline?'<span class="rm-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="detail-countdown" data-deadline="'+a.deadline+'"></span></span>':'')
-      +(!isConcluded?'<span class="rm-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><b id="race-meta-n">—</b>&nbsp;<span class="it">in corsa</span><span class="en">racing</span></span>':'')
+      // 20 lug (Skeezu): meta di corsa a SOLE icone in riga coi badge — tap → popup informativo
+      +(!isConcluded&&a.deadline?'<button class="rm-chip rm-ico" onclick="showRaceInfo(\'time\')" aria-label="Tempo rimanente" title="Tempo rimanente"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="detail-countdown" data-deadline="'+a.deadline+'"></span></button>':'')
+      +(!isConcluded?'<button class="rm-chip rm-ico" onclick="showRaceInfo(\'racers\')" aria-label="In corsa" title="In corsa"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><b id="race-meta-n">—</b></button>':'')
       +'</div>':'')
 
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
@@ -2762,6 +2762,15 @@ async function openDetail(id){
       +'<button class="buy-btn" style="flex:1" onclick="document.getElementById(\'owner-pop\').classList.remove(\'open\');typeof detailTab===\'function\'&&window.innerWidth<=768?detailTab(\'set\'):scrollToAutoBuyBox()"><span class="it">Gestisci</span><span class="en">Manage</span></button>'
       +'<button class="dd-toggle" style="padding:10px 14px" onclick="document.getElementById(\'owner-pop\').classList.remove(\'open\')"><span class="it">Chiudi</span><span class="en">Close</span></button>'
       +'</div></div></div>':'')
+    // Popup informativo meta corsa (icone tempo / in corsa)
+    +(!isConcluded?
+      '<div class="owner-pop" id="race-pop" onclick="if(event.target===this)this.classList.remove(\'open\')">'
+      +'<div class="op-card">'
+      +'<div class="op-title" id="rp-title"></div>'
+      +'<div class="rp-value" id="rp-value"></div>'
+      +'<p class="op-txt" id="rp-txt"></p>'
+      +'<div class="op-acts"><button class="dd-toggle" style="padding:10px 14px;margin-left:auto" onclick="document.getElementById(\'race-pop\').classList.remove(\'open\')"><span class="it">Chiudi</span><span class="en">Close</span></button></div>'
+      +'</div></div>':'')
 
     +'</div>' // close detail-split
 
@@ -3240,6 +3249,34 @@ function showOwnerPop(){
   var p=document.getElementById('owner-pop');
   if(p)p.classList.add('open');
 }
+function showRaceInfo(type){
+  // 20 lug: meta corsa a sole icone — il tap apre il popup informativo
+  var p=document.getElementById('race-pop');if(!p)return;
+  var t=document.getElementById('rp-title'),v=document.getElementById('rp-value'),x=document.getElementById('rp-txt');
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(type==='time'){
+    var dc=document.getElementById('detail-countdown');
+    var dl=dc?dc.dataset.deadline:null;
+    var cd=dl?fmtCountdown(dl):null;
+    var dtIt='',dtEn='';
+    if(dl){var d=new Date(dl);
+      dtIt=d.toLocaleDateString('it-IT',{weekday:'long',day:'numeric',month:'long'})+' alle '+d.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+      dtEn=d.toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long'})+' at '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'});}
+    t.innerHTML='<span class="it">Tempo rimanente</span><span class="en">Time left</span>';
+    v.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>'
+      +'<b'+(dl?' data-deadline="'+dl+'"':'')+'>'+(cd?(cd.expired?(lang==='it'?'Corsa chiusa':'Race closed'):(lang==='it'?cd.text:cd.en)):'—')+'</b>';
+    x.innerHTML='<span class="it">La corsa si chiude '+(dtIt||'a scadenza')+'. Ultimo momento utile per fare Step.</span>'
+      +'<span class="en">The race closes '+(dtEn?'on '+dtEn:'at the deadline')+'. Last chance to make your Steps.</span>';
+  }else{
+    var n=document.getElementById('race-meta-n');
+    t.innerHTML='<span class="it">In corsa</span><span class="en">Racing now</span>';
+    v.innerHTML='<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>'
+      +'<b id="rp-racers-n">'+((n&&n.textContent!=='—')?n.textContent:'0')+'</b>';
+    x.innerHTML='<span class="it">Utenti che stanno facendo Step in questa corsa verso la vetta.</span>'
+      +'<span class="en">Users currently making Steps in this climb to the summit.</span>';
+  }
+  p.classList.add('open');
+}
 function detailTab(t){
   var d=document.getElementById('detail');if(!d)return;
   d.setAttribute('data-dtab',t);
@@ -3400,6 +3437,8 @@ function updateDetailPosition(airdropId,scores){
   // Meta di corsa compatta: quanti in corsa (visibile in tutti i tab)
   var _rmn=document.getElementById('race-meta-n');
   if(_rmn)_rmn.textContent=(scores&&scores.length)||0;
+  var _rpn=document.getElementById('rp-racers-n');
+  if(_rpn)_rpn.textContent=(scores&&scores.length)||0;
   var el=document.getElementById('detail-position');if(!el)return;
   if(!_session||!scores||scores.length===0){
     var total=scores?scores.length:0;
