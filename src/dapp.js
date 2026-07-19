@@ -2362,7 +2362,7 @@ function _gallerySync(){
 function initGalleryV2(){
   _galleryIdx=0;
   var tr=document.getElementById('gallery-track');if(!tr)return;
-  tr.addEventListener('scroll',function(){requestAnimationFrame(_gallerySync)},{passive:true});
+  tr.addEventListener('scroll',_gallerySync,{passive:true});
 }
 
 function openGalleryLightbox(i){
