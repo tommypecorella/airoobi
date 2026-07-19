@@ -28,7 +28,7 @@
 <meta name="color-scheme" content="light dark">
 <style>[data-lang="it"] .en,[data-lang="en"] .it{display:none!important}</style>
 <link rel="stylesheet" href="/src/tokens.css?v=4.26.2">
-<link rel="stylesheet" href="/src/dapp.css?v=4.77.0">
+<link rel="stylesheet" href="/src/dapp.css?v=4.78.0">
 <link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.51.0">
 <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
 <script src="/src/theme.js?v=4.50.1"></script>
@@ -415,7 +415,7 @@
             </div>
             <button id="streak-btn" onclick="claimStreakDay()" style="background:var(--gold);color:#000;border:none;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;padding:10px 22px;cursor:pointer;font-weight:700;border-radius:var(--radius-sm);white-space:nowrap"><span class="it">TIMBRA OGGI</span><span class="en">CHECK IN</span></button>
           </div>
-          <div id="streak-calendar" style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px"></div>
+          <div id="streak-calendar" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px"></div>
           <div id="streak-status" style="margin-top:10px;font-size:11px;color:var(--gray-500);text-align:center"></div>
         </div>
       </div>
@@ -1061,11 +1061,39 @@
   <!-- ═══ WALLET TAB ═══ -->
   <div id="tab-wallet" style="display:none">
 
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
-      <div class="wallet-section-label" style="margin-bottom:0"><span class="it">I tuoi Asset</span><span class="en">Your Assets</span></div>
-      <a href="/explorer" target="_blank" rel="noopener" style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);text-decoration:none;border:1px solid rgba(74,158,255,.3);padding:6px 14px;transition:all .3s;white-space:nowrap;border-radius:var(--radius-sm)" onmouseover="this.style.background='rgba(74,158,255,.1)'" onmouseout="this.style.background='transparent'">ARIA EXPLORER</a>
-      <a href="/explorer-robi" target="_blank" rel="noopener" style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);text-decoration:none;border:1px solid rgba(239,62,79,.35);padding:6px 14px;transition:all .3s;white-space:nowrap;border-radius:var(--radius-sm);margin-left:8px" onmouseover="this.style.background='rgba(239,62,79,.1)'" onmouseout="this.style.background='transparent'">ROBI EXPLORER</a>
+    <!-- 20 lug (Skeezu): ordine wallet = ANDAMENTO in cima → flusso orizzontale → explorer centrati → I TUOI ASSET -->
+
+    <!-- ROBI SPARKLINE + HISTORY compatto (prima voce) -->
+    <div style="padding:14px 16px;border:1px solid rgba(255,255,255,.07);background:var(--card-bg);border-radius:var(--radius);margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold)"><span class="it">ANDAMENTO ROBI</span><span class="en">ROBI TREND</span></div>
+        <div id="robi-sparkline-val" style="font-family:var(--font-h);font-size:16px;color:var(--gold)">—</div>
+      </div>
+      <canvas id="robi-sparkline" style="width:100%;height:120px"></canvas>
+      <div style="margin-top:10px">
+        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-500);margin-bottom:6px"><span class="it">STORICO</span><span class="en">HISTORY</span></div>
+        <div id="robi-history-list" style="max-height:150px;overflow-y:auto">
+          <div style="color:var(--gray-500);font-size:11px;text-align:center;padding:12px"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
+        </div>
+      </div>
     </div>
+
+    <!-- FLUSSO orizzontale semplificato (max 2 righe) -->
+    <div class="wallet-flow-line" style="display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 10px;font-family:var(--font-m);font-size:11px;letter-spacing:1px;margin-bottom:16px;padding:10px 14px;border:1px solid rgba(255,255,255,.07);background:var(--card-bg);border-radius:var(--radius)">
+      <span style="white-space:nowrap;color:var(--gray-400)"><span class="it">Ricevi</span><span class="en">Get</span> <b style="color:var(--aria)">ARIA</b></span>
+      <span style="color:var(--gray-600)">→</span>
+      <span style="white-space:nowrap;color:var(--gray-400)"><span class="it">Guadagni</span><span class="en">Earn</span> <b style="color:var(--gold)">ROBI</b></span>
+      <span style="color:var(--gray-600)">→</span>
+      <span style="white-space:nowrap;color:var(--gray-400)"><span class="it">Riscuoti</span><span class="en">Redeem</span> <b style="color:var(--kas)">KAS</b></span>
+    </div>
+
+    <!-- EXPLORER centrati, prima del titolo -->
+    <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:12px">
+      <a href="/explorer" target="_blank" rel="noopener" style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--aria);text-decoration:none;border:1px solid rgba(74,158,255,.3);padding:6px 14px;transition:all .3s;white-space:nowrap;border-radius:var(--radius-sm)" onmouseover="this.style.background='rgba(74,158,255,.1)'" onmouseout="this.style.background='transparent'">ARIA EXPLORER</a>
+      <a href="/explorer-robi" target="_blank" rel="noopener" style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold);text-decoration:none;border:1px solid rgba(239,62,79,.35);padding:6px 14px;transition:all .3s;white-space:nowrap;border-radius:var(--radius-sm)" onmouseover="this.style.background='rgba(239,62,79,.1)'" onmouseout="this.style.background='transparent'">ROBI EXPLORER</a>
+    </div>
+
+    <div class="wallet-section-label"><span class="it">I tuoi Asset</span><span class="en">Your Assets</span></div>
 
     <!-- 3 ASSET IN RIGA -->
     <div class="wallet-row">
@@ -1123,39 +1151,6 @@
         <div class="wcard-compact-sub"><span id="dapp-wcard-kas-potential" style="display:none"><span id="dapp-wcard-kas-potential-val" style="color:var(--kas)">—</span> · </span><span class="it">On-chain · tuo per sempre</span><span class="en">On-chain · yours forever</span></div>
         <div class="wcard-compact-footer">
           <span style="color:rgba(73,234,203,.3)">KASPA · <span class="it">Stage 2</span><span class="en">Stage 2</span></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- FLUSSO compatto -->
-    <div class="wallet-flow">
-      <div class="wflow-node">
-        <div class="wflow-icon" style="color:var(--aria)">▸ ARIA</div>
-        <div class="wflow-label" style="color:var(--aria)"><span class="it">Ricevi</span><span class="en">You get</span></div>
-      </div>
-      <div class="wflow-arrow">→</div>
-      <div class="wflow-node">
-        <div class="wflow-icon" style="color:var(--gold)">▸ ROBI</div>
-        <div class="wflow-label" style="color:var(--gold)"><span class="it">Guadagni</span><span class="en">You earn</span></div>
-      </div>
-      <div class="wflow-arrow">→</div>
-      <div class="wflow-node">
-        <div class="wflow-icon" style="color:var(--kas)">▸ KAS</div>
-        <div class="wflow-label" style="color:var(--kas)"><span class="it">Riscuoti</span><span class="en">You redeem</span></div>
-      </div>
-    </div>
-
-    <!-- ROBI SPARKLINE + HISTORY compatto -->
-    <div style="padding:14px 16px;border:1px solid rgba(255,255,255,.07);background:var(--card-bg);border-radius:var(--radius);margin-bottom:16px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <div style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gold)"><span class="it">ANDAMENTO ROBI</span><span class="en">ROBI TREND</span></div>
-        <div id="robi-sparkline-val" style="font-family:var(--font-h);font-size:16px;color:var(--gold)">—</div>
-      </div>
-      <canvas id="robi-sparkline" style="width:100%;height:120px"></canvas>
-      <div style="margin-top:10px">
-        <div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gray-500);margin-bottom:6px"><span class="it">STORICO</span><span class="en">HISTORY</span></div>
-        <div id="robi-history-list" style="max-height:150px;overflow-y:auto">
-          <div style="color:var(--gray-500);font-size:11px;text-align:center;padding:12px"><span class="it">Caricamento...</span><span class="en">Loading...</span></div>
         </div>
       </div>
     </div>
@@ -1754,8 +1749,8 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.85.0"></script>
-<div id="footer-mount" data-version="alfa-20.07.2026-4.85.0"></div>
-<script src="/src/footer.js?v=1.15.0"></script>
+<script src="/src/dapp.js?v=4.86.0"></script>
+<div id="footer-mount" data-version="alfa-20.07.2026-4.86.0"></div>
+<script src="/src/footer.js?v=1.16.0"></script>
 </body>
 </html>
