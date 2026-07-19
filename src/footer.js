@@ -344,14 +344,15 @@ function initPwa(){
   var deferred=null;
   function showBanner(onInstall){
     if(document.getElementById('pwa-banner'))return;
+    // 19 lug (Skeezu): da toast in basso (si tagliava sotto la quick-nav) a SIDE BAR laterale
     var b=document.createElement('div');
     b.id='pwa-banner';
-    b.style.cssText='position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:9000;display:flex;align-items:center;gap:12px;background:var(--black,#fff);color:var(--white,#0F1417);border:1px solid rgba(239,62,79,.35);border-radius:14px;padding:12px 16px;box-shadow:0 12px 40px rgba(0,0,0,.25);font-family:Inter,sans-serif;font-size:13px;max-width:92vw';
+    b.style.cssText='position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:9000;display:flex;flex-direction:column;align-items:stretch;gap:8px;background:var(--black,#fff);color:var(--white,#0F1417);border:1px solid rgba(239,62,79,.35);border-right:none;border-radius:14px 0 0 14px;padding:14px 14px 12px;box-shadow:-8px 0 28px rgba(0,0,0,.22);font-family:Inter,sans-serif;font-size:12px;max-width:210px';
     var isIos=/iphone|ipad|ipod/i.test(navigator.userAgent);
-    b.innerHTML='<span style="font-weight:600">AIR<span style="color:#EF3E4F">OO</span>BI</span>'
-      +'<span>'+(onInstall?'Installa l\'app sul tuo dispositivo':(isIos?'Aggiungi alla Home: Condividi &rarr; \u201cAggiungi alla schermata Home\u201d':''))+'</span>'
-      +(onInstall?'<button id="pwa-install-btn" style="background:#EF3E4F;color:#fff;border:none;border-radius:9px;padding:8px 16px;font-weight:700;font-size:12px;letter-spacing:.06em;cursor:pointer">INSTALLA</button>':'')
-      +'<button id="pwa-close-btn" style="background:none;border:none;color:inherit;opacity:.55;font-size:16px;cursor:pointer;padding:4px">\u2715</button>';
+    b.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-weight:600">AIR<span style="color:#EF3E4F">OO</span>BI</span>'
+      +'<button id="pwa-close-btn" style="background:none;border:none;color:inherit;opacity:.55;font-size:15px;cursor:pointer;padding:2px">\u2715</button></div>'
+      +(onInstall?'':(isIos?'<span style="line-height:1.4">Condividi &rarr; \u201cAggiungi alla schermata Home\u201d</span>':''))
+      +(onInstall?'<button id="pwa-install-btn" style="background:#EF3E4F;color:#fff;border:none;border-radius:9px;padding:9px 12px;font-weight:700;font-size:12px;letter-spacing:.05em;cursor:pointer">INSTALLA L\'APP</button>':'');
     document.body.appendChild(b);
     document.getElementById('pwa-close-btn').onclick=function(){b.remove();localStorage.setItem('airoobi_pwa_dismissed','1');};
     if(onInstall)document.getElementById('pwa-install-btn').onclick=function(){

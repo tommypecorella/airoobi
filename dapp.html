@@ -28,7 +28,7 @@
 <meta name="color-scheme" content="light dark">
 <style>[data-lang="it"] .en,[data-lang="en"] .it{display:none!important}</style>
 <link rel="stylesheet" href="/src/tokens.css?v=4.26.2">
-<link rel="stylesheet" href="/src/dapp.css?v=4.63.0">
+<link rel="stylesheet" href="/src/dapp.css?v=4.64.0">
 <link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.50.0">
 <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
 <script src="/src/theme.js?v=4.50.1"></script>
@@ -223,7 +223,7 @@
     <span class="it">Lingua · IT/EN</span><span class="en">Language · IT/EN</span>
   </button>
   <button class="user-menu-item" id="um-install" onclick="dappInstallApp()" style="display:none;color:var(--gold)">
-    <span class="it">Installa APP</span><span class="en">Install APP</span>
+    <span class="it">INSTALLA L'APP</span><span class="en">INSTALL THE APP</span>
   </button>
   <button class="user-menu-item" onclick="showChangePw();toggleUserMenu()">
     <span class="it">Cambia password</span><span class="en">Change password</span>
@@ -373,14 +373,16 @@
     <div class="dash-section" id="daily-quests" style="margin-top:24px">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px;flex-wrap:wrap;gap:6px">
         <div class="dash-section-title" style="margin:0;font-family:var(--font-h);font-size:20px;font-weight:400"><span class="it">Cosa fare oggi</span><span class="en">Today's moves</span></div>
-        <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400)"><span class="it">giornata completa = <strong style="color:var(--aria)">+1000 ARIA</strong></span><span class="en">full day = <strong style="color:var(--aria)">+1000 ARIA</strong></span></span>
+        <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400)"><span class="it">giornata completa = <strong style="color:var(--aria)">+500 ARIA</strong> · si riparte a mezzanotte</span><span class="en">full day = <strong style="color:var(--aria)">+500 ARIA</strong> · resets at midnight</span></span>
       </div>
       <div class="dq-grid" id="dq-grid">
-        <button class="dq-item" id="dq-checkin" onclick="typeof claimFaucet==='function'&&claimFaucet()"><span class="dq-tick">&#9675;</span><span class="dq-label"><span class="it">Ricevi ARIA e timbra l'ingresso</span><span class="en">Get your ARIA &amp; stamp the entry</span></span></button>
+        <button class="dq-item" id="dq-faucet" onclick="typeof claimFaucet==='function'&&claimFaucet()"><span class="dq-tick">&#9675;</span><span class="dq-label"><span class="it">Ricevi i tuoi ARIA</span><span class="en">Get your ARIA</span></span></button>
+        <button class="dq-item" id="dq-checkin" onclick="typeof claimStreakDay==='function'&&claimStreakDay()"><span class="dq-tick">&#9675;</span><span class="dq-label"><span class="it">Timbra l'ingresso</span><span class="en">Stamp your entry</span></span></button>
         <button class="dq-item" id="dq-valuation" onclick="navigateTo('submit')"><span class="dq-tick">&#9675;</span><span class="dq-label"><span class="it">Fai valutare un oggetto</span><span class="en">Get an item valued</span></span></button>
         <button class="dq-item" id="dq-steps" onclick="navigateTo('explore')"><span class="dq-tick">&#9675;</span><span class="dq-label"><span class="it">Fai 5 Step</span><span class="en">Take 5 Steps</span> <span class="dq-count" id="dq-steps-count"></span></span></button>
+        <button class="dq-item" id="dq-steps-one" onclick="navigateTo('explore')"><span class="dq-tick">&#9675;</span><span class="dq-label"><span class="it">Fai 10 Step in un airdrop</span><span class="en">Take 10 Steps in one airdrop</span> <span class="dq-count" id="dq-steps-one-count"></span></span></button>
       </div>
-      <div id="dq-done" style="display:none;margin-top:10px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:#49b583">&#10003; <span class="it">Giornata completa — +1000 ARIA nel tuo conto!</span><span class="en">Full day — +1000 ARIA in your account!</span></div>
+      <div id="dq-done" style="display:none;margin-top:10px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:#49b583">&#10003; <span class="it">Giornata completa — +500 ARIA nel tuo conto!</span><span class="en">Full day — +500 ARIA in your account!</span></div>
     </div>
 
     <!-- GUADAGNI — earning actions v2 (close F2) -->
@@ -1480,7 +1482,7 @@
           </div>
           <!-- Flow -->
           <div style="text-align:center;padding:20px 0 0;border-top:1px solid var(--gray-700)">
-            <div style="font-family:var(--font-m);font-size:12px;letter-spacing:1px;color:var(--gray-400)">
+            <div class="asset-flow-line" style="font-family:var(--font-m);font-size:12px;letter-spacing:1px;color:var(--gray-400)">
               <span style="color:var(--aria)">ARIA</span> <span style="color:var(--gray-600)">→ accumula + partecipa →</span> <span style="color:var(--gold)">ROBI</span> <span style="color:var(--gray-600)">→ riscuoti →</span> <span style="color:var(--kas)">KAS</span>
             </div>
             <div style="font-size:11px;color:var(--gray-600);margin-top:6px"><span class="it">Gratis ogni giorno → valore reale già oggi → crypto on-chain domani</span><span class="en">Free every day → real value today → on-chain crypto tomorrow</span></div>
@@ -1751,8 +1753,8 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.72.0"></script>
-<div id="footer-mount" data-version="alfa-19.07.2026-4.70.0"></div>
-<script src="/src/footer.js?v=1.9.0"></script>
+<script src="/src/dapp.js?v=4.73.0"></script>
+<div id="footer-mount" data-version="alfa-19.07.2026-4.71.0"></div>
+<script src="/src/footer.js?v=1.10.0"></script>
 </body>
 </html>

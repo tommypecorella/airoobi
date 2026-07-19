@@ -413,6 +413,7 @@ function initGuidaBanner(){
 document.addEventListener('DOMContentLoaded',async function(){
   initGuidaBanner();
   var pp=location.pathname;
+  document.body.classList.add('logged'); // i toggle lingua/tema vivono nel menu utente
   var initialPage=PATH_TO_PAGE[pp]||(pp.startsWith('/airdrops')||pp.startsWith('/dapp/airdrop/')?'explore':'home');
   var airdropMatch=pp.match(/^\/(?:airdrops|dapp\/airdrop)\/([0-9a-f-]{36})$/);
   var urlId=airdropMatch?airdropMatch[1]:new URLSearchParams(location.search).get('id');
@@ -2648,6 +2649,21 @@ async function openDetail(id){
     +(hasSetTab?'<button class="dtb-btn" data-dt="set" onclick="detailTab(\'set\')">'+_dtbIco+'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="it">Impostazioni</span><span class="en">Settings</span></button>':'')
     +'</nav>';
 
+  // 19 lug · Orientamento primo-arrivo: 3 righe su cos'è la corsa, dismissabile per sempre
+  var introHtml='';
+  try{
+    if(!isConcluded&&!isValuation&&!localStorage.getItem('airoobi_intro_ok')){
+      introHtml='<div class="detail-intro dtab-salita" id="detail-intro">'
+        +'<button class="di-x" onclick="try{localStorage.setItem(\'airoobi_intro_ok\',\'1\')}catch(e){};var el=document.getElementById(\'detail-intro\');if(el)el.remove();" aria-label="Chiudi">&times;</button>'
+        +'<div class="di-title"><span class="it">Prima volta su un airdrop?</span><span class="en">First time on an airdrop?</span></div>'
+        +'<div class="di-row"><span class="it">Ogni oggetto è una <b>corsa in salita</b>: fai Step con i tuoi ARIA per salire.</span><span class="en">Every item is an <b>uphill climb</b>: take Steps with your ARIA to move up.</span></div>'
+        +'<div class="di-row"><span class="it">Chi è <b>in vetta alla chiusura</b> ottiene l\'oggetto.</span><span class="en">Whoever is <b>at the summit at close</b> gets the item.</span></div>'
+        +'<div class="di-row"><span class="it">Lungo il percorso raccogli <b>fiori ROBI</b> — tuoi comunque vada.</span><span class="en">Along the trail you pick up <b>ROBI flowers</b> — yours no matter what.</span></div>'
+        +'<a class="di-link" href="/come-funziona-airdrop" target="_blank"><span class="it">Come funziona →</span><span class="en">How it works →</span></a>'
+        +'</div>';
+    }
+  }catch(e){}
+
   var html=''
     // Layout 10 lug (richiesta Skeezu): SX = titolo/posizione/FOTO · DX = SALITA + buy box
     +'<div class="detail-split detail-split-v2">'
@@ -2659,6 +2675,8 @@ async function openDetail(id){
 
     // 18 lug · I TUOI NUMERI sempre in cima: ARIA spesi · Step percorsi · ROBI in arrivo
     +mystripHtml
+
+    +introHtml
 
     // Titolo + chip fase (§4.3)
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
@@ -2771,6 +2789,17 @@ async function openDetail(id){
 
   document.getElementById('detail-content').innerHTML=html;
   document.body.classList.add('detail-open'); // il fab segnalazioni si alza sopra tab bar + buy box
+  // 19 lug (Skeezu) · topbar specializzata nel dettaglio: breadcrumb ‹ Airdrops nello spazio libero
+  if(!document.getElementById('tb-breadcrumb')){
+    var _tb=document.querySelector('.topbar .topbar-right');
+    if(_tb){
+      var _bc=document.createElement('button');
+      _bc.id='tb-breadcrumb';
+      _bc.innerHTML='&lsaquo; <span class="it">Airdrops</span><span class="en">Airdrops</span>';
+      _bc.onclick=function(){backToList();};
+      _tb.parentNode.insertBefore(_bc,_tb);
+    }
+  }
   var _dEl=document.getElementById('detail');
   if(_dEl)_dEl.setAttribute('data-dtab','salita');
   // Mockup v3: su mobile il buy box parte compresso (pannello sticky sopra la tab bar)
@@ -5912,11 +5941,15 @@ async function renderDailyQuests(){
       var t=el.querySelector('.dq-tick');
       if(t)t.innerHTML=done?'&#10003;':'&#9675;';
     }
+    setQ('dq-faucet',q.faucet);
     setQ('dq-checkin',q.checkin);
     setQ('dq-valuation',q.valuation);
     setQ('dq-steps',q.steps);
+    setQ('dq-steps-one',q.steps_one);
     var c=document.getElementById('dq-steps-count');
     if(c)c.textContent=q.steps?'':('('+(q.steps_done||0)+'/5)');
+    var c1=document.getElementById('dq-steps-one-count');
+    if(c1)c1.textContent=q.steps_one?'':('('+(q.steps_one_done||0)+'/10)');
     var dn=document.getElementById('dq-done');
     if(dn)dn.style.display=q.granted?'block':'none';
   }catch(e){}

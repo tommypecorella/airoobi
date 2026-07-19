@@ -1,0 +1,7 @@
+-- SPECCHIO (applicata al live 19 lug 2026 via MCP: 'daily_quests_v2_5_imprese_rome_500').
+-- COSA FARE OGGI v2: 5 imprese SEPARATE (ricevi ARIA/faucet · timbra ingresso ·
+-- fai valutare · 5 Step totali · 10 Step in UN airdrop), giornata su Europe/Rome
+-- (reset mezzanotte italiana), premio giornata completa 500 ARIA (era 1000).
+-- Corpo completo della funzione nel DB: get_my_daily_quests() — vedi anche
+-- 20260719010000_daily_quests_1000_aria.sql per tabella daily_quest_claims.
+-- Aggiornata la voce 'daily_quests' del notification_catalog (+500).

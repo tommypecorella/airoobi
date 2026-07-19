@@ -1443,3 +1443,30 @@ body.logged .topbar .theme-toggle,body.logged .topbar .lang-toggle{display:none!
   .detail-mystrip{margin:8px 0 10px}
   .detail-split-v2{gap:10px}
 }
+
+/* ══ 19 lug mattina · aggiustatine pre-social ══ */
+/* Dashboard: A·R·K su UNA riga anche mobile (rinforzo) */
+@media(max-width:768px){
+  .dash-stats{display:grid!important;grid-template-columns:repeat(3,1fr)!important;gap:8px!important}
+}
+/* Portafoglio mobile: 3 saldi in verticale + diagrammi in verticale */
+@media(max-width:768px){
+  .wallet-row{display:flex!important;flex-direction:column!important;gap:10px}
+  .wallet-row>.wcard-compact{min-width:0!important;flex:none!important}
+  .asset-flow-line span{display:block;padding:2px 0}
+}
+/* Topbar specializzata nel dettaglio airdrop: logo + ‹Airdrops + saldo ARIA + avatar */
+#tb-breadcrumb{display:none}
+body.detail-open #tb-breadcrumb{display:inline-flex;align-items:center;gap:4px;background:none;border:1px solid var(--gray-700);border-radius:999px;color:var(--gray-300);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;padding:5px 12px;cursor:pointer;margin-right:auto}
+body.detail-open #tb-breadcrumb:hover{border-color:var(--gold);color:var(--gold)}
+body.detail-open .topbar-nav{display:none!important}
+body.detail-open .topbar .topbar-bal-robi,
+body.detail-open .topbar #segnala-top,
+body.detail-open .topbar .theme-toggle,
+body.detail-open .topbar .lang-toggle{display:none!important}
+/* Orientamento primo-arrivo nella pagina airdrop */
+.detail-intro{position:relative;background:var(--color-surface,var(--gray-900));border:1px solid rgba(239,62,79,.3);border-radius:16px;padding:14px 40px 14px 16px;margin-bottom:12px}
+.detail-intro .di-x{position:absolute;top:8px;right:10px;background:none;border:1px solid var(--gray-700);border-radius:8px;width:26px;height:26px;color:var(--gray-400);font-size:14px;cursor:pointer}
+.detail-intro .di-title{font-family:var(--font-h);font-size:15px;font-weight:700;margin-bottom:8px}
+.detail-intro .di-row{font-size:12.5px;line-height:1.55;color:var(--gray-300);padding:2px 0}
+.detail-intro .di-link{display:inline-block;margin-top:8px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--color-accent,#2F6BFF);text-decoration:none}
