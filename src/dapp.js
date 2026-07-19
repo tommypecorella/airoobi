@@ -3135,8 +3135,10 @@ async function renderSalita(scores){
     counters+='<span class="sc-item"><span class="it"><strong>'+fuoriCount+'</strong> fuori corsa</span><span class="en"><strong>'+fuoriCount+'</strong> out of the race</span></span>';
   }
   // Quick action contestuale (2c): imposta lo slider ai blocchi giusti e porta al box acquisto
+  // Il venditore non corre la propria corsa (guardia SELLER_CANNOT_STEP + sellerbox): nessuna CTA
+  var isSeller=!_publicMode&&uid&&(a.submitted_by===uid||a.created_by===uid);
   var cta='';
-  if(remaining>0){
+  if(remaining>0&&!isSeller){
     if(!uid||_publicMode){
       cta='<button class="salita-cta" onclick="salitaQuickBuy(1)"><span class="it">Entra in corsa</span><span class="en">Join the climb</span></button>';
     }else if(n===0){
