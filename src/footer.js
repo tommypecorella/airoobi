@@ -98,6 +98,8 @@ var SB_KEY_F='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 function _isAboPage(){return location.pathname.indexOf('abo.html')!==-1||location.pathname.indexOf('/abo')===0}
 function initSegnala(){
   if(_isAboPage())return; // vale anche per /abo/<pagina>.html (rewrite 18 lug)
+  // 19 lug (Skeezu): niente segnalazioni anonime — il bottone appare SOLO da loggati
+  try{var _s=JSON.parse(localStorage.getItem('airoobi_session'));if(!_s||!_s.access_token)return;}catch(e){return;}
   if(document.getElementById('segnala-fab'))return;
   var st=document.createElement('style');
   st.textContent='#segnala-fab{position:fixed;right:16px;bottom:16px;z-index:9990;width:46px;height:46px;border-radius:50%;border:none;background:#EF3E4F;color:#fff;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;transition:transform .15s}'

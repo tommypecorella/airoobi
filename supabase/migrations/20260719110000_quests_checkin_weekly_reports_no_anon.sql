@@ -1,0 +1,6 @@
+-- SPECCHIO (applicata al live 19 lug via MCP: 'daily_quests_fix_checkin_weekly_and_anon_reports').
+-- FIX 1: quest «timbra l'ingresso» ora legge weekly_checkins (week_start + days_checked
+-- smallint[] ISODOW, ora italiana) — la tabella checkins era legacy e vuota.
+-- FIX 2 (Skeezu): submit_user_report richiede login (auth.uid() NOT NULL, error login_required),
+-- REVOKE anon / GRANT authenticated. FE: bandierina visibile solo da loggati (footer.js).
+-- Corpi completi nel DB: get_my_daily_quests(), submit_user_report(text,text,text).

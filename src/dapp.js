@@ -3189,7 +3189,7 @@ async function updateAutoBuyBanner(airdropId){
   banner.style.display='';
   banner.innerHTML=''
     +'<span class="ab-banner-icon">'+UI_ICONS.zap+'</span>'
-    +'<span class="ab-banner-text"><strong><span class="it">AUTO-BUY ATTIVO</span><span class="en">AUTO-BUY ACTIVE</span></strong> · '
+    +'<span class="ab-banner-text"><strong><span class="it">AUTO-STEP ATTIVO</span><span class="en">AUTO-STEP ACTIVE</span></strong> · '
     +'<span class="it">sta facendo '+rule.blocks_per_interval+' Step ogni '+intervalLabel+' per te</span>'
     +'<span class="en">advancing '+rule.blocks_per_interval+' Steps every '+intervalLabel+' for you</span>'
     +' · <span class="ab-banner-prog">'+rule.total_bought+'/'+rule.max_blocks+'</span></span>'

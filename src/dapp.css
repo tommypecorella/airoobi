@@ -1470,3 +1470,12 @@ body.detail-open .topbar .lang-toggle{display:none!important}
 .detail-intro .di-title{font-family:var(--font-h);font-size:15px;font-weight:700;margin-bottom:8px}
 .detail-intro .di-row{font-size:12.5px;line-height:1.55;color:var(--gray-300);padding:2px 0}
 .detail-intro .di-link{display:inline-block;margin-top:8px;font-family:var(--font-m);font-size:11px;letter-spacing:.5px;color:var(--color-accent,#2F6BFF);text-decoration:none}
+
+/* 19 lug · Dettaglio = SOLO dettaglio: qualunque fratello della lista (ricerca,
+   in-arrivo, CTA valuta, banner) non può più spuntare sotto la pagina airdrop */
+body.detail-open #tab-explore > *:not(#detail){display:none!important}
+/* Salita card mobile: header con badge che non si accavalla alla riga meta */
+@media(max-width:768px){
+  .salita-wrap{overflow:hidden}
+  .salita-head,.salita-meta{flex-wrap:wrap;row-gap:4px}
+}

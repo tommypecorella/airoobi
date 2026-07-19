@@ -228,9 +228,9 @@ html[data-theme="light"] .counter-bar {
   outline-offset: 2px;
 }
 
-/* ISSUE-17 · .dash-stats mobile-first */
+/* ISSUE-17 · .dash-stats mobile-first — 19 lug (Skeezu): A·R·K su UNA riga anche su phone */
 @media (max-width: 480px) {
-  .dash-stats { grid-template-columns: 1fr !important; }
+  .dash-stats { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
 }
 
 /* ISSUE-18 · .dash-quick-links mobile-first */
