@@ -1531,6 +1531,7 @@ function showPage(page){
   if(page==='wallet')loadDappWallet();
   if(page==='archive')loadDappArchive();
   if(page==='profilo')loadProfilePage();
+  if(page==='home'&&typeof renderDailyQuests==='function')renderDailyQuests();
 }
 
 // ── Profilo page (account settings view) ──
@@ -2261,7 +2262,8 @@ function renderGrid(){
     if(myBlk>0){
       myStatsHtml='<div class="card-my-stats">';
       if(rankInfo)myStatsHtml+='<div class="card-stat-pill rank"><div class="card-stat-icon">#</div><div class="card-stat-content"><div class="card-stat-value">'+rankInfo.rank+' / '+rankInfo.total+'</div><div class="card-stat-label"><span class="it">Posizione</span><span class="en">Rank</span></div></div></div>';
-      myStatsHtml+='<div class="card-stat-pill robi"><span class="info-i" onclick="event.stopPropagation();showInfoTip(this,\'robi-card-projection\')">i</span><div class="card-stat-icon"><img src="/public/images/AIROOBI_Symbol_White.png" alt="ROBI"></div><div class="card-stat-content"><div class="card-stat-value">'+myRobi.toFixed(1)+'</div><div class="card-stat-label">ROBI</div></div></div>';
+      // 19 lug (Skeezu): monogramma OO flat rossa/nera al posto del PNG con sfondo
+      myStatsHtml+='<div class="card-stat-pill robi"><span class="info-i" onclick="event.stopPropagation();showInfoTip(this,\'robi-card-projection\')">i</span><div class="card-stat-icon"><svg viewBox="0 0 34 20" width="26" height="16" fill="none" stroke-width="3"><circle cx="10" cy="10" r="7" stroke="#EF3E4F"/><circle cx="24" cy="10" r="7" stroke="currentColor"/></svg></div><div class="card-stat-content"><div class="card-stat-value">'+myRobi.toFixed(1)+'</div><div class="card-stat-label">ROBI</div></div></div>';
       myStatsHtml+='</div>';
     }
 
@@ -2271,7 +2273,7 @@ function renderGrid(){
       +durationBadge(a.duration_type)
       +imgHtml
       +'<div class="card-img-row">'
-      +'<div class="card-cat">'+(CAT_ICONS[a.category]||'')+' '+(a.category||'')+'</div>'
+      +'<div class="card-cat">'+(CAT_ICONS[a.category]||'')+' '+(a.category||'')+(a.code?' <span class="card-code">#'+escHtml(a.code)+'</span>':'')+'</div>'
       +'<div class="card-actions">'
       +'<button class="share-btn" data-id="'+a.id+'" data-title="'+escHtml(a.title||'').replace(/"/g,'&quot;')+'" data-img="'+escHtml(a.image_url||'').replace(/"/g,'&quot;')+'" onclick="shareFromBtn(this,event)" title="Condividi"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>'
       +'<button class="'+heartCls+' card-heart" onclick="toggleWatchlist(\''+a.id+'\',event)">&#9825;</button>'
@@ -2639,8 +2641,8 @@ async function openDetail(id){
   var _dtbIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">';
   var tabbarHtml=''
     +'<nav class="detail-tabbar" id="detail-tabbar">'
-    // 19 lug (Skeezu): voce HOME nella tab bar del dettaglio — torna alla dashboard
-    +'<button class="dtb-btn" onclick="location.href=\'/dashboard\'">'+_dtbIco+'<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span class="it">Home</span><span class="en">Home</span></button>'
+    // 19 lug (Skeezu): AIRDROPS al posto di Home — torna alla lista degli airdrop
+    +'<button class="dtb-btn" onclick="backToList()">'+_dtbIco+'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span class="it">Airdrops</span><span class="en">Airdrops</span></button>'
     +'<button class="dtb-btn active" data-dt="salita" onclick="detailTab(\'salita\')">'+_dtbIco+'<path d="M3 20l6-9 4 5 5-8 3 4"/></svg><span class="it">Salita</span><span class="en">Climb</span></button>'
     +'<button class="dtb-btn" data-dt="info" onclick="detailTab(\'info\')">'+_dtbIco+'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span class="it">Info</span><span class="en">Info</span></button>'
     +(hasSetTab?'<button class="dtb-btn" data-dt="set" onclick="detailTab(\'set\')">'+_dtbIco+'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="it">Impostazioni</span><span class="en">Settings</span></button>':'')
@@ -5884,6 +5886,52 @@ async function loadDappWallet(){
   loadRobiHistory(token);
   loadWishlistAlerts();
   renderNotifPrefsUI();
+}
+
+// ── COSA FARE OGGI (19 lug · Skeezu): 3 imprese, giornata completa = +1000 ARIA ──
+async function renderDailyQuests(){
+  var box=document.getElementById('daily-quests');
+  if(!box)return;
+  if(!_session){box.style.display='none';return;}
+  document.body.classList.add('logged');
+  // Installa APP: azione permanente nel menu utente (il banner una-tantum poteva essere chiuso)
+  var um=document.getElementById('um-install');
+  if(um){
+    var standalone=(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone;
+    um.style.display=standalone?'none':'block';
+  }
+  try{
+    var token=await getValidToken();if(!token)return;
+    var q=await sbRpc('get_my_daily_quests',{},token);
+    if(!q||!q.ok)return;
+    box.style.display='';
+    function setQ(id,done){
+      var el=document.getElementById(id);if(!el)return;
+      el.classList.toggle('done',!!done);
+      el.disabled=!!done;
+      var t=el.querySelector('.dq-tick');
+      if(t)t.innerHTML=done?'&#10003;':'&#9675;';
+    }
+    setQ('dq-checkin',q.checkin);
+    setQ('dq-valuation',q.valuation);
+    setQ('dq-steps',q.steps);
+    var c=document.getElementById('dq-steps-count');
+    if(c)c.textContent=q.steps?'':('('+(q.steps_done||0)+'/5)');
+    var dn=document.getElementById('dq-done');
+    if(dn)dn.style.display=q.granted?'block':'none';
+  }catch(e){}
+}
+function dappInstallApp(){
+  if(window._pwaDeferred){
+    window._pwaDeferred.prompt();
+    window._pwaDeferred.userChoice.then(function(){window._pwaDeferred=null;});
+  }else if(/iphone|ipad|ipod/i.test(navigator.userAgent)){
+    var lang=document.documentElement.getAttribute('data-lang')||'it';
+    alert(lang==='it'?'Su iPhone: tocca Condividi (⬆) e poi «Aggiungi a schermata Home».':'On iPhone: tap Share (⬆) then "Add to Home Screen".');
+  }else{
+    var l2=document.documentElement.getAttribute('data-lang')||'it';
+    alert(l2==='it'?'Dal menu del browser scegli «Installa app».':'From the browser menu choose "Install app".');
+  }
 }
 
 // ── Gestione notifiche (censimento 18 lug): di sistema obbligatorie, le altre spegnibili ──

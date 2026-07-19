@@ -1401,3 +1401,45 @@ img.salita-av{display:block}
   .detail-split-v2{grid-template-columns:1fr 440px!important;gap:16px}
   .detail-race-col{position:sticky;top:74px;align-self:start}
 }
+
+/* ══ 19 lug · Batch Skeezu: card, CTA, topbar dettaglio, imprese del giorno ══ */
+/* Card lista: monogramma OO flat (rossa + inchiostro) e codice airdrop */
+.card-stat-pill.robi .card-stat-icon{color:var(--ink,var(--white))}
+.card-code{font-family:var(--font-m);font-size:9px;letter-spacing:.5px;color:var(--gray-500);border:1px solid var(--gray-800);border-radius:6px;padding:1px 5px;margin-left:6px;text-transform:none;vertical-align:1px}
+
+/* «Hai un oggetto di valore?»: tutto centrato, CTA al centro */
+.explore-cta-valuta{flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px}
+.explore-cta-valuta .ecv-text{text-align:center}
+
+/* Topbar dedicata alla pagina airdrop: solo logo (esce → home) + saldi + campanella/segnala + avatar */
+body.detail-open .topbar-nav{display:none!important}
+body.detail-open .topbar{gap:10px}
+
+/* Lingua e tema vivono nel menu utente (da loggati) */
+body.logged .topbar .theme-toggle,body.logged .topbar .lang-toggle{display:none!important}
+
+/* Dashboard: ARIA · ROBI · KAS su UNA riga */
+.dash-stats{display:grid!important;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:640px){
+  .dash-stats .dash-stat{padding:12px 8px!important}
+  .dash-stats .dash-stat-val{font-size:22px!important}
+  .dash-stats .dash-stat-label{font-size:10px}
+}
+
+/* COSA FARE OGGI: 3 imprese, tick verde quando fatte */
+.dq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.dq-item{display:flex;align-items:center;gap:10px;padding:14px;border:1px solid var(--gray-700);background:rgba(255,255,255,.02);border-radius:10px;color:var(--white);font-size:13px;cursor:pointer;text-align:left;font-family:var(--font-b)}
+.dq-item:hover{border-color:var(--gold)}
+.dq-item.done{opacity:.55;cursor:default;border-color:rgba(73,181,131,.4)}
+.dq-item.done:hover{border-color:rgba(73,181,131,.4)}
+.dq-tick{font-family:var(--font-m);font-size:15px;color:var(--gray-500);flex-shrink:0}
+.dq-item.done .dq-tick{color:#49b583}
+.dq-count{font-family:var(--font-m);font-size:11px;color:var(--gray-400)}
+
+/* Dettaglio più compatto su mobile (architettura info) */
+@media(max-width:768px){
+  .detail-title-v2{font-size:20px;margin-bottom:6px}
+  .detail-hud{padding:12px 14px;gap:6px;margin-bottom:10px}
+  .detail-mystrip{margin:8px 0 10px}
+  .detail-split-v2{gap:10px}
+}

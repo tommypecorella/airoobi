@@ -113,11 +113,20 @@ function initSegnala(){
     +'#segnala-send:disabled{opacity:.5}'
     +'#segnala-msg{font-size:12px;margin-top:8px;display:none}';
   document.head.appendChild(st);
+  // 19 lug (Skeezu): la bandierina vive in TOPBAR quando c'è (.topbar-right); fab solo come fallback
+  var topRight=document.querySelector('.topbar-right');
   var fab=document.createElement('button');
-  fab.id='segnala-fab';
   fab.setAttribute('aria-label','Segnala un problema');
   fab.title='Segnala un problema';
   fab.innerHTML='<svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>';
+  if(topRight){
+    fab.id='segnala-top';
+    st.textContent+='#segnala-top{width:30px;height:30px;flex-shrink:0;border-radius:50%;border:1px solid rgba(239,62,79,.45);background:none;color:#EF3E4F;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}'
+      +'#segnala-top svg{width:15px;height:15px;stroke:#EF3E4F;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}'
+      +'#segnala-modal.sg-top{bottom:auto;top:64px}';
+  }else{
+    fab.id='segnala-fab';
+  }
   var modal=document.createElement('div');
   modal.id='segnala-modal';
   modal.innerHTML='<div id="segnala-head" style="display:flex;align-items:center;gap:8px;margin:-2px 0 4px;cursor:grab;touch-action:none">'
@@ -128,7 +137,12 @@ function initSegnala(){
     +'<textarea id="segnala-text" maxlength="2000" placeholder="Cosa non funziona? / What\'s wrong?"></textarea>'
     +'<button id="segnala-send"><span class="it">Invia segnalazione</span><span class="en">Send report</span></button>'
     +'<div id="segnala-msg"></div>';
-  document.body.appendChild(fab);
+  if(topRight){
+    topRight.insertBefore(fab, topRight.querySelector('.topbar-avatar')||null);
+    modal.classList.add('sg-top');
+  }else{
+    document.body.appendChild(fab);
+  }
   document.body.appendChild(modal);
   fab.addEventListener('click',function(){modal.classList.toggle('open');if(modal.classList.contains('open'))document.getElementById('segnala-text').focus();});
   document.addEventListener('click',function(e){
@@ -347,6 +361,7 @@ function initPwa(){
   }
   window.addEventListener('beforeinstallprompt',function(e){
     e.preventDefault();deferred=e;
+    window._pwaDeferred=e; // 19 lug: azione «Installa APP» permanente nel menu utente della dapp
     setTimeout(function(){showBanner(true);},2500);
   });
   // iOS: nessun beforeinstallprompt — hint manuale una tantum
