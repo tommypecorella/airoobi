@@ -1523,3 +1523,24 @@ html[data-theme="dark"] .owner-pill{color:#8AA3FF}
 .detail-sellerbox{background:var(--color-surface,var(--gray-900));border:1px solid rgba(47,107,255,.35);border-radius:16px;padding:16px}
 .detail-sellerbox .dsb-title{font-family:var(--font-h);font-size:16px;font-weight:700;margin-bottom:6px}
 .detail-sellerbox .dsb-copy{font-size:12.5px;line-height:1.55;color:var(--gray-300);margin-bottom:12px}
+
+/* ── Rifiniture maniacali 19 lug sera ── */
+/* Badge ALPHA BRAVE in riga con la CTA tonda (alto sx dashboard) */
+.dash-alpha-fixed{position:fixed;top:76px;left:54px;z-index:80;margin:0!important}
+@media(max-width:640px){.dash-alpha-fixed{top:71px;left:44px}}
+body.detail-open .dash-alpha-fixed{display:none}
+/* Riga badge sopra il titolo: fase + IL TUO AIRDROP (cliccabile) */
+.detail-badges{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:2px 0 8px}
+.do-badge-btn{border:1px solid rgba(47,107,255,.4);cursor:pointer;transition:all .15s}
+.do-badge-btn:hover{background:rgba(47,107,255,.28)}
+/* Meta di corsa compatta: countdown + in corsa, ovunque */
+.race-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 12px}
+.rm-chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:11px;letter-spacing:.3px;color:var(--gray-300);background:var(--color-surface-2,var(--gray-800));border:1px solid var(--color-border,var(--gray-700));border-radius:999px;padding:5px 11px;font-variant-numeric:tabular-nums}
+.rm-chip svg{flex-shrink:0;opacity:.7}
+/* Popup IL TUO AIRDROP */
+.owner-pop{display:none;position:fixed;inset:0;z-index:95;background:rgba(6,9,14,.6);align-items:center;justify-content:center;padding:20px}
+.owner-pop.open{display:flex}
+.owner-pop .op-card{background:var(--color-surface,var(--gray-900));border:1px solid rgba(47,107,255,.4);border-radius:16px;padding:20px;max-width:360px;width:100%}
+.owner-pop .op-title{font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:8px}
+.owner-pop .op-txt{font-size:13px;line-height:1.6;color:var(--gray-300);margin-bottom:14px}
+.owner-pop .op-acts{display:flex;gap:10px;align-items:center}

@@ -2557,12 +2557,12 @@ async function openDetail(id){
 
   // GS-8 header: categoria + ♡ + ⤴ (heart sfondo chiaro)
   var titleSafe=(a.title||'').replace(/'/g,"\\'");
+  // 19 lug (Skeezu): via l'eyebrow «AIRDROP · categoria» — è ovvio che è un airdrop. Resta il codice.
   var headerV2=''
     +'<div class="detail-header-v2">'
-    +'<a href="#" class="detail-cat-v2" onclick="event.preventDefault();backToList();filterCat(\''+a.category+'\');return false">'
-    +(CAT_ICONS[a.category]||'')+'<span class="detail-cat-label"><span class="it">AIRDROP · '+a.category+'</span><span class="en">AIRDROP · '+a.category+'</span></span>'
-    +(a.code?' <span class="airdrop-code" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+a.code+'\');showToast(\'Codice copiato\',\'success\')" title="Codice airdrop — clicca per copiare" style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);border:1px solid var(--gray-700);border-radius:8px;padding:2px 8px;margin-left:8px;cursor:pointer;vertical-align:1px">#'+a.code+'</span>':'')
-    +'</a>'
+    +'<span class="detail-cat-v2">'
+    +(a.code?'<span class="airdrop-code" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+a.code+'\');showToast(\'Codice copiato\',\'success\')" title="Codice airdrop — clicca per copiare" style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);border:1px solid var(--gray-700);border-radius:8px;padding:2px 8px;cursor:pointer;vertical-align:1px">#'+a.code+'</span>':'')
+    +'</span>'
     +'<div class="detail-header-actions">'
     +'<button class="heart-btn-v2'+(isInWatchlist(a.id)?' active':'')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" title="Preferito" aria-label="Aggiungi ai preferiti">&#9825;</button>'
     +'<button class="share-btn-v2" onclick="shareAirdrop(\''+a.id+'\',\''+titleSafe+'\')" title="Condividi" aria-label="Condividi airdrop">'
@@ -2706,50 +2706,60 @@ async function openDetail(id){
 
     +headerV2
 
-    // ═ Ordine IA firmato Skeezu 19 lug: A · desc · B · F · D · E · C ═
-    // A · Titolo + descrizione una riga (espandibile)
+    // ═ Rifinitura 19 lug sera (Skeezu): badge fase + badge TUO prima del titolo,
+    //   B fasi → meta compatta (ovunque) → Salita subito; numeri e posizione in colonna corsa ═
+    +((phaseChip||(_isMineVal&&!isValuation))?
+      '<div class="detail-badges">'
+      +(phaseChip||'')
+      +(_isMineVal&&!isValuation?'<button class="do-badge do-badge-btn" onclick="showOwnerPop()"><span class="it">IL TUO AIRDROP</span><span class="en">YOUR AIRDROP</span> ▾</button>':'')
+      +'</div>':'')
+
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
     +(a.description?'<div class="detail-desc"><span id="detail-desc-txt" class="dd-clamp">'+escHtml(a.description)+'</span> <button class="dd-toggle" onclick="var t=document.getElementById(\'detail-desc-txt\');var c=t.classList.toggle(\'dd-clamp\');this.innerHTML=c?\'<span class=\\\'it\\\'>più</span><span class=\\\'en\\\'>more</span>\':\'<span class=\\\'it\\\'>meno</span><span class=\\\'en\\\'>less</span>\';"><span class="it">più</span><span class="en">more</span></button></div>':'')
 
-    // Evidenza proprietario: questo airdrop è TUO
-    +(_isMineVal&&!isValuation?
-      '<div class="detail-owner">'
-      +'<span class="do-badge"><span class="it">IL TUO AIRDROP</span><span class="en">YOUR AIRDROP</span></span>'
-      +'<span class="do-txt"><span class="it">Sei il venditore: la corsa la guardi, non la corri. Estensioni e strumenti sono in Impostazioni.</span><span class="en">You\'re the seller: you watch the climb, you don\'t run it. Extensions and tools live in Settings.</span></span>'
-      +'<button class="do-link" onclick="typeof detailTab===\'function\'&&window.innerWidth<=768?detailTab(\'set\'):scrollToAutoBuyBox()"><span class="it">Gestisci →</span><span class="en">Manage →</span></button>'
-      +'</div>':'')
-
     +introHtml
 
-    // B · Fasi: importantissimo sapere subito dove siamo (sempre visibile, anche nel tab Salita)
+    // B · Fasi subito
     +buildPhaseStepper(a)
 
-    // F · Scheda prodotto subito dopo la fase: galleria + info oggetto
+    // Meta di corsa compatta: countdown + in corsa — visibile in TUTTI i tab
+    +(!isConcluded?
+      '<div class="race-meta">'
+      +(a.deadline?'<span class="rm-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="detail-countdown" data-deadline="'+a.deadline+'"></span></span>':'')
+      +'<span class="rm-chip"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><b id="race-meta-n">—</b>&nbsp;<span class="it">in corsa</span><span class="en">racing</span></span>'
+      +'</div>':'')
+
+    // F · Scheda prodotto (tab Info su mobile)
     +galleryHtml
     +productHtml
 
-    // D · I TUOI NUMERI (per il venditore c'è l'evidenza sopra)
-    +(_isMineVal?'':mystripHtml)
-
-    // E · HUD DI CORSA: fase live+countdown, distacchi e chip auto-step in UNA card
-    +(phaseChip||(!isConcluded&&!isValuation)?
-      '<div class="detail-hud dtab-salita">'
-      +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
-      +(!isConcluded&&!isValuation?'<div class="detail-position" id="detail-position"></div>':'')
-      +'<div id="detail-autobuy-banner" class="detail-autobuy-banner" style="display:none"></div>'
-      +'</div>':'')
-
-    // C · Estendi la corsa (strumento: vive in Impostazioni su mobile, in coda su desktop)
+    // C · Estendi la corsa (Impostazioni su mobile, coda su desktop)
     +(extendHtml?'<div class="dtab-set">'+extendHtml+'</div>':'')
 
     +'</div>' // close detail-right
 
-    // ── COL DX: LA SALITA in cima + pannello acquisto sotto ──
+    // ── COL DX (colonna corsa): SALITA → i tuoi numeri → posizione → azione ──
     +'<div class="detail-race-col dtab-salita">'
     +(!isConcluded?'<div id="detail-salita"></div>':'')
+    +(_isMineVal?'':mystripHtml)
+    +(!_isMineVal&&(!isConcluded&&!isValuation)?
+      '<div class="detail-hud">'
+      +'<div class="detail-position" id="detail-position"></div>'
+      +'<div id="detail-autobuy-banner" class="detail-autobuy-banner" style="display:none"></div>'
+      +'</div>':'')
     +buyBoxHtml
     +(!isConcluded?'<div class="detail-rullo-hook" id="detail-rullo-hook"></div>':'')
     +'</div>'
+    // Popup badge IL TUO AIRDROP
+    +(_isMineVal&&!isValuation?
+      '<div class="owner-pop" id="owner-pop" onclick="if(event.target===this)this.classList.remove(\'open\')">'
+      +'<div class="op-card">'
+      +'<div class="op-title"><span class="it">Il tuo airdrop</span><span class="en">Your airdrop</span></div>'
+      +'<p class="op-txt"><span class="it">Sei il venditore: la corsa la guardi dalla vetta, non la corri. Puoi condividerla per spingerla e, se serve, estenderla.</span><span class="en">You\'re the seller: you watch the climb from the summit. Share it to push it, extend it if needed.</span></p>'
+      +'<div class="op-acts">'
+      +'<button class="buy-btn" style="flex:1" onclick="document.getElementById(\'owner-pop\').classList.remove(\'open\');typeof detailTab===\'function\'&&window.innerWidth<=768?detailTab(\'set\'):scrollToAutoBuyBox()"><span class="it">Gestisci</span><span class="en">Manage</span></button>'
+      +'<button class="dd-toggle" style="padding:10px 14px" onclick="document.getElementById(\'owner-pop\').classList.remove(\'open\')"><span class="it">Chiudi</span><span class="en">Close</span></button>'
+      +'</div></div></div>':'')
 
     +'</div>' // close detail-split
 
@@ -3224,6 +3234,10 @@ async function updateAutoBuyBanner(airdropId){
 // window.scrollTo(0, targetY) — instant è UX accettabile, smooth lo verifichi una volta
 // trovato il conflitto (scroll-behavior CSS o altro che annulla il smooth).
 // 18 lug (Skeezu) · Tab mobile del dettaglio airdrop: Salita / Info / Impostazioni
+function showOwnerPop(){
+  var p=document.getElementById('owner-pop');
+  if(p)p.classList.add('open');
+}
 function detailTab(t){
   var d=document.getElementById('detail');if(!d)return;
   d.setAttribute('data-dtab',t);
@@ -3381,6 +3395,9 @@ function updateDetailPosition(airdropId,scores){
     _msp.textContent=_mp>0?(_mp+'°'):'—';
     _msp.classList.toggle('ms-first',_mp===1);
   }
+  // Meta di corsa compatta: quanti in corsa (visibile in tutti i tab)
+  var _rmn=document.getElementById('race-meta-n');
+  if(_rmn)_rmn.textContent=(scores&&scores.length)||0;
   var el=document.getElementById('detail-position');if(!el)return;
   if(!_session||!scores||scores.length===0){
     var total=scores?scores.length:0;
