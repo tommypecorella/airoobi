@@ -2584,6 +2584,13 @@ async function openDetail(id){
     +'</div>'
     :isConcluded
     ?_renderOutcomePanel(a,myBlocks,_outcomeRobi)
+    :_isMineVal
+    // 19 lug (decisione Skeezu): il venditore non corre la propria corsa — niente pannello AVANZA
+    ?'<div class="detail-sellerbox dtab-salita">'
+    +'<div class="dsb-title"><span class="it">Sei il venditore</span><span class="en">You\'re the seller</span></div>'
+    +'<p class="dsb-copy"><span class="it">Questa corsa la guardi dalla vetta: niente Step per te. Puoi spingerla condividendola e, se serve, estenderla dalle Impostazioni.</span><span class="en">You watch this climb from the summit: no Steps for you. Push it by sharing, or extend it from Settings.</span></p>'
+    +'<button class="buy-btn" style="display:block;width:100%" onclick="shareAirdrop(\''+a.id+'\',\''+titleSafe+'\')"><span class="it">Condividi la corsa</span><span class="en">Share the climb</span></button>'
+    +'</div>'
     :_publicMode
     ?'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Vuoi partecipare?</span><span class="en">Want to participate?</span></div>'

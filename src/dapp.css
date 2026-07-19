@@ -1518,3 +1518,8 @@ html[data-theme="dark"] #tab-my [style*="#161D26"]{color:#E8EAED!important}
 html[data-theme="dark"] .owner-pill{color:#8AA3FF}
 /* Fasi sempre visibili anche nel tab Salita: compatte su mobile */
 @media(max-width:768px){.phase-strip{margin-bottom:10px}}
+
+/* Venditore: niente AVANZA, pannello di spinta (19 lug) */
+.detail-sellerbox{background:var(--color-surface,var(--gray-900));border:1px solid rgba(47,107,255,.35);border-radius:16px;padding:16px}
+.detail-sellerbox .dsb-title{font-family:var(--font-h);font-size:16px;font-weight:700;margin-bottom:6px}
+.detail-sellerbox .dsb-copy{font-size:12.5px;line-height:1.55;color:var(--gray-300);margin-bottom:12px}

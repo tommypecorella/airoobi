@@ -1,0 +1,14 @@
+-- SPECCHIO (applicata al live 19 lug via MCP: 'buy_blocks_seller_guard').
+-- Decisione Skeezu: il venditore NON può fare Step nel proprio airdrop.
+-- Prima era bloccato solo alla chiusura (execute_draw) → buco shill-bidding:
+-- poteva alzare soglia e punteggi correndo contro i partecipanti.
+-- Patch: guardia in buy_blocks subito dopo il lock dell'airdrop —
+--   IF v_airdrop.submitted_by = v_user_id THEN
+--     RETURN jsonb_build_object('ok', false, 'error', 'SELLER_CANNOT_STEP');
+--   END IF;
+-- UI: per il venditore il pannello AVANZA è sostituito da .detail-sellerbox
+-- («Sei il venditore — condividi la corsa»). Collaudo: buy_blocks da CEO sul
+-- proprio airdrop → SELLER_CANNOT_STEP (rollback test).
+-- Contestuale (una tantum, stesso giorno): i 53 Step del CEO su ASTR-20-1518
+-- redistribuiti ai partecipanti presenti (Mary 27→75, bure 26→66, totale 141
+-- invariato, participations riaggregate coerenti, auto-step CEO disattivato).
