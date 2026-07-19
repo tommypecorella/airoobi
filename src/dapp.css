@@ -1562,3 +1562,5 @@ body.detail-open .dash-alpha-fixed{display:none}
 html:not([data-theme="dark"]) .dash-alpha-fixed{background:rgba(237,242,255,.96)!important;border-color:rgba(47,107,255,.5)!important;color:#1E54E6!important}
 /* Codice airdrop in card: a capo sotto la categoria, mai spezzato */
 .card-cat .card-code{display:block;width:max-content;margin:5px 0 0;white-space:nowrap}
+/* Titolo card: sempre una riga, ellissi se lungo */
+.card-title{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
