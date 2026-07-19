@@ -457,7 +457,7 @@ window.airLightbox=function(imgs,startIdx){
   }).join('');
   lb.classList.add('open');
   document.body.style.overflow='hidden';
-  requestAnimationFrame(function(){lb._go(startIdx||0,false);lb._syncN();});
+  setTimeout(function(){lb._go(startIdx||0,false);lb._syncN();},0);
 };
 function initLightboxDelegate(){
   document.addEventListener('click',function(e){
