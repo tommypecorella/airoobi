@@ -1557,3 +1557,6 @@ body.detail-open .dash-alpha-fixed{display:none}
 @media(max-width:768px){
   .topbar .topbar-right{flex:1;justify-content:center;gap:10px}
 }
+/* Badge ALPHA BRAVE flottante: sfondo bluette pieno, leggibile sopra qualsiasi contenuto */
+.dash-alpha-fixed{background:rgba(21,32,58,.95)!important;border:1px solid rgba(47,107,255,.55)!important;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);box-shadow:0 4px 14px rgba(0,0,0,.3)}
+html:not([data-theme="dark"]) .dash-alpha-fixed{background:rgba(237,242,255,.96)!important;border-color:rgba(47,107,255,.5)!important;color:#1E54E6!important}
