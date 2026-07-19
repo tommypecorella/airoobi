@@ -2369,6 +2369,36 @@ function openGalleryLightbox(i){
   if(window.airLightbox&&window._galleryImgs&&window._galleryImgs.length)window.airLightbox(window._galleryImgs,i||0);
 }
 
+// ── EVALOBI consultabile dal dettaglio (20 lug, Skeezu) ──
+async function loadDetailEvalobi(airdropId){
+  window._detailEvalobi=null;
+  var chip=document.getElementById('evalobi-chip');
+  if(!chip)return;
+  try{
+    var r=await fetch(SB_URL+'/rest/v1/rpc/get_evalobi_for_airdrop',{method:'POST',headers:{'apikey':SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({p_airdrop_id:airdropId})});
+    var rows=r.ok?await r.json():[];
+    if(rows&&rows.length&&rows[0].token_id!=null){
+      window._detailEvalobi=rows[0];
+      chip.style.display='inline-flex';
+    }
+  }catch(e){}
+}
+
+function openEvalobiPop(){
+  var ev=window._detailEvalobi;if(!ev)return;
+  var p=document.getElementById('evalobi-pop');
+  if(!p){
+    p=document.createElement('div');
+    p.id='evalobi-pop';
+    p.innerHTML='<iframe id="evalobi-frame" title="Certificato EVALOBI"></iframe>'
+      +'<button class="ep-x" onclick="document.getElementById(\'evalobi-pop\').classList.remove(\'open\');document.body.style.overflow=\'\'" aria-label="Chiudi">&times;</button>';
+    document.body.appendChild(p);
+  }
+  document.getElementById('evalobi-frame').src='/evalobi/'+ev.token_id;
+  p.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
 async function openDetail(id){
   var a=_airdrops.find(function(x){return x.id===id});
   if(!a){
@@ -2538,6 +2568,8 @@ async function openDetail(id){
     +'<div class="detail-header-v2">'
     +'<span class="detail-cat-v2">'
     +(a.code?'<span class="airdrop-code" onclick="navigator.clipboard&&navigator.clipboard.writeText(\''+a.code+'\');showToast(\'Codice copiato\',\'success\')" title="Codice airdrop — clicca per copiare" style="font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-400);border:1px solid var(--gray-700);border-radius:8px;padding:2px 8px;cursor:pointer;vertical-align:1px">#'+a.code+'</span>':'')
+    // 20 lug (Skeezu): loghetto EVALOBI consultabile — compare se l'airdrop ha il certificato
+    +'<button id="evalobi-chip" class="evalobi-chip" style="display:none" onclick="openEvalobiPop()" title="Certificato EVALOBI — consulta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.5 13l1.5 8-5-3-5 3 1.5-8"/></svg>EVALOBI</button>'
     +'</span>'
     +'<div class="detail-header-actions">'
     +'<button class="heart-btn-v2'+(isInWatchlist(a.id)?' active':'')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" title="Preferito" aria-label="Aggiungi ai preferiti">&#9825;</button>'
@@ -2825,6 +2857,7 @@ async function openDetail(id){
   // Start gallery auto-play
   window._galleryImgs=galleryImgs;
   initGalleryV2();
+  loadDetailEvalobi(a.id);
 
   // Start physics simulation for bubbles
   if(_bubbles.length>0)startBubblePhysics();
@@ -5917,6 +5950,11 @@ async function loadDappWallet(){
       var certRes=await fetch(SB_URL+'/rest/v1/rpc/get_my_evalobi',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'});
       if(certRes.ok)_certs=await certRes.json()||[];
     }catch(e){}
+    // 20 lug (Skeezu): l'EVALOBI è una cosa a sé — se per un oggetto esiste già il
+    // certificato, la card della richiesta di valutazione è un doppione e sparisce.
+    var _certTitles={};
+    (_certs||[]).forEach(function(c){if(c.object_title)_certTitles[String(c.object_title).toLowerCase().trim()]=1;});
+    valCards=valCards.filter(function(v){var m=v.metadata||{};var t=String(m.title||v.name||'').toLowerCase().trim();return !t||!_certTitles[t];});
     var _certHtml=(_certs||[]).map(function(c){
       var oc=c.evaluation_outcome==='GO'?{t:'Approvato',col:'var(--kas)'}:c.evaluation_outcome==='NO_GO'?{t:'Non idoneo',col:'#ef4444'}:{t:'Da rivedere',col:'#f0a030'};
       var cDate=c.evaluated_at?new Date(c.evaluated_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'}):'';
