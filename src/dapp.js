@@ -2123,10 +2123,16 @@ function startCountdowns(){
       var cd=fmtCountdown(dc.dataset.deadline);
       if(cd){
         var lang=document.documentElement.getAttribute('data-lang')||'it';
-        dc.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> '
-          +'<span class="it">'+(cd.expired?'Deadline scaduta':cd.text+' alla chiusura')+'</span>'
-          +'<span class="en">'+(cd.expired?'Deadline expired':cd.en+' to close')+'</span>';
-        dc.className='detail-countdown'+(cd.urgent?' urgent':'');
+        if(dc.closest('.race-meta')){
+          // 19 lug: nel chip compatto solo il tempo, niente pillola dentro la pillola
+          dc.textContent=cd.expired?(lang==='it'?'chiusa':'closed'):(lang==='it'?cd.text:cd.en);
+          if(dc.parentElement)dc.parentElement.classList.toggle('urgent',!!cd.urgent&&!cd.expired);
+        }else{
+          dc.innerHTML='<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> '
+            +'<span class="it">'+(cd.expired?'Deadline scaduta':cd.text+' alla chiusura')+'</span>'
+            +'<span class="en">'+(cd.expired?'Deadline expired':cd.en+' to close')+'</span>';
+          dc.className='detail-countdown'+(cd.urgent?' urgent':'');
+        }
       }
     }
   },1000);

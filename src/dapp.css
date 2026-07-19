@@ -1544,3 +1544,9 @@ body.detail-open .dash-alpha-fixed{display:none}
 .owner-pop .op-title{font-family:var(--font-h);font-size:17px;font-weight:700;margin-bottom:8px}
 .owner-pop .op-txt{font-size:13px;line-height:1.6;color:var(--gray-300);margin-bottom:14px}
 .owner-pop .op-acts{display:flex;gap:10px;align-items:center}
+
+/* Meta di corsa: A+B stessa riga, gemelli armonici */
+.race-meta{flex-wrap:nowrap}
+.rm-chip{height:30px;line-height:1}
+.rm-chip.urgent{border-color:rgba(239,62,79,.5);color:var(--gold)}
+.rm-chip b{font-weight:600}
