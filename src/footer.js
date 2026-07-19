@@ -433,7 +433,7 @@ function ensureLightbox(){
     lb.querySelector('#air-lb-n').textContent=(idx()+1)+' / '+n;
   }
   function close(){lb.classList.remove('open');document.body.style.overflow='';}
-  track.addEventListener('scroll',function(){requestAnimationFrame(syncN)},{passive:true});
+  track.addEventListener('scroll',syncN,{passive:true});
   lb.querySelector('#air-lb-x').addEventListener('click',close);
   lb.querySelector('#air-lb-prev').addEventListener('click',function(){go(idx()-1);});
   lb.querySelector('#air-lb-next').addEventListener('click',function(){go(idx()+1);});
