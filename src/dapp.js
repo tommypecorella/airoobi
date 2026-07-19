@@ -2726,6 +2726,11 @@ async function openDetail(id){
       +'</div>':'')
 
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
+
+    // 20 lug (Skeezu): mini carousel foto sotto il titolo — thumbnails swipabili, tap → lightbox
+    +(galleryImgs.length?'<div class="mini-gal">'+galleryImgs.map(function(src,i){
+      return '<img src="'+src+'" alt="'+(a.title||'')+' — '+(i+1)+'" loading="lazy" onclick="openGalleryLightbox('+i+')">';
+    }).join('')+'</div>':'')
     +(a.description?'<div class="detail-desc"><span id="detail-desc-txt" class="dd-clamp">'+escHtml(a.description)+'</span> <button class="dd-toggle" onclick="var t=document.getElementById(\'detail-desc-txt\');var c=t.classList.toggle(\'dd-clamp\');this.innerHTML=c?\'<span class=\\\'it\\\'>più</span><span class=\\\'en\\\'>more</span>\':\'<span class=\\\'it\\\'>meno</span><span class=\\\'en\\\'>less</span>\';"><span class="it">più</span><span class="en">more</span></button></div>':'')
 
     +introHtml
