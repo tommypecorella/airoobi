@@ -253,7 +253,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 <meta name="apple-mobile-web-app-title" content="ABO">
 <!-- Skin ABO v3 (Design Sheet 18 lug): token layer, skin-not-rewrite -->
 <link rel="stylesheet" href="/src/theme-v3.css?v=1.1.0">
-<link rel="stylesheet" href="/src/abo-v3.css?v=1.3.0">
+<link rel="stylesheet" href="/src/abo-v3.css?v=1.4.0">
 <script>
 /* Tema ABO prima del primo paint: salvato → preferenza di sistema */
 (function(){try{
@@ -2562,14 +2562,14 @@ async function loadReportsTable(){
       var pRes=await fetch(SB_URL+'/rest/v1/profiles?select=id,email&id=in.('+uids.join(',')+')',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
       if(pRes.ok){(await pRes.json()||[]).forEach(function(p){emap[p.id]=p.email;});}
     }
-    var stBadge={open:'<span class="tag" style="color:#f0a030;border-color:#f0a03055">APERTA</span>',in_review:'<span class="tag" style="color:var(--aria);border-color:var(--aria)">IN LAVORAZIONE</span>',resolved:'<span class="tag tag-ok">RISOLTA</span>',rejected:'<span class="tag" style="color:var(--gray-500)">RESPINTA</span>'};
+    var stBadge={open:'<span class="tag tag-warn">APERTA</span>',in_review:'<span class="tag tag-info">IN LAVORAZIONE</span>',resolved:'<span class="tag tag-ok">RISOLTA</span>',rejected:'<span class="tag">RESPINTA</span>'};
     tbody.innerHTML=data.map(function(r){
       var d=new Date(r.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
       var who=r.user_id?(emap[r.user_id]||r.user_id.slice(0,8)):'<span style="color:var(--gray-500)">ospite</span>';
       var acts=[];
       if(r.status==='open')acts.push('<button class="ab-btn" style="padding:3px 8px;font-size:10px" onclick="aboReportAct(\''+r.id+'\',\'in_review\')">PRENDI</button>');
       if(r.status!=='resolved')acts.push('<button class="ab-btn ab-btn-primary" style="padding:3px 8px;font-size:10px" onclick="aboReportResolve(\''+r.id+'\','+(r.user_id?'true':'false')+')">RISOLVI</button>');
-      if(r.status!=='rejected'&&r.status!=='resolved')acts.push('<button class="ab-btn" style="padding:3px 8px;font-size:10px;color:#f87171;border-color:#f8717155" onclick="aboReportAct(\''+r.id+'\',\'rejected\')">RESPINGI</button>');
+      if(r.status!=='rejected'&&r.status!=='resolved')acts.push('<button class="ab-btn ab-quiet-danger" style="padding:3px 10px;font-size:10px" onclick="aboReportAct(\''+r.id+'\',\'rejected\')">RESPINGI</button>');
       return '<tr>'
         +'<td style="font-family:var(--font-m);font-size:11px;white-space:nowrap">'+d+'</td>'
         +'<td style="font-size:12px">'+who+'</td>'
@@ -5309,7 +5309,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-18.07.2026-1.12.0"></div>
+<div id="footer-mount" data-version="alfa-19.07.2026-1.13.0"></div>
 <script src="/src/footer.js?v=1.14.0"></script>
 </body>
 </html>
