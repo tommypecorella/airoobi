@@ -83,7 +83,8 @@ html[data-theme="dark"]{--black:#0F1417;--gray-900:#161D24;--gray-800:#202A34;--
   }
   .btn-primary { background: var(--gold); color: var(--black); border: 1px solid var(--gold); }
   .btn-primary:hover { background: var(--white); border-color: var(--white); }
-  .btn-ghost { background: transparent; color: var(--ink,var(--white)); border: 1px solid var(--gray-400); }
+  .btn-ghost { background: transparent; color: #161D26; border: 1px solid #8A97A8; }
+  html[data-theme="dark"] .btn-ghost { color: #EDF1F7; border-color: #5C6878; }
   html:not([data-theme="dark"]) .btn-ghost { color: #161D26; border-color: #8A97A8; }
   .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
 
@@ -425,7 +426,7 @@ html[data-theme="dark"]{--black:#0F1417;--gray-900:#161D24;--gray-800:#202A34;--
 
 <!-- FOOTER -->
 <div id="footer-mount" data-version="alfa-15.07.2026-1.1.4"></div>
-<script src="/src/footer.js?v=1.14.0"></script>
+<script src="/src/footer.js?v=1.15.0"></script>
 
 <script>
   // ── Alpha Brave counter — live count(profiles) — Option A ──

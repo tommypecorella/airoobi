@@ -184,7 +184,8 @@ html[data-theme="dark"]{--abo-sticky-col-shadow:8px 0 8px -8px rgba(0,0,0,.6)}
 .ab-btn.ab-quiet-danger{background:transparent;border:1px solid var(--color-error-subtle);color:var(--color-error-text);height:auto}
 .ab-btn.ab-quiet-danger:hover{background:var(--color-error-subtle)}
 /* Sidebar e controlli testata: light theme-esplicito (le var si perdevano) */
-html:not([data-theme="dark"]) .admin-sidebar-item{color:#455364}
+html:not([data-theme="dark"]) .admin-sidebar-item{color:#455364!important}
+html:not([data-theme="dark"]) .admin-sidebar-item.active{color:#EF3E4F!important}
 html:not([data-theme="dark"]) .admin-close{color:#455364!important;border-color:#D4DBE3!important}
 /* Chip saldi in topbar ABO: ereditano il colore della testata (la regola tok-coin globale del footer qui stona) */
 #admin-overlay .tok-coin{color:inherit!important}
