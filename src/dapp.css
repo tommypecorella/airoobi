@@ -1489,3 +1489,19 @@ html[data-theme="dark"] .cat-pill{color:#AEB9C6;border-color:#3A434F}
 /* Select della dapp: mai bianco-su-bianco, in nessun tema */
 #tab-explore select,#etb-sort-select{border:1px solid #D4DBE3;background:#FFFFFF;color:#161D26;border-radius:8px;padding:6px 10px}
 html[data-theme="dark"] #tab-explore select,html[data-theme="dark"] #etb-sort-select{border-color:#3A434F;background:#1E242C;color:#E8EAED}
+
+/* ── Audit run-1 · dapp-specifici (report agent) ── */
+/* Chip AUTO-STEP nell'HUD: eredita il blu del chip, mai bianco fisso */
+.detail-hud .ab-banner-text,.detail-hud .ab-banner-text strong,.detail-hud .ab-banner-prog{color:inherit!important}
+/* Preset del buy box in light */
+html:not([data-theme="dark"]) .buy-preset{color:#455364;border-color:#D4DBE3}
+/* Bianchi hardcoded → inchiostro in light */
+html:not([data-theme="dark"]) .sub-dur-name,
+html:not([data-theme="dark"]) .invita-share-label,
+html:not([data-theme="dark"]) .profilo-btn{color:#161D26!important}
+/* Scuri hardcoded → chiari in dark (portafoglio e miei airdrop) */
+html[data-theme="dark"] .my-card-meta{color:#AEB9C6!important}
+html[data-theme="dark"] #tab-wallet [style*="#0F1417"],
+html[data-theme="dark"] #tab-wallet [style*="#161D26"],
+html[data-theme="dark"] #tab-my [style*="#0F1417"],
+html[data-theme="dark"] #tab-my [style*="#161D26"]{color:#E8EAED!important}
