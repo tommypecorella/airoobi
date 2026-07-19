@@ -1553,3 +1553,7 @@ body.detail-open .dash-alpha-fixed{display:none}
 /* Badge fase + TUO + chip meta: una sola riga viva sopra il titolo */
 .detail-badges .rm-chip{height:26px;font-size:10.5px;padding:4px 10px}
 .detail-badges .detail-chip-fase,.detail-badges .do-badge-btn{height:26px;display:inline-flex;align-items:center}
+/* Topbar mobile: gruppo saldi+campanella+segnala+avatar centrato */
+@media(max-width:768px){
+  .topbar .topbar-right{flex:1;justify-content:center;gap:10px}
+}
