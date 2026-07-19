@@ -2664,6 +2664,32 @@ async function openDetail(id){
     }
   }catch(e){}
 
+  // F · Scheda prodotto (spostata in colonna SX — ordine IA 19 lug; la descrizione
+  // estesa vive nel collassabile sotto al titolo, qui non si duplica)
+  var productHtml=''
+    +'<div class="product-info-v2 dtab-info">'
+    +(brand?'<div class="product-brand">'+brand+'</div>':'')
+    +'<div class="product-price-row">'
+    +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' '+tokIcon('ARIA',18)+'</div>'
+    +'<div class="product-price-aria">'
+    +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-400);margin-right:6px">'+a.block_price_aria+'</span>':'')
+    +'<span class="it">per Step</span><span class="en">per Step</span> &middot; <span class="it">percorso di</span><span class="en">trail of</span> '+a.total_blocks.toLocaleString('it-IT')+' Step'
+    +(isPresale?' &middot; <span style="color:var(--aria)">PRESALE</span>':'')
+    +'</div>'
+    +'</div>'
+    +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>&#9935; PRESALE 2x</strong> — <span class="it">Ogni Step in presale raccoglie il doppio dei ROBI</span><span class="en">Every presale Step picks up double ROBI</span></div>':'')
+    +(model?'<div class="product-model">'+model+'</div>':'')
+    +(condition?'<div class="product-condition">'+condition+'</div>':'')
+    +(highlights.length>0
+      ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
+      :'')
+    +(included.length>0
+      ?'<div class="product-included-label"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
+      +'<ul class="product-included">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
+      :'')
+    +durationBadge(a.duration_type)
+    +'</div>';
+
   var html=''
     // Layout 10 lug (richiesta Skeezu): SX = titolo/posizione/FOTO · DX = SALITA + buy box
     +'<div class="detail-split detail-split-v2">'
@@ -2673,17 +2699,32 @@ async function openDetail(id){
 
     +headerV2
 
-    // 18 lug · I TUOI NUMERI sempre in cima: ARIA spesi · Step percorsi · ROBI in arrivo
-    +mystripHtml
+    // ═ Ordine IA firmato Skeezu 19 lug: A · desc · B · F · D · E · C ═
+    // A · Titolo + descrizione una riga (espandibile)
+    +'<h1 class="detail-title-v2">'+a.title+'</h1>'
+    +(a.description?'<div class="detail-desc"><span id="detail-desc-txt" class="dd-clamp">'+escHtml(a.description)+'</span> <button class="dd-toggle" onclick="var t=document.getElementById(\'detail-desc-txt\');var c=t.classList.toggle(\'dd-clamp\');this.innerHTML=c?\'<span class=\\\'it\\\'>più</span><span class=\\\'en\\\'>more</span>\':\'<span class=\\\'it\\\'>meno</span><span class=\\\'en\\\'>less</span>\';"><span class="it">più</span><span class="en">more</span></button></div>':'')
+
+    // Evidenza proprietario: questo airdrop è TUO
+    +(_isMineVal&&!isValuation?
+      '<div class="detail-owner">'
+      +'<span class="do-badge"><span class="it">IL TUO AIRDROP</span><span class="en">YOUR AIRDROP</span></span>'
+      +'<span class="do-txt"><span class="it">Sei il venditore: la corsa la guardi, non la corri. Estensioni e strumenti sono in Impostazioni.</span><span class="en">You\'re the seller: you watch the climb, you don\'t run it. Extensions and tools live in Settings.</span></span>'
+      +'<button class="do-link" onclick="typeof detailTab===\'function\'&&window.innerWidth<=768?detailTab(\'set\'):scrollToAutoBuyBox()"><span class="it">Gestisci →</span><span class="en">Manage →</span></button>'
+      +'</div>':'')
 
     +introHtml
 
-    // Titolo + chip fase (§4.3)
-    +'<h1 class="detail-title-v2">'+a.title+'</h1>'
-    +'<div class="dtab-info">'+buildPhaseStepper(a)+'</div>'
-    +(extendHtml?'<div class="dtab-set">'+extendHtml+'</div>':'')
+    // B · Fasi: importantissimo sapere subito dove siamo (sempre visibile, anche nel tab Salita)
+    +buildPhaseStepper(a)
 
-    // Mockup v3 (19 lug) · HUD DI CORSA: fase+countdown, distacchi e chip auto-step in UNA card
+    // F · Scheda prodotto subito dopo la fase: galleria + info oggetto
+    +galleryHtml
+    +productHtml
+
+    // D · I TUOI NUMERI (per il venditore c'è l'evidenza sopra)
+    +(_isMineVal?'':mystripHtml)
+
+    // E · HUD DI CORSA: fase live+countdown, distacchi e chip auto-step in UNA card
     +(phaseChip||(!isConcluded&&!isValuation)?
       '<div class="detail-hud dtab-salita">'
       +(phaseChip?'<div class="detail-phase-row">'+phaseChip+(a.deadline&&!isConcluded?'<span class="detail-phase-time" id="detail-countdown" data-deadline="'+a.deadline+'"></span>':'')+'</div>':'')
@@ -2691,8 +2732,8 @@ async function openDetail(id){
       +'<div id="detail-autobuy-banner" class="detail-autobuy-banner" style="display:none"></div>'
       +'</div>':'')
 
-    // Galleria immagini sotto la posizione (spostata dalla colonna DX · 10 lug)
-    +galleryHtml
+    // C · Estendi la corsa (strumento: vive in Impostazioni su mobile, in coda su desktop)
+    +(extendHtml?'<div class="dtab-set">'+extendHtml+'</div>':'')
 
     +'</div>' // close detail-right
 
@@ -2707,31 +2748,6 @@ async function openDetail(id){
 
     // ══════════ FINE ABOVE-THE-FOLD · §4.8 SOTTO LA PIEGA ══════════
     +'<div class="detail-below-v2">'
-
-    // Prezzo + presale info (resta accessibile, ora sotto-piega come "scheda prodotto")
-    +'<div class="product-info-v2 dtab-info">'
-    +(brand?'<div class="product-brand">'+brand+'</div>':'')
-    +'<div class="product-price-row">'
-    +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' '+tokIcon('ARIA',18)+'</div>'
-    +'<div class="product-price-aria">'
-    +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-400);margin-right:6px">'+a.block_price_aria+'</span>':'')
-    +'<span class="it">per Step</span><span class="en">per Step</span> &middot; <span class="it">percorso di</span><span class="en">trail of</span> '+a.total_blocks.toLocaleString('it-IT')+' Step'
-    +(isPresale?' &middot; <span style="color:var(--aria)">PRESALE</span>':'')
-    +'</div>'
-    +'</div>'
-    +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>&#9935; 2x MINING BOOST</strong> — <span class="it">Compra in presale e guadagna il doppio dei ROBI</span><span class="en">Buy in presale and earn 2x ROBI</span></div>':'')
-    +(a.description?'<p class="product-desc">'+a.description+'</p>':'')
-    +(model?'<div class="product-model">'+model+'</div>':'')
-    +(condition?'<div class="product-condition">'+condition+'</div>':'')
-    +(highlights.length>0
-      ?'<ul class="product-highlights">'+highlights.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
-      :'')
-    +(included.length>0
-      ?'<div class="product-included-label"><span class="it">Contenuto della confezione</span><span class="en">What\'s included</span></div>'
-      +'<ul class="product-included">'+included.map(function(h){return '<li>'+h+'</li>'}).join('')+'</ul>'
-      :'')
-    +durationBadge(a.duration_type)
-    +'</div>'
 
     // Accordion dettagli airdrop
     +'<div class="dtab-info">'
@@ -4125,7 +4141,7 @@ function _renderPartCard(item,isArchive){
     +imgHtml
     +'<div class="my-card-info">'
     +'<div class="my-card-title">'+a.title+'</div>'
-    +'<div class="my-card-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+a.category+' &middot; '+badge+deadlineHtml+'</div>'
+    +'<div class="my-card-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+((a.submitted_by&&_session&&_session.user&&a.submitted_by===_session.user.id)?'<span class="owner-pill"><span class="it">TUO · sei il venditore</span><span class="en">YOURS · you\'re the seller</span></span>':'')+a.category+' &middot; '+badge+deadlineHtml+'</div>'
     +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> Step &middot; '+item.spent+' ARIA</div>'
     +'</div></div>'
     +revealHtml
