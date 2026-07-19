@@ -1479,3 +1479,13 @@ body.detail-open #tab-explore > *:not(#detail){display:none!important}
   .salita-wrap{overflow:hidden}
   .salita-head,.salita-meta{flex-wrap:wrap;row-gap:4px}
 }
+
+/* ── Audit 19 lug run-1 · contrasto theme-esplicito (immune al var-mixing) ── */
+/* Pillole categoria: leggibili su entrambi i temi, attiva = rosso pieno + bianco */
+html:not([data-theme="dark"]) .cat-pill{color:#455364;border-color:#D4DBE3}
+html[data-theme="dark"] .cat-pill{color:#AEB9C6;border-color:#3A434F}
+.cat-pill.active{background:#EF3E4F!important;border-color:#EF3E4F!important;color:#fff!important}
+.cat-pill.active:hover{color:#fff!important}
+/* Select della dapp: mai bianco-su-bianco, in nessun tema */
+#tab-explore select,#etb-sort-select{border:1px solid #D4DBE3;background:#FFFFFF;color:#161D26;border-radius:8px;padding:6px 10px}
+html[data-theme="dark"] #tab-explore select,html[data-theme="dark"] #etb-sort-select{border-color:#3A434F;background:#1E242C;color:#E8EAED}
