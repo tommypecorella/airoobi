@@ -22,15 +22,13 @@ var CSS=''
 +'html[data-lang="en"] .app-footer .en{display:inline}'
 +'html[data-lang="en"] .app-footer .it{display:none}'
 /* punto 10 (15 lug 2026): box condivisione su tutte le pagine */+'.app-share{max-width:680px;margin:36px auto 0;padding:16px 20px;border:1px solid var(--gray-800,#E3E8EF);border-radius:14px;display:flex;flex-wrap:wrap;align-items:center;gap:10px;justify-content:center;font-family:var(--font-b,Inter,sans-serif)}'+'.app-share-label{font-family:var(--font-m,monospace);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gray-500,#8A97A8);width:100%;text-align:center;margin-bottom:2px}'+'.app-share a,.app-share button{display:inline-flex;align-items:center;gap:6px;border:1px solid #D4DBE3;background:none;color:#33404F;font-size:12px;font-weight:600;padding:8px 14px;border-radius:999px;cursor:pointer;text-decoration:none;transition:all .15s}'
-+'html[data-theme="dark"] .app-share a,html[data-theme="dark"] .app-share button{border-color:#3A434F;color:#AEB9C6}'
++'html[data-theme="dark"] .app-share a,html[data-theme="dark"] .app-share button{border-color:#6B7686;color:#8A94A6}'
 /* ── Audit 19 lug · contrasti condivisi theme-espliciti (scanner WCAG) ── */
 +'html:not([data-theme="dark"]) .topbar-nav a{color:#455364!important}'
 +'html[data-theme="dark"] .topbar-nav a{color:#AEB9C6!important}'
 +'.topbar-nav a.active,.topbar-nav a:hover{color:#EF3E4F!important}'
 +'html:not([data-theme="dark"]) .lang-toggle{color:#455364!important;border-color:#D4DBE3!important}'
 +'html[data-theme="dark"] .lang-toggle{color:#AEB9C6!important}'
-+'html:not([data-theme="dark"]) .tb-user-menu-item{color:#33404F!important}'
-+'html[data-theme="dark"] .tb-user-menu-item{color:#C6CFD9!important}'
 /* KAS: teal scuro in light, ovunque (inline var(--kas) compreso) */
 +'html:not([data-theme="dark"]) body{--kas:#0FA88C}'
 +'html:not([data-theme="dark"]) .kas,html:not([data-theme="dark"]) .cf-kas{color:#0FA88C!important}'
@@ -38,7 +36,13 @@ var CSS=''
 +'html:not([data-theme="dark"]) .exp-chart-range{color:#455364!important}'
 +'html[data-theme="dark"] .exp-chart-range{color:#AEB9C6!important}'
 /* Treasury: semaforo Green leggibile in light */
-+'html:not([data-theme="dark"]) .band-status{color:#0B6B37!important}'+'.app-share a:hover,.app-share button:hover{border-color:var(--gold,#EF3E4F);color:var(--gold,#EF3E4F)}';
++'html:not([data-theme="dark"]) .band-status{color:#0B6B37!important}'
+/* round-3: cat-pill globale (anche hub pubblico), ticker dashboard, tok-coin in light */
++'html:not([data-theme="dark"]) .cat-pill{color:#455364!important;border-color:#D4DBE3!important}'
++'html[data-theme="dark"] .cat-pill{color:#AEB9C6!important}'
++'.cat-pill.active{background:#EF3E4F!important;border-color:#EF3E4F!important;color:#fff!important}'
++'html:not([data-theme="dark"]) #activity-feed>div{color:#455364!important}'
++'html:not([data-theme="dark"]) .tok-coin{color:#33404F!important}'+'.app-share a:hover,.app-share button:hover{border-color:var(--gold,#EF3E4F);color:var(--gold,#EF3E4F)}'
 /* punto 13 (15 lug 2026): simbolini (A)ria / (R)obi inline nei testi */+'.tok-coin{white-space:nowrap}'+'.tok-coin::before{content:"";display:inline-block;width:.92em;height:.92em;margin-right:.22em;vertical-align:-0.1em;background-size:contain;background-repeat:no-repeat}'+'.tok-aria::before{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%277%27 fill=%27none%27 stroke=%27%234A9EFF%27 stroke-width=%271.6%27/%3E%3Ctext x=%278%27 y=%2711.6%27 text-anchor=%27middle%27 fill=%27%234A9EFF%27 font-size=%279.5%27 font-weight=%27700%27 font-family=%27Inter,sans-serif%27%3EA%3C/text%3E%3C/svg%3E")}'+'.tok-robi::before{background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Ccircle cx=%278%27 cy=%278%27 r=%277%27 fill=%27none%27 stroke=%27%23EF3E4F%27 stroke-width=%271.6%27/%3E%3Ctext x=%278%27 y=%2711.6%27 text-anchor=%27middle%27 fill=%27%23EF3E4F%27 font-size=%279.5%27 font-weight=%27700%27 font-family=%27Inter,sans-serif%27%3ER%3C/text%3E%3C/svg%3E")}';
 
 var LINKS=[
