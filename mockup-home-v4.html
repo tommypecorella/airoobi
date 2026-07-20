@@ -93,6 +93,27 @@ body{background:#05080F;color:var(--ink);font-family:var(--fb);-webkit-font-smoo
 .nv svg{width:20px;height:20px;stroke:currentColor;display:block;margin:0 auto 3px}
 .nv.on{color:var(--red)}
 .foot{margin:34px 16px 0;text-align:center;font-family:var(--fm);font-size:9px;letter-spacing:1px;color:var(--ink3)}
+
+/* ── Learning path ── */
+.qmark{width:30px;height:30px;border-radius:50%;border:1px solid var(--line);background:none;color:var(--ink2);font-family:var(--fd);font-size:15px;font-weight:700;cursor:pointer}
+.learn-strip{display:flex;align-items:center;gap:10px;width:calc(100% - 24px);margin:2px 12px 10px;background:rgba(47,107,255,.08);border:1px solid rgba(47,107,255,.35);border-radius:14px;padding:11px 14px;color:var(--ink);font-family:var(--fb);font-size:12.5px;text-align:left;cursor:pointer}
+.learn-strip svg{width:18px;height:18px;color:var(--blu);flex-shrink:0}
+.learn-strip span{flex:1}
+.learn-strip em{font-style:normal;font-family:var(--fm);font-size:11px;color:var(--aria);white-space:nowrap}
+.learn-strip em i{font-style:normal;font-size:9px;letter-spacing:1px}
+#learn{display:none;position:fixed;inset:0;z-index:200;background:rgba(4,7,13,.94);backdrop-filter:blur(4px)}
+#learn.open{display:flex;align-items:center;justify-content:center;padding:24px}
+.lcard{width:100%;max-width:360px;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px 24px 22px;text-align:center}
+.l-ico{width:54px;height:54px;margin:0 auto 16px;border-radius:50%;background:rgba(47,107,255,.12);display:flex;align-items:center;justify-content:center}
+.l-ico svg{width:26px;height:26px;stroke:var(--blu)}
+.l-t{font-family:var(--fd);font-size:20px;font-weight:600;margin-bottom:10px}
+.l-x{font-size:14px;line-height:1.6;color:var(--ink2);min-height:112px}
+.l-x b{color:var(--ink);font-weight:600}
+.l-dots{display:flex;justify-content:center;gap:6px;margin:18px 0 16px}
+.l-dots i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.15)}
+.l-dots i.on{background:var(--red);transform:scale(1.25)}
+.l-next{width:100%;background:var(--red);color:#fff;border:none;border-radius:12px;padding:14px;font-family:var(--fd);font-size:15px;font-weight:700;cursor:pointer}
+.l-skip{margin-top:10px;background:none;border:none;color:var(--ink3);font-size:12px;cursor:pointer}
 </style>
 </head>
 <body>
@@ -102,9 +123,17 @@ body{background:#05080F;color:var(--ink);font-family:var(--fb);-webkit-font-smoo
   <div class="top">
     <div class="logo">AIR<b>OO</b>BI</div>
     <div class="sp"></div>
+    <button class="qmark" onclick="openLearn()" aria-label="Come funziona" title="Come funziona">?</button>
     <span class="pill-aria"><svg width="13" height="13" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="currentColor" font-size="9" font-weight="700">A</text></svg>8180</span>
     <div class="av">S</div>
   </div>
+
+  <!-- LEARNING PATH · strip per i nuovi (riapribile sempre col «?») -->
+  <button class="learn-strip" onclick="openLearn()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+    <span><b>Nuovo qui?</b> Impara AIROOBI in 2 minuti — 5 tappe</span>
+    <em>+100 <i>ARIA</i></em>
+  </button>
 
   <!-- HERO · l'oggetto è l'eroe -->
   <div class="hero">
@@ -130,6 +159,34 @@ body{background:#05080F;color:var(--ink);font-family:var(--fb);-webkit-font-smoo
       </div>
       <button class="cta">Entra in corsa<small>10 ARIA A STEP · SALITA DETERMINISTICA</small></button>
       <div class="h-note">Comunque vada, sul percorso raccogli <b>fiori ROBI</b>.</div>
+    </div>
+  </div>
+
+  <!-- HERO 2 · feed: più airdrop live = più hero card in scroll -->
+  <div class="hero" style="margin-top:14px">
+    <div class="hero-img" style="background:#0E1626">
+      <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center">
+        <svg width="90" height="90" viewBox="0 0 24 24" fill="none" stroke="#3d4a63" stroke-width="1.2"><path d="M4 15l12-8 2 3-12 8zM14 5l3-2 3 4-3 2zM8 18l-1 4M11 17l2 5"/><circle cx="7" cy="17" r="1.6"/></svg>
+      </div>
+      <div class="hi-top">
+        <span class="chip chip-live"><i></i>IN CORSA</span>
+        <span class="chip chip-time">chiude tra 5g 8h</span>
+      </div>
+    </div>
+    <div class="hero-body">
+      <div class="h-title">Telescopio Dobson 200 mm</div>
+      <div class="h-sub">
+        <span class="val">Valore certificato €480–560</span>
+        <span class="h-cert"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.5 13l1.5 8-5-3-5 3 1.5-8"/></svg>EVALOBI</span>
+      </div>
+      <div class="trail">
+        <div class="trail-bar"><i style="width:31%"></i></div>
+        <div class="trail-meta">
+          <span>402 / 1.290 Step verso la vetta</span>
+          <span class="racers"><span class="r">L</span><span class="r">G</span><span class="r">+5</span>&nbsp;7 in corsa</span>
+        </div>
+      </div>
+      <button class="cta">Entra in corsa<small>5 ARIA A STEP · SALITA DETERMINISTICA</small></button>
     </div>
   </div>
 
@@ -193,7 +250,45 @@ body{background:#05080F;color:var(--ink);font-family:var(--fb);-webkit-font-smoo
   </div>
 
 </div>
+<!-- LEARNING OVERLAY · componente riusabile: stesso deck per venditori, punteggio, EVALOBI… -->
+<div id="learn" onclick="if(event.target===this)closeLearn()">
+  <div class="lcard">
+    <div class="l-ico" id="l-ico"></div>
+    <div class="l-t" id="l-t"></div>
+    <div class="l-x" id="l-x"></div>
+    <div class="l-dots" id="l-dots"></div>
+    <button class="l-next" id="l-next" onclick="nextLesson()"></button>
+    <button class="l-skip" onclick="closeLearn()">Chiudi — lo riapri dal «?» in alto</button>
+  </div>
+</div>
+
 <script>
+// ── Learning path (mock interattivo) ──
+var LESSONS=[
+ {t:'L\'airdrop',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z"/></svg>',
+  x:'Un <b>oggetto vero</b>, valutato e certificato. Una <b>corsa a Step</b> verso la vetta. Chi è in vetta alla chiusura lo ottiene — <b>consegna inclusa</b>.'},
+ {t:'Gli ARIA',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="10" font-weight="700">A</text></svg>',
+  x:'Il carburante degli Step. In questa fase di test <b>si guadagnano, non si comprano</b> — gratis, ogni giorno. Al lancio ufficiale saranno a listino (0,10&nbsp;€) e i saldi di test si azzereranno: <b>qui si impara senza rischi</b>.'},
+ {t:'Step & Salita',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 20h18L14 6l-3 5-2-3z"/></svg>',
+  x:'Ogni Step ti fa salire. La posizione è un <b>punteggio deterministico</b>: i tuoi Step, la fedeltà alla categoria, il boost di garanzia. <b>Niente caso</b>: conta il percorso.'},
+ {t:'I fiori ROBI',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M12 11v9M9 22h6"/></svg>',
+  x:'Sul sentiero raccogli <b>fiori ROBI</b>: reward che restano tuoi <b>comunque vada la corsa</b>. In futuro riscattabili in KAS, on-chain.'},
+ {t:'La vetta',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M8 21h8M12 17v4M17 4H7v4a5 5 0 0010 0zM7 6H4a3 3 0 003 3M17 6h3a3 3 0 01-3 3"/></svg>',
+  x:'Alla chiusura, chi è in vetta <b>ottiene l\'oggetto</b>. Tutti gli altri ricevono un <b>ROBI di ringraziamento</b> per la corsa. Pronto?'}
+];
+var _li=0;
+function renderLesson(){
+  var l=LESSONS[_li];
+  document.getElementById('l-ico').innerHTML=l.ico;
+  document.getElementById('l-t').textContent=l.t;
+  document.getElementById('l-x').innerHTML=l.x;
+  document.getElementById('l-dots').innerHTML=LESSONS.map(function(_,i){return '<i class="'+(i===_li?'on':'')+'"></i>'}).join('');
+  document.getElementById('l-next').textContent=_li<LESSONS.length-1?'Avanti':'Entra in corsa →';
+}
+function openLearn(){_li=0;renderLesson();document.getElementById('learn').classList.add('open');}
+function closeLearn(){document.getElementById('learn').classList.remove('open');}
+function nextLesson(){if(_li<LESSONS.length-1){_li++;renderLesson();}else{closeLearn();window.scrollTo({top:0,behavior:'smooth'});}}
+
 // countdown reale sulla deadline vera di Astrolab
 (function(){
   var dl=new Date('2026-07-23T04:00:00+02:00');
