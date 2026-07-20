@@ -2690,7 +2690,10 @@ async function openDetail(id){
     +'<div class="info-tile"><div class="it-label"><span class="it">Raccolta ROBI</span><span class="en">ROBI pickup</span></div><div class="it-value" style="color:var(--gold)">1 '+tokIcon('ROBI',16)+' / '+_rate+'</div><div class="it-sub">'+(isPresale?'<span class="it">presale: 1 ogni '+Math.max(1,Math.ceil(_rate/2))+' Step</span><span class="en">presale: 1 every '+Math.max(1,Math.ceil(_rate/2))+' Steps</span>':'<span class="it">1 fiore ogni '+_rate+' Step</span><span class="en">1 flower every '+_rate+' Steps</span>')+'</div></div>'
     +(dl?'<div class="info-tile it-wide"><div class="it-label"><span class="it">Scadenza</span><span class="en">Deadline</span></div><div class="it-value it-date">'+dl+'</div><div class="it-sub"><span class="it">chiusura della corsa</span><span class="en">race closes</span></div></div>':'')
     +'</div>';
-  var productHtml=''
+  // Scheda prodotto solo se ha contenuti reali — mai cornice vuota (il durationBadge
+  // da solo non basta: la scadenza vive già nella tile KPI)
+  var _hasProductInfo=!!(brand||model||condition||highlights.length||included.length||isPresale);
+  var productHtml=!_hasProductInfo?'':''
     +'<div class="product-info-v2 dtab-info">'
     +(brand?'<div class="product-brand">'+brand+'</div>':'')
     +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>&#9935; PRESALE 2x</strong> — <span class="it">Ogni Step in presale raccoglie il doppio dei ROBI</span><span class="en">Every presale Step picks up double ROBI</span></div>':'')
