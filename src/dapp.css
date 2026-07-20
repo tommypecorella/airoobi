@@ -1623,7 +1623,8 @@ html:not([data-theme="dark"]) .info-tile .it-value{color:#15203A}
 .detail-badges .heart-btn-v2.hb-inline.active::before{font-size:13px}
 /* Su schermi stretti la riga badge si compatta: tutto su una riga, niente cuore orfano */
 @media(max-width:420px){
-  .detail-badges{gap:6px}
+  .detail-badges{gap:5px}
   .detail-badges .detail-chip-fase,.detail-badges .do-badge-btn{padding:4px 8px;font-size:10px}
+  .detail-badges .do-badge-btn{letter-spacing:.4px}
   .detail-badges .rm-chip.rm-ico{width:28px;min-width:28px}
 }
