@@ -1546,13 +1546,29 @@ async function loadProfilePage(){
   try{
     var token=await getValidToken();
     if(!token)return;
-    var res=await fetch(SB_URL+'/rest/v1/profiles?select=first_name,last_name,username,created_at&id=eq.'+_session.user.id,{
+    var res=await fetch(SB_URL+'/rest/v1/profiles?select=first_name,last_name,username,created_at,avatar_url&id=eq.'+_session.user.id,{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}
     });
     if(!res.ok)return;
     var rows=await res.json();
     if(!rows||!rows.length)return;
     var p=rows[0];
+    // 20 lug (Skeezu): foto profilo — cerchio con l'immagine attuale o l'iniziale
+    var pa=document.getElementById('profilo-avatar');
+    if(pa){
+      if(p.avatar_url){
+        pa.innerHTML='';
+        var ai=new Image();ai.src=p.avatar_url+'?t='+Date.now();ai.alt='';
+        ai.style.cssText='width:100%;height:100%;object-fit:cover';
+        pa.appendChild(ai);
+      }else{
+        pa.textContent=(_session.user.email||'?').charAt(0).toUpperCase();
+      }
+    }
+    var ab=document.getElementById('profilo-avatar-btn');
+    if(ab)ab.innerHTML=p.avatar_url
+      ?'<span class="it">Cambia foto</span><span class="en">Change photo</span>'
+      :'<span class="it">Aggiungi foto</span><span class="en">Add photo</span>';
     _currentProfile={first_name:p.first_name||'',last_name:p.last_name||'',username:p.username||''};
     var fullName=((p.first_name||'')+' '+(p.last_name||'')).trim();
     if(nameEl)nameEl.textContent=fullName||(_session.user.email?_session.user.email.split('@')[0]:'—');
@@ -1562,6 +1578,72 @@ async function loadProfilePage(){
       sinceEl.textContent=d.toLocaleDateString(document.documentElement.getAttribute('data-lang')==='en'?'en-US':'it-IT',{year:'numeric',month:'long',day:'numeric'});
     }
   }catch(e){}
+}
+
+// ── Foto profilo (20 lug, Skeezu): upload avatar dal profilo ──
+// Ridimensiona client-side a 512px, upsert su storage avatars/<uid>/avatar.jpg
+// (stesso path degli avatar esistenti), poi PATCH profiles.avatar_url.
+function _resizeImageToJpeg(file,maxSide){
+  return new Promise(function(resolve,reject){
+    var img=new Image();
+    img.onload=function(){
+      try{
+        var w=img.width,h=img.height,s=Math.min(1,maxSide/Math.max(w,h));
+        var c=document.createElement('canvas');
+        c.width=Math.max(1,Math.round(w*s));c.height=Math.max(1,Math.round(h*s));
+        c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+        c.toBlob(function(b){b?resolve(b):reject(new Error('canvas'))},'image/jpeg',.85);
+      }catch(e){reject(e);}
+      finally{URL.revokeObjectURL(img.src);}
+    };
+    img.onerror=function(){URL.revokeObjectURL(img.src);reject(new Error('img'));};
+    img.src=URL.createObjectURL(file);
+  });
+}
+function _setAvatarEverywhere(url){
+  var bust=url+'?t='+Date.now();
+  var pa=document.getElementById('profilo-avatar');
+  if(pa){pa.innerHTML='';var i1=new Image();i1.src=bust;i1.style.cssText='width:100%;height:100%;object-fit:cover';pa.appendChild(i1);}
+  var ta=document.getElementById('topbar-avatar');
+  if(ta){
+    var old=ta.querySelector('img');if(old)old.remove();
+    var le=document.getElementById('avatar-letter');if(le)le.style.display='none';
+    var i2=new Image();i2.src=bust;ta.appendChild(i2);
+  }
+}
+async function profiloAvatarUpload(file){
+  var msg=document.getElementById('profilo-avatar-msg');
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  if(!file)return;
+  if(!/^image\//.test(file.type)){if(msg)msg.textContent=lang==='it'?'Scegli un\'immagine':'Pick an image';return;}
+  if(file.size>8*1024*1024){if(msg)msg.textContent=lang==='it'?'Massimo 8 MB':'Max 8 MB';return;}
+  if(msg)msg.textContent=lang==='it'?'Caricamento…':'Uploading…';
+  try{
+    var blob=await _resizeImageToJpeg(file,512);
+    var token=await getValidToken();
+    if(!token||!_session)throw new Error('no session');
+    var path='avatars/'+_session.user.id+'/avatar.jpg';
+    var up=await fetch(SB_URL+'/storage/v1/object/'+path,{
+      method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'image/jpeg','x-upsert':'true'},
+      body:blob
+    });
+    if(!up.ok)throw new Error('upload '+up.status);
+    var url=SB_URL+'/storage/v1/object/public/'+path;
+    var pr=await fetch(SB_URL+'/rest/v1/profiles?id=eq.'+_session.user.id,{
+      method:'PATCH',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({avatar_url:url})
+    });
+    if(!pr.ok)throw new Error('profile '+pr.status);
+    _setAvatarEverywhere(url);
+    if(msg)msg.textContent='';
+    var ab=document.getElementById('profilo-avatar-btn');
+    if(ab)ab.innerHTML='<span class="it">Cambia foto</span><span class="en">Change photo</span>';
+    if(typeof showToast==='function')showToast(lang==='it'?'Foto aggiornata':'Photo updated','success');
+  }catch(e){
+    if(msg)msg.textContent=lang==='it'?'Errore, riprova':'Error, try again';
+  }
 }
 
 // ── Round 6 · Profilo Edit Modal (username feature) ──

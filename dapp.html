@@ -1266,6 +1266,15 @@
           <span style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);text-transform:uppercase"><span class="it">Account</span><span class="en">Account</span></span>
           <button class="profilo-edit-btn" onclick="showProfiloEditModal()"><span class="it">Modifica</span><span class="en">Edit</span></button>
         </div>
+        <!-- Foto profilo (20 lug, Skeezu): aggiungi/cambia avatar -->
+        <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px">
+          <div id="profilo-avatar" style="width:72px;height:72px;border-radius:50%;background:var(--gray-800);border:2px solid var(--gray-700);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;font-family:var(--font-h);font-size:28px;color:var(--gold)">?</div>
+          <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start">
+            <button class="profilo-edit-btn" id="profilo-avatar-btn" onclick="document.getElementById('profilo-avatar-file').click()"><span class="it">Aggiungi foto</span><span class="en">Add photo</span></button>
+            <span id="profilo-avatar-msg" style="font-size:11px;color:var(--gray-500)"></span>
+          </div>
+          <input type="file" id="profilo-avatar-file" accept="image/*" style="display:none" onchange="profiloAvatarUpload(this.files[0]);this.value=''">
+        </div>
         <div class="profilo-row" style="display:flex;flex-direction:column;gap:6px;margin-bottom:18px">
           <span style="font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;color:var(--gray-400);text-transform:uppercase">Email</span>
           <span id="profilo-email" style="font-size:15px;color:var(--white);word-break:break-all">—</span>
@@ -1749,8 +1758,8 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.93.0"></script>
-<div id="footer-mount" data-version="alfa-20.07.2026-4.93.2"></div>
+<script src="/src/dapp.js?v=4.94.0"></script>
+<div id="footer-mount" data-version="alfa-20.07.2026-4.94.0"></div>
 <script src="/src/footer.js?v=1.17.1"></script>
 </body>
 </html>
