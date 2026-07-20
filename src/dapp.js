@@ -2679,19 +2679,20 @@ async function openDetail(id){
     }
   }catch(e){}
 
-  // F · Scheda prodotto (spostata in colonna SX — ordine IA 19 lug; la descrizione
-  // estesa vive nel collassabile sotto al titolo, qui non si duplica)
+  // F · Scheda prodotto (20 lug Skeezu: tab INFO dashboard-style — i numeri chiave
+  // vivono nelle tile KPI qui sotto; via la price-row e l'accordion Dettagli, zero doppioni)
+  var _rate=calcMiningRate(a);
+  var infoTilesHtml=''
+    +'<div class="info-tiles dtab-info">'
+    +'<div class="info-tile"><div class="it-label"><span class="it">Prezzo Step</span><span class="en">Step price</span></div><div class="it-value" style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA',16)+'</div><div class="it-sub">'+(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through">'+a.block_price_aria+'</span> &middot; PRESALE':'<span class="it">per Step</span><span class="en">per Step</span>')+'</div></div>'
+    +'<div class="info-tile"><div class="it-label"><span class="it">Percorso</span><span class="en">Trail</span></div><div class="it-value">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="it-sub"><span class="it">Step totali</span><span class="en">total Steps</span></div></div>'
+    +'<div class="info-tile"><div class="it-label"><span class="it">Alla vetta</span><span class="en">To the summit</span></div><div class="it-value">'+remaining.toLocaleString('it-IT')+'</div><div class="it-sub"><span class="it">Step rimanenti</span><span class="en">Steps left</span></div></div>'
+    +'<div class="info-tile"><div class="it-label"><span class="it">Raccolta ROBI</span><span class="en">ROBI pickup</span></div><div class="it-value" style="color:var(--gold)">1 '+tokIcon('ROBI',16)+' / '+_rate+'</div><div class="it-sub">'+(isPresale?'<span class="it">presale: 1 ogni '+Math.max(1,Math.ceil(_rate/2))+' Step</span><span class="en">presale: 1 every '+Math.max(1,Math.ceil(_rate/2))+' Steps</span>':'<span class="it">1 fiore ogni '+_rate+' Step</span><span class="en">1 flower every '+_rate+' Steps</span>')+'</div></div>'
+    +(dl?'<div class="info-tile it-wide"><div class="it-label"><span class="it">Scadenza</span><span class="en">Deadline</span></div><div class="it-value it-date">'+dl+'</div><div class="it-sub"><span class="it">chiusura della corsa</span><span class="en">race closes</span></div></div>':'')
+    +'</div>';
   var productHtml=''
     +'<div class="product-info-v2 dtab-info">'
     +(brand?'<div class="product-brand">'+brand+'</div>':'')
-    +'<div class="product-price-row">'
-    +'<div class="product-price">'+(isPresale&&a.presale_block_price?a.presale_block_price:a.block_price_aria)+' '+tokIcon('ARIA',18)+'</div>'
-    +'<div class="product-price-aria">'
-    +(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through;color:var(--gray-400);margin-right:6px">'+a.block_price_aria+'</span>':'')
-    +'<span class="it">per Step</span><span class="en">per Step</span> &middot; <span class="it">percorso di</span><span class="en">trail of</span> '+a.total_blocks.toLocaleString('it-IT')+' Step'
-    +(isPresale?' &middot; <span style="color:var(--aria)">PRESALE</span>':'')
-    +'</div>'
-    +'</div>'
     +(isPresale?'<div style="background:rgba(74,158,255,.08);border:1px solid rgba(74,158,255,.25);padding:8px 12px;margin-top:8px;font-size:12px;color:var(--aria);letter-spacing:.5px"><strong>&#9935; PRESALE 2x</strong> — <span class="it">Ogni Step in presale raccoglie il doppio dei ROBI</span><span class="en">Every presale Step picks up double ROBI</span></div>':'')
     +(model?'<div class="product-model">'+model+'</div>':'')
     +(condition?'<div class="product-condition">'+condition+'</div>':'')
@@ -2742,8 +2743,9 @@ async function openDetail(id){
     // B · Fasi subito
     +buildPhaseStepper(a)
 
-    // F · Scheda prodotto (tab Info su mobile)
+    // F · Scheda prodotto (tab Info su mobile) — dashboard-style: galleria → KPI → scheda
     +galleryHtml
+    +infoTilesHtml
     +productHtml
 
     // C · Estendi la corsa (Impostazioni su mobile, coda su desktop)
@@ -2788,17 +2790,8 @@ async function openDetail(id){
     // ══════════ FINE ABOVE-THE-FOLD · §4.8 SOTTO LA PIEGA ══════════
     +'<div class="detail-below-v2">'
 
-    // Accordion dettagli airdrop
-    +'<div class="dtab-info">'
-    +acc('airdrop','Dettagli airdrop','Airdrop details',
-      '<ul class="acc-list neutral">'
-      +'<li><span class="it">Prezzo per Step:</span><span class="en">Price per Step:</span> <strong style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA')+'</strong></li>'
-      +'<li><span class="it">Lunghezza percorso:</span><span class="en">Trail length:</span> <strong>'+a.total_blocks.toLocaleString('it-IT')+' Step</strong></li>'
-      +'<li><span class="it">Step alla vetta:</span><span class="en">Steps to the summit:</span> <strong>'+remaining.toLocaleString('it-IT')+'</strong></li>'
-      +'<li><span class="it">Raccolta ROBI:</span><span class="en">ROBI pickup:</span> <strong style="color:var(--gold)">1 '+tokIcon('ROBI')+' <span class="it">ogni</span><span class="en">every</span> '+calcMiningRate(a)+' Step</strong>'+(isPresale?' <span style="color:var(--aria)">(presale: '+Math.max(1,Math.ceil(calcMiningRate(a)/2))+' Step)</span>':'')+'</li>'
-      +(dl?'<li><span class="it">Scadenza:</span><span class="en">Deadline:</span> <strong>'+dl+'</strong></li>':'')
-      +'</ul>',false)
-    +'</div>'
+    // Accordion "Dettagli airdrop" RIMOSSO (20 lug, Skeezu): i dati vivono nelle
+    // tile KPI del tab Info (infoTilesHtml) — dashboard-style, zero doppioni.
 
     // Mockup v3 (mappa di consolidamento): detail-myblocks e detail-stats ELIMINATI —
     // i numeri personali vivono SOLO nel mystrip, i parametri SOLO nei Dettagli airdrop.
