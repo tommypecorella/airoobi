@@ -2572,7 +2572,7 @@ async function openDetail(id){
     +'<button id="evalobi-chip" class="evalobi-chip" style="display:none" onclick="openEvalobiPop()" title="Certificato EVALOBI — consulta"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="6"/><path d="M15.5 13l1.5 8-5-3-5 3 1.5-8"/></svg>EVALOBI</button>'
     +'</span>'
     +'<div class="detail-header-actions">'
-    +'<button class="heart-btn-v2'+(isInWatchlist(a.id)?' active':'')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" title="Preferito" aria-label="Aggiungi ai preferiti">&#9825;</button>'
+    // 20 lug (Skeezu): il cuore vive nella riga badge coi tondini — qui resta solo lo share
     +'<button class="share-btn-v2" onclick="shareAirdrop(\''+a.id+'\',\''+titleSafe+'\')" title="Condividi" aria-label="Condividi airdrop">'
     +'<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>'
     +'</button>'
@@ -2730,6 +2730,8 @@ async function openDetail(id){
       // 20 lug (Skeezu): meta di corsa a SOLE icone in riga coi badge — tap → popup informativo
       +(!isConcluded&&a.deadline?'<button class="rm-chip rm-ico" onclick="showRaceInfo(\'time\')" aria-label="Tempo rimanente" title="Tempo rimanente"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="detail-countdown" data-deadline="'+a.deadline+'"></span></button>':'')
       +(!isConcluded?'<button class="rm-chip rm-ico" onclick="showRaceInfo(\'racers\')" aria-label="In corsa" title="In corsa"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><b id="race-meta-n">—</b></button>':'')
+      // 20 lug (Skeezu): cuore preferiti in fila coi tondini della riga badge
+      +'<button class="heart-btn-v2 hb-inline'+(isInWatchlist(a.id)?' active':'')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" title="Preferito" aria-label="Aggiungi ai preferiti">&#9825;</button>'
       +'</div>':'')
 
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'

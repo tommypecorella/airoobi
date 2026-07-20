@@ -1617,3 +1617,7 @@ html:not([data-theme="dark"]) .detail-masthead{background:linear-gradient(160deg
 .info-tile .it-sub{font-size:10px;color:var(--gray-500);margin-top:4px;font-family:var(--font-m);letter-spacing:.5px}
 .info-tile.it-wide{grid-column:1/-1}
 html:not([data-theme="dark"]) .info-tile .it-value{color:#15203A}
+
+/* ═ 20 lug (Skeezu) · Cuore preferiti in riga badge, taglia tondini ═ */
+.detail-badges .heart-btn-v2.hb-inline{width:26px;height:26px;min-width:26px;font-size:13px}
+.detail-badges .heart-btn-v2.hb-inline.active::before{font-size:13px}
