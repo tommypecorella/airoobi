@@ -2513,6 +2513,10 @@ function openEvalobiPop(){
 }
 
 async function openDetail(id){
+  // v4 (20 lug): il dettaglio vive dentro #tab-explore — se arrivi dal feed home
+  // (o da altrove) prima si attiva il tab, altrimenti il pannello resta invisibile.
+  var _te=document.getElementById('tab-explore');
+  if(_te&&_te.style.display==='none')navigateTo('explore');
   var a=_airdrops.find(function(x){return x.id===id});
   if(!a){
     // PR-5 F7: gli airdrop conclusi non sono in _airdrops (solo presale/sale).
