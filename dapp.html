@@ -28,7 +28,7 @@
 <meta name="color-scheme" content="light dark">
 <style>[data-lang="it"] .en,[data-lang="en"] .it{display:none!important}</style>
 <link rel="stylesheet" href="/src/tokens.css?v=4.26.2">
-<link rel="stylesheet" href="/src/dapp.css?v=4.86.0">
+<link rel="stylesheet" href="/src/dapp.css?v=4.87.0">
 <link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.51.0">
 <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
 <script src="/src/theme.js?v=4.50.1"></script>
@@ -52,6 +52,10 @@
     <a href="/" data-page="home" onclick="navigateTo('home',event)">
       <svg viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1m-2 0h2"/></svg>
       <span class="it">Home</span><span class="en">Home</span>
+    </a>
+    <a href="/guadagna" data-page="earn" onclick="navigateTo('earn',event)">
+      <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <span class="it">Guadagna</span><span class="en">Earn</span>
     </a>
     <div class="nav-dropdown nav-airdrops-wrap" style="position:relative">
       <a href="/airdrops" data-page="explore" class="nav-primary" onclick="navigateTo('explore',event)">
@@ -119,6 +123,7 @@
   <div class="topbar-right">
     <span class="topbar-bal topbar-bal-clickable" id="topbar-bal" onclick="navigateTo('wallet')" role="button" tabindex="0" aria-label="Vai al portafoglio · saldo ARIA" title="Vai al portafoglio"><svg class="topbar-bal-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#4A9EFF" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#4A9EFF" font-size="9" font-weight="700" font-family="var(--font-b)">A</text></svg><span id="topbar-aria-val">—</span></span>
     <span class="topbar-bal topbar-bal-robi topbar-bal-clickable" id="topbar-bal-robi" onclick="navigateTo('wallet')" role="button" tabindex="0" aria-label="Vai al portafoglio · ROBI posseduti e valore nominale" title="Vai al portafoglio · valore nominale 1 ROBI dal ROBI Explorer"><svg class="topbar-bal-icon" viewBox="0 0 16 16"><circle cx="8" cy="8" r="7" fill="none" stroke="#EF3E4F" stroke-width="1.5"/><text x="8" y="11.5" text-anchor="middle" fill="#EF3E4F" font-size="9" font-weight="700" font-family="var(--font-b)">R</text></svg><span id="topbar-robi-val">—</span><span class="topbar-robi-inline" id="topbar-robi-price" style="display:none"><span id="topbar-robi-price-val">€—</span><span id="topbar-robi-price-trend" class="topbar-robi-trend" style="display:none"></span></span></span>
+    <button class="v4-qmark" id="tb-learn" onclick="openLearn()" title="Come funziona AIROOBI" aria-label="Come funziona AIROOBI">?</button>
     <button class="notif-bell" id="notif-bell" onclick="toggleNotifPanel()" title="Notifiche">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" stroke-width="2" class="bell-icon"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
       <span class="notif-badge" id="notif-badge" style="display:none">0</span>
@@ -342,15 +347,63 @@
 <!-- MAIN -->
 <div class="main">
 
-  <!-- ═══ HOME ═══ -->
+  <!-- ═══ HOME v4 (20 lug, GO Skeezu): feed product-first — l'airdrop è l'eroe ═══ -->
   <div id="tab-home" class="dash-home" style="display:none">
+    <span class="dash-alpha-badge dash-alpha-fixed">alpha brave</span>
+
+    <!-- Learning path · strip per i nuovi (riapribile sempre dal «?» in topbar) -->
+    <button class="v4-learn-strip" id="v4-learn-strip" onclick="openLearn()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10L12 5 2 10l10 5 10-5zM6 12v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg>
+      <span><b><span class="it">Nuovo qui?</span><span class="en">New here?</span></b> <span class="it">Impara AIROOBI in 2 minuti — 6 tappe</span><span class="en">Learn AIROOBI in 2 minutes — 6 steps</span></span>
+      <em>+100 <i>ARIA</i></em>
+    </button>
+
+    <!-- Feed airdrop live (hero card, renderHomeFeed) -->
+    <div id="home-feed"></div>
+    <button class="v4-all" onclick="navigateTo('explore')"><span class="it">Tutti gli airdrop →</span><span class="en">All airdrops →</span></button>
+
+    <!-- ARIA: si guadagnano -->
+    <div class="v4-sec">
+      <div class="v4-sec-t"><span class="it">Ti servono ARIA?</span><span class="en">Need ARIA?</span></div>
+      <div class="v4-sec-s"><span class="it">Non si comprano. Si guadagnano — ogni giorno.</span><span class="en">You can't buy them. You earn them — every day.</span></div>
+      <div class="v4-earn" onclick="navigateTo('earn')">
+        <div class="v4-ecard"><div class="v4-eamt">+100</div><div class="v4-elbl"><span class="it">Ricevi ARIA</span><span class="en">Get ARIA</span></div></div>
+        <div class="v4-ecard"><div class="v4-eamt">+50</div><div class="v4-elbl"><span class="it">Timbra</span><span class="en">Check in</span></div></div>
+        <div class="v4-ecard"><div class="v4-eamt"><span class="it">fino a</span><span class="en">up to</span> +500</div><div class="v4-elbl"><span class="it">Imprese di oggi</span><span class="en">Today's feats</span></div></div>
+      </div>
+    </div>
+
+    <!-- Il vantaggio, 2 righe -->
+    <div class="v4-why">
+      <div class="v4-wrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2"><path d="M3 20h18L14 6l-3 5-2-3z"/></svg>
+        <div><b><span class="it">In vetta alla chiusura?</span><span class="en">On top at closing?</span></b> <span class="it">L'oggetto è tuo. Consegna inclusa.</span><span class="en">The item is yours. Delivery included.</span></div>
+      </div>
+      <div class="v4-wrow">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--aria)" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M12 11v9M9 22h6"/></svg>
+        <div><b><span class="it">Non arrivi in vetta?</span><span class="en">Didn't reach the top?</span></b> <span class="it">I fiori ROBI raccolti restano tuoi. Sempre.</span><span class="en">The ROBI flowers you picked stay yours. Always.</span></div>
+      </div>
+    </div>
+
+    <!-- Prossimi + proponi -->
+    <div class="v4-sec">
+      <div class="v4-sec-t"><span class="it">Prossimi airdrop</span><span class="en">Upcoming airdrops</span></div>
+      <div id="home-upcoming"></div>
+      <div class="v4-fcard" onclick="navigateTo('submit')" style="cursor:pointer">
+        <div class="v4-fimg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5" y="3" width="14" height="18" rx="2"/><line x1="5" y1="7" x2="19" y2="7"/></svg></div>
+        <div><div class="v4-fct"><span class="it">Il tuo oggetto qui</span><span class="en">Your item here</span></div><div class="v4-fcs"><span class="it">Non venderlo. Airdroppalo.</span><span class="en">Don't sell it. Airdrop it.</span></div></div>
+        <span class="v4-ftag"><span class="it">PROPONI</span><span class="en">SUBMIT</span></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GUADAGNA (ex home earnings — v4: la home è il feed airdrop) ═══ -->
+  <div id="tab-earn" class="dash-home" style="display:none">
 
     <!-- WELCOME — friendly, caldo -->
     <div style="padding:32px 0 8px;text-align:center">
       <div style="font-family:var(--font-h);font-size:clamp(26px,5vw,36px);font-weight:300;color:var(--white);line-height:1.2;margin-bottom:6px"><span class="it">Bentornato<em id="home-user-name" style="color:var(--gold);font-style:normal" data-prefix=", "></em></span><span class="en">Welcome back<em id="home-user-name-en" style="color:var(--gold);font-style:normal" data-prefix=", "></em></span></div>
-      <div style="font-family:var(--font-b);font-size:13px;color:var(--gray-400);letter-spacing:.3px"><span class="it">Il tuo spazio su AIROOBI. Accumula, partecipa, realizza.</span><span class="en">Your space on AIROOBI. Accumulate, participate, achieve.</span></div>
-      <!-- 19 lug (Skeezu): badge in alto a sx, in riga con la CTA tonda guida rapida -->
-      <span class="dash-alpha-badge dash-alpha-fixed">alpha brave</span>
+      <div style="font-family:var(--font-b);font-size:13px;color:var(--gray-400);letter-spacing:.3px"><span class="it">Guadagna ARIA ogni giorno. Poi corri.</span><span class="en">Earn ARIA every day. Then climb.</span></div>
     </div>
 
     <!-- SALDI — card eleganti con glow sottile -->
@@ -1758,8 +1811,8 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.95.0"></script>
-<div id="footer-mount" data-version="alfa-20.07.2026-4.95.0"></div>
-<script src="/src/footer.js?v=1.17.1"></script>
+<script src="/src/dapp.js?v=4.96.0"></script>
+<div id="footer-mount" data-version="alfa-20.07.2026-4.96.0"></div>
+<script src="/src/footer.js?v=1.18.0"></script>
 </body>
 </html>

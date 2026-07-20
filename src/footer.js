@@ -83,10 +83,10 @@ function initQuickNav(){
   var logged=false;try{logged=!!localStorage.getItem('airoobi_session');}catch(e){}
   var p=location.pathname;
   var _i=function(paths){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+paths+'</svg>';};
+  // v4 (20 lug, GO Skeezu): la home È l'airdrop — nav AIRDROP · GUADAGNA · PORTAFOGLIO · INVITA
   var items=[
-    {href:logged?'/dashboard':'/',act:(p==='/'||p.indexOf('/dashboard')===0||p==='/home'),ic:_i('<path d="M3 10.5L12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/>'),it:'Home',en:'Home'},
-    // Loggato → /esplora (marketplace in-app): /airdrops è la pagina pubblica che rimbalza i loggati
-    {href:logged?'/esplora':'/airdrops',act:(p.indexOf('/airdrops')===0||p.indexOf('/esplora')===0||p.indexOf('/airdrop')===0),ic:_i('<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>'),it:'Airdrop',en:'Airdrops'},
+    {href:logged?'/dashboard':'/airdrops',act:(p==='/'||p.indexOf('/dashboard')===0||p==='/home'||p.indexOf('/airdrops')===0||p.indexOf('/esplora')===0),ic:_i('<path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>'),it:'Airdrop',en:'Airdrops'},
+    {href:logged?'/guadagna':'/login?returnTo=%2Fguadagna',act:(p.indexOf('/guadagna')===0),ic:_i('<path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>'),it:'Guadagna',en:'Earn'},
     {href:'/portafoglio',act:(p.indexOf('/portafoglio')===0),ic:_i('<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01M2 9h20"/>'),it:'Portafoglio',en:'Wallet'},
     {href:'/invita',act:(p.indexOf('/invita')===0||p.indexOf('/referral')===0),ic:_i('<path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/>'),it:'Invita',en:'Invite'}
   ];

@@ -1490,10 +1490,11 @@ function playUnboxingReveal(blocksBought,revealedRobi){
 // ── Page routing ──
 var _isApp=location.hostname==='airoobi.app'||location.hostname==='www.airoobi.app';
 var PAGE_PATHS=_isApp
-  ?{home:'/dashboard',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio',archive:'/archivio',learn:'/come-funziona-airdrop',profilo:'/profilo'}
-  :{home:'/dapp',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/come-funziona-airdrop',profilo:'/profilo'};
-var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/come-funziona-airdrop':'learn','/profilo':'profilo'};
+  ?{home:'/dashboard',earn:'/guadagna',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio',archive:'/archivio',learn:'/come-funziona-airdrop',profilo:'/profilo'}
+  :{home:'/dapp',earn:'/guadagna',explore:'/airdrops',my:'/miei-airdrop',submit:'/proponi',referral:'/invita',wallet:'/portafoglio-dapp',archive:'/archivio',learn:'/come-funziona-airdrop',profilo:'/profilo'};
+var PATH_TO_PAGE={'/':'home','/dashboard':'home','/dapp':'home','/dapp.html':'home','/guadagna':'earn','/airdrops':'explore','/esplora':'explore','/miei-airdrop':'my','/proponi':'submit','/referral-dapp':'referral','/referral':'referral','/invita':'referral','/portafoglio-dapp':'wallet','/portafoglio':'wallet','/archivio':'archive','/come-funziona-airdrop':'learn','/profilo':'profilo'};
 var PAGE_HEADERS={
+  earn:{it:'<em>Guadagna</em>',en:'<em>Earn</em>',sub_it:'ARIA gratis ogni giorno: ricevi, timbra, completa le imprese.',sub_en:'Free ARIA every day: claim, check in, complete the feats.'},
   explore:{it:'<em>Airdrops</em>',en:'<em>Airdrops</em>',sub_it:'Usa i tuoi ARIA per correre. Ogni Step ti avvicina alla vetta.',sub_en:'Use your ARIA to climb. Every Step brings you closer to the summit.'},
   my:{it:'I miei <em>Airdrop</em>',en:'My <em>Airdrops</em>',sub_it:'Segui le tue corse e gli Step acquistati.',sub_en:'Track your races and purchased Steps.'},
   submit:{it:'<b>Valuta</b> il tuo <em>oggetto</em>',en:'<b>Evaluate</b> your <em>item</em>',sub_it:'Hai un oggetto di valore? Mettilo in airdrop su AIROOBI.',sub_en:'Have a valuable item? Put it on airdrop on AIROOBI.'},
@@ -1528,7 +1529,7 @@ function navigateTo(page,event){
 }
 
 function showPage(page){
-  ['home','explore','my','submit','referral','wallet','archive','learn','profilo'].forEach(function(t){
+  ['home','earn','explore','my','submit','referral','wallet','archive','learn','profilo'].forEach(function(t){
     var panel=document.getElementById('tab-'+t);
     if(panel)panel.style.display=page===t?'block':'none';
   });
@@ -1558,7 +1559,9 @@ function showPage(page){
   if(page==='wallet')loadDappWallet();
   if(page==='archive')loadDappArchive();
   if(page==='profilo')loadProfilePage();
-  if(page==='home'&&typeof renderDailyQuests==='function')renderDailyQuests();
+  // v4 (20 lug): la home è il feed airdrop; le imprese vivono in GUADAGNA
+  if(page==='earn'&&typeof renderDailyQuests==='function')renderDailyQuests();
+  if(page==='home'&&typeof renderHomeFeed==='function')renderHomeFeed();
 }
 
 // ── Profilo page (account settings view) ──
@@ -2249,6 +2252,7 @@ function startCountdowns(){
 
 // ── Grid ──
 function renderGrid(){
+  if(typeof renderHomeFeed==='function')renderHomeFeed(); // v4: il feed home segue gli stessi dati
   var grid=document.getElementById('grid');
   var empty=document.getElementById('empty');
   var list;
@@ -6997,3 +7001,127 @@ function copyAirdropLink(url){
     navigator.clipboard.writeText(url).then(done).catch(legacy);
   }else legacy();
 }
+
+// ═══ HOME v4 (20 lug, GO Skeezu): feed product-first — l'airdrop è l'eroe ═══
+function renderHomeFeed(){
+  var feed=document.getElementById('home-feed');
+  if(!feed)return;
+  var live=(_airdrops||[]).filter(function(a){return a.status==='sale'||a.status==='presale'});
+  if(!live.length){
+    feed.innerHTML='<div class="v4-empty"><span class="it">Nessuna corsa attiva in questo momento — torna presto.</span><span class="en">No live race right now — check back soon.</span></div>';
+    return;
+  }
+  feed.innerHTML=live.map(function(a){
+    var sold=a.blocks_sold||0,tot=a.total_blocks||1;
+    var pct=Math.max(2,Math.min(100,Math.round(sold/tot*100)));
+    var price=(a.status==='presale'&&a.presale_block_price)?a.presale_block_price:a.block_price_aria;
+    return '<div class="v4-hero" onclick="openDetail(\''+a.id+'\')">'
+      +'<div class="v4-himg">'
+      +(a.image_url?'<img src="'+a.image_url+'" alt="" loading="lazy">':'<div class="v4-noimg"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')
+      +'<div class="v4-hi-top">'
+      +(a.status==='presale'
+        ?'<span class="v4-chip v4-chip-pre">PRESALE 2&times;</span>'
+        :'<span class="v4-chip v4-chip-live"><i></i><span class="it">IN CORSA</span><span class="en">RACING</span></span>')
+      +(a.deadline&&a.status==='sale'?'<span class="v4-chip v4-chip-time"><span class="it">chiude tra</span><span class="en">closes in</span>&nbsp;<span data-deadline="'+a.deadline+'"></span></span>':'')
+      +'</div></div>'
+      +'<div class="v4-hbody">'
+      +'<div class="v4-htitle">'+escHtml(a.title||'')+'</div>'
+      +(a.code?'<div class="v4-hcode">#'+escHtml(a.code)+'</div>':'')
+      +'<div class="v4-trail"><i style="width:'+pct+'%"></i></div>'
+      +'<div class="v4-tmeta">'+sold.toLocaleString('it-IT')+' / '+tot.toLocaleString('it-IT')+' <span class="it">Step verso la vetta</span><span class="en">Steps to the summit</span></div>'
+      +'<button class="v4-cta"><span class="it">Entra in corsa</span><span class="en">Join the race</span><small>'+price+' ARIA <span class="it">A STEP &middot; SALITA DETERMINISTICA</span><span class="en">PER STEP &middot; DETERMINISTIC CLIMB</span></small></button>'
+      +'<div class="v4-hnote"><span class="it">Comunque vada, sul percorso raccogli <b>fiori ROBI</b>.</span><span class="en">However it goes, you pick <b>ROBI flowers</b> on the trail.</span></div>'
+      +'</div></div>';
+  }).join('');
+  startCountdowns();
+}
+
+// ═══ Learning path v4 — deck riusabile, 6 tappe, +100 ARIA al completamento ═══
+var V4_LESSONS=[
+ {t_it:'L\'airdrop',t_en:'The airdrop',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 2l8 4.5v9L12 20l-8-4.5v-9z"/></svg>',
+  it:'Un <b>oggetto vero</b>, valutato e certificato. Una <b>corsa a Step</b> verso la vetta. Chi è in vetta alla chiusura lo ottiene — <b>consegna inclusa</b>.',
+  en:'A <b>real item</b>, evaluated and certified. A <b>Step race</b> to the summit. Whoever is on top at closing gets it — <b>delivery included</b>.'},
+ {t_it:'Gli ARIA',t_en:'ARIA',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="9"/><text x="12" y="16" text-anchor="middle" fill="currentColor" stroke="none" font-size="10" font-weight="700">A</text></svg>',
+  it:'Il carburante degli Step. In questa fase di test <b>si guadagnano, non si comprano</b> — gratis, ogni giorno. Al lancio ufficiale saranno a listino (0,10&nbsp;&euro;) e i saldi di test si azzereranno: <b>qui si impara senza rischi</b>.',
+  en:'The fuel for Steps. In this test phase <b>you earn them, you don\'t buy them</b> — free, every day. At the official launch they will be listed (&euro;0.10) and test balances will reset: <b>here you learn risk-free</b>.'},
+ {t_it:'Step & Salita',t_en:'Steps & the Climb',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 20h18L14 6l-3 5-2-3z"/></svg>',
+  it:'Ogni Step ti fa salire. La posizione è un <b>punteggio deterministico</b>: i tuoi Step, la fedeltà alla categoria, il boost di garanzia. <b>Niente caso</b>: conta il percorso.',
+  en:'Every Step moves you up. Your position is a <b>deterministic score</b>: your Steps, category loyalty, the guarantee boost. <b>No luck involved</b>: the trail is what counts.'},
+ {t_it:'I fiori ROBI',t_en:'ROBI flowers',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M12 11v9M9 22h6"/></svg>',
+  it:'Sul sentiero raccogli <b>fiori ROBI</b>: ricompense che restano tue <b>comunque vada la corsa</b>. In futuro riscattabili in KAS, on-chain.',
+  en:'Along the trail you pick <b>ROBI flowers</b>: rewards that stay yours <b>however the race goes</b>. Redeemable in KAS on-chain in the future.'},
+ {t_it:'Le tre cose da ricordare',t_en:'The three things to remember',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="7" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 11l6-3M9 13l6 3"/></svg>',
+  it:'<span style="display:block;text-align:left"><b style="color:var(--aria)">ARIA</b> — il carburante: si guadagnano e si spendono in Step.<br><br><b style="color:var(--gold)">ROBI</b> — la ricompensa: il tuo guadagno vero, in futuro riscattabile in KAS.<br><br><b style="color:var(--gold)">Fiori ROBI</b> — frazioni di ROBI che raccogli sul percorso, corsa dopo corsa.</span>',
+  en:'<span style="display:block;text-align:left"><b style="color:var(--aria)">ARIA</b> — the fuel: you earn them and spend them on Steps.<br><br><b style="color:var(--gold)">ROBI</b> — the reward: your real earnings, redeemable in KAS in the future.<br><br><b style="color:var(--gold)">ROBI flowers</b> — fractions of ROBI you pick along the trail, race after race.</span>'},
+ {t_it:'La vetta',t_en:'The summit',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M8 21h8M12 17v4M17 4H7v4a5 5 0 0010 0zM7 6H4a3 3 0 003 3M17 6h3a3 3 0 01-3 3"/></svg>',
+  it:'Alla chiusura, chi è in vetta <b>ottiene l\'oggetto</b>. Tutti gli altri ricevono un <b>ROBI di ringraziamento</b> per la corsa. Pronto?',
+  en:'At closing, whoever is on top <b>gets the item</b>. Everyone else receives a <b>thank-you ROBI</b> for the race. Ready?'}
+];
+var _v4li=0;
+function ensureLearnOverlay(){
+  var l=document.getElementById('v4-learn');
+  if(l)return l;
+  l=document.createElement('div');
+  l.id='v4-learn';
+  l.innerHTML='<div class="v4-lcard">'
+    +'<div class="v4-lico" id="v4-lico"></div>'
+    +'<div class="v4-lt" id="v4-lt"></div>'
+    +'<div class="v4-lx" id="v4-lx"></div>'
+    +'<div class="v4-ldots" id="v4-ldots"></div>'
+    +'<button class="v4-lnext" id="v4-lnext" onclick="nextLesson()"></button>'
+    +'<button class="v4-lskip" onclick="closeLearn()"><span class="it">Chiudi — lo riapri dal &laquo;?&raquo; in alto</span><span class="en">Close — reopen it from the &laquo;?&raquo; above</span></button>'
+    +'</div>';
+  l.addEventListener('click',function(e){if(e.target===l)closeLearn();});
+  document.body.appendChild(l);
+  return l;
+}
+function renderLesson(){
+  var lang=document.documentElement.getAttribute('data-lang')||'it';
+  var l=V4_LESSONS[_v4li];
+  document.getElementById('v4-lico').innerHTML=l.ico;
+  document.getElementById('v4-lt').textContent=lang==='en'?l.t_en:l.t_it;
+  document.getElementById('v4-lx').innerHTML=lang==='en'?l.en:l.it;
+  document.getElementById('v4-ldots').innerHTML=V4_LESSONS.map(function(_,i){return '<i class="'+(i===_v4li?'on':'')+'"></i>'}).join('');
+  document.getElementById('v4-lnext').innerHTML=_v4li<V4_LESSONS.length-1
+    ?'<span class="it">Avanti</span><span class="en">Next</span>'
+    :'<span class="it">Entra in corsa &rarr;</span><span class="en">Join the race &rarr;</span>';
+}
+function openLearn(){_v4li=0;ensureLearnOverlay();renderLesson();document.getElementById('v4-learn').classList.add('open');document.body.style.overflow='hidden';}
+function closeLearn(){var l=document.getElementById('v4-learn');if(l)l.classList.remove('open');document.body.style.overflow='';}
+function nextLesson(){
+  if(_v4li<V4_LESSONS.length-1){_v4li++;renderLesson();return;}
+  closeLearn();
+  claimLearningReward();
+  navigateTo('home');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+async function claimLearningReward(){
+  if(!_session)return;
+  try{
+    var token=await getValidToken();if(!token)return;
+    var r=await fetch(SB_URL+'/rest/v1/rpc/claim_learning_reward',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'});
+    var j=r.ok?await r.json():null;
+    if(j&&j.ok&&j.granted){
+      if(typeof showToast==='function')showToast('+100 ARIA — percorso completato! / path complete!','success');
+      try{localStorage.setItem('v4_learn_done','1');}catch(e){}
+      var strip=document.getElementById('v4-learn-strip');
+      if(strip)strip.style.display='none';
+      if(typeof refreshTopbarBalances==='function')refreshTopbarBalances();
+    }else{
+      try{localStorage.setItem('v4_learn_done','1');}catch(e){}
+      var s2=document.getElementById('v4-learn-strip');
+      if(s2)s2.style.display='none';
+    }
+  }catch(e){}
+}
+// La strip sparisce per chi ha già completato il percorso
+(function(){
+  try{
+    if(localStorage.getItem('v4_learn_done')==='1'){
+      document.addEventListener('DOMContentLoaded',function(){
+        var s=document.getElementById('v4-learn-strip');
+        if(s)s.style.display='none';
+      });
+    }
+  }catch(e){}
+})();

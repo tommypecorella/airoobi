@@ -1635,3 +1635,74 @@ html:not([data-theme="dark"]) #avatar-banner{color:#3d4a63;background:rgba(47,10
   .detail-badges .do-badge-btn{letter-spacing:.4px}
   .detail-badges .rm-chip.rm-ico{width:28px;min-width:28px}
 }
+
+/* ═══ DESIGN SYSTEM v4 (20 lug, GO Skeezu): home feed product-first + learning path + festa mobile ═══ */
+/* Strip learning + qmark */
+.v4-learn-strip{display:flex;align-items:center;gap:10px;width:100%;margin:14px 0 12px;background:rgba(47,107,255,.08);border:1px solid rgba(47,107,255,.35);border-radius:14px;padding:11px 14px;color:var(--white);font-family:var(--font-b);font-size:12.5px;text-align:left;cursor:pointer}
+.v4-learn-strip svg{width:18px;height:18px;stroke:var(--aria);flex-shrink:0}
+.v4-learn-strip span{flex:1}
+.v4-learn-strip em{font-style:normal;font-family:var(--font-m);font-size:11px;color:var(--aria);white-space:nowrap}
+.v4-learn-strip em i{font-style:normal;font-size:9px;letter-spacing:1px}
+.v4-qmark{width:30px;height:30px;flex-shrink:0;border-radius:50%;border:1px solid var(--gray-700);background:none;color:var(--gray-400);font-family:var(--font-h);font-size:15px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
+/* Hero feed — bordo gradiente bluette→rosso */
+.v4-hero{margin:0 0 16px;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid transparent;background:linear-gradient(var(--card-bg,#111827),var(--card-bg,#111827)) padding-box,linear-gradient(150deg,rgba(47,107,255,.55),rgba(239,62,79,.45)) border-box;box-shadow:0 12px 36px rgba(0,0,0,.35)}
+html:not([data-theme="dark"]) .v4-hero{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(150deg,rgba(47,107,255,.45),rgba(239,62,79,.4)) border-box;box-shadow:0 10px 28px rgba(21,32,58,.12)}
+.v4-himg{position:relative;background:#fff;aspect-ratio:4/3;max-height:340px}
+.v4-himg img{width:100%;height:100%;object-fit:contain}
+.v4-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--gray-600);background:var(--gray-900)}
+.v4-hi-top{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px}
+.v4-chip{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:10px;letter-spacing:1px;padding:5px 10px;border-radius:999px;backdrop-filter:blur(6px);background:rgba(10,15,26,.82);color:#F4F6FA}
+.v4-chip-live{color:#3DDC97}
+.v4-chip-live i{width:6px;height:6px;border-radius:50%;background:#3DDC97;animation:v4pulse 1.6s infinite}
+@keyframes v4pulse{50%{opacity:.35}}
+.v4-chip-pre{color:var(--aria)}
+.v4-chip .card-countdown{display:inline;font:inherit;color:inherit;margin:0;letter-spacing:inherit}
+.v4-hbody{padding:16px 16px 18px}
+.v4-htitle{font-family:var(--font-h);font-size:21px;font-weight:600;line-height:1.15;color:var(--white)}
+.v4-hcode{font-family:var(--font-m);font-size:10px;letter-spacing:1px;color:var(--gray-500);margin-top:4px}
+.v4-trail{height:6px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:12px}
+html:not([data-theme="dark"]) .v4-trail{background:rgba(21,32,58,.1)}
+.v4-trail i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,#2F6BFF,var(--gold))}
+.v4-tmeta{font-family:var(--font-m);font-size:11px;color:var(--gray-400);margin-top:8px}
+.v4-cta{display:block;width:100%;margin-top:14px;background:var(--gold);color:#fff;border:none;border-radius:14px;padding:14px;font-family:var(--font-h);font-size:16px;font-weight:700;cursor:pointer}
+.v4-cta small{display:block;font-family:var(--font-m);font-size:10px;font-weight:400;letter-spacing:1px;opacity:.85;margin-top:3px}
+.v4-hnote{margin-top:10px;text-align:center;font-size:12px;color:var(--gray-400)}
+.v4-hnote b{color:var(--gold);font-weight:600}
+.v4-empty{padding:26px;border:1px dashed var(--gray-700);border-radius:16px;text-align:center;color:var(--gray-500);font-size:13px}
+.v4-all{display:block;text-align:center;font-family:var(--font-m);font-size:11px;letter-spacing:1px;color:var(--gray-400);margin:2px 0 4px;cursor:pointer;background:none;border:none;width:100%;padding:8px}
+/* Sezioni */
+.v4-sec{margin:26px 0 0}
+.v4-sec-t{font-family:var(--font-h);font-size:16px;font-weight:600;color:var(--white)}
+.v4-sec-s{font-size:12.5px;color:var(--gray-400);margin-top:3px}
+.v4-earn{display:flex;gap:8px;margin-top:12px;cursor:pointer}
+.v4-ecard{flex:1;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:14px;padding:12px 10px;text-align:center;min-width:0}
+.v4-eamt{font-family:var(--font-m);font-size:13px;color:var(--aria);font-weight:500}
+.v4-elbl{font-size:10.5px;color:var(--gray-400);margin-top:3px}
+.v4-why{margin:22px 0 0;display:flex;flex-direction:column;gap:10px}
+.v4-wrow{display:flex;align-items:center;gap:12px;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:14px;padding:13px 14px;font-size:13.5px;line-height:1.4;color:var(--gray-300)}
+.v4-wrow svg{width:20px;height:20px;flex-shrink:0}
+.v4-wrow b{color:var(--white);font-weight:600}
+.v4-fcard{display:flex;gap:12px;align-items:center;background:var(--card-bg);border:1px solid var(--gray-700);border-radius:14px;padding:12px;margin-top:10px}
+.v4-fimg{width:54px;height:54px;border-radius:10px;background:var(--gray-800);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--gray-500)}
+.v4-fimg svg{width:22px;height:22px}
+.v4-fct{font-size:13.5px;font-weight:600;color:var(--white)}
+.v4-fcs{font-family:var(--font-m);font-size:10.5px;color:var(--gray-500);margin-top:2px;letter-spacing:.5px}
+.v4-ftag{margin-left:auto;font-family:var(--font-m);font-size:9px;letter-spacing:1px;color:#2F6BFF;border:1px solid rgba(47,107,255,.4);border-radius:6px;padding:3px 7px;flex-shrink:0}
+/* Learn overlay */
+#v4-learn{display:none;position:fixed;inset:0;z-index:205;background:rgba(4,7,13,.94);backdrop-filter:blur(4px)}
+#v4-learn.open{display:flex;align-items:center;justify-content:center;padding:24px}
+.v4-lcard{width:100%;max-width:360px;background:var(--card-bg,#111827);border:1px solid var(--gray-700);border-radius:22px;padding:28px 24px 22px;text-align:center}
+.v4-lico{width:54px;height:54px;margin:0 auto 16px;border-radius:50%;background:rgba(47,107,255,.12);display:flex;align-items:center;justify-content:center}
+.v4-lico svg{width:26px;height:26px;stroke:var(--aria)}
+.v4-lt{font-family:var(--font-h);font-size:20px;font-weight:600;margin-bottom:10px;color:var(--white)}
+.v4-lx{font-size:14px;line-height:1.6;color:var(--gray-300);min-height:112px}
+.v4-lx b{color:var(--white);font-weight:600}
+.v4-ldots{display:flex;justify-content:center;gap:6px;margin:18px 0 16px}
+.v4-ldots i{width:7px;height:7px;border-radius:50%;background:rgba(128,140,160,.3)}
+.v4-ldots i.on{background:var(--gold);transform:scale(1.25)}
+.v4-lnext{width:100%;background:var(--gold);color:#fff;border:none;border-radius:12px;padding:14px;font-family:var(--font-h);font-size:15px;font-weight:700;cursor:pointer}
+.v4-lskip{margin-top:10px;background:none;border:none;color:var(--gray-500);font-size:12px;cursor:pointer}
+/* Campanella che squilla (festa mobile v4) */
+@keyframes v4ring{0%,100%{transform:rotate(0)}10%{transform:rotate(14deg)}20%{transform:rotate(-12deg)}30%{transform:rotate(10deg)}40%{transform:rotate(-8deg)}50%{transform:rotate(5deg)}60%{transform:rotate(-3deg)}70%{transform:rotate(0)}}
+.notif-bell.has-unread .bell-icon{transform-origin:top center;animation:v4ring 2.6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.notif-bell.has-unread .bell-icon{animation:none}}

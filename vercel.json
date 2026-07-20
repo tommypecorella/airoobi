@@ -351,6 +351,16 @@
       "destination": "/dapp.html"
     },
     {
+      "source": "/guadagna",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.airoobi.app"
+        }
+      ],
+      "destination": "/dapp.html"
+    },
+    {
       "source": "/blog",
       "has": [
         {
@@ -701,6 +711,10 @@
     {
       "source": "/dashboard",
       "destination": "/home.html"
+    },
+    {
+      "source": "/guadagna",
+      "destination": "/dapp.html"
     },
     {
       "source": "/profilo",
