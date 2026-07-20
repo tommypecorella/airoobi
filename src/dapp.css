@@ -1600,3 +1600,10 @@ html:not([data-theme="dark"]) .dash-alpha-fixed{background:rgba(237,242,255,.96)
   #detail .mini-gal{display:flex}
   #detail[data-dtab="info"] .mini-gal{display:none}
 }
+
+/* ═ 20 lug (Skeezu) · Testatina airdrop: codice+EVALOBI / badge / titolo in un rettangolo summary ═ */
+.detail-masthead{background:linear-gradient(160deg,rgba(47,107,255,.09),rgba(255,255,255,.02) 65%);border:1px solid var(--color-border,var(--gray-700));border-radius:var(--radius);padding:14px 16px;margin:0 0 12px}
+.detail-masthead .detail-header-v2{position:static;background:transparent;padding:0;margin:0 0 10px}
+.detail-masthead .detail-badges{margin:0 0 10px}
+.detail-masthead .detail-title-v2{margin:0}
+html:not([data-theme="dark"]) .detail-masthead{background:linear-gradient(160deg,rgba(47,107,255,.08),rgba(21,32,58,.03) 65%);border-color:rgba(21,32,58,.15)}

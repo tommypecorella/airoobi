@@ -2712,6 +2712,9 @@ async function openDetail(id){
     // ── COL SX ──
     +'<div class="detail-right detail-competitive-col" id="detail-right">'
 
+    // ═ 20 lug (Skeezu): testatina unica — codice+EVALOBI+azioni / badge / titolo
+    //   fusi in un rettangolo summary su tre righe ═
+    +'<div class="detail-masthead">'
     +headerV2
 
     // ═ Rifinitura 19 lug sera (Skeezu): badge fase + badge TUO prima del titolo,
@@ -2726,6 +2729,7 @@ async function openDetail(id){
       +'</div>':'')
 
     +'<h1 class="detail-title-v2">'+a.title+'</h1>'
+    +'</div>' // close detail-masthead
 
     // 20 lug (Skeezu): mini carousel foto sotto il titolo — thumbnails swipabili, tap → lightbox
     +(galleryImgs.length?'<div class="mini-gal">'+galleryImgs.map(function(src,i){
