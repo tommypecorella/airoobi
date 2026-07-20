@@ -1647,7 +1647,7 @@ html:not([data-theme="dark"]) #avatar-banner{color:#3d4a63;background:rgba(47,10
 /* Hero feed — bordo gradiente bluette→rosso */
 .v4-hero{margin:0 0 16px;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid transparent;background:linear-gradient(var(--card-bg,#111827),var(--card-bg,#111827)) padding-box,linear-gradient(150deg,rgba(47,107,255,.55),rgba(239,62,79,.45)) border-box;box-shadow:0 12px 36px rgba(0,0,0,.35)}
 html:not([data-theme="dark"]) .v4-hero{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(150deg,rgba(47,107,255,.45),rgba(239,62,79,.4)) border-box;box-shadow:0 10px 28px rgba(21,32,58,.12)}
-.v4-himg{position:relative;background:#fff;aspect-ratio:4/3;max-height:340px}
+.v4-himg{position:relative;background:#fff;width:100%;height:clamp(220px,58vw,340px)}
 .v4-himg img{width:100%;height:100%;object-fit:contain}
 .v4-noimg{width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--gray-600);background:var(--gray-900)}
 .v4-hi-top{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;gap:8px}
