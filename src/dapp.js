@@ -565,8 +565,34 @@ async function loadDappAvatar(){
       img.src=data[0].avatar_url+'?t='+Date.now();
       img.alt='';
       avatarEl.appendChild(img);
+    }else{
+      // 20 lug (Skeezu): niente foto → banner invito (X = pausa 24h; sparisce per sempre con la foto)
+      showAvatarBanner();
     }
   }catch(e){}
+}
+
+// ── Banner «aggiungi la tua foto profilo» (20 lug, Skeezu) ──
+function showAvatarBanner(){
+  try{
+    var snooze=localStorage.getItem('avatar_banner_snooze');
+    if(snooze&&Date.now()-parseInt(snooze,10)<86400000)return; // X premuta da meno di 24h
+  }catch(e){}
+  if(document.getElementById('avatar-banner'))return;
+  var b=document.createElement('div');
+  b.id='avatar-banner';
+  b.innerHTML=''
+    +'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0114 0v1"/></svg>'
+    +'<span style="flex:1;min-width:0"><span class="it">Aggiungi la tua foto profilo — è quella che corre sulla Salita.</span><span class="en">Add your profile photo — it\'s the one climbing the Salita.</span></span>'
+    +'<button id="avatar-banner-go" onclick="navigateTo(\'profilo\')"><span class="it">Aggiungi</span><span class="en">Add</span></button>'
+    +'<button id="avatar-banner-x" aria-label="Chiudi" onclick="try{localStorage.setItem(\'avatar_banner_snooze\',String(Date.now()))}catch(e){};this.parentElement.remove()">&times;</button>';
+  var main=document.querySelector('.main');
+  if(!main)return;
+  main.insertBefore(b,main.firstChild);
+}
+function hideAvatarBanner(){
+  var b=document.getElementById('avatar-banner');
+  if(b)b.remove();
 }
 
 function toggleDiscoverMenu(e){
@@ -1637,6 +1663,7 @@ async function profiloAvatarUpload(file){
     });
     if(!pr.ok)throw new Error('profile '+pr.status);
     _setAvatarEverywhere(url);
+    hideAvatarBanner(); // foto caricata: il banner invito non serve più
     if(msg)msg.textContent='';
     var ab=document.getElementById('profilo-avatar-btn');
     if(ab)ab.innerHTML='<span class="it">Cambia foto</span><span class="en">Change photo</span>';

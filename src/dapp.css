@@ -1621,6 +1621,13 @@ html:not([data-theme="dark"]) .info-tile .it-value{color:#15203A}
 /* ═ 20 lug (Skeezu) · Cuore preferiti in riga badge, taglia tondini ═ */
 .detail-badges .heart-btn-v2.hb-inline{width:26px;height:26px;min-width:26px;font-size:13px}
 .detail-badges .heart-btn-v2.hb-inline.active::before{font-size:13px}
+/* ═ 20 lug (Skeezu) · Banner «aggiungi la tua foto profilo» ═ */
+#avatar-banner{display:flex;align-items:center;gap:10px;margin:0 0 14px;padding:10px 12px;background:rgba(47,107,255,.08);border:1px solid rgba(47,107,255,.35);border-radius:var(--radius-sm);font-size:12.5px;color:var(--gray-300);line-height:1.4}
+#avatar-banner svg{color:var(--aria)}
+#avatar-banner-go{flex-shrink:0;background:none;border:1px solid rgba(47,107,255,.5);border-radius:8px;color:var(--aria);font-family:var(--font-m);font-size:10px;letter-spacing:1px;padding:6px 12px;cursor:pointer;text-transform:uppercase}
+#avatar-banner-x{flex-shrink:0;width:26px;height:26px;background:none;border:none;color:var(--gray-500);font-size:18px;line-height:1;cursor:pointer;padding:0}
+html:not([data-theme="dark"]) #avatar-banner{color:#3d4a63;background:rgba(47,107,255,.07)}
+
 /* Su schermi stretti la riga badge si compatta: tutto su una riga, niente cuore orfano */
 @media(max-width:420px){
   .detail-badges{gap:5px}
