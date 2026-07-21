@@ -139,6 +139,11 @@ function updateBalanceUI(){
   var robiEl=document.getElementById('topbar-robi-val');
   if(ariaEl)ariaEl.textContent=_balance;
   if(robiEl)robiEl.textContent=_robi;
+  // FIX importi (22 lug): le card grandi della pagina Guadagna (home-aria/home-robi)
+  // venivano settate solo al primo render del saluto — su refresh diretto di /guadagna
+  // il saldo arriva DOPO e restavano a 0. Ora si aggiornano a ogni loadBalance.
+  var hA=document.getElementById('home-aria'); if(hA)hA.textContent=_balance;
+  var hR=document.getElementById('home-robi'); if(hR)hR.textContent=_robi;
 }
 var _airdrops=[];
 var _myParts=[];
@@ -3287,6 +3292,8 @@ async function renderSalita(scores){
       +'</div>':'')
     +'</div>'
     +'<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">'
+    // posizione dell'utente rispetto agli altri, sempre in chiaro (Skeezu 22 lug)
+    +(myRank?'<span style="display:inline-flex;align-items:center;gap:6px;font-family:var(--font-m);font-size:13px;font-weight:700;padding:5px 13px;border-radius:999px;background:rgba(239,62,79,.14);color:var(--gold);border:1px solid rgba(239,62,79,.4);white-space:nowrap">'+(lang==='it'?'TU &middot; '+myRank+'&deg; su '+n:'YOU &middot; #'+myRank+' of '+n)+'</span>':'')
     +(inVetta?'<span class="salita-invetta"><span class="it">SEI IN VETTA</span><span class="en">AT THE SUMMIT</span></span>':'')
     +(volata?'<span class="salita-volata"><span class="it">VOLATA FINALE</span><span class="en">FINAL SPRINT</span></span>':'')
     +'</div></div>'

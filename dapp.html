@@ -327,6 +327,15 @@
     <div id="home-feed"></div>
     <button class="v4-all" onclick="navigateTo('explore')"><span class="it">Tutti gli airdrop →</span><span class="en">All airdrops →</span></button>
 
+    <!-- ═ ZONA Y (Skeezu 22 lug): "impara / guadagna / proponi" — sfondo distinto per staccarla dal feed airdrop ═ -->
+    <style>
+      .v4-zoneY{margin:26px -6px 0;padding:22px 16px 10px;border-radius:22px;
+        background:linear-gradient(180deg,color-mix(in srgb,var(--aria) 6%,transparent),transparent 55%),var(--card-bg,rgba(255,255,255,.02));
+        border:1px solid color-mix(in srgb,var(--aria) 16%,transparent)}
+      .v4-zoneY .v4-sec{margin-top:0}
+      .v4-zoneY>.v4-sec+.v4-why{margin-top:16px}
+    </style>
+    <div class="v4-zoneY">
     <!-- ARIA: si guadagnano -->
     <div class="v4-sec">
       <div class="v4-sec-t"><span class="it">Ti servono ARIA?</span><span class="en">Need ARIA?</span></div>
@@ -360,6 +369,7 @@
         <span class="v4-ftag"><span class="it">PROPONI</span><span class="en">SUBMIT</span></span>
       </div>
     </div>
+    </div><!-- /v4-zoneY -->
   </div>
 
   <!-- ═══ GUADAGNA (ex home earnings — v4: la home è il feed airdrop) ═══ -->
@@ -1776,8 +1786,8 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=4.97.0"></script>
-<div id="footer-mount" data-version="alfa-22.07.2026-4.98.0"></div>
+<script src="/src/dapp.js?v=4.99.0"></script>
+<div id="footer-mount" data-version="alfa-22.07.2026-4.99.0"></div>
 <script src="/src/footer.js?v=1.18.0"></script>
 </body>
 </html>

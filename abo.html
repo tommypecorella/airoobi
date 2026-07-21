@@ -2613,7 +2613,7 @@ async function loadReportsTable(){
         +'<td style="font-family:var(--font-m);font-size:11px;white-space:nowrap">'+d+'</td>'
         +'<td style="font-size:12px">'+who+'</td>'
         +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escHtml(r.page||'')+'">'+escHtml(r.page||'—')+'</td>'
-        +'<td style="font-size:12px;max-width:320px" title="'+escHtml(r.message)+'">'+escHtml(r.message.length>140?r.message.slice(0,139)+'…':r.message)+(r.admin_notes?'<div style="font-size:10px;color:var(--gray-500);margin-top:3px">note: '+escHtml(r.admin_notes)+'</div>':'')+'</td>'
+        +'<td style="font-size:12.5px;line-height:1.55;min-width:280px;max-width:560px;white-space:pre-wrap;word-break:break-word;vertical-align:top;padding-top:12px">'+escHtml(r.message)+(r.admin_notes?'<div style="font-size:10.5px;color:var(--gray-500);margin-top:5px;padding-top:5px;border-top:1px dashed var(--gray-700)">📝 '+escHtml(r.admin_notes)+'</div>':'')+'</td>'
         +'<td>'+(stBadge[r.status]||escHtml(r.status))+'</td>'
         +'<td style="font-family:var(--font-m);color:var(--gold)">'+(parseFloat(r.robi_reward)>0?'+'+parseFloat(r.robi_reward):'—')+'</td>'
         +'<td style="white-space:nowrap"><div style="display:flex;gap:4px">'+acts.join('')+'</div></td>'
@@ -2635,7 +2635,11 @@ async function aboReportAct(id,status){
   loadReportsTable();if(typeof loadAboTodo==='function')loadAboTodo();
 }
 async function aboReportResolve(id,hasUser){
-  var notes=prompt('Note (facoltative):','')||null;
+  var raw=prompt('Note (facoltative) — la firma del team viene aggiunta in automatico:','');
+  if(raw===null)return; // annulla = niente
+  // firma automatica in append (Skeezu 22 lug): ogni risoluzione porta il sigillo del team
+  var SIGN='— AIROOBI APP SERVICE TEAM · appservice@airoobi.com';
+  var notes=(raw.trim()?raw.trim()+'\n\n':'')+SIGN;
   var robi=0;
   if(hasUser){
     var v=prompt('ROBI di ringraziamento per la segnalazione (0 = nessuno, max 100):','0');
@@ -5348,7 +5352,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-22.07.2026-1.15.0"></div>
+<div id="footer-mount" data-version="alfa-22.07.2026-1.16.0"></div>
 <script src="/src/footer.js?v=1.18.0"></script>
 </body>
 </html>
