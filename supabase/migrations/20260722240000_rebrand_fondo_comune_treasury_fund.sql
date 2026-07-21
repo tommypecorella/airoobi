@@ -1,0 +1,6 @@
+-- Rebrand "Fondo Comune" → "AIROOBI TREASURY FUND" (Skeezu 22 lug 2026).
+-- FE: sostituzione testo su tutte le pagine live (blog, abo, home.js/css, pagine varie).
+-- DB: unico punto = testo notifica in extend_airdrop_deadline (body: "al Fondo Comune"
+--     → "all'AIROOBI TREASURY FUND"). La funzione è ri-creata identica per il resto
+--     nella migration 20260722240001 (specchio dello stato live). Vedi anche task Extend→Treasury.
+-- (Definizione completa applicata via CREATE OR REPLACE — qui nota di rebranding.)

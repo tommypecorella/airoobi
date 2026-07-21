@@ -827,7 +827,7 @@ html:not([data-lang]) .video-nosee .it{display:inline}
 .wswap-btn{padding:12px 28px;background:rgba(184,137,61,.15);color:var(--gold);border:1px solid rgba(184,137,61,.3);font-family:var(--font-m);font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;cursor:default;}
 .wswap-coming{font-family:var(--font-m);font-size:9px;color:var(--gray-600);letter-spacing:1px;margin-top:4px;}
 
-/* FONDO COMUNE */
+/* AIROOBI TREASURY FUND */
 .wallet-fund{background:rgba(184,137,61,.04);border:1px solid rgba(184,137,61,.12);padding:20px 24px;margin-bottom:8px;}
 .wfund-label{font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gold);margin-bottom:10px;}
 .wfund-stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:14px;}
