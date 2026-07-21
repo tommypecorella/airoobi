@@ -2891,6 +2891,7 @@ async function openDetail(id){
       +'</div>':'')
     +buyBoxHtml
     +(!isConcluded?'<div class="detail-rullo-hook" id="detail-rullo-hook"></div>':'')
+    +'<div id="race-chat"></div>'
     +'</div>'
     // Popup badge IL TUO AIRDROP
     +(_isMineVal&&!isValuation?
@@ -3022,6 +3023,8 @@ async function openDetail(id){
     loadHintSoglia(a.id);
     // GS-16 · aggancio "scopri ROBI nel rullo" (loadRulloHook)
     loadRulloHook(a.id);
+    // 💬 Chat della corsa (social · Skeezu 22 lug) — solo membri
+    renderRaceChat(a.id);
   }else if(_positionInterval){
     clearInterval(_positionInterval);_positionInterval=null;
   }
@@ -3087,24 +3090,143 @@ function salitaHue(uid){
   return h%360;
 }
 
+var _salitaNames={}; // uid -> nickname (username, mai email)
 function salitaAvatarHtml(uid,me){
   var url=_salitaAvatars[uid];
-  if(url)return '<img class="salita-av" src="'+url+'" alt="" loading="lazy">';
+  // data-uid rende il tondino zoomabile (tap/hover) — vedi _salitaZoomInit
+  if(url)return '<img class="salita-av zoomable" data-uid="'+uid+'" src="'+url+'" alt="" loading="lazy">';
   // Fallback: cerchio in tinta deterministica dall'id + «OO» (simbolo AIROOBI)
-  return '<span class="salita-av" style="background:hsl('+salitaHue(uid)+' 45% 46%)">OO</span>';
+  return '<span class="salita-av zoomable" data-uid="'+uid+'" style="background:hsl('+salitaHue(uid)+' 45% 46%)">OO</span>';
 }
 
 async function salitaLoadAvatars(airdropId,ids){
   if(_salitaAvatarsFor===airdropId){
     ids=ids.filter(function(id){return !(id in _salitaAvatars)});
-  }else{_salitaAvatars={};_salitaAvatarsFor=airdropId;}
+  }else{_salitaAvatars={};_salitaNames={};_salitaAvatarsFor=airdropId;}
   if(!ids.length)return;
   try{
     var token=_publicMode?SB_KEY:await getValidToken();if(!token)return;
-    var rows=await sbGet('profiles?id=in.('+ids.join(',')+')&select=id,avatar_url',token)||[];
+    var rows=await sbGet('profiles?id=in.('+ids.join(',')+')&select=id,avatar_url,username',token)||[];
     ids.forEach(function(id){if(!(id in _salitaAvatars))_salitaAvatars[id]=null});
-    if(Array.isArray(rows))rows.forEach(function(r){_salitaAvatars[r.id]=r.avatar_url||null});
+    if(Array.isArray(rows))rows.forEach(function(r){_salitaAvatars[r.id]=r.avatar_url||null;_salitaNames[r.id]=r.username||null;});
   }catch(e){}
+}
+
+// ── Zoom avatar (tap mobile / hover desktop) + nickname · social (Skeezu 22 lug) ──
+function _salitaNick(uid){var u=_salitaNames[uid];return u?('@'+u):'Concorrente';}
+function _salitaZoomInit(){
+  if(window._salitaZoomReady)return;window._salitaZoomReady=true;
+  var st=document.createElement('style');
+  st.textContent=
+    '.salita-av.zoomable{cursor:pointer;transition:transform .12s}'
+    +'@media(hover:hover){.salita-rider:hover{z-index:60}.salita-av.zoomable:hover{transform:scale(1.12)}}'
+    +'#salita-zoom{position:fixed;z-index:9996;display:none;flex-direction:column;align-items:center;gap:8px;pointer-events:none;transform:translate(-50%,-100%)}'
+    +'#salita-zoom.on{display:flex}'
+    +'#salita-zoom .zi{width:132px;height:132px;border-radius:50%;object-fit:cover;border:3px solid #EF3E4F;box-shadow:0 12px 40px rgba(0,0,0,.6);background:#1b232d;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:34px;color:#fff;overflow:hidden}'
+    +'#salita-zoom .zi img{width:100%;height:100%;object-fit:cover}'
+    +'#salita-zoom .zn{font-family:var(--font-b);font-size:14px;font-weight:700;color:#fff;background:rgba(20,26,33,.92);border:1px solid var(--gray-700,#36424F);padding:5px 12px;border-radius:999px;white-space:nowrap}'
+    +'#salita-zoom .zh{font-size:10.5px;color:#EF3E4F}';
+  document.head.appendChild(st);
+  var z=document.createElement('div');z.id='salita-zoom';
+  z.innerHTML='<div class="zi" id="salita-zoom-img"></div><div class="zn" id="salita-zoom-name"></div>';
+  document.body.appendChild(z);
+  function show(el){
+    var uid=el.getAttribute('data-uid');if(!uid)return;
+    var url=_salitaAvatars[uid];
+    var zi=document.getElementById('salita-zoom-img'),zn=document.getElementById('salita-zoom-name');
+    zi.innerHTML=url?'<img src="'+url+'" alt="">':(el.textContent||'OO');
+    if(!url&&el.style.background)zi.style.background=el.style.background;else zi.style.background='#1b232d';
+    var mine=_session&&_session.user&&uid===_session.user.id;
+    zn.innerHTML=_salitaNick(uid)+((mine&&!url)?'<div class="zh"><span class="it">metti una tua foto! ↑</span><span class="en">add a profile photo! ↑</span></div>':'');
+    var r=el.getBoundingClientRect();
+    z.style.left=(r.left+r.width/2)+'px';z.style.top=(r.top-8)+'px';
+    z.classList.add('on');
+  }
+  function hide(){z.classList.remove('on');}
+  document.addEventListener('pointerover',function(e){var el=e.target.closest&&e.target.closest('.salita-av.zoomable');if(el&&e.pointerType!=='touch')show(el);});
+  document.addEventListener('pointerout',function(e){var el=e.target.closest&&e.target.closest('.salita-av.zoomable');if(el&&e.pointerType!=='touch')hide();});
+  document.addEventListener('click',function(e){var el=e.target.closest&&e.target.closest('.salita-av.zoomable');if(el){e.stopPropagation();if(z.classList.contains('on'))hide();else{show(el);setTimeout(function(){document.addEventListener('click',hide,{once:true});},0);}}});
+  window.addEventListener('scroll',hide,true);
+}
+
+// ── 💬 Chat della corsa (Skeezu 22 lug, "vediamo che succede") ──
+var _raceChatInterval=null,_raceChatLastId=0,_raceChatAid=null,_raceChatCssReady=false;
+function _chatEsc(s){return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]});}
+function _raceChatCss(){
+  if(_raceChatCssReady)return;_raceChatCssReady=true;
+  var st=document.createElement('style');
+  st.textContent=
+    '.rchat{margin-top:14px;background:var(--card-bg,rgba(255,255,255,.02));border:1px solid var(--gray-800,#2a333d);border-radius:16px;overflow:hidden}'
+    +'.rchat-h{display:flex;align-items:center;gap:8px;padding:12px 14px;cursor:pointer;font-family:var(--font-b);font-size:13px;font-weight:700;user-select:none}'
+    +'.rchat-h .live{width:7px;height:7px;border-radius:50%;background:#3ddc97;animation:rcpulse 2s infinite}'
+    +'@keyframes rcpulse{0%,100%{opacity:1}50%{opacity:.35}}'
+    +'.rchat-h .cnt{margin-left:auto;font-family:var(--font-m);font-size:11px;color:var(--gray-400)}'
+    +'.rchat-b{display:none;flex-direction:column}.rchat.open .rchat-b{display:flex}'
+    +'.rchat-msgs{max-height:260px;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:9px}'
+    +'.rc-m{display:flex;gap:8px;align-items:flex-start}.rc-m.me{flex-direction:row-reverse}'
+    +'.rc-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;object-fit:cover;background:#374250;display:flex;align-items:center;justify-content:center;font-family:var(--font-m);font-size:10px;color:#fff;overflow:hidden}'
+    +'.rc-av img{width:100%;height:100%;object-fit:cover}'
+    +'.rc-bub{max-width:76%;background:var(--gray-800,#232c36);border-radius:12px;padding:6px 10px}'
+    +'.rc-m.me .rc-bub{background:rgba(239,62,79,.16)}'
+    +'.rc-nk{font-size:10.5px;font-weight:700;color:var(--aria,#4A9EFF);margin-bottom:1px}'
+    +'.rc-m.me .rc-nk{color:#EF3E4F;text-align:right}'
+    +'.rc-tx{font-size:13px;line-height:1.4;color:var(--white,#eef2f6);word-break:break-word;white-space:pre-wrap}'
+    +'.rchat-in{display:flex;gap:7px;padding:10px 12px;border-top:1px solid var(--gray-800,#2a333d)}'
+    +'.rchat-in input{flex:1;background:var(--gray-900,#0e1319);border:1px solid var(--gray-700,#36424F);border-radius:10px;color:inherit;font:inherit;font-size:13px;padding:9px 11px}'
+    +'.rchat-in button{background:#EF3E4F;color:#fff;border:none;border-radius:10px;padding:0 15px;font-weight:700;cursor:pointer}'
+    +'.rchat-empty{padding:14px;font-size:12px;color:var(--gray-500);text-align:center}';
+  document.head.appendChild(st);
+}
+async function renderRaceChat(aid){
+  var host=document.getElementById('race-chat');if(!host)return;
+  if(_raceChatInterval){clearInterval(_raceChatInterval);_raceChatInterval=null;}
+  if(_publicMode){host.innerHTML='';return;} // solo loggati/membri
+  _raceChatCss();_raceChatAid=aid;_raceChatLastId=0;
+  host.innerHTML=
+    '<div class="rchat" id="rchat"><div class="rchat-h" onclick="document.getElementById(\'rchat\').classList.toggle(\'open\')">'
+    +'<span class="live"></span>💬 <span class="it">Chat della corsa</span><span class="en">Race chat</span>'
+    +'<span class="cnt" id="rchat-cnt"></span></div>'
+    +'<div class="rchat-b"><div class="rchat-msgs" id="rchat-msgs"><div class="rchat-empty"><span class="it">Carico…</span><span class="en">Loading…</span></div></div>'
+    +'<div class="rchat-in"><input id="rchat-input" maxlength="500" placeholder="Scrivi ai concorrenti… / Message racers…" onkeydown="if(event.key===\'Enter\')sendRaceChat()"><button onclick="sendRaceChat()">›</button></div>'
+    +'</div></div>';
+  await loadRaceChat(aid,true);
+  _raceChatInterval=setInterval(function(){if(_raceChatAid===aid)loadRaceChat(aid,false);},5000);
+}
+async function loadRaceChat(aid,full){
+  var host=document.getElementById('race-chat');if(!host||_raceChatAid!==aid)return;
+  try{
+    var tok=await getValidToken();if(!tok)return;
+    var d=await sbRpc('get_airdrop_chat',{p_airdrop_id:aid,p_after:full?0:_raceChatLastId},tok);
+    if(!d||!d.ok){ if(d&&d.error==='not_member'){host.innerHTML='';} return; }
+    var box=document.getElementById('rchat-msgs');if(!box)return;
+    var msgs=d.messages||[];
+    if(full)box.innerHTML='';
+    else if(box.querySelector('.rchat-empty'))box.innerHTML='';
+    if(full&&!msgs.length){box.innerHTML='<div class="rchat-empty"><span class="it">Ancora nessun messaggio. Rompi il ghiaccio! 🐑</span><span class="en">No messages yet. Break the ice! 🐑</span></div>';}
+    var near=box.scrollHeight-box.scrollTop-box.clientHeight<60;
+    msgs.forEach(function(m){
+      if(m.id<= _raceChatLastId)return;
+      _raceChatLastId=Math.max(_raceChatLastId,m.id);
+      var nick=m.username?('@'+m.username):'Concorrente';
+      var av=m.avatar_url?'<img src="'+_chatEsc(m.avatar_url)+'" alt="">':'OO';
+      var row=document.createElement('div');row.className='rc-m'+(m.mine?' me':'');
+      row.innerHTML='<span class="rc-av">'+av+'</span><div class="rc-bub"><div class="rc-nk">'+_chatEsc(m.mine?'Tu':nick)+'</div><div class="rc-tx">'+_chatEsc(m.message)+'</div></div>';
+      box.appendChild(row);
+    });
+    var cntEl=document.getElementById('rchat-cnt');if(cntEl&&box.querySelectorAll('.rc-m').length)cntEl.textContent=box.querySelectorAll('.rc-m').length;
+    if(full||near)box.scrollTop=box.scrollHeight;
+  }catch(e){}
+}
+async function sendRaceChat(){
+  var inp=document.getElementById('rchat-input');if(!inp)return;
+  var v=(inp.value||'').trim();if(!v||!_raceChatAid)return;
+  inp.value='';
+  try{
+    var tok=await getValidToken();if(!tok)return;
+    var d=await sbRpc('post_airdrop_chat',{p_airdrop_id:_raceChatAid,p_message:v},tok);
+    if(d&&d.ok){loadRaceChat(_raceChatAid,false);}
+    else{inp.value=v;if(d&&d.error==='rate_limited')showToast('<span class="it">Vai piano coi messaggi 🐑</span><span class="en">Slow down 🐑</span>');}
+  }catch(e){inp.value=v;}
 }
 
 function salitaCountdown(deadline){
@@ -3303,6 +3425,8 @@ async function renderSalita(scores){
     +cta
     +'<p class="salita-legal"><span class="it">Posizione deterministica: punteggio = √Step × moltiplicatore fedeltà + boost di garanzia. Chi è in vetta alla chiusura ottiene l\'oggetto; a tutti gli altri, alla chiusura, va un ROBI Reward: il ringraziamento per aver corso.</span><span class="en">Deterministic position: score = √Steps × loyalty multiplier + guarantee boost. Whoever is at the summit at close gets the item; everyone else receives ROBI Reward at close — a thank-you for the climb.</span></p>'
     +'</div>';
+
+  _salitaZoomInit(); // zoom avatar + nickname (social)
 
   // Posizionamento sul sentiero via getPointAtLength
   el.querySelectorAll('.salita-field [data-t]').forEach(function(node){
@@ -4075,6 +4199,7 @@ function closeDetailView(){
   stopGalleryAutoplay();
   stopBubblePhysics();
   if(_positionInterval){clearInterval(_positionInterval);_positionInterval=null;}
+  if(_raceChatInterval){clearInterval(_raceChatInterval);_raceChatInterval=null;}
   document.body.classList.remove('detail-open'); // fab segnalazioni torna in basso
   var det=document.getElementById('detail');
   if(det){det.classList.remove('active');det.style.display='';}
