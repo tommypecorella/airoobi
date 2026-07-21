@@ -3771,8 +3771,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       +'<div class="strategy-box">'
       +'<div class="strategy-title"><span class="it">Come funziona il punteggio?</span><span class="en">How does scoring work?</span></div>'
       +'<div style="padding:14px 16px;background:rgba(239,62,79,.05);border:1px solid rgba(239,62,79,.2);border-radius:var(--radius-sm);margin-bottom:14px;line-height:1.55;font-size:13px;color:var(--gray-300)">'
-      +'<span class="it">Il Punteggio combina tre cose: gli <strong style="color:var(--gold)">Step</strong> che fai (a radice quadrata), il <strong style="color:var(--gold)">Moltiplicatore Fedelt&agrave;</strong> sugli ARIA spesi in categoria, e un <strong style="color:var(--gold)">Boost di garanzia</strong> che si attiva se partecipi spesso senza ancora ottenere un oggetto. Tutto deterministico: conta il punteggio, non il caso.</span>'
-      +'<span class="en">The Score combines three things: <strong style="color:var(--gold)">Steps</strong> you take (square-root), the <strong style="color:var(--gold)">Loyalty Multiplier</strong> on category ARIA spent, and a <strong style="color:var(--gold)">Guarantee Boost</strong> that kicks in if you participate often without getting an item yet. Fully deterministic: your score decides, not chance.</span>'
+      +'<span class="it">Sali facendo <strong style="color:var(--gold)">Step</strong>: chi &egrave; pi&ugrave; in alto alla chiusura vince l\'oggetto. Contano tre cose semplici — i <strong style="color:var(--gold)">passi</strong> che fai, la tua <strong style="color:var(--gold)">fedelt&agrave;</strong> (cresce spendendo ARIA in questa categoria) e una <strong style="color:var(--gold)">spinta bonus</strong> che si accende se corri tanto senza ancora vincere. Niente fortuna: conta solo quanto corri.</span>'
+      +'<span class="en">You climb by taking <strong style="color:var(--gold)">Steps</strong>: whoever is highest at close wins the item. Three simple things count — your <strong style="color:var(--gold)">steps</strong>, your <strong style="color:var(--gold)">loyalty</strong> (grows spending ARIA in this category) and a <strong style="color:var(--gold)">bonus boost</strong> that turns on if you race a lot without winning yet. No luck: only how much you climb.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
       +'<span class="it">Chi &egrave; in vetta alla chiusura ottiene l\'oggetto. Tutti raccolgono fiori ROBI sul percorso, e alla chiusura arriva il ROBI di ringraziamento per la corsa.</span>'
@@ -3872,6 +3872,19 @@ function updateStrategyGuide(scores,pos,total,myScore){
   var loyaltyPctBar=Math.min(100,Math.round(Math.log10(1+myHistoricAria/100)*25));
   var pityFillColor=myPityPhase==='hard'?'var(--gold)':myPityPhase==='soft'?'var(--accent)':'';
 
+  // ── "spiegato a nonna" (Skeezu 22 lug): un numero che conta + 3 KPI plain ──
+  var _tFBase=Math.max(0,leaderScoreV-myPityBonus);
+  var _tBlocks=myLoyaltyMult>0.01?Math.ceil(Math.pow(_tFBase/myLoyaltyMult,2)):0;
+  var gapSteps=Math.max(0,_tBlocks-myBlocks);
+  var leadIt,leadEn;
+  if(isFirst){leadIt='&#127956; Sei in testa! Fai ancora qualche Step per difendere la vetta.';leadEn='&#127956; You\'re leading! Take a few more Steps to defend the summit.';}
+  else if(myPityPhase==='hard'){leadIt='&#128293; Spinta bonus forte attiva: il 1&deg; posto &egrave; quasi tuo. Continua a fare Step.';leadEn='&#128293; Strong bonus active: #1 is nearly yours. Keep taking Steps.';}
+  else if(myPityPhase==='soft'){leadIt='Sei super competitivo — ancora qualche Step e ci sei.';leadEn='You\'re very competitive — a few more Steps and you\'re there.';}
+  else if(gapSteps>0&&gapSteps<=400){leadIt='Ti mancano circa <strong>'+gapSteps+' Step</strong> per arrivare 1&deg;.';leadEn='About <strong>'+gapSteps+' Steps</strong> to reach #1.';}
+  else{leadIt='Il 1&deg; &egrave; lontano, ma ogni Step raccoglie fiori &#127800; ROBI. Corri!';leadEn='#1 is far, but every Step picks ROBI flowers &#127800;. Keep climbing!';}
+  var boostIt=myPityPhase==='hard'?'Forte':myPityPhase==='soft'?'Attiva':'Spenta';
+  var boostEn=myPityPhase==='hard'?'Strong':myPityPhase==='soft'?'On':'Off';
+
   // GS-10 A/B collapsible: blocco A (header + Tuo Punteggio) sempre visibile,
   // blocco B (factors + tips) collassato di default. Clic su A toggle B.
   // Preserva stato open precedente dell'utente nel re-render (refreshPosition polling 30s)
@@ -3888,56 +3901,27 @@ function updateStrategyGuide(scores,pos,total,myScore){
     +'<span class="it">Tuo Punteggio: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; primo: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
     +'<span class="en">Your Score: <strong>'+myScoreV.toFixed(2)+'</strong>'+(pos>1?' &middot; leader: <strong>'+leaderScoreV.toFixed(2)+'</strong>':'')+'</span>'
     +'</div>'
-    // Blocco B: factors + tips · collassato di default, espanso quando .gs10-open
+    // Blocco B · "spiegato a nonna": un numero che conta + 3 KPI plain + rassicurazione
     +'<div class="strategy-ab-body">'
-    +'<div class="strategy-factors">'
-    // 1. Blocchi (radice quadrata)
-    +'<div class="strategy-factor-block van">'
-    +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.trophy+' <span class="it">Step correnti</span><span class="en">Current Steps</span></span>'
-    +'<span class="strategy-factor-weight-badge">'+myBlocks+' &middot; &radic;='+Math.sqrt(Math.max(myBlocks,0)).toFixed(2)+'</span>'
+    +'<div style="padding:12px 14px;background:rgba(239,62,79,.06);border:1px solid rgba(239,62,79,.22);border-radius:10px;font-size:14.5px;line-height:1.5;margin-bottom:12px">'
+    +'<span class="it">'+leadIt+'</span><span class="en">'+leadEn+'</span></div>'
+    +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px">'
+    +_nonnaKpi(UI_ICONS.trophy, myBlocks.toLocaleString('it-IT'), myBlocks.toLocaleString('en-US'), 'Passi fatti','Steps done','pi&ugrave; ne fai, pi&ugrave; sali','more = higher')
+    +_nonnaKpi(UI_ICONS.gem, '&times;'+myLoyaltyMult.toFixed(2), '&times;'+myLoyaltyMult.toFixed(2), 'Fedelt&agrave;','Loyalty','sale spendendo ARIA qui','grows spending ARIA here')
+    +_nonnaKpi(UI_ICONS.zap, boostIt, boostEn, 'Spinta bonus','Bonus boost','si accende se corri tanto','turns on if you race a lot')
     +'</div>'
-    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Contributo a radice quadrata: 100 Step valgono 10, non 100.</span>'
-    +'<span class="en">Square-root contribution: 100 Steps count as 10, not 100.</span>'
-    +'</div>'
-    +'</div>'
-    // 2. Moltiplicatore Fedeltà
-    +'<div class="strategy-factor-block van">'
-    +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.gem+' <span class="it">Moltiplicatore Fedelt&agrave;</span><span class="en">Loyalty Multiplier</span></span>'
-    +'<span class="strategy-factor-weight-badge">&times;'+myLoyaltyMult.toFixed(2)+'</span>'
-    +'</div>'
-    +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+loyaltyPctBar+'%"></div></div>'
-    +'<div class="strategy-bar-val">'+Math.round(myHistoricAria).toLocaleString('it-IT')+' ARIA</div>'
-    +'</div>'
-    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">Cresce con gli ARIA spesi in categoria (curva logaritmica, saturante).</span>'
-    +'<span class="en">Grows with ARIA spent in category (log curve, saturating).</span>'
-    +'</div>'
-    +'</div>'
-    // 3. Boost di garanzia (pity)
-    +'<div class="strategy-factor-block van'+(myPityPhase==='hard'?' pity-hard':myPityPhase==='soft'?' pity-soft':'')+'">'
-    +'<div class="strategy-factor-head">'
-    +'<span class="strategy-factor-heading">'+UI_ICONS.zap+' <span class="it">Boost di garanzia</span><span class="en">Guarantee Boost</span></span>'
-    +'<span class="strategy-factor-weight-badge">'+myLosses+'/'+myPityThreshold+'</span>'
-    +'</div>'
-    +'<div class="strategy-factor-bar">'
-    +'<div class="strategy-bar-track"><div class="strategy-bar-fill f1" style="width:'+pityPct+'%'+(pityFillColor?';background:'+pityFillColor:'')+'"></div></div>'
-    +'<div class="strategy-bar-val">+'+myPityBonus.toFixed(2)+'</div>'
-    +'</div>'
-    +'<div class="strategy-factor-hint">'+UI_ICONS.bulb
-    +' <span class="it">'+pityStatusIt+'.</span>'
-    +'<span class="en">'+pityStatusEn+'.</span>'
-    +'</div>'
-    +'</div>'
-    +'</div>'
-    +'<div class="strategy-tips">'
-    +tipsIt.map(function(t){return '<div class="strategy-tip"><span class="it">'+t+'</span></div>'}).join('')
-    +tipsEn.map(function(t){return '<div class="strategy-tip"><span class="en">'+t+'</span></div>'}).join('')
-    +'</div>'
+    +'<div class="strategy-tip"><span class="it">Comunque vada, i fiori &#127800; ROBI raccolti restano tuoi — e alla chiusura arriva il ROBI di ringraziamento.</span><span class="en">Either way, the ROBI flowers &#127800; you picked stay yours — plus a thank-you ROBI at close.</span></div>'
     +'</div>' // close strategy-ab-body
+    +'</div>';
+}
+
+// KPI "da nonna": icona + numero grande + etichetta semplice + una riga di aiuto
+function _nonnaKpi(icon, valIt, valEn, labIt, labEn, hintIt, hintEn){
+  return '<div style="background:var(--card-bg,rgba(255,255,255,.03));border:1px solid var(--gray-800,#2a333d);border-radius:12px;padding:11px 12px;text-align:center">'
+    +'<div style="font-family:var(--font-m);font-size:20px;font-weight:700;color:var(--gold,#E8B84A);line-height:1.1">'
+    +'<span class="it">'+valIt+'</span><span class="en">'+valEn+'</span></div>'
+    +'<div style="font-size:11.5px;font-weight:700;margin-top:4px"><span class="it">'+labIt+'</span><span class="en">'+labEn+'</span></div>'
+    +'<div style="font-size:10.5px;color:var(--gray-500);line-height:1.35;margin-top:3px"><span class="it">'+hintIt+'</span><span class="en">'+hintEn+'</span></div>'
     +'</div>';
 }
 
