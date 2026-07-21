@@ -134,6 +134,13 @@ function initSegnala(){
     +'#segnala-modal textarea{width:100%;min-height:92px;background:rgba(0,0,0,.25);border:1px solid var(--gray-700,#36424F);border-radius:8px;color:inherit;font:inherit;font-size:13px;padding:8px;resize:vertical;box-sizing:border-box}'
     +'#segnala-send{margin-top:10px;width:100%;background:#EF3E4F;color:#fff;border:none;border-radius:8px;padding:10px;font-size:12px;letter-spacing:1.5px;font-weight:700;cursor:pointer;text-transform:uppercase}'
     +'#segnala-send:disabled{opacity:.5}'
+    +'#segnala-attach-row{margin-top:8px}'
+    +'#segnala-attach-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px dashed var(--gray-600,#4a5561);color:var(--gray-300,#c4ccd4);border-radius:8px;padding:7px 11px;font:inherit;font-size:11.5px;cursor:pointer}'
+    +'#segnala-attach-btn:hover{border-color:#EF3E4F;color:#EF3E4F}'
+    +'#segnala-preview{margin-top:8px;display:none;position:relative}'
+    +'#segnala-preview.on{display:block}'
+    +'#segnala-preview img{max-width:100%;max-height:140px;border-radius:8px;border:1px solid var(--gray-700,#36424F);display:block}'
+    +'#segnala-preview .rm{position:absolute;top:5px;right:5px;width:24px;height:24px;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;border:none;cursor:pointer;font-size:14px;line-height:1}'
     +'#segnala-msg{font-size:12px;margin-top:8px;display:none}';
   document.head.appendChild(st);
   // 19 lug (Skeezu): la bandierina vive in TOPBAR quando c'è (.topbar-right); fab solo come fallback
@@ -158,6 +165,9 @@ function initSegnala(){
     +'</div>'
     +'<p><span class="it">Racconta cosa non va: pagina e utente li alleghiamo noi. Le segnalazioni utili vengono ringraziate in ROBI.</span><span class="en">Tell us what\'s wrong: page and user are attached automatically. Useful reports get thanked in ROBI.</span></p>'
     +'<textarea id="segnala-text" maxlength="2000" placeholder="Cosa non funziona? / What\'s wrong?"></textarea>'
+    +'<div id="segnala-attach-row"><button type="button" id="segnala-attach-btn"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l9.19-9.19a3.5 3.5 0 0 1 4.95 4.95l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg><span class="it">Allega screenshot</span><span class="en">Attach screenshot</span></button>'
+    +'<input type="file" id="segnala-file" accept="image/*" style="display:none"></div>'
+    +'<div id="segnala-preview"></div>'
     +'<button id="segnala-send"><span class="it">Invia segnalazione</span><span class="en">Send report</span></button>'
     +'<div id="segnala-msg"></div>';
   if(topRight){
@@ -196,32 +206,56 @@ function initSegnala(){
     head.addEventListener('pointerup',function(){drag=false;head.style.cursor='grab';});
     head.addEventListener('pointercancel',function(){drag=false;head.style.cursor='grab';});
   })();
-  document.getElementById('segnala-send').addEventListener('click',function(){
+  // ── allegato immagine (Skeezu 22 lug): preview + upload su bucket storage "reports" ──
+  var _segnalaFile=null;
+  document.getElementById('segnala-attach-btn').addEventListener('click',function(){document.getElementById('segnala-file').click();});
+  document.getElementById('segnala-file').addEventListener('change',function(){
+    var f=this.files&&this.files[0];var prev=document.getElementById('segnala-preview');
+    if(!f){_segnalaFile=null;prev.className='';prev.innerHTML='';return;}
+    if(f.size>5*1024*1024){_segnalaFile=null;this.value='';alert('Immagine troppo grande (max 5MB).');return;}
+    _segnalaFile=f;
+    var url=URL.createObjectURL(f);
+    prev.className='on';
+    prev.innerHTML='<button type="button" class="rm" title="Rimuovi">&times;</button><img src="'+url+'" alt="anteprima">';
+    prev.querySelector('.rm').addEventListener('click',function(){_segnalaFile=null;document.getElementById('segnala-file').value='';prev.className='';prev.innerHTML='';});
+  });
+  document.getElementById('segnala-send').addEventListener('click',async function(){
     var btn=this,txt=document.getElementById('segnala-text'),msg=document.getElementById('segnala-msg');
     var v=(txt.value||'').trim();
     if(v.length<5){msg.style.display='block';msg.style.color='#f87171';msg.innerHTML='<span class="it">Scrivi almeno qualche parola.</span><span class="en">Write at least a few words.</span>';return;}
     btn.disabled=true;
-    var tok=SB_KEY_F;
-    try{var sess=JSON.parse(localStorage.getItem('airoobi_session'));if(sess&&sess.access_token)tok=sess.access_token;}catch(e){}
-    fetch(SB_URL_F+'/rest/v1/rpc/submit_user_report',{
-      method:'POST',
-      headers:{'apikey':SB_KEY_F,'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
-      body:JSON.stringify({p_message:v,p_page:location.pathname+location.search,p_user_agent:(navigator.userAgent||'').slice(0,250)})
-    }).then(function(r){return r.json()}).then(function(d){
-      btn.disabled=false;
-      msg.style.display='block';
+    var tok=SB_KEY_F,uid=null;
+    try{var sess=JSON.parse(localStorage.getItem('airoobi_session'));if(sess&&sess.access_token){tok=sess.access_token;uid=sess.user&&sess.user.id;}}catch(e){}
+    var imgUrl=null;
+    try{
+      if(_segnalaFile&&uid){
+        msg.style.display='block';msg.style.color='var(--gray-400,#9AA7B2)';
+        msg.innerHTML='<span class="it">Carico l\'immagine…</span><span class="en">Uploading image…</span>';
+        var ext=(_segnalaFile.name.split('.').pop()||'png').toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,5)||'png';
+        var path=uid+'/'+Date.now()+'.'+ext;
+        var up=await fetch(SB_URL_F+'/storage/v1/object/reports/'+path,{
+          method:'POST',headers:{'apikey':SB_KEY_F,'Authorization':'Bearer '+tok,'Content-Type':_segnalaFile.type||'image/png','x-upsert':'true'},body:_segnalaFile});
+        if(up.ok)imgUrl=SB_URL_F+'/storage/v1/object/public/reports/'+path;
+      }
+    }catch(e){}
+    try{
+      var r=await fetch(SB_URL_F+'/rest/v1/rpc/submit_user_report',{
+        method:'POST',headers:{'apikey':SB_KEY_F,'Authorization':'Bearer '+tok,'Content-Type':'application/json'},
+        body:JSON.stringify({p_message:v,p_page:location.pathname+location.search,p_user_agent:(navigator.userAgent||'').slice(0,250),p_image_url:imgUrl})});
+      var d=await r.json();
+      btn.disabled=false;msg.style.display='block';
       if(d&&d.ok){
         msg.style.color='var(--kas,#49EACB)';
         msg.innerHTML='<span class="it">Grazie! Il team AIROOBI la legger&agrave; presto.</span><span class="en">Thanks! The AIROOBI team will read it soon.</span>';
-        txt.value='';
+        txt.value='';_segnalaFile=null;var pv=document.getElementById('segnala-preview');pv.className='';pv.innerHTML='';document.getElementById('segnala-file').value='';
         setTimeout(function(){modal.classList.remove('open');msg.style.display='none';},2600);
       }else{
         msg.style.color='#f87171';
-        msg.innerHTML=(d&&d.error==='RATE_LIMIT')
+        msg.innerHTML=(d&&(d.error==='RATE_LIMIT'||d.error==='rate_limited'))
           ?'<span class="it">Hai gi&agrave; inviato molte segnalazioni oggi — grazie! Riprova domani.</span><span class="en">You\'ve sent many reports today — thanks! Try again tomorrow.</span>'
           :'<span class="it">Invio non riuscito. Riprova.</span><span class="en">Send failed. Try again.</span>';
       }
-    }).catch(function(){btn.disabled=false;msg.style.display='block';msg.style.color='#f87171';msg.innerHTML='<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>';});
+    }catch(e){btn.disabled=false;msg.style.display='block';msg.style.color='#f87171';msg.innerHTML='<span class="it">Errore di rete. Riprova.</span><span class="en">Network error. Try again.</span>';}
   });
 }
 

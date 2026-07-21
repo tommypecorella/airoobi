@@ -639,8 +639,45 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
   <!-- MESSAGGI AIRDROP -->
   <!-- ═══ SEGNALAZIONI (18 lug 2026) · ticket bug/flaw dal widget flottante ═══ -->
   <div class="admin-section" id="sec-reports">
+    <style>
+      .rep-kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:6px 0 18px}
+      .rep-kpi{background:var(--card-bg,rgba(255,255,255,.03));border:1px solid var(--gray-800,#2a333d);border-radius:14px;padding:14px 16px}
+      .rep-kpi .n{font-family:var(--font-m);font-size:28px;font-weight:700;line-height:1}
+      .rep-kpi .l{font-size:11px;color:var(--gray-400);letter-spacing:.5px;text-transform:uppercase;margin-top:6px}
+      .rep-kpi.k-open{border-left:3px solid #f5a524}.rep-kpi.k-rev{border-left:3px solid #5b9bff}
+      .rep-kpi.k-res{border-left:3px solid #3ddc97}.rep-kpi.k-robi{border-left:3px solid var(--gold,#E8B84A)}
+      .rep-kpi.k-open .n{color:#f5a524}.rep-kpi.k-rev .n{color:#5b9bff}.rep-kpi.k-res .n{color:#3ddc97}.rep-kpi.k-robi .n{color:var(--gold,#E8B84A)}
+      .rep-gest{background:none;border:1px solid var(--gray-600,#4a5561);color:var(--white);border-radius:8px;padding:6px 14px;font-size:11.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+      .rep-gest:hover{border-color:#EF3E4F;color:#EF3E4F}
+      .rep-imgdot{display:inline-flex;align-items:center;gap:4px;color:var(--gray-400);font-size:11px}
+      /* scheda modale ticket */
+      #rep-modal{display:none;position:fixed;inset:0;z-index:9997;background:rgba(0,0,0,.6);align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+      #rep-modal.on{display:flex}
+      #rep-card{width:min(720px,100%);background:var(--gray-900,#141a21);border:1px solid var(--gray-700,#36424F);border-radius:16px;overflow:hidden}
+      #rep-card .rc-head{display:flex;align-items:center;gap:10px;padding:16px 18px;border-bottom:1px solid var(--gray-800,#2a333d)}
+      #rep-card .rc-head h3{margin:0;font-size:16px;flex:1}
+      #rep-card .rc-body{padding:18px;max-height:70vh;overflow-y:auto}
+      #rep-card .rc-meta{display:flex;flex-wrap:wrap;gap:8px;font-size:11.5px;color:var(--gray-400);margin-bottom:12px}
+      #rep-card .rc-meta b{color:var(--gray-300)}
+      #rep-card .rc-msg{font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-word;background:var(--card-bg,rgba(255,255,255,.03));border:1px solid var(--gray-800,#2a333d);border-radius:10px;padding:14px 16px}
+      #rep-card .rc-img{margin-top:12px}
+      #rep-card .rc-img img{max-width:100%;border-radius:10px;border:1px solid var(--gray-700,#36424F);cursor:zoom-in}
+      #rep-card .rc-form{margin-top:18px;padding-top:16px;border-top:1px dashed var(--gray-700,#36424F)}
+      #rep-card .rc-form label{display:block;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:.5px;margin:0 0 6px}
+      #rep-card .rc-form select,#rep-card .rc-form textarea,#rep-card .rc-form input{width:100%;background:var(--gray-900,#0e1319);border:1px solid var(--gray-700,#36424F);border-radius:8px;color:var(--white);font:inherit;font-size:13px;padding:9px 11px;box-sizing:border-box}
+      #rep-card .rc-form textarea{min-height:80px;resize:vertical}
+      #rep-card .rc-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+      #rep-card .rc-row>div{flex:1;min-width:140px}
+      #rep-card .rc-sign{font-size:11px;color:var(--gray-500);margin-top:5px}
+    </style>
     <h2><span class="it">Segnalazioni</span><span class="en">Reports</span> <span id="rep-count" style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gray-400);font-weight:400"></span></h2>
-    <p style="font-size:12px;color:var(--gray-400);margin-bottom:16px"><span class="it">Ticket dal widget "Segnala un problema" (ogni pagina, desktop+mobile). Utente e pagina arrivano in automatico. Premia le segnalazioni utili in ROBI, a discrezione.</span><span class="en">Tickets from the "Report an issue" widget. User and page attached automatically. Reward useful reports in ROBI.</span></p>
+    <p style="font-size:12px;color:var(--gray-400);margin-bottom:10px"><span class="it">Il gestionale dei ticket dal widget "Segnala un problema". Utente, pagina ed eventuale screenshot arrivano in automatico. Apri <b>Gestisci</b> per leggere tutto e rispondere; premia le segnalazioni utili in ROBI.</span><span class="en">Ticket manager from the "Report an issue" widget. Open <b>Manage</b> to read and reply; reward useful reports in ROBI.</span></p>
+    <div class="rep-kpis" id="rep-kpis">
+      <div class="rep-kpi k-open"><div class="n" id="kpi-open">—</div><div class="l"><span class="it">Aperte</span><span class="en">Open</span></div></div>
+      <div class="rep-kpi k-rev"><div class="n" id="kpi-rev">—</div><div class="l"><span class="it">In lavorazione</span><span class="en">In progress</span></div></div>
+      <div class="rep-kpi k-res"><div class="n" id="kpi-res">—</div><div class="l"><span class="it">Risolte</span><span class="en">Resolved</span></div></div>
+      <div class="rep-kpi k-robi"><div class="n" id="kpi-robi">—</div><div class="l"><span class="it">ROBI premiati</span><span class="en">ROBI rewarded</span></div></div>
+    </div>
     <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap">
       <select id="rep-filter" onchange="loadReportsTable()" style="background:var(--gray-900);color:var(--white);border:1px solid var(--gray-700);padding:6px 10px;border-radius:6px;font-size:12px">
         <option value="open">Aperte</option>
@@ -653,10 +690,14 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     </div>
     <div class="admin-table-wrap">
       <table class="admin-table" id="rep-tbl">
-        <thead><tr><th>Data</th><th>Utente</th><th>Pagina</th><th>Segnalazione</th><th>Stato</th><th>ROBI</th><th>Azioni</th></tr></thead>
+        <thead><tr><th>Data</th><th>Utente</th><th>Pagina</th><th>Segnalazione</th><th>Stato</th><th>ROBI</th><th></th></tr></thead>
         <tbody><tr><td colspan="7" style="color:var(--gray-400)">Caricamento…</td></tr></tbody>
       </table>
     </div>
+  </div>
+  <!-- scheda modale gestione ticket -->
+  <div id="rep-modal" onclick="if(event.target===this)closeReportDetail()">
+    <div id="rep-card"></div>
   </div>
 
   <div class="admin-section" id="sec-messages">
@@ -2580,8 +2621,23 @@ async function mintEvalobiFromAirdrop(){
 }
 
 // 18 lug · SEGNALAZIONI standalone (fetch raw, pattern ABO)
+var _repData={}, _repEmap={};
+var REP_STBADGE={open:'<span class="tag tag-warn">APERTA</span>',in_review:'<span class="tag tag-info">IN LAVORAZIONE</span>',resolved:'<span class="tag tag-ok">RISOLTA</span>',rejected:'<span class="tag">RESPINTA</span>'};
+var REP_SIGN='— AIROOBI APP SERVICE TEAM · appservice@airoobi.com';
+async function loadReportsKpis(){
+  var s=getSession();if(!s)return;
+  try{
+    var res=await fetch(SB_URL+'/rest/v1/user_reports?select=status,robi_reward&limit=2000',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
+    if(!res.ok)return;var d=await res.json()||[];
+    var o=0,rv=0,rs=0,robi=0;
+    d.forEach(function(r){if(r.status==='open')o++;else if(r.status==='in_review')rv++;else if(r.status==='resolved')rs++;robi+=parseFloat(r.robi_reward)||0;});
+    var set=function(id,v){var e=document.getElementById(id);if(e)e.textContent=v;};
+    set('kpi-open',o);set('kpi-rev',rv);set('kpi-res',rs);set('kpi-robi',(Math.round(robi*100)/100));
+  }catch(e){}
+}
 async function loadReportsTable(){
   var s=getSession();if(!s)return;
+  loadReportsKpis();
   var tbody=document.querySelector('#rep-tbl tbody');
   if(!tbody)return;
   tbody.innerHTML='<tr><td colspan="7" style="color:var(--gray-500);padding:18px;text-align:center">Caricamento…</td></tr>';
@@ -2595,31 +2651,77 @@ async function loadReportsTable(){
     var data=await res.json()||[];
     var cntEl=document.getElementById('rep-count');
     if(cntEl)cntEl.textContent='('+data.length+(st?' '+st:'')+')';
-    var emap={};
+    _repData={};data.forEach(function(r){_repData[r.id]=r;});
+    _repEmap={};
     var uids=[];data.forEach(function(r){if(r.user_id&&uids.indexOf(r.user_id)===-1)uids.push(r.user_id);});
     if(uids.length){
       var pRes=await fetch(SB_URL+'/rest/v1/profiles?select=id,email&id=in.('+uids.join(',')+')',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token}});
-      if(pRes.ok){(await pRes.json()||[]).forEach(function(p){emap[p.id]=p.email;});}
+      if(pRes.ok){(await pRes.json()||[]).forEach(function(p){_repEmap[p.id]=p.email;});}
     }
-    var stBadge={open:'<span class="tag tag-warn">APERTA</span>',in_review:'<span class="tag tag-info">IN LAVORAZIONE</span>',resolved:'<span class="tag tag-ok">RISOLTA</span>',rejected:'<span class="tag">RESPINTA</span>'};
     tbody.innerHTML=data.map(function(r){
       var d=new Date(r.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
-      var who=r.user_id?(emap[r.user_id]||r.user_id.slice(0,8)):'<span style="color:var(--gray-500)">ospite</span>';
-      var acts=[];
-      if(r.status==='open')acts.push('<button class="ab-btn" style="padding:3px 8px;font-size:10px" onclick="aboReportAct(\''+r.id+'\',\'in_review\')">PRENDI</button>');
-      if(r.status!=='resolved')acts.push('<button class="ab-btn ab-btn-primary" style="padding:3px 8px;font-size:10px" onclick="aboReportResolve(\''+r.id+'\','+(r.user_id?'true':'false')+')">RISOLVI</button>');
-      if(r.status!=='rejected'&&r.status!=='resolved')acts.push('<button class="ab-btn ab-quiet-danger" style="padding:3px 10px;font-size:10px" onclick="aboReportAct(\''+r.id+'\',\'rejected\')">RESPINGI</button>');
+      var who=r.user_id?(_repEmap[r.user_id]||r.user_id.slice(0,8)):'<span style="color:var(--gray-500)">ospite</span>';
+      var prev=(r.message||'').replace(/\s+/g,' ');if(prev.length>90)prev=prev.slice(0,89)+'…';
+      var imgDot=r.image_url?'<span class="rep-imgdot">📎 <span class="it">foto</span><span class="en">img</span></span>':'';
       return '<tr>'
         +'<td style="font-family:var(--font-m);font-size:11px;white-space:nowrap">'+d+'</td>'
         +'<td style="font-size:12px">'+who+'</td>'
         +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-400);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="'+escHtml(r.page||'')+'">'+escHtml(r.page||'—')+'</td>'
-        +'<td style="font-size:12.5px;line-height:1.55;min-width:280px;max-width:560px;white-space:pre-wrap;word-break:break-word;vertical-align:top;padding-top:12px">'+escHtml(r.message)+(r.admin_notes?'<div style="font-size:10.5px;color:var(--gray-500);margin-top:5px;padding-top:5px;border-top:1px dashed var(--gray-700)">📝 '+escHtml(r.admin_notes)+'</div>':'')+'</td>'
-        +'<td>'+(stBadge[r.status]||escHtml(r.status))+'</td>'
+        +'<td style="font-size:12.5px;max-width:380px">'+escHtml(prev)+(imgDot?' '+imgDot:'')+'</td>'
+        +'<td>'+(REP_STBADGE[r.status]||escHtml(r.status))+'</td>'
         +'<td style="font-family:var(--font-m);color:var(--gold)">'+(parseFloat(r.robi_reward)>0?'+'+parseFloat(r.robi_reward):'—')+'</td>'
-        +'<td style="white-space:nowrap"><div style="display:flex;gap:4px">'+acts.join('')+'</div></td>'
+        +'<td style="white-space:nowrap"><button class="rep-gest" onclick="openReportDetail(\''+r.id+'\')"><span class="it">Gestisci</span><span class="en">Manage</span></button></td>'
         +'</tr>';
     }).join('')||'<tr><td colspan="7" style="color:var(--gray-500);text-align:center;padding:24px">Nessuna segnalazione</td></tr>';
   }catch(e){tbody.innerHTML='<tr><td colspan="7" style="color:#f87171;padding:18px">'+escHtml(e.message||String(e))+'</td></tr>';}
+}
+function closeReportDetail(){var m=document.getElementById('rep-modal');if(m)m.classList.remove('on');}
+function openReportDetail(id){
+  var r=_repData[id];if(!r)return;
+  var m=document.getElementById('rep-modal'),card=document.getElementById('rep-card');
+  var d=new Date(r.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  var who=r.user_id?(_repEmap[r.user_id]||r.user_id.slice(0,8)):'ospite';
+  var hasUser=!!r.user_id;
+  var img=r.image_url?'<div class="rc-img"><a href="'+escHtml(r.image_url)+'" target="_blank" rel="noopener"><img src="'+escHtml(r.image_url)+'" alt="screenshot"></a></div>':'';
+  var notesPrev=r.admin_notes?'<div style="font-size:11.5px;color:var(--gray-500);margin-top:10px;padding:8px 10px;background:rgba(255,255,255,.02);border-radius:8px;white-space:pre-wrap">📝 '+escHtml(r.admin_notes)+'</div>':'';
+  card.innerHTML=
+    '<div class="rc-head">'+(REP_STBADGE[r.status]||'')+'<h3>'+escHtml(who)+'</h3>'
+      +'<button onclick="closeReportDetail()" style="width:28px;height:28px;background:none;border:1px solid var(--gray-700);border-radius:8px;color:inherit;font-size:16px;cursor:pointer">&times;</button></div>'
+    +'<div class="rc-body">'
+      +'<div class="rc-meta"><span><b>'+d+'</b></span><span>·</span><span><b>'+escHtml(r.page||'—')+'</b></span>'
+        +(parseFloat(r.robi_reward)>0?'<span>·</span><span style="color:var(--gold)"><b>+'+parseFloat(r.robi_reward)+' ROBI</b></span>':'')+'</div>'
+      +'<div class="rc-msg">'+escHtml(r.message||'')+'</div>'+img+notesPrev
+      +(r.user_agent?'<div style="font-size:10px;color:var(--gray-600);margin-top:8px;word-break:break-all">'+escHtml(r.user_agent)+'</div>':'')
+      +'<div class="rc-form">'
+        +'<div class="rc-row">'
+          +'<div><label><span class="it">Stato</span><span class="en">Status</span></label>'
+            +'<select id="rc-status">'
+            +'<option value="in_review"'+(r.status==='in_review'?' selected':'')+'>In lavorazione</option>'
+            +'<option value="resolved"'+(r.status==='resolved'?' selected':'')+'>Risolta</option>'
+            +'<option value="rejected"'+(r.status==='rejected'?' selected':'')+'>Respinta</option>'
+            +'</select></div>'
+          +(hasUser?'<div><label>ROBI <span class="it">di ringraziamento</span><span class="en">reward</span></label><input id="rc-robi" type="number" min="0" max="100" step="0.5" value="'+(parseFloat(r.robi_reward)||0)+'"></div>':'')
+        +'</div>'
+        +'<label><span class="it">Risposta / note</span><span class="en">Reply / notes</span></label>'
+        +'<textarea id="rc-notes" placeholder="Scrivi la risposta all\'utente…">'+escHtml(r.admin_notes||'').replace(/\n*—\sAIROOBI APP SERVICE TEAM.*/s,'').trim()+'</textarea>'
+        +'<div class="rc-sign">✍️ '+REP_SIGN+' <span class="it">— aggiunta in automatico</span><span class="en">— auto-appended</span></div>'
+        +'<button class="ab-btn ab-btn-primary" style="margin-top:12px;width:100%" onclick="saveReportDetail(\''+r.id+'\','+hasUser+')"><span class="it">Salva risposta</span><span class="en">Save reply</span></button>'
+      +'</div>'
+    +'</div>';
+  m.classList.add('on');
+}
+async function saveReportDetail(id,hasUser){
+  var status=document.getElementById('rc-status').value;
+  var raw=(document.getElementById('rc-notes').value||'').trim();
+  var notes=(raw?raw+'\n\n':'')+REP_SIGN;
+  var robi=0;
+  if(hasUser){robi=parseFloat(document.getElementById('rc-robi').value)||0;if(robi<0||robi>100){alert('ROBI tra 0 e 100.');return;}}
+  if(status!=='resolved')robi=0; // il ROBI di ringraziamento si dà solo quando si risolve
+  var d=await _aboReportRpc(id,status,notes,robi);
+  if(!d||!d.ok){alert('Errore: '+(d&&d.error||'?'));return;}
+  closeReportDetail();
+  if(robi>0)alert('Salvato ✓ · +'+robi+' ROBI assegnati con notifica all\'utente.');
+  loadReportsTable();if(typeof loadAboTodo==='function')loadAboTodo();
 }
 async function _aboReportRpc(id,status,notes,robi){
   var s=getSession();if(!s)return null;
@@ -5352,7 +5454,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-22.07.2026-1.16.0"></div>
-<script src="/src/footer.js?v=1.18.0"></script>
+<div id="footer-mount" data-version="alfa-22.07.2026-1.17.0"></div>
+<script src="/src/footer.js?v=1.19.0"></script>
 </body>
 </html>
