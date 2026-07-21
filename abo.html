@@ -552,6 +552,23 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
 
   <!-- USERS TABLE -->
   <div class="admin-section" id="sec-users">
+    <!-- 🎁 Regala ARIA ai tester più attivi (Skeezu 22 lug 2026) — SOLO ARIA, mai ROBI -->
+    <div class="admin-card" style="margin-bottom:18px;padding:16px 18px;border:1px solid var(--gray-200);border-radius:12px">
+      <h3 style="margin:0 0 4px">🎁 <span class="it">Regala ARIA</span><span class="en">Gift ARIA</span></h3>
+      <div class="admin-note" style="margin-bottom:10px"><span class="it">Premia i tester più attivi: email, importo in <b>ARIA</b> (mai ROBI — sarebbe unfair) e, se vuoi, una notifica con testo tuo. Va nel ledger come <code>admin_gift</code> con la tua firma.</span><span class="en">Reward active testers: email, amount in ARIA only, optional custom notification.</span></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <input id="gift-email" type="email" placeholder="email utente" style="flex:1;min-width:220px" autocomplete="off">
+        <input id="gift-amount" type="number" min="1" step="1" placeholder="ARIA" style="max-width:110px">
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px">
+        <input id="gift-msg" type="text" placeholder="testo della notifica (es. Dal team, con affetto!)" style="flex:1;min-width:260px" maxlength="200" autocomplete="off">
+        <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;white-space:nowrap;cursor:pointer">
+          <input id="gift-notify" type="checkbox" checked> <span class="it">invia notifica</span><span class="en">send notification</span>
+        </label>
+        <button class="ab-btn ab-btn-primary" id="gift-send" onclick="aboGiftAria()">Regala</button>
+      </div>
+      <div id="gift-msg-out" style="font-size:13px;margin-top:8px;color:var(--gray-500)"></div>
+    </div>
     <h2>Ultimi utenti <span id="adm-users-total" style="font-family:var(--font-m);font-size:13px;letter-spacing:1px;color:var(--gray-400);font-weight:400"></span> <span class="info-i" onclick="showAboTip(this,'sec-users')">i</span></h2>
     <table class="admin-table" id="adm-users-table">
       <thead><tr><th>Email</th><th>ARIA</th><th>ROBI</th><th><span class="it">Ingressi (sett.)</span><span class="en">Entries (wk)</span></th><th>Referral</th><th>Registrato</th></tr></thead>
@@ -1618,6 +1635,28 @@ async function sbPatch(path,data,token){
 async function sbDel(path,token){
   var res=await fetch(SB_URL+'/rest/v1/'+path,{method:'DELETE',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+(token||SB_KEY),'Prefer':'return=minimal'}});
   if(!res.ok)throw new Error('DELETE failed: '+res.status);
+}
+// 🎁 Regala ARIA ai tester (Skeezu 22 lug 2026) — RPC admin_gift_aria, SOLO ARIA
+async function aboGiftAria(){
+  var out=document.getElementById('gift-msg-out');
+  var email=(document.getElementById('gift-email').value||'').trim();
+  var amount=parseInt(document.getElementById('gift-amount').value,10);
+  var msg=(document.getElementById('gift-msg').value||'').trim();
+  var notify=document.getElementById('gift-notify').checked;
+  if(!email||email.indexOf('@')<0){out.textContent='⚠ email non valida';return}
+  if(!amount||amount<=0){out.textContent='⚠ importo ARIA non valido';return}
+  if(!confirm('Regalare '+amount.toLocaleString('it-IT')+' ARIA a '+email+(notify?' con notifica?':' (senza notifica)?')))return;
+  var btn=document.getElementById('gift-send');btn.disabled=true;out.textContent='invio…';
+  try{
+    var s=getSession();
+    var r=await sbRpc('admin_gift_aria',{p_email:email,p_amount:amount,p_message:msg||null,p_notify:notify},s&&s.access_token);
+    if(r&&r.ok){
+      out.innerHTML='✅ <b>'+amount.toLocaleString('it-IT')+' ARIA</b> a '+r.email+' — nuovo saldo <b>'+Number(r.new_balance).toLocaleString('it-IT')+'</b>'+(r.notified?' · 🔔 notifica inviata':'');
+      document.getElementById('gift-amount').value='';
+      if(typeof loadUsers==='function')loadUsers();
+    }else out.textContent='❌ '+((r&&r.error)||'errore RPC');
+  }catch(e){out.textContent='❌ errore di rete';}
+  btn.disabled=false;
 }
 async function sbRpc(fn,body,token){
   const res=await fetch(SB_URL+'/rest/v1/rpc/'+fn,{
@@ -5309,7 +5348,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-19.07.2026-1.14.0"></div>
+<div id="footer-mount" data-version="alfa-22.07.2026-1.15.0"></div>
 <script src="/src/footer.js?v=1.18.0"></script>
 </body>
 </html>
