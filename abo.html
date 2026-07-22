@@ -1184,7 +1184,24 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
           <option value="">— Seleziona —</option>
         </select>
         <button onclick="loadFairnessAnalysis()" style="background:var(--gold);color:#000;border:none;padding:6px 16px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;cursor:pointer;font-weight:700">Aggiorna</button>
+        <div id="fair-mode-toggle" onclick="toggleFairMode()" title="Tecnico ⇄ Umano" style="margin-left:auto;display:inline-flex;align-items:center;gap:0;border:1px solid var(--gray-700);border-radius:8px;overflow:hidden;cursor:pointer;font-family:var(--font-m);font-size:10px;letter-spacing:1px;user-select:none">
+          <span class="fm-t" style="padding:6px 12px">🔬 TECNICO</span>
+          <span class="fm-h" style="padding:6px 12px">👵 UMANO</span>
+        </div>
       </div>
+      <style>
+        #fair-mode-toggle .fm-t,#fair-mode-toggle .fm-h{color:var(--gray-500);transition:all .15s}
+        #fair-mode-toggle .fm-t{background:rgba(255,255,255,.04);color:var(--gold)}
+        body.abo-fair-human #fair-mode-toggle .fm-t{background:none;color:var(--gray-500)}
+        body.abo-fair-human #fair-mode-toggle .fm-h{background:rgba(74,158,255,.14);color:#4A9EFF}
+        #fairness-result .fair-human{display:none}
+        #fairness-result .fair-hlabel{display:none}
+        body.abo-fair-human #fairness-result .fair-tech{display:none}
+        body.abo-fair-human #fairness-result .fair-tlabel{display:none}
+        body.abo-fair-human #fairness-result .fair-human{display:block}
+        body.abo-fair-human #fairness-result .fair-hlabel{display:block}
+        #fairness-result .fair-human{font-size:12.5px;color:#9fb3c8;line-height:1.5;margin-top:6px;background:rgba(74,158,255,.05);border-left:2px solid rgba(74,158,255,.4);padding:7px 10px;border-radius:0 6px 6px 0}
+      </style>
       <div id="fairness-result"></div>
     </div>
   </div>
@@ -3598,17 +3615,22 @@ async function loadFairnessAnalysis(){
     h+='<div style="display:flex;align-items:center;gap:24px;margin-bottom:20px;padding:20px;background:rgba(255,255,255,.02);border:1px solid var(--gray-800)">';
     h+='<div style="text-align:center"><div style="font-family:var(--font-m);font-size:48px;font-weight:300;color:'+gradeColor+';line-height:1">'+fs.value+'</div><div style="font-family:var(--font-m);font-size:10px;letter-spacing:2px;color:var(--gray-500);margin-top:4px">FAIRNESS SCORE</div></div>';
     h+='<div style="text-align:center"><div style="font-family:var(--font-h);font-size:36px;font-weight:300;color:'+gradeColor+'">'+fs.grade+'</div><div style="font-family:var(--font-m);font-size:10px;color:var(--gray-400)">'+fs.label+'</div></div>';
-    h+='<div style="flex:1;font-size:12px;color:var(--gray-400)"><strong>'+d.participants+'</strong> partecipanti · <strong>'+d.total_blocks_sold+'</strong> Step percorsi<br>Gini: <strong>'+d.gini.value+'</strong> ('+d.gini.interpretation+')</div>';
+    h+='<div style="flex:1;font-size:12px;color:var(--gray-400)"><strong>'+d.participants+'</strong> partecipanti · <strong>'+d.total_blocks_sold+'</strong> Step percorsi<br><span class="fair-tlabel">Gini: <strong>'+d.gini.value+'</strong> ('+d.gini.interpretation+')</span></div>';
     h+='</div>';
+    // 👵 traduzione umana dell'header (Skeezu 22 lug)
+    h+='<div class="fair-human" style="margin-top:-10px;margin-bottom:16px"><b>In parole semplici:</b> è il voto di equità della gara, da 0 (uno ha stravinto) a 100 (tutti pari). Qui <b>'+fs.value+'/100 → voto '+fs.grade+'</b> ('+fs.label+'). Hanno corso <b>'+d.participants+'</b> persone per <b>'+d.total_blocks_sold+'</b> Step totali. L\'indice "Gini" '+d.gini.value+' è '+(d.gini.value<0.3?'<b>bassissimo</b>: gli Step sono distribuiti bene, nessuno ha stra-dominato':'<b>alto</b>: pochi hanno fatto gran parte degli Step')+'.</div>';
     var subs=d.sub_scores;
     var subLabels={gini:'Gini',conc_top1:'Top 1',conc_top5:'Top 5',conc_top10:'Top 10',gap_1_2:'Gap 1°-2°',factor_bal:'Factor Bal.',spread:'Spread',diversity:'Diversity'};
+    var subHuman={gini:'Equità generale',conc_top1:'Il 1° non strapesa',conc_top5:'I primi 5 non strapesano',conc_top10:'I primi 10 non strapesano',gap_1_2:'1° e 2° vicini',factor_bal:'Mix Step/Fedeltà',spread:'Punteggi ravvicinati',diversity:'Quanti corrono davvero'};
     var subWeights={gini:25,conc_top1:15,conc_top5:10,conc_top10:5,gap_1_2:20,factor_bal:15,spread:5,diversity:5};
     h+='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">';
     Object.keys(subLabels).forEach(function(k){
       var val=subs[k];
       var barColor=val>=70?'#49b583':val>=50?'var(--gold)':val>=30?'#f59e0b':'#ef4444';
       h+='<div style="background:var(--gray-900);padding:10px;border:1px solid var(--gray-800)">';
-      h+='<div style="font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;color:var(--gray-500)">'+subLabels[k]+' <span style="color:var(--gray-600)">('+subWeights[k]+'%)</span></div>';
+      h+='<div style="font-family:var(--font-m);font-size:8px;letter-spacing:1.5px;color:var(--gray-500);min-height:22px">'
+        +'<span class="fair-tlabel">'+subLabels[k]+' <span style="color:var(--gray-600)">('+subWeights[k]+'%)</span></span>'
+        +'<span class="fair-hlabel" style="text-transform:none;letter-spacing:.2px;font-size:9.5px;color:#9fb3c8;line-height:1.25">'+subHuman[k]+'</span></div>';
       h+='<div style="font-family:var(--font-m);font-size:18px;font-weight:600;color:'+barColor+'">'+val+'</div>';
       h+='<div style="height:3px;background:var(--gray-800);margin-top:6px"><div style="height:100%;width:'+val+'%;background:'+barColor+';transition:width .5s"></div></div>';
       h+='</div>';
@@ -3617,28 +3639,38 @@ async function loadFairnessAnalysis(){
     h+='<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
     var c=d.concentration;
     h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)"><div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">CONCENTRAZIONE BLOCCHI</div>';
-    h+='<div style="font-size:12px;color:var(--gray-300)">Top 1: <strong>'+(c.top1_share*100).toFixed(1)+'%</strong> ('+c.top1_blocks+' Step)</div>';
+    h+='<div class="fair-tech"><div style="font-size:12px;color:var(--gray-300)">Top 1: <strong>'+(c.top1_share*100).toFixed(1)+'%</strong> ('+c.top1_blocks+' Step)</div>';
     h+='<div style="font-size:12px;color:var(--gray-300)">Top 5: <strong>'+(c.top5_share*100).toFixed(1)+'%</strong> ('+c.top5_blocks+' Step)</div>';
     h+='<div style="font-size:12px;color:var(--gray-300)">Top 10: <strong>'+(c.top10_share*100).toFixed(1)+'%</strong> ('+c.top10_blocks+' Step)</div></div>';
+    h+='<div class="fair-human">Chi ha accumulato più Step. Il primo ha fatto il <b>'+(c.top1_share*100).toFixed(0)+'%</b> di tutti gli Step, i primi cinque il <b>'+(c.top5_share*100).toFixed(0)+'%</b>. Più questi numeri sono bassi, più la torta degli Step è divisa tra tanti = più equo.</div></div>';
     var fb=d.factor_balance;
-    h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)"><div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">BILANCIAMENTO FATTORI (VINCITORE)</div>';
-    h+='<div style="font-size:12px;color:#4A9EFF">F1 Step (70%): <strong>'+fb.f1_pct+'%</strong> (raw: '+fb.winner_f1+')</div>';
+    h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)"><div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">BILANCIAMENTO FATTORI <span class="fair-tlabel">(VINCITORE)</span></div>';
+    h+='<div class="fair-tech"><div style="font-size:12px;color:#4A9EFF">F1 Step (70%): <strong>'+fb.f1_pct+'%</strong> (raw: '+fb.winner_f1+')</div>';
     h+='<div style="font-size:12px;color:var(--gold)">F2 Categoria (30%): <strong>'+fb.f2_pct+'%</strong> (raw: '+fb.winner_f2+')</div>';
     h+='<div style="font-size:11px;color:var(--gray-400);margin-top:6px">Dominante: <strong style="color:var(--white)">'+fb.dominant+'</strong> · Sbilanciamento: '+(fb.imbalance*100).toFixed(1)+'%</div></div>';
+    h+='<div class="fair-human">Da dove arriva il punteggio di chi è in testa: <b>'+fb.f1_pct+'%</b> dagli Step fatti e <b>'+fb.f2_pct+'%</b> dalla fedeltà di categoria. '+(fb.f2_pct<10?'Qui è quasi tutto Step — la fedeltà non ha ancora inciso.':'Un buon mix tra i due.')+'</div></div>';
     var ss=d.score_spread;
     h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)"><div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">DISTRIBUZIONE SCORE</div>';
-    h+='<div style="font-size:12px;color:var(--gray-300)">Media: <strong>'+ss.mean+'</strong> · Std dev: <strong>'+ss.std_dev+'</strong></div>';
+    h+='<div class="fair-tech"><div style="font-size:12px;color:var(--gray-300)">Media: <strong>'+ss.mean+'</strong> · Std dev: <strong>'+ss.std_dev+'</strong></div>';
     h+='<div style="font-size:12px;color:var(--gray-300)">Min: '+ss.min+' · Max: '+ss.max+'</div>';
     h+='<div style="font-size:12px;color:var(--gray-300)">Gap 1°-2°: <strong style="color:'+(ss.gap_1st_2nd>0.1?'#f59e0b':'#49b583')+'">'+ss.gap_1st_2nd+'</strong></div></div>';
+    h+='<div class="fair-human">I punteggi vanno da <b>'+Number(ss.min).toFixed(0)+'</b> a <b>'+Number(ss.max).toFixed(0)+'</b>, in media <b>'+Number(ss.mean).toFixed(0)+'</b>. Sono vicini tra loro (poca "deviazione") = gara equilibrata, nessuno è scappato via.</div></div>';
     var dv=d.diversity;
     h+='<div style="background:var(--gray-900);padding:14px;border:1px solid var(--gray-800)"><div style="font-family:var(--font-m);font-size:9px;letter-spacing:1.5px;color:var(--gold);margin-bottom:8px">DIVERSITÀ PARTECIPAZIONE</div>';
-    h+='<div style="font-size:12px;color:var(--gray-300)">Acquirenti unici: <strong>'+dv.unique_buyers+'</strong></div>';
+    h+='<div class="fair-tech"><div style="font-size:12px;color:var(--gray-300)">Acquirenti unici: <strong>'+dv.unique_buyers+'</strong></div>';
     h+='<div style="font-size:12px;color:var(--gray-300)">Media Step/utente: <strong>'+dv.avg_blocks_per_buyer+'</strong></div>';
     h+='<div style="font-size:12px;color:var(--gray-300)">Rapporto diversità: <strong>'+(dv.ratio*100).toFixed(1)+'%</strong></div></div>';
+    h+='<div class="fair-human"><b>'+dv.unique_buyers+'</b> persone diverse hanno corso, facendo in media <b>'+Math.round(dv.avg_blocks_per_buyer)+'</b> Step a testa.</div></div>';
     h+='</div>';
     resultEl.innerHTML=h;
   }catch(e){console.error('fairness:',e);resultEl.innerHTML='<p style="color:#ef4444">'+escHtml(e.message)+'</p>';}
 }
+// 👵 toggle Tecnico ⇄ Umano (Skeezu 22 lug): mantiene i numeri, affianca la spiegazione in italiano-di-tutti-i-giorni
+function toggleFairMode(){
+  var on=document.body.classList.toggle('abo-fair-human');
+  try{localStorage.setItem('abo_fair_human',on?'1':'0');}catch(e){}
+}
+(function(){try{if(localStorage.getItem('abo_fair_human')==='1')document.body.classList.add('abo-fair-human');}catch(e){}})();
 
 // ── Engine Config ──
 async function loadEngineConfig(){
@@ -5454,7 +5486,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-22.07.2026-1.18.0"></div>
+<div id="footer-mount" data-version="alfa-22.07.2026-1.19.0"></div>
 <script src="/src/footer.js?v=1.19.0"></script>
 </body>
 </html>
