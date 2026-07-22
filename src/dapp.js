@@ -4782,7 +4782,7 @@ async function openControlRoom(airdropId){
 
   var scoresHtml='';
   if(preview.scores&&preview.scores.length){
-    scoresHtml='<div class="cr-section"><div class="cr-section-title">Score Leaderboard</div>'
+    scoresHtml='<div class="cr-section"><div class="cr-section-title"><span class="it">Classifica finale</span><span class="en">Final standings</span></div>'
       +'<div style="font-size:10px;color:var(--gray-500);margin-bottom:8px">F1 = Step acquistati (70%) &middot; F2 = ARIA spesi nella categoria (30%)</div>'
       +'<table class="cr-table"><thead><tr><th>Rank</th><th style="text-align:center">F1</th><th style="text-align:center">F2</th><th style="text-align:center">Score</th><th style="text-align:center">Blocks</th><th style="text-align:center">ARIA</th></tr></thead><tbody>';
     preview.scores.slice(0,8).forEach(function(s){
@@ -6907,6 +6907,11 @@ var INFO_TIPS={
   'evalobi':{
     it:'EVALOBI è il certificato di valutazione del tuo oggetto — esito, valore stimato e motivazione, firmati da AIROOBI. Non ha valore monetario e non si spende: è la prova, permanente e tua, del nostro giudizio. Resta nel Portafoglio anche dopo aver venduto o ritirato l\'oggetto.',
     en:'EVALOBI is your object\'s evaluation certificate — outcome, estimated value and reasoning, signed by AIROOBI. It has no monetary value and cannot be spent: it is a permanent, personal proof of our assessment. It stays in your Wallet even after you sell or withdraw the object.'
+  },
+  // dettaglio tecnico dei benefit Alpha Brave, dietro la "i" (per i pochi interessati)
+  'alpha-brave-perks':{
+    it:'Fase Alpha Brave: 1.000 posti totali. Chi invita in questa fase entra nella "community fondante" con benefit permanenti — Badge Fondatore + anzianità nello scoring (la tua data d\'ingresso pesa a tuo favore). A posti esauriti i ROBI per invito diminuiscono.',
+    en:'Alpha Brave phase: 1,000 total spots. Inviting during this phase joins the "founding community" with permanent perks — Founder Badge + scoring seniority (your join date counts in your favor). Once spots fill up, ROBI per invite decreases.'
   },
   // la formula tecnica dello scoring, dietro la "i" (versione umana visibile a schermo)
   'salita-scoring':{
