@@ -2343,7 +2343,7 @@ function renderGrid(){
     // Badge: presale vs sale, then fill status
     var badge='';
     var isPresale=a.status==='presale';
-    if(isPresale)badge='<div class="card-badge presale">Presale · 2x Mining</div>';
+    if(isPresale)badge='<div class="card-badge presale"><span class="it">Anteprima · doppi ROBI</span><span class="en">Preview · double ROBI</span></div>';
     else if(pct>=80)badge='<div class="card-badge ending"><span class="it">Ultimi</span><span class="en">Ending</span></div>';
     else if(pct>=50)badge='<div class="card-badge hot">Hot</div>';
     else badge='<div class="card-badge sale">Live</div>';
@@ -2734,7 +2734,7 @@ async function openDetail(id){
     +'</div>'
     :'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Metti da parte i tuoi ARIA</span><span class="en">Set aside your ARIA</span></div>'
-    +'<p class="buy-box-framing"><span class="it">Ogni Step ti avvicina alla vetta e lungo il percorso raccogli ROBI Reward — reward reali, riscattabili in KAS.</span><span class="en">Every Step brings you closer to the summit — and you pick up ROBI Reward along the trail, redeemable in KAS.</span></p>'
+    +'<p class="buy-box-framing"><span class="it">Ogni Step ti avvicina alla vetta e lungo il percorso raccogli <strong>ROBI veri</strong> — che puoi riscattare in KAS quando vuoi.</span><span class="en">Every Step brings you closer to the summit — and along the trail you pick up <strong>real ROBI</strong>, redeemable in KAS anytime.</span></p>'
     +(isPresale?'<div style="background:rgba(74,158,255,.06);border:1px solid rgba(74,158,255,.2);padding:6px 10px;margin-bottom:12px;font-size:11px;color:var(--aria)"><strong>&#9935; PRESALE 2x</strong> — <span class="it">In presale ogni Step raccoglie il doppio dei ROBI!</span><span class="en">In presale every Step picks up double ROBI!</span></div>':'')
     +'<div class="buy-display">'
     +'<div class="buy-display-count" id="buy-display-count">1 <span>Step</span></div>'
