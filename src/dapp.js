@@ -3427,7 +3427,7 @@ async function renderSalita(scores){
     +'<div class="salita-mini">'+mini+'</div>'
     +(counters?'<div class="salita-counters">'+counters+'</div>':'')
     +cta
-    +'<p class="salita-legal"><span class="it">Posizione deterministica: punteggio = √Step × moltiplicatore fedeltà + boost di garanzia. Chi è in vetta alla chiusura ottiene l\'oggetto; a tutti gli altri, alla chiusura, va un ROBI Reward: il ringraziamento per aver corso.</span><span class="en">Deterministic position: score = √Steps × loyalty multiplier + guarantee boost. Whoever is at the summit at close gets the item; everyone else receives ROBI Reward at close — a thank-you for the climb.</span></p>'
+    +'<p class="salita-legal"><span class="it">Chi è più in alto alla chiusura si porta a casa l\'oggetto, consegna inclusa. Tutti gli altri ricevono comunque un fiore ROBI di ringraziamento per aver corso. Conta solo quanto sali — niente fortuna.</span><span class="en">Whoever is highest at close takes the object home, delivery included. Everyone else still gets a thank-you ROBI for the climb. Only how much you climb counts — no luck.</span> <span class="info-i" onclick="showInfoTip(this,\'salita-scoring\')" style="cursor:pointer">i</span></p>'
     +'</div>';
 
   _salitaZoomInit(); // zoom avatar + nickname (social)
@@ -6891,6 +6891,11 @@ var INFO_TIPS={
   'evalobi':{
     it:'EVALOBI è il certificato di valutazione del tuo oggetto — esito, valore stimato e motivazione, firmati da AIROOBI. Non ha valore monetario e non si spende: è la prova, permanente e tua, del nostro giudizio. Resta nel Portafoglio anche dopo aver venduto o ritirato l\'oggetto.',
     en:'EVALOBI is your object\'s evaluation certificate — outcome, estimated value and reasoning, signed by AIROOBI. It has no monetary value and cannot be spent: it is a permanent, personal proof of our assessment. It stays in your Wallet even after you sell or withdraw the object.'
+  },
+  // la formula tecnica dello scoring, dietro la "i" (versione umana visibile a schermo)
+  'salita-scoring':{
+    it:'Posizione deterministica: punteggio = √Step × moltiplicatore fedeltà + boost di garanzia. Chi è in vetta alla chiusura ottiene l\'oggetto; a tutti gli altri, alla chiusura, va un ROBI Reward: il ringraziamento per aver corso.',
+    en:'Deterministic position: score = √Steps × loyalty multiplier + guarantee boost. Whoever is at the summit at close gets the item; everyone else receives ROBI Reward at close — a thank-you for the climb.'
   }
 };
 
