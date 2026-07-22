@@ -7149,7 +7149,7 @@ function renderHomeFeed(){
       +(a.code?'<div class="v4-hcode">#'+escHtml(a.code)+'</div>':'')
       +'<div class="v4-trail"><i style="width:'+pct+'%"></i></div>'
       +'<div class="v4-tmeta">'+sold.toLocaleString('it-IT')+' / '+tot.toLocaleString('it-IT')+' <span class="it">Step verso la vetta</span><span class="en">Steps to the summit</span></div>'
-      +'<button class="v4-cta"><span class="it">Entra in corsa</span><span class="en">Join the race</span><small>'+price+' ARIA <span class="it">A STEP &middot; SALITA DETERMINISTICA</span><span class="en">PER STEP &middot; DETERMINISTIC CLIMB</span></small></button>'
+      +'<button class="v4-cta"><span class="it">Entra in corsa</span><span class="en">Join the race</span><small>'+price+' ARIA <span class="it">A STEP &middot; CONTA QUANTO SALI, NON LA FORTUNA</span><span class="en">PER STEP &middot; YOUR CLIMB DECIDES, NOT LUCK</span></small></button>'
       +'<div class="v4-hnote"><span class="it">Comunque vada, sul percorso raccogli <b>fiori ROBI</b>.</span><span class="en">However it goes, you pick <b>ROBI flowers</b> on the trail.</span></div>'
       +'</div></div>';
   }).join('');
