@@ -924,7 +924,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
         <p><strong style="color:var(--gold)">3 · presale → sale</strong> — il venditore accetta la valutazione e la corsa parte (presale se attivata, con passaggio automatico a sale alla soglia % configurata in Engine Config). <em>Trigger: accept_airdrop_valuation · auto-transizione in buy_blocks.</em></p>
         <p><strong style="color:var(--gold)">4 · waiting_seller_acknowledge</strong> — la corsa finisce per sold-out, scadenza timer o scacco matto; il cron rileva l'evento e chiede la decisione al venditore (SLA 24h, poi auto-accettazione). <em>Trigger: detect_airdrop_end_event (cron 5 min).</em></p>
         <p><strong style="color:var(--gold)">5 · completed</strong> — il venditore accetta: draw deterministico, oggetto al 1° in classifica, ROBI Reward proporzionali a tutti i perdenti (cap formula unica), +5 ROBI a vincitore e venditore, split 67,99/22/10/0,01. <em>Trigger: seller_acknowledge_airdrop → execute_draw.</em></p>
-        <p><strong style="color:#f87171">5b · annullato</strong> — il venditore rifiuta (o ritiro pre-partenza): tutti gli ARIA dei partecipanti rimborsati, i fiori ROBI raccolti restano ai partecipanti, nessun draw. <em>Trigger: seller_acknowledge_airdrop('annulla') → refund_airdrop.</em></p>
+        <p><strong style="color:#f87171">5b · annullato</strong> — il venditore rifiuta (o ritiro pre-partenza): tutti gli ARIA dei partecipanti rimborsati, i ROBI raccolti restano ai partecipanti, nessun draw. <em>Trigger: seller_acknowledge_airdrop('annulla') → refund_airdrop.</em></p>
         <p style="color:var(--gray-500);font-size:11px;margin-top:8px">Ciclo verificato E2E il 14-15 lug 2026: 31 giri completi, esiti positivi e negativi, transizioni corrette in entrambi i casi.</p>
       </div>
     </details>
@@ -2880,7 +2880,7 @@ async function loadAdminData(){
     window._robiUserSources=userSrc;
     var distEl=document.getElementById('adm-robi-dist');
     if(distEl){
-      var SRC_IT={alphanet_welcome:'Welcome testnet',alpha_live_welcome:'Welcome live (2º!)',referral_welcome:'Referral — accolto',referral_inviter:'Referral — invitante',streak_week:'Settimana completa ingressi',gs16_rullo_block:'Fiori sulla salita',airdrop_won:'Vetta raggiunta',airdrop_completed_seller:'Corsa completata (venditore)',alpha_valuation_request:'Valutazione richiesta (AB1000)',alpha_valuation_accepted:'Valutazione accettata (AB1000)',evaluation_bonus:'Bonus valutazione GO'};
+      var SRC_IT={alphanet_welcome:'Welcome testnet',alpha_live_welcome:'Welcome live (2º!)',referral_welcome:'Referral — accolto',referral_inviter:'Referral — invitante',streak_week:'Settimana completa ingressi',gs16_rullo_block:'ROBI sulla salita',airdrop_won:'Vetta raggiunta',airdrop_completed_seller:'Corsa completata (venditore)',alpha_valuation_request:'Valutazione richiesta (AB1000)',alpha_valuation_accepted:'Valutazione accettata (AB1000)',evaluation_bonus:'Bonus valutazione GO'};
       var keys=Object.keys(srcAgg).sort(function(a,b){return srcAgg[b].tot-srcAgg[a].tot});
       distEl.innerHTML='<h3 style="font-family:var(--font-m);font-size:11px;letter-spacing:2px;color:var(--gold);margin:22px 0 10px">DISTRIBUZIONE ROBI PER FONTE <span style="color:var(--gray-500);letter-spacing:0;font-size:10px">· circolanti: '+(window._robiTotal%1===0?window._robiTotal:window._robiTotal.toFixed(2))+'</span></h3>'
         +'<div class="admin-table-wrap"><table class="admin-table"><thead><tr><th>Fonte</th><th>Grant</th><th>ROBI</th><th>% del circolante</th></tr></thead><tbody>'
@@ -5486,7 +5486,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-22.07.2026-1.19.0"></div>
+<div id="footer-mount" data-version="alfa-23.07.2026-1.20.0"></div>
 <script src="/src/footer.js?v=1.19.0"></script>
 </body>
 </html>

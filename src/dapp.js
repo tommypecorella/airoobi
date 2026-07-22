@@ -37,7 +37,7 @@ var CAT_ICONS={
 
 // UI icons (Lucide-style, monochrome, currentColor). Never use colored emoji in UI.
 var UI_ICONS={
-  // Fiore-ROBI (Skeezu 10 lug): il ROBI che raccogli sul percorso — petali + R nel cuore
+  // ROBI (Skeezu 10 lug): il ROBI che raccogli sul percorso — petali + R nel cuore
   flower:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 13.5V21"/><path d="M12 18.2c-2.6-.3-4.1-1.6-4.5-3.8"/><circle cx="12" cy="4.6" r="1.8"/><circle cx="16.6" cy="8" r="1.8"/><circle cx="14.9" cy="12.6" r="1.8"/><circle cx="9.1" cy="12.6" r="1.8"/><circle cx="7.4" cy="8" r="1.8"/><circle cx="12" cy="8.8" r="2.7"/><text x="12" y="10.6" text-anchor="middle" font-size="4.6" font-weight="700" fill="currentColor" stroke="none" font-family="Inter,sans-serif">R</text></svg>',
   // Orme-STEP: l'unità di misura della distanza dalla vetta
   steps:'<svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="5.2" y="12.6" width="4.6" height="7.4" rx="2.3" transform="rotate(14 7.5 16.3)"/><rect x="14" y="3.8" width="4.6" height="7.4" rx="2.3" transform="rotate(14 16.3 7.5)"/></svg>',
@@ -1475,7 +1475,7 @@ function playUnboxingReveal(blocksBought,revealedRobi){
     +(revealedRobi>0
       ?'<div class="unbox-robi">'+UI_ICONS.flower+' +'+revealedRobi+' ROBI Reward <span class="it">raccolti sul percorso</span><span class="en">picked up on the trail</span></div>'
        +'<div class="unbox-note"><span class="it">Gi&agrave; sul tuo portafoglio.</span><span class="en">Already in your wallet.</span></div>'
-      :'<div class="unbox-note"><span class="it">La tua posizione in classifica sale. Altri fiori ROBI ti aspettano sul percorso.</span><span class="en">Your ranking position climbs. More ROBI flowers await on the trail.</span></div>')
+      :'<div class="unbox-note"><span class="it">La tua posizione in classifica sale. Altri ROBI ti aspettano sul percorso.</span><span class="en">Your ranking position climbs. More ROBI await on the trail.</span></div>')
     +'</div>'
     +'</div>';
   overlay.addEventListener('click',function(){
@@ -2799,7 +2799,7 @@ async function openDetail(id){
         +'<div class="di-title"><span class="it">Prima volta su un airdrop?</span><span class="en">First time on an airdrop?</span></div>'
         +'<div class="di-row"><span class="it">Ogni oggetto è una <b>corsa in salita</b>: fai Step con i tuoi ARIA per salire.</span><span class="en">Every item is an <b>uphill climb</b>: take Steps with your ARIA to move up.</span></div>'
         +'<div class="di-row"><span class="it">Chi è <b>in vetta alla chiusura</b> ottiene l\'oggetto.</span><span class="en">Whoever is <b>at the summit at close</b> gets the item.</span></div>'
-        +'<div class="di-row"><span class="it">Lungo il percorso raccogli <b>fiori ROBI</b> — tuoi comunque vada.</span><span class="en">Along the trail you pick up <b>ROBI flowers</b> — yours no matter what.</span></div>'
+        +'<div class="di-row"><span class="it">Lungo il percorso raccogli <b>ROBI</b> — tuoi comunque vada.</span><span class="en">Along the trail you pick up <b>ROBI</b> — yours no matter what.</span></div>'
         +'<a class="di-link" href="/come-funziona-airdrop" target="_blank"><span class="it">Come funziona →</span><span class="en">How it works →</span></a>'
         +'</div>';
     }
@@ -2813,7 +2813,7 @@ async function openDetail(id){
     +'<div class="info-tile"><div class="it-label"><span class="it">Prezzo Step</span><span class="en">Step price</span></div><div class="it-value" style="color:var(--aria)">'+effectivePrice+' '+tokIcon('ARIA',16)+'</div><div class="it-sub">'+(isPresale&&a.presale_block_price?'<span style="text-decoration:line-through">'+a.block_price_aria+'</span> &middot; PRESALE':'<span class="it">per Step</span><span class="en">per Step</span>')+'</div></div>'
     +'<div class="info-tile"><div class="it-label"><span class="it">Percorso</span><span class="en">Trail</span></div><div class="it-value">'+a.total_blocks.toLocaleString('it-IT')+'</div><div class="it-sub"><span class="it">Step totali</span><span class="en">total Steps</span></div></div>'
     +'<div class="info-tile"><div class="it-label"><span class="it">Alla vetta</span><span class="en">To the summit</span></div><div class="it-value">'+remaining.toLocaleString('it-IT')+'</div><div class="it-sub"><span class="it">Step rimanenti</span><span class="en">Steps left</span></div></div>'
-    +'<div class="info-tile"><div class="it-label"><span class="it">Raccolta ROBI</span><span class="en">ROBI pickup</span></div><div class="it-value" style="color:var(--gold)">1 '+tokIcon('ROBI',16)+' / '+_rate+'</div><div class="it-sub">'+(isPresale?'<span class="it">presale: 1 ogni '+Math.max(1,Math.ceil(_rate/2))+' Step</span><span class="en">presale: 1 every '+Math.max(1,Math.ceil(_rate/2))+' Steps</span>':'<span class="it">1 fiore ogni '+_rate+' Step</span><span class="en">1 flower every '+_rate+' Steps</span>')+'</div></div>'
+    +'<div class="info-tile"><div class="it-label"><span class="it">Raccolta ROBI</span><span class="en">ROBI pickup</span></div><div class="it-value" style="color:var(--gold)">1 '+tokIcon('ROBI',16)+' / '+_rate+'</div><div class="it-sub">'+(isPresale?'<span class="it">presale: 1 ogni '+Math.max(1,Math.ceil(_rate/2))+' Step</span><span class="en">presale: 1 every '+Math.max(1,Math.ceil(_rate/2))+' Steps</span>':'<span class="it">1 ROBI ogni '+_rate+' Step</span><span class="en">1 ROBI every '+_rate+' Steps</span>')+'</div></div>'
     +(dl?'<div class="info-tile it-wide"><div class="it-label"><span class="it">Scadenza</span><span class="en">Deadline</span></div><div class="it-value it-date">'+dl+'</div><div class="it-sub"><span class="it">chiusura della corsa</span><span class="en">race closes</span></div></div>':'')
     +'</div>';
   // Scheda prodotto solo se ha contenuti reali — mai cornice vuota (il durationBadge
@@ -3050,8 +3050,8 @@ async function loadRulloHook(airdropId){
       ?'<strong>'+outstanding.toLocaleString('it-IT')+'</strong> <span class="it">ROBI ancora nascosti</span><span class="en">ROBI still hidden</span>'
       :'<span class="it">Tutti i ROBI nascosti sono stati trovati</span><span class="en">All hidden ROBI found</span>';
     el.innerHTML=''
-      +'<div class="rullo-hook-head">'+UI_ICONS.flower+' <span class="rullo-hook-title"><span class="it">Fiori ROBI sul percorso</span><span class="en">ROBI flowers on the trail</span></span></div>'
-      +'<p class="rullo-hook-copy"><span class="it">Lungo il percorso alcuni Step nascondono un fiore ROBI: raccoglilo avanzando — è subito tuo, sul portafoglio.</span><span class="en">Some Steps along the trail hide a ROBI flower: pick it up as you advance — instantly yours, in your wallet.</span></p>'
+      +'<div class="rullo-hook-head">'+UI_ICONS.flower+' <span class="rullo-hook-title"><span class="it">ROBI sul percorso</span><span class="en">ROBI on the trail</span></span></div>'
+      +'<p class="rullo-hook-copy"><span class="it">Lungo il percorso alcuni Step nascondono un ROBI: raccoglilo avanzando — è subito tuo, sul portafoglio.</span><span class="en">Some Steps along the trail hide a ROBI: pick it up as you advance — instantly yours, in your wallet.</span></p>'
       +'<div class="rullo-hook-count">'+countLine+'</div>';
     _rulloCounts={total:total,outstanding:outstanding};
     if(_lastScores)renderSalita(_lastScores);
@@ -3334,7 +3334,7 @@ async function renderSalita(scores){
     var foundFlags=Math.round(flagsN*(robiFound/robiTotal));
     for(var f=0;f<flagsN;f++){
       var ft=0.08+0.8*(f+1)/(flagsN+1);
-      // Fiori ROBI sul sentiero (Skeezu 10 lug): raccolti = fiore pieno · da raccogliere = tratteggiato
+      // ROBI sul sentiero (Skeezu 10 lug): raccolti = fiore pieno · da raccogliere = tratteggiato
       html+='<div class="salita-flagpin'+(f<foundFlags?' picked':'')+'" data-t="'+ft.toFixed(3)+'"><svg width="16" height="22" viewBox="0 0 24 24" fill="none" stroke="'+(f<foundFlags?'var(--gold)':'var(--gray-500)')+'" stroke-width="1.6"'+(f<foundFlags?'':' stroke-dasharray="2 2"')+'><path d="M12 13.5V22"/><circle cx="12" cy="4.6" r="1.8"/><circle cx="16.6" cy="8" r="1.8"/><circle cx="14.9" cy="12.6" r="1.8"/><circle cx="9.1" cy="12.6" r="1.8"/><circle cx="7.4" cy="8" r="1.8"/><circle cx="12" cy="8.8" r="2.7"'+(f<foundFlags?' fill="rgba(239,62,79,.15)"':'')+'/></svg></div>';
     }
   }
@@ -3443,7 +3443,7 @@ async function renderSalita(scores){
     +'<div class="salita-mini">'+mini+'</div>'
     +(counters?'<div class="salita-counters">'+counters+'</div>':'')
     +cta
-    +'<p class="salita-legal"><span class="it">Chi è più in alto alla chiusura si porta a casa l\'oggetto, consegna inclusa. Tutti gli altri ricevono comunque un fiore ROBI di ringraziamento per aver corso. Conta solo quanto sali — niente fortuna.</span><span class="en">Whoever is highest at close takes the object home, delivery included. Everyone else still gets a thank-you ROBI for the climb. Only how much you climb counts — no luck.</span> <span class="info-i" onclick="showInfoTip(this,\'salita-scoring\')" style="cursor:pointer">i</span></p>'
+    +'<p class="salita-legal"><span class="it">Chi è più in alto alla chiusura si porta a casa l\'oggetto, consegna inclusa. Tutti gli altri ricevono comunque un ROBI di ringraziamento per aver corso. Conta solo quanto sali — niente fortuna.</span><span class="en">Whoever is highest at close takes the object home, delivery included. Everyone else still gets a thank-you ROBI for the climb. Only how much you climb counts — no luck.</span> <span class="info-i" onclick="showInfoTip(this,\'salita-scoring\')" style="cursor:pointer">i</span></p>'
     +'</div>';
 
   _salitaZoomInit(); // zoom avatar + nickname (social)
@@ -3665,7 +3665,7 @@ function _renderOutcomePanel(a,myBlocks,myRobi){
   if(st==='waiting_seller_acknowledge'){
     body='<p class="buy-box-framing"><span class="it">L\'airdrop è concluso. Il venditore ha 72 ore per confermare la chiusura — l\'esito comparirà qui appena decide.</span><span class="en">The airdrop has closed. The seller has 72 hours to confirm — the outcome will appear here once decided.</span></p>';
   }else if(st==='annullato'){
-    body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; i fiori ROBI già raccolti sul percorso restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI flowers already picked stay in the wallet.</span></p>';
+    body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; i ROBI già raccolti sul percorso restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI already picked stay in the wallet.</span></p>';
   }else if(isWinner){
     body='<p class="buy-box-framing"><span class="it">Hai ottenuto l\'oggetto: <strong>'+a.title+'</strong>. Inserisci l\'indirizzo di spedizione per riceverlo.</span><span class="en">You got the item: <strong>'+a.title+'</strong>. Submit your shipping address to receive it.</span></p>'
       +'<button class="buy-btn" onclick="openClaimModal(\''+a.id+'\',\''+titleSafe+'\')"><span class="it">Reclama l\'oggetto →</span><span class="en">Claim the item →</span></button>';
@@ -3795,8 +3795,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       +'<span class="en">You climb by taking <strong style="color:var(--gold)">Steps</strong>: whoever is highest at close wins the item. Three simple things count — your <strong style="color:var(--gold)">steps</strong>, your <strong style="color:var(--gold)">loyalty</strong> (grows spending ARIA in this category) and a <strong style="color:var(--gold)">bonus boost</strong> that turns on if you race a lot without winning yet. No luck: only how much you climb.</span>'
       +'</div>'
       +'<div class="strategy-tip">'
-      +'<span class="it">Chi &egrave; in vetta alla chiusura ottiene l\'oggetto. Tutti raccolgono fiori ROBI sul percorso, e alla chiusura arriva il ROBI di ringraziamento per la corsa.</span>'
-      +'<span class="en">Whoever is at the summit at close gets the item. Everyone picks up ROBI flowers on the trail, plus a thank-you ROBI at close.</span>'
+      +'<span class="it">Chi &egrave; in vetta alla chiusura ottiene l\'oggetto. Tutti raccolgono ROBI sul percorso, e alla chiusura arriva il ROBI di ringraziamento per la corsa.</span>'
+      +'<span class="en">Whoever is at the summit at close gets the item. Everyone picks up ROBI on the trail, plus a thank-you ROBI at close.</span>'
       +'</div>'
       +'</div>';
     return;
@@ -3871,8 +3871,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
         tipsIt.push('Stima: circa <strong>'+blocksNeeded+' Step</strong> in pi&ugrave; per raggiungere il 1&deg;.');
         tipsEn.push('Estimate: about <strong>'+blocksNeeded+' more Steps</strong> to reach #1.');
       } else if(blocksNeeded>300){
-        tipsIt.push('Il distacco dal 1&deg; &egrave; ampio. Corri comunque: <strong>raccogli i fiori ROBI sul percorso</strong>, fai crescere il moltiplicatore fedelt&agrave;, e avvicinati al Boost.');
-        tipsEn.push('Gap to #1 is wide. Run anyway: <strong>pick up the ROBI flowers along the trail</strong>, grow your Loyalty Multiplier, and approach the Boost.');
+        tipsIt.push('Il distacco dal 1&deg; &egrave; ampio. Corri comunque: <strong>raccogli i ROBI sul percorso</strong>, fai crescere il moltiplicatore fedelt&agrave;, e avvicinati al Boost.');
+        tipsEn.push('Gap to #1 is wide. Run anyway: <strong>pick up the ROBI along the trail</strong>, grow your Loyalty Multiplier, and approach the Boost.');
       }
     }
     if(myHistoricAria>0 && loyaltyNext){
@@ -3884,8 +3884,8 @@ function updateStrategyGuide(scores,pos,total,myScore){
       tipsIt.push('Presale: prezzo ridotto e doppi ROBI dal mining.');
       tipsEn.push('Presale: lower price and double mining ROBI.');
     }
-    tipsIt.push('Anche se non arrivi 1°, <strong>raccogli i fiori ROBI sul percorso</strong> e ricevi i ROBI di ringraziamento alla chiusura.');
-    tipsEn.push('Even if you don\'t finish #1, <strong>you pick up the ROBI flowers along the trail</strong> and receive the thank-you ROBI at close.');
+    tipsIt.push('Anche se non arrivi 1°, <strong>raccogli i ROBI sul percorso</strong> e ricevi i ROBI di ringraziamento alla chiusura.');
+    tipsEn.push('Even if you don\'t finish #1, <strong>you pick up the ROBI along the trail</strong> and receive the thank-you ROBI at close.');
   }
 
   // Loyalty bar progress (visual, log10 scaled)
@@ -3901,7 +3901,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
   else if(myPityPhase==='hard'){leadIt='&#128293; Spinta bonus forte attiva: il 1&deg; posto &egrave; quasi tuo. Continua a fare Step.';leadEn='&#128293; Strong bonus active: #1 is nearly yours. Keep taking Steps.';}
   else if(myPityPhase==='soft'){leadIt='Sei super competitivo — ancora qualche Step e ci sei.';leadEn='You\'re very competitive — a few more Steps and you\'re there.';}
   else if(gapSteps>0&&gapSteps<=400){leadIt='Ti mancano circa <strong>'+gapSteps+' Step</strong> per arrivare 1&deg;.';leadEn='About <strong>'+gapSteps+' Steps</strong> to reach #1.';}
-  else{leadIt='Il 1&deg; &egrave; lontano, ma ogni Step raccoglie fiori &#127800; ROBI. Corri!';leadEn='#1 is far, but every Step picks ROBI flowers &#127800;. Keep climbing!';}
+  else{leadIt='Il 1&deg; &egrave; lontano, ma ogni Step raccoglie ROBI. Corri!';leadEn='#1 is far, but every Step picks ROBI. Keep climbing!';}
   var boostIt=myPityPhase==='hard'?'Forte':myPityPhase==='soft'?'Attiva':'Spenta';
   var boostEn=myPityPhase==='hard'?'Strong':myPityPhase==='soft'?'On':'Off';
 
@@ -3930,7 +3930,7 @@ function updateStrategyGuide(scores,pos,total,myScore){
     +_nonnaKpi(UI_ICONS.gem, '&times;'+myLoyaltyMult.toFixed(2), '&times;'+myLoyaltyMult.toFixed(2), 'Fedelt&agrave;','Loyalty','sale spendendo ARIA qui','grows spending ARIA here')
     +_nonnaKpi(UI_ICONS.zap, boostIt, boostEn, 'Spinta bonus','Bonus boost','si accende se corri tanto','turns on if you race a lot')
     +'</div>'
-    +'<div class="strategy-tip"><span class="it">Comunque vada, i fiori &#127800; ROBI raccolti restano tuoi — e alla chiusura arriva il ROBI di ringraziamento.</span><span class="en">Either way, the ROBI flowers &#127800; you picked stay yours — plus a thank-you ROBI at close.</span></div>'
+    +'<div class="strategy-tip"><span class="it">Comunque vada, i ROBI raccolti restano tuoi — e alla chiusura arriva il ROBI di ringraziamento.</span><span class="en">Either way, the ROBI you picked stay yours — plus a thank-you ROBI at close.</span></div>'
     +'</div>' // close strategy-ab-body
     +'</div>';
 }
@@ -7175,7 +7175,7 @@ function renderHomeFeed(){
       +'<div class="v4-trail"><i style="width:'+pct+'%"></i></div>'
       +'<div class="v4-tmeta">'+sold.toLocaleString('it-IT')+' / '+tot.toLocaleString('it-IT')+' <span class="it">Step verso la vetta</span><span class="en">Steps to the summit</span></div>'
       +'<button class="v4-cta"><span class="it">Entra in corsa</span><span class="en">Join the race</span><small>'+price+' ARIA <span class="it">A STEP &middot; CONTA QUANTO SALI, NON LA FORTUNA</span><span class="en">PER STEP &middot; YOUR CLIMB DECIDES, NOT LUCK</span></small></button>'
-      +'<div class="v4-hnote"><span class="it">Comunque vada, sul percorso raccogli <b>fiori ROBI</b>.</span><span class="en">However it goes, you pick <b>ROBI flowers</b> on the trail.</span></div>'
+      +'<div class="v4-hnote"><span class="it">Comunque vada, sul percorso raccogli <b>ROBI</b>.</span><span class="en">However it goes, you pick <b>ROBI</b> on the trail.</span></div>'
       +'</div></div>';
   }).join('');
   startCountdowns();
@@ -7192,12 +7192,12 @@ var V4_LESSONS=[
  {t_it:'Step & Salita',t_en:'Steps & the Climb',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 20h18L14 6l-3 5-2-3z"/></svg>',
   it:'Ogni Step ti fa salire. La posizione è un <b>punteggio deterministico</b>: i tuoi Step, la fedeltà alla categoria, il boost di garanzia. <b>Niente caso</b>: conta il percorso.',
   en:'Every Step moves you up. Your position is a <b>deterministic score</b>: your Steps, category loyalty, the guarantee boost. <b>No luck involved</b>: the trail is what counts.'},
- {t_it:'I fiori ROBI',t_en:'ROBI flowers',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M12 11v9M9 22h6"/></svg>',
-  it:'Sul sentiero raccogli <b>fiori ROBI</b>: ricompense che restano tue <b>comunque vada la corsa</b>. In futuro riscattabili in KAS, on-chain.',
-  en:'Along the trail you pick <b>ROBI flowers</b>: rewards that stay yours <b>however the race goes</b>. Redeemable in KAS on-chain in the future.'},
+ {t_it:'I ROBI',t_en:'ROBI',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M12 11v9M9 22h6"/></svg>',
+  it:'Sul sentiero raccogli <b>ROBI</b>: ricompense che restano tue <b>comunque vada la corsa</b>. In futuro riscattabili in KAS, on-chain.',
+  en:'Along the trail you pick <b>ROBI</b>: rewards that stay yours <b>however the race goes</b>. Redeemable in KAS on-chain in the future.'},
  {t_it:'Le tre cose da ricordare',t_en:'The three things to remember',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="6" cy="12" r="3"/><circle cx="18" cy="7" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 11l6-3M9 13l6 3"/></svg>',
-  it:'<span style="display:block;text-align:left"><b style="color:var(--aria)">ARIA</b> — il carburante: si guadagnano e si spendono in Step.<br><br><b style="color:var(--gold)">ROBI</b> — la ricompensa: il tuo guadagno vero, in futuro riscattabile in KAS.<br><br><b style="color:var(--gold)">Fiori ROBI</b> — frazioni di ROBI che raccogli sul percorso, corsa dopo corsa.</span>',
-  en:'<span style="display:block;text-align:left"><b style="color:var(--aria)">ARIA</b> — the fuel: you earn them and spend them on Steps.<br><br><b style="color:var(--gold)">ROBI</b> — the reward: your real earnings, redeemable in KAS in the future.<br><br><b style="color:var(--gold)">ROBI flowers</b> — fractions of ROBI you pick along the trail, race after race.</span>'},
+  it:'<span style="display:block;text-align:left"><b style="color:var(--aria)">ARIA</b> — il carburante: si guadagnano e si spendono in Step.<br><br><b style="color:var(--gold)">ROBI</b> — la ricompensa: il tuo guadagno vero, in futuro riscattabile in KAS.<br><br><b style="color:var(--gold)">ROBI</b> — frazioni di ROBI che raccogli sul percorso, corsa dopo corsa.</span>',
+  en:'<span style="display:block;text-align:left"><b style="color:var(--aria)">ARIA</b> — the fuel: you earn them and spend them on Steps.<br><br><b style="color:var(--gold)">ROBI</b> — the reward: your real earnings, redeemable in KAS in the future.<br><br><b style="color:var(--gold)">ROBI</b> — fractions of ROBI you pick along the trail, race after race.</span>'},
  {t_it:'La vetta',t_en:'The summit',ico:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M8 21h8M12 17v4M17 4H7v4a5 5 0 0010 0zM7 6H4a3 3 0 003 3M17 6h3a3 3 0 01-3 3"/></svg>',
   it:'Alla chiusura, chi è in vetta <b>ottiene l\'oggetto</b>. Tutti gli altri ricevono un <b>ROBI di ringraziamento</b> per la corsa. Pronto?',
   en:'At closing, whoever is on top <b>gets the item</b>. Everyone else receives a <b>thank-you ROBI</b> for the race. Ready?'}
