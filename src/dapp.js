@@ -6725,8 +6725,8 @@ window._onPubCounters=function(c){
   try{
     var n=c&&c.valutazioni_in_corso;
     if(!n)return;
-    var it='In questo momento '+(n===1?'1 oggetto è':n+' oggetti sono')+' in valutazione: sono i prossimi airdrop.';
-    var en='Right now '+(n===1?'1 item is':n+' items are')+' under evaluation: the next airdrops.';
+    var it='Intanto '+(n===1?'un oggetto è già dal valutatore':n+' oggetti sono già dal valutatore')+': '+(n===1?'sarà uno dei prossimi airdrop':'saranno i prossimi airdrop')+'.';
+    var en='Meanwhile '+(n===1?'one item is already with the evaluator':n+' items are already with the evaluator')+': '+(n===1?'it will be one of the next airdrops':'they will be the next airdrops')+'.';
     var b=document.getElementById('banner-vals');
     if(b){b.innerHTML='<span class="it">'+it+'</span><span class="en">'+en+'</span>';b.style.display='block';}
     var p=document.getElementById('proponi-vals');
