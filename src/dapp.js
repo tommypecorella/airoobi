@@ -540,6 +540,8 @@ async function loadAirdropsPublic(){
 function setupUI(){
   var email=_session.user?.email||'';
   document.getElementById('user-menu-email').textContent=email;
+  var _nk=document.getElementById('user-menu-nick');
+  if(_nk)_nk.textContent=email?email.split('@')[0]:'🐏'; // fallback: prefisso email (poi il nome vero da loadProfileDetail)
   var letter=email?email[0].toUpperCase():'?';
   document.getElementById('avatar-letter').textContent=letter;
   // Load avatar image from profile
@@ -1607,6 +1609,8 @@ async function loadProfilePage(){
     var fullName=((p.first_name||'')+' '+(p.last_name||'')).trim();
     if(nameEl)nameEl.textContent=fullName||(_session.user.email?_session.user.email.split('@')[0]:'—');
     if(usernameEl)usernameEl.textContent=p.username?'@'+p.username:'—';
+    var _nk2=document.getElementById('user-menu-nick'); // "Ciao {nome}" nel menu: nome vero → @username → prefisso email
+    if(_nk2)_nk2.textContent=(p.first_name||'').trim()||(p.username?'@'+p.username:(_session.user.email?_session.user.email.split('@')[0]:'🐏'));
     if(sinceEl&&p.created_at){
       var d=new Date(p.created_at);
       sinceEl.textContent=d.toLocaleDateString(document.documentElement.getAttribute('data-lang')==='en'?'en-US':'it-IT',{year:'numeric',month:'long',day:'numeric'});

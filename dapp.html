@@ -162,53 +162,53 @@
 </div>
 
 <!-- USER MENU DROPDOWN -->
+<style>
+  /* menu utente riordinato (Skeezu 22 lug): header con saluto+controlli, 2 CTA, voci ordinate */
+  #user-menu .um-head{padding:14px 16px 12px;border-bottom:1px solid var(--gray-800)}
+  #user-menu .um-hello{font-family:var(--font-h,inherit);font-size:16px;font-weight:700;color:var(--white);margin-bottom:2px}
+  #user-menu .um-head .user-menu-email{border:none;padding:0;margin:0 0 10px;font-size:12px;color:var(--gray-400);word-break:break-all}
+  #user-menu .um-controls{display:flex;gap:8px}
+  #user-menu .um-ctrl{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid var(--gray-700);border-radius:9px;color:var(--gray-300);font-family:var(--font-m);font-size:11px;letter-spacing:.5px;padding:8px 6px;cursor:pointer}
+  #user-menu .um-ctrl:hover{border-color:var(--gold);color:var(--gold)}
+  #user-menu .um-cta{display:block;box-sizing:border-box;width:calc(100% - 24px);margin:10px 12px 0;border:none;border-radius:10px;padding:13px;font-family:var(--font-b);font-weight:800;font-size:14px;letter-spacing:1px;cursor:pointer;text-align:center}
+  #user-menu .um-cta-sell{background:#EF3E4F;color:#fff}
+  #user-menu .um-cta-explore{background:none;color:var(--aria,#4A9EFF);border:1.5px solid var(--aria,#4A9EFF)}
+  #user-menu .um-cta:hover{filter:brightness(1.07)}
+  #user-menu .um-sep{height:1px;background:var(--gray-800);margin:10px 12px}
+</style>
 <div class="user-menu" id="user-menu">
-  <div class="user-menu-email" id="user-menu-email">—</div>
-  <button class="user-menu-item" onclick="navigateTo('home');toggleUserMenu()">
-    <span class="it">Home</span><span class="en">Home</span>
-  </button>
-  <button class="user-menu-item" onclick="navigateTo('explore');toggleUserMenu()">
-    <span class="it">Esplora airdrop</span><span class="en">Explore airdrops</span>
-  </button>
-  <button class="user-menu-item" onclick="navigateTo('my');toggleUserMenu()">
-    <span class="it">I miei airdrop</span><span class="en">My airdrops</span>
-  </button>
-  <button class="user-menu-item" onclick="navigateTo('profilo');toggleUserMenu()">
-    <span class="it">Profilo</span><span class="en">Profile</span>
-  </button>
-  <button class="user-menu-item" onclick="navigateTo('wallet');toggleUserMenu()">
-    <span class="it">Portafoglio</span><span class="en">Wallet</span>
-  </button>
-  <button class="user-menu-item" onclick="navigateTo('referral');toggleUserMenu()">
-    <span class="it">+Invita amici</span><span class="en">+Invite friends</span>
-  </button>
-  <button class="user-menu-item" onclick="navigateTo('submit');toggleUserMenu()">
-    <span class="it">Vendi (airdroppa)</span><span class="en">Sell (airdrop)</span>
-  </button>
-  <!-- 19 lug (Skeezu): lingua, tema e installazione APP vivono qui -->
-  <button class="user-menu-item" onclick="window._airoobiThemeToggle&&window._airoobiThemeToggle()">
-    <span class="it">Tema chiaro/scuro</span><span class="en">Light/dark theme</span>
-  </button>
-  <button class="user-menu-item" onclick="toggleLang()">
-    <span class="it">Lingua · IT/EN</span><span class="en">Language · IT/EN</span>
-  </button>
-  <button class="user-menu-item" id="um-install" onclick="dappInstallApp()" style="display:none;color:var(--gold)">
-    <span class="it">INSTALLA L'APP</span><span class="en">INSTALL THE APP</span>
-  </button>
-  <button class="user-menu-item" onclick="showChangePw();toggleUserMenu()">
-    <span class="it">Cambia password</span><span class="en">Change password</span>
-  </button>
-  <a href="/come-funziona-airdrop" class="user-menu-item" style="display:block;text-decoration:none">
-    <span class="it">Come funziona</span><span class="en">How it works</span>
-  </a>
-  <a href="/blog" class="user-menu-item" style="display:block;text-decoration:none">Blog</a>
-  <a href="/faq" class="user-menu-item" style="display:block;text-decoration:none">FAQ</a>
+  <div class="um-head">
+    <div class="um-hello"><span class="it">Ciao</span><span class="en">Hi</span> <span id="user-menu-nick">🐑</span></div>
+    <div class="user-menu-email" id="user-menu-email">—</div>
+    <div class="um-controls">
+      <button class="um-ctrl" onclick="toggleLang()" title="Lingua IT/EN">🌐 IT/EN</button>
+      <button class="um-ctrl" onclick="window._airoobiThemeToggle&&window._airoobiThemeToggle()" title="Tema chiaro/scuro">◐ <span class="it">Tema</span><span class="en">Theme</span></button>
+    </div>
+  </div>
+  <!-- due CTA a tutta larghezza -->
+  <button class="um-cta um-cta-sell" onclick="navigateTo('submit');toggleUserMenu()">AIRDROPPA!</button>
+  <button class="um-cta um-cta-explore" onclick="navigateTo('explore');toggleUserMenu()"><span class="it">TUTTI GLI AIRDROP</span><span class="en">ALL AIRDROPS</span></button>
+  <div class="um-sep"></div>
+  <!-- voci principali (ordine Skeezu) -->
+  <button class="user-menu-item" onclick="navigateTo('home');toggleUserMenu()"><span class="it">Home</span><span class="en">Home</span></button>
+  <button class="user-menu-item" onclick="navigateTo('profilo');toggleUserMenu()"><span class="it">Profilo</span><span class="en">Profile</span></button>
+  <button class="user-menu-item" onclick="navigateTo('earn');toggleUserMenu()"><span class="it">I Miei Task</span><span class="en">My Tasks</span></button>
+  <button class="user-menu-item" onclick="navigateTo('my');toggleUserMenu()"><span class="it">I miei airdrop</span><span class="en">My airdrops</span></button>
+  <button class="user-menu-item" onclick="navigateTo('wallet');toggleUserMenu()"><span class="it">Portafoglio</span><span class="en">Wallet</span></button>
   <a href="/tokens" class="user-menu-item" style="display:block;text-decoration:none">Tokenomics</a>
+  <div class="um-sep"></div>
+  <!-- il resto (disposizione CCP) -->
+  <button class="user-menu-item" onclick="navigateTo('referral');toggleUserMenu()"><span class="it">+Invita amici</span><span class="en">+Invite friends</span></button>
+  <a href="/come-funziona-airdrop" class="user-menu-item" style="display:block;text-decoration:none"><span class="it">Come funziona</span><span class="en">How it works</span></a>
+  <a href="/faq" class="user-menu-item" style="display:block;text-decoration:none">FAQ</a>
+  <a href="/blog" class="user-menu-item" style="display:block;text-decoration:none">Blog</a>
+  <button class="user-menu-item" id="um-install" onclick="dappInstallApp()" style="display:none;color:var(--gold)"><span class="it">INSTALLA L'APP</span><span class="en">INSTALL THE APP</span></button>
   <button class="user-menu-item" id="dapp-admin-link" onclick="window.open('/abo','_blank')" style="display:none"><span class="it">Gestisci (ABO)</span><span class="en">Manage (ABO)</span></button>
+  <!-- cambio password: ultima voce (Skeezu) -->
+  <button class="user-menu-item" onclick="showChangePw();toggleUserMenu()"><span class="it">Cambia password</span><span class="en">Change password</span></button>
+  <div class="um-sep"></div>
   <button class="user-menu-item um-logout" onclick="doLogout()">Logout</button>
-  <button class="user-menu-item" onclick="showDeleteAccount();toggleUserMenu()" style="color:var(--gray-600);font-size:12px;margin-top:4px;border-top:none">
-    <span class="it">Elimina account</span><span class="en">Delete account</span>
-  </button>
+  <button class="user-menu-item" onclick="showDeleteAccount();toggleUserMenu()" style="color:var(--gray-600);font-size:12px;margin-top:4px;border-top:none"><span class="it">Elimina account</span><span class="en">Delete account</span></button>
 </div>
 
 <!-- DELETE ACCOUNT MODAL -->
@@ -1786,8 +1786,8 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=5.2.0"></script>
-<div id="footer-mount" data-version="alfa-22.07.2026-5.2.0"></div>
+<script src="/src/dapp.js?v=5.3.0"></script>
+<div id="footer-mount" data-version="alfa-22.07.2026-5.3.0"></div>
 <script src="/src/footer.js?v=1.19.0"></script>
 </body>
 </html>
