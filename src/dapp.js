@@ -2783,8 +2783,8 @@ async function openDetail(id){
   var _dtbIco='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">';
   var tabbarHtml=''
     +'<nav class="detail-tabbar" id="detail-tabbar">'
-    // 19 lug (Skeezu): AIRDROPS al posto di Home — torna alla lista degli airdrop
-    +'<button class="dtb-btn" onclick="backToList()">'+_dtbIco+'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg><span class="it">Airdrops</span><span class="en">Airdrops</span></button>'
+    // 23 lug (Skeezu): CHAT al posto di AIRDROPS — il back alla lista vive già in testata
+    +'<button class="dtb-btn" data-dt="chat" onclick="openRaceChatTab()">'+_dtbIco+'<path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="it">Chat</span><span class="en">Chat</span></button>'
     +'<button class="dtb-btn active" data-dt="salita" onclick="detailTab(\'salita\')">'+_dtbIco+'<path d="M3 20l6-9 4 5 5-8 3 4"/></svg><span class="it">Salita</span><span class="en">Climb</span></button>'
     +'<button class="dtb-btn" data-dt="info" onclick="detailTab(\'info\')">'+_dtbIco+'<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg><span class="it">Info</span><span class="en">Info</span></button>'
     +(hasSetTab?'<button class="dtb-btn" data-dt="set" onclick="detailTab(\'set\')">'+_dtbIco+'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg><span class="it">Impostazioni</span><span class="en">Settings</span></button>':'')
@@ -3154,6 +3154,22 @@ function _salitaZoomInit(){
 }
 
 // ── 💬 Chat della corsa (Skeezu 22 lug, "vediamo che succede") ──
+// Bottone CHAT del tabbar mobile (23 lug): va al tab Salita dove vive la chat,
+// apre il pannello e ci scrolla. Se non sei membro (#rchat assente) avvisa con un toast.
+function openRaceChatTab(){
+  if(typeof detailTab==='function')detailTab('salita');
+  setTimeout(function(){
+    var r=document.getElementById('rchat');
+    if(r){
+      r.classList.add('open');
+      r.scrollIntoView({behavior:'smooth',block:'center'});
+      var inp=document.getElementById('rchat-input');
+      if(inp)setTimeout(function(){inp.focus();},350);
+    }else{
+      showToast('<span class="it">💬 La chat si apre quando entri in corsa</span><span class="en">💬 Chat opens once you join the climb</span>');
+    }
+  },140);
+}
 var _raceChatInterval=null,_raceChatLastId=0,_raceChatAid=null,_raceChatCssReady=false;
 function _chatEsc(s){return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]});}
 function _raceChatCss(){
