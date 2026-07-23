@@ -10,6 +10,10 @@
 var CSS=''
 +'.app-footer{border-top:1px solid var(--gray-800,#E3E8EF);padding:40px 24px 34px;text-align:center;'
 +'font-family:var(--font,\'Inter\',\'Instrument Sans\',sans-serif);background:transparent}'
+/* slogan + payoff (23 lug 2026, Skeezu): il verbo su ogni pagina */
++'.app-footer-slogan{font-family:var(--font-h,\'Space Grotesk\',\'Inter\',sans-serif);font-size:15px;font-weight:700;letter-spacing:-.01em;color:var(--white,#0F1417);margin-bottom:3px}'
++'.app-footer-slogan em{color:var(--gold,#EF3E4F);font-style:italic}'
++'.app-footer-payoff{font-size:12px;font-style:italic;color:var(--gray-400,#5B6A7D);letter-spacing:.05em;margin-bottom:20px}'
 +'.app-footer-links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin-bottom:18px}'
 +'.app-footer-links a{color:var(--gray-400,#5B6A7D);text-decoration:none;font-size:12px;letter-spacing:.04em;transition:color .2s}'
 +'.app-footer-links a:hover{color:var(--gold,#EF3E4F)}'
@@ -65,6 +69,8 @@ function render(mount){
     return '<a href="'+l.href+'">'+span(l)+'</a>';
   }).join('');
   mount.outerHTML='<footer class="app-footer">'
+    +'<div class="app-footer-slogan no-tok" data-no-gloss><span class="it">Non venderlo! <em>Airdroppalo</em> su AIROOBI.</span><span class="en">Don\'t sell it! <em>Airdrop it</em> on AIROOBI.</span></div>'
+    +'<div class="app-footer-payoff" data-no-gloss><span class="it">da qualcuno &middot; per qualcuno</span><span class="en">from someone &middot; for someone</span></div>'
     +'<div class="app-footer-links">'+links+'</div>'
     +'<div class="app-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>'
     +'<div class="app-footer-18"><span class="it">Piattaforma riservata ai maggiorenni (18+).</span><span class="en">Platform for adults only (18+).</span></div>'
