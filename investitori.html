@@ -385,13 +385,14 @@
     }
 
     // Load live metrics
-    fetch(SUPABASE_URL+'/rest/v1/profiles?select=id,total_points&deleted_at=is.null',{
-      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
-    }).then(function(r){return r.ok?r.json():[]}).then(function(d){
+    fetch(SUPABASE_URL+'/rest/v1/rpc/public_stats',{
+      method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},body:'{}'
+    }).then(function(r){return r.ok?r.json():null}).then(function(d){
+      if(!d)return;
       var ue=document.getElementById('inv-users');
-      if(ue)ue.textContent=d.length||'\u2014';
+      if(ue)ue.textContent=d.users||'\u2014';
       var ae=document.getElementById('inv-aria');
-      if(ae){var total=d.reduce(function(a,b){return a+(b.total_points||0)},0);ae.textContent=total.toLocaleString();}
+      if(ae){ae.textContent=(d.aria_total||0).toLocaleString();}
     }).catch(function(){});
 
     // Charts

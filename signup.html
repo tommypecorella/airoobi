@@ -136,7 +136,7 @@ body{padding:0;justify-content:flex-start}
 </div>
 
 </main>
-<div id="footer-mount" data-version="alfa-18.07.2026-4.16.0"></div>
+<div id="footer-mount" data-version="alfa-28.07.2026-4.17.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 
 <script>
@@ -264,10 +264,10 @@ function showSuccess(id,msg){var e=document.getElementById(id);e.textContent=msg
 var ALPHA_BRAVE_MAX=1000;
 async function checkAlphaBraveFull(){
   try{
-    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}});
+    var res=await fetch(SB_URL+'/rest/v1/rpc/public_stats',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},body:'{}'});
     if(res.ok){
-      var range=res.headers.get('content-range');
-      if(range){var total=parseInt(range.split('/')[1],10);return total>=ALPHA_BRAVE_MAX}
+      var st=await res.json();
+      if(st){var total=st.users|0;return total>=ALPHA_BRAVE_MAX}
     }
   }catch(e){}
   return false;
@@ -343,8 +343,8 @@ async function doSignup(){
       }
     }
     if(ref){
-      var refProfiles=await sbGet('profiles?referral_code=eq.'+ref+'&select=id',SB_KEY).catch(function(){return []});
-      if(!refProfiles||refProfiles.length===0){
+      var refOk=await fetch(SB_URL+'/rest/v1/rpc/referral_valid',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},body:JSON.stringify({code:ref})}).then(function(r){return r.ok?r.json():false}).catch(function(){return false});
+      if(refOk!==true){
         document.getElementById('signup-btn').disabled=false;
         return showError('signup-error',lang==='it'?'Codice referral non valido.':'Invalid referral code.');
       }
@@ -365,7 +365,7 @@ async function doSignup(){
       if(ref)track('referral_signup_completed',{ref_code:ref,new_user_id:data.user.id});
       var returnTo=new URLSearchParams(window.location.search).get('returnTo');
       var isDapp=window.location.hostname.indexOf('airoobi.app')!==-1;
-      window.location.href=(returnTo&&returnTo.startsWith('/'))?returnTo:(isDapp?'/airdrops':'/');
+      window.location.href=(returnTo&&/^\/[a-zA-Z0-9\-_\/#?=&]*$/.test(returnTo))?returnTo:(isDapp?'/airdrops':'/');
     }else{
       // No session returned — try auto-login immediately
       track('signup_email_sent',{has_ref:!!ref,lang:lang});

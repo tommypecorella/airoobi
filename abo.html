@@ -3326,7 +3326,7 @@ async function adExecuteDraw(airdropId,title){
   if(!confirm('Seconda conferma: sei sicuro di eseguire il draw?'))return;
   var s=getSession();if(!s)return;
   try{
-    var res=await fetch(SB_URL+'/rest/v1/rpc/execute_draw',{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/admin_execute_draw',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
       body:JSON.stringify({p_airdrop_id:airdropId})
@@ -5486,7 +5486,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-23.07.2026-1.20.0"></div>
+<div id="footer-mount" data-version="alfa-28.07.2026-1.21.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 </body>
 </html>

@@ -122,7 +122,7 @@ body{padding:0;justify-content:flex-start}
 </div>
 
 </main>
-<div id="footer-mount" data-version="alfa-18.07.2026-4.14.0"></div>
+<div id="footer-mount" data-version="alfa-28.07.2026-4.15.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 
 <script>
@@ -213,7 +213,7 @@ async function doLogin(){
     saveSession(data);
     track('login',{lang:lang,email_confirmed:!!data.user.email_confirmed_at});
     var returnTo=new URLSearchParams(window.location.search).get('returnTo');
-    if(returnTo&&returnTo.startsWith('/')){
+    if(returnTo&&/^\/[a-zA-Z0-9\-_\/#?=&]*$/.test(returnTo)){
       window.location.href=returnTo;
     }else{
       // If on airoobi.com, go to home; if on airoobi.app, go to dashboard

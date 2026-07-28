@@ -11,7 +11,7 @@ var _balance=0;
 var _publicMode=false;
 var ARIA_EUR=0.10;
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
-function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):''}
 function tokIcon(t,sz){
   sz=sz||14;
   var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#EF3E4F':t==='KAS'?'#49EACB':'var(--gray-500)';

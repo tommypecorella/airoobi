@@ -30,3 +30,21 @@ airoobi/
 tests/
 test-results/
 playwright-report/
+playwright.config.ts
+
+# Segreti locali — MAI nel deploy (con .vercelignore presente la CLI non applica .gitignore)
+.env
+.env.*
+
+# Archivio sorgente completo + copie/dump del back-office (pentest 28 lug: erano LIVE
+# su www.airoobi.app → mappa di schema/RLS/RPC admin regalata a un attaccante)
+*.zip
+airoobi-alfa-source-code.zip
+Design system v3/
+
+# Pagine legacy/prototipo e file residui serviti per errore dalla root
+home.html.pre-hero-backup-20260714
+mockup-home-v4.html
+setup-project.sh
+test.txt
+*.pdf

@@ -8,7 +8,7 @@ var _balance=0;
 var _publicMode=false; // true when viewing public pages without auth
 var ARIA_EUR=0.10; // 1 ARIA = €0.10 (interno, usato per ROBI e ABO)
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
-function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):'';}
 function tokIcon(t,sz){
   sz=sz||14;
   var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#EF3E4F':t==='KAS'?'#49EACB':'var(--gray-500)';
@@ -1305,12 +1305,12 @@ async function loadAlphaCounterInvita(){
   var present=ids.map(function(id){return document.getElementById(id);}).filter(Boolean);
   if(!present.length)return;
   try{
-    var res=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
-      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}
+    var res=await fetch(SB_URL+'/rest/v1/rpc/public_stats',{
+      method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json'},body:'{}'
     });
     if(res.ok){
-      var range=res.headers.get('content-range');
-      if(range){var total=parseInt(range.split('/')[1],10)||0;present.forEach(function(el){el.textContent=total;});}
+      var st=await res.json();
+      if(st){var total=st.users||0;present.forEach(function(el){el.textContent=total;});}
     }
   }catch(e){}
 }
@@ -3110,7 +3110,7 @@ async function salitaLoadAvatars(airdropId,ids){
   if(!ids.length)return;
   try{
     var token=_publicMode?SB_KEY:await getValidToken();if(!token)return;
-    var rows=await sbGet('profiles?id=in.('+ids.join(',')+')&select=id,avatar_url,username',token)||[];
+    var rows=await fetch(SB_URL+'/rest/v1/rpc/salita_profiles',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:JSON.stringify({ids:ids})}).then(function(r){return r.ok?r.json():[]}).catch(function(){return []})||[];
     ids.forEach(function(id){if(!(id in _salitaAvatars))_salitaAvatars[id]=null});
     if(Array.isArray(rows))rows.forEach(function(r){_salitaAvatars[r.id]=r.avatar_url||null;_salitaNames[r.id]=r.username||null;});
   }catch(e){}

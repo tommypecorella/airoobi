@@ -91,10 +91,10 @@ async function sbPost(table,data){
   return res
 }
 async function sbCount(){
-  const res=await fetch(SUPABASE_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
-    headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+  const res=await fetch(SUPABASE_URL+'/rest/v1/rpc/public_stats',{
+    method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'},body:'{}'
   });
-  if(res.ok){const d=await res.json();return d.length}
+  if(res.ok){const d=await res.json();return (d&&d.users)||0}
   return 0
 }
 
@@ -1045,7 +1045,7 @@ async function loadNotifications(){
   }catch(e){console.error('Notif load:',e);}
 }
 
-function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):'';}
 
 function timeAgo(dateStr){
   var d=new Date(dateStr);var now=new Date();var diff=Math.floor((now-d)/1000);
@@ -1312,7 +1312,7 @@ async function adExecuteDraw(airdropId,title){
   if(!confirm('Seconda conferma: sei sicuro di eseguire il draw?'))return;
   var s=getSession();if(!s)return;
   try{
-    var res=await fetch(SB_URL+'/rest/v1/rpc/execute_draw',{
+    var res=await fetch(SB_URL+'/rest/v1/rpc/admin_execute_draw',{
       method:'POST',
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},
       body:JSON.stringify({p_airdrop_id:airdropId})
@@ -2225,13 +2225,11 @@ async function openRoadmapDetail(phaseKey){
     try{
       var s=getSession();
       var token=s?s.access_token:SB_KEY;
-      var users=await sbGet('profiles?select=id',token);
+      var st=await fetch(SUPABASE_URL+'/rest/v1/rpc/public_stats',{method:'POST',headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'}).then(function(r){return r.ok?r.json():null}).catch(function(){return null});
       var wl=await sbGet('waitlist?select=id',token);
-      var pts=await sbGet('points_ledger?select=amount',token);
-      var totalAria=pts?pts.reduce(function(a,b){return a+(b.amount||0)},0):0;
-      var ue=document.getElementById('rd-stat-users');if(ue)ue.textContent=users?users.length:0;
+      var ue=document.getElementById('rd-stat-users');if(ue)ue.textContent=st?st.users:0;
       var we=document.getElementById('rd-stat-waitlist');if(we)we.textContent=wl?wl.length:0;
-      var ae=document.getElementById('rd-stat-aria');if(ae)ae.textContent=totalAria.toLocaleString();
+      var ae=document.getElementById('rd-stat-aria');if(ae)ae.textContent=(st?st.aria_total:0).toLocaleString();
     }catch(e){console.error('RD stats error:',e);}
   }
 }

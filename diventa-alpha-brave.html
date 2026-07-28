@@ -425,7 +425,7 @@ html[data-theme="dark"]{--black:#0F1417;--gray-900:#161D24;--gray-800:#202A34;--
 </section>
 
 <!-- FOOTER -->
-<div id="footer-mount" data-version="alfa-15.07.2026-1.1.4"></div>
+<div id="footer-mount" data-version="alfa-28.07.2026-1.1.5"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 
 <script>
@@ -440,13 +440,13 @@ html[data-theme="dark"]{--black:#0F1417;--gray-900:#161D24;--gray-800:#202A34;--
     function fmt(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,'.');}
     async function refresh(){
       try{
-        var r=await fetch(SB_URL+'/rest/v1/profiles?select=id&deleted_at=is.null',{
-          headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Prefer':'count=exact','Range':'0-0'}
+        var r=await fetch(SB_URL+'/rest/v1/rpc/public_stats',{
+          method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'},body:'{}'
         });
         if(!r.ok)return;
-        var range=r.headers.get('content-range');
-        if(!range)return;
-        var total=parseInt(range.split('/')[1],10);
+        var st=await r.json();
+        if(!st)return;
+        var total=st.users|0;
         if(isNaN(total))return;
         if(elNum)elNum.textContent=fmt(total);
         if(elBar)elBar.style.width=Math.min(100,(total/MAX)*100).toFixed(2)+'%';
