@@ -9,6 +9,12 @@ var _publicMode=false; // true when viewing public pages without auth
 var ARIA_EUR=0.10; // 1 ARIA = €0.10 (interno, usato per ROBI e ABO)
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):'';}
+// XSS hardening (pentest 28 lug): schema-whitelist per src/href (mai javascript:, mai attribute-breakout).
+// Ammette solo https://, root-relative /x, data:image/, blob: — poi escapa " < > & per non rompere l'attributo.
+function safeUrl(u){u=String(u==null?'':u).trim();return /^(https:\/\/|\/[^\/]|data:image\/|blob:)/i.test(u)?escHtml(u):'';}
+// Valore sicuro dentro onclick="fn('...')" — JS-escape (\' \\) PRIMA di escHtml, così l'HTML-decode a runtime
+// restituisce \' e la stringa JS non si spezza. Preferire dataset+addEventListener dove possibile.
+function jsAttr(s){return escHtml(String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' '));}
 function tokIcon(t,sz){
   sz=sz||14;
   var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#EF3E4F':t==='KAS'?'#49EACB':'var(--gray-500)';
@@ -2359,13 +2365,13 @@ function renderGrid(){
       var dotsHtml='<div class="card-gallery-dots">';
       var imgsHtml='';
       for(var gi=0;gi<cardImgs.length;gi++){
-        imgsHtml+='<img src="'+cardImgs[gi]+'" alt="" loading="lazy"'+(gi===0?' class="active"':'')+' data-idx="'+gi+'">';
+        imgsHtml+='<img src="'+safeUrl(cardImgs[gi])+'" alt="" loading="lazy"'+(gi===0?' class="active"':'')+' data-idx="'+gi+'">';
         dotsHtml+='<span class="card-gallery-dot'+(gi===0?' active':'')+'"></span>';
       }
       dotsHtml+='</div>';
       imgHtml='<div class="card-gallery" data-card-gallery>'+imgsHtml+dotsHtml+'</div>';
     } else if(a.image_url){
-      imgHtml='<div class="card-gallery"><img class="active" src="'+a.image_url+'" alt="" loading="lazy"></div>';
+      imgHtml='<div class="card-gallery"><img class="active" src="'+safeUrl(a.image_url)+'" alt="" loading="lazy"></div>';
     } else {
       imgHtml='<div class="card-img-placeholder">'+placeholderSvg+'</div>';
     }
@@ -2402,14 +2408,14 @@ function renderGrid(){
       +durationBadge(a.duration_type)
       +imgHtml
       +'<div class="card-img-row">'
-      +'<div class="card-cat">'+(CAT_ICONS[a.category]||'')+' '+(a.category||'')+(a.code?' <span class="card-code">#'+escHtml(a.code)+'</span>':'')+'</div>'
+      +'<div class="card-cat">'+(CAT_ICONS[a.category]||'')+' '+escHtml(a.category||'')+(a.code?' <span class="card-code">#'+escHtml(a.code)+'</span>':'')+'</div>'
       +'<div class="card-actions">'
       +'<button class="share-btn" data-id="'+a.id+'" data-title="'+escHtml(a.title||'').replace(/"/g,'&quot;')+'" data-img="'+escHtml(a.image_url||'').replace(/"/g,'&quot;')+'" onclick="shareFromBtn(this,event)" title="Condividi"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>'
       +'<button class="'+heartCls+' card-heart" onclick="toggleWatchlist(\''+a.id+'\',event)">&#9825;</button>'
       +'</div>'
       +'</div>'
       +'<div class="card-body">'
-      +'<div class="card-title">'+a.title+'</div>'
+      +'<div class="card-title">'+escHtml(a.title)+'</div>'
       +cdHtml
       +myStatsHtml
       +'<div class="card-progress"><div class="card-progress-bar" style="width:'+pct+'%"></div></div>'
@@ -2612,7 +2618,7 @@ async function openDetail(id){
   var condition=pi.condition||'';
 
   var productImgHtml=a.image_url
-    ?'<img src="'+a.image_url+'" alt="'+a.title+'">'
+    ?'<img src="'+safeUrl(a.image_url)+'" alt="'+escHtml(a.title)+'">'
     :'<img class="product-img-placeholder" src="/public/images/AIROOBI_Symbol_White.png" alt="">';
 
   // Gallery images: main + extra_photos (solo URL reali — mai <img src="null">)
@@ -2640,7 +2646,7 @@ async function openDetail(id){
   var slidesHtml=galleryImgs.length
     ?galleryImgs.map(function(src,i){
       return '<div class="gallery-slide'+(i===0?' active':'')+'" onclick="openGalleryLightbox('+i+')">'
-        +'<img src="'+src+'" alt="'+a.title+' — '+(i+1)+'" loading="'+(i<2?'eager':'lazy')+'">'
+        +'<img src="'+safeUrl(src)+'" alt="'+escHtml(a.title)+' — '+(i+1)+'" loading="'+(i<2?'eager':'lazy')+'">'
         +'</div>';
     }).join('')
     :'<div class="gallery-slide active gallery-slide-placeholder">'
@@ -2688,7 +2694,7 @@ async function openDetail(id){
     +'</div>';
 
   // GS-8 header: categoria + ♡ + ⤴ (heart sfondo chiaro)
-  var titleSafe=(a.title||'').replace(/'/g,"\\'");
+  var titleSafe=jsAttr(a.title);
   // 19 lug (Skeezu): via l'eyebrow «AIRDROP · categoria» — è ovvio che è un airdrop. Resta il codice.
   var headerV2=''
     +'<div class="detail-header-v2">'
@@ -2860,12 +2866,12 @@ async function openDetail(id){
       +'<button class="heart-btn-v2 hb-inline'+(isInWatchlist(a.id)?' active':'')+'" id="detail-heart" onclick="toggleWatchlist(\''+a.id+'\')" title="Preferito" aria-label="Aggiungi ai preferiti">&#9825;</button>'
       +'</div>':'')
 
-    +'<h1 class="detail-title-v2">'+a.title+'</h1>'
+    +'<h1 class="detail-title-v2">'+escHtml(a.title)+'</h1>'
     +'</div>' // close detail-masthead
 
     // 20 lug (Skeezu): mini carousel foto sotto il titolo — thumbnails swipabili, tap → lightbox
     +(galleryImgs.length?'<div class="mini-gal">'+galleryImgs.map(function(src,i){
-      return '<img src="'+src+'" alt="'+(a.title||'')+' — '+(i+1)+'" loading="lazy" onclick="openGalleryLightbox('+i+')">';
+      return '<img src="'+safeUrl(src)+'" alt="'+escHtml(a.title||'')+' — '+(i+1)+'" loading="lazy" onclick="openGalleryLightbox('+i+')">';
     }).join('')+'</div>':'')
     +(a.description?'<div class="detail-desc"><span id="detail-desc-txt" class="dd-clamp">'+escHtml(a.description)+'</span> <button class="dd-toggle" onclick="var t=document.getElementById(\'detail-desc-txt\');var c=t.classList.toggle(\'dd-clamp\');this.innerHTML=c?\'<span class=\\\'it\\\'>più</span><span class=\\\'en\\\'>more</span>\':\'<span class=\\\'it\\\'>meno</span><span class=\\\'en\\\'>less</span>\';"><span class="it">più</span><span class="en">more</span></button></div>':'')
 
@@ -3098,7 +3104,7 @@ var _salitaNames={}; // uid -> nickname (username, mai email)
 function salitaAvatarHtml(uid,me){
   var url=_salitaAvatars[uid];
   // data-uid rende il tondino zoomabile (tap/hover) — vedi _salitaZoomInit
-  if(url)return '<img class="salita-av zoomable" data-uid="'+uid+'" src="'+url+'" alt="" loading="lazy">';
+  if(url)return '<img class="salita-av zoomable" data-uid="'+uid+'" src="'+safeUrl(url)+'" alt="" loading="lazy">';
   // Fallback: cerchio in tinta deterministica dall'id + «OO» (simbolo AIROOBI)
   return '<span class="salita-av zoomable" data-uid="'+uid+'" style="background:hsl('+salitaHue(uid)+' 45% 46%)">OO</span>';
 }
@@ -3117,7 +3123,7 @@ async function salitaLoadAvatars(airdropId,ids){
 }
 
 // ── Zoom avatar (tap mobile / hover desktop) + nickname · social (Skeezu 22 lug) ──
-function _salitaNick(uid){var u=_salitaNames[uid];return u?('@'+u):'Concorrente';}
+function _salitaNick(uid){var u=_salitaNames[uid];return u?('@'+escHtml(u)):'Concorrente';}
 function _salitaZoomInit(){
   if(window._salitaZoomReady)return;window._salitaZoomReady=true;
   var st=document.createElement('style');
@@ -3138,7 +3144,7 @@ function _salitaZoomInit(){
     var uid=el.getAttribute('data-uid');if(!uid)return;
     var url=_salitaAvatars[uid];
     var zi=document.getElementById('salita-zoom-img'),zn=document.getElementById('salita-zoom-name');
-    zi.innerHTML=url?'<img src="'+url+'" alt="">':(el.textContent||'OO');
+    zi.innerHTML=url?'<img src="'+safeUrl(url)+'" alt="">':(el.textContent||'OO');
     if(!url&&el.style.background)zi.style.background=el.style.background;else zi.style.background='#1b232d';
     var mine=_session&&_session.user&&uid===_session.user.id;
     zn.innerHTML=_salitaNick(uid)+((mine&&!url)?'<div class="zh"><span class="it">metti una tua foto! ↑</span><span class="en">add a profile photo! ↑</span></div>':'');
@@ -3171,7 +3177,7 @@ function openRaceChatTab(){
   },140);
 }
 var _raceChatInterval=null,_raceChatLastId=0,_raceChatAid=null,_raceChatCssReady=false;
-function _chatEsc(s){return String(s==null?'':s).replace(/[<>&"]/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]});}
+function _chatEsc(s){return String(s==null?'':s).replace(/[<>&"']/g,function(c){return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c]});}
 function _raceChatCss(){
   if(_raceChatCssReady)return;_raceChatCssReady=true;
   var st=document.createElement('style');
@@ -3228,7 +3234,7 @@ async function loadRaceChat(aid,full){
       if(m.id<= _raceChatLastId)return;
       _raceChatLastId=Math.max(_raceChatLastId,m.id);
       var nick=m.username?('@'+m.username):'Concorrente';
-      var av=m.avatar_url?'<img src="'+_chatEsc(m.avatar_url)+'" alt="">':'OO';
+      var av=m.avatar_url?'<img src="'+safeUrl(m.avatar_url)+'" alt="">':'OO';
       var row=document.createElement('div');row.className='rc-m'+(m.mine?' me':'');
       row.innerHTML='<span class="rc-av">'+av+'</span><div class="rc-bub"><div class="rc-nk">'+_chatEsc(m.mine?'Tu':nick)+'</div><div class="rc-tx">'+_chatEsc(m.message)+'</div></div>';
       box.appendChild(row);
@@ -3323,7 +3329,7 @@ async function renderSalita(scores){
   html+='<svg class="salita-svg" viewBox="0 0 '+SALITA_VB_W+' '+SALITA_VB_H+'" preserveAspectRatio="none" aria-hidden="true"><path class="salita-path" d="'+SALITA_PATH_D+'" vector-effect="non-scaling-stroke"/></svg>';
   // Vetta (foto oggetto)
   var vettaHtml='<div class="salita-vetta">'
-    +(a.image_url?'<img class="salita-vetta-img" src="'+a.image_url+'" alt="">':'<div class="salita-vetta-ph"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')
+    +(a.image_url?'<img class="salita-vetta-img" src="'+safeUrl(a.image_url)+'" alt="">':'<div class="salita-vetta-ph"><svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')
     +'<span class="salita-vetta-flag"><span class="it">VETTA</span><span class="en">SUMMIT</span></span></div>';
   html+=vettaHtml;
   // Bandierine ROBI (traguardi volanti)
@@ -3386,7 +3392,7 @@ async function renderSalita(scores){
 
   // ── Variante compatta (2d) — mobile: sparkline orizzontale ──
   var mini='<svg viewBox="0 0 480 88" preserveAspectRatio="none" aria-hidden="true"><path d="M8,74 C130,66 330,42 452,14" fill="none" stroke="var(--gray-600)" stroke-width="2" stroke-dasharray="1 7" stroke-linecap="round"/></svg>';
-  mini+='<div class="salita-mini-vetta">'+(a.image_url?'<img src="'+a.image_url+'" alt="">':'<div class="salita-mini-ph"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')+'</div>';
+  mini+='<div class="salita-mini-vetta">'+(a.image_url?'<img src="'+safeUrl(a.image_url)+'" alt="">':'<div class="salita-mini-ph"><svg viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')+'</div>';
   miniRiders.forEach(function(r){
     var mx=5+r.t*85, my=80-r.t*62;
     if(r.plus){mini+='<span class="salita-plus" style="left:'+mx.toFixed(1)+'%;top:'+my.toFixed(1)+'%">+'+r.plus+'</span>';return;}
@@ -3649,9 +3655,9 @@ function _renderOutcomePanel(a,myBlocks,myRobi){
   var st=a.status;
   var participated=myBlocks>0;
   var isWinner=st==='completed'&&a.winner_id&&uid&&a.winner_id===uid;
-  var titleSafe=(a.title||'').replace(/'/g,"\\'");
+  var titleSafe=jsAttr(a.title);
   var storyLink=a.story_public_visible&&a.story_public_url
-    ?'<a href="'+a.story_public_url+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;letter-spacing:.5px;text-decoration:none;font-family:var(--font-m)"><span class="it">STORIA PUBBLICA →</span><span class="en">PUBLIC STORY →</span></a>'
+    ?'<a href="'+safeUrl(a.story_public_url)+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;letter-spacing:.5px;text-decoration:none;font-family:var(--font-m)"><span class="it">STORIA PUBBLICA →</span><span class="en">PUBLIC STORY →</span></a>'
     :'';
   var chipIt,chipEn,chipColor;
   if(st==='completed'){chipIt='Airdrop concluso';chipEn='Airdrop closed';chipColor='#22c55e';}
@@ -3667,7 +3673,7 @@ function _renderOutcomePanel(a,myBlocks,myRobi){
   }else if(st==='annullato'){
     body='<p class="buy-box-framing"><span class="it">Questo airdrop è stato annullato. I partecipanti sono stati rimborsati in ARIA per intero; i ROBI già raccolti sul percorso restano nel portafoglio.</span><span class="en">This airdrop was cancelled. Participants were fully refunded in ARIA; ROBI already picked stay in the wallet.</span></p>';
   }else if(isWinner){
-    body='<p class="buy-box-framing"><span class="it">Hai ottenuto l\'oggetto: <strong>'+a.title+'</strong>. Inserisci l\'indirizzo di spedizione per riceverlo.</span><span class="en">You got the item: <strong>'+a.title+'</strong>. Submit your shipping address to receive it.</span></p>'
+    body='<p class="buy-box-framing"><span class="it">Hai ottenuto l\'oggetto: <strong>'+escHtml(a.title)+'</strong>. Inserisci l\'indirizzo di spedizione per riceverlo.</span><span class="en">You got the item: <strong>'+escHtml(a.title)+'</strong>. Submit your shipping address to receive it.</span></p>'
       +'<button class="buy-btn" onclick="openClaimModal(\''+a.id+'\',\''+titleSafe+'\')"><span class="it">Reclama l\'oggetto →</span><span class="en">Claim the item →</span></button>';
   }else if(st==='completed'&&participated){
     body='<p class="buy-box-framing"><span class="it">L\'oggetto è stato assegnato a un altro partecipante. I tuoi ROBI Reward restano con te, riscattabili in KAS quando vuoi.</span><span class="en">The item went to another participant. Your ROBI Reward stay with you, redeemable in KAS anytime.</span></p>';
@@ -4444,7 +4450,7 @@ function _renderPartCard(item,isArchive){
   var a=item.airdrop;
   if(!a)return '';
   var imgHtml=a.image_url
-    ?'<img class="my-card-img" src="'+a.image_url+'" alt="" loading="lazy" onerror="this.style.display=\'none\';if(this.nextSibling)this.nextSibling.style.display=\'flex\'"><div class="my-card-img-placeholder" style="display:none">'+placeholderSvg+'</div>'
+    ?'<img class="my-card-img" src="'+safeUrl(a.image_url)+'" alt="" loading="lazy" onerror="this.style.display=\'none\';if(this.nextSibling)this.nextSibling.style.display=\'flex\'"><div class="my-card-img-placeholder" style="display:none">'+placeholderSvg+'</div>'
     :'<div class="my-card-img-placeholder">'+placeholderSvg+'</div>';
   // Status badge
   var st=a.status;
@@ -4474,8 +4480,8 @@ function _renderPartCard(item,isArchive){
     +'<div style="display:flex;gap:16px;padding:18px;align-items:center;cursor:pointer" onclick="goToAirdrop(\''+a.id+'\')">'
     +imgHtml
     +'<div class="my-card-info">'
-    +'<div class="my-card-title">'+a.title+'</div>'
-    +'<div class="my-card-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+((a.submitted_by&&_session&&_session.user&&a.submitted_by===_session.user.id)?'<span class="owner-pill"><span class="it">TUO · sei il venditore</span><span class="en">YOURS · you\'re the seller</span></span>':'')+a.category+' &middot; '+badge+deadlineHtml+'</div>'
+    +'<div class="my-card-title">'+escHtml(a.title)+'</div>'
+    +'<div class="my-card-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">'+((a.submitted_by&&_session&&_session.user&&a.submitted_by===_session.user.id)?'<span class="owner-pill"><span class="it">TUO · sei il venditore</span><span class="en">YOURS · you\'re the seller</span></span>':'')+escHtml(a.category||'')+' &middot; '+badge+deadlineHtml+'</div>'
     +'<div class="my-card-blocks"><strong>'+item.blocks+'</strong> Step &middot; '+item.spent+' ARIA</div>'
     +'</div></div>'
     +revealHtml
@@ -4548,18 +4554,18 @@ function _renderRevealBlock(a,item,status){
   var robi=_myRobiByAirdrop[a.id]||{shares:0,sources:[],consolation_rank:null};
   var isWinner=status==='completed'&&a.winner_id&&uid&&a.winner_id===uid;
   var storyLink=a.story_public_visible&&a.story_public_url
-    ?'<a href="'+a.story_public_url+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;letter-spacing:.5px;text-decoration:none;font-family:var(--font-m)">'
+    ?'<a href="'+safeUrl(a.story_public_url)+'" target="_blank" rel="noopener" style="color:var(--gold);font-size:11px;letter-spacing:.5px;text-decoration:none;font-family:var(--font-m)">'
       +'<span class="it">STORIA PUBBLICA →</span><span class="en">PUBLIC STORY →</span></a>'
     :'';
   // Scenario 1: completed + winner
   if(isWinner){
     return '<div style="background:linear-gradient(135deg,rgba(239,62,79,.15),rgba(239,62,79,.02));border-top:1px solid var(--gold);padding:16px 18px;display:flex;flex-direction:column;gap:10px">'
       +'<div style="display:flex;align-items:center;gap:10px">'
-      +'<div style="font-family:var(--font-h);font-size:18px;color:var(--gold);font-weight:500"><span class="it">Hai ottenuto l\'oggetto · '+a.title+'</span><span class="en">You got the item · '+a.title+'</span></div>'
+      +'<div style="font-family:var(--font-h);font-size:18px;color:var(--gold);font-weight:500"><span class="it">Hai ottenuto l\'oggetto · '+escHtml(a.title)+'</span><span class="en">You got the item · '+escHtml(a.title)+'</span></div>'
       +'</div>'
       +'<div style="font-size:12px;color:var(--gray-300);line-height:1.5"><span class="it">Inserisci l\'indirizzo di spedizione per ricevere l\'oggetto. Hai 14 giorni dalla data dell\'evento.</span><span class="en">Submit the shipping address to receive the item. You have 14 days from the event date.</span></div>'
       +'<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">'
-      +'<button onclick="openClaimModal(\''+a.id+'\',\''+(a.title||'').replace(/\'/g,'\\\'')+'\')" style="background:var(--gold);color:var(--black);border:none;padding:9px 18px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">RECLAMA L\'OGGETTO →</span><span class="en">CLAIM ITEM →</span></button>'
+      +'<button onclick="openClaimModal(\''+a.id+'\',\''+jsAttr(a.title)+'\')" style="background:var(--gold);color:var(--black);border:none;padding:9px 18px;font-family:var(--font-m);font-size:11px;letter-spacing:1.5px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">RECLAMA L\'OGGETTO →</span><span class="en">CLAIM ITEM →</span></button>'
       +storyLink
       +'</div></div>';
   }
@@ -4982,7 +4988,7 @@ function pwRenderSlotTile(slot,slotIdx,photo,otherIdx,isAddMore){
   var html='<div class="'+cls+'" '+dataAttrs+' onclick="pwOpenForSlot('+slotIdx+(otherIdx!=null?','+otherIdx:'')+(isAddMore?',true':'')+')">';
   if(slot.required)html+='<span class="pw-slot-required-badge"><span class="it">OBBLIGATORIA</span><span class="en">REQUIRED</span></span>';
   if(photo){
-    html+='<img src="'+(photo.url||'')+'" alt="" class="pw-slot-img">';
+    html+='<img src="'+safeUrl(photo.url)+'" alt="" class="pw-slot-img">';
     html+='<div class="pw-slot-tag">'+(slot.id==='other'&&photo.caption?escHtml(photo.caption):(slot.it||slot.id))+'</div>';
     html+='<button type="button" class="pw-slot-remove" onclick="event.stopPropagation();pwRemoveSlotPhoto(\''+slot.id+'\''+(otherIdx!=null?','+otherIdx:'')+')" aria-label="Rimuovi">&times;</button>';
     html+='<div class="pw-slot-redo"><span class="it">Cambia</span><span class="en">Replace</span></div>';
@@ -5460,7 +5466,7 @@ function _renderSubsHtml(subs,isArchive){
     var date=new Date(s.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'});
     var quotation=s.object_value_eur>0?'€'+parseFloat(s.object_value_eur).toFixed(2):'—';
     var subImgHtml=s.image_url
-      ?'<img class="my-card-img" src="'+s.image_url+'" alt="" loading="lazy">'
+      ?'<img class="my-card-img" src="'+safeUrl(s.image_url)+'" alt="" loading="lazy">'
       :'<div class="my-card-img-placeholder"><svg viewBox="0 0 24 24" fill="none"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z" stroke="currentColor" stroke-width="1.5"/><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12" stroke="currentColor" stroke-width="1.5"/></svg></div>';
     var cardStyle='border:1px solid var(--gray-800);padding:16px 20px;margin-bottom:12px'+(isArchive?';opacity:.72':'');
     html+='<div style="'+cardStyle+'">';
@@ -5694,8 +5700,8 @@ function renderBoTable(){
   list.forEach(function(a){
     var date=new Date(a.created_at).toLocaleDateString('it-IT',{day:'2-digit',month:'short'});
     var blocksInfo=a.total_blocks>0?(a.blocks_sold+'/'+a.total_blocks):'—';
-    html+='<tr><td class="truncate" title="'+a.title+'">'+a.title+'</td>'
-      +'<td class="mono">'+(catLabels[a.category]||a.category)+'</td>'
+    html+='<tr><td class="truncate" title="'+escHtml(a.title)+'">'+escHtml(a.title)+'</td>'
+      +'<td class="mono">'+(catLabels[a.category]||escHtml(a.category))+'</td>'
       +'<td class="mono">€'+Number(a.object_value_eur).toLocaleString('it-IT')+'</td>'
       +'<td class="hide-mobile"><span class="bo-status '+a.status+'">'+a.status.replace(/_/g,' ')+'</span></td>'
       +'<td class="mono hide-mobile">'+blocksInfo+'</td>'
@@ -5718,19 +5724,19 @@ function viewBoDetail(id){
   var panel=document.getElementById('bo-detail-panel');
   var date=new Date(a.created_at).toLocaleString('it-IT');
   var dl=a.deadline?new Date(a.deadline).toLocaleDateString('it-IT'):'—';
-  var html='<div class="bo-detail"><div class="bo-detail-header"><div class="bo-detail-title">'+a.title+' <span class="bo-status '+a.status+'">'+a.status.replace(/_/g,' ')+'</span> <button class="bo-btn" onclick="openEditAirdrop(\''+a.id+'\')" style="border-color:var(--aria);color:var(--aria);margin-left:8px">&#9998; <span class="it">Modifica</span><span class="en">Edit</span></button></div><button class="bo-detail-close" onclick="closeBoDetail()">&times;</button></div>';
-  if(a.image_url)html+='<img class="bo-detail-img" src="'+a.image_url+'" alt="">';
-  if(a.description)html+='<div class="bo-detail-desc">'+a.description+'</div>';
+  var html='<div class="bo-detail"><div class="bo-detail-header"><div class="bo-detail-title">'+escHtml(a.title)+' <span class="bo-status '+a.status+'">'+a.status.replace(/_/g,' ')+'</span> <button class="bo-btn" onclick="openEditAirdrop(\''+a.id+'\')" style="border-color:var(--aria);color:var(--aria);margin-left:8px">&#9998; <span class="it">Modifica</span><span class="en">Edit</span></button></div><button class="bo-detail-close" onclick="closeBoDetail()">&times;</button></div>';
+  if(a.image_url)html+='<img class="bo-detail-img" src="'+safeUrl(a.image_url)+'" alt="">';
+  if(a.description)html+='<div class="bo-detail-desc">'+escHtml(a.description)+'</div>';
   html+='<div class="bo-detail-grid">'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">ID</div><div class="bo-detail-item-val mono" style="font-size:10px">'+a.id+'</div></div>'
-    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Categoria</div><div class="bo-detail-item-val">'+a.category+'</div></div>'
+    +'<div class="bo-detail-item"><div class="bo-detail-item-label">Categoria</div><div class="bo-detail-item-val">'+escHtml(a.category)+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Valore EUR</div><div class="bo-detail-item-val" style="color:var(--gold)">€'+Number(a.object_value_eur).toLocaleString('it-IT')+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Prezzo blocco</div><div class="bo-detail-item-val" style="color:var(--aria)">'+(a.block_price_aria||'—')+' ARIA</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Blocchi</div><div class="bo-detail-item-val">'+(a.total_blocks>0?a.blocks_sold+'/'+a.total_blocks:'—')+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Deadline</div><div class="bo-detail-item-val">'+dl+'</div></div>'
     +'<div class="bo-detail-item"><div class="bo-detail-item-label">Creato</div><div class="bo-detail-item-val">'+date+'</div></div>'
     +'</div>';
-  if(a.rejection_reason)html+='<div style="color:var(--red);font-size:12px;margin-top:8px">Motivo: '+a.rejection_reason+'</div>';
+  if(a.rejection_reason)html+='<div style="color:var(--red);font-size:12px;margin-top:8px">Motivo: '+escHtml(a.rejection_reason)+'</div>';
   if(a.status==='in_valutazione')html+='<div class="bo-actions" style="margin-top:12px"><button class="bo-btn approve" onclick="openApprove(\''+a.id+'\')"><span class="it">Approva</span><span class="en">Approve</span></button><button class="bo-btn reject" onclick="openReject(\''+a.id+'\')"><span class="it">Rifiuta</span><span class="en">Reject</span></button></div>';
   // Chat section
   html+='<div style="margin-top:20px;border-top:1px solid var(--gray-800);padding-top:16px">';
@@ -5815,7 +5821,7 @@ function openApprove(id){
   var val=Number(a.object_value_eur);
   var sugBlocks=Math.max(10,Math.round(val/4)*2);
   var sugPrice=Math.max(1,Math.round(val*1.43/sugBlocks));
-  document.getElementById('approve-info').innerHTML='<strong>'+a.title+'</strong><br>Categoria: '+a.category+' &middot; Valore: <strong>€'+val.toLocaleString('it-IT')+'</strong><br>Suggerimento: ~'+sugBlocks+' Step × '+sugPrice+' ARIA = €'+(sugBlocks*sugPrice*0.20).toLocaleString('it-IT')+' revenue';
+  document.getElementById('approve-info').innerHTML='<strong>'+escHtml(a.title)+'</strong><br>Categoria: '+escHtml(a.category)+' &middot; Valore: <strong>€'+val.toLocaleString('it-IT')+'</strong><br>Suggerimento: ~'+sugBlocks+' Step × '+sugPrice+' ARIA = €'+(sugBlocks*sugPrice*0.20).toLocaleString('it-IT')+' revenue';
   document.getElementById('approve-price').value=sugPrice;
   document.getElementById('approve-blocks').value=sugBlocks;
   document.getElementById('approve-presale').value='';
@@ -6250,7 +6256,7 @@ async function loadDappWallet(){
         var imgUrl=m.image_url||'';
         var date=new Date(v.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',year:'numeric'});
         var imgHtml=imgUrl
-          ?'<img src="'+imgUrl+'" style="width:100%;height:80px;object-fit:cover;border-bottom:1px solid var(--gray-700)" loading="lazy">'
+          ?'<img src="'+safeUrl(imgUrl)+'" style="width:100%;height:80px;object-fit:cover;border-bottom:1px solid var(--gray-700)" loading="lazy">'
           :'<div style="height:80px;display:flex;align-items:center;justify-content:center;background:var(--gray-900);border-bottom:1px solid var(--gray-700)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-600)" stroke-width="1.5"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>';
         return '<div style="border:1px solid var(--gray-700);border-radius:var(--radius-sm);overflow:hidden;cursor:pointer;transition:border-color .2s" onclick="showValuationDetail('+i+')" onmouseover="this.style.borderColor=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\'">'
           +imgHtml
@@ -6400,7 +6406,7 @@ function showValuationDetail(idx){
 
   var h='';
   // Image
-  if(imgUrl)h+='<img src="'+imgUrl+'" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--gray-700);margin-bottom:16px" loading="lazy">';
+  if(imgUrl)h+='<img src="'+safeUrl(imgUrl)+'" style="width:100%;max-height:200px;object-fit:cover;border:1px solid var(--gray-700);margin-bottom:16px" loading="lazy">';
   // Title
   h+='<h3 style="font-family:var(--font-h);font-size:22px;font-weight:300;color:var(--white);margin-bottom:8px">'+escHtml(m.title||v.name||'')+'</h3>';
   // Status badge
@@ -6433,7 +6439,7 @@ function showValuationDetail(idx){
   if(imgs.length>1){
     h+='<div style="display:flex;gap:8px;overflow-x:auto;margin-bottom:16px">';
     imgs.forEach(function(url){
-      h+='<img src="'+url+'" style="width:80px;height:80px;object-fit:cover;border:1px solid var(--gray-700);flex-shrink:0" loading="lazy">';
+      h+='<img src="'+safeUrl(url)+'" style="width:80px;height:80px;object-fit:cover;border:1px solid var(--gray-700);flex-shrink:0" loading="lazy">';
     });
     h+='</div>';
   }
@@ -6773,12 +6779,12 @@ async function loadDappArchive(){
       _archiveLoaded=true;
       return;
     }
-    var esc=function(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''};
+    var esc=function(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):''};
     var html='';
     data.forEach(function(a){
       var catLabel=ARCH_CAT_LABELS[a.category]||a.category||'—';
       var imgSrc=a.image_url||'';
-      var imgHtml=imgSrc?'<img class="past-card-img" src="'+esc(imgSrc)+'" alt="'+esc(a.title)+'" loading="lazy">':'<div class="past-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px">'+(isIt?'NESSUNA IMMAGINE':'NO IMAGE')+'</div>';
+      var imgHtml=imgSrc?'<img class="past-card-img" src="'+safeUrl(imgSrc)+'" alt="'+esc(a.title)+'" loading="lazy">':'<div class="past-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--gray-600);font-family:var(--font-m);font-size:11px;letter-spacing:1.5px">'+(isIt?'NESSUNA IMMAGINE':'NO IMAGE')+'</div>';
       var drawDate=a.draw_executed_at?new Date(a.draw_executed_at).toLocaleDateString(isIt?'it-IT':'en-GB',{day:'numeric',month:'short',year:'numeric'}):'—';
       var winnerId=a.winner_public_id?a.winner_public_id.substring(0,8)+'...':'—';
       html+='<div class="past-card">';
@@ -6985,7 +6991,7 @@ async function loadComingSoon(){
     var phSvg='<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>';
     grid.innerHTML=items.map(function(a){
       var img=a.image_url
-        ?'<img class="coming-tile-img" src="'+a.image_url+'" alt="" loading="lazy">'
+        ?'<img class="coming-tile-img" src="'+safeUrl(a.image_url)+'" alt="" loading="lazy">'
         :'<div class="coming-tile-ph">'+phSvg+'</div>';
       return '<div class="coming-tile">'
         +'<div class="coming-tile-badge"><span class="it">presto</span><span class="en">soon</span></div>'
@@ -7112,7 +7118,7 @@ function openShareMenu(url,text,title,imgUrl){
   ov.id='share-overlay';
   ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
   ov.onclick=function(e){if(e.target===ov)ov.remove();};
-  var thumbHtml=imgUrl?'<img src="'+imgUrl.replace(/"/g,'&quot;')+'" alt="" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:12px">':'';
+  var thumbHtml=imgUrl?'<img src="'+safeUrl(imgUrl)+'" alt="" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:12px">':'';
   var titleHtml=title?'<div style="font-family:var(--font-h);font-size:15px;color:var(--white);line-height:1.3;margin-bottom:14px">'+escHtml(title)+'</div>':'';
   ov.innerHTML='<div style="background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:20px;max-width:360px;width:100%">'
     +thumbHtml+titleHtml
@@ -7167,7 +7173,7 @@ function renderHomeFeed(){
     var price=(a.status==='presale'&&a.presale_block_price)?a.presale_block_price:a.block_price_aria;
     return '<div class="v4-hero" onclick="openDetail(\''+a.id+'\')">'
       +'<div class="v4-himg">'
-      +(a.image_url?'<img src="'+a.image_url+'" alt="" loading="lazy">':'<div class="v4-noimg"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')
+      +(a.image_url?'<img src="'+safeUrl(a.image_url)+'" alt="" loading="lazy">':'<div class="v4-noimg"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>')
       +'<div class="v4-hi-top">'
       +(a.status==='presale'
         ?'<span class="v4-chip v4-chip-pre">PRESALE 2&times;</span>'

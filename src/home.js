@@ -977,7 +977,7 @@ async function loadAdminData(){
       var tbody=document.getElementById('adm-users-body');
       tbody.innerHTML=users.slice(0,50).map(function(u){
         var d=new Date(u.created_at).toLocaleDateString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
-        return '<tr class="adm-user-row" onclick="toggleUserDetail(this,\''+u.id+'\')" data-uid="'+u.id+'"><td>'+u.email+'</td><td>'+(u.total_points||0)+'</td><td>'+(u.current_streak||0)+'</td><td>'+(refMap[u.id]||0)+'</td><td>'+d+'</td></tr>';
+        return '<tr class="adm-user-row" onclick="toggleUserDetail(this,\''+u.id+'\')" data-uid="'+u.id+'"><td>'+escHtml(u.email)+'</td><td>'+(u.total_points||0)+'</td><td>'+(u.current_streak||0)+'</td><td>'+(refMap[u.id]||0)+'</td><td>'+d+'</td></tr>';
       }).join('');
     }
     

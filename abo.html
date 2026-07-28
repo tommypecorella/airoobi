@@ -1549,7 +1549,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     if (status) q = q.eq('status', status);
     const { data, error } = await q;
     if (error) { tbody.innerHTML = '<tr><td colspan="7" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
-    tbody.innerHTML = (data||[]).map(r => `<tr><td style="font-family:var(--font-m);font-size:10px">${r.airdrop_id.slice(0,8)}</td><td style="font-family:var(--font-m);font-size:10px">${r.opener_id.slice(0,8)}</td><td><span class="tag">${r.opener_role}</span></td><td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${r.reason}">${r.reason}</td><td><span class="tag ${r.status==='resolved'?'tag-ok':'tag-warn'}">${r.status}</span></td><td style="font-size:11px;color:var(--gray-400)">${new Date(r.opened_at).toLocaleString('it-IT')}</td><td>${r.status==='pending_review'?`<button class="ab-btn ab-btn-primary" style="padding:4px 10px;font-size:10px" onclick="resolveDispute('${r.id}')">Resolve</button>`:''}</td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Nessuna dispute</td></tr>';
+    tbody.innerHTML = (data||[]).map(r => `<tr><td style="font-family:var(--font-m);font-size:10px">${r.airdrop_id.slice(0,8)}</td><td style="font-family:var(--font-m);font-size:10px">${r.opener_id.slice(0,8)}</td><td><span class="tag">${r.opener_role}</span></td><td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(r.reason)}">${escHtml(r.reason)}</td><td><span class="tag ${r.status==='resolved'?'tag-ok':'tag-warn'}">${r.status}</span></td><td style="font-size:11px;color:var(--gray-400)">${new Date(r.opened_at).toLocaleString('it-IT')}</td><td>${r.status==='pending_review'?`<button class="ab-btn ab-btn-primary" style="padding:4px 10px;font-size:10px" onclick="resolveDispute('${r.id}')">Resolve</button>`:''}</td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Nessuna dispute</td></tr>';
   };
   window.resolveDispute = async function(disputeId){
     const notes = prompt('Resolution notes:'); if (!notes) return;
@@ -1735,7 +1735,11 @@ async function sbPost(table,data){
 }
 
 // ── Utilities ──
-function escHtml(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):'';}
+// Valore sicuro dentro onclick="fn('...')" — JS-escape prima di escHtml (pentest 28 lug XSS→admin).
+function jsAttr(s){return escHtml(String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\r?\n/g,' '));}
+// Schema-whitelist per href/src: mai javascript: cliccabile dall'admin. Solo https/root/data:image/blob.
+function safeUrl(u){u=String(u==null?'':u).trim();return /^(https:\/\/|\/[^\/]|data:image\/|blob:)/i.test(u)?escHtml(u):'';}
 function timeAgo(dateStr){
   var d=new Date(dateStr);var now=new Date();var diff=Math.floor((now-d)/1000);
   if(diff<60)return 'ora';if(diff<3600)return Math.floor(diff/60)+'m';
@@ -2477,7 +2481,7 @@ async function loadNotifCenter(){
           +'<td style="font-size:12px">'+escHtml(r.audience)+'</td>'
           +'<td style="font-family:var(--font-m);font-size:10px;white-space:nowrap">'+escHtml(r.channel)+'</td>'
           +'<td style="font-size:12px;color:var(--gray-300);max-width:320px">'+escHtml(r.sample_text)+'</td>'
-          +'<td style="font-family:var(--font-m);font-size:10px">'+(r.link?'<a href="'+escHtml(r.link)+'" style="color:var(--gold)">'+escHtml(r.link)+'</a>':'—')+'</td>'
+          +'<td style="font-family:var(--font-m);font-size:10px">'+(r.link?'<a href="'+safeUrl(r.link)+'" style="color:var(--gold)">'+escHtml(r.link)+'</a>':'—')+'</td>'
           +'<td style="font-family:var(--font-m);font-size:10px;color:var(--gray-500)">'+escHtml(r.emitter)+'</td>'
           +'<td>'+stato+'</td>'
           +'</tr>';
@@ -2699,7 +2703,7 @@ function openReportDetail(id){
   var d=new Date(r.created_at).toLocaleString('it-IT',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
   var who=r.user_id?(_repEmap[r.user_id]||r.user_id.slice(0,8)):'ospite';
   var hasUser=!!r.user_id;
-  var img=r.image_url?'<div class="rc-img"><a href="'+escHtml(r.image_url)+'" target="_blank" rel="noopener"><img src="'+escHtml(r.image_url)+'" alt="screenshot"></a></div>':'';
+  var img=r.image_url?'<div class="rc-img"><a href="'+safeUrl(r.image_url)+'" target="_blank" rel="noopener"><img src="'+safeUrl(r.image_url)+'" alt="screenshot"></a></div>':'';
   var notesPrev=r.admin_notes?'<div style="font-size:11.5px;color:var(--gray-500);margin-top:10px;padding:8px 10px;background:rgba(255,255,255,.02);border-radius:8px;white-space:pre-wrap">📝 '+escHtml(r.admin_notes)+'</div>':'';
   card.innerHTML=
     '<div class="rc-head">'+(REP_STBADGE[r.status]||'')+'<h3>'+escHtml(who)+'</h3>'
@@ -3443,7 +3447,7 @@ async function loadAirdropStats(){
       var pct=a.total_blocks>0?Math.round((a.blocks_sold||0)/a.total_blocks*100):0;
       var partCount=parts.filter(function(p){return false}).length; // we don't have airdrop_id in parts query, show blocks_sold
       var ariaTotal=(a.blocks_sold||0)*(a.block_price_aria||0);
-      html+='<tr><td>'+((a.title||'—').substring(0,30))+'</td><td><span class="admin-badge admin-badge-'+(a.status==='completed'?'green':'gold')+'">'+a.status+'</span></td>'
+      html+='<tr><td>'+escHtml((a.title||'—').substring(0,30))+'</td><td><span class="admin-badge admin-badge-'+(a.status==='completed'?'green':'gold')+'">'+a.status+'</span></td>'
         +'<td>'+a.total_blocks+'</td><td>'+(a.blocks_sold||0)+'</td><td>'+pct+'%</td>'
         +'<td>—</td><td>'+Math.round(ariaTotal).toLocaleString('it-IT')+'</td></tr>';
     });
@@ -4038,8 +4042,8 @@ async function loadPlatformAriaAccount(){
           var amtStr=(amt>=0?'+':'')+amt.toLocaleString()+' ARIA';
           var reasonMap={valuation_fee:'Submission fee',refund:'Rimborso',admin_adjust:'Admin adjust',airdrop_fee:'Airdrop fee'};
           var reasonLabel=reasonMap[r.reason]||r.reason;
-          var user=r.related_user_email||'—';
-          var item=r.related_airdrop_title?('<span style="color:var(--gray-300)">'+r.related_airdrop_title+'</span>'):'—';
+          var user=escHtml(r.related_user_email||'—');
+          var item=r.related_airdrop_title?('<span style="color:var(--gray-300)">'+escHtml(r.related_airdrop_title)+'</span>'):'—';
           h+='<tr><td style="font-family:var(--font-m);font-size:11px;color:var(--gray-400)">'+dateStr+'</td>';
           h+='<td style="color:'+amtColor+';font-weight:600;font-family:var(--font-m)">'+amtStr+'</td>';
           h+='<td>'+reasonLabel+'</td>';
@@ -5141,7 +5145,7 @@ function renderCompanyAssets(){
   }).join('');
 }
 
-function escH(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):'';}
+function escH(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):'';}
 
 function caFilter(cat){
   _caFilter=cat;
@@ -5265,7 +5269,7 @@ async function loadAboNotifications(){
       var time=new Date(n.created_at).toLocaleString('it-IT',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       var isMsg=n.type==='message';
       var onclick=isMsg
-        ?'aboNotifGoToChat(\''+n.id+'\',\''+escH(n.title||'')+'\')'
+        ?'aboNotifGoToChat(\''+n.id+'\',\''+jsAttr(n.title||'')+'\')'
         :'aboMarkNotifRead(\''+n.id+'\')';
       return '<div class="abo-notif-item'+(n.read?'':' unread')+'" data-id="'+n.id+'" onclick="'+onclick+'">'
         +'<div class="n-title">'+escH(n.title||'AIROOBI')+'</div>'
@@ -5486,7 +5490,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-28.07.2026-1.21.0"></div>
+<div id="footer-mount" data-version="alfa-28.07.2026-1.22.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 </body>
 </html>

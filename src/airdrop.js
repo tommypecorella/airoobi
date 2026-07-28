@@ -12,6 +12,8 @@ var _publicMode=false;
 var ARIA_EUR=0.10;
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):''}
+// XSS hardening (pentest 28 lug): schema-whitelist per src/href su pagina PUBBLICA (no login).
+function safeUrl(u){u=String(u==null?'':u).trim();return /^(https:\/\/|\/[^\/]|data:image\/|blob:)/i.test(u)?escHtml(u):''}
 function tokIcon(t,sz){
   sz=sz||14;
   var c=t==='ARIA'?'#4A9EFF':t==='ROBI'?'#EF3E4F':t==='KAS'?'#49EACB':'var(--gray-500)';
@@ -1327,7 +1329,7 @@ async function renderDetail(){
   var slidesHtml=galleryImgs.map(function(src,i){
     return '<div class="gallery-slide'+(i===0?' active':'')+'">'
       +(src
-        ?'<img src="'+src+'" alt="'+escHtml(a.title)+' — '+(i+1)+'" loading="'+(i<2?'eager':'lazy')+'">'
+        ?'<img src="'+safeUrl(src)+'" alt="'+escHtml(a.title)+' — '+(i+1)+'" loading="'+(i<2?'eager':'lazy')+'">'
         :'<img class="product-img-placeholder" src="/public/images/AIROOBI_Symbol_White.png" alt="">')
       +'</div>';
   }).join('');
@@ -1825,7 +1827,7 @@ function openShareMenu(url,text,title,imgUrl){
   ov.id='share-overlay';
   ov.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px';
   ov.onclick=function(e){if(e.target===ov)ov.remove();};
-  var thumbHtml=imgUrl?'<img src="'+imgUrl.replace(/"/g,'&quot;')+'" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:12px">':'';
+  var thumbHtml=imgUrl?'<img src="'+safeUrl(imgUrl)+'" style="width:100%;aspect-ratio:16/10;object-fit:cover;border-radius:var(--radius-sm);margin-bottom:12px">':'';
   var titleHtml=title?'<div style="font-family:var(--font-h);font-size:15px;color:var(--white);line-height:1.3;margin-bottom:14px">'+escHtml(title)+'</div>':'';
   ov.innerHTML='<div style="background:var(--card-bg);border:1px solid var(--gray-700);border-radius:var(--radius);padding:20px;max-width:360px;width:100%">'
     +thumbHtml+titleHtml

@@ -8,6 +8,9 @@
   const SB_URL = 'https://vuvlmlpuhovipfwtquux.supabase.co';
   const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1dmxtbHB1aG92aXBmd3RxdXV4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI2NjM0MjEsImV4cCI6MjA4ODIzOTQyMX0.5iEqns2F7N6h1VVxLJjqu3Rm4doOVDs5hpD8sNaL6co';
 
+  // XSS hardening (pentest 28 lug): username è dato di ALTRI utenti → mai raw in innerHTML.
+  function escHtml(s){return s==null?'':String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
+
   function getAirdropId() {
     const m = location.pathname.match(/\/airdrops\/([0-9a-f-]+)/i);
     if (m) return m[1];
@@ -67,7 +70,7 @@
       const stateBadge = r.is_attivo ? '' : '<span class="le-badge le-badge-gray" title="Esclusi: math fairness · non può più superare il leader anche acquistando tutti i blocchi rimanenti">🔒 escluso</span>';
       return `<tr ${isYou ? 'class="le-row-you"' : ''}>
         <td>#${r.rank}</td>
-        <td>@${r.username || '—'}</td>
+        <td>@${escHtml(r.username) || '—'}</td>
         <td style="text-align:right">${Number(r.score).toFixed(2)}</td>
         <td style="text-align:right">${r.blocks_count}</td>
         <td>${badge}${stateBadge}</td>
