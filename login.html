@@ -122,7 +122,7 @@ body{padding:0;justify-content:flex-start}
 </div>
 
 </main>
-<div id="footer-mount" data-version="alfa-28.07.2026-4.15.0"></div>
+<div id="footer-mount" data-version="alfa-28.07.2026-4.16.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 
 <script>
@@ -199,10 +199,11 @@ async function doLogin(){
   if(!email)return showError('login-error',lang==='it'?'Inserisci email':'Enter email');
   if(!pw)return showError('login-error',lang==='it'?'Inserisci password':'Enter password');
 
-  var turnstileToken=getTurnstileToken('login-turnstile');
-  if(!turnstileToken){
-    return showError('login-error',lang==='it'?'Completa la verifica anti-bot.':'Complete the anti-bot verification.');
-  }
+  // Anti-bot: il token Turnstile NON e' verificato da gotrue (captcha nativo OFF) ne' inoltrato al
+  // server -> gate solo lato client, zero valore di sicurezza (un bot chiama /auth/v1/token e salta
+  // il widget). Bloccare qui teneva fuori utenti veri il cui browser/rete non risolve la sfida
+  // Cloudflare -> NON blocca piu' il login. Anti-bot vero = captcha nativo Supabase server-side (A5).
+  var turnstileToken=getTurnstileToken('login-turnstile'); // conservato per la futura verifica A5
 
   document.getElementById('login-btn').disabled=true;
   var result=await sbAuth('token?grant_type=password',{email:email,password:pw});
