@@ -92,6 +92,27 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 .hero-ctas{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;position:relative}
 .btn-primary{display:inline-block;background:var(--ink);color:var(--black);padding:13px 30px;font-family:var(--font-b);font-size:11px;letter-spacing:.08em;font-weight:500;text-decoration:none;transition:all .2s ease;border-radius:var(--radius);text-transform:uppercase}
 .btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px);box-shadow:0 6px 18px rgba(15,20,23,.18)}
+/* Hero "drop" v5: ticker + LIVE + due porte */
+.aro-ticker-bar{overflow:hidden;border-bottom:.5px solid var(--line);padding:8px 0}
+.aro-tick{display:inline-flex;white-space:nowrap;animation:aroMarq 26s linear infinite}
+.aro-tick span{font-family:var(--font-m);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);padding-right:36px}
+@keyframes aroMarq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+@keyframes aroPulse{0%,100%{opacity:1}50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.aro-tick{animation:none}.hero-live .dot{animation:none}}
+.hero-live{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-m);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:18px;position:relative}
+.hero-live .dot{width:8px;height:8px;border-radius:50%;background:var(--kas);animation:aroPulse 1.4s ease-in-out infinite}
+.hero-oneliner{font-size:clamp(1rem,2.3vw,1.18rem);color:var(--ink);max-width:520px;margin:0 auto 26px;line-height:1.55;font-weight:500;position:relative}
+.hero-doors{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:30px;position:relative}
+.btn-door{display:flex;flex-direction:column;align-items:flex-start;text-align:left;text-decoration:none;border-radius:var(--radius);padding:13px 22px;min-width:224px;transition:transform .12s ease,box-shadow .2s ease,border-color .2s ease}
+.btn-door:hover{transform:translateY(-2px)}
+.btn-door .dl{font-family:var(--font-b);font-size:14.5px;font-weight:600;letter-spacing:.01em;display:flex;align-items:center;gap:8px}
+.btn-door .ds{font-size:11.5px;margin-top:4px}
+.btn-door-primary{background:var(--gold);color:#fff}
+.btn-door-primary .ds{color:rgba(255,255,255,.85)}
+.btn-door-primary:hover{box-shadow:0 8px 22px rgba(239,62,79,.28)}
+.btn-door-ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.btn-door-ghost .ds{color:var(--ink-soft)}
+.btn-door-ghost:hover{border-color:var(--ink-soft)}
 .btn-secondary{display:inline-block;background:var(--coral);border:none;color:#fff;padding:13px 30px;font-family:var(--font-b);font-size:11px;letter-spacing:.08em;font-weight:500;text-decoration:none;transition:all .2s ease;border-radius:var(--radius);text-transform:uppercase}
 .btn-secondary:hover{background:#E12950;transform:translateY(-1px);box-shadow:0 6px 18px rgba(247,54,89,.22)}
 
@@ -270,9 +291,30 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 <script src="/src/topbar.js?v=4.52.0"></script>
 
 <!-- HERO -->
+<div class="aro-ticker-bar" aria-hidden="true" data-no-gloss>
+  <div class="aro-tick">
+    <span class="it">airdrop &middot; da qualcuno &middot; per qualcuno &nbsp;&bull;&nbsp; oggetti veri, prezzo giusto, zero aste &nbsp;&bull;&nbsp;</span><span class="en">airdrop &middot; from someone &middot; for someone &nbsp;&bull;&nbsp; real items, fair price, no bidding wars &nbsp;&bull;&nbsp;</span>
+    <span class="it">airdrop &middot; da qualcuno &middot; per qualcuno &nbsp;&bull;&nbsp; oggetti veri, prezzo giusto, zero aste &nbsp;&bull;&nbsp;</span><span class="en">airdrop &middot; from someone &middot; for someone &nbsp;&bull;&nbsp; real items, fair price, no bidding wars &nbsp;&bull;&nbsp;</span>
+  </div>
+</div>
 <section class="hero">
   <h1><span class="it">Non venderlo!<br><em>Airdroppalo</em> su AIROOBI.</span><span class="en">Don't sell it!<br><em>Airdrop it</em> on AIROOBI.</span></h1>
   <div class="hero-payoff" data-no-gloss><span class="it">da qualcuno &middot; per qualcuno</span><span class="en">from someone &middot; for someone</span></div>
+  <div class="hero-live"><span class="dot"></span><span id="drop-live"><span class="it">le corse sono aperte</span><span class="en">drops are live</span></span></div>
+  <p class="hero-oneliner">
+    <span class="it">Oggetti da qualcuno, per qualcuno: airdroppa quello che non usi, trova quello che cerchi.</span>
+    <span class="en">Items from someone, for someone: airdrop what you don't use, find what you're looking for.</span>
+  </p>
+  <div class="hero-doors">
+    <a href="/proponi" class="btn-door btn-door-primary">
+      <span class="dl"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M4 12v9h16v-9M7.5 8a2.5 2.5 0 010-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 010 5"/></svg><span class="it">Airdroppa un oggetto</span><span class="en">Airdrop an item</span></span>
+      <span class="ds"><span class="it">immetti quello che non usi pi&ugrave;</span><span class="en">list what you no longer use</span></span>
+    </a>
+    <a href="/airdrops" class="btn-door btn-door-ghost">
+      <span class="dl"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg><span class="it">Prendi un oggetto</span><span class="en">Grab an item</span></span>
+      <span class="ds"><span class="it">fai la tua proposta, o entra in una corsa</span><span class="en">make your offer, or join a race</span></span>
+    </a>
+  </div>
   <p class="hero-sub">
     <span class="it">Il negozio online dove ogni oggetto &egrave; <strong>una corsa</strong>:<br>entri gratis, avanzi <strong>Step dopo Step</strong> e chi arriva <strong>in vetta</strong> se lo porta a casa.<br>Chi ha corso viene comunque ringraziato in <span class="hl">ROBI</span>: approfittane e accumulali adesso &mdash; in mainnet li converti in <span style="color:var(--kas);font-weight:650">KAS</span> quando decidi tu.</span>
     <span class="en">The online store where every item is <strong>a race</strong>:<br>join free, advance <strong>Step by Step</strong> and whoever reaches <strong>the summit</strong> takes it home.<br>Everyone who ran still gets thanked in <span class="hl">ROBI</span>: make the most of it and stack them now &mdash; on mainnet you convert them to <span style="color:var(--kas);font-weight:650">KAS</span> whenever you decide.</span>
@@ -292,11 +334,6 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
       <div class="alpha-banner-detail" style="margin-top:6px;opacity:.85"><span class="it">I ROBI generosi di adesso sono il ringraziamento di AIROOBI a chi supporta il lancio. Nessuna corsa contro il tempo: solo un grazie a chi c'&egrave; dall'inizio.</span><span class="en">Today's generous ROBI are AIROOBI's thank-you to those supporting the launch. No race against the clock: just gratitude for being here from the start.</span></div>
     </div>
   </div>
-  <div class="hero-ctas">
-    <a href="/signup" class="btn-primary hide-if-logged"><span class="it">Compra &rarr;</span><span class="en">Buy &rarr;</span></a>
-    <a href="/proponi" class="btn-secondary"><span class="it">Vendi &rarr;</span><span class="en">Sell &rarr;</span></a>
-  </div>
-
   <!-- WELCOME GRANT — Alpha-Net -->
   <div class="welcome-grant">
     <div class="welcome-grant-label"><span class="it">REGISTRANDOTI OGGI RICEVI</span><span class="en">SIGN UP TODAY AND GET</span></div>
@@ -426,7 +463,7 @@ body{color:var(--ink);background:var(--black);font-family:var(--font-b);line-hei
 </section>
 
 <!-- FOOTER -->
-<div id="footer-mount" data-version="alfa-28.07.2026-4.18.0"></div>
+<div id="footer-mount" data-version="alfa-28.07.2026-4.19.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 
 <script>
@@ -502,6 +539,12 @@ function renderCard(a,type){
     });
     if(!res.ok)return;
     var airdrops=await res.json();
+    var _n=Array.isArray(airdrops)?airdrops.length:0;
+    var _live=document.getElementById('drop-live');
+    if(_live){
+      if(_n>0){_live.innerHTML='<span class="it">'+_n+' cors'+(_n===1?'a aperta':'e aperte')+' ora</span><span class="en">'+_n+' drop'+(_n===1?'':'s')+' live now</span>';}
+      else{var _chip=_live.closest('.hero-live');if(_chip)_chip.style.display='none';}
+    }
     var track=document.getElementById('active-track');
     if(!airdrops||airdrops.length===0){
       track.innerHTML='<div class="carousel-empty"><span class="it">Nessun airdrop attivo al momento. Torna presto!</span><span class="en">No active airdrops right now. Come back soon!</span></div>';
