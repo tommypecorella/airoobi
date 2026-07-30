@@ -28,7 +28,7 @@
 <meta name="color-scheme" content="light dark">
 <style>[data-lang="it"] .en,[data-lang="en"] .it{display:none!important}</style>
 <link rel="stylesheet" href="/src/tokens.css?v=4.26.2">
-<link rel="stylesheet" href="/src/dapp.css?v=4.88.0">
+<link rel="stylesheet" href="/src/dapp.css?v=4.89.0">
 <link rel="stylesheet" href="/src/dapp-v2-g3.css?v=4.51.0">
 <link rel="stylesheet" href="/src/theme-v3.css?v=4.48.2">
 <script src="/src/theme.js?v=4.50.1"></script>
@@ -315,6 +315,18 @@
   <!-- ═══ HOME v4 (20 lug, GO Skeezu): feed product-first — l'airdrop è l'eroe ═══ -->
   <div id="tab-home" class="dash-home" style="display:none">
     <span class="dash-alpha-badge dash-alpha-fixed">alpha brave</span>
+
+    <!-- Due porte (30 lug, GO Skeezu): airdroppa / prendi — azioni chiare in cima anche da loggato -->
+    <div class="home-doors">
+      <button class="home-door home-door-primary" onclick="navigateTo('submit')">
+        <span class="hd-l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="8" width="18" height="4"/><path d="M12 8v13M4 12v9h16v-9M7.5 8a2.5 2.5 0 010-5C11 3 12 8 12 8s1-5 4.5-5a2.5 2.5 0 010 5"/></svg><span class="it">Airdroppa un oggetto</span><span class="en">Airdrop an item</span></span>
+        <span class="hd-s"><span class="it">immetti quello che non usi pi&ugrave;</span><span class="en">list what you no longer use</span></span>
+      </button>
+      <button class="home-door home-door-ghost" onclick="navigateTo('explore')">
+        <span class="hd-l"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 01-8 0"/></svg><span class="it">Prendi un oggetto</span><span class="en">Grab an item</span></span>
+        <span class="hd-s"><span class="it">fai la tua proposta, o entra in una corsa</span><span class="en">make your offer, or join a race</span></span>
+      </button>
+    </div>
 
     <!-- Learning path · strip per i nuovi (riapribile sempre dal «?» in topbar) -->
     <button class="v4-learn-strip" id="v4-learn-strip" onclick="openLearn()">
@@ -1787,7 +1799,7 @@
 </div>
 
 <script src="/src/dapp.js?v=5.10.0"></script>
-<div id="footer-mount" data-version="alfa-28.07.2026-5.11.0"></div>
+<div id="footer-mount" data-version="alfa-28.07.2026-5.12.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 <script src="/src/glossary.js?v=1.0.0" defer></script>
 </body>
