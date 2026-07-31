@@ -1,0 +1,24 @@
+-- PROPOSTA v3 (1 ago 2026) — SCADENZA + CHIUSURA AUTOMATICA. Applicata live via MCP
+-- (migration proposta_v3_deadline_and_auto_resolve_cron). Mirror.
+--
+-- PROBLEMA CHIUSO: senza scadenza le vendite a proposta restavano aperte all'infinito e l'ESCROW
+-- dei compratori restava bloccato finche' un admin non risolveva a mano.
+--
+-- PATTERN (come execute_draw): il motore vero e' _resolve_proposta_internal (NESSUN gate, NON
+-- concesso a nessun ruolo client) + wrapper admin_resolve_proposta (gate is_admin, per la chiusura
+-- anticipata manuale) + cron_resolve_expired_proposte schedulato ogni 5 min. Serve perche' il cron
+-- gira senza auth.uid(): non potrebbe mai passare is_admin().
+--
+-- CONFIG: proposta_duration_days = 7 (open_proposta_sale imposta deadline = now() + N giorni).
+-- NOVITA' UX: ora anche i PERDENTI e le offerte sotto riserva ricevono una notifica di rimborso
+-- (prima i soldi tornavano in silenzio).
+--
+-- TEST (airdrop di test con deadline gia' scaduta, poi cleanup con ripristino saldi esatto):
+--   compratore offre 70 EUR -> escrow 700; cron eseguito SENZA contesto utente (auth.uid() NULL)
+--   -> proposta 'won', compratore paga 700, venditore +644, commissione AIROOBI 56 (8%),
+--   airdrop -> waiting_seller_acknowledge. Conservazione: 700 = 644 + 56. OK.
+-- SICUREZZA verificata da anon: _resolve_proposta_internal / cron_resolve_expired_proposte /
+--   open_proposta_sale -> permission denied (42501).
+--
+-- Il corpo completo delle funzioni e' quello applicato live; vedi la migration MCP omonima.
+-- Questo file documenta la struttura: non ri-eseguire senza allineare i corpi.
