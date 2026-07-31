@@ -12,6 +12,9 @@ var _publicMode=false;
 var ARIA_EUR=0.10;
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):''}
+// Colonne airdrop leggibili dal client: TUTTE tranne seller_min_price (riserva segreta venditore).
+// Pagina PUBBLICA: prima faceva select=* e serviva la riserva a ogni visitatore (pentest 1 ago).
+var AIRDROP_PUBLIC_COLS='id,title,description,category,image_url,object_value_eur,block_price_aria,total_blocks,blocks_sold,status,deadline,winner_id,created_by,created_at,updated_at,product_info,presale_block_price,submitted_by,rejection_reason,seller_desired_price,auto_draw,draw_executed_at,winner_score,venditore_payout_eur,airoobi_fee_eur,charity_contrib_eur,fondo_contributo_eur,aria_incassato,draw_scores,duration_type,presale_enabled,launch_fee_paid,presale_blocks_pct,early_close_reason,original_total_blocks,is_demo,duration_days,listing_published_at,end_event_triggered_at,end_event_trigger_type,seller_acknowledge_sla_deadline,seller_acknowledge_decision,seller_acknowledge_decided_at,winner_candidate_user_id,story_public_visible,story_winner_redacted,story_public_url,code,extensions_count,sale_mode,company_id,b2c_product'
 // XSS hardening (pentest 28 lug): schema-whitelist per src/href su pagina PUBBLICA (no login).
 function safeUrl(u){u=String(u==null?'':u).trim();return /^(https:\/\/|\/[^\/]|data:image\/|blob:)/i.test(u)?escHtml(u):''}
 function tokIcon(t,sz){
@@ -1739,7 +1742,7 @@ var _airdropId=(function(){
   }
 
   try{
-    var res=await fetch(SB_URL+'/rest/v1/airdrops?id=eq.'+_airdropId+'&select=*',{
+    var res=await fetch(SB_URL+'/rest/v1/airdrops?id=eq.'+_airdropId+'&select='+AIRDROP_PUBLIC_COLS,{
       headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}
     });
     if(!res.ok){showError();return;}

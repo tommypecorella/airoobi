@@ -9,6 +9,10 @@ var _publicMode=false; // true when viewing public pages without auth
 var ARIA_EUR=0.10; // 1 ARIA = €0.10 (interno, usato per ROBI e ABO)
 function eur(aria){return '€'+(aria*ARIA_EUR).toFixed(2).replace('.',',')}
 function escHtml(s){return s?String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'):'';}
+// Colonne airdrop leggibili dal client: TUTTE tranne seller_min_price (la riserva segreta del
+// venditore). Sostituisce i vecchi select=* che la sbandieravano a chiunque (pentest 1 ago).
+// La riserva la leggono solo il venditore/admin via RPC SECURITY DEFINER (get_airdrop_reserve).
+var AIRDROP_PUBLIC_COLS='id,title,description,category,image_url,object_value_eur,block_price_aria,total_blocks,blocks_sold,status,deadline,winner_id,created_by,created_at,updated_at,product_info,presale_block_price,submitted_by,rejection_reason,seller_desired_price,auto_draw,draw_executed_at,winner_score,venditore_payout_eur,airoobi_fee_eur,charity_contrib_eur,fondo_contributo_eur,aria_incassato,draw_scores,duration_type,presale_enabled,launch_fee_paid,presale_blocks_pct,early_close_reason,original_total_blocks,is_demo,duration_days,listing_published_at,end_event_triggered_at,end_event_trigger_type,seller_acknowledge_sla_deadline,seller_acknowledge_decision,seller_acknowledge_decided_at,winner_candidate_user_id,story_public_visible,story_winner_redacted,story_public_url,code,extensions_count,sale_mode,company_id,b2c_product';
 // XSS hardening (pentest 28 lug): schema-whitelist per src/href (mai javascript:, mai attribute-breakout).
 // Ammette solo https://, root-relative /x, data:image/, blob: — poi escapa " < > & per non rompere l'attributo.
 function safeUrl(u){u=String(u==null?'':u).trim();return /^(https:\/\/|\/[^\/]|data:image\/|blob:)/i.test(u)?escHtml(u):'';}
@@ -2540,7 +2544,7 @@ async function openDetail(id){
     // Li carico singolarmente per renderne il recap invece del fallback marketplace.
     var _tok0=_publicMode?SB_KEY:await getValidToken();
     if(_tok0){
-      var _fetched=await sbGet('airdrops?id=eq.'+encodeURIComponent(id)+'&select=*&limit=1',_tok0);
+      var _fetched=await sbGet('airdrops?id=eq.'+encodeURIComponent(id)+'&select='+AIRDROP_PUBLIC_COLS+'&limit=1',_tok0);
       if(Array.isArray(_fetched)&&_fetched.length)a=_fetched[0];
     }
   }
@@ -5653,7 +5657,7 @@ function _renderSubsHtml(subs,isArchive){
 async function openCompleteEarlyClose(airdropId){
   var token=await getValidToken();if(!token)return;
   // Fetch airdrop per riepilogo
-  var rows=await sbGet('airdrops?id=eq.'+airdropId+'&select=id,title,status,blocks_sold,total_blocks,original_total_blocks,block_price_aria,seller_min_price,seller_desired_price,early_close_reason,object_value_eur',token);
+  var rows=await sbGet('airdrops?id=eq.'+airdropId+'&select=id,title,status,blocks_sold,total_blocks,original_total_blocks,block_price_aria,seller_desired_price,early_close_reason,object_value_eur',token);
   if(!rows||!rows[0]){showToast('<span class="it">Airdrop non trovato</span><span class="en">Airdrop not found</span>');return;}
   var a=rows[0];
   if(a.status!=='pending_seller_decision'){showToast('<span class="it">Questo airdrop non è in attesa di decisione</span><span class="en">This airdrop is not pending decision</span>');return;}
@@ -5664,7 +5668,9 @@ async function openCompleteEarlyClose(airdropId){
   var blockPrice=a.block_price_aria||0;
   var revenueAria=blocksSold*blockPrice;
   var revenueEur=revenueAria/10; // ARIA_EUR=0.10
-  var sellerMin=parseFloat(a.seller_min_price)||0;
+  // La riserva non e' piu' leggibile dalla tabella (pentest 1 ago): la ottiene solo il venditore
+  // (o l'admin) via RPC SECURITY DEFINER.
+  var sellerMin=parseFloat(await sbRpc('get_airdrop_reserve',{p_airdrop_id:airdropId},token))||0;
   var sellerDesired=parseFloat(a.seller_desired_price)||0;
   // Stima quota seller (78% del revenue se split std; fallback: tutto meno AIROOBI fee)
   var sellerShare=revenueEur*0.78;
