@@ -1567,7 +1567,7 @@ function showPage(page){
   if(page==='home'){loadHomeDashboard();startFeedPolling();}
   if(page==='explore'){bindExploreSearch();}
   if(page==='my'){renderMyAirdrops();loadMySubmissions();}
-  if(page==='submit'){loadValuationCost().then(function(){updateSubmitCostUI();});renderSubPhotos();}
+  if(page==='submit'){loadValuationCost().then(function(){updateSubmitCostUI();});renderSubPhotos();loadMyCompanies();}
   if(page==='referral')loadDappReferral();
   if(page==='wallet')loadDappWallet();
   if(page==='archive')loadDappArchive();
@@ -2408,7 +2408,9 @@ function renderGrid(){
       +durationBadge(a.duration_type)
       +imgHtml
       +'<div class="card-img-row">'
-      +'<div class="card-cat">'+(CAT_ICONS[a.category]||'')+' '+escHtml(a.category||'')+(a.code?' <span class="card-code">#'+escHtml(a.code)+'</span>':'')+'</div>'
+      +'<div class="card-cat">'+(CAT_ICONS[a.category]||'')+' '+escHtml(a.category||'')
+      +(a.sale_mode==='proposta'?' <span class="card-code" style="border-color:var(--aria);color:var(--aria)"><span class="it">PROPOSTA</span><span class="en">OFFER</span></span>':'')
+      +(a.code?' <span class="card-code">#'+escHtml(a.code)+'</span>':'')+'</div>'
       +'<div class="card-actions">'
       +'<button class="share-btn" data-id="'+a.id+'" data-title="'+escHtml(a.title||'').replace(/"/g,'&quot;')+'" data-img="'+escHtml(a.image_url||'').replace(/"/g,'&quot;')+'" onclick="shareFromBtn(this,event)" title="Condividi"><svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>'
       +'<button class="'+heartCls+' card-heart" onclick="toggleWatchlist(\''+a.id+'\',event)">&#9825;</button>'
@@ -2549,6 +2551,8 @@ async function openDetail(id){
     return;
   }
   stopGalleryAutoplay();
+  // 1 ago: in modalita' Proposta serve sapere se ho gia' proposto PRIMA di renderizzare il box
+  if(a.sale_mode==='proposta')await loadMyProposal(a.id); else _myProposal=null;
   if(!_currentDetail||_currentDetail.id!==a.id){_salitaPrevRank=null;_rulloCounts=null;_lastScores=null;_salitaMyPrevT=null;}
   _currentDetail=a;
   _buyQty=1;
@@ -2716,7 +2720,10 @@ async function openDetail(id){
 
   // Buy box (acquisto subito sotto soglia — §4.6 above-the-fold)
   var _isMineVal=!_publicMode&&_session&&_session.user&&(a.submitted_by===_session.user.id||a.created_by===_session.user.id);
-  var buyBoxHtml=isValuation
+  // 1 ago: modalita' Proposta — al posto del pannello Step, il pannello offerta (cieca, una sola)
+  var buyBoxHtml=(a.sale_mode==='proposta'&&!isValuation&&!isConcluded)
+    ?_renderPropostaBox(a)
+    :isValuation
     ?'<div class="buy-box">'
     +'<div class="buy-box-label"><span class="it">Proposta in valutazione</span><span class="en">Proposal under evaluation</span></div>'
     +'<p class="buy-box-framing"><span class="it">Il team AIROOBI sta preparando la quotazione (24&ndash;48h). '+(a.status==='valutazione_completata'?'Quotazione pronta: attende la decisione del venditore. ':'')+'Appena il venditore d&agrave; l\'OK, la corsa parte da qui.</span><span class="en">The AIROOBI team is preparing the quotation (24&ndash;48h). Once the seller gives the OK, the climb starts here.</span></p>'
@@ -3650,6 +3657,89 @@ async function loadHintSoglia(airdropId){
 // PR-5 · Pannello esito per airdrop concluso (F7/F8): vincitore, consegna, ROBI.
 // Sostituisce il buy box quando lo status è completed/annullato/closed/
 // waiting_seller_acknowledge. Riusa lo styling buy-box e openClaimModal.
+// ── Modalita' PROPOSTA (1 ago) · box compratore ──
+// Cieca e a colpo unico: una sola proposta a testa, non si vedono le altre. Niente rilanci.
+var _myProposal=null; // {amount_eur,status,escrow_aria} della proposta dell'utente su questo airdrop
+function _renderPropostaBox(a){
+  var isMine=!_publicMode&&_session&&_session.user&&(a.submitted_by===_session.user.id||a.created_by===_session.user.id);
+  var ask=a.seller_desired_price?Number(a.seller_desired_price):null;
+  var askLine=ask?'<div class="buy-box-framing" style="margin-bottom:10px"><span class="it">Prezzo richiesto: </span><span class="en">Asking price: </span><strong>&euro;'+ask.toLocaleString('it-IT')+'</strong></div>':'';
+  if(_publicMode){
+    return '<div class="buy-box"><div class="buy-box-label"><span class="it">Fai la tua proposta</span><span class="en">Make your offer</span></div>'
+      +askLine
+      +'<p class="buy-box-framing"><span class="it">Registrati per proporre il tuo prezzo. Una proposta a testa, senza vedere quelle degli altri: niente rilanci.</span><span class="en">Sign up to offer your price. One offer each, without seeing the others: no bidding wars.</span></p>'
+      +'<a href="/signup?returnTo='+encodeURIComponent('/airdrops/'+a.id)+'" class="buy-btn" style="display:block;text-align:center;text-decoration:none"><span class="it">Registrati gratis &rarr;</span><span class="en">Sign up free &rarr;</span></a></div>';
+  }
+  if(isMine){
+    return '<div class="detail-sellerbox"><div class="dsb-title"><span class="it">Sei il venditore</span><span class="en">You\'re the seller</span></div>'
+      +askLine
+      +'<p class="dsb-copy"><span class="it">Le proposte arrivano coperte: le vedrai tutte insieme alla chiusura. Vince la pi&ugrave; alta che raggiunge il tuo prezzo minimo.</span><span class="en">Offers stay covered: you\'ll see them all at closing. The highest one that meets your reserve wins.</span></p></div>';
+  }
+  if(_myProposal&&_myProposal.status==='pending'){
+    return '<div class="buy-box"><div class="buy-box-label"><span class="it">La tua proposta</span><span class="en">Your offer</span></div>'
+      +'<div class="buy-display"><div class="buy-display-count">&euro;'+Number(_myProposal.amount_eur).toLocaleString('it-IT')+'</div>'
+      +'<div class="buy-display-balance"><span class="it">bloccati: </span><span class="en">on hold: </span>'+_myProposal.escrow_aria+' '+tokIcon('ARIA')+'</div></div>'
+      +'<p class="buy-box-framing"><span class="it">&Egrave; al sicuro: se non viene accettata ti torna tutto indietro.</span><span class="en">It\'s safe: if it isn\'t accepted you get everything back.</span></p>'
+      +'<button class="buy-btn" style="background:none;border:1px solid var(--gray-700);color:var(--gray-300)" onclick="withdrawMyProposal(\''+a.id+'\')"><span class="it">Ritira la proposta</span><span class="en">Withdraw offer</span></button></div>';
+  }
+  return '<div class="buy-box"><div class="buy-box-label"><span class="it">Fai la tua proposta</span><span class="en">Make your offer</span></div>'
+    +askLine
+    +'<p class="buy-box-framing"><span class="it">Proponi il tuo prezzo: <strong>una sola proposta</strong>, e non vedi quelle degli altri &mdash; niente rilanci. Se non viene accettata, ti torna tutto.</span><span class="en">Offer your price: <strong>one single offer</strong>, and you can\'t see the others &mdash; no bidding wars. If it isn\'t accepted, you get it all back.</span></p>'
+    +'<input class="submit-input" id="prop-amount" type="number" min="1" step="0.01" placeholder="'+(ask?ask:100)+'" style="width:100%;margin-bottom:10px">'
+    +'<div class="buy-display-balance" style="margin-bottom:10px"><span class="it">Saldo:</span><span class="en">Balance:</span> '+_balance+' '+tokIcon('ARIA')+' &middot; <span class="it">1 &euro; = 10 ARIA</span><span class="en">1 &euro; = 10 ARIA</span></div>'
+    +'<button class="buy-btn" style="display:block;width:100%" onclick="sendMyProposal(\''+a.id+'\')"><span class="it">Invia la proposta</span><span class="en">Send offer</span></button></div>';
+}
+
+async function loadMyProposal(airdropId){
+  _myProposal=null;
+  if(_publicMode||!_session||!_session.user)return;
+  try{
+    var token=await getValidToken();if(!token)return;
+    var rows=await fetch(SB_URL+'/rest/v1/proposals?airdrop_id=eq.'+airdropId+'&user_id=eq.'+_session.user.id+'&select=amount_eur,status,escrow_aria',
+      {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token}}).then(function(r){return r.ok?r.json():[]}).catch(function(){return []})||[];
+    if(rows.length)_myProposal=rows[0];
+  }catch(e){}
+}
+
+async function sendMyProposal(airdropId){
+  var el=document.getElementById('prop-amount');
+  var amount=el?parseFloat(el.value):NaN;
+  if(!amount||amount<=0){showToast('<span class="it">Inserisci un importo valido</span><span class="en">Enter a valid amount</span>');return;}
+  var need=Math.ceil(amount*10);
+  if(_balance<need){showToast('<span class="it">Ti servono '+need+' ARIA per questa proposta</span><span class="en">You need '+need+' ARIA for this offer</span>');return;}
+  try{
+    var token=await getValidToken();
+    var res=await fetch(SB_URL+'/rest/v1/rpc/submit_proposal',{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId,p_amount_eur:amount})});
+    var r=await res.json();
+    if(r&&r.ok){
+      showToast('<span class="it">Proposta inviata!</span><span class="en">Offer sent!</span>','success');
+      if(typeof loadProfile==='function')loadProfile();
+      openDetail(airdropId);
+    }else{
+      var err=(r&&r.error)||'ERROR';
+      var msg={INSUFFICIENT_ARIA:'ARIA insufficienti',ALREADY_PROPOSED:'Hai gia\' fatto la tua proposta',SELLER_CANNOT_PROPOSE:'Sei il venditore',NOT_OPEN:'Le proposte sono chiuse'}[err]||err;
+      showToast(escHtml(msg));
+    }
+  }catch(e){showToast('<span class="it">Errore di rete</span><span class="en">Network error</span>');}
+}
+
+async function withdrawMyProposal(airdropId){
+  try{
+    var token=await getValidToken();
+    var res=await fetch(SB_URL+'/rest/v1/rpc/withdraw_proposal',{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId})});
+    var r=await res.json();
+    if(r&&r.ok){
+      showToast('<span class="it">Proposta ritirata, ARIA restituiti</span><span class="en">Offer withdrawn, ARIA refunded</span>','success');
+      if(typeof loadProfile==='function')loadProfile();
+      openDetail(airdropId);
+    }else showToast(escHtml((r&&r.error)||'ERROR'));
+  }catch(e){showToast('<span class="it">Errore di rete</span><span class="en">Network error</span>');}
+}
+
 function _renderOutcomePanel(a,myBlocks,myRobi){
   var uid=_session&&_session.user&&_session.user.id;
   var st=a.status;
@@ -4869,22 +4959,59 @@ function updateSubmitCostUI(){
   }
 }
 
-// ── Duration type card selection ──
+// ── Duration/mode card selection ──
+// 1 ago: generico sulla griglia genitore — le card modalita' (#sub-mode-grid) riusano lo stesso
+// stile, quindi il vecchio lookup fisso su #sub-duration-grid si sarebbe pestato i piedi.
 (function(){
   document.addEventListener('click',function(e){
     var card=e.target.closest('.sub-duration-card');
     if(!card)return;
-    var grid=document.getElementById('sub-duration-grid');
+    var grid=card.parentElement;
     if(!grid)return;
     grid.querySelectorAll('.sub-duration-card').forEach(function(c){c.classList.remove('selected')});
     card.classList.add('selected');
-    card.querySelector('input[type=radio]').checked=true;
+    var radio=card.querySelector('input[type=radio]');
+    if(radio)radio.checked=true;
+    if(grid.id==='sub-mode-grid'&&typeof onSaleModeChange==='function')onSaleModeChange();
   });
 })();
 
 function getSelectedDuration(){
   var r=document.querySelector('input[name="sub-duration"]:checked');
   return r?r.value:'standard';
+}
+
+// ── Modalita' di vendita + azienda B2C (1 ago) ──
+function getSelectedSaleMode(){
+  var r=document.querySelector('input[name="sub-mode"]:checked');
+  return r?r.value:'airdrop';
+}
+function getSelectedCompanyId(){
+  var s=document.getElementById('sub-company');
+  return (s&&s.value)?s.value:null;
+}
+// In Proposta la durata non c'entra (non e' una corsa): nascondo il blocco durata.
+function onSaleModeChange(){
+  var isProp=getSelectedSaleMode()==='proposta';
+  var durWrap=document.getElementById('sub-duration-grid');
+  if(durWrap&&durWrap.parentElement)durWrap.parentElement.style.display=isProp?'none':'';
+}
+// Carica le aziende dove sono Brand Manager: se non ce ne sono, il blocco resta nascosto.
+async function loadMyCompanies(){
+  var wrap=document.getElementById('sub-company-wrap');
+  var sel=document.getElementById('sub-company');
+  if(!wrap||!sel||_publicMode)return;
+  try{
+    var token=await getValidToken();if(!token)return;
+    var rows=await fetch(SB_URL+'/rest/v1/rpc/get_my_companies',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},body:'{}'})
+      .then(function(r){return r.ok?r.json():[]}).catch(function(){return []})||[];
+    var mine=(rows||[]).filter(function(c){return c.role==='brand_manager'&&c.verified});
+    if(!mine.length){wrap.style.display='none';return;}
+    var isIt=(document.documentElement.getAttribute('data-lang')||'it')==='it';
+    sel.innerHTML='<option value="">'+(isIt?'Me stesso (privato)':'Myself (private)')+'</option>'
+      +mine.map(function(c){return '<option value="'+escHtml(c.company_id)+'">'+escHtml(c.name)+'</option>'}).join('');
+    wrap.style.display='';
+  }catch(e){}
 }
 
 // ══ Photo Wizard — slot-based guided upload ══
@@ -5324,7 +5451,10 @@ async function submitObject(){
         p_seller_desired_price:desired,
         p_seller_min_price:minP,
         p_image_urls:photoUrls,
-        p_duration_type:getSelectedDuration()
+        p_duration_type:getSelectedDuration(),
+        p_sale_mode:getSelectedSaleMode(),
+        p_company_id:getSelectedCompanyId(),
+        p_b2c_product:getSelectedCompanyId()?'product_hype':null
       })
     });
     if(res.ok){

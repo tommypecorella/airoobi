@@ -887,6 +887,30 @@
           </div>
         </div>
       </div>
+      <!-- MODALITA' DI VENDITA (1 ago) -->
+      <div class="submit-field">
+        <label class="submit-label"><span class="it">Come vuoi cederlo</span><span class="en">How you want to pass it on</span></label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="sub-mode-grid">
+          <label class="sub-duration-card selected" id="sub-mode-airdrop">
+            <input type="radio" name="sub-mode" value="airdrop" checked style="display:none">
+            <strong><span class="it">Airdrop</span><span class="en">Airdrop</span></strong>
+            <small><span class="it">una corsa: chi arriva in vetta se lo porta a casa</span><span class="en">a climb: whoever reaches the summit takes it home</span></small>
+          </label>
+          <label class="sub-duration-card" id="sub-mode-proposta">
+            <input type="radio" name="sub-mode" value="proposta" style="display:none">
+            <strong><span class="it">Proposta</span><span class="en">Offer</span></strong>
+            <small><span class="it">ognuno fa la sua proposta, una sola e senza vedere le altre</span><span class="en">everyone makes one blind offer</span></small>
+          </label>
+        </div>
+      </div>
+
+      <!-- AZIENDA B2C (visibile solo se sei Brand Manager di un'azienda) -->
+      <div class="submit-field" id="sub-company-wrap" style="display:none">
+        <label class="submit-label"><span class="it">A nome di</span><span class="en">On behalf of</span></label>
+        <select class="submit-select" id="sub-company" aria-label="Azienda"></select>
+        <div class="submit-hint" id="sub-company-hint" style="margin-top:6px"><span class="it">Se scegli un&rsquo;azienda, l&rsquo;airdrop sar&agrave; <strong>PRODUCT HYPE</strong> a nome del brand.</span><span class="en">If you pick a company, the airdrop will be <strong>PRODUCT HYPE</strong> under the brand.</span></div>
+      </div>
+
       <div style="display:flex;gap:16px">
         <div class="submit-field" style="flex:1">
           <label class="submit-label"><span class="it">Prezzo desiderato (&euro;)</span><span class="en">Desired price (&euro;)</span> *</label>
@@ -1798,8 +1822,8 @@
   <div style="text-align:right;margin-top:8px"><button onclick="closeInfoTip()" style="background:none;border:none;color:var(--gold);font-family:var(--font-m);font-size:10px;letter-spacing:1px;cursor:pointer">OK</button></div>
 </div>
 
-<script src="/src/dapp.js?v=5.11.0"></script>
-<div id="footer-mount" data-version="alfa-28.07.2026-5.12.0"></div>
+<script src="/src/dapp.js?v=5.12.0"></script>
+<div id="footer-mount" data-version="alfa-01.08.2026-5.13.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 <script src="/src/glossary.js?v=1.0.0" defer></script>
 </body>

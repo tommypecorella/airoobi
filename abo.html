@@ -1560,6 +1560,20 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     if (error) { tbody.innerHTML = '<tr><td colspan="7" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
     tbody.innerHTML = (data||[]).map(r => `<tr><td style="font-family:var(--font-m);font-size:10px">${r.airdrop_id.slice(0,8)}</td><td style="font-family:var(--font-m);font-size:10px">${r.opener_id.slice(0,8)}</td><td><span class="tag">${r.opener_role}</span></td><td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(r.reason)}">${escHtml(r.reason)}</td><td><span class="tag ${r.status==='resolved'?'tag-ok':'tag-warn'}">${r.status}</span></td><td style="font-size:11px;color:var(--gray-400)">${new Date(r.opened_at).toLocaleString('it-IT')}</td><td>${r.status==='pending_review'?`<button class="ab-btn ab-btn-primary" style="padding:4px 10px;font-size:10px" onclick="resolveDispute('${r.id}')">Resolve</button>`:''}</td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Nessuna dispute</td></tr>';
   };
+  window.adResolveProposta = async function(airdropId,title){
+    if(!confirm('Chiudere le proposte per "'+title+'"?\n\nVince la piu\' alta che raggiunge il prezzo minimo. Le altre vengono rimborsate in ARIA.')) return;
+    var s=getSession(); if(!s) return;
+    try{
+      var res=await fetch(SB_URL+'/rest/v1/rpc/admin_resolve_proposta',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:JSON.stringify({p_airdrop_id:airdropId})});
+      var r=await res.json();
+      if(r&&r.ok){
+        if(r.outcome==='no_valid_proposals') alert('Nessuna proposta valida (tutte sotto il minimo): airdrop annullato, ARIA rimborsati.');
+        else alert('Assegnato!\n\nPrezzo: €'+r.amount_eur+'\nCommissione AIROOBI: '+r.commission_aria+' ARIA ('+r.commission_pct+'%)\nAl venditore: '+r.seller_received_aria+' ARIA');
+      } else alert('Errore: '+((r&&r.error)||'?'));
+      if(typeof loadAdminAirdrops==='function')loadAdminAirdrops();
+    }catch(e){alert('Errore di rete: '+e);}
+  };
+
   window.loadCompaniesTable = async function(){
     var s=getSession(); if(!s) return;
     var tbody=document.querySelector('#companies-tbl tbody');
@@ -3048,6 +3062,10 @@ async function loadAdminAirdrops(){
       }
       if(a.status==='accettato'){
         html+='<button data-id="'+a.id+'" data-title="'+escHtml(a.title).replace(/"/g,'&quot;')+'" onclick="adPublishListing(this.dataset.id,this.dataset.title)" style="background:var(--gold);border:1px solid var(--gold);color:var(--black);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px;font-weight:700">PUBBLICA</button>';
+      }
+      // Modalita' Proposta: chiusura manuale (vince la piu' alta >= riserva, gli altri rimborsati)
+      if(a.sale_mode==='proposta'&&a.status==='sale'){
+        html+='<button data-id="'+a.id+'" data-title="'+escHtml(a.title).replace(/"/g,'&quot;')+'" onclick="adResolveProposta(this.dataset.id,this.dataset.title)" style="background:none;border:1px solid var(--aria);color:var(--aria);padding:4px 10px;font-family:var(--font-m);font-size:10px;cursor:pointer;letter-spacing:1px">CHIUDI PROPOSTE</button>';
       }
       html+='</td></tr>';
     });
@@ -5535,7 +5553,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-01.08.2026-1.23.0"></div>
+<div id="footer-mount" data-version="alfa-01.08.2026-1.24.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 </body>
 </html>
