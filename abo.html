@@ -337,6 +337,7 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div class="admin-sidebar-item" onclick="adminNav('sec-analysis')"><svg viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6"/></svg><span class="it">Analisi &amp; Fairness</span><span class="en">Analysis &amp; Fairness</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-messages')"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg><span class="it">Messaggi</span><span class="en">Messages</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-reports')"><svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span class="it">Segnalazioni</span><span class="en">Reports</span><span class="sb-badge" id="sb-badge-rep"></span></div>
+    <div class="admin-sidebar-item" onclick="adminNav('sec-companies')"><svg viewBox="0 0 24 24"><path d="M3 21h18M6 21V7l6-4 6 4v14M10 9h.01M14 9h.01M10 13h.01M14 13h.01"/></svg><span class="it">Aziende</span><span class="en">Companies</span></div>
     <div class="admin-sidebar-item" onclick="adminNav('sec-users')"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg><span class="it">Utenti</span><span class="en">Users</span></div>
   </div>
   <div class="admin-sidebar-group">
@@ -1451,6 +1452,14 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     <div style="overflow:auto"><table class="adm-tbl" id="disputes-tbl"><thead><tr><th>Airdrop</th><th>Opener</th><th>Ruolo</th><th>Reason</th><th>Stato</th><th>Aperta</th><th></th></tr></thead><tbody><tr><td colspan="7" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento…</td></tr></tbody></table></div>
   </div>
 
+  <!-- ═══ AIRDROP B2C · sec-companies · gestione aziende + Brand Manager ═══ -->
+  <div class="admin-section" id="sec-companies" style="display:none">
+    <h2>Aziende &middot; Brand Manager</h2>
+    <p style="font-size:12px;color:var(--gray-400);margin-bottom:16px">Aziende registrate per gli AIRDROP B2C (verifica automatica alla creazione). Puoi <b>revocare la verifica</b> o <b>sospendere</b> un'azienda (es. impersonazione brand).</p>
+    <div style="display:flex;gap:8px;margin-bottom:12px"><button onclick="loadCompaniesTable()" class="ab-btn" style="padding:6px 14px">Refresh</button></div>
+    <div style="overflow:auto"><table class="adm-tbl" id="companies-tbl"><thead><tr><th>Azienda</th><th>Brand Manager</th><th>Membri</th><th>Airdrop</th><th>Verificata</th><th>Stato</th><th>Creata</th><th>Azioni</th></tr></thead><tbody><tr><td colspan="8" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento&hellip;</td></tr></tbody></table></div>
+  </div>
+
   <!-- ═══ W4 · sec-swaps · token_swaps + KAS rate ═══ -->
   <div class="admin-section" id="sec-swaps" style="display:none">
     <h2>Token Swaps Monitor</h2>
@@ -1551,6 +1560,40 @@ body{font-family:var(--font-b);color:var(--white);background:var(--black);overfl
     if (error) { tbody.innerHTML = '<tr><td colspan="7" style="color:#f87171;padding:18px">'+error.message+'</td></tr>'; return; }
     tbody.innerHTML = (data||[]).map(r => `<tr><td style="font-family:var(--font-m);font-size:10px">${r.airdrop_id.slice(0,8)}</td><td style="font-family:var(--font-m);font-size:10px">${r.opener_id.slice(0,8)}</td><td><span class="tag">${r.opener_role}</span></td><td style="max-width:240px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${escHtml(r.reason)}">${escHtml(r.reason)}</td><td><span class="tag ${r.status==='resolved'?'tag-ok':'tag-warn'}">${r.status}</span></td><td style="font-size:11px;color:var(--gray-400)">${new Date(r.opened_at).toLocaleString('it-IT')}</td><td>${r.status==='pending_review'?`<button class="ab-btn ab-btn-primary" style="padding:4px 10px;font-size:10px" onclick="resolveDispute('${r.id}')">Resolve</button>`:''}</td></tr>`).join('') || '<tr><td colspan="7" style="text-align:center;color:var(--gray-500);padding:18px">Nessuna dispute</td></tr>';
   };
+  window.loadCompaniesTable = async function(){
+    var s=getSession(); if(!s) return;
+    var tbody=document.querySelector('#companies-tbl tbody');
+    if(!tbody) return;
+    tbody.innerHTML='<tr><td colspan="8" style="color:var(--gray-500);text-align:center;padding:24px">Caricamento&hellip;</td></tr>';
+    try{
+      var res=await fetch(SB_URL+'/rest/v1/rpc/admin_list_companies',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:'{}'});
+      var rows=res.ok?(await res.json()||[]):[];
+      if(!rows.length){tbody.innerHTML='<tr><td colspan="8" style="color:var(--gray-500);text-align:center;padding:24px">Nessuna azienda registrata</td></tr>';return;}
+      tbody.innerHTML=rows.map(function(c){
+        var d=c.created_at?new Date(c.created_at).toLocaleDateString('it-IT'):'—';
+        var vbtn='<button class="ab-btn" style="padding:4px 10px;font-size:10px" onclick="companyVerify(\''+c.company_id+'\','+(c.verified?'false':'true')+')">'+(c.verified?'Revoca':'Verifica')+'</button>';
+        var sbtn='<button class="ab-btn" style="padding:4px 10px;font-size:10px" onclick="companySetStatus(\''+c.company_id+'\',\''+(c.status==='active'?'suspended':'active')+'\')">'+(c.status==='active'?'Sospendi':'Riattiva')+'</button>';
+        return '<tr><td>'+escHtml(c.name)+'</td>'
+          +'<td style="font-family:var(--font-m);font-size:11px">'+escHtml(c.brand_manager_email||'—')+'</td>'
+          +'<td>'+c.members+'</td><td>'+c.airdrops+'</td>'
+          +'<td>'+(c.verified?'<span style="color:var(--kas)">&#10003;</span>':'<span style="color:var(--gray-600)">&mdash;</span>')+'</td>'
+          +'<td>'+(c.status==='active'?'attiva':'<span style="color:#f87171">sospesa</span>')+'</td>'
+          +'<td style="font-size:11px;color:var(--gray-400)">'+d+'</td>'
+          +'<td style="white-space:nowrap"><div style="display:flex;gap:6px">'+vbtn+sbtn+'</div></td></tr>';
+      }).join('');
+    }catch(e){tbody.innerHTML='<tr><td colspan="8" style="color:#f87171">'+escHtml(String(e))+'</td></tr>';}
+  };
+  window.companyVerify = async function(id,verify){
+    var s=getSession(); if(!s) return;
+    await fetch(SB_URL+'/rest/v1/rpc/admin_verify_company',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:JSON.stringify({p_company_id:id,p_verified:(verify===true||verify==='true')})});
+    loadCompaniesTable();
+  };
+  window.companySetStatus = async function(id,status){
+    var s=getSession(); if(!s) return;
+    await fetch(SB_URL+'/rest/v1/rpc/admin_set_company_status',{method:'POST',headers:{'apikey':SB_KEY,'Authorization':'Bearer '+s.access_token,'Content-Type':'application/json'},body:JSON.stringify({p_company_id:id,p_status:status})});
+    loadCompaniesTable();
+  };
+
   window.resolveDispute = async function(disputeId){
     const notes = prompt('Resolution notes:'); if (!notes) return;
     const sellerPct = parseFloat(prompt('Refund seller % (0-100):', '0') || '0');
@@ -1850,7 +1893,8 @@ var ABO_MODULE_TO_SEC={
   engine_config:'sec-engine',
   evalobi:'sec-evalobi',
   segnalazioni:'sec-reports',
-  notifiche:'sec-notifications'
+  notifiche:'sec-notifications',
+  aziende:'sec-companies'
 };
 
 window._aboSimulating=null; // null = no sim · role string = simulazione attiva
@@ -2542,6 +2586,7 @@ function adminNav(sectionId,skipPush){
   if(sectionId==='sec-airdrop-stats'||sectionId==='sec-airdrops')loadAirdropStats();
   if(sectionId==='sec-evalobi'&&typeof loadEvalobiTable==='function')loadEvalobiTable();
   if(sectionId==='sec-reports'&&typeof loadReportsTable==='function')loadReportsTable();
+  if(sectionId==='sec-companies'&&typeof loadCompaniesTable==='function')loadCompaniesTable();
   if(sectionId==='sec-notifications'&&typeof loadNotifCenter==='function')loadNotifCenter();
   var main=document.getElementById('admin-main');
   if(main){main.scrollTop=0;main.focus();}
@@ -5490,7 +5535,7 @@ document.addEventListener('click',function(e){
 });
 </script>
 <div id="abo-tooltip" role="tooltip"></div>
-<div id="footer-mount" data-version="alfa-28.07.2026-1.22.0"></div>
+<div id="footer-mount" data-version="alfa-01.08.2026-1.23.0"></div>
 <script src="/src/footer.js?v=1.20.0"></script>
 </body>
 </html>
