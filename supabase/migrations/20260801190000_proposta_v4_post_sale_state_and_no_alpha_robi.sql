@@ -1,0 +1,30 @@
+-- PROPOSTA v4 + v4b (1 ago 2026) — applicate live via MCP
+-- (proposta_mode_post_sale_state_completed + proposta_v4b_no_alpha_robi_on_proposta_sales).
+--
+-- ── v4: STATO POST-VENDITA ───────────────────────────────────────────────────────────────────
+-- La risoluzione metteva l'airdrop in 'waiting_seller_acknowledge' = stato della macchina AIRDROP.
+-- Conseguenze REALI (verificate leggendo le funzioni live):
+--   * seller_acknowledge_airdrop('accept') chiama execute_draw() -> l'ESTRAZIONE della Salita su
+--     una vendita che non ha Step, sovrascrivendo il winner_id gia' deciso dalle proposte;
+--   * seller_acknowledge_airdrop('annulla') e cron_seller_acknowledge_timeout -> 'annullato' +
+--     refund_airdrop + penalita' di cancellazione al venditore. Ma nella Proposta il compratore ha
+--     GIA' pagato e il venditore ha GIA' incassato -> stato monetario incoerente + strike ingiusto.
+--   (il cron non le pescava solo perche' seller_acknowledge_sla_deadline resta NULL: salvezza fragile)
+-- FIX: nella Proposta il settlement e' completo alla risoluzione -> stato 'completed' + winner_id
+-- (+ draw_executed_at), che aggancia il flusso esistente di reclamo/spedizione lato vincitore.
+--
+-- ── v4b: NIENTE ROBI ALPHA BRAVE SULLE VENDITE A PROPOSTA ────────────────────────────────────
+-- Effetto collaterale scoperto TESTANDO v4: il passaggio a 'completed' fa scattare
+-- tf_airdrop_completed_robi -> +5 ROBI venditore ("Corsa completata") e +5 al vincitore
+-- ("Vetta raggiunta"). Su una Proposta e' falso (nessuna corsa/vetta) ed e' SFRUTTABILE:
+-- due account complici, vendita da 1 EUR, costo netto ~1 ARIA -> 10 ROBI (passivita' coperte dal
+-- treasury, riscattabili in KAS) = farming a costo quasi zero.
+-- FIX: guardia `COALESCE(NEW.sale_mode,'airdrop') <> 'proposta'` nel trigger. I premi Alpha Brave
+-- restano SOLO per il motore airdrop. Eventuali premi per la Proposta = design separato (Skeezu).
+--
+-- TEST (airdrop di test, poi cleanup con saldi ripristinati esatti):
+--   offerta 80 EUR su riserva 50, cron senza contesto utente -> status 'completed', winner set,
+--   compratore -800, venditore +736, commissione 64 (8%); conservazione 800=736+64;
+--   ROBI coniati = 0; zero righe proposta in 'waiting_seller_acknowledge'.
+--
+-- I corpi completi sono quelli applicati live; questo file documenta la struttura.
