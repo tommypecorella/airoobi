@@ -5627,8 +5627,16 @@ function _renderSubsHtml(subs,isArchive){
     var canWithdraw=s.status!=='annullato'&&s.status!=='completed'&&s.status!=='closed'&&s.status!=='pending_seller_decision';
     var isValutazioneCompletata=s.status==='valutazione_completata';
     var isPendingSellerDecision=s.status==='pending_seller_decision';
+    // Vendita a Proposta: finche' non e' aperta, il venditore la apre lui (paga la commissione di
+    // apertura e fa partire il conto alla rovescia). Senza questo passaggio nessuno addebita la
+    // fee e la vendita non ha scadenza -> il cron non potrebbe mai chiuderla.
+    var isProposta=s.sale_mode==='proposta';
+    var canOpenProposta=isProposta&&!isArchive&&['draft','in_valutazione','valutazione_completata','approvato'].indexOf(s.status)>-1;
     html+='<div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">';
     html+='<button onclick="goToAirdrop(\''+s.id+'\')" style="background:var(--gold);color:#000;border:none;padding:7px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:700;cursor:pointer;transition:all .15s;border-radius:var(--radius-sm)" onmouseover="this.style.opacity=\'.85\'" onmouseout="this.style.opacity=\'1\'"><span class="it">ENTRA</span><span class="en">ENTER</span></button>';
+    if(canOpenProposta){
+      html+='<button onclick="openPropostaSale(\''+s.id+'\',\''+jsAttr(s.title)+'\')" style="background:var(--aria);color:#000;border:none;padding:7px 16px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;font-weight:700;cursor:pointer;border-radius:var(--radius-sm)"><span class="it">APRI ALLE PROPOSTE</span><span class="en">OPEN FOR OFFERS</span></button>';
+    }
     html+='<button onclick="this.style.display=\'none\';loadAirdropChat(\''+s.id+'\',\'sub-chat-'+s.id+'\')" style="background:none;border:1px solid var(--gray-700);color:var(--gray-400);padding:6px 14px;font-family:var(--font-m);font-size:10px;letter-spacing:1.5px;cursor:pointer;transition:all .2s" onmouseover="this.style.borderColor=\'var(--gold)\';this.style.color=\'var(--gold)\'" onmouseout="this.style.borderColor=\'var(--gray-700)\';this.style.color=\'var(--gray-400)\'"><span class="it">MESSAGGI</span><span class="en">MESSAGES</span></button>';
     if(!isArchive){
       if(isValutazioneCompletata){
@@ -5731,6 +5739,43 @@ async function confirmCompleteEarlyClose(airdropId){
 }
 
 // ── Withdraw submission (doppia conferma) ──
+// Il venditore apre la vendita a Proposta: paga la commissione di apertura (% del primo prezzo,
+// a carico suo) e parte la scadenza. L'importo esatto lo decide il server: qui non lo anticipiamo
+// per non mostrare un numero sbagliato se la config cambia — lo mostriamo dopo, a cose fatte.
+async function openPropostaSale(airdropId,title){
+  var isIt=(document.documentElement.getAttribute('data-lang')||'it')==='it';
+  var ok=confirm(isIt
+    ?'Aprire "'+title+'" alle proposte?\n\nVerra\' addebitata la commissione di apertura (una percentuale del primo prezzo) e i compratori potranno fare la loro proposta fino alla scadenza.'
+    :'Open "'+title+'" for offers?\n\nThe listing fee (a percentage of your asking price) will be charged, and buyers will be able to make their offer until the deadline.');
+  if(!ok)return;
+  try{
+    var token=await getValidToken();if(!token)return;
+    var res=await fetch(SB_URL+'/rest/v1/rpc/open_proposta_sale',{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({p_airdrop_id:airdropId})});
+    var r=await res.json();
+    if(r&&r.ok){
+      var dl=r.deadline?new Date(r.deadline).toLocaleDateString('it-IT',{day:'2-digit',month:'short',year:'numeric'}):'';
+      showToast(isIt
+        ?'Vendita aperta! Commissione: '+r.listing_fee_aria+' ARIA'+(dl?' &middot; chiude il '+dl:'')
+        :'Sale open! Fee: '+r.listing_fee_aria+' ARIA'+(dl?' &middot; closes on '+dl:''),'success');
+      if(typeof loadProfile==='function')loadProfile();
+      if(typeof loadMySubmissions==='function')loadMySubmissions();
+    }else{
+      var err=(r&&r.error)||'ERROR';
+      var msg={
+        INSUFFICIENT_ARIA:isIt?'ARIA insufficienti per la commissione di apertura':'Not enough ARIA for the listing fee',
+        NOT_SELLER:isIt?'Non sei il venditore':'You are not the seller',
+        PRICES_NOT_SET:isIt?'Mancano il primo prezzo e il minimo':'Asking price and minimum are missing',
+        RESERVE_ABOVE_ASK:isIt?'Il minimo non puo\' superare il primo prezzo':'The minimum cannot exceed the asking price',
+        ALREADY_OPEN:isIt?'Gia\' aperta alle proposte':'Already open for offers',
+        NOT_PROPOSTA:isIt?'Questo non e\' un annuncio a proposta':'This is not an offer-based listing'
+      }[err]||err;
+      showToast(escHtml(msg));
+    }
+  }catch(e){showToast(isIt?'Errore di rete':'Network error');}
+}
+
 async function withdrawSubmission(airdropId,title){
   var lang=document.documentElement.getAttribute('data-lang')||'it';
   var msg1=lang==='it'
