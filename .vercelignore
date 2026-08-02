@@ -48,3 +48,7 @@ mockup-home-v4.html
 setup-project.sh
 test.txt
 *.pdf
+# ...tranne la metodologia treasury: e' un download PUBBLICO linkato da treasury.html
+# (era 404 dal giorno in cui abbiamo escluso i PDF). Gli altri PDF restano fuori:
+# stanno tutti in "CLA-CCP BRIDGE/" (investor pack, pitch deck, piani) gia' escluso.
+!AIROOBI_Treasury_Methodology_v1.pdf
