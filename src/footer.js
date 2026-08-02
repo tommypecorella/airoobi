@@ -72,7 +72,7 @@ function render(mount){
     +'<div class="app-footer-slogan no-tok" data-no-gloss><span class="it">Non venderlo! <em>Airdroppalo</em> su AIROOBI.</span><span class="en">Don\'t sell it! <em>Airdrop it</em> on AIROOBI.</span></div>'
     +'<div class="app-footer-payoff" data-no-gloss><span class="it">da qualcuno &middot; per qualcuno</span><span class="en">from someone &middot; for someone</span></div>'
     +'<div class="app-footer-links">'+links+'</div>'
-    +'<div class="app-footer-copy">&copy; 2026 AIROOBI &mdash; Dream Robe E-Commerce. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>'
+    +'<div class="app-footer-copy">&copy; 2026 AIROOBI. <span class="it">Tutti i diritti riservati.</span><span class="en">All rights reserved.</span></div>'
     +'<div class="app-footer-18"><span class="it">Piattaforma riservata ai maggiorenni (18+).</span><span class="en">Platform for adults only (18+).</span></div>'
     +'<div class="app-footer-motto"><span class="it">Stiamo costruendo. Ogni giorno.</span><span class="en">Building. Every day.</span></div>'
     +'<div class="app-footer-vals" id="footer-vals" style="display:none;font-family:var(--font-m,\'JetBrains Mono\',monospace);font-size:10px;letter-spacing:1px;color:var(--gray-400,#5B6A7D);margin-top:8px"></div>'

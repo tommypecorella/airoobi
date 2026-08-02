@@ -1,7 +1,7 @@
 {
-  "name": "AIROOBI — Dream Robe E-Commerce",
+  "name": "AIROOBI — Non venderlo! Airdroppalo.",
   "short_name": "AIROOBI",
-  "description": "Ogni oggetto è una corsa. Percorri Step con ARIA, raccogli ROBI, arriva in vetta.",
+  "description": "Qualcosa da qualcuno, per qualcuno: airdroppa quello che non usi, trova quello che cerchi.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
