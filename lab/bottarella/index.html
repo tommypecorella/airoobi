@@ -31,11 +31,12 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;p
 .hero h1 b{color:var(--teal);font-weight:800}
 .hero p{font-size:19px;color:var(--muted);margin:0 0 22px;max-width:44ch}
 .hero .cta{display:flex;gap:10px;flex-wrap:wrap}
-.hero .pic{position:relative;display:grid;place-items:center}
-.hero .pic .card{position:absolute;bottom:24px;left:-16px;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow);padding:10px 12px;min-width:170px}
+.hero .pic{display:grid;place-items:center}
+.hero .stack{width:min(100%,300px);display:flex;flex-direction:column}
+.hero .pic .card{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 20px 20px;box-shadow:var(--shadow);padding:12px 16px}
 .hero .pic .card .l{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .hero .pic .card .v{font-size:24px;font-weight:700;line-height:1.05;margin-top:4px}.hero .pic .card .v sup{font-size:.5em;vertical-align:.55em;font-weight:500}
-.hero .pic img.cardimg{height:min(72vh,560px);width:auto;max-width:100%;border-radius:28px;object-fit:cover;box-shadow:0 30px 60px -30px rgba(11,31,51,.45),0 0 0 1px rgba(11,31,51,.06)}
+.hero .pic img.cardimg{width:100%;height:auto;display:block;border-radius:24px 24px 0 0;object-fit:cover}
 .tag{display:inline-block;font:600 11px "Geist Mono",monospace;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:10px;background:var(--tint);color:var(--accent-ink);margin-bottom:12px}
 section{padding-block:40px;border-top:1px solid var(--border)}
 h2{font-size:clamp(26px,3.6vw,36px);letter-spacing:-.02em;line-height:1.1;margin:0 0 8px;text-wrap:balance}
@@ -58,7 +59,7 @@ input,select{height:48px;border:1px solid var(--border);border-radius:14px;paddi
 .ok{display:none;padding:14px 16px;border-radius:14px;background:rgba(5,150,105,.1);color:var(--green);font-weight:600}
 footer{padding-top:28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 footer a{color:var(--accent-ink);text-decoration:none}
-@media(max-width:760px){.hero{grid-template-columns:1fr}.hero .pic{order:-1}.hero .pic img.cardimg{height:auto;width:min(52%,220px);border-radius:20px}.hero .pic .card{position:static;margin-top:-20px;width:100%}.stages{grid-template-columns:1fr}}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.hero .pic{order:-1}.hero .stack{width:min(100%,240px)}.hero .pic .card{position:static;margin-top:-20px;width:100%}.stages{grid-template-columns:1fr}}
 </style>
 <div class="wrap">
 <nav class="top">
@@ -75,8 +76,10 @@ footer a{color:var(--accent-ink);text-decoration:none}
     <div class="cta"><a class="btn primary" href="#lista">Entra in lista</a><a class="btn ghost" href="#come">Come funziona</a></div>
   </div>
   <div class="pic">
-    <img class="cardimg" src="bruno-card.jpg" alt="Bruno, l'avatar di Bottarella">
-    <div class="card"><div class="l">Messi da parte</div><div class="v num">142<sup>,80 USDT</sup></div><div class="note">esempio · al netto di depositi e fee</div></div>
+    <div class="stack">
+      <img class="cardimg" src="bruno-card.jpg" alt="Bruno, l'avatar di Bottarella">
+      <div class="card"><div class="l">Messi da parte</div><div class="v num">142<sup>,80 USDT</sup></div><div class="note">esempio · al netto di depositi e fee</div></div>
+    </div>
   </div>
 </div>
 
