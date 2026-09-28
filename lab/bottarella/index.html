@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bottarella · Al resto pensa Bottarella</title>
+<meta name="description" content="Bottarella compra Kaspa quando scende, rivende quando risale e mette al sicuro quello che guadagna. Tu impari guardandola lavorare. Entra in lista per la modalità Prova.">
+<meta property="og:title" content="Al resto pensa Bottarella.">
+<meta property="og:description" content="Kaspa, senza doverlo guardare. Prima con soldi finti. Entra in lista.">
+<meta property="og:image" content="https://www.airoobi.app/lab/bottarella/bust.png">
+<meta property="og:type" content="website">
+<link rel="icon" href="/lab/bottarella/mark.svg" type="image/svg+xml">
+<link rel="canonical" href="https://www.airoobi.app/lab/bottarella">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#F4F6FA;--ink:#0B1F33;--muted:#5B6B7C;--surface:#fff;--border:#E3E8F0;--accent:#3B5BFF;--accent-hover:#2C46D6;--accent-ink:#14237A;--tint:#E9EDFF;--teal:#49EACB;--wool:#F6F1E7;--green:#059669;--amber:#d97706;--purple:#7C5CF0;--shadow:0 1px 2px rgba(11,31,51,.04),0 14px 32px -20px rgba(11,31,51,.22);color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Geist,system-ui,sans-serif;line-height:1.5;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1040px;margin:0 auto}
+.num{font-family:"Geist Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0}
+.lab{font:700 11px "Geist Mono",monospace;letter-spacing:.08em;color:#E63946;text-decoration:none;order:-1;white-space:nowrap}
+@media(max-width:560px){.lab{display:none}}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em}.brand img{width:36px;height:36px}.brand b{color:var(--teal);font-weight:800}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:52px;padding:0 22px;border-radius:16px;font-weight:700;font-size:16px;border:none;cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--accent);color:#fff}.btn.primary:hover{background:var(--accent-hover)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--border)}
+.btn.sm{height:42px;padding:0 16px;font-size:14px;border-radius:12px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center;padding-block:32px 48px}
+.hero h1{font-size:clamp(38px,6vw,64px);line-height:1;letter-spacing:-.03em;margin:0 0 14px}
+.hero h1 b{color:var(--teal);font-weight:800}
+.hero p{font-size:19px;color:var(--muted);margin:0 0 22px;max-width:44ch}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero .pic{position:relative;display:grid;place-items:center}
+.hero .pic .card{position:absolute;bottom:12px;left:0;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:14px 16px;min-width:210px}
+.hero .pic .card .l{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.hero .pic .card .v{font-size:30px;font-weight:700;line-height:1.05;margin-top:4px}.hero .pic .card .v sup{font-size:.5em;vertical-align:.55em;font-weight:500}
+.hero .pic img{width:min(100%,460px);filter:drop-shadow(0 30px 40px rgba(11,31,51,.18))}
+.tag{display:inline-block;font:600 11px "Geist Mono",monospace;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:10px;background:var(--tint);color:var(--accent-ink);margin-bottom:12px}
+section{padding-block:40px;border-top:1px solid var(--border)}
+h2{font-size:clamp(26px,3.6vw,36px);letter-spacing:-.02em;line-height:1.1;margin:0 0 8px;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 24px;max-width:60ch}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
+.card .k{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--tint);color:var(--accent);font-weight:800;margin-bottom:12px;font-family:"Geist Mono",monospace}
+.card h3{margin:0 0 6px;font-size:18px}.card p{margin:0;color:var(--muted);font-size:15px}
+.band{margin:18px -22px -22px;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:var(--tint);color:var(--accent-ink);font-weight:700;border-radius:0 0 20px 20px;font-size:14px}
+.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.trust .card{border-left:4px solid var(--green)}
+.ring{display:inline-grid;place-items:center;width:52px;height:52px;position:relative;margin-bottom:10px}.ring svg{position:absolute;inset:0}.ring span{font:600 13px "Geist Mono",monospace;position:relative}
+.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stage{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;text-align:center}.stage .p{font-size:28px;font-weight:700}.stage .n{font-size:12px;color:var(--muted)}
+form{display:grid;gap:12px;max-width:520px}
+label{font-size:13px;font-weight:600;color:var(--muted)}
+input,select{height:48px;border:1px solid var(--border);border-radius:14px;padding:0 14px;font:inherit;background:var(--surface);color:var(--ink);width:100%}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{height:40px;padding:0 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font:600 13px Geist,sans-serif;cursor:pointer;color:var(--muted)}.chip.on{background:var(--tint);color:var(--accent-ink);border-color:#CFD7FF}
+.note{font-size:12px;color:var(--muted)}
+.ok{display:none;padding:14px 16px;border-radius:14px;background:rgba(5,150,105,.1);color:var(--green);font-weight:600}
+footer{padding-top:28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+footer a{color:var(--accent-ink);text-decoration:none}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.hero .pic{order:-1}.hero .pic .card{position:static;margin-top:-30px;width:100%}.stages{grid-template-columns:1fr}}
+</style>
+<div class="wrap">
+<nav class="top">
+  <a class="lab" href="/lab" title="Torna ad AIROOBI LAB">← AIROOBI&nbsp;LAB</a>
+  <a class="brand" href="#top" style="color:inherit;text-decoration:none"><img src="mark.svg" alt=""><span>Bot<b>t</b>arella</span></a>
+  <a class="btn primary sm" href="#lista">Entra in lista</a>
+</nav>
+
+<div class="hero" id="top">
+  <div>
+    <span class="tag">Kaspa · training on the bot</span>
+    <h1>Al resto pensa Bot<b>t</b>arella.</h1>
+    <p>Compra Kaspa quando scende, rivende quando risale, e mette al sicuro quello che guadagna. Tu impari guardandola lavorare.</p>
+    <div class="cta"><a class="btn primary" href="#lista">Entra in lista</a><a class="btn ghost" href="#come">Come funziona</a></div>
+  </div>
+  <div class="pic">
+    <img src="bust.png" alt="Bruno, l'avatar di Bottarella">
+    <div class="card"><div class="l">Messi da parte</div><div class="v num">142<sup>,80 USDT</sup></div><div class="note">esempio · al netto di depositi e fee</div></div>
+  </div>
+</div>
+
+<section id="come">
+  <h2>Tre cose, in quest'ordine.</h2>
+  <p class="lead">Niente grafici da guardare, niente parole da imparare. Scegli che rapporto vuoi con Kaspa e Bottarella fa il resto.</p>
+  <div class="grid3">
+    <div class="card"><div class="k">1</div><h3>Accendi</h3><p>Colleghi il tuo conto exchange e scegli un profilo: Prudente, Bilanciato o Ambizioso. Tutto il resto si imposta da solo.</p></div>
+    <div class="card"><div class="k">2</div><h3>Lavora</h3><p>Compra quando il prezzo scende di uno scalino, rivende quando risale. Giorno e notte, anche mentre dormi.</p></div>
+    <div class="card"><div class="k">3</div><h3>Mette al sicuro</h3><p>Una fetta di quello che guadagna finisce da parte, fuori dalla griglia. Il numero grande della tua HOME.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="grid3">
+    <div class="card" style="grid-column:span 2">
+      <span class="tag" style="background:#FFF1DB;color:#9A5B00">Modalità Prova</span>
+      <h2>Prima con soldi finti.</h2>
+      <p class="lead" style="margin-bottom:0">Stessi prezzi veri, stesse regole, zero rischio. Guardi Bottarella lavorare per giorni e leggi il verbale. Quando ti convince, passi all'Online.</p>
+      <div class="band">La lista d'attesa parte dalla Prova <span>→</span></div>
+    </div>
+    <div class="card">
+      <div class="ring"><svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="23" fill="none" stroke="var(--border)" stroke-width="5"/><circle cx="26" cy="26" r="23" fill="none" stroke="var(--purple)" stroke-width="5" stroke-linecap="round" stroke-dasharray="72 145" transform="rotate(-90 26 26)"/></svg><span>50%</span></div>
+      <h3>Lo zoccolo</h3><p>Una parte dei tuoi KAS non si vende mai: si prende il rialzo intero. Lo decidi tu, con una percentuale.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>I soldi restano tuoi.</h2>
+  <p class="lead">Bottarella non custodisce niente. Comanda solo gli ordini sul tuo conto, e ogni mossa che sposta denaro chiede il tuo PIN.</p>
+  <div class="trust">
+    <div class="card"><h3>Sul tuo exchange</h3><p>Le chiavi che le dai non possono prelevare. Quella porta è murata a monte.</p></div>
+    <div class="card"><h3>PIN a ogni mossa</h3><p>Avviare, fermare, cambiare regole, mettere da parte: sempre col tuo PIN.</p></div>
+    <div class="card"><h3>Timbrata su Kaspa</h3><p>Ogni notte l'impronta del diario finisce sulla blockchain di Kaspa. Chiunque può verificare che non è stato ritoccato.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Impari facendo. E guadagni ROBI.</h2>
+  <p class="lead">Training on the bot: sette tappe che si completano usando Bottarella, guide brevi, e il consigliere che legge i numeri veri. Ogni tappa paga ROBI, la moneta di AIROOBI.</p>
+  <div class="stages">
+    <div class="stage"><div class="p num">100%</div><div class="n">Stadio 1 · whitelist</div></div>
+    <div class="stage"><div class="p num">50%</div><div class="n">Stadio 2</div></div>
+    <div class="stage"><div class="p num">0%</div><div class="n">Mainnet · solo azioni reali</div></div>
+  </div>
+  <p class="note" style="margin-top:10px">Le percentuali dei ROBI per il learning diminuiscono a ogni stadio, come un halving. I ROBI guadagnati in Prova valgono 30 giorni dall'apertura dell'Online: dopo, vengono bruciati. Le cifre degli stadi sono indicative.</p>
+</section>
+
+<section id="lista">
+  <h2>Entra in lista.</h2>
+  <p class="lead">La whitelist apre la Modalità Prova a un gruppo ristretto. Ti scriviamo noi quando è il tuo turno.</p>
+  <form id="wl">
+    <div><label for="em">La tua email</label><input id="em" type="email" placeholder="nome@esempio.it" required></div>
+    <div><label for="ka">Il tuo indirizzo Kaspa (facoltativo)</label><input id="ka" type="text" placeholder="kaspa:…"></div>
+    <div><label>Che rapporto vuoi con Kaspa?</label><div class="chips" id="intent"><button type="button" class="chip" data-v="prudente">Prudente</button><button type="button" class="chip on" data-v="bilanciato">Bilanciato</button><button type="button" class="chip" data-v="ambizioso">Ambizioso</button></div></div>
+    <label style="display:flex;gap:8px;align-items:flex-start;font-weight:500"><input type="checkbox" id="ok" required style="width:18px;height:18px;margin-top:2px">Ho capito che la Prova usa soldi finti e che i ROBI della Prova valgono 30 giorni dall'apertura dell'Online.</label>
+    <button class="btn primary" type="submit">Mettimi in lista</button>
+    <div class="ok" id="done">Ricevuto. Ti scriviamo noi quando è il tuo turno.</div>
+    <p class="note">Bozza: il form non invia ancora nulla. Nessun rendimento promesso: Bottarella lavora, i mercati fanno quello che vogliono.</p>
+  </form>
+</section>
+
+<footer>
+  <span>Bot<b style="color:var(--teal)">t</b>arella, un prodotto di AIROOBI · Nessuna custodia dei fondi</span>
+  <span><a href="https://kaspa.org" target="_blank" rel="noopener">kaspa.org</a> · <a href="/lab">AIROOBI LAB</a> · <span class="num">v1.0.0</span></span>
+</footer>
+</div>
+<script>
+document.querySelectorAll('#intent .chip').forEach(function(b){b.addEventListener('click',function(){document.querySelectorAll('#intent .chip').forEach(function(x){x.classList.remove('on')});b.classList.add('on');});});
+document.getElementById('wl').addEventListener('submit',function(e){e.preventDefault();document.getElementById('done').style.display='block';});
+</script>
+
+</body>
+</html>

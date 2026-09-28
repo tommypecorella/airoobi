@@ -163,6 +163,11 @@
   ],
   "redirects": [
     {
+      "source": "/lab/Bottarella",
+      "destination": "/lab/bottarella",
+      "statusCode": 301
+    },
+    {
       "source": "/((?!$|sitemap\\.xml|ads\\.txt|robots\\.txt|og-image|favicon|apple-touch|public/).+)",
       "has": [
         {
