@@ -59,8 +59,8 @@ h2{font-size:clamp(26px,3.6vw,36px);letter-spacing:-.02em;line-height:1.1;margin
 .stat .v{font-size:34px;font-weight:700;line-height:1;letter-spacing:-.02em}.stat .v sup{font-size:.5em;vertical-align:.55em;font-weight:500}
 .stat .l{font-size:12px;color:var(--muted);margin-top:6px}
 .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
-.phone{background:var(--surface);border:1px solid var(--border);border-radius:28px;box-shadow:var(--shadow);overflow:hidden;aspect-ratio:9/16;display:grid;place-items:center;text-align:center;padding:16px;color:var(--muted);font-size:13px}
-.phone img{width:100%;height:100%;object-fit:cover;display:block}
+.phone{background:var(--surface);border:1px solid var(--border);border-radius:28px;box-shadow:var(--shadow);overflow:hidden;aspect-ratio:345/760}
+.phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
 .shots figcaption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
 .ring{display:inline-grid;place-items:center;width:52px;height:52px;position:relative;margin-bottom:10px}.ring svg{position:absolute;inset:0}.ring span{font:600 13px "Geist Mono",monospace;position:relative}
 .stages{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
@@ -125,9 +125,9 @@ footer a{color:var(--accent-ink);text-decoration:none}
   <h2>L'app, dal vero.</h2>
   <p class="lead">Nessun disegno: sono le schermate di Bottarella in uso oggi.</p>
   <div class="shots">
-    <figure style="margin:0"><div class="phone" id="shot-home">Schermata HOME<br><small>in arrivo</small></div><figcaption>HOME: come sto, in un numero.</figcaption></figure>
-    <figure style="margin:0"><div class="phone" id="shot-griglia">Schermata Griglia<br><small>in arrivo</small></div><figcaption>Bottarella: cosa fa e come la guido.</figcaption></figure>
-    <figure style="margin:0"><div class="phone" id="shot-salvadanaio">Schermata Salvadanaio<br><small>in arrivo</small></div><figcaption>Salvadanaio: quanto è al sicuro.</figcaption></figure>
+    <figure style="margin:0"><div class="phone"><img src="shot-home.jpg" alt="Schermata HOME di Bottarella"></div><figcaption>HOME: come sto, in un numero.</figcaption></figure>
+    <figure style="margin:0"><div class="phone"><img src="shot-griglia.jpg" alt="Schermata Griglia di Bottarella"></div><figcaption>Bottarella: cosa fa e come la guido.</figcaption></figure>
+    <figure style="margin:0"><div class="phone"><img src="shot-salvadanaio.jpg" alt="Schermata Salvadanaio di Bottarella"></div><figcaption>Salvadanaio: quanto è al sicuro.</figcaption></figure>
   </div>
 </section>
 
@@ -202,7 +202,7 @@ footer a{color:var(--accent-ink);text-decoration:none}
 
 <footer>
   <span>Bot<b style="color:var(--teal)">t</b>arella, un prodotto di AIROOBI · Nessuna custodia dei fondi</span>
-  <span><a href="https://kaspa.org" target="_blank" rel="noopener">kaspa.org</a> · <a href="/lab">AIROOBI LAB</a> · <span class="num">v1.1.0</span></span>
+  <span><a href="https://kaspa.org" target="_blank" rel="noopener">kaspa.org</a> · <a href="/lab">AIROOBI LAB</a> · <span class="num">v1.2.0</span></span>
 </footer>
 </div>
 <script>
