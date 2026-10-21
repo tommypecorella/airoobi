@@ -88,6 +88,7 @@
 ---
 
 ## 6. Nodi aperti / decisioni pendenti
+- **Supabase, dal 30 ott 2026: le tabelle nuove in `public` NON ricevono più i grant Data API in automatico** (email Supabase del 20 ott). Le 243 migrazioni esistenti non sono toccate; da ora ogni `create table` porta i suoi `grant` nella stessa migrazione (`supabase/migrations/README_GRANTS.md`, template in `_drafts/`). Vale anche per `db reset` locale e preview branch. Da verificare in Dashboard → Settings → API quali tabelle sono esposte.
 
 1. **[#1 URGENTE] NEW ERA step 3-4:** ROBI è stato avviato? Il rifacimento di AIgorà è iniziato? Nessuna traccia nel bridge → chiarire con Skeezu/ROBI.
 2. **AIgorà — piano di consolidamento:** quale console è la base (standalone semplice vs bridge piena Fase D+E)? Qual è l'**MVP del giorno 1** (bacheca task? bus N-agenti? registro decisioni?)? Deploy pubblico via Cloudflare ZT (come Bottarella)?

@@ -1,0 +1,12 @@
+-- TEMPLATE (dal 30 ott 2026): tabella nuova in public = RLS + policy + GRANT nella stessa migrazione
+create table if not exists public.esempio (
+  id bigint generated always as identity primary key,
+  created_at timestamptz not null default now(),
+  user_id uuid references auth.users(id)
+);
+alter table public.esempio enable row level security;
+create policy "esempio_select_own" on public.esempio for select to authenticated using (user_id = auth.uid());
+-- GRANT: senza, dal 30 ott la Data API risponde permission denied
+grant select on public.esempio to authenticated;
+grant select, insert, update, delete on public.esempio to service_role;
+-- niente grant ad anon se la tabella non è pubblica
