@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bottarella · Al resto pensa Bottarella</title>
+<meta name="description" content="Bottarella è l'app che compra Kaspa quando scende, lo rivende quando risale e mette al sicuro quello che guadagna. Gratis per chi parte da zero, con Bruno che ti accompagna. Entra nel Lab.">
+<meta property="og:title" content="Al resto pensa Bottarella.">
+<meta property="og:description" content="Kaspa, senza doverlo guardare. Gratis per chi parte da zero. Entra nel Lab.">
+<meta property="og:image" content="https://www.airoobi.app/lab/bottarella/bruno-card.jpg">
+<meta property="og:type" content="website">
+<link rel="icon" href="/lab/bottarella/mark.svg" type="image/svg+xml">
+<link rel="canonical" href="https://www.airoobi.app/lab/bottarella">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600&display=swap">
+<style>
+:root{--bg:#F4F6FA;--ink:#0B1F33;--muted:#5B6B7C;--surface:#fff;--border:#E3E8F0;--accent:#3B5BFF;--accent-hover:#2C46D6;--accent-ink:#14237A;--tint:#E9EDFF;--teal:#49EACB;--wool:#F6F1E7;--green:#059669;--amber:#d97706;--purple:#7C5CF0;--shadow:0 1px 2px rgba(11,31,51,.04),0 14px 32px -20px rgba(11,31,51,.22);color-scheme:light}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Geist,system-ui,sans-serif;line-height:1.5;padding-inline:16px;padding-block:0 48px}
+.wrap{max-width:1040px;margin:0 auto}
+.num{font-family:"Geist Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums}
+nav.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 0}
+.lab{font:700 11px "Geist Mono",monospace;letter-spacing:.08em;color:#E63946;text-decoration:none;order:-1;white-space:nowrap}
+@media(max-width:560px){.lab{display:none}}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.01em}.brand img{width:36px;height:36px}.brand b{color:var(--teal);font-weight:800}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:52px;padding:0 22px;border-radius:16px;font-weight:700;font-size:16px;border:none;cursor:pointer;text-decoration:none}
+.btn.primary{background:var(--accent);color:#fff}.btn.primary:hover{background:var(--accent-hover)}
+.btn.ghost{background:var(--surface);color:var(--ink);border:1px solid var(--border)}
+.btn.sm{height:42px;padding:0 16px;font-size:14px;border-radius:12px}
+.hero{display:grid;grid-template-columns:1.35fr .65fr;gap:28px;align-items:center;padding-block:24px 36px}
+.hero h1{font-size:clamp(38px,6vw,64px);line-height:1;letter-spacing:-.03em;margin:0 0 14px}
+.hero h1 b{color:var(--teal);font-weight:800}
+.hero .what{font-size:21px;font-weight:600;margin:0 0 10px;max-width:38ch;letter-spacing:-.01em}
+.hero p{font-size:17px;color:var(--muted);margin:0 0 22px;max-width:46ch}
+.hero .cta{display:flex;gap:10px;flex-wrap:wrap}
+.hero .pic{display:grid;place-items:center}
+.hero .stack{width:min(100%,300px);display:flex;flex-direction:column}
+.hero .bruno{font-size:14px;color:var(--muted);line-height:1.35;margin:0 0 10px;text-align:center}.hero .bruno strong{display:block;font-size:18px;color:var(--ink);letter-spacing:-.01em}
+.hero .pic img.cardimg{width:100%;height:auto;display:block;border-radius:24px 24px 0 0;object-fit:cover}
+.hero .pic .card{background:var(--surface);border:1px solid var(--border);border-top:none;border-radius:0 0 20px 20px;box-shadow:var(--shadow);padding:12px 16px}
+.hero .pic .card .l{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.hero .pic .card .v{font-size:24px;font-weight:700;line-height:1.05;margin-top:4px}.hero .pic .card .v sup{font-size:.5em;vertical-align:.55em;font-weight:500}
+.tag{display:inline-block;font:600 11px "Geist Mono",monospace;letter-spacing:.1em;text-transform:uppercase;padding:6px 10px;border-radius:10px;background:var(--tint);color:var(--accent-ink);margin-bottom:12px}
+.proof{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 8px}
+.proof span{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink);background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:8px 12px}
+.proof span i{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block}
+section{padding-block:40px;border-top:1px solid var(--border)}
+h2{font-size:clamp(26px,3.6vw,36px);letter-spacing:-.02em;line-height:1.1;margin:0 0 8px;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 24px;max-width:60ch}
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow);padding:22px}
+.card .k{width:44px;height:44px;border-radius:14px;display:grid;place-items:center;background:var(--tint);color:var(--accent);font-weight:800;margin-bottom:12px;font-family:"Geist Mono",monospace}
+.card h3{margin:0 0 6px;font-size:18px}.card p{margin:0;color:var(--muted);font-size:15px}
+.band{margin:18px -22px -22px;height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;background:var(--tint);color:var(--accent-ink);font-weight:700;border-radius:0 0 20px 20px;font-size:14px}
+.trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.trust .card{border-left:4px solid var(--green)}
+.who .card{border-left:4px solid var(--accent)}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.stat .card{padding:18px}
+.stat .v{font-size:34px;font-weight:700;line-height:1;letter-spacing:-.02em}.stat .v sup{font-size:.5em;vertical-align:.55em;font-weight:500}
+.stat .l{font-size:12px;color:var(--muted);margin-top:6px}
+.shots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+.phone{background:var(--surface);border:1px solid var(--border);border-radius:28px;box-shadow:var(--shadow);overflow:hidden;aspect-ratio:345/760}
+.phone img{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.shots figcaption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+.ring{display:inline-grid;place-items:center;width:52px;height:52px;position:relative;margin-bottom:10px}.ring svg{position:absolute;inset:0}.ring span{font:600 13px "Geist Mono",monospace;position:relative}
+.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.stage{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:14px;text-align:center}.stage .p{font-size:28px;font-weight:700}.stage .n{font-size:12px;color:var(--muted)}
+.faq details{border-top:1px solid var(--border);padding:12px 0}.faq summary{cursor:pointer;font-weight:600;font-size:16px}.faq p{margin:8px 0 0;color:var(--muted);max-width:70ch}
+form{display:grid;gap:12px;max-width:520px}
+label{font-size:13px;font-weight:600;color:var(--muted)}
+input,select{height:48px;border:1px solid var(--border);border-radius:14px;padding:0 14px;font:inherit;background:var(--surface);color:var(--ink);width:100%}
+.chips{display:flex;gap:8px;flex-wrap:wrap}.chip{height:40px;padding:0 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);font:600 13px Geist,sans-serif;cursor:pointer;color:var(--muted)}.chip.on{background:var(--tint);color:var(--accent-ink);border-color:#CFD7FF}
+.note{font-size:12px;color:var(--muted)}
+.ok{display:none;padding:14px 16px;border-radius:14px;background:rgba(5,150,105,.1);color:var(--green);font-weight:600}
+footer{padding-top:28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+footer a{color:var(--accent-ink);text-decoration:none}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.hero .pic{order:-1}.hero .stack{width:min(100%,240px)}.stages{grid-template-columns:1fr}.shots{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.shots{grid-template-columns:1fr}}
+</style>
+<div class="wrap">
+<nav class="top">
+  <a class="lab" href="/lab" title="Torna ad AIROOBI LAB">← AIROOBI&nbsp;LAB</a>
+  <a class="brand" href="#top" style="color:inherit;text-decoration:none"><img src="mark.svg" alt=""><span>Bot<b>t</b>arella</span></a>
+  <a class="btn primary sm" href="https://bottarella.airoobi.com/entra">Entra nel Lab</a>
+</nav>
+
+<div class="hero" id="top">
+  <div>
+    <span class="tag">L'app che fa lavorare i tuoi Kaspa</span>
+    <h1>Al resto pensa Bot<b>t</b>arella.</h1>
+    <p class="what">Bottarella è un'app che compra Kaspa quando il prezzo scende, lo rivende quando risale, e mette al sicuro quello che guadagna.</p>
+    <p>Tu non devi sapere niente di trading. Scegli che rapporto vuoi con Kaspa, lei fa il resto e ti spiega cosa sta facendo. I tuoi soldi restano sul tuo conto.</p>
+    <div class="proof"><span><i></i>Online dal 30 giugno 2026</span><span><i></i>Diario timbrato su Kaspa ogni notte</span><span><i></i>Nessuna custodia dei fondi</span></div>
+    <div class="cta"><a class="btn primary" href="https://bottarella.airoobi.com/entra">Entra nel Lab, è gratis</a><a class="btn ghost" href="#offerta">Quanto costa</a></div>
+  </div>
+  <div class="pic">
+    <div class="stack">
+      <div class="bruno"><strong>Lui è Bruno.</strong> Ti dice cosa fa Bottarella, una cosa alla volta.</div>
+      <img class="cardimg" src="bruno-card.jpg" alt="Bruno, l'avatar di Bottarella">
+      <div class="card"><div class="l">Messi da parte</div><div class="v num">142<sup>,80 USDT</sup></div><div class="note">esempio · al netto di depositi e fee</div></div>
+    </div>
+  </div>
+</div>
+
+<section class="who">
+  <h2>È per te se…</h2>
+  <p class="lead">Tre persone diverse, uno stesso problema: avere Kaspa e non sapere cosa farne.</p>
+  <div class="grid3">
+    <div class="card"><h3>Hai dei KAS fermi</h3><p>Li hai comprati, stanno lì. Bottarella li fa lavorare a scalini senza venderli tutti: una parte non la tocca mai.</p></div>
+    <div class="card"><h3>Vuoi entrare in Kaspa senza capire i grafici</h3><p>Nessun grafico da guardare, nessuna parola da imparare. Un profilo, un numero grande, una voce che ti dice cosa succede.</p></div>
+    <div class="card"><h3>Vuoi imparare facendo</h3><p>Training on the bot: capisci come funziona guardandola lavorare, prima con soldi finti. E ogni tappa paga ROBI.</p></div>
+  </div>
+</section>
+
+<section id="come">
+  <h2>Come funziona, in tre passi.</h2>
+  <p class="lead">Colleghi il tuo conto exchange, scegli un profilo, e da lì in poi Bottarella lavora da sola. Ogni mossa che sposta denaro chiede il tuo PIN.</p>
+  <div class="grid3">
+    <div class="card"><div class="k">1</div><h3>Accendi</h3><p>Colleghi il conto e scegli come vuoi che si comporti: Prudente, Bilanciato o Ambizioso. Tutto il resto si imposta da solo.</p></div>
+    <div class="card"><div class="k">2</div><h3>Lavora</h3><p>Compra quando il prezzo scende di uno scalino, rivende quando risale. Giorno e notte, anche mentre dormi. Se il mercato si agita, frena da sola.</p></div>
+    <div class="card"><div class="k">3</div><h3>Mette al sicuro</h3><p>Quello che guadagna finisce da parte, in dollari, fuori dalla griglia. È il numero grande della tua HOME.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>L'app, dal vero.</h2>
+  <p class="lead">Nessun disegno: sono le schermate di Bottarella in uso oggi.</p>
+  <div class="shots">
+    <figure style="margin:0"><div class="phone"><img src="shot-home.jpg" alt="Schermata HOME di Bottarella"></div><figcaption>HOME: come sto, in un numero.</figcaption></figure>
+    <figure style="margin:0"><div class="phone"><img src="shot-griglia.jpg" alt="Schermata Griglia di Bottarella"></div><figcaption>Bottarella: cosa fa e come la guido.</figcaption></figure>
+    <figure style="margin:0"><div class="phone"><img src="shot-salvadanaio.jpg" alt="Schermata Salvadanaio di Bottarella"></div><figcaption>Salvadanaio: quanto è al sicuro.</figcaption></figure>
+  </div>
+</section>
+
+<section>
+  <h2>Numeri veri, non promesse.</h2>
+  <p class="lead">Dal conto di chi l'ha costruita, aggiornati al 22 ottobre 2026. Il passato non dice niente sul futuro: i mercati fanno quello che vogliono.</p>
+  <div class="stat">
+    <div class="card"><div class="v num">114</div><div class="l">giorni online, senza fermarsi</div></div>
+    <div class="card"><div class="v num">405</div><div class="l">scambi eseguiti dalla griglia</div></div>
+    <div class="card"><div class="v num">1.200<sup>+</sup></div><div class="l">decisioni automatiche registrate</div></div>
+    <div class="card"><div class="v num">26</div><div class="l">impronte del diario sulla blockchain di Kaspa</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="grid2">
+    <div class="card">
+      <span class="tag" style="background:#FFF1DB;color:#9A5B00">Il Lab</span>
+      <h2>Prima con soldi finti. Il Lab è aperto.</h2>
+      <p class="lead" style="margin-bottom:0">Stessi prezzi veri, stesse regole, zero rischio, senza exchange e senza chiavi. Lasci l'email, un posto si apre, Bruno c'è dal primo giorno. Dopo quindici giorni, se vuoi, è lui ad accompagnarti ai soldi veri: wallet, exchange, chiavi, passo passo.</p>
+      <div class="band">Entra nel Lab, è gratis <a href="https://bottarella.airoobi.com/entra" style="color:inherit">→</a></div>
+    </div>
+    <div class="card">
+      <div class="ring"><svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="23" fill="none" stroke="var(--border)" stroke-width="5"/><circle cx="26" cy="26" r="23" fill="none" stroke="var(--purple)" stroke-width="5" stroke-linecap="round" stroke-dasharray="72 145" transform="rotate(-90 26 26)"/></svg><span>50%</span></div>
+      <h3>Lo zoccolo</h3><p>Una parte dei tuoi KAS non si vende mai: si prende il rialzo intero. Lo decidi tu, con una percentuale. È la differenza tra un bot e Bottarella.</p>
+    </div>
+  </div>
+</section>
+
+<section id="offerta">
+  <h2>Gratis per chi parte da zero. Paga chi sa cosa fa.</h2>
+  <p class="lead">Tutto quello che serve per entrare in Kaspa, capire e stare protetti non costa niente. Si paga solo per governare la macchina a mano.</p>
+  <div class="grid2">
+    <div class="card" style="border-left:4px solid var(--green)">
+      <span class="tag" style="background:rgba(5,150,105,.1);color:var(--green)">Gratis, per sempre</span>
+      <h3>Lab e Online</h3>
+      <p>Il Lab con soldi finti. La griglia vera sul tuo exchange, con un profilo scelto da te e tutto il resto impostato da lei. Tutte le protezioni accese: rete di sicurezza, frenata nei crolli, Cassaforte sul guadagno. Bruno: configurazione, note del mattino, dieci domande al giorno. Impara con i ROBI, Registro, avvisi. Il cassetto NACHO.</p>
+      <div class="band" style="background:rgba(5,150,105,.1);color:var(--green)">0 € · nessuna carta, mai <span>→</span></div>
+    </div>
+    <div class="card" style="border-left:4px solid var(--accent)">
+      <span class="tag">Bottarella Avanzato</span>
+      <h3>Le manopole, più exchange, più coppie</h3>
+      <p>Livelli, ordine, ampiezza e le regole a mano. MEXC e gli altri exchange, altre coppie, più griglie insieme. Prove multiple e confronto, Registro tecnico ed esportazione, Bruno a cinquanta domande al giorno. Per chi sa cosa fa.</p>
+      <div class="band"><span><span class="num">19,9 €</span> al mese · <span class="num">199 €</span> l'anno</span><span style="font-weight:500">si paga in KAS, a tessere</span></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h3 style="margin-bottom:4px">La scala dei fondatori</h3>
+    <p style="margin-bottom:12px">Chi attiva l'Avanzato per primo, con un exchange collegato, ha un numero. Il numero è pubblico e non si riassegna mai.</p>
+    <div class="stages" style="grid-template-columns:repeat(4,1fr);margin-top:0">
+      <div class="stage"><div class="p num">1–100</div><div class="n">gratis per sempre, senza carta</div></div>
+      <div class="stage"><div class="p num">101–500</div><div class="n">−50 % per 24 mesi</div></div>
+      <div class="stage"><div class="p num">501–2.000</div><div class="n">−25 % per 12 mesi</div></div>
+      <div class="stage"><div class="p num">poi</div><div class="n">19,9 € al mese, uguale per tutti</div></div>
+    </div>
+    <div class="band"><span>Fondatori: <span class="num" id="founders">0</span> di 100</span><span style="font-weight:500">chi porta qualcuno: un mese di Avanzato a testa, o 5 ROBI</span></div>
+  </div>
+</section>
+
+<section id="kaspaitaly">
+  <div class="grid2">
+    <div class="card">
+      <span class="tag" style="background:#E6FBF6;color:#0E8F7E">Kaspa Italy · Telegram</span>
+      <h2 style="font-size:clamp(24px,3vw,30px)">Kaspa spiegato in italiano, per chi parte da zero.</h2>
+      <p class="lead" style="margin-bottom:0">Un gruppo dove fare le domande da principiante senza sentirsi dire che sono stupide. Ogni mattina le Note di Bruno, e Bruno che risponde quando lo nomini: spiega come funziona, mai cosa fare.</p>
+      <div class="band">Entra nel gruppo <a href="https://t.me/kaspaitaly" target="_blank" rel="noopener" style="color:inherit">t.me/kaspaitaly →</a></div>
+    </div>
+    <div class="card">
+      <h3>Tre cose chiare, anche lì</h3>
+      <p>Nessuno ti dirà cosa comprare o vendere. Nessuno dello staff ti scriverà mai in privato per primo. L'AI può sbagliare: verifica sempre.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>I soldi restano tuoi.</h2>
+  <p class="lead">Bottarella non custodisce niente. Comanda solo gli ordini sul tuo conto exchange, e ogni mossa che sposta denaro chiede il tuo PIN.</p>
+  <div class="trust">
+    <div class="card"><h3>Sul tuo exchange</h3><p>Le chiavi che le dai non possono prelevare. Quella porta è murata a monte.</p></div>
+    <div class="card"><h3>PIN a ogni mossa</h3><p>Avviare, fermare, cambiare regole, mettere da parte: sempre col tuo PIN.</p></div>
+    <div class="card"><h3>Timbrata su Kaspa</h3><p>Ogni notte l'impronta del diario finisce sulla blockchain di Kaspa. Chiunque può verificare che non è stato ritoccato.</p></div>
+  </div>
+</section>
+
+<section>
+  <h2>Impari facendo. E guadagni ROBI.</h2>
+  <p class="lead">Training on the bot: sette tappe che si completano usando Bottarella, guide brevi, e un consigliere che legge i numeri veri. Ogni tappa paga ROBI, la moneta di AIROOBI.</p>
+  <div class="stages">
+    <div class="stage"><div class="p num">100%</div><div class="n">Stadio 1 · whitelist</div></div>
+    <div class="stage"><div class="p num">50%</div><div class="n">Stadio 2</div></div>
+    <div class="stage"><div class="p num">0%</div><div class="n">Mainnet · solo azioni reali</div></div>
+  </div>
+  <p class="note" style="margin-top:10px">Le percentuali dei ROBI per il learning diminuiscono a ogni stadio, come un halving. I ROBI guadagnati in Prova valgono 30 giorni dall'apertura dell'Online: dopo, vengono bruciati ed escono dal circolante. Le cifre degli stadi sono indicative. Chi porta qualcuno e chi arriva prendono 5 ROBI a testa al primo scambio vero, mai all'iscrizione.</p>
+</section>
+
+<section class="faq">
+  <h2>Domande dirette.</h2>
+  <details><summary>Bottarella può prendere i miei soldi?</summary><p>No. Le chiavi che le dai possono solo mettere e togliere ordini sul tuo conto. Prelevare non è tra i loro poteri.</p></details>
+  <details><summary>Guadagno di sicuro?</summary><p>No. Bottarella lavora con metodo, ma i mercati fanno quello che vogliono. Per questo si parte dalla Prova con soldi finti e si mette al sicuro quello che entra.</p></details>
+  <details><summary>Devo capire il trading?</summary><p>No. Scegli un profilo e leggi un numero. Se poi vuoi capire, c'è il percorso Impara: tappe brevi, pagate in ROBI.</p></details>
+  <details><summary>Quanto costa?</summary><p>Niente, per chi parte da zero: Lab, griglia vera con le protezioni, Bruno, Impara. L'Avanzato, per chi vuole le manopole e più exchange, costa 19,9 € al mese o 199 € l'anno, pagati in KAS a tessere: nessun rinnovo automatico, nessuna carta. I primi cento che lo attivano non pagano mai.</p></details>
+  <details><summary>Posso pagare in euro?</summary><p>Per ora in KAS: lo leggiamo dalla blockchain, nessun intermediario. La carta arriverà più avanti, sempre a tessere.</p></details>
+  <details><summary>Dove gira?</summary><p>Su un piccolo computer in casa di chi l'ha costruita, non in un cloud. Chiavi e PIN non escono mai da lì.</p></details>
+</section>
+
+<section id="lista">
+  <h2>Entra nel Lab.</h2>
+  <p class="lead">Lasci l'email, un posto si apre, il codice arriva. Soldi finti sui prezzi veri, Bruno dal primo giorno, nessun exchange richiesto per cominciare.</p>
+  <div class="cta" style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn primary" href="https://bottarella.airoobi.com/entra">Entra nel Lab, è gratis</a><a class="btn ghost" href="https://t.me/kaspaitaly" target="_blank" rel="noopener">Prima fai una domanda su Kaspa Italy</a></div>
+  <p class="note" style="margin-top:14px">L'AI può sbagliare: verifica sempre. Bottarella non dà consigli finanziari: ti dà gli strumenti e l'AI per giocartela. Bruno non ti dirà mai cosa fare, ma cosa penserebbe di fare. Decidi tu.</p>
+</section>
+
+<footer>
+  <span>Bot<b style="color:var(--teal)">t</b>arella, un prodotto di AIROOBI · Nessuna custodia dei fondi</span>
+  <span><a href="https://kaspa.org" target="_blank" rel="noopener">kaspa.org</a> · <a href="/lab">AIROOBI LAB</a> · <span class="num">v1.3.0</span></span>
+</footer>
+</div>
+
+</body>
+</html>
