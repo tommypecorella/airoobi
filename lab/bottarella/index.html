@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bottarella · Al resto pensa Bottarella</title>
+<meta name="theme-color" content="#F4F6FA" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B1220" media="(prefers-color-scheme: dark)">
 <meta name="description" content="Bottarella è l'app che compra Kaspa quando scende, lo rivende quando risale e mette al sicuro quello che guadagna. Gratis per chi parte da zero, con Bruno che ti accompagna. Entra nel Lab.">
 <meta property="og:title" content="Al resto pensa Bottarella.">
 <meta property="og:description" content="Kaspa, senza doverlo guardare. Gratis per chi parte da zero. Entra nel Lab.">
@@ -14,6 +16,10 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@500;600&display=swap">
 <style>
 :root{--bg:#F4F6FA;--ink:#0B1F33;--muted:#5B6B7C;--surface:#fff;--border:#E3E8F0;--accent:#3B5BFF;--accent-hover:#2C46D6;--accent-ink:#14237A;--tint:#E9EDFF;--teal:#49EACB;--wool:#F6F1E7;--green:#059669;--amber:#d97706;--purple:#7C5CF0;--shadow:0 1px 2px rgba(11,31,51,.04),0 14px 32px -20px rgba(11,31,51,.22);color-scheme:light}
+.tag.lab{background:#FFF1DB;color:#9A5B00}.tag.ki{background:#E6FBF6;color:#0E8F7E}
+/* DARK MODE (25 ott 2026): segue il sistema; stessi token dell'app in scuro */
+@media (prefers-color-scheme:dark){:root{--bg:#0B1220;--ink:#E8EEF8;--muted:#9AA8BF;--surface:#121A2C;--border:#26314D;--accent:#7C8FFF;--accent-hover:#93A3FF;--accent-ink:#DCE2FF;--tint:rgba(124,143,255,.16);--wool:#1C1508;--green:#10b981;--amber:#f59e0b;--shadow:0 1px 2px rgba(0,0,0,.35);color-scheme:dark}
+.tag.lab{background:#3A2610;color:#F6B04E}.tag.ki{background:#0E2A26;color:#49EACB}.chip.on{border-color:rgba(124,143,255,.35)}.btn.primary{color:#0B1220}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Geist,system-ui,sans-serif;line-height:1.5;padding-inline:16px;padding-block:0 48px}
 .wrap{max-width:1040px;margin:0 auto}
@@ -147,7 +153,7 @@ footer a{color:var(--accent-ink);text-decoration:none}
 <section>
   <div class="grid2">
     <div class="card">
-      <span class="tag" style="background:#FFF1DB;color:#9A5B00">Il Lab</span>
+      <span class="tag lab">Il Lab</span>
       <h2>Prima con soldi finti. Il Lab è aperto.</h2>
       <p class="lead" style="margin-bottom:0">Stessi prezzi veri, stesse regole, zero rischio, senza exchange e senza chiavi. Lasci l'email, un posto si apre, Bruno c'è dal primo giorno: al primo ingresso ti chiede chi sei e prepara tutto lui, in parole semplici, da 20 €. Se parti da zero, il primo mese si lavora qui, con soldi finti, e si studia: dieci lezioni illustrate, una ogni tre giorni, con Bruno che insegna e un piccolo ROBI per ogni lezione superata. Poi è lui ad accompagnarti ai soldi veri, wallet, exchange, chiavi, passo passo. Chi sa cosa fa non ha il vincolo.</p>
       <div class="band">Entra nel Lab, è gratis <a href="https://bottarella.airoobi.com/entra" style="color:inherit">→</a></div>
@@ -192,7 +198,7 @@ footer a{color:var(--accent-ink);text-decoration:none}
 <section id="kaspaitaly">
   <div class="grid2">
     <div class="card">
-      <span class="tag" style="background:#E6FBF6;color:#0E8F7E">Kaspa Italy · Telegram</span>
+      <span class="tag ki">Kaspa Italy · Telegram</span>
       <h2 style="font-size:clamp(24px,3vw,30px)">Kaspa spiegato in italiano, per chi parte da zero.</h2>
       <p class="lead" style="margin-bottom:0">Un gruppo dove fare le domande da principiante senza sentirsi dire che sono stupide. Ogni mattina le Note di Bruno, e Bruno che risponde quando lo nomini: spiega come funziona, mai cosa fare.</p>
       <div class="band">Entra nel gruppo <a href="https://t.me/kaspaitaly" target="_blank" rel="noopener" style="color:inherit">t.me/kaspaitaly →</a></div>
@@ -244,7 +250,7 @@ footer a{color:var(--accent-ink);text-decoration:none}
 
 <footer>
   <span>Bot<b style="color:var(--teal)">t</b>arella, un prodotto di AIROOBI · Nessuna custodia dei fondi</span>
-  <span><a href="https://kaspa.org" target="_blank" rel="noopener">kaspa.org</a> · <a href="/lab">AIROOBI LAB</a> · <span class="num">v1.3.4</span></span>
+  <span><a href="https://kaspa.org" target="_blank" rel="noopener">kaspa.org</a> · <a href="/lab">AIROOBI LAB</a> · <span class="num">v1.3.5</span></span>
 </footer>
 </div>
 
