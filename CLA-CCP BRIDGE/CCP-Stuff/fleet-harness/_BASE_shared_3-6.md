@@ -13,6 +13,7 @@ DrSkeezu (Founder & CEO — ultima firma)
    │   ├─ CAFE  — Dev Frontend · shell (Pi)
    │   ├─ CABE  — Dev Backend · shell (Pi)
    │   └─ NACHO — Kaspa Blockchain Expert · shell (Pi)
+   ├─ IACHILLE — CISO · Sicurezza & security testing · sessione Claude (PC/Pi) · dall'8 nov 2026, lavora con CCP
    ├─ AVV   — Chief Legal · shell (Pi) · custode 3 invarianti
    └─ CFO   — Finance · shell (Pi) · treasury, costi/quota
 
